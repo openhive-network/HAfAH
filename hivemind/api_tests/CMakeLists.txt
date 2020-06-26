@@ -18,5 +18,7 @@ macro(ADD_API_TEST api_name test_name)
   set_property(TEST "${api_name}/${test_name}" PROPERTY LABELS python_tests ${api_name} ${test_name})
 endmacro(ADD_API_TEST)
 
-add_subdirectory(condenser_api)
-
+add_subdirectory(follow_api)
+add_subdirectory(tags_api)
+add_subdirectory(bridge)
+add_subdirectory(block_api)
