@@ -1,8 +1,9 @@
 # Adding python tests to cmake
-set(REFERENCE_NODE https://api.hive.blog)
-set(TEST_NODE http://127.0.0.1:8090)
+set(REFERENCE_NODE https://api.hive.blog CACHE STRING "Address of reference node for api tests")
+set(TEST_NODE http://127.0.0.1:8090 CACHE STRING "Address of node under api tests")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/testbase.py" "${CMAKE_BINARY_DIR}/tests/api_tests/testbase.py" COPYONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/jsonsocket.py" "${CMAKE_BINARY_DIR}/tests/api_tests/jsonsocket.py" COPYONLY)
 
 macro(ADD_API_TEST api_name test_name)
     set(working_dir ${CMAKE_BINARY_DIR}/tests/api_tests/${api_name})
@@ -14,6 +15,6 @@ macro(ADD_API_TEST api_name test_name)
     if (${num_extra_args} GREATER 0)
         set(test_parameters ${test_name}.py ${TEST_NODE} ${REFERENCE_NODE} ${working_dir} ${extra_macro_args})
     endif()
-    add_test(NAME "${api_name}/${test_name}" COMMAND python3 ${test_parameters} WORKING_DIRECTORY ${working_dir})
-    set_property(TEST "${api_name}/${test_name}" PROPERTY LABELS python_tests ${api_name} ${test_name})
+    add_test(NAME "api/${api_name}/${test_name}" COMMAND python3 ${test_parameters} WORKING_DIRECTORY ${working_dir})
+    set_property(TEST "api/${api_name}/${test_name}" PROPERTY LABELS python_tests ${api_name} ${test_name})
 endmacro(ADD_API_TEST)
