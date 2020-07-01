@@ -395,10 +395,6 @@ tests = [
       "params": {"accounts":["temp","null"]}
    },
    {
-      "method": "database_api.list_limit_orders",
-      "params": {"start":[{"base":{"amount":1000,"precision":3,"nai":"@@000000021"},"quote":{"amount":1,"precision":3,"nai":"@@000000013"}},0], "limit":10, "order":"by_price"}
-   },
-   {
       "method": "database_api.find_limit_orders",
       "params": {"account":"temp"}
    },
@@ -421,22 +417,6 @@ tests = [
    {
       "method": "database_api.verify_signatures",
       "params": {"required_active":["temp"]}
-   },
-   {
-      "method": "database_api.list_smt_token_emissions",
-      "params": {"limit": 100, "order": "by_symbol_time", "start": []}
-   },
-   {
-      "method": "database_api.find_smt_token_emissions",
-      "params": {"asset_symbol": {"nai":"@@100000006", "decimals": 3}}
-   },
-   {
-      "method": "database_api.list_smt_contributions",
-      "params": {"limit": 100, "order": "by_symbol_contributor", "start": []}
-   },
-   {
-      "method": "database_api.find_smt_contributions",
-      "params": {"symbol_contributor": [{"asset_symbol": {"nai":"@@100000006", "decimals": 3}, "account": "temp"}] }
    }
 ]
 
@@ -463,7 +443,7 @@ def test_api( url, headers, payload ):
 
 def main():
    if len( sys.argv ) == 1:
-      url = "https://api.steemit.com/"
+      url = "https://api.hive.blog/"
    elif len( sys.argv ) == 2:
       url = sys.argv[1]
    else:
@@ -499,4 +479,4 @@ def main():
    return 0
 
 if __name__ == "__main__":
-   main()
+   exit( main() )

@@ -1,14 +1,14 @@
 #!/bin/bash
 
-NODE='http://127.0.0.1'
-RPC_PORT=8090
+NODE='http://192.168.4.117'
+RPC_PORT=8091
 EXIT_CODE=0
 COMPARATOR=''
 
-if [ $1 == 'equal' ]
+if [ "$1" = "equal" ]
 then
    COMPARATOR='comparator_equal'
-elif [ $1 == 'contain' ]
+elif [ "$1" = "contain" ]
 then
    COMPARATOR='comparator_contain'
 else

@@ -22,3 +22,9 @@ macro(ADD_API_TEST common_working_dir directory_with_test product api_name test_
     add_test(NAME "api/${api_name}/${test_name}" COMMAND python3 ${test_parameters} WORKING_DIRECTORY ${working_dir})
     set_property(TEST "api/${api_name}/${test_name}" PROPERTY LABELS python_tests ${api_name} ${test_name})
 endmacro(ADD_API_TEST)
+
+# @directory_with_test - full path to tests_api repo on the disk
+# @product - hived or hivemind
+macro(ADD_API_SMOKETEST directory_with_test product)
+    ADD_TEST(NAME "api/smoketes" COMMAND ${directory_with_test}/${product}/api_error_smoketest.py ${TEST_NODE} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tests)
+endmacro(ADD_API_SMOKETEST)
