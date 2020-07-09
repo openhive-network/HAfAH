@@ -13,12 +13,12 @@
     - group: *api
     - url: "/"
     - method: "POST"
-    - body: {template: {file: "../templates/request_template.json"}}
+    - body: {template: {file: "../../templates/request_template.json"}}
     - validators:
       - extract_test: {jsonpath_mini: "error", test: "not_exists"}
       - extract_test: {jsonpath_mini: "result", test: "exists"}
       - compare: {jsonpath_mini: "id", comparator: "str_eq", expected: {template: $test_id}}
-      - json_file_validator: {jsonpath_mini: "result", comparator: "json_compare", expected: {template: '$api/$method'}}
+      - json_file_validator: {jsonpath_mini: "result", comparator: "json_compare", expected: {template: 'full_sync/$api/$method'}}
 
 #  - test:
 #    - name: "normalize_post"
@@ -103,54 +103,64 @@
     - name: "get_payout_stats"
     - variable_binds:
       - method: "get_payout_stats"
-      - args: '[1.0]'
+      - args: '{}'
+    - generator_binds:
+      - test_id: test_id
+    - group: *api
+    - url: "/"
+    - method: "POST"
+    - body: {template: {file: "../../templates/request_template.json"}}
+    - validators:
+      - extract_test: {jsonpath_mini: "error", test: "not_exists"}
+      - extract_test: {jsonpath_mini: "result", test: "exists"}
+      - compare: {jsonpath_mini: "id", comparator: "str_eq", expected: {template: $test_id}}
+      - extract_test: {jsonpath_mini: "result.blogs", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.items", test: "exists"}
+
+  - test:
+    - name: "get_community"
+    - variable_binds:
+      - method: "get_community"
+      - args: '{"name":"hive-123456","observer":"steemit"}'
     - <<: *base_test
 
-# Communitiest not present at 5000000 blocks
-# - test:
-#   - name: "get_community"
-#   - variable_binds:
-#     - method: "get_community"
-#     - args: '{"name":"hive-123456","observer":"steemit"}'
-#   - <<: *base_test
+  - test:
+    - name: "get_community_context"
+    - variable_binds:
+      - method: "get_community_context"
+      - args: '{"name":"hive-123456", "account":"steemit"}'
+    - <<: *base_test
 
-# - test:
-#   - name: "get_community_context"
-#   - variable_binds:
-#     - method: "get_community_context"
-#     - args: '{"name":"hive-123456", "account":"steemit"}'
-#   - <<: *base_test
-
-# - test:
-#   - name: "list_communities"
-#   - variable_binds:
-#     - method: "list_communities"
-#     - args: '{"limit":1}'
-#   - generator_binds:
-#     - test_id: test_id
-#   - group: *api
-#   - url: "/"
-#   - method: "POST"
-#   - body: {template: {file: "../templates/request_template.json"}}
-#   - validators:
-#     - extract_test: {jsonpath_mini: "error", test: "not_exists"}
-#     - extract_test: {jsonpath_mini: "result", test: "exists"}
-#     - compare: {jsonpath_mini: "id", comparator: "str_eq", expected: {template: $test_id}}
-#     - extract_test: {jsonpath_mini: "result.0.about", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.admins", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.avatar_url", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.context", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.created_at", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.id", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.is_nsfw", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.lang", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.name", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.num_authors", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.num_pending", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.subscribers", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.sum_pending", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.title", test: "exists"}
-#     - extract_test: {jsonpath_mini: "result.0.type_id", test: "exists"}
+  - test:
+    - name: "list_communities"
+    - variable_binds:
+      - method: "list_communities"
+      - args: '{"limit":1}'
+    - generator_binds:
+      - test_id: test_id
+    - group: *api
+    - url: "/"
+    - method: "POST"
+    - body: {template: {file: "../../templates/request_template.json"}}
+    - validators:
+      - extract_test: {jsonpath_mini: "error", test: "not_exists"}
+      - extract_test: {jsonpath_mini: "result", test: "exists"}
+      - compare: {jsonpath_mini: "id", comparator: "str_eq", expected: {template: $test_id}}
+      - extract_test: {jsonpath_mini: "result.0.about", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.admins", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.avatar_url", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.context", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.created_at", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.id", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.is_nsfw", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.lang", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.name", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.num_authors", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.num_pending", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.subscribers", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.sum_pending", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.title", test: "exists"}
+      - extract_test: {jsonpath_mini: "result.0.type_id", test: "exists"}
 
 # Disabled as its not used, not ready
 #  - test:

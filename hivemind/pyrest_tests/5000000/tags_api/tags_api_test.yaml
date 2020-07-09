@@ -1,7 +1,7 @@
 ---
   - config:
-    - testset: "Condenser API Tests"
-    - api: &api "condenser_api"
+    - testset: "Tags API Tests"
+    - api: &api "tags_api"
     - variable_binds:
       - api: *api
     - generators:
@@ -13,61 +13,25 @@
     - group: *api
     - url: "/"
     - method: "POST"
-    - body: {template: {file: "../templates/request_template.json"}}
+    - body: {template: {file: "../../templates/request_template.json"}}
     - validators:
       - extract_test: {jsonpath_mini: "error", test: "not_exists"}
       - extract_test: {jsonpath_mini: "result", test: "exists"}
       - compare: {jsonpath_mini: "id", comparator: "str_eq", expected: {template: $test_id}}
-      - json_file_validator: {jsonpath_mini: "result", comparator: "json_compare", expected: {template: '$api/$method'}}
+      - json_file_validator: {jsonpath_mini: "result", comparator: "json_compare", expected: {template: '5000000/$api/$method'}}
 
   - test:
-    - name: "get_followers"
+    - name: "get_discussion"
     - variable_binds:
-      - method: "get_followers"
-      - args: '["steemit",null,"blog",10]'
-    - <<: *base_test
-
-  - test:
-    - name: "get_following"
-    - variable_binds:
-      - method: "get_following"
-      - args: '["steemit",null,"blog",10]'
-    - <<: *base_test
-
-  - test:
-    - name: "get_follow_count"
-    - variable_binds:
-      - method: "get_follow_count"
-      - args: '["steemit"]'
-    - <<: *base_test
-
-  - test:
-    - name: "get_content"
-    - variable_binds:
-      - method: "get_content"
-      - args: '["steemit", "firstpost"]'
+      - method: "get_discussion"
+      - args: '{"author":"steemit", "permlink":"firstpost"}'
     - <<: *base_test
 
   - test:
     - name: "get_content_replies"
     - variable_binds:
       - method: "get_content_replies"
-      - args: '["gtg", "hello-world"]'
-    - <<: *base_test
-
-# Dynamic data present
-#  - test:
-#    - name: "get_state"
-#    - variable_binds:
-#      - method: "get_state"
-#      - args: '["/@steemit"]'
-#    - <<: *base_test
-
-  - test:
-    - name: "get_trending_tags"
-    - variable_binds:
-      - method: "get_trending_tags"
-      - args: '{"start_tag":"polska","limit":10}'
+      - args: '{"author":"alice", "permlink":"firstpost"}'
     - <<: *base_test
 
   - test:
@@ -102,14 +66,7 @@
     - name: "get_discussions_by_blog"
     - variable_binds:
       - method: "get_discussions_by_blog"
-      - args: '{"tag":"polska","limit":1}'
-    - <<: *base_test
-
-  - test:
-    - name: "get_discussions_by_feed"
-    - variable_binds:
-      - method: "get_discussions_by_feed"
-      - args: '{"tag":"polska","limit":1}'
+      - args: '{"tag":"steemit","limit":1}'
     - <<: *base_test
 
   - test:
@@ -117,13 +74,6 @@
     - variable_binds:
       - method: "get_discussions_by_comments"
       - args: '{"start_author":"steemit","start_permlink":"firstpost","limit":1}'
-    - <<: *base_test
-
-  - test:
-    - name: "get_replies_by_last_update"
-    - variable_binds:
-      - method: "get_replies_by_last_update"
-      - args: '["steemit","firstpost",1]'
     - <<: *base_test
 
   - test:
@@ -147,45 +97,58 @@
       - args: '{"tag":"polska","limit":1}'
     - <<: *base_test
 
-  - test:
-    - name: "get_blog"
-    - variable_binds:
-      - method: "get_blog"
-      - args: '{"account":"steemit","start_entry_id":0,"limit":1}'
-    - <<: *base_test
+# Not found
+#  - test:
+#    - name: "get_active_votes"
+#    - variable_binds:
+#      - method: "get_active_votes"
+#      - args: '{"author":"steemit", "permlink":"firstpost"}'
+#    - <<: *base_test
 
-  - test:
-    - name: "get_blog_entries"
-    - variable_binds:
-      - method: "get_blog_entries"
-      - args: '{"account":"steemit","start_entry_id":0,"limit":1}'
-    - <<: *base_test
+# Not found
+#  - test:
+#    - name: "get_tags_used_by_author"
+#    - variable_binds:
+#      - method: "get_tags_used_by_author"
+#      - args: '{"author":"steemit"}'
+#    - <<: *base_test
 
-  - test:
-    - name: "get_account_reputations"
-    - variable_binds:
-      - method: "get_account_reputations"
-      - args: '["steemit", 1]'
-    - <<: *base_test
+# Not found
+#  - test:
+#    - name: "get_discussions_by_active"
+#    - variable_binds:
+#      - method: "get_discussions_by_active"
+#      - args: '{"tag":"steem","limit":1}'
+#    - <<: *base_test
 
-  - test:
-    - name: "get_reblogged_by"
-    - variable_binds:
-      - method: "get_reblogged_by"
-      - args: '{"author":"steemit","permlink":"firstpost"}'
-    - <<: *base_test
+# Not found
+#  - test:
+#    - name: "get_discussions_by_cashout"
+#    - variable_binds:
+#      - method: "get_discussions_by_cashout"
+#      - args: '{"tag":"steem","limit":1}'
+#    - <<: *base_test
 
-  - test:
-    - name: "get_accounts"
-    - variable_binds:
-      - method: "get_accounts"
-      - args: '[["steemit"]]'
-    - <<: *base_test
+# Not found
+#  - test:
+#    - name: "get_discussions_by_votes"
+#    - variable_binds:
+#      - method: "get_discussions_by_votes"
+#      - args: '{"tag":"steem","limit":1}'
+#    - <<: *base_test
+
+# Not found
+#  - test:
+#    - name: "get_discussions_by_children"
+#    - variable_binds:
+#      - method: "get_discussions_by_children"
+#      - args: '{"tag":"steem","limit":1}'
+#    - <<: *base_test
 
 # No longer supported
 #  - test:
 #    - name: "get_account_votes"
 #    - variable_binds:
 #      - method: "get_account_votes"
-#      - args: '["steemit"]'
+#      - args: '{"account":"steemit"}'
 #    - <<: *base_test

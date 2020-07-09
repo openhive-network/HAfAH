@@ -13,7 +13,7 @@
     - group: *api
     - url: "/"
     - method: "POST"
-    - body: {template: {file: "../templates/request_template.json"}}
+    - body: {template: {file: "../../templates/request_template.json"}}
     - validators:
       - extract_test: {jsonpath_mini: "error", test: "not_exists"}
       - extract_test: {jsonpath_mini: "result", test: "exists"}
