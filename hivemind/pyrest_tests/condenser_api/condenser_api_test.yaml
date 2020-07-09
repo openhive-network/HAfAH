@@ -52,7 +52,7 @@
     - name: "get_content_replies"
     - variable_binds:
       - method: "get_content_replies"
-      - args: '["steemit", "firstpost"]'
+      - args: '["gtg", "hello-world"]'
     - <<: *base_test
 
 # Dynamic data present

@@ -11,7 +11,7 @@ def list_contain(response, pattern):
     return True
 
 def contain(response, pattern):
-    if not isinstance(response, pattern):
+    if not isinstance(response, type(pattern)):
         return False
 
     if isinstance(response, dict):
