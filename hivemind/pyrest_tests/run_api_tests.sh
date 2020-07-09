@@ -23,7 +23,7 @@ echo "Running API tests\n"
 pyresttest $1 ./basic_smoketest.yaml
 [ $? -ne 0 ] && echo FATAL: hivemind not running? && exit -1
 
-pyresttest $1 ./bridge_api/bridge_api_test.yaml --import_extensions='validator_ex;'$COMPARATOR
+pyresttest $1 ./bridge/bridge_api_test.yaml --import_extensions='validator_ex;'$COMPARATOR
 [ $? -ne 0 ] && EXIT_CODE=-1
 
 pyresttest $1 ./condenser_api/condenser_api_test.yaml --import_extensions='validator_ex;'$COMPARATOR

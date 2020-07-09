@@ -1,0 +1,4 @@
+# filter *.out.json
+*.out.json
+
+*__pycache__*
