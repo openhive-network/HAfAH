@@ -20,6 +20,20 @@
       - compare: {jsonpath_mini: "id", comparator: "str_eq", expected: {template: $test_id}}
       - json_file_validator: {jsonpath_mini: "result", comparator: "json_compare", expected: {template: 'full_sync/$api/$method'}}
 
+  - posts_schema_test: &posts_schema_test
+    - generator_binds:
+      - test_id: test_id
+    - group: *api
+    - url: "/"
+    - method: "POST"
+    - body: {template: {file: "../../templates/request_template.json"}}
+    - validators:
+      - extract_test: {jsonpath_mini: "error", test: "not_exists"}
+      - extract_test: {jsonpath_mini: "result", test: "exists"}
+      - compare: {jsonpath_mini: "id", comparator: "str_eq", expected: {template: $test_id}}
+      - json_file_validator: {jsonpath_mini: "result", comparator: "json_compare", expected: {template: 'full_sync/$api/$method'}}
+      - json_schema: {schema: {file: '../../schemas/post_schema.json'}}
+
   - test:
     - name: "get_followers"
     - variable_binds:
@@ -75,49 +89,49 @@
     - variable_binds:
       - method: "get_discussions_by_trending"
       - args: '{"tag":"polska","limit":1}'
-    - <<: *base_test
+    - <<: *posts_schema_test
 
   - test:
     - name: "get_discussions_by_hot"
     - variable_binds:
       - method: "get_discussions_by_hot"
       - args: '{"tag":"polska","limit":1}'
-    - <<: *base_test
+    - <<: *posts_schema_test
 
   - test:
     - name: "get_discussions_by_promoted"
     - variable_binds:
       - method: "get_discussions_by_promoted"
       - args: '{"tag":"polska","limit":1}'
-    - <<: *base_test
+    - <<: *posts_schema_test
 
   - test:
     - name: "get_discussions_by_created"
     - variable_binds:
       - method: "get_discussions_by_created"
       - args: '{"tag":"polska","limit":1}'
-    - <<: *base_test
+    - <<: *posts_schema_test
 
   - test:
     - name: "get_discussions_by_blog"
     - variable_binds:
       - method: "get_discussions_by_blog"
-      - args: '{"tag":"polska","limit":1}'
-    - <<: *base_test
+      - args: '{"tag":"blocktrades","limit":1}'
+    - <<: *posts_schema_test
 
   - test:
     - name: "get_discussions_by_feed"
     - variable_binds:
       - method: "get_discussions_by_feed"
-      - args: '{"tag":"polska","limit":1}'
-    - <<: *base_test
+      - args: '{"tag":"blocktrades","limit":1}'
+    - <<: *posts_schema_test
 
   - test:
     - name: "get_discussions_by_comments"
     - variable_binds:
       - method: "get_discussions_by_comments"
       - args: '{"start_author":"steemit","start_permlink":"firstpost","limit":1}'
-    - <<: *base_test
+    - <<: *posts_schema_test
 
   - test:
     - name: "get_replies_by_last_update"
