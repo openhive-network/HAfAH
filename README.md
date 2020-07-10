@@ -4,6 +4,21 @@
   hivemind CI processes.
 
 # Usage:
+## Installing pyrest test framework
+### By `pip3`
+`pip3 install pyresttest`
+
+### From sources
+```
+git clone https://github.com/svanoort/pyresttest.git
+cd pyresttest
+python3 setupt.py build
+python3 setup.py install --user
+```
+
+### Remarks
+If you are not installing by `pip3` make sure that you have installed `pyyaml`, `future`, `pycurl`
+in your system. Also you will need developer libs for `libcurl4-openssl`, `libssl` (for Ubuntu `libcurl4-openssl-dev` and `libssl-dev`)
 
 ## Usage with `hived`:
 ### Python API tests:
