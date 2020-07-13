@@ -10,7 +10,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/jsonsocket.py" "${CMAKE_BINARY_DIR}/te
 # @product - hived or hivemind
 macro(ADD_API_TEST common_working_dir directory_with_test product api_name test_name)
     set(working_dir ${CMAKE_BINARY_DIR}/tests)
-    set(api_test_directory ${directory_with_test}/${product}/${api_name})
+    set(api_test_directory ${directory_with_test}/${product}/reference/${api_name})
     set(test_script_path ${api_test_directory}/${test_name}.py)
     message(STATUS "Adding ${api_name}/${test_name} to test list")
     set(extra_macro_args ${ARGN})
