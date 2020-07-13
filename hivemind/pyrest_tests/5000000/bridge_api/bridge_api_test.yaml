@@ -18,7 +18,7 @@
       - extract_test: {jsonpath_mini: "error", test: "not_exists"}
       - extract_test: {jsonpath_mini: "result", test: "exists"}
       - compare: {jsonpath_mini: "id", comparator: "str_eq", expected: {template: $test_id}}
-      - json_file_validator: {jsonpath_mini: "result", comparator: "json_compare", expected: {template: '5000000/$api/$method'}}
+      - json_file_validator: {jsonpath_mini: "result", comparator: "json_compare", expected: {template: '5000000/bridge_api/$method'}}
 
 #  - test:
 #    - name: "normalize_post"
