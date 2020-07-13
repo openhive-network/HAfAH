@@ -19,8 +19,9 @@ macro(ADD_API_TEST common_working_dir directory_with_test product api_name test_
     if (${num_extra_args} GREATER 0)
         set(test_parameters ${test_script_path} ${TEST_NODE} ${REFERENCE_NODE} ${working_dir} ${extra_macro_args})
     endif()
-    add_test(NAME "api/${api_name}/${test_name}" COMMAND python3 ${test_parameters} WORKING_DIRECTORY ${working_dir})
-    set_property(TEST "api/${api_name}/${test_name}" PROPERTY LABELS python_tests ${api_name} ${test_name})
+    set(test "api/reference/${api_name}/${test_name}")
+    add_test(NAME "${test}" COMMAND python3 ${test_parameters} WORKING_DIRECTORY ${working_dir})
+    set_property(TEST ${test} PROPERTY LABELS api_reference_tests)
 endmacro(ADD_API_TEST)
 
 # @common_working_dir - the root of working directories for all the api test
@@ -38,7 +39,7 @@ macro(ADD_API_PYREST_TEST common_working_dir directory_with_test product blocks 
     message(STATUS "Adding ${test_name}" )
     set(test_parameters ${test_file_path} "--import_extensions=validator_ex\;comparator_equal")
     add_test(NAME ${test_name} COMMAND pyresttest ${TEST_NODE} ${test_parameters} WORKING_DIRECTORY ${working_dir})
-    set_property(TEST ${test_name} PROPERTY LABELS python_tests ${api_name} ${test_name})
+    set_property(TEST ${test_name} PROPERTY LABELS "pyresttests")
 endmacro(ADD_API_PYREST_TEST)
 
 # @directory_with_test - full path to tests_api repo on the disk
