@@ -192,3 +192,10 @@
 #      - method: "get_account_votes"
 #      - args: '["steemit"]'
 #    - <<: *base_test
+
+  - test:
+      - name: "get_active_votes"
+      - variable_binds:
+          - method: "get_active_votes"
+          - args: '["biophil","test"]'
+      - <<: *base_test
