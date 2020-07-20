@@ -145,7 +145,7 @@
 #      - args: '{"tag":"steem","limit":1}'
 #    - <<: *base_test
 
-# No longer supported (replaced by database_api.list_votes)
+# No longer supported
 #  - test:
 #    - name: "get_account_votes"
 #    - variable_binds:
