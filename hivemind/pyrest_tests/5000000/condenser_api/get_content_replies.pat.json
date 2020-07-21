@@ -1,13 +1,6 @@
 [
     {
-        "active_votes": [
-            {
-                "percent": "0",
-                "reputation": 0,
-                "rshares": "0",
-                "voter": "christianibabe"
-            }
-        ],
+        "active_votes": [],
         "author": "trogdor",
         "author_reputation": 0,
         "beneficiaries": [],
