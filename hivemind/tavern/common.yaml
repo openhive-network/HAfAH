@@ -1,0 +1,9 @@
+---
+  name: Common test values
+  description: Common values for tests
+
+  variables:
+    service:
+      proto: http
+      server: 127.0.0.1
+      port: 8080

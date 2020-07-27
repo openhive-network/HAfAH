@@ -1,0 +1,461 @@
+---
+  test_name: Hivemind condenser_api.get_followers smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_followers
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_followers"
+          params: ["steemit",null,"blog",10]
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_following smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_following
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_following"
+          params: ["steemit",null,"blog",10]
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_follow_count smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_follow_count
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_follow_count"
+          params: ["steemit"]
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_content smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_content
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_content"
+          params: ["gtg", "hello-world"]
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_state smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_state
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_state"
+          params: ["/@steemit"]
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_trending_tags smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_trending_tags
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_trending_tags"
+          params: {"start_tag":"polska","limit":10}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_discussions_by_trending smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_discussions_by_trending
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_trending"
+          params: {"tag":"polska","limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_discussions_by_hot smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_discussions_by_hot
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_hot"
+          params: {"tag":"polska","limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_discussions_by_promoted smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_discussions_by_promoted
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_promoted"
+          params: {"tag":"polska","limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_discussions_by_created smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_discussions_by_created
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_created"
+          params: {"tag":"polska","limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_discussions_by_blog smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_discussions_by_blog
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_blog"
+          params: {"tag":"blocktrades","limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_discussions_by_feed smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_discussions_by_feed
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_feed"
+          params: {"tag":"blocktrades","limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_discussions_by_comments smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_discussions_by_comments
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_comments"
+          params: {"start_author":"steemit","start_permlink":"firstpost","limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_replies_by_last_update smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_replies_by_last_update
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_replies_by_last_update"
+          params: ["steemit","firstpost",1]
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_discussions_by_author_before_date smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_discussions_by_author_before_date
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_author_before_date"
+          params: {"author":"steemit","start_permlink":"firstpost","before_date":"2016-04-19T22:49:43","limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_post_discussions_by_payout smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_post_discussions_by_payout
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_post_discussions_by_payout"
+          params: {"tag":"polska","limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_comment_discussions_by_payout smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_comment_discussions_by_payout
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_comment_discussions_by_payout"
+          params: {"tag":"polska","limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_blog smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_blog
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_blog"
+          params: {"account":"steemit","start_entry_id":0,"limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_blog_entries smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_blog_entries
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_blog_entries"
+          params: {"account":"steemit","start_entry_id":0,"limit":1}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_account_reputations smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_account_reputations
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_account_reputations"
+          params: ["steemit", 1]
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_reblogged_by smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_reblogged_by
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_reblogged_by"
+          params: {"author":"steemit","permlink":"firstpost"}
+      response:
+        status_code: 200
+
+---
+  test_name: Hivemind condenser_api.get_accounts smoke test
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_accounts
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_accounts"
+          params: [["steemit"]]
+      response:
+        status_code: 200
