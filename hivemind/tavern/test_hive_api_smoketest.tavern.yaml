@@ -18,3 +18,5 @@
           params: {}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response

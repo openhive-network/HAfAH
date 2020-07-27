@@ -18,6 +18,8 @@
           params: {"author":"steemit", "permlink":"firstpost"}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind tags_api.get_content_replies smoke test
@@ -39,6 +41,8 @@
           params: {"author":"steemit", "permlink":"firstpost"}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind tags_api.get_discussions_by_trending smoke test
@@ -60,6 +64,8 @@
           params: {"tag":"polska","limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind tags_api.get_discussions_by_hot smoke test
@@ -81,6 +87,8 @@
           params: {"tag":"polska","limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind tags_api.get_discussions_by_promoted smoke test
@@ -102,6 +110,8 @@
           params: {"tag":"polska","limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind tags_api.get_discussions_by_created smoke test
@@ -123,6 +133,8 @@
           params: {"tag":"polska","limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind tags_api.get_discussions_by_blog smoke test
@@ -144,6 +156,8 @@
           params: {"tag":"blocktrades","limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind tags_api.get_discussions_by_comments smoke test
@@ -165,6 +179,8 @@
           params: {"start_author":"steemit","start_permlink":"firstpost","limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind tags_api.get_discussions_by_author_before_date smoke test
@@ -186,6 +202,8 @@
           params: {"author":"steemit","start_permlink":"firstpost","before_date":"2016-04-19T22:49:43","limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind tags_api.get_post_discussions_by_payout smoke test
@@ -207,6 +225,8 @@
           params: {"tag":"polska","limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind tags_api.get_comment_discussions_by_payout smoke test
@@ -228,3 +248,5 @@
           params: {"tag":"polska","limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response

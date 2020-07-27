@@ -18,6 +18,8 @@
           params: {"start":["steemit","firstpost"], "limit":10, "order":"by_permlink"}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind database_api.find_comments smoke test
@@ -39,3 +41,5 @@
           params: {"start":[["steemit","firstpost"]], "limit":10, "order":"by_author"}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response

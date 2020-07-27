@@ -270,6 +270,8 @@
           params: {"limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind bridge_api.list_community_roles smoke test
@@ -291,6 +293,8 @@
           params: {"community":"hive-123456"}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind bridge_api.list_subscribers smoke test
@@ -312,6 +316,8 @@
           params: {"community":"hive-123456"}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind bridge_api.list_all_subscriptions smoke test
@@ -333,3 +339,5 @@
           params: {"account":"steemit"}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response

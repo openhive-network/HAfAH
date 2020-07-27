@@ -2,3 +2,6 @@
 *.out.json
 
 *__pycache__*
+
+# filter *.pyc
+*.pyc

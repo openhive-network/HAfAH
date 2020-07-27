@@ -18,6 +18,8 @@
           params: {"account":"steemit","start":null,"type":"blog","limit":10}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind follow_api.get_following smoke test
@@ -39,6 +41,8 @@
           params: {"account":"steemit","start":null,"type":"blog","limit":10}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind follow_api.get_follow_count smoke test
@@ -60,6 +64,8 @@
           params: {"account":"steemit"}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind follow_api.get_account_reputations smoke test
@@ -81,6 +87,8 @@
           params: {"account_lower_bound": "steem", "limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind follow_api.get_blog smoke test
@@ -102,6 +110,8 @@
           params: {"account":"steemit","start_entry_id":0,"limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind follow_api.get_blog_entries smoke test
@@ -123,6 +133,8 @@
           params: {"account":"steemit","start_entry_id":0,"limit":1}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
 
 ---
   test_name: Hivemind follow_api.get_reblogged_by smoke test
@@ -144,3 +156,5 @@
           params: {"author":"steemit","permlink":"firstpost"}
       response:
         status_code: 200
+        verify_response_with:
+          function: validate_response:validate_response
