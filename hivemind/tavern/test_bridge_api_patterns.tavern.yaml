@@ -1,8 +1,8 @@
 ---
-  test_name: Hivemind bridge_api.get_post_header smoke test
+  test_name: Hivemind bridge_api.get_post_header patterns test
 
   marks:
-    - smoketest
+    - patterntest
 
   includes:
     - !include common.yaml
@@ -22,13 +22,17 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_post_header"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.get_discussion smoke test
+  test_name: Hivemind bridge_api.get_discussion patterns test
 
   marks:
-    - smoketest
+    - patterntest
+    - xfail
 
   includes:
     - !include common.yaml
@@ -48,13 +52,17 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_discussion"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.get_post smoke test
+  test_name: Hivemind bridge_api.get_post patterns test
 
   marks:
-    - smoketest
+    - patterntest
+    - xfail
 
   includes:
     - !include common.yaml
@@ -74,13 +82,17 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_post"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.get_account_posts smoke test
+  test_name: Hivemind bridge_api.get_account_posts patterns test
 
   marks:
-    - smoketest
+    - patterntest
+    - xfail
 
   includes:
     - !include common.yaml
@@ -100,13 +112,17 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_account_posts"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.get_ranked_posts smoke test
+  test_name: Hivemind bridge_api.get_ranked_posts patterns test
 
   marks:
-    - smoketest
+    - patterntest
+    - xfail
 
   includes:
     - !include common.yaml
@@ -126,13 +142,16 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_ranked_posts"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.get_profile smoke test
+  test_name: Hivemind bridge_api.get_profile patterns test
 
   marks:
-    - smoketest
+    - patterntest
 
   includes:
     - !include common.yaml
@@ -152,13 +171,16 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_profile"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.get_trending_topics smoke test
+  test_name: Hivemind bridge_api.get_trending_topics patterns test
 
   marks:
-    - smoketest
+    - patterntest
 
   includes:
     - !include common.yaml
@@ -178,13 +200,16 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_trending_topics"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.post_notifications smoke test
+  test_name: Hivemind bridge_api.post_notifications patterns test
 
   marks:
-    - smoketest
+    - patterntest
 
   includes:
     - !include common.yaml
@@ -204,13 +229,16 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "post_notifications"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.account_notifications smoke test
+  test_name: Hivemind bridge_api.account_notifications patterns test
 
   marks:
-    - smoketest
+    - patterntest
 
   includes:
     - !include common.yaml
@@ -230,13 +258,16 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "account_notifications"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.unread_notifications smoke test
+  test_name: Hivemind bridge_api.unread_notifications patterns test
 
   marks:
-    - smoketest
+    - patterntest
 
   includes:
     - !include common.yaml
@@ -256,13 +287,17 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "unread_notifications"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.get_payout_stats smoke test
+  test_name: Hivemind bridge_api.get_payout_stats patterns test
 
   marks:
-    - smoketest
+    - patterntest
+    - xfail
 
   includes:
     - !include common.yaml
@@ -278,17 +313,21 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_payout_stats"
-          params: {}
+          params: [1.0]
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_payout_stats"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.get_community smoke test
+  test_name: Hivemind bridge_api.get_community patterns test
 
   marks:
-    - smoketest
+    - patterntest
+    - xfail
 
   includes:
     - !include common.yaml
@@ -304,17 +343,20 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_community"
-          params: {"name":"hive-123456", "account":"steemit"}
+          params: {"name":"hive-123456", "observer":"steemit"}
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_community"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.list_communities smoke test
+  test_name: Hivemind bridge_api.list_communities patterns test
 
   marks:
-    - smoketest
+    - patterntest
 
   includes:
     - !include common.yaml
@@ -334,13 +376,16 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "list_communities"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.list_community_roles smoke test
+  test_name: Hivemind bridge_api.list_community_roles patterns test
 
   marks:
-    - smoketest
+    - patterntest
 
   includes:
     - !include common.yaml
@@ -360,13 +405,16 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "list_community_roles"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.list_subscribers smoke test
+  test_name: Hivemind bridge_api.list_subscribers patterns test
 
   marks:
-    - smoketest
+    - patterntest
 
   includes:
     - !include common.yaml
@@ -386,13 +434,16 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "list_subscribers"
+            directory: "bridge_api_patterns"
 
 ---
-  test_name: Hivemind bridge_api.list_all_subscriptions smoke test
+  test_name: Hivemind bridge_api.list_all_subscriptions patterns test
 
   marks:
-    - smoketest
+    - patterntest
 
   includes:
     - !include common.yaml
@@ -412,4 +463,7 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:validate_response
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "list_all_subscriptions"
+            directory: "bridge_api_patterns"

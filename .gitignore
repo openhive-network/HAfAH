@@ -5,3 +5,6 @@
 
 # filter *.pyc
 *.pyc
+
+# filter diff files
+*.diff.json

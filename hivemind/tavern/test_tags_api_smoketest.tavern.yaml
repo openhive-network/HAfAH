@@ -1,6 +1,9 @@
 ---
   test_name: Hivemind tags_api.get_discussion smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -23,6 +26,9 @@
 
 ---
   test_name: Hivemind tags_api.get_content_replies smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -47,6 +53,9 @@
 ---
   test_name: Hivemind tags_api.get_discussions_by_trending smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -69,6 +78,9 @@
 
 ---
   test_name: Hivemind tags_api.get_discussions_by_hot smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -93,6 +105,9 @@
 ---
   test_name: Hivemind tags_api.get_discussions_by_promoted smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -115,6 +130,9 @@
 
 ---
   test_name: Hivemind tags_api.get_discussions_by_created smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -139,6 +157,9 @@
 ---
   test_name: Hivemind tags_api.get_discussions_by_blog smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -161,6 +182,9 @@
 
 ---
   test_name: Hivemind tags_api.get_discussions_by_comments smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -185,6 +209,9 @@
 ---
   test_name: Hivemind tags_api.get_discussions_by_author_before_date smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -208,6 +235,9 @@
 ---
   test_name: Hivemind tags_api.get_post_discussions_by_payout smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -230,6 +260,9 @@
 
 ---
   test_name: Hivemind tags_api.get_comment_discussions_by_payout smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml

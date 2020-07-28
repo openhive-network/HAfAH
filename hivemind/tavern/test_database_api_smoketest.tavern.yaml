@@ -1,6 +1,9 @@
 ---
   test_name: Hivemind database_api.list_comments smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -23,6 +26,9 @@
 
 ---
   test_name: Hivemind database_api.find_comments smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml

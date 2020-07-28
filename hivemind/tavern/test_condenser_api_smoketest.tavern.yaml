@@ -1,6 +1,9 @@
 ---
   test_name: Hivemind condenser_api.get_followers smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -23,6 +26,9 @@
 
 ---
   test_name: Hivemind condenser_api.get_following smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -47,6 +53,9 @@
 ---
   test_name: Hivemind condenser_api.get_follow_count smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -69,6 +78,9 @@
 
 ---
   test_name: Hivemind condenser_api.get_content smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -93,6 +105,9 @@
 ---
   test_name: Hivemind condenser_api.get_state smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -115,6 +130,9 @@
 
 ---
   test_name: Hivemind condenser_api.get_trending_tags smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -139,6 +157,9 @@
 ---
   test_name: Hivemind condenser_api.get_discussions_by_trending smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -161,6 +182,9 @@
 
 ---
   test_name: Hivemind condenser_api.get_discussions_by_hot smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -185,6 +209,9 @@
 ---
   test_name: Hivemind condenser_api.get_discussions_by_promoted smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -207,6 +234,9 @@
 
 ---
   test_name: Hivemind condenser_api.get_discussions_by_created smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -231,6 +261,9 @@
 ---
   test_name: Hivemind condenser_api.get_discussions_by_blog smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -253,6 +286,9 @@
 
 ---
   test_name: Hivemind condenser_api.get_discussions_by_feed smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -277,6 +313,9 @@
 ---
   test_name: Hivemind condenser_api.get_discussions_by_comments smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -299,6 +338,9 @@
 
 ---
   test_name: Hivemind condenser_api.get_replies_by_last_update smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -323,6 +365,9 @@
 ---
   test_name: Hivemind condenser_api.get_discussions_by_author_before_date smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -345,6 +390,9 @@
 
 ---
   test_name: Hivemind condenser_api.get_post_discussions_by_payout smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -369,6 +417,9 @@
 ---
   test_name: Hivemind condenser_api.get_comment_discussions_by_payout smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -391,6 +442,9 @@
 
 ---
   test_name: Hivemind condenser_api.get_blog smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -415,6 +469,9 @@
 ---
   test_name: Hivemind condenser_api.get_blog_entries smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -437,6 +494,9 @@
 
 ---
   test_name: Hivemind condenser_api.get_account_reputations smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
@@ -461,6 +521,9 @@
 ---
   test_name: Hivemind condenser_api.get_reblogged_by smoke test
 
+  marks:
+    - smoketest
+
   includes:
     - !include common.yaml
 
@@ -483,6 +546,9 @@
 
 ---
   test_name: Hivemind condenser_api.get_accounts smoke test
+
+  marks:
+    - smoketest
 
   includes:
     - !include common.yaml
