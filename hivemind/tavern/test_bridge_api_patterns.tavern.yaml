@@ -32,7 +32,7 @@
 
   marks:
     - patterntest
-    - xfail
+    - failing
 
   includes:
     - !include common.yaml
@@ -62,7 +62,7 @@
 
   marks:
     - patterntest
-    - xfail
+    - failing
 
   includes:
     - !include common.yaml
@@ -92,7 +92,7 @@
 
   marks:
     - patterntest
-    - xfail
+    - failing
 
   includes:
     - !include common.yaml
@@ -122,7 +122,7 @@
 
   marks:
     - patterntest
-    - xfail
+    - failing
 
   includes:
     - !include common.yaml
@@ -297,7 +297,7 @@
 
   marks:
     - patterntest
-    - xfail
+    - failing
 
   includes:
     - !include common.yaml
@@ -327,7 +327,7 @@
 
   marks:
     - patterntest
-    - xfail
+    - failing
 
   includes:
     - !include common.yaml
