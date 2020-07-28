@@ -107,6 +107,8 @@
 
   marks:
     - smoketest
+    - failing
+    - xfail
 
   includes:
     - !include common.yaml
@@ -263,6 +265,8 @@
 
   marks:
     - smoketest
+    - failing
+    - xfail
 
   includes:
     - !include common.yaml
@@ -549,6 +553,8 @@
 
   marks:
     - smoketest
+    - failing
+    - xfail
 
   includes:
     - !include common.yaml

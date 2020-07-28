@@ -5,6 +5,7 @@ To run tavern test:
 2. Edit `common.yaml` and set variables to desired values
 3. Install tavern/pytest `pip install tavern[pytest]`
 4. Run tests: `PYTHONPATH=$PYTHONPATH:$(pwd) py.test -v`
+   or with compact logging: `PYTHONPATH=$PYTHONPATH:/home/dariusz-work/Sources/tests_api/hivemind/tavern/ py.test -v -tavern-beta-new-traceback -p no:logging`
 
 
 Each test is marked, we have three mark defined:

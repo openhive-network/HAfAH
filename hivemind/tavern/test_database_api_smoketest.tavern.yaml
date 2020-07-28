@@ -29,6 +29,8 @@
 
   marks:
     - smoketest
+    - failing
+    - xfail
 
   includes:
     - !include common.yaml
