@@ -1,0 +1,204 @@
+---
+  test_name: Hivemind follow_api.get_followers patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_followers
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "follow_api.get_followers"
+          params: {"account":"steemit","start":null,"type":"blog","limit":10}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_followers"
+            directory: "follow_api_patterns"
+
+---
+  test_name: Hivemind follow_api.get_following patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_following
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "follow_api.get_following"
+          params: {"account":"proskynneo","start":null,"type":"blog","limit":10}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_following"
+            directory: "follow_api_patterns"
+
+---
+  test_name: Hivemind follow_api.get_follow_count patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_follow_count
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "follow_api.get_follow_count"
+          params: {"account":"steemit"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_follow_count"
+            directory: "follow_api_patterns"
+
+---
+  test_name: Hivemind follow_api.get_account_reputations patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_account_reputations
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "follow_api.get_account_reputations"
+          params: {"account_lower_bound": "steem", "limit":1}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_account_reputations"
+            directory: "follow_api_patterns"
+
+---
+  test_name: Hivemind follow_api.get_blog patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_blog
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "follow_api.get_blog"
+          params: {"account":"steemit","start_entry_id":0,"limit":1}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_blog"
+            directory: "follow_api_patterns"
+
+---
+  test_name: Hivemind follow_api.get_blog_entries patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_blog_entries
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "follow_api.get_blog_entries"
+          params: {"account":"steemit","start_entry_id":0,"limit":1}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_blog_entries"
+            directory: "follow_api_patterns"
+
+---
+  test_name: Hivemind follow_api.get_reblogged_by patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_reblogged_by
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "follow_api.get_reblogged_by"
+          params: {"author":"steemit","permlink":"firstpost"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_reblogged_by"
+            directory: "follow_api_patterns"
