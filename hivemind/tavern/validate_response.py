@@ -3,13 +3,18 @@ class PatternDiffException(Exception):
 
 def json_pretty_string(json_obj):
   from json import dumps
-  return dumps(json_obj, sort_keys=True, indent=4)
+  return dumps(json_obj, sort_keys=True, indent=2)
 
 def save_diff(name, diff):
   """ Save diff to a file """
   with open(name, 'w') as f:
     f.write(str(diff))
     f.write("\n")
+
+def save_response(file_name, response_json):
+  """ Save response to file """
+  with open(file_name, 'w') as f:
+    f.writelines(json_pretty_string(response_json))
 
 
 def validate_response(response):
@@ -19,6 +24,7 @@ def validate_response(response):
   assert error is None, "Error detected in response: {}".format(error["message"])
   assert result is not None, "Error detected in response: result is null, json object was expected"
 
+RESPONSE_FILE_EXT = ".out.json"
 PATTERN_FILE_EXT = ".pat.json"
 DIFF_FILE_EXT = ".diff.json"
 def load_pattern(name):
@@ -42,6 +48,8 @@ def compare_response_with_pattern(response, method=None, directory=None):
   pattern_resp_diff = jsondiff.diff(pattern, result)
   if pattern_resp_diff:
     fname = directory + "/" + method + DIFF_FILE_EXT
+    response_fname = directory + "/" + method + RESPONSE_FILE_EXT
     save_diff(fname, pattern_resp_diff)
+    save_response(response_fname, result)
     msg = "Differences detected between response and pattern. Diff saved to {}\n\nDiff:\n{}".format(fname, pattern_resp_diff)
     raise PatternDiffException(msg)
