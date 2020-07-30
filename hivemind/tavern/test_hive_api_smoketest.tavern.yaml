@@ -10,7 +10,7 @@
   stages:
     - name: db_head_state
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json

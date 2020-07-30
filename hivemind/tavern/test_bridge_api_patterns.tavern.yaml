@@ -10,7 +10,7 @@
   stages:
     - name: get_post_header
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -41,7 +41,7 @@
   stages:
     - name: get_discussion
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -72,7 +72,7 @@
   stages:
     - name: get_post
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -103,7 +103,7 @@
   stages:
     - name: get_account_posts
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -134,7 +134,7 @@
   stages:
     - name: get_ranked_posts
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -163,7 +163,7 @@
   stages:
     - name: get_profile
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -192,7 +192,7 @@
   stages:
     - name: get_trending_topics
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -221,7 +221,7 @@
   stages:
     - name: post_notifications
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -250,7 +250,7 @@
   stages:
     - name: account_notifications
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -279,7 +279,7 @@
   stages:
     - name: unread_notifications
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -310,7 +310,7 @@
   stages:
     - name: get_payout_stats
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -341,7 +341,7 @@
   stages:
     - name: get_community
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -370,7 +370,7 @@
   stages:
     - name: list_communities
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -399,7 +399,7 @@
   stages:
     - name: list_community_roles
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -428,7 +428,7 @@
   stages:
     - name: list_subscribers
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -457,7 +457,7 @@
   stages:
     - name: list_all_subscriptions
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json

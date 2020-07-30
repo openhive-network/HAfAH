@@ -10,7 +10,7 @@
   stages:
     - name: get_discussion
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -38,7 +38,7 @@
   stages:
     - name: get_content_replies
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -64,7 +64,7 @@
   stages:
     - name: get_discussions_by_trending
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -90,7 +90,7 @@
   stages:
     - name: get_discussions_by_hot
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -116,7 +116,7 @@
   stages:
     - name: get_discussions_by_promoted
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -142,7 +142,7 @@
   stages:
     - name: get_discussions_by_created
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -170,7 +170,7 @@
   stages:
     - name: get_discussions_by_blog
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -196,7 +196,7 @@
   stages:
     - name: get_discussions_by_comments
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -222,7 +222,7 @@
   stages:
     - name: get_discussions_by_author_before_date
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -248,7 +248,7 @@
   stages:
     - name: get_post_discussions_by_payout
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -274,7 +274,7 @@
   stages:
     - name: get_comment_discussions_by_payout
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json

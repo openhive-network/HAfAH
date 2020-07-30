@@ -10,7 +10,7 @@
   stages:
     - name: get_followers
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -36,7 +36,7 @@
   stages:
     - name: get_following
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -62,7 +62,7 @@
   stages:
     - name: get_follow_count
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -88,7 +88,7 @@
   stages:
     - name: get_account_reputations
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -114,7 +114,7 @@
   stages:
     - name: get_blog
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -140,7 +140,7 @@
   stages:
     - name: get_blog_entries
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -166,7 +166,7 @@
   stages:
     - name: get_reblogged_by
       request:
-        url: "{service.proto:s}://{service.server:s}:{service.port:d}/"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
