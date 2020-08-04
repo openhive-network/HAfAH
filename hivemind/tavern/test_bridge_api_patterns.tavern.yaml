@@ -1,0 +1,475 @@
+---
+  test_name: Hivemind bridge_api.get_post_header patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_post_header
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_post_header"
+          params: {"author":"steemit", "permlink":"firstpost"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_post_header"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.get_discussion patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_discussion
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_discussion"
+          params: {"author":"steemit", "permlink":"firstpost"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_discussion"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.get_post patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_post
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_post"
+          params: {"author":"steemit", "permlink":"firstpost"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_post"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.get_account_posts patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_account_posts
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_account_posts"
+          params: {"sort":"posts", "account":"steemit"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_account_posts"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.get_ranked_posts patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_ranked_posts
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_ranked_posts"
+          params: {"sort":"trending","tag":"","observer":"steemit"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_ranked_posts"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.get_profile patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_profile
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_profile"
+          params: {"account":"steemit"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_profile"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.get_trending_topics patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_trending_topics
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_trending_topics"
+          params: {}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_trending_topics"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.post_notifications patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: post_notifications
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.post_notifications"
+          params: {"author":"steemit", "permlink":"firstpost"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "post_notifications"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.account_notifications patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: account_notifications
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.account_notifications"
+          params: {"account":"steemit","limit":100}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "account_notifications"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.unread_notifications patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: unread_notifications
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.unread_notifications"
+          params: {"account":"steemit"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "unread_notifications"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.get_payout_stats patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_payout_stats
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_payout_stats"
+          params: [1.0]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_payout_stats"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.get_community patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_community
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_community"
+          params: {"name":"hive-123456", "observer":"steemit"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_community"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.list_communities patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: list_communities
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.list_communities"
+          params: {"limit":1}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "list_communities"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.list_community_roles patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: list_community_roles
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.list_community_roles"
+          params: {"community":"hive-123456"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "list_community_roles"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.list_subscribers patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: list_subscribers
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.list_subscribers"
+          params: {"community":"hive-123456"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "list_subscribers"
+            directory: "bridge_api_patterns"
+
+---
+  test_name: Hivemind bridge_api.list_all_subscriptions patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: list_all_subscriptions
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.list_all_subscriptions"
+          params: {"account":"steemit"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "list_all_subscriptions"
+            directory: "bridge_api_patterns"

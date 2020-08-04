@@ -1,0 +1,61 @@
+---
+  test_name: Hivemind database_api.list_comments patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: list_comments
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "database_api.list_comments"
+          params: {"start":["steemit","firstpost"], "limit":10, "order":"by_permlink"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "list_comments"
+            directory: "database_api_patterns"
+
+---
+  test_name: Hivemind database_api.find_comments patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: find_comments
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "database_api.find_comments"
+          params: {"start":[["steemit","firstpost"]], "limit":10, "order":"by_author"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "find_comments"
+            directory: "database_api_patterns"
