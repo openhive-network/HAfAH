@@ -16,6 +16,11 @@ def save_response(file_name, response_json):
   with open(file_name, 'w') as f:
     f.writelines(json_pretty_string(response_json))
 
+def save_no_response(file_name, msg):
+  """ Save lack of response to file """
+  with open(file_name, 'w') as f:
+    f.write(msg)
+
 RESPONSE_FILE_EXT = ".out.json"
 PATTERN_FILE_EXT = ".pat.json"
 DIFF_FILE_EXT = ".diff.json"
@@ -29,18 +34,30 @@ def load_pattern(name):
 
 def compare_response_with_pattern(response, method=None, directory=None):
   """ This method will compare response with pattern file """
+  import os
+  fname = directory + "/" + method + DIFF_FILE_EXT
+  response_fname = directory + "/" + method + RESPONSE_FILE_EXT
+  if os.path.exists(fname):
+    os.remove(fname)
+  if os.path.exists(response_fname):
+    os.remove(response_fname)
+
   response_json = response.json()
   error = response_json.get("error", None)
   result = response_json.get("result", None)
-  assert error is None, "Error detected in response: {}".format(error["message"])
-  assert result is not None, "Error detected in response: result is null, json object was expected"
+  if error is not None:
+    msg = "Error detected in response: {}".format(error["message"])
+    save_no_response(response_fname, msg)
+    raise PatternDiffException(msg)
+  if result is None:
+    msg = "Error detected in response: result is null, json object was expected"
+    save_no_response(response_fname, msg)
+    raise PatternDiffException(msg)
 
   import jsondiff
   pattern = load_pattern(directory + "/" + method + PATTERN_FILE_EXT)
   pattern_resp_diff = jsondiff.diff(pattern, result)
   if pattern_resp_diff:
-    fname = directory + "/" + method + DIFF_FILE_EXT
-    response_fname = directory + "/" + method + RESPONSE_FILE_EXT
     save_diff(fname, pattern_resp_diff)
     save_response(response_fname, result)
     msg = "Differences detected between response and pattern. Diff saved to {}\n\nDiff:\n{}".format(fname, pattern_resp_diff)

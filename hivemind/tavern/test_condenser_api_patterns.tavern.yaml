@@ -91,7 +91,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # edited votes wrong, influences net_rshares and/or pending_payout_value; last_payout/last_update
 
   includes:
     - !include common.yaml
@@ -122,7 +122,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # last_payout/last_update
 
   includes:
     - !include common.yaml
@@ -153,7 +153,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # edited votes wrong, influences net_rshares and/or pending_payout_value; last_payout/last_update; created for pow account
 
   includes:
     - !include common.yaml
@@ -184,7 +184,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # some tags have too many comments/top_posts, influences total_payouts; once that is fixed rest of total_payouts can be slightly different
 
   includes:
     - !include common.yaml
@@ -215,7 +215,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # totally different post
 
   includes:
     - !include common.yaml
@@ -246,7 +246,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # totally different post
 
   includes:
     - !include common.yaml
@@ -277,7 +277,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # edited votes wrong, influences net_rshares and/or pending_payout_value; last_payout/last_update
 
   includes:
     - !include common.yaml
@@ -307,8 +307,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -339,7 +337,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # null result (super slow query response)
 
   includes:
     - !include common.yaml
@@ -368,7 +366,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_feed patterns test
 
   marks:
-    - patterntest
+    - patterntest # can't find any params that would give nonempty results
 
   includes:
     - !include common.yaml
@@ -399,7 +397,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # last_payout/last_update
 
   includes:
     - !include common.yaml
@@ -430,7 +428,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # last_payout/last_update
 
   includes:
     - !include common.yaml
@@ -461,7 +459,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # edited votes wrong, influences net_rshares and/or pending_payout_value; last_payout/last_update
 
   includes:
     - !include common.yaml
@@ -491,8 +489,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -522,8 +518,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -554,7 +548,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # edited votes wrong, influences net_rshares and/or pending_payout_value; last_payout/last_update
 
   includes:
     - !include common.yaml
@@ -641,7 +635,7 @@
   test_name: Hivemind condenser_api.get_reblogged_by patterns test
 
   marks:
-    - patterntest
+    - patterntest # result is empty because reblogging functionality started past 5mln blocks
 
   includes:
     - !include common.yaml
@@ -701,7 +695,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # percent/time wrong for vote with rshares=0 (possibly same problem as in edited votes)
 
   includes:
     - !include common.yaml
