@@ -179,6 +179,7 @@
           extra_kwargs:
             method: "get_profile"
             directory: "bridge_api_patterns"
+            ignore_tags: ["id"]
 
 ---
   test_name: Hivemind bridge_api.get_trending_topics patterns test

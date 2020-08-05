@@ -32,7 +32,14 @@ def load_pattern(name):
     ret = load(f)
   return ret
 
-def compare_response_with_pattern(response, method=None, directory=None):
+def remove_tag(data, tags_to_remove):
+  if not isinstance(data, (dict, list)):
+    return data
+  if isinstance(data, list):
+    return [remove_tag(v, tags_to_remove) for v in data]
+  return {k: remove_tag(v, tags_to_remove) for k, v in data.items() if k not in tags_to_remove}
+
+def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None):
   """ This method will compare response with pattern file """
   import os
   fname = directory + "/" + method + DIFF_FILE_EXT
@@ -43,6 +50,9 @@ def compare_response_with_pattern(response, method=None, directory=None):
     os.remove(response_fname)
 
   response_json = response.json()
+  if ignore_tags is not None:
+    assert isinstance(ignore_tags, list), "ingore_tags should be list of tags"
+    response_json = remove_tag(response_json, ignore_tags)
   error = response_json.get("error", None)
   result = response_json.get("result", None)
   if error is not None:
@@ -56,6 +66,8 @@ def compare_response_with_pattern(response, method=None, directory=None):
 
   import jsondiff
   pattern = load_pattern(directory + "/" + method + PATTERN_FILE_EXT)
+  if ignore_tags is not None:
+    pattern = remove_tag(pattern, ignore_tags)
   pattern_resp_diff = jsondiff.diff(pattern, result)
   if pattern_resp_diff:
     save_diff(fname, pattern_resp_diff)
