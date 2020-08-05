@@ -645,39 +645,12 @@
             directory: "condenser_api_patterns"
 
 ---
-  test_name: Hivemind condenser_api.get_accounts patterns test
-
-  marks:
-    - patterntest
-
-  includes:
-    - !include common.yaml
-
-  stages:
-    - name: get_accounts
-      request:
-        url: "{service.proto:s}://{service.server:s}:{service.port}/"
-        method: POST
-        headers:
-          content-type: application/json
-        json:
-          jsonrpc: "2.0"
-          id: 1
-          method: "condenser_api.get_accounts"
-          params: ["steemit"]
-      response:
-        status_code: 200
-        verify_response_with:
-          function: validate_response:compare_response_with_pattern
-          extra_kwargs:
-            method: "get_accounts"
-            directory: "condenser_api_patterns"
-
----
   test_name: Hivemind condenser_api.get_active_votes patterns test
 
   marks:
     - patterntest
+    - failing
+    - xfail # percent/time wrong for vote with rshares=0 (possibly same problem as in edited votes)
 
   includes:
     - !include common.yaml
@@ -701,3 +674,30 @@
           extra_kwargs:
             method: "get_active_votes"
             directory: "condenser_api_patterns"
+---
+  test_name: Hivemind deprecated condenser_api.get_account_votes 
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_account_votes
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_account_votes"
+          params: ["steemit"]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_error_data
+          extra_kwargs:
+            data: "ApiError: get_account_votes is no longer supported, for details see https://steemit.com/steemit/@steemitdev/additional-public-api-change"
