@@ -120,7 +120,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # edited votes wrong, influences net_rshares and/or pending_payout_value; last_payout/last_update
+    - xfail # edited votes wrong, influences net_rshares and/or pending_payout_value; last_payout
 
   includes:
     - !include common.yaml
