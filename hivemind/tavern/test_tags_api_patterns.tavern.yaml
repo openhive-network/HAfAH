@@ -3,8 +3,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout
 
   includes:
     - !include common.yaml
@@ -34,8 +32,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout
 
   includes:
     - !include common.yaml
@@ -216,8 +212,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout
 
   includes:
     - !include common.yaml
@@ -247,8 +241,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout
 
   includes:
     - !include common.yaml
