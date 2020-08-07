@@ -119,8 +119,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout
 
   includes:
     - !include common.yaml

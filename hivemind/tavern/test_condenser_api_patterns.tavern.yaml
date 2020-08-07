@@ -90,8 +90,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout
 
   includes:
     - !include common.yaml
@@ -121,8 +119,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout
 
   includes:
     - !include common.yaml
@@ -152,8 +148,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout; created for pow account
 
   includes:
     - !include common.yaml
@@ -184,7 +178,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # some tags have too many comments/top_posts, influences total_payouts; once that is fixed rest of total_payouts can be slightly different
+    - xfail # some tags have too many comments/top_posts, influences total_payouts (problem when post is deleted and recreated); once that is fixed rest of total_payouts can be slightly different
 
   includes:
     - !include common.yaml
@@ -394,8 +388,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout
 
   includes:
     - !include common.yaml
@@ -425,8 +417,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout
 
   includes:
     - !include common.yaml
@@ -456,8 +446,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout
 
   includes:
     - !include common.yaml
@@ -545,8 +533,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # last_payout
 
   includes:
     - !include common.yaml
