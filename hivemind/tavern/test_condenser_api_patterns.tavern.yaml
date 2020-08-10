@@ -587,6 +587,7 @@
             directory: "condenser_api_patterns"
 
 ---
+  #should return reputation based on fat node, now is 0
   test_name: Hivemind condenser_api.get_account_reputations patterns test
 
   marks:
@@ -701,3 +702,89 @@
           function: validate_response:compare_error_data
           extra_kwargs:
             data: "ApiError: get_account_votes is no longer supported, for details see https://steemit.com/steemit/@steemitdev/additional-public-api-change"
+
+---
+  # get_accounts should be based on fat node - posting_rewards and reputations are 0 on AH node
+  test_name: Hivemind condenser_api.get_accounts with single account patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_accounts
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_accounts"
+          params: [["steemit"]]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_accounts"
+            directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_accounts with multiple accounts patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_accounts with multiple accounts
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_accounts"
+          params: [["steemit","biophil","test"]]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_multiple_accounts"
+            directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_accounts with non existing account patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_accounts with non existing account
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_accounts"
+          params: [["nalesnik"]]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_non_existing_accounts"
+            directory: "condenser_api_patterns"

@@ -1,8 +1,6 @@
-{
-  "reputations": [
-    {
-      "name": "steemit",
-      "reputation": 0
-    }
-  ]
-}
+[
+  {
+    "account": "steemit",
+    "reputation": "12944616889"
+  }
+]
