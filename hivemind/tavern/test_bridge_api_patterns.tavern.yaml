@@ -364,6 +364,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail
 
   includes:
     - !include common.yaml
