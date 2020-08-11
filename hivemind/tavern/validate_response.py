@@ -70,7 +70,8 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     pattern = remove_tag(pattern, ignore_tags)
   pattern_resp_diff = deepdiff.DeepDiff(pattern, result)
   if pattern_resp_diff:
-    save_diff(fname, pattern_resp_diff)
+    pattern_resp_diff_json = pattern_resp_diff.to_json()
+    save_diff(fname, pattern_resp_diff_json)
     save_response(response_fname, result)
-    msg = "Differences detected between response and pattern. Diff saved to {}\n\nDiff:\n{}".format(fname, pattern_resp_diff)
+    msg = "Differences detected between response and pattern. Diff saved to {}\n\nDiff:\n{}".format(fname, pattern_resp_diff_json)
     raise PatternDiffException(msg)
