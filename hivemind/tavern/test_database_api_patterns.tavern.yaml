@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind database_api.list_comments patterns test
+  test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 
   marks:
     - patterntest
@@ -59,3 +59,1454 @@
           extra_kwargs:
             method: "find_comments"
             directory: "database_api_patterns"
+
+########################  CASHOUT TIME  ########################
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" wrong date size
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["2016-07-08", "", ""],
+            "limit": 10,
+            "order": "by_cashout_time",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "basic_string::at: __n (which is 0) >= this->size() (which is 0):basic_string::at: __n (which is 0) >= this->size() (which is 0): unable to convert ISO-formatted string to fc::time_point_sec"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" date and author
+
+marks:
+  - patterntest
+  - xfail # shows error when there is only one of optional value (first)
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["1969-12-31T23:59:59", "etcmike", ""],
+            "limit": 10,
+            "order": "by_cashout_time",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Assert Exception:comment != nullptr: Could not find comment etcmike/."
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" date and permlink
+
+marks:
+  - patterntest
+  - xfail # shows error when there is only one of optional value (first)
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start":
+              [
+                "1969-12-31T23:59:59",
+                "",
+                "re-bullionstackers-screen-it-tab-it-what-are-they-20160829t061254603z",
+              ],
+            "limit": 10,
+            "order": "by_cashout_time",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Assert Exception:comment != nullptr: Could not find comment /re-bullionstackers-screen-it-tab-it-what-are-they-20160829t061254603z."
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" all data
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start":
+              [
+                "1969-12-31T23:59:59",
+                "etcmike",
+                "re-bullionstackers-screen-it-tab-it-what-are-they-20160829t061254603z",
+              ],
+            "limit": 10,
+            "order": "by_cashout_time",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_by_cashout_time_all_data"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" future data
+
+marks:
+  - patterntest
+  - xfail # show first posts comments
+  - failing
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["2030-07-08T00:45:15", "", ""],
+            "limit": 10,
+            "order": "by_cashout_time",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_by_cashout_time_future_data"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" very future data
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["2050-07-08T00:45:15", "", ""],
+            "limit": 10,
+            "order": "by_cashout_time",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Assert Exception:(pt - epoch).total_seconds() <= INT32_MAX: Datetime overflowunable to convert ISO-formatted string to fc::time_point_sec"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" no data
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          { "start": ["", "", ""], "limit": 10, "order": "by_cashout_time" }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Day of month value is out of range 1..31:Day of month value is out of range 1..31: unable to convert ISO-formatted string to fc::time_point_sec"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" data exist in database
+
+marks:
+  - patterntest
+  - xfail # problem with date cashout_time = "1970-01-01 00:00:00" or 1969-12-31T23:59:59
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["1970-01-01T00:00:00", "", ""],
+            "limit": 10,
+            "order": "by_cashout_time",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_by_cashout_first_date"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" data exist in database
+
+marks:
+  - patterntest
+  - xfail # wrong output, given cashout_time exist in database (output later 2016-09-15T19:47:27)
+  - failing
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["2016-07-08T00:45:15", "", ""],
+            "limit": 10,
+            "order": "by_cashout_time",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_by_cashout_time_second"
+          directory: "database_api_patterns"
+
+########################  PERMLINK  ########################
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_permlink" only author
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params: { "start": ["gtg", ""], "limit": 10, "order": "by_permlink" }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_permlink"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_permlink" no data
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params: { "start": ["", ""], "limit": 10, "order": "by_permlink" }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_permlink_permlink_no_data"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_permlink" good permlink
+
+marks:
+  - patterntest # author first - when empty, takes alphabetical (later by permlink)
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start":
+              [
+                "",
+                "re-an-introduction-to-where-eagles-fly-the-american-wilderness-expedition-by-zedekiah-morse-20160824t212916",
+              ],
+            "limit": 10,
+            "order": "by_permlink",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_permlink_good_permlink"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_permlink" good params
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start":
+              [
+                "skypilot",
+                "an-introduction-to-where-eagles-fly-the-american-wilderness-expedition-by-zedekiah-morse",
+              ],
+            "limit": 10,
+            "order": "by_permlink",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_permlink_good_params"
+          directory: "database_api_patterns"
+
+########################  ROOT  ########################
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_root" good params
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_root
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["gtg", "hello-world", "", ""],
+            "limit": 10,
+            "order": "by_root",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_root"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_root" no data
+
+marks:
+  - patterntest
+  - xfail # first two params are required
+  - failing
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_root
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["", "", "", ""],
+            "limit": 10,
+            "order": "by_root",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_root_no_data"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_root" only root_author
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_root
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["vi1son", "", "", ""],
+            "limit": 10,
+            "order": "by_root",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Assert Exception:root != nullptr: Could not find comment vi1son/."
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_root" required values (comment of a post)
+
+marks:
+  - patterntest
+  - xfail # wrong output
+  - failing
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_root
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["vi1son", "re-givemeyoursteem-winners-of-steemit-food-challenge-3-desserts-to-die-for-20160828t172955785z", "", ""],
+            "limit": 10,
+            "order": "by_root",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_root_required_values"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_root" required values (post)
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_root
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["givemeyoursteem", "winners-of-steemit-food-challenge-3-desserts-to-die-for", "", ""],
+            "limit": 10,
+            "order": "by_root",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_root_required_values_comments"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_root" all values correct
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_root
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["givemeyoursteem", "winners-of-steemit-food-challenge-3-desserts-to-die-for", "vi1son", "re-givemeyoursteem-winners-of-steemit-food-challenge-3-desserts-to-die-for-20160828t172955785z"],
+            "limit": 10,
+            "order": "by_root",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_root_all_values"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_root" with child_author 
+
+marks:
+  - patterntest
+  - xfail # child_author, child_permlink are optional
+  - failing
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_root
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["givemeyoursteem", "winners-of-steemit-food-challenge-3-desserts-to-die-for", "vi1son", ""],
+            "limit": 10,
+            "order": "by_root",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Assert Exception:child != nullptr: Could not find comment vi1son/."
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_root" wrong child_permlink 
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_root
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["givemeyoursteem", "winners-of-steemit-food-challenge-3-desserts-to-die-for", "vi1son", "randomvalues"],
+            "limit": 10,
+            "order": "by_root",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Assert Exception:child != nullptr: Could not find comment vi1son/randomvalues."
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_root" wrong val
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_root
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["giv", "winner", "", ""],
+            "limit": 10,
+            "order": "by_root",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Assert Exception:root != nullptr: Could not find comment giv/winner."
+
+########################  PARENT  ########################
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_parent"
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_parent
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["gtg", "hello-world", "", ""],
+            "limit": 10,
+            "order": "by_parent",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_parent"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_parent" no data
+
+marks:
+  - patterntest
+  - xfail # first 2 params are required
+  - failing
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_parent
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["", "", "", ""],
+            "limit": 10,
+            "order": "by_parent",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_parent_no_data"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_parent" no data
+
+marks:
+  - patterntest
+  - xfail # second param is required
+  - failing
+
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_parent
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["vi1son", "", "", ""],
+            "limit": 10,
+            "order": "by_parent",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_parent_parent_author"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_parent" required data
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_parent
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["knozaki2015", "re-givemeyoursteem-winners-of-steemit-food-challenge-3-desserts-to-die-for-20160828t181032961z", "", ""],
+            "limit": 10,
+            "order": "by_parent",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_parent_required_data"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_parent" child_author
+
+marks:
+  - patterntest
+  - xfail # child_author, child_permlink are optional 
+  - failing
+
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_parent
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["knozaki2015", "re-givemeyoursteem-winners-of-steemit-food-challenge-3-desserts-to-die-for-20160828t181032961z", "givemeyoursteem", ""],
+            "limit": 10,
+            "order": "by_parent",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Assert Exception:child != nullptr: Could not find comment givemeyoursteem/."
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_parent" all data
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_parent
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["allasyummyfood", "re-givemeyoursteem-winners-of-steemit-food-challenge-3-desserts-to-die-for-20160829t004616466z", "vlad", "re-allasyummyfood-re-givemeyoursteem-winners-of-steemit-food-challenge-3-desserts-to-die-for-20160829t011002757z"],
+            "limit": 10,
+            "order": "by_parent",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_parent_all_data"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_parent" not full parent_permlink
+
+marks:
+  - patterntest
+  - xfail # unexpected output - takes it aplhabetical from author
+  - failing
+
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_parent
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["allasyummy", "re-givemeyoursteem-winner", "vlad", "re-allasyummyfood-re-givemeyoursteem-winners-of-steemit-food-challenge-3-desserts-to-die-for-20160829t011002757z"],
+            "limit": 10,
+            "order": "by_parent",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_parent_not_full_data"
+          directory: "database_api_patterns"
+
+########################  AUTHOR LAST UPDATE  ########################
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct date
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_author_last_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["", "2016-08-28T17:15:12", "", ""],
+            "limit": 10,
+            "order": "by_author_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_author_last_update_corr_date"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct date and author
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_author_last_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["", "2016-08-28T17:15:12", "givemeyoursteem", ""],
+            "limit": 10,
+            "order": "by_author_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Assert Exception:comment != nullptr: Could not find comment givemeyoursteem/."
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct date and author wrong permlink
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_author_last_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["", "2016-08-28T17:15:12", "givemeyoursteem", "winners-of-steemit-food-challenge-3"],
+            "limit": 10,
+            "order": "by_author_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Assert Exception:comment != nullptr: Could not find comment givemeyoursteem/winners-of-steemit-food-challenge-3."
+ 
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct date author and permlink
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_author_last_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["", "2016-08-28T17:15:12", "givemeyoursteem", "winners-of-steemit-food-challenge-3-desserts-to-die-for"],
+            "limit": 10,
+            "order": "by_author_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_author_last_update_corr_dap"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct author and date
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_author_last_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["givemeyoursteem", "2016-08-28T17:15:12", "", ""],
+            "limit": 10,
+            "order": "by_author_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_author_last_update_corr_author_date"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" not full author and corr date
+
+marks:
+  - patterntest
+  - xfail # output should be the same as prev test or with completely diff author
+  - failing
+
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_author_last_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["givemeyo", "2016-08-28T17:15:12", "", ""],
+            "limit": 10,
+            "order": "by_author_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_author_last_update_author_date"
+          directory: "database_api_patterns"
+
+########################  LAST UPDATE  ########################
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_last_update"
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          { "start": ["", "", "", ""], "limit": 10, "order": "by_last_update" }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Day of month value is out of range 1..31:Day of month value is out of range 1..31: unable to convert ISO-formatted string to fc::time_point_sec"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_last_update" date in author
+
+marks:
+  - patterntest
+  - xfail # first arg is author, not date (error about date)
+  - failing
+
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["2016-08-24T21:29:42", "", "", ""],
+            "limit": 10,
+            "order": "by_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Day of month value is out of range 1..31:Day of month value is out of range 1..31: unable to convert ISO-formatted string to fc::time_point_sec"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_last_update" good date
+
+marks:
+  - patterntest
+  - xfail # shows different comment than expected
+  - failing
+
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["", "2016-08-24T21:29:42", "", ""],
+            "limit": 10,
+            "order": "by_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_last_update_good_date"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_last_update" wrong date
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["", "2016-08-24", "", ""],
+            "limit": 10,
+            "order": "by_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "basic_string::at: __n (which is 0) >= this->size() (which is 0):basic_string::at: __n (which is 0) >= this->size() (which is 0): unable to convert ISO-formatted string to fc::time_point_sec"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_last_update" very future date
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["", "2050-08-24T21:29:42", "", ""],
+            "limit": 10,
+            "order": "by_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Assert Exception:(pt - epoch).total_seconds() <= INT32_MAX: Datetime overflowunable to convert ISO-formatted string to fc::time_point_sec"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_last_update" future date
+
+marks:
+  - patterntest
+  - xfail # show last comments in base
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["", "2022-08-24T21:29:42", "", ""],
+            "limit": 10,
+            "order": "by_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_comments_by_last_update_future_date"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_last_update" wrong day
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_comments_by_update
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["", "2016-04-66T21:29:42", "", ""],
+            "limit": 10,
+            "order": "by_last_update",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_error_message
+        extra_kwargs:
+          message: "Day of month value is out of range 1..31:Day of month value is out of range 1..31: unable to convert ISO-formatted string to fc::time_point_sec"

@@ -45,3 +45,9 @@ def compare_response_with_pattern(response, method=None, directory=None):
     save_response(response_fname, result)
     msg = "Differences detected between response and pattern. Diff saved to {}\n\nDiff:\n{}".format(fname, pattern_resp_diff)
     raise PatternDiffException(msg)
+
+def compare_error_message(response, message):
+  response_json = response.json()
+  error = response_json.get("error", None)
+  if error['message'] != message:
+    raise PatternDiffException('error message not equal, expected: "' + message + '" given: "' + error['message'] + '"')
