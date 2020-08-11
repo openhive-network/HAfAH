@@ -33,7 +33,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # plenty of differences, most are formatting problems (some extra elements, some missing, some different type)
 
   includes:
     - !include common.yaml
@@ -64,7 +64,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # plenty of differences, most are formatting problems (some extra elements, some missing, some different type)
 
   includes:
     - !include common.yaml
@@ -95,7 +95,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # plenty of differences, most are formatting problems (some extra elements, some missing, some different type)
 
   includes:
     - !include common.yaml
@@ -126,7 +126,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # hard to say - too many differences (fix those in get_post first, might help here)
 
   includes:
     - !include common.yaml
@@ -230,7 +230,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.post_notifications"
-          params: {"author":"steemit", "permlink":"firstpost"}
+          params: {"author":"admin", "permlink":"firstpost", "min_score":15}
       response:
         status_code: 200
         verify_response_with:
@@ -259,7 +259,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.account_notifications"
-          params: {"account":"steemit","limit":100}
+          params: {"account":"steemit", "min_score": 15, "limit":20}
       response:
         status_code: 200
         verify_response_with:
@@ -273,6 +273,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail # the underlying mechanism seems to be nonfunctional
 
   includes:
     - !include common.yaml
@@ -288,7 +290,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.unread_notifications"
-          params: {"account":"steemit"}
+          params: {"account":"steemit", "min_score":15}
       response:
         status_code: 200
         verify_response_with:
@@ -302,8 +304,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -334,7 +334,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # test should probably be removed from 5mln set since it will return error when incorrect community id is passed and communities did not exist then
 
   includes:
     - !include common.yaml
@@ -363,7 +363,7 @@
   test_name: Hivemind bridge_api.list_communities patterns test
 
   marks:
-    - patterntest
+    - patterntest # no nonempty result possible for 5mln set (ABW: something fishy here - as long as pattern is JSON it doesn't care about the content)
 
   includes:
     - !include common.yaml
@@ -392,7 +392,7 @@
   test_name: Hivemind bridge_api.list_community_roles patterns test
 
   marks:
-    - patterntest
+    - patterntest # no nonempty result possible for 5mln set
 
   includes:
     - !include common.yaml
@@ -421,7 +421,7 @@
   test_name: Hivemind bridge_api.list_subscribers patterns test
 
   marks:
-    - patterntest
+    - patterntest # no nonempty result possible for 5mln set
 
   includes:
     - !include common.yaml
@@ -450,7 +450,7 @@
   test_name: Hivemind bridge_api.list_all_subscriptions patterns test
 
   marks:
-    - patterntest
+    - patterntest # no nonempty result possible for 5mln set
 
   includes:
     - !include common.yaml
