@@ -33,7 +33,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # plenty of differences, most are formatting problems (some extra elements, some missing, some different type)
+    - xfail # missing replies, payout is always zero except root post, grey, flag_weight, total_votes counts all without filtering
 
   includes:
     - !include common.yaml
@@ -64,7 +64,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # plenty of differences, most are formatting problems (some extra elements, some missing, some different type)
+    - xfail # total_votes (new version counts all the listed votes, old does not count some)
 
   includes:
     - !include common.yaml
@@ -95,7 +95,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # plenty of differences, most are formatting problems (some extra elements, some missing, some different type)
+    - xfail # total_votes counts all without filtering
 
   includes:
     - !include common.yaml
@@ -126,7 +126,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # hard to say - too many differences (fix those in get_post first, might help here)
+    - xfail # completely different list of posts due to sc_trend not working, plus see get_post
 
   includes:
     - !include common.yaml
@@ -274,7 +274,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # the underlying mechanism seems to be nonfunctional
+    - xfail # underlying mechanism seems to be nonfunctional (related hive_notifs table is empty but it shouldn't)
 
   includes:
     - !include common.yaml
