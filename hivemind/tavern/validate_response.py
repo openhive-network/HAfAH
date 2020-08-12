@@ -8,7 +8,7 @@ def json_pretty_string(json_obj):
 def save_diff(name, diff):
   """ Save diff to a file """
   with open(name, 'w') as f:
-    f.write(str(diff))
+    f.write(json_pretty_string(diff))
     f.write("\n")
 
 def save_response(file_name, response_json):
@@ -64,15 +64,16 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     save_no_response(response_fname, msg)
     raise PatternDiffException(msg)
 
-  import jsondiff
+  import deepdiff
   pattern = load_pattern(directory + "/" + method + PATTERN_FILE_EXT)
   if ignore_tags is not None:
     pattern = remove_tag(pattern, ignore_tags)
-  pattern_resp_diff = jsondiff.diff(pattern, result)
+  pattern_resp_diff = deepdiff.DeepDiff(pattern, result)
   if pattern_resp_diff:
-    save_diff(fname, pattern_resp_diff)
+    pattern_resp_diff_json = pattern_resp_diff.to_json()
+    save_diff(fname, pattern_resp_diff_json)
     save_response(response_fname, result)
-    msg = "Differences detected between response and pattern. Diff saved to {}\n\nDiff:\n{}".format(fname, pattern_resp_diff)
+    msg = "Differences detected between response and pattern. Diff saved to {}\n\nDiff:\n{}".format(fname, pattern_resp_diff_json)
     raise PatternDiffException(msg)
 
 def compare_error_data(response, data):

@@ -1460,6 +1460,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail # wrong pattern, wrong test params (empty result)
 
   includes:
     - !include common.yaml

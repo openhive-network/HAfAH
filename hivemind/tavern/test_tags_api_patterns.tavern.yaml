@@ -181,8 +181,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # null result (super long query response)
 
   includes:
     - !include common.yaml
