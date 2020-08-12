@@ -28,6 +28,91 @@
             directory: "condenser_api_patterns"
 
 ---
+  test_name: Hivemind condenser_api.get_followers last patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_followers last
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_followers"
+          params: ["steemit","fjccoin","blog",1000]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_followers_last"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_followers no followers patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_followers no followers
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_followers"
+          params: ["test2",null,"blog",1000]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_followers_no_followers"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_followers over limit test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_followers over limit
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_followers"
+          params: ["steemit",null,"blog",1001]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_error_data
+          extra_kwargs:
+            data: "limit exceeds max (1001 > 1000)"
+---
   test_name: Hivemind condenser_api.get_following patterns test
 
   marks:
@@ -83,6 +168,64 @@
           extra_kwargs:
             method: "get_following_last"
             directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_following no following patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_following last
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_following"
+          params: ["test2",null,"blog",1000]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_following_no_following"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_following over limit test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_following last
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_following"
+          params: ["gtg","blocktrades","blog",1001]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_error_data
+          extra_kwargs:
+            data: "limit exceeds max (1001 > 1000)"
+
 ---
   test_name: Hivemind condenser_api.get_follow_count patterns test
 
@@ -111,7 +254,62 @@
           extra_kwargs:
             method: "get_follow_count"
             directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_follow_count following and followers patterns test
 
+  marks:
+    - patterntest 
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_follow_count following and followers 
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_follow_count"
+          params: ["gtg"]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_follow_count_following_and_followers"
+            directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_follow_count_no_followers patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_follow_count
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_follow_count"
+          params: ["test2"]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_follow_count_no_followers"
+            directory: "condenser_api_patterns"
 ---
   test_name: Hivemind condenser_api.get_content patterns test
 
@@ -140,7 +338,34 @@
           extra_kwargs:
             method: "get_content"
             directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_content gtg patterns test
 
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_content gtg
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_content"
+          params: ["gtg", "witness-gtg"]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_content_gtg"
+            directory: "condenser_api_patterns"
 ---
   test_name: Hivemind condenser_api.get_content_replies patterns test
 
