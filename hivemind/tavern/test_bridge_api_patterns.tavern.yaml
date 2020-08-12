@@ -33,7 +33,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # missing replies, payout is always zero except root post, grey, flag_weight, total_votes counts all without filtering
 
   includes:
     - !include common.yaml
@@ -64,7 +64,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # total_votes (new version counts all the listed votes, old does not count some)
 
   includes:
     - !include common.yaml
@@ -95,7 +95,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # total_votes counts all without filtering
 
   includes:
     - !include common.yaml
@@ -126,7 +126,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # completely different list of posts due to sc_trend not working, plus see get_post
 
   includes:
     - !include common.yaml
@@ -179,6 +179,7 @@
           extra_kwargs:
             method: "get_profile"
             directory: "bridge_api_patterns"
+            ignore_tags: ["id"]
 
 ---
   test_name: Hivemind bridge_api.get_trending_topics patterns test
@@ -229,7 +230,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.post_notifications"
-          params: {"author":"steemit", "permlink":"firstpost"}
+          params: {"author":"admin", "permlink":"firstpost", "min_score":15}
       response:
         status_code: 200
         verify_response_with:
@@ -258,7 +259,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.account_notifications"
-          params: {"account":"steemit","limit":100}
+          params: {"account":"steemit", "min_score": 15, "limit":20}
       response:
         status_code: 200
         verify_response_with:
@@ -272,6 +273,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail # underlying mechanism seems to be nonfunctional (related hive_notifs table is empty but it shouldn't)
 
   includes:
     - !include common.yaml
@@ -287,7 +290,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.unread_notifications"
-          params: {"account":"steemit"}
+          params: {"account":"steemit", "min_score":15}
       response:
         status_code: 200
         verify_response_with:
@@ -301,8 +304,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -333,7 +334,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # test should probably be removed from 5mln set since it will return error when incorrect community id is passed and communities did not exist then
 
   includes:
     - !include common.yaml
@@ -363,6 +364,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail
 
   includes:
     - !include common.yaml
@@ -391,7 +394,7 @@
   test_name: Hivemind bridge_api.list_community_roles patterns test
 
   marks:
-    - patterntest
+    - patterntest # no nonempty result possible for 5mln set
 
   includes:
     - !include common.yaml
@@ -420,7 +423,7 @@
   test_name: Hivemind bridge_api.list_subscribers patterns test
 
   marks:
-    - patterntest
+    - patterntest # no nonempty result possible for 5mln set
 
   includes:
     - !include common.yaml
@@ -449,7 +452,7 @@
   test_name: Hivemind bridge_api.list_all_subscriptions patterns test
 
   marks:
-    - patterntest
+    - patterntest # no nonempty result possible for 5mln set
 
   includes:
     - !include common.yaml

@@ -178,7 +178,7 @@
   test_name: Hivemind follow_api.get_reblogged_by patterns test
 
   marks:
-    - patterntest
+    - patterntest # result is empty because reblogging functionality started past 5mln blocks
 
   includes:
     - !include common.yaml

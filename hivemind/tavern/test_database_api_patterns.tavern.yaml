@@ -28,6 +28,7 @@
           extra_kwargs:
             method: "list_comments"
             directory: "database_api_patterns"
+            ignore_tags: ["id"]
 
 ---
   test_name: Hivemind database_api.find_comments patterns test
@@ -51,7 +52,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "database_api.find_comments"
-          params: {"start":[["steemit","firstpost"]], "limit":10, "order":"by_author"}
+          params: {"comments":[["steemit","firstpost"]]}
       response:
         status_code: 200
         verify_response_with:

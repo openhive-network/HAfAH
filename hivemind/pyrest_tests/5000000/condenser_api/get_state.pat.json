@@ -645,7 +645,7 @@
             "parent_author": "",
             "parent_permlink": "meta",
             "pending_payout_value": "0.000 HBD",
-            "percent_steem_dollars": 10000,
+            "percent_hbd": 10000,
             "permlink": "firstpost",
             "post_id": 1,
             "promoted": "0.000 HBD",
@@ -664,12 +664,12 @@
         "quote": "1.000 HIVE"
     },
     "props": {
+        "hbd_interest_rate": 1000,
+        "hbd_print_rate": 10000,
         "head_block_number": 5000000,
         "last_irreversible_block_num": 4999980,
-        "sbd_interest_rate": 1000,
-        "sbd_print_rate": 10000,
         "time": "2016-09-15T19:47:21",
-        "total_vesting_fund_steem": "149190428.013 HIVE",
+        "total_vesting_fund_hive": "149190428.013 HIVE",
         "total_vesting_shares": "448144916705.468384 VESTS"
     },
     "tag_idx": {
