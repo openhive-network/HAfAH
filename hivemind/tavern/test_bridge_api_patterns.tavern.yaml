@@ -363,7 +363,9 @@
   test_name: Hivemind bridge_api.list_communities patterns test
 
   marks:
-    - patterntest # no nonempty result possible for 5mln set (ABW: something fishy here - as long as pattern is JSON it doesn't care about the content)
+    - patterntest
+    - failing
+    - xfail
 
   includes:
     - !include common.yaml

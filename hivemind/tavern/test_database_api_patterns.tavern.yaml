@@ -28,6 +28,7 @@
           extra_kwargs:
             method: "list_comments"
             directory: "database_api_patterns"
+            ignore_tags: ["id"]
 
 ---
   test_name: Hivemind database_api.find_comments patterns test
@@ -59,3 +60,4 @@
           extra_kwargs:
             method: "find_comments"
             directory: "database_api_patterns"
+            ignore_tags: ["id", "post_id"]
