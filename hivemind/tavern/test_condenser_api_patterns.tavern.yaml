@@ -90,8 +90,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -121,8 +119,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -152,8 +148,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -276,8 +270,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -307,8 +299,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -338,8 +328,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # null result (super slow query response)
 
   includes:
     - !include common.yaml
@@ -398,8 +386,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -429,8 +415,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -460,8 +444,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -491,8 +473,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -522,8 +502,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -553,8 +531,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -672,7 +648,7 @@
   marks:
     - patterntest
     - failing
-    - xfail
+    - xfail # wrong pattern, wrong test params (empty result)
 
   includes:
     - !include common.yaml
