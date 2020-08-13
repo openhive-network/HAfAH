@@ -208,8 +208,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # totally different post
 
   includes:
     - !include common.yaml
@@ -239,8 +237,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # totally different post
 
   includes:
     - !include common.yaml
