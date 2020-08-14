@@ -14,7 +14,8 @@ def save_diff(name, diff):
 def save_response(file_name, response_json):
   """ Save response to file """
   with open(file_name, 'w') as f:
-    f.writelines(json_pretty_string(response_json))
+    f.write(json_pretty_string(response_json))
+    f.write("\n")
 
 def save_no_response(file_name, msg):
   """ Save lack of response to file """
