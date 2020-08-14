@@ -33,7 +33,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # missing replies, payout is always zero except root post, grey, flag_weight, total_votes counts all without filtering
+    - xfail # payout is zero in some cases, grey, flag_weight, total_votes counts all without filtering
 
   includes:
     - !include common.yaml
@@ -125,8 +125,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # completely different list of posts due to sc_trend not working, plus see get_post
 
   includes:
     - !include common.yaml
@@ -179,7 +177,6 @@
           extra_kwargs:
             method: "get_profile"
             directory: "bridge_api_patterns"
-            ignore_tags: ["id"]
 
 ---
   test_name: Hivemind bridge_api.get_trending_topics patterns test
