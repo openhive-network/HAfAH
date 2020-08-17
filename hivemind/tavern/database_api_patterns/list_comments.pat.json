@@ -21,8 +21,8 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 0,
-      "json_metadata": "",
+      "id": 1,
+      "json_metadata": "{}",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-03-30T18:30:18",
       "max_accepted_payout": {
@@ -35,7 +35,7 @@
       "net_votes": 90,
       "parent_author": "",
       "parent_permlink": "meta",
-      "percent_steem_dollars": 10000,
+      "percent_hbd": 10000,
       "permlink": "firstpost",
       "reward_weight": 10000,
       "root_author": "steemit",
@@ -70,7 +70,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 19953,
+      "id": 27842,
       "json_metadata": "{\"tags\":[\"steemit\"]}",
       "last_payout": "2016-08-03T00:00:06",
       "last_update": "2016-06-10T08:03:27",
@@ -84,7 +84,7 @@
       "net_votes": -1,
       "parent_author": "",
       "parent_permlink": "steemit",
-      "percent_steem_dollars": 10000,
+      "percent_hbd": 10000,
       "permlink": "show-me-some-love-please",
       "reward_weight": 10000,
       "root_author": "steemit-awesome",
@@ -119,7 +119,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 19951,
+      "id": 27840,
       "json_metadata": "{\"tags\":[\"steemit\"]}",
       "last_payout": "2016-08-03T00:00:06",
       "last_update": "2016-06-10T08:00:09",
@@ -168,7 +168,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 397905,
+      "id": 543507,
       "json_metadata": "{\"tags\":[\"holiday\"]}",
       "last_payout": "2016-08-31T15:38:18",
       "last_update": "2016-08-01T20:01:54",
@@ -217,7 +217,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 398017,
+      "id": 543657,
       "json_metadata": "{\"tags\":[\"steemit\"]}",
       "last_payout": "2016-09-01T23:15:57",
       "last_update": "2016-08-01T20:06:54",
@@ -266,7 +266,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 521662,
+      "id": 700619,
       "json_metadata": "{\"tags\":[\"namecoin\",\"dns\",\"steem\",\"bounty\",\"deutsch\"],\"image\":[\"https://i.imgsafe.org/9aa30b795c.png\"],\"links\":[\"https://steemit.com/namecoin/@dantheman/dns-via-steem\",\"https://steemit.com/@dantheman\"]}",
       "last_payout": "2016-09-08T23:23:39",
       "last_update": "2016-08-09T10:04:48",
@@ -315,7 +315,7 @@
         "precision": 3
       },
       "depth": 2,
-      "id": 521670,
+      "id": 700627,
       "json_metadata": "{\"tags\":[\"namecoin\"]}",
       "last_payout": "2016-09-08T21:40:24",
       "last_update": "2016-08-09T10:05:24",
@@ -364,7 +364,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 520707,
+      "id": 699424,
       "json_metadata": "{\"tags\":[\"namecoin\",\"dns\",\"steem\",\"bounty\",\"deutsch\"],\"users\":[\"dantheman\"],\"image\":[\"https://i.imgsafe.org/9842418ea3.png\"],\"links\":[\"https://steemit.com/namecoin/@dantheman/dns-via-steem\"]}",
       "last_payout": "2016-09-08T21:40:24",
       "last_update": "2016-08-09T09:37:48",
@@ -413,7 +413,7 @@
         "precision": 3
       },
       "depth": 2,
-      "id": 521490,
+      "id": 700387,
       "json_metadata": "{\"tags\":[\"namecoin\"]}",
       "last_payout": "2016-09-08T21:40:24",
       "last_update": "2016-08-09T09:38:06",
@@ -462,7 +462,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 411238,
+      "id": 559995,
       "json_metadata": "{\"tags\":[\"introduceyourself\",\"votefunding\",\"yoga\",\"photography\",\"finance\"],\"users\":[\"mranderson\"],\"image\":[\"https://www.steemimg.com/images/2016/08/02/IMG_9517edc90.jpg\"],\"links\":[\"https://steemit.com/writing/@kencode/do-you-know-a-foreign-language-crowdvoting\"]}",
       "last_payout": "2016-09-02T04:02:27",
       "last_update": "2016-08-02T14:23:09",

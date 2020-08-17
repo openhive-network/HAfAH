@@ -14,7 +14,8 @@ def save_diff(name, diff):
 def save_response(file_name, response_json):
   """ Save response to file """
   with open(file_name, 'w') as f:
-    f.writelines(json_pretty_string(response_json))
+    f.write(json_pretty_string(response_json))
+    f.write("\n")
 
 def save_no_response(file_name, msg):
   """ Save lack of response to file """
@@ -51,7 +52,7 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
 
   response_json = response.json()
   if ignore_tags is not None:
-    assert isinstance(ignore_tags, list), "ingore_tags should be list of tags"
+    assert isinstance(ignore_tags, list), "ignore_tags should be list of tags"
     response_json = remove_tag(response_json, ignore_tags)
   error = response_json.get("error", None)
   result = response_json.get("result", None)
@@ -70,10 +71,9 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     pattern = remove_tag(pattern, ignore_tags)
   pattern_resp_diff = deepdiff.DeepDiff(pattern, result)
   if pattern_resp_diff:
-    pattern_resp_diff_json = pattern_resp_diff.to_json()
-    save_diff(fname, pattern_resp_diff_json)
     save_response(response_fname, result)
-    msg = "Differences detected between response and pattern. Diff saved to {}\n\nDiff:\n{}".format(fname, pattern_resp_diff_json)
+    save_diff(fname, pattern_resp_diff)
+    msg = "Differences detected between response and pattern. Diff saved to {}\n\nDiff:\n{}".format(fname, pattern_resp_diff)
     raise PatternDiffException(msg)
 
 def compare_error_data(response, data):
@@ -81,3 +81,9 @@ def compare_error_data(response, data):
   error = response_json.get("error", None)
   if error['data'] != data:
     raise PatternDiffException('error data not equal, expected: "' + data + '" given: "' + error['data'] + '"')
+
+def compare_error_message(response, message):
+  response_json = response.json()
+  error = response_json.get("error", None)
+  if error['message'] != message:
+    raise PatternDiffException('error message not equal, expected: "' + message + '" given: "' + error['message'] + '"')
