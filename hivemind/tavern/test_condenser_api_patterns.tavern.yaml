@@ -177,8 +177,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # some tags have too many comments/top_posts, influences total_payouts (problem when post is deleted and recreated); once that is fixed rest of total_payouts can be slightly different
 
   includes:
     - !include common.yaml
