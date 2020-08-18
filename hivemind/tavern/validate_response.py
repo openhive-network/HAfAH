@@ -87,3 +87,9 @@ def compare_error_message(response, message):
   error = response_json.get("error", None)
   if error['message'] != message:
     raise PatternDiffException('error message not equal, expected: "' + message + '" given: "' + error['message'] + '"')
+
+def null_result(response):
+  response_json = response.json()
+  result = response_json.get("result", None)
+  if result:
+    raise PatternDiffException('result is: "' + result + ' but should be null')
