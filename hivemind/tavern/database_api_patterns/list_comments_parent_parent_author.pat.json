@@ -21,8 +21,8 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 336501,
-      "json_metadata": "",
+      "id": 466556,
+      "json_metadata": "{}",
       "last_payout": "2016-08-29T05:00:42",
       "last_update": "2016-07-29T15:23:18",
       "max_accepted_payout": {
@@ -70,8 +70,8 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 336600,
-      "json_metadata": "",
+      "id": 466695,
+      "json_metadata": "{}",
       "last_payout": "2016-08-29T05:00:42",
       "last_update": "2016-07-29T15:23:39",
       "max_accepted_payout": {
@@ -119,8 +119,8 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 425216,
-      "json_metadata": "",
+      "id": 576972,
+      "json_metadata": "{}",
       "last_payout": "2016-09-02T20:52:12",
       "last_update": "2016-08-03T08:52:45",
       "max_accepted_payout": {
@@ -168,7 +168,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 773677,
+      "id": 1021488,
       "json_metadata": "{}",
       "last_payout": "2016-09-02T20:52:12",
       "last_update": "2016-08-28T02:48:12",
@@ -217,8 +217,8 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 353970,
-      "json_metadata": "",
+      "id": 488825,
+      "json_metadata": "{}",
       "last_payout": "2016-08-30T01:59:27",
       "last_update": "2016-07-30T13:55:45",
       "max_accepted_payout": {
@@ -266,8 +266,8 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 353971,
-      "json_metadata": "",
+      "id": 488826,
+      "json_metadata": "{}",
       "last_payout": "2016-08-30T01:59:27",
       "last_update": "2016-07-30T13:55:45",
       "max_accepted_payout": {
@@ -315,7 +315,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 416566,
+      "id": 566327,
       "json_metadata": "{\"tags\":[\"steemit\"]}",
       "last_payout": "2016-09-02T08:18:00",
       "last_update": "2016-08-02T20:13:33",
@@ -364,7 +364,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 416610,
+      "id": 566379,
       "json_metadata": "{\"tags\":[\"steemit\"]}",
       "last_payout": "2016-09-02T08:18:00",
       "last_update": "2016-08-02T20:16:27",
@@ -413,7 +413,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 260239,
+      "id": 359786,
       "json_metadata": "{\"tags\":[]}",
       "last_payout": "2016-08-26T00:12:39",
       "last_update": "2016-07-25T22:32:54",
@@ -462,8 +462,8 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 260253,
-      "json_metadata": "",
+      "id": 359805,
+      "json_metadata": "{}",
       "last_payout": "2016-08-26T00:12:39",
       "last_update": "2016-07-25T22:33:24",
       "max_accepted_payout": {
