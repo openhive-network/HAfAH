@@ -916,7 +916,7 @@
 
 ---
   test_name: Hivemind bridge_api.unread_notifications patterns test
-      not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
     - failing
@@ -947,7 +947,7 @@
 
 ---
   test_name: Hivemind bridge_api.get_payout_stats patterns test
-      not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
 
@@ -976,7 +976,7 @@
 
 ---
   test_name: Hivemind bridge_api.get_payout_stats over limit test
-      not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
 
@@ -1003,7 +1003,7 @@
             data: "limit exceeds max (251 > 250)"
 ---
   test_name: Hivemind bridge_api.get_community patterns test
-      not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
     - failing
@@ -1034,7 +1034,7 @@
 
 ---
   test_name: Hivemind bridge_api.list_communities patterns test
-      not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest # no nonempty result possible for 5mln set
 
@@ -1092,7 +1092,7 @@
 
 ---
   test_name: Hivemind bridge_api.list_subscribers patterns test
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+      not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest # no nonempty result possible for 5mln set
 
