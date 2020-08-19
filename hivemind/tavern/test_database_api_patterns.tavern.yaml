@@ -393,7 +393,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable
+  - xfail # plenty of differences but comparable (to be investigated, start with last_payout, potentially result of deletion and repost)
 
 includes:
   - !include common.yaml
@@ -495,7 +495,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable
+  - xfail # plenty of differences but comparable (to be investigated, start with last_payout)
 
 includes:
   - !include common.yaml
@@ -643,7 +643,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" req
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable
+  - xfail # active, payouts, children_abs_shares
 
 includes:
   - !include common.yaml
@@ -679,7 +679,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" req
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable
+  - xfail # active, payouts, children_abs_rshares
 
 includes:
   - !include common.yaml
@@ -715,7 +715,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" all
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable
+  - xfail # active, payouts
 
 includes:
   - !include common.yaml
@@ -857,7 +857,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent"
 marks:
   - patterntest
   - failing
-  - xfail # active, cashout_time, last_payout
+  - xfail # active
 
 includes:
   - !include common.yaml
@@ -966,7 +966,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" r
 marks:
   - patterntest
   - failing
-  - xfail # active, cashout_time, last_payout
+  - xfail # active
 
 includes:
   - !include common.yaml
@@ -1038,7 +1038,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" a
 marks:
   - patterntest
   - failing
-  - xfail # multiple problems but comparable
+  - xfail # active
 
 includes:
   - !include common.yaml

@@ -584,7 +584,7 @@
   test_name: Hivemind condenser_api.get_account_reputations patterns test
 
   marks:
-    - patterntest
+    - patterntest # to be changed for account that has some reputation
 
   includes:
     - !include common.yaml
@@ -644,7 +644,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # wrong pattern, wrong test params (empty result)
+    - xfail # server error (to be investigated)
 
   includes:
     - !include common.yaml
@@ -660,7 +660,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_accounts"
-          params: ["steemit"]
+          params: [["steemit"]]
       response:
         status_code: 200
         verify_response_with:
