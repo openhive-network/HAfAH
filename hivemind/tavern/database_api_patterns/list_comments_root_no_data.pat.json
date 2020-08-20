@@ -21,8 +21,8 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 0,
-      "json_metadata": "",
+      "id": 1,
+      "json_metadata": "{}",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-03-30T18:30:18",
       "max_accepted_payout": {
@@ -70,8 +70,8 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 1,
-      "json_metadata": "",
+      "id": 2,
+      "json_metadata": "{}",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-03-30T19:52:30",
       "max_accepted_payout": {
@@ -119,8 +119,8 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 2,
-      "json_metadata": "",
+      "id": 3,
+      "json_metadata": "{}",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-03-31T13:54:33",
       "max_accepted_payout": {
@@ -168,7 +168,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 3,
+      "id": 4,
       "json_metadata": "{}",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-04-06T19:22:42",
@@ -217,7 +217,7 @@
         "precision": 3
       },
       "depth": 2,
-      "id": 100,
+      "id": 116,
       "json_metadata": "{}",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-04-13T03:48:36",
@@ -266,7 +266,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 66968,
+      "id": 92903,
       "json_metadata": "{\"tags\":[\"meta\"]}",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-07-13T08:29:36",
@@ -315,7 +315,7 @@
         "precision": 3
       },
       "depth": 2,
-      "id": 67008,
+      "id": 92974,
       "json_metadata": "{\"tags\":[\"meta\"]}",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-07-13T08:38:48",
@@ -364,7 +364,7 @@
         "precision": 3
       },
       "depth": 2,
-      "id": 110487,
+      "id": 151464,
       "json_metadata": "{\"tags\":[\"meta\"]}",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-07-17T19:38:12",
@@ -413,7 +413,7 @@
         "precision": 3
       },
       "depth": 2,
-      "id": 125759,
+      "id": 172339,
       "json_metadata": "{\"tags\":[\"meta\"]}",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-07-18T19:53:12",
@@ -462,7 +462,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 125823,
+      "id": 172415,
       "json_metadata": "{\"tags\":[\"meta\"],\"links\":[\"http://steem.com/@bittrex/transfers\"]}",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-07-18T19:58:09",

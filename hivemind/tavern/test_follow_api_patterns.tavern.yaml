@@ -89,7 +89,7 @@
   test_name: Hivemind follow_api.get_account_reputations patterns test
 
   marks:
-    - patterntest
+    - patterntest # to be changed for account that has some reputation
 
   includes:
     - !include common.yaml
