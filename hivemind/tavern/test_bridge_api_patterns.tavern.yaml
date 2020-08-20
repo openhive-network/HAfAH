@@ -33,7 +33,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # payout is zero in some cases, grey, flag_weight, total_votes counts all without filtering
+    - xfail # payout is zero in some cases, grey, flag_weight
 
   includes:
     - !include common.yaml
@@ -63,8 +63,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # total_votes (new version counts all the listed votes, old does not count some)
 
   includes:
     - !include common.yaml
@@ -94,8 +92,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # total_votes counts all without filtering
 
   includes:
     - !include common.yaml

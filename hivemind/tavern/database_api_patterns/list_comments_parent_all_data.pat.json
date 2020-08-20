@@ -10,7 +10,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Congratulations! Good job!\n\nhttp://www.todaystrucking.com/sites/default/files/first-place-ribbon-sm.png\n\nFollow you\n\nhttp://buketik-ufa.ru/image/cache/data/hollidays/z_8145a12e-500x500.jpg",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-05T01:10:36",
       "category": "foodchallenge",
       "children": 0,
       "children_abs_rshares": 0,
@@ -23,7 +23,7 @@
       "depth": 2,
       "id": 1035317,
       "json_metadata": "{\"tags\":[\"foodchallenge\"],\"image\":[\"http://www.todaystrucking.com/sites/default/files/first-place-ribbon-sm.png\"]}",
-      "last_payout": "2016-08-29T20:19:39",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-29T01:10:36",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -59,7 +59,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Congratulations to the 1st and 2nd prize @allasyummyfood and @vlad!! Great job :D",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-05T11:24:27",
       "category": "foodchallenge",
       "children": 0,
       "children_abs_rshares": 0,
@@ -72,7 +72,7 @@
       "depth": 2,
       "id": 1039861,
       "json_metadata": "{\"tags\":[\"foodchallenge\"],\"users\":[\"allasyummyfood\",\"vlad\"]}",
-      "last_payout": "2016-08-29T20:19:39",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-29T11:26:00",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -108,7 +108,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Your \"steamy\" morning coffee will never be the same ;p",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-02T11:50:33",
       "category": "steemit",
       "children": 0,
       "children_abs_rshares": 0,
@@ -121,7 +121,7 @@
       "depth": 3,
       "id": 996526,
       "json_metadata": "{\"tags\":[\"steemit\"]}",
-      "last_payout": "2016-08-26T19:18:24",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-26T11:50:33",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -157,7 +157,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "It takes me a while to get yours ^^\nThanks for your support ;)",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-10T03:22:18",
       "category": "steem",
       "children": 0,
       "children_abs_rshares": 0,
@@ -170,7 +170,7 @@
       "depth": 2,
       "id": 1106787,
       "json_metadata": "{\"tags\":[\"steem\"]}",
-      "last_payout": "2016-09-03T19:27:33",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-09-03T03:22:18",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -206,7 +206,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Thank you for commenting Alla.  I have been following you since I found steemit.  And thank you for the compliment on the photos.",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-07T11:29:24",
       "category": "food",
       "children": 0,
       "children_abs_rshares": 0,
@@ -219,7 +219,7 @@
       "depth": 2,
       "id": 1069484,
       "json_metadata": "{\"tags\":[\"food\"]}",
-      "last_payout": "2016-09-01T04:32:09",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-31T11:29:24",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -246,7 +246,7 @@
       "vote_rshares": 0
     },
     {
-      "abs_rshares": 0,
+      "abs_rshares": 20486836064,
       "active": "2016-08-31T13:08:48",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -255,7 +255,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "He is actually 5 now.  The pictures were older but the post was to maybe help people wanting a puppy and people with a puppy.\n\ud83d\udc8b @halo \ud83d\udc8b\ud83d\ude07",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-07T13:08:48",
       "category": "halo",
       "children": 0,
       "children_abs_rshares": 0,
@@ -268,7 +268,7 @@
       "depth": 2,
       "id": 1070455,
       "json_metadata": "{\"tags\":[\"halo\"],\"users\":[\"halo\"]}",
-      "last_payout": "2016-09-01T07:02:15",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-31T13:08:48",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -276,7 +276,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": 0,
+      "net_rshares": 20486836064,
       "net_votes": 1,
       "parent_author": "allasyummyfood",
       "parent_permlink": "re-halo-steemit-girl-halo-tips-to-be-a-better-dog-owner-20160831t114201287z",
@@ -291,11 +291,11 @@
         "nai": "@@000000013",
         "precision": 3
       },
-      "total_vote_weight": 0,
-      "vote_rshares": 0
+      "total_vote_weight": 93997427963879367,
+      "vote_rshares": 20486836064
     },
     {
-      "abs_rshares": 0,
+      "abs_rshares": 5623393157,
       "active": "2016-08-18T04:33:27",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -304,7 +304,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "I will teach him patience!",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-08-24T16:07:33",
       "category": "steemit",
       "children": 1,
       "children_abs_rshares": 0,
@@ -317,7 +317,7 @@
       "depth": 2,
       "id": 854877,
       "json_metadata": "{\"tags\":[\"steemit\"]}",
-      "last_payout": "2016-08-18T17:44:30",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-17T16:10:00",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -325,7 +325,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": 0,
+      "net_rshares": 5623393157,
       "net_votes": 1,
       "parent_author": "allasyummyfood",
       "parent_permlink": "re-hanshotfirst-how-can-a-minnow-pull-his-tiny-weight-20160817t160228694z",
@@ -340,8 +340,8 @@
         "nai": "@@000000013",
         "precision": 3
       },
-      "total_vote_weight": 0,
-      "vote_rshares": 0
+      "total_vote_weight": 25896916462551420,
+      "vote_rshares": 5623393157
     },
     {
       "abs_rshares": 0,
@@ -353,7 +353,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Thank you very much for the encouragement! I'll keep grinding away.",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-08-24T16:17:57",
       "category": "steemit",
       "children": 3,
       "children_abs_rshares": 0,
@@ -366,7 +366,7 @@
       "depth": 2,
       "id": 855050,
       "json_metadata": "{\"tags\":[\"steemit\"]}",
-      "last_payout": "2016-08-18T17:44:30",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-17T16:17:57",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -402,7 +402,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "\u043d\u043e \u0445\u043e\u0447\u0435\u0442\u0441\u044f \u0442\u043e\u0433\u043e \u0447\u0435\u0433\u043e \u043d\u0435\u043b\u044c\u0437\u044f. \u0445\u043e\u0447\u0435\u0442\u0441\u044f \u0437\u0430\u043f\u0440\u0435\u0442\u043d\u043e\u0435.\u0442\u043e\u0433\u0434\u0430 \u0434\u0443\u043c\u0430\u0435\u0448 \u0447\u0442\u043e \u0437\u0434\u043e\u0440\u043e\u0432.",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-08-30T12:30:54",
       "category": "food",
       "children": 0,
       "children_abs_rshares": 0,
@@ -415,7 +415,7 @@
       "depth": 2,
       "id": 949876,
       "json_metadata": "{\"tags\":[\"food\"]}",
-      "last_payout": "2016-08-23T19:18:27",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-23T12:30:54",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -451,7 +451,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Thank you! I will check that out!",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-07T14:49:33",
       "category": "introduceyourself",
       "children": 0,
       "children_abs_rshares": 0,
@@ -464,7 +464,7 @@
       "depth": 2,
       "id": 1071577,
       "json_metadata": "{\"tags\":[\"introduceyourself\"]}",
-      "last_payout": "2016-09-01T07:12:12",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-31T14:49:33",
       "max_accepted_payout": {
         "amount": "1000000000",

@@ -4,7 +4,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # plenty of differences but comparable
+    - xfail # payouts, active, escaping
 
   includes:
     - !include common.yaml
@@ -35,7 +35,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # plenty of differences but comparable
+    - xfail # payouts, active
 
   includes:
     - !include common.yaml
@@ -177,7 +177,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problem with ordering most likely)
+  - xfail # payouts, active, net_rshares (only because parameters were changed so results only cover specific posts)
 
 includes:
   - !include common.yaml
@@ -198,8 +198,8 @@ stages:
             "start":
               [
                 "1969-12-31T23:59:59",
-                "etcmike",
-                "re-bullionstackers-screen-it-tab-it-what-are-they-20160829t061254603z",
+                "proskynneo",
+                "steemit-firstpost-1",
               ],
             "limit": 10,
             "order": "by_cashout_time",
@@ -218,7 +218,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 marks:
   - patterntest
   - failing
-  - xfail # no results; show first posts comments
+  - xfail # no results (because timestamp::max is actually smaller in SQL); show first posts comments
 
 includes:
   - !include common.yaml
@@ -320,7 +320,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problem with ordering most likely)
+  - xfail # incomparable - ordering with date
 
 includes:
   - !include common.yaml
@@ -356,7 +356,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problem with ordering most likely)
+  - xfail # incomparable - ordering by date
 
 includes:
   - !include common.yaml
@@ -393,7 +393,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable
+  - xfail # plenty of differences but comparable (to be investigated, start with last_payout, potentially result of deletion and repost)
 
 includes:
   - !include common.yaml
@@ -424,7 +424,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable, wrong(?) encoding
+  - xfail # active, reward_weight, escaping
 
 includes:
   - !include common.yaml
@@ -455,7 +455,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 marks:
   - patterntest # author first - when empty, takes alphabetical (later by permlink)
   - failing
-  - xfail # plenty of differences but comparable, wrong(?) encoding
+  - xfail # active, reward_weight, escaping
 
 includes:
   - !include common.yaml
@@ -495,7 +495,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable
+  - xfail # plenty of differences but comparable (to be investigated, start with last_payout)
 
 includes:
   - !include common.yaml
@@ -536,7 +536,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" goo
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problems with ordering most likely)
+  - xfail # active, payouts, escaping
 
 includes:
   - !include common.yaml
@@ -572,7 +572,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" no 
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problems with ordering most likely); first two params are required
+  - xfail # active, payouts, net_rshares; first two params are required
 
 includes:
   - !include common.yaml
@@ -643,7 +643,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" req
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problems with ordering most likely)
+  - xfail # active, payouts, children_abs_shares
 
 includes:
   - !include common.yaml
@@ -679,7 +679,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" req
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable
+  - xfail # active, payouts, children_abs_rshares
 
 includes:
   - !include common.yaml
@@ -715,7 +715,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" all
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problems with ordering most likely)
+  - xfail # active, payouts
 
 includes:
   - !include common.yaml
@@ -857,7 +857,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent"
 marks:
   - patterntest
   - failing
-  - xfail # multiple problems but comparable
+  - xfail # active
 
 includes:
   - !include common.yaml
@@ -893,7 +893,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" n
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problems with ordering most likely); first 2 params are required
+  - xfail # incomparable - unknown ordering problem; first 2 params are required
 
 includes:
   - !include common.yaml
@@ -929,7 +929,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" n
 marks:
   - patterntest
   - failing
-  - xfail # second param is required
+  - xfail # active; second param is required
 
 
 includes:
@@ -966,7 +966,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" r
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable
+  - xfail # active
 
 includes:
   - !include common.yaml
@@ -1038,7 +1038,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" a
 marks:
   - patterntest
   - failing
-  - xfail # multiple problems but comparable
+  - xfail # active
 
 includes:
   - !include common.yaml
@@ -1074,7 +1074,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" n
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable
+  - xfail # active, payouts
 
 
 includes:
@@ -1112,7 +1112,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_author_la
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problem with ordering most likely)
+  - xfail # incomparable - ordering with date
 
 includes:
   - !include common.yaml
@@ -1218,7 +1218,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_author_la
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problem with ordering most likely)
+  - xfail # incomparable - ordering with date
 
 includes:
   - !include common.yaml
@@ -1254,7 +1254,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_author_la
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problem with ordering most likely)
+  - xfail # incomparable - ordering with date
 
 includes:
   - !include common.yaml
@@ -1290,7 +1290,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_author_la
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problem with ordering most likely); output should be the same as prev test or with completely diff author
+  - xfail # incomparable - ordering with date; output should be the same as prev test or with completely diff author
 
 
 includes:
@@ -1395,7 +1395,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_last_upda
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problem with ordering most likely)
+  - xfail # incomparable - ordering by date
 
 
 includes:
@@ -1502,7 +1502,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_last_upda
 marks:
   - patterntest
   - failing
-  - xfail # incomparable (problem with ordering most likely); show last comments in base
+  - xfail # incomparable - ordering by date; show last comments in base
 
 includes:
   - !include common.yaml
