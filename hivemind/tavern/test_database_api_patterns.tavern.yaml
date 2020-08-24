@@ -35,7 +35,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # payouts, active
+    - xfail # active
 
   includes:
     - !include common.yaml
@@ -177,7 +177,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 marks:
   - patterntest
   - failing
-  - xfail # payouts, active, net_rshares (only because parameters were changed so results only cover specific posts)
+  - xfail # active, payouts (only because parameters were changed so results only cover specific posts)
 
 includes:
   - !include common.yaml
@@ -218,7 +218,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 marks:
   - patterntest
   - failing
-  - xfail # no results (because timestamp::max is actually smaller in SQL); show first posts comments
+  - xfail # active, payouts; show first posts comments
 
 includes:
   - !include common.yaml
@@ -320,7 +320,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 marks:
   - patterntest
   - failing
-  - xfail # incomparable - ordering with date
+  - xfail # active; incomparable with original due to cashout_time differences
 
 includes:
   - !include common.yaml
@@ -356,7 +356,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 marks:
   - patterntest
   - failing
-  - xfail # incomparable - ordering by date
+  - xfail # active; incomparable with original due to cashout_time differences (same pattern as in list_comments_by_cashout_first_date)
 
 includes:
   - !include common.yaml
@@ -393,13 +393,13 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable (to be investigated, start with last_payout, potentially result of deletion and repost)
+  - xfail # active, payouts
 
 includes:
   - !include common.yaml
 
 stages:
-  - name: list_comments_by_cashout_time
+  - name: list_comments_by_permlink
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -424,13 +424,13 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 marks:
   - patterntest
   - failing
-  - xfail # active, reward_weight, escaping
+  - xfail # active, escaping
 
 includes:
   - !include common.yaml
 
 stages:
-  - name: list_comments_by_cashout_time
+  - name: list_comments_by_permlink
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -453,15 +453,15 @@ stages:
 test_name: Hivemind database_api.list_comments patterns test order "by_permlink" good permlink
 
 marks:
-  - patterntest # author first - when empty, takes alphabetical (later by permlink)
+  - patterntest
   - failing
-  - xfail # active, reward_weight, escaping
+  - xfail # active, escaping; author first - when empty, takes alphabetical (later by permlink)
 
 includes:
   - !include common.yaml
 
 stages:
-  - name: list_comments_by_cashout_time
+  - name: list_comments_by_permlink
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -495,13 +495,13 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 marks:
   - patterntest
   - failing
-  - xfail # plenty of differences but comparable (to be investigated, start with last_payout)
+  - xfail # active, payouts, abs_rshares/vote_rshares prior to first payout
 
 includes:
   - !include common.yaml
 
 stages:
-  - name: list_comments_by_cashout_time
+  - name: list_comments_by_permlink
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -572,7 +572,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" no 
 marks:
   - patterntest
   - failing
-  - xfail # active, payouts, net_rshares; first two params are required
+  - xfail # active, payouts; first two params are required
 
 includes:
   - !include common.yaml
@@ -643,7 +643,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" req
 marks:
   - patterntest
   - failing
-  - xfail # active, payouts, children_abs_shares
+  - xfail # active
 
 includes:
   - !include common.yaml
@@ -679,7 +679,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" req
 marks:
   - patterntest
   - failing
-  - xfail # active, payouts, children_abs_rshares
+  - xfail # active
 
 includes:
   - !include common.yaml
@@ -715,7 +715,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" all
 marks:
   - patterntest
   - failing
-  - xfail # active, payouts
+  - xfail # active
 
 includes:
   - !include common.yaml
@@ -891,7 +891,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" n
 marks:
   - patterntest
   - failing
-  - xfail # incomparable - unknown ordering problem; first 2 params are required
+  - xfail # active, payouts, title; first 2 params are required
 
 includes:
   - !include common.yaml
@@ -1104,7 +1104,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_author_la
 marks:
   - patterntest
   - failing
-  - xfail # incomparable - ordering with date
+  - xfail # active, payouts, incomparable with original (bug in fat node using wrong index)
 
 includes:
   - !include common.yaml
@@ -1210,7 +1210,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_author_la
 marks:
   - patterntest
   - failing
-  - xfail # incomparable - ordering with date
+  - xfail # active, payouts, incomparable with original (bug in fat node using wrong index)
 
 includes:
   - !include common.yaml
@@ -1246,7 +1246,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_author_la
 marks:
   - patterntest
   - failing
-  - xfail # incomparable - ordering with date
+  - xfail # active, incomparable with original (bug in fat node using wrong index)
 
 includes:
   - !include common.yaml
@@ -1282,7 +1282,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_author_la
 marks:
   - patterntest
   - failing
-  - xfail # incomparable - ordering with date; output should be the same as prev test or with completely diff author
+  - xfail # active, incomparable with original (bug in fat node using wrong index); output should be the same as prev test or with completely diff author
 
 
 includes:
@@ -1387,7 +1387,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_last_upda
 marks:
   - patterntest
   - failing
-  - xfail # incomparable - ordering by date
+  - xfail # active, differences in rshares/weight after empty payout
 
 
 includes:
@@ -1494,7 +1494,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_last_upda
 marks:
   - patterntest
   - failing
-  - xfail # incomparable - ordering by date; show last comments in base
+  - xfail # active, beneficiaries as dict; show last comments in base
 
 includes:
   - !include common.yaml
