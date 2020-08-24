@@ -1,7 +1,7 @@
 {
   "comments": [
     {
-      "abs_rshares": 0,
+      "abs_rshares": 1184743282626,
       "active": "2016-08-29T13:45:42",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -10,7 +10,7 @@
       "author_rewards": 588,
       "beneficiaries": [],
       "body": "https://i.imgsafe.org/2b5635a585.jpg\n\n### This week we've seen delicious desserts thanks to everyone that took part in the challenge <3 Let us present the winners! \n\n### Soon we will announce next weeks challenge, [follow](https://steemit.com/@givemeyoursteem) if you don't want to miss it :)\n\n---\n\n# THE WINNERS of Steemit Food Challenge #3\n\n---\n\n# 4th prize (25 SBD) goes to...\nhttps://img1.steemit.com/0x0/https://www.steemimg.com/images/2016/08/27/FB_IMG_14722971245630aad6.jpg\n... @foxxycat and this delicious [pomegranate chocolate tart](https://steemit.com/foodchallenge/@foxxycat/steemit-food-challenge-3-chocolate-tart-is-the-new-black)!\n\n### Sponsored by @knozaki2015\n\n---\n\n# 3rd prize (35 SBD) goes to...\nhttps://img1.steemit.com/0x0/https://s10.postimg.org/wugbquxnt/DSCF9961.jpg\nhttps://youtu.be/dXxtkgAtKXQ\n... @amy-goodrich and her double chocolate [chunky monkey ice cream](https://steemit.com/foodchallenge/@amy-goodrich/double-chocolate-chunky-monkey-ice-cream-video-steemit-food-challenge-3)! \n\n### Sponsored by @fyrstikken & [Steemspeak.com](http://steemspeak.com/) - a voice-hangout for the Steemit crypto-crowd!\n\n---\n\n# 2nd prize (50 SBD) goes to...\nhttps://img1.steemit.com/0x0/http://oi68.tinypic.com/2dbjw94.jpg\n... @vlad with this fresh and vitaminized [citrus and watermelon jelly](https://steemit.com/foodchallenge/@vlad/desserts-to-die-for-delicious-jelly-watermelon-grapefruit-orange-all-topped-with-a-smidgen-of-grated-coconut)!\n\n### Sponsored by @instructor2121\n\n---\n\n# The WINNER of Steemit Food Challenge (100 Steem dollars) is...\nhttps://img1.steemit.com/0x0/https://s12.postimg.org/te13g6wbx/napaleon_cake_1.jpg\n... @allasyummyfood with her beautiful [Russian Napoleon cake](https://steemit.com/food/@allasyummyfood/russian-napoleon-cake-recipe-steemit-food-challenge)!\n### Sponsored by @smooth\n\n---\n\n### But there is still one chance to win with our new prize, the wild pick!\n\n# Razvanelul's Wild Pick (15 SBD) goes to... \nhttps://img1.steemit.com/0x0/https://abload.de/img/steemcake6huwn.png\n... @crypt0mine with this creative [Steemit cake](https://steemit.com/steemit/@crypt0mine/steemit-cake)!\n>  I HOPE that cake was not photoshop because it looks amazing. I liked the photo and especially: the idea! Good job and please give me more of a challenge next time! I'm gonna continue my picks for next week as well so bring it on!!\n\n### Sponsored by @razvanelulmarin\n\n---\n\n### Soon we will announce the theme for next weeks Steemit Food Challenge, [follow](https://steemit.com/@givemeyoursteem) if you don't want to miss it :)\n\n---\n\n# Thank you!\n\n### We hope to see you next week!",
-      "cashout_time": "2016-09-28T20:19:39",
+      "cashout_time": "2016-09-04T17:15:12",
       "category": "foodchallenge",
       "children": 18,
       "children_abs_rshares": 2374341643,
@@ -30,8 +30,8 @@
         "nai": "@@000000013",
         "precision": 3
       },
-      "max_cashout_time": "2016-09-13T01:24:24",
-      "net_rshares": 0,
+      "max_cashout_time": "1969-12-31T23:59:59",
+      "net_rshares": 1184743282626,
       "net_votes": 44,
       "parent_author": "",
       "parent_permlink": "foodchallenge",
@@ -46,11 +46,11 @@
         "nai": "@@000000013",
         "precision": 3
       },
-      "total_vote_weight": 0,
-      "vote_rshares": 0
+      "total_vote_weight": 4215185774169958139,
+      "vote_rshares": 1184743282626
     },
     {
-      "abs_rshares": 0,
+      "abs_rshares": 46948242150,
       "active": "2016-08-29T13:45:42",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -59,7 +59,7 @@
       "author_rewards": 18,
       "beneficiaries": [],
       "body": "Congratulations to the winners. We are waiting for the new competition.",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-04T17:29:57",
       "category": "foodchallenge",
       "children": 2,
       "children_abs_rshares": 0,
@@ -80,7 +80,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": 0,
+      "net_rshares": 46948242150,
       "net_votes": 3,
       "parent_author": "givemeyoursteem",
       "parent_permlink": "winners-of-steemit-food-challenge-3-desserts-to-die-for",
@@ -95,8 +95,8 @@
         "nai": "@@000000013",
         "precision": 3
       },
-      "total_vote_weight": 0,
-      "vote_rshares": 0
+      "total_vote_weight": 213998834635823260,
+      "vote_rshares": 46948242150
     },
     {
       "abs_rshares": 0,
@@ -108,7 +108,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "We will announce next weeks theme soon, hope to see you there!",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-04T17:50:15",
       "category": "foodchallenge",
       "children": 1,
       "children_abs_rshares": 0,
@@ -121,7 +121,7 @@
       "depth": 2,
       "id": 1029853,
       "json_metadata": "{\"tags\":[\"foodchallenge\"]}",
-      "last_payout": "2016-08-29T20:19:39",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-28T17:50:15",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -148,7 +148,7 @@
       "vote_rshares": 0
     },
     {
-      "abs_rshares": 0,
+      "abs_rshares": 7520862006,
       "active": "2016-08-28T18:12:39",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -157,7 +157,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "24 seconds from now\tTransfer 25.000 SBD to foxxycat\tCongrats 4th place Steemit Food Challenge #3 (sponsor @knozaki2015)",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-04T18:11:06",
       "category": "foodchallenge",
       "children": 1,
       "children_abs_rshares": 0,
@@ -170,7 +170,7 @@
       "depth": 1,
       "id": 1030133,
       "json_metadata": "{\"tags\":[\"foodchallenge\"],\"users\":[\"knozaki2015\"]}",
-      "last_payout": "2016-08-29T20:19:39",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-28T18:11:06",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -178,7 +178,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": 0,
+      "net_rshares": 7520862006,
       "net_votes": 2,
       "parent_author": "givemeyoursteem",
       "parent_permlink": "winners-of-steemit-food-challenge-3-desserts-to-die-for",
@@ -193,8 +193,8 @@
         "nai": "@@000000013",
         "precision": 3
       },
-      "total_vote_weight": 0,
-      "vote_rshares": 0
+      "total_vote_weight": 34618763423959467,
+      "vote_rshares": 7520862006
     },
     {
       "abs_rshares": 0,
@@ -206,7 +206,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Lovely! Thank you so much for sponsoring @knozaki2015 ! And congratulations @foxxycat ! :D",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-04T18:12:39",
       "category": "foodchallenge",
       "children": 0,
       "children_abs_rshares": 0,
@@ -219,7 +219,7 @@
       "depth": 2,
       "id": 1030162,
       "json_metadata": "{\"tags\":[\"foodchallenge\"],\"users\":[\"knozaki2015\",\"foxxycat\"]}",
-      "last_payout": "2016-08-29T20:19:39",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-28T18:12:39",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -246,7 +246,7 @@
       "vote_rshares": 0
     },
     {
-      "abs_rshares": 0,
+      "abs_rshares": 7470836016,
       "active": "2016-08-28T18:26:39",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -255,7 +255,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Uuh, I didn't have enough time to participate :( and I do make some really delicious desserts.",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-04T18:21:39",
       "category": "foodchallenge",
       "children": 1,
       "children_abs_rshares": 0,
@@ -268,7 +268,7 @@
       "depth": 1,
       "id": 1030265,
       "json_metadata": "{\"tags\":[\"foodchallenge\"]}",
-      "last_payout": "2016-08-29T20:19:39",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-28T18:21:39",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -276,7 +276,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": 0,
+      "net_rshares": 7470836016,
       "net_votes": 1,
       "parent_author": "givemeyoursteem",
       "parent_permlink": "winners-of-steemit-food-challenge-3-desserts-to-die-for",
@@ -291,8 +291,8 @@
         "nai": "@@000000013",
         "precision": 3
       },
-      "total_vote_weight": 0,
-      "vote_rshares": 0
+      "total_vote_weight": 34388921502622671,
+      "vote_rshares": 7470836016
     },
     {
       "abs_rshares": 0,
@@ -304,7 +304,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Yeah we missed your post! But no worry, there will be a new challenge very soon :)",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-04T18:26:39",
       "category": "foodchallenge",
       "children": 0,
       "children_abs_rshares": 0,
@@ -317,7 +317,7 @@
       "depth": 2,
       "id": 1030333,
       "json_metadata": "{\"tags\":[\"foodchallenge\"]}",
-      "last_payout": "2016-08-29T20:19:39",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-28T18:26:39",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -344,7 +344,7 @@
       "vote_rshares": 0
     },
     {
-      "abs_rshares": 0,
+      "abs_rshares": 7698389677,
       "active": "2016-08-28T19:25:24",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -353,7 +353,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Excellent Job everyone who entered!\n# Great job picking the winners too! I couldn't agree more!",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-04T19:02:12",
       "category": "foodchallenge",
       "children": 1,
       "children_abs_rshares": 0,
@@ -366,7 +366,7 @@
       "depth": 1,
       "id": 1030904,
       "json_metadata": "{\"tags\":[\"foodchallenge\"]}",
-      "last_payout": "2016-08-29T20:19:39",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-28T19:02:12",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -374,7 +374,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": 0,
+      "net_rshares": 7698389677,
       "net_votes": 2,
       "parent_author": "givemeyoursteem",
       "parent_permlink": "winners-of-steemit-food-challenge-3-desserts-to-die-for",
@@ -389,8 +389,8 @@
         "nai": "@@000000013",
         "precision": 3
       },
-      "total_vote_weight": 0,
-      "vote_rshares": 0
+      "total_vote_weight": 35434359161631381,
+      "vote_rshares": 7698389677
     },
     {
       "abs_rshares": 0,
@@ -402,7 +402,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Yes I'm moved by all effort, you Steemit Food Challengers are the best! \nThanks, it's always a hard choice to make! :)",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-04T19:25:24",
       "category": "foodchallenge",
       "children": 0,
       "children_abs_rshares": 0,
@@ -415,7 +415,7 @@
       "depth": 2,
       "id": 1031268,
       "json_metadata": "{\"tags\":[\"foodchallenge\"]}",
-      "last_payout": "2016-08-29T20:19:39",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-28T19:25:24",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -442,7 +442,7 @@
       "vote_rshares": 0
     },
     {
-      "abs_rshares": 0,
+      "abs_rshares": 6791682394,
       "active": "2016-08-28T19:44:48",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -451,7 +451,7 @@
       "author_rewards": 0,
       "beneficiaries": [],
       "body": "Congratulations to all!",
-      "cashout_time": "1969-12-31T23:59:59",
+      "cashout_time": "2016-09-04T19:44:48",
       "category": "foodchallenge",
       "children": 0,
       "children_abs_rshares": 0,
@@ -464,7 +464,7 @@
       "depth": 1,
       "id": 1031585,
       "json_metadata": "{\"tags\":[\"foodchallenge\"]}",
-      "last_payout": "2016-08-29T20:19:39",
+      "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-28T19:44:48",
       "max_accepted_payout": {
         "amount": "1000000000",
@@ -472,7 +472,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": 0,
+      "net_rshares": 6791682394,
       "net_votes": 1,
       "parent_author": "givemeyoursteem",
       "parent_permlink": "winners-of-steemit-food-challenge-3-desserts-to-die-for",
@@ -487,8 +487,8 @@
         "nai": "@@000000013",
         "precision": 3
       },
-      "total_vote_weight": 0,
-      "vote_rshares": 0
+      "total_vote_weight": 31268016129348998,
+      "vote_rshares": 6791682394
     }
   ]
 }

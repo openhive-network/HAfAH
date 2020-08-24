@@ -1,130 +1,94 @@
 [
   {
-    "abs_rshares": 0,
-    "active": "2016-07-18T19:53:12",
     "active_votes": [
       {
-        "percent": -100,
+        "percent": "-100",
         "reputation": 0,
-        "rshares": -375241,
-        "time": "2016-04-08T20:09:33",
-        "voter": "dantheman",
-        "weight": 0
+        "rshares": "-375241",
+        "voter": "dantheman"
       },
       {
-        "percent": 10000,
+        "percent": "10000",
         "reputation": 0,
-        "rshares": 5100,
-        "time": "2016-03-30T20:21:45",
-        "voter": "steemit46",
-        "weight": "5100000000"
+        "rshares": "5100",
+        "voter": "steemit46"
       },
       {
-        "percent": 10000,
+        "percent": "10000",
         "reputation": 0,
-        "rshares": 81125,
-        "time": "2016-04-12T04:45:27",
-        "voter": "roadscape",
-        "weight": 2507175368
+        "rshares": "81125",
+        "voter": "roadscape"
       },
       {
-        "percent": 10000,
+        "percent": "10000",
         "reputation": 0,
-        "rshares": 425903066,
-        "time": "2016-07-21T22:39:51",
-        "voter": "gekko",
-        "weight": 0
+        "rshares": "425903066",
+        "voter": "gekko"
       },
       {
-        "percent": 10000,
+        "percent": "10000",
         "reputation": 0,
-        "rshares": 431616594,
-        "time": "2016-05-24T00:46:54",
-        "voter": "acidyo",
-        "weight": 376
+        "rshares": "431616594",
+        "voter": "acidyo"
       },
       {
-        "percent": 10000,
+        "percent": "10000",
         "reputation": 0,
-        "rshares": 742566481,
-        "time": "2016-07-22T19:57:15",
-        "voter": "patrick-g",
-        "weight": 0
+        "rshares": "742566481",
+        "voter": "patrick-g"
       },
       {
-        "percent": 10000,
+        "percent": "10000",
         "reputation": 0,
         "rshares": "58854897335",
-        "time": "2016-07-13T08:39:18",
-        "voter": "business",
-        "weight": 0
+        "voter": "business"
       },
       {
-        "percent": 10000,
+        "percent": "10000",
         "reputation": 0,
-        "rshares": 108855472,
-        "time": "2016-07-17T19:37:48",
-        "voter": "kingtylervvs",
-        "weight": 0
+        "rshares": "108855472",
+        "voter": "kingtylervvs"
       },
       {
-        "percent": 10000,
+        "percent": "10000",
         "reputation": 0,
-        "rshares": 244129227,
-        "time": "2016-07-21T05:28:45",
-        "voter": "kewpiedoll",
-        "weight": 0
+        "rshares": "244129227",
+        "voter": "kewpiedoll"
       },
       {
-        "percent": 10000,
+        "percent": "10000",
         "reputation": 0,
-        "rshares": 1615731741,
-        "time": "2016-08-01T02:17:39",
-        "voter": "naturalista",
-        "weight": 0
+        "rshares": "1615731741",
+        "voter": "naturalista"
       }
     ],
-    "allow_curation_rewards": true,
-    "allow_replies": true,
-    "allow_votes": true,
     "author": "admin",
-    "author_reputation": 975371654,
-    "author_rewards": 0,
+    "author_reputation": 0,
     "beneficiaries": [],
     "body": "First Reply! Let's get this **party** started",
-    "body_length": 0,
+    "body_length": 45,
     "cashout_time": "1969-12-31T23:59:59",
     "category": "meta",
     "children": 2,
-    "children_abs_rshares": 0,
     "created": "2016-03-30T19:52:30",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
-    "id": 1,
-    "json_metadata": "",
+    "json_metadata": "{}",
     "last_payout": "2016-08-24T19:59:42",
     "last_update": "2016-03-30T19:52:30",
     "max_accepted_payout": "1000000.000 HBD",
-    "max_cashout_time": "1969-12-31T23:59:59",
-    "net_rshares": -226592300084,
-    "net_votes": 8,
+    "net_rshares": 62423410900,
     "parent_author": "steemit",
     "parent_permlink": "firstpost",
     "pending_payout_value": "0.000 HBD",
-    "percent_steem_dollars": 10000,
+    "percent_hbd": 10000,
     "permlink": "firstpost",
+    "post_id": 2,
     "promoted": "0.000 HBD",
-    "reblogged_by": [],
     "replies": [],
-    "reward_weight": 10000,
-    "root_author": "steemit",
-    "root_permlink": "firstpost",
     "root_title": "Welcome to Steem!",
     "title": "",
     "total_payout_value": "0.000 HBD",
-    "total_pending_payout_value": "0.000 HBD",
-    "total_vote_weight": 0,
-    "url": "/meta/@steemit/firstpost#@admin/firstpost",
-    "vote_rshares": 0
+    "url": "/meta/@steemit/firstpost#@admin/firstpost"
   }
 ]
