@@ -856,8 +856,6 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent"
 
 marks:
   - patterntest
-  - failing
-  - xfail # active
 
 includes:
   - !include common.yaml
@@ -928,8 +926,6 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" n
 
 marks:
   - patterntest
-  - failing
-  - xfail # active; second param is required
 
 
 includes:
@@ -965,8 +961,6 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" r
 
 marks:
   - patterntest
-  - failing
-  - xfail # active
 
 includes:
   - !include common.yaml
@@ -1037,8 +1031,6 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" a
 
 marks:
   - patterntest
-  - failing
-  - xfail # active
 
 includes:
   - !include common.yaml
