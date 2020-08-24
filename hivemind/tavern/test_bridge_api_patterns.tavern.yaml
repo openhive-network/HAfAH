@@ -454,9 +454,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "invalid sort"
+            method: "get_ranked_posts_invalid_sort"
+            directory: "bridge_api_patterns"
+            error_response: true
 
 ---
   test_name: Hivemind bridge_api.get_ranked_posts hot patterns test
@@ -851,9 +853,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "limit exceeds max (26 > 25)"
+            method: "get_trending_topics_over_limit"
+            directory: "bridge_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind bridge_api.post_notifications patterns test
 
@@ -1000,9 +1004,12 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "limit exceeds max (251 > 250)"
+            method: "get_payout_stats_over_limit"
+            directory: "bridge_api_patterns"
+            error_response: true
+
 ---
   test_name: Hivemind bridge_api.get_community patterns test
       # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge

@@ -5,12 +5,6 @@ def json_pretty_string(json_obj):
   from json import dumps
   return dumps(json_obj, sort_keys=True, indent=2)
 
-def save_diff(name, diff):
-  """ Save diff to a file """
-  with open(name, 'w') as f:
-    f.write(json_pretty_string(diff))
-    f.write("\n")
-
 def save_response(file_name, response_json):
   """ Save response to file """
   with open(file_name, 'w') as f:
@@ -24,7 +18,6 @@ def save_no_response(file_name, msg):
 
 RESPONSE_FILE_EXT = ".out.json"
 PATTERN_FILE_EXT = ".pat.json"
-DIFF_FILE_EXT = ".diff.json"
 def load_pattern(name):
   """ Loads pattern from json file to python object """
   from json import load
@@ -40,13 +33,10 @@ def remove_tag(data, tags_to_remove):
     return [remove_tag(v, tags_to_remove) for v in data]
   return {k: remove_tag(v, tags_to_remove) for k, v in data.items() if k not in tags_to_remove}
 
-def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None):
+def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
   """ This method will compare response with pattern file """
   import os
-  fname = directory + "/" + method + DIFF_FILE_EXT
   response_fname = directory + "/" + method + RESPONSE_FILE_EXT
-  if os.path.exists(fname):
-    os.remove(fname)
   if os.path.exists(response_fname):
     os.remove(response_fname)
 
@@ -56,7 +46,10 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     response_json = remove_tag(response_json, ignore_tags)
   error = response_json.get("error", None)
   result = response_json.get("result", None)
-  if error is not None:
+  if error_response:
+    result = error
+
+  if error is not None and not error_response:
     msg = "Error detected in response: {}".format(error["message"])
     save_no_response(response_fname, msg)
     raise PatternDiffException(msg)
@@ -72,16 +65,17 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
   pattern_resp_diff = deepdiff.DeepDiff(pattern, result)
   if pattern_resp_diff:
     save_response(response_fname, result)
-    save_diff(fname, pattern_resp_diff)
-    msg = "Differences detected between response and pattern. Diff saved to {}\n\nDiff:\n{}".format(fname, pattern_resp_diff)
+    msg = "Differences detected between response and pattern."
     raise PatternDiffException(msg)
 
+# deprecated - replace by compare_response_with_pattern with error_response=True
 def compare_error_data(response, data):
   response_json = response.json()
   error = response_json.get("error", None)
   if error['data'] != data:
     raise PatternDiffException('error data not equal, expected: "' + data + '" given: "' + error['data'] + '"')
 
+# deprecated - replace by compare_response_with_pattern with error_response=True
 def compare_error_message(response, message):
   response_json = response.json()
   error = response_json.get("error", None)

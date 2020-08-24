@@ -137,9 +137,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "limit exceeds max (1001 > 1000)"
+            method: "get_followers_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_followers wrong_type patterns test
 
@@ -164,9 +166,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "invalid follow_type `wrong_type`"
+            method: "get_followers_wrong_type"
+            directory: "condenser_api_patterns"
+            error_response: true
 
 ---
   test_name: Hivemind condenser_api.get_following patterns test
@@ -306,9 +310,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "invalid follow_type `wrong_type`"
+            method: "get_following_wrong_type"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_following over limit test
 
@@ -333,9 +339,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "limit exceeds max (1001 > 1000)"
+            method: "get_following_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 
 ---
   test_name: Hivemind condenser_api.get_follow_count patterns test
@@ -501,9 +509,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "IndexError: list index out of range"
+            method: "get_content_deleted"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_content_replies patterns test
 
@@ -646,9 +656,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "limit exceeds max (251 > 250)"
+            method: "get_followers_trending_tags_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_discussions_by_trending patterns test
 
@@ -882,9 +894,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "get_discussions_by_comments() got an unexpected keyword argument 'author'"
+            method: "get_discussions_by_comments_unexpected_keyword"
+            directory: "condenser_api_patterns"
+            error_response: true
 
 ---
   test_name: Hivemind condenser_api.get_replies_by_last_update patterns test
@@ -971,7 +985,7 @@
             method: "get_replies_by_last_update_no_results"
             directory: "condenser_api_patterns"
 ---
-  test_name: Hivemind condenser_api.get_replies_by_last_update exceeds limit patterns test
+  test_name: Hivemind condenser_api.get_replies_by_last_update over limit patterns test
 
   marks:
     - patterntest
@@ -980,7 +994,7 @@
     - !include common.yaml
 
   stages:
-    - name: get_replies_by_last_update exceeds limit
+    - name: get_replies_by_last_update over limit
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -994,9 +1008,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "limit exceeds max (101 > 100)"
+            method: "get_replies_by_last_update_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_replies_by_last_update blank start author patterns test
 
@@ -1021,9 +1037,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "`start_author` cannot be blank"    
+            method: "get_replies_by_last_update_blank_start_author"
+            directory: "condenser_api_patterns"
+            error_response: true
 
 ---
   test_name: Hivemind condenser_api.get_replies_by_last_update invalid account name length patterns test
@@ -1049,9 +1067,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "invalid account name length: `a`"
+            method: "get_replies_by_last_update_invalid_account_name"
+            directory: "condenser_api_patterns"
+            error_response: true
             
 ---
   test_name: Hivemind condenser_api.get_discussions_by_author_before_date patterns test
@@ -1135,9 +1155,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "limit exceeds max (101 > 100)"
+            method: "get_discussions_by_author_before_date_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_post_discussions_by_payout patterns test
 
@@ -1248,9 +1270,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "limit exceeds max (101 > 100)"
+            method: "get_post_discussions_by_payout_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 
 ---
   test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test
@@ -1361,9 +1385,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "limit exceeds max (101 > 100)"
+            method: "get_comment_discussions_by_payout_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 
 ---
   test_name: Hivemind condenser_api.get_blog patterns test
@@ -1418,9 +1444,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "start_index and limit combination is invalid (11, 20)"
+            method: "get_blog_invalid_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
             
 ---
   test_name: Hivemind condenser_api.get_blog limit 100 patterns test
@@ -1481,7 +1509,7 @@
             method: "get_blog_no_results"
             directory: "condenser_api_patterns"
 ---
-  test_name: Hivemind condenser_api.get_blog limit exceed test
+  test_name: Hivemind condenser_api.get_blog over limit test
 
   marks:
     - patterntest
@@ -1490,7 +1518,7 @@
     - !include common.yaml
 
   stages:
-    - name: get_blog limit exceed
+    - name: get_blog over limit
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -1504,9 +1532,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "limit exceeds max (501 > 500)"
+            method: "get_blog_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_blog non existing account test
 
@@ -1531,9 +1561,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "account not found: `non.existing`"
+            method: "get_blog_non_existing"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_blog too long account name test
 
@@ -1558,36 +1590,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "invalid account name length: `too.long.account.name`"
----
-  test_name: Hivemind condenser_api.get_blog too long account name test
-
-  marks:
-    - patterntest
-
-  includes:
-    - !include common.yaml
-
-  stages:
-    - name: get_blog too long account name
-      request:
-        url: "{service.proto:s}://{service.server:s}:{service.port}/"
-        method: POST
-        headers:
-          content-type: application/json
-        json:
-          jsonrpc: "2.0"
-          id: 1
-          method: "condenser_api.get_blog"
-          params: {"account":"too.long.account.name","start_entry_id":0,"limit":1}
-      response:
-        status_code: 200
-        verify_response_with:
-          function: validate_response:compare_error_data
-          extra_kwargs:
-            data: "invalid account name length: `too.long.account.name`"
+            method: "get_blog_too_long_account_name"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_blog invalid account test
 
@@ -1612,9 +1619,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "invalid account char"
+            method: "get_blog_invalid_account_char"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_blog_entries patterns test
 
@@ -1743,7 +1752,7 @@
     - !include common.yaml
 
   stages:
-    - name: get_account_votes
+    - name: get_account_votes deprecated
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -1757,10 +1766,11 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_error_data
+          function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            data: "ApiError: get_account_votes is no longer supported, for details see https://steemit.com/steemit/@steemitdev/additional-public-api-change"
-
+            method: "get_account_votes_deprecated"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   # get_accounts should be based on fat node - posting_rewards and reputations are 0 on AH node
   test_name: Hivemind condenser_api.get_accounts with single account patterns test
