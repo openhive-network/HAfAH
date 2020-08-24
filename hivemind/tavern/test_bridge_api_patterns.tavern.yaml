@@ -1149,3 +1149,89 @@
           extra_kwargs:
             method: "list_all_subscriptions"
             directory: "bridge_api_patterns"
+---
+  test_name: Hivemind bridge_api.get_relationship_between_accounts patterns test
+
+  marks:
+    - patterntest # no nonempty result possible for 5mln set
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_relationship_between_accounts
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_relationship_between_accounts"
+          params: {"account1": "steemit", "account2": "good-karma"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_relationship_between_accounts"
+            directory: "bridge_api_patterns"
+---
+  test_name: Hivemind bridge_api.get_relationship_between_accounts follows patterns test
+
+  marks:
+    - patterntest # no nonempty result possible for 5mln set
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_relationship_between_accounts follows
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_relationship_between_accounts"
+          params: {"account1": "good-karma", "account2": "steemit"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_relationship_between_accounts_follows"
+            directory: "bridge_api_patterns"
+---
+  test_name: Hivemind bridge_api.get_relationship_between_accounts ignores patterns test
+
+  marks:
+    - patterntest # no nonempty result possible for 5mln set
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_relationship_between_accounts ignores
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_relationship_between_accounts"
+          params: {"account1": "tuck-fheman", "account2": "tonyson"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_relationship_between_accounts_ignores"
+            directory: "bridge_api_patterns"
+
+# get_relationship_between_accounts is_blacklisted and follows_blacklists should be implemented after switching to tests over 5 mln blocks.
