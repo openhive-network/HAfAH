@@ -1,7 +1,7 @@
 {
   "comments": [
     {
-      "abs_rshares": "920389243926",
+      "abs_rshares": 80964590737004,
       "active": "2016-08-18T03:32:12",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -13,7 +13,7 @@
       "cashout_time": "2016-08-23T18:11:03",
       "category": "witness-category",
       "children": 14,
-      "children_abs_rshares": "1000824866058",
+      "children_abs_rshares": 0,
       "created": "2016-08-16T18:11:03",
       "curator_payout_value": {
         "amount": "243149",
@@ -31,7 +31,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": "920389243926",
+      "net_rshares": 80964590737004,
       "net_votes": 177,
       "parent_author": "",
       "parent_permlink": "witness-category",
@@ -47,7 +47,7 @@
         "precision": 3
       },
       "total_vote_weight": 0,
-      "vote_rshares": "920389243926"
+      "vote_rshares": 80964590737004
     },
     {
       "abs_rshares": 0,
@@ -99,7 +99,7 @@
       "vote_rshares": 0
     },
     {
-      "abs_rshares": 0,
+      "abs_rshares": 568650179247,
       "active": "2016-08-27T18:39:45",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -197,7 +197,7 @@
       "vote_rshares": 0
     },
     {
-      "abs_rshares": 1067633479,
+      "abs_rshares": 11126043440,
       "active": "2016-08-26T21:16:45",
       "allow_curation_rewards": true,
       "allow_replies": true,

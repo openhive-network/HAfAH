@@ -21,7 +21,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 6,
+      "id": 7,
       "json_metadata": "{}",
       "last_payout": "2016-08-12T10:16:39",
       "last_update": "2016-04-08T07:36:18",
@@ -31,7 +31,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": -491818553,
+      "net_rshares": 0,
       "net_votes": -2,
       "parent_author": "",
       "parent_permlink": "",
@@ -70,7 +70,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 7,
+      "id": 8,
       "json_metadata": "{}",
       "last_payout": "2016-08-12T10:16:42",
       "last_update": "2016-04-08T07:55:15",
@@ -80,7 +80,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": -481781440,
+      "net_rshares": 0,
       "net_votes": -3,
       "parent_author": "",
       "parent_permlink": "",
@@ -119,7 +119,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 9,
+      "id": 10,
       "json_metadata": "{}",
       "last_payout": "2016-08-13T18:32:54",
       "last_update": "2016-04-08T08:49:15",
@@ -129,7 +129,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": -477016308,
+      "net_rshares": 0,
       "net_votes": -2,
       "parent_author": "",
       "parent_permlink": "",
@@ -168,7 +168,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 20,
+      "id": 23,
       "json_metadata": "{}",
       "last_payout": "2016-08-03T00:00:06",
       "last_update": "2016-04-08T15:39:00",
@@ -178,7 +178,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": -37896234000000,
+      "net_rshares": 0,
       "net_votes": 11,
       "parent_author": "",
       "parent_permlink": "",
@@ -217,7 +217,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 30,
+      "id": 34,
       "json_metadata": "{}",
       "last_payout": "2016-08-03T00:00:06",
       "last_update": "2016-04-10T18:05:15",
@@ -266,7 +266,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 31,
+      "id": 35,
       "json_metadata": "{}",
       "last_payout": "2016-08-21T21:26:42",
       "last_update": "2016-04-12T07:40:06",
@@ -315,7 +315,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 93,
+      "id": 102,
       "json_metadata": "{}",
       "last_payout": "2016-08-26T03:00:03",
       "last_update": "2016-04-13T00:06:57",
@@ -364,7 +364,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 103,
+      "id": 119,
       "json_metadata": "{}",
       "last_payout": "2016-08-12T10:16:57",
       "last_update": "2016-04-13T08:45:09",
@@ -374,7 +374,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": -433402453408,
+      "net_rshares": 0,
       "net_votes": 2,
       "parent_author": "",
       "parent_permlink": "",
@@ -413,7 +413,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 110,
+      "id": 129,
       "json_metadata": "{}",
       "last_payout": "2016-08-03T00:00:06",
       "last_update": "2016-05-15T16:06:06",
@@ -462,7 +462,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 111,
+      "id": 130,
       "json_metadata": "{}",
       "last_payout": "2016-08-24T05:37:24",
       "last_update": "2016-04-13T16:25:15",

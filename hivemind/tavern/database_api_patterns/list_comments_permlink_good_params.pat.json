@@ -1,7 +1,7 @@
 {
   "comments": [
     {
-      "abs_rshares": "4923114688969",
+      "abs_rshares": 131318844612266,
       "active": "2016-09-11T05:54:30",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -13,7 +13,7 @@
       "cashout_time": "2016-08-31T21:24:33",
       "category": "introduceyourself",
       "children": 112,
-      "children_abs_rshares": "5017117283364",
+      "children_abs_rshares": 0,
       "created": "2016-08-24T21:24:33",
       "curator_payout_value": {
         "amount": "545355",
@@ -47,10 +47,10 @@
         "precision": 3
       },
       "total_vote_weight": 0,
-      "vote_rshares": 131252358872788
+      "vote_rshares": 131285601742527
     },
     {
-      "abs_rshares": 196185915,
+      "abs_rshares": 15500271048057,
       "active": "2016-09-08T11:49:15",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -62,7 +62,7 @@
       "cashout_time": "2016-09-15T01:39:12",
       "category": "life",
       "children": 4,
-      "children_abs_rshares": 196185915,
+      "children_abs_rshares": 0,
       "created": "2016-09-08T01:39:12",
       "curator_payout_value": {
         "amount": "3823",
@@ -160,7 +160,7 @@
       "cashout_time": "2016-09-09T00:23:30",
       "category": "photography",
       "children": 13,
-      "children_abs_rshares": "32969357867",
+      "children_abs_rshares": 0,
       "created": "2016-09-02T00:23:30",
       "curator_payout_value": {
         "amount": "4357",
@@ -209,7 +209,7 @@
       "cashout_time": "2016-09-11T19:31:03",
       "category": "photography",
       "children": 22,
-      "children_abs_rshares": "140201312914",
+      "children_abs_rshares": 0,
       "created": "2016-09-04T19:31:03",
       "curator_payout_value": {
         "amount": "6541",
@@ -258,7 +258,7 @@
       "cashout_time": "2016-09-16T11:04:21",
       "category": "photography",
       "children": 7,
-      "children_abs_rshares": 113157676,
+      "children_abs_rshares": 0,
       "created": "2016-09-09T11:04:21",
       "curator_payout_value": {
         "amount": "203",
@@ -356,7 +356,7 @@
       "cashout_time": "2016-09-21T14:46:27",
       "category": "photography",
       "children": 11,
-      "children_abs_rshares": "10027068167722",
+      "children_abs_rshares": 0,
       "created": "2016-09-14T14:46:27",
       "curator_payout_value": {
         "amount": "0",
@@ -405,7 +405,7 @@
       "cashout_time": "2016-09-02T22:53:00",
       "category": "introduceyourself",
       "children": 13,
-      "children_abs_rshares": 1230392222,
+      "children_abs_rshares": 0,
       "created": "2016-08-26T22:53:00",
       "curator_payout_value": {
         "amount": "420",
@@ -454,7 +454,7 @@
       "cashout_time": "2016-09-03T23:27:30",
       "category": "photography",
       "children": 12,
-      "children_abs_rshares": "6808732560425",
+      "children_abs_rshares": 0,
       "created": "2016-08-27T23:27:30",
       "curator_payout_value": {
         "amount": "41",

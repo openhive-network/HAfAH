@@ -227,7 +227,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": -491818553,
+      "net_rshares": 0,
       "net_votes": -2,
       "parent_author": "",
       "parent_permlink": "",
@@ -276,7 +276,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": -481781440,
+      "net_rshares": 0,
       "net_votes": -3,
       "parent_author": "",
       "parent_permlink": "",
@@ -374,7 +374,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": -477016308,
+      "net_rshares": 0,
       "net_votes": -2,
       "parent_author": "",
       "parent_permlink": "",
@@ -423,7 +423,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": -12344332066668,
+      "net_rshares": 0,
       "net_votes": -8,
       "parent_author": "",
       "parent_permlink": "spam",
@@ -472,7 +472,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": -466979195,
+      "net_rshares": 0,
       "net_votes": 4,
       "parent_author": "",
       "parent_permlink": "miner-category",
