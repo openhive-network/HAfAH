@@ -80,7 +80,7 @@
         "precision": 3
       },
       "max_cashout_time": "1969-12-31T23:59:59",
-      "net_rshares": -226592300084,
+      "net_rshares": 0,
       "net_votes": 8,
       "parent_author": "steemit",
       "parent_permlink": "firstpost",
