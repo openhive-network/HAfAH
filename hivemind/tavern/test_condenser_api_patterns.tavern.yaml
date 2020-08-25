@@ -433,7 +433,7 @@
   test_name: Hivemind condenser_api.get_content patterns test
 
   marks:
-    - patterntest
+    - patterntest # fat node was giving more data
 
   includes:
     - !include common.yaml
@@ -461,7 +461,7 @@
   test_name: Hivemind condenser_api.get_content gtg patterns test
 
   marks:
-    - patterntest
+    - patterntest # fat node was giving more data
 
   includes:
     - !include common.yaml
@@ -518,7 +518,7 @@
   test_name: Hivemind condenser_api.get_content_replies patterns test
 
   marks:
-    - patterntest
+    - patterntest # fat node was giving more data
 
   includes:
     - !include common.yaml
@@ -607,7 +607,7 @@
   test_name: Hivemind condenser_api.get_trending_tags limit 250 patterns test
 
   marks:
-    - patterntest
+    - patterntest # there is random order in some elements of original answer
 
   includes:
     - !include common.yaml
@@ -1455,8 +1455,8 @@
 
   marks:
     - patterntest
-    - xfail # test should return all steemit account posts, issue: https://gitlab.syncad.com/hive/hivemind/-/issues/53
     - failing
+    - xfail # test should return all steemit account posts, issue: https://gitlab.syncad.com/hive/hivemind/-/issues/53
 
   includes:
     - !include common.yaml
@@ -1658,7 +1658,7 @@
   test_name: Hivemind condenser_api.get_account_reputations patterns test
 
   marks:
-    - patterntest # to be changed for account that has some reputation
+    - patterntest # fat node gives different answer (not only nonzero reputation but also json is generally different)
 
   includes:
     - !include common.yaml
