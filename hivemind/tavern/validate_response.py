@@ -5,13 +5,13 @@ def json_pretty_string(json_obj):
   from json import dumps
   return dumps(json_obj, sort_keys=True, indent=2)
 
-def save_response(file_name, response_json):
+def save_json(file_name, response_json):
   """ Save response to file """
   with open(file_name, 'w') as f:
     f.write(json_pretty_string(response_json))
     f.write("\n")
 
-def save_no_response(file_name, msg):
+def save_raw(file_name, msg):
   """ Save lack of response to file """
   with open(file_name, 'w') as f:
     f.write(msg)
@@ -51,11 +51,11 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
 
   if error is not None and not error_response:
     msg = "Error detected in response: {}".format(error["message"])
-    save_no_response(response_fname, msg)
+    save_raw(response_fname, msg)
     raise PatternDiffException(msg)
   if result is None:
     msg = "Error detected in response: result is null, json object was expected"
-    save_no_response(response_fname, msg)
+    save_raw(response_fname, msg)
     raise PatternDiffException(msg)
 
   import deepdiff
@@ -64,7 +64,7 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     pattern = remove_tag(pattern, ignore_tags)
   pattern_resp_diff = deepdiff.DeepDiff(pattern, result)
   if pattern_resp_diff:
-    save_response(response_fname, result)
+    save_json(response_fname, result)
     msg = "Differences detected between response and pattern."
     raise PatternDiffException(msg)
 
@@ -72,4 +72,6 @@ def null_result(response):
   response_json = response.json()
   result = response_json.get("result", None)
   if result:
-    raise PatternDiffException('result is: "' + result + ' but should be null')
+    msg = "Error detected in response: result is {} but should be null".format(result)
+    save_json(result)
+    raise PatternDiffException(msg)
