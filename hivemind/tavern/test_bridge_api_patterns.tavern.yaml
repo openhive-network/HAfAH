@@ -33,7 +33,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # payout is zero in some cases, grey, flag_weight
+    - xfail # grey, flag_weight
 
   includes:
     - !include common.yaml
