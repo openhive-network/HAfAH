@@ -60,7 +60,9 @@
   test_name: Hivemind bridge_api.get_post_header not existing permlink patterns test
       # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
-    - patterntest
+    - patterntest # original gives no error, just no result
+    - failing
+    - xfail # no error message, just no result (and while it is like in old version we need proper error)
 
   includes:
     - !include common.yaml
@@ -80,7 +82,12 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:null_result
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_post_header_not_existing_permlink"
+            directory: "bridge_api_patterns"
+            error_response: true
+            ignore_tags: ["timestamp"]
 
 ---
   test_name: Hivemind bridge_api.get_discussion patterns test
@@ -88,7 +95,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # grey, flag_weight
+    - xfail # gray, flag_weight
 
   includes:
     - !include common.yaml
@@ -115,10 +122,9 @@
 
 ---
   test_name: Hivemind bridge_api.get_discussion gtg patterns test
-
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
 
   includes:
     - !include common.yaml
@@ -145,10 +151,12 @@
             
 ---
   test_name: Hivemind bridge_api.get_discussion non existing permlink patterns test
-
-  marks:
-    - patterntest
       # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+  marks:
+    - patterntest # original gives no error, just no result
+    - failing
+    - xfail # no error message, just no result (and while it is like in old version we need proper error)
+
 
   includes:
     - !include common.yaml
@@ -168,15 +176,19 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:null_result 
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_discussion_not_existing_permlink"
+            directory: "bridge_api_patterns"
+            error_response: true
+            ignore_tags: ["timestamp"]
+
 ---
   test_name: Hivemind bridge_api.get_post patterns test
-
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
-    - failing
-    - xfail
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+
   includes:
     - !include common.yaml
 
@@ -202,10 +214,10 @@
 
 ---
   test_name: Hivemind bridge_api.get_post gtg patterns test
-
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+
   includes:
     - !include common.yaml
 
@@ -228,14 +240,13 @@
           extra_kwargs:
             method: "get_post_gtg"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_account_posts patterns test
-
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
-    - failing
-    - xfail
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+
   includes:
     - !include common.yaml
 
@@ -261,10 +272,10 @@
 
 ---
   test_name: Hivemind bridge_api.get_account_posts sort blog patterns test
-
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+
   includes:
     - !include common.yaml
 
@@ -287,13 +298,13 @@
           extra_kwargs:
             method: "get_account_posts_sort_blog"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_account_posts sort feed patterns test
 
   marks:
-    - patterntest
-    - failing
-    - xfail # should return posts, now its empty (hive3 hivemind)
+    - patterntest # should return posts, now its empty (hive3 hivemind)
+
   includes:
     - !include common.yaml
 
@@ -316,13 +327,13 @@
           extra_kwargs:
             method: "get_account_posts_sort_feed"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_account_posts sort comments patterns test
 
   marks:
-    - patterntest
-    - failing
-    - xfail # should return posts, now its empty (hive3 hivemind)
+    - patterntest # should return posts, now its empty (hive3 hivemind)
+
   includes:
     - !include common.yaml
 
@@ -345,12 +356,15 @@
           extra_kwargs:
             method: "get_account_posts_sort_comments"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_account_posts sort replies patterns test
-
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+    - failing
+    - xfail # flag_weight
+
   includes:
     - !include common.yaml
 
@@ -373,13 +387,13 @@
           extra_kwargs:
             method: "get_account_posts_sort_replies"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_account_posts sort payout patterns test
 
   marks:
-    - patterntest
-    - failing
-    - xfail # should return posts, now its empty (hive3 hivemind)
+    - patterntest # should return posts, now its empty (hive3 hivemind)
+
   includes:
     - !include common.yaml
 
@@ -402,6 +416,7 @@
           extra_kwargs:
             method: "get_account_posts_sort_payout"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_ranked_posts patterns test
 
@@ -430,6 +445,7 @@
           extra_kwargs:
             method: "get_ranked_posts"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_ranked_posts sort invalid patterns test
 
@@ -493,6 +509,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail # beneficiaries as dictionary
 
   includes:
     - !include common.yaml
@@ -522,8 +540,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail
 
   includes:
     - !include common.yaml
@@ -580,6 +596,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail # gray
 
   includes:
     - !include common.yaml
@@ -608,6 +626,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail # empty results (to be investigated)
 
   includes:
     - !include common.yaml
@@ -692,10 +712,10 @@
 
 ---
   test_name: Hivemind bridge_api.get_profile patterns test
-
+      #not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
-      #not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+
   includes:
     - !include common.yaml
 
@@ -718,12 +738,15 @@
           extra_kwargs:
             method: "get_profile"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_profile gtg patterns test
-
+      #not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
-      #not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+    - failing
+    - xfail # plenty of differences, as if the whole routine does not work at all
+
   includes:
     - !include common.yaml
 
@@ -746,12 +769,15 @@
           extra_kwargs:
             method: "get_profile_gtg"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_profile not existing patterns test
-
-  marks:
-    - patterntest
       #not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+  marks:
+    - patterntest # original gives no error, just no result
+    - failing
+    - xfail # no error message, just no result (and while it is like in old version we need proper error)
+
   includes:
     - !include common.yaml
 
@@ -770,7 +796,12 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:null_result
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_profile_not_existing_account"
+            directory: "bridge_api_patterns"
+            error_response: true
+            ignore_tags: ["timestamp"]
 
 ---
   test_name: Hivemind bridge_api.get_trending_topics patterns test
@@ -1101,7 +1132,7 @@
 
 ---
   test_name: Hivemind bridge_api.list_subscribers patterns test
-      not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest # no nonempty result possible for 5mln set
 
@@ -1156,6 +1187,7 @@
           extra_kwargs:
             method: "list_all_subscriptions"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_relationship_between_accounts patterns test
 
@@ -1184,6 +1216,7 @@
           extra_kwargs:
             method: "get_relationship_between_accounts"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_relationship_between_accounts follows patterns test
 
@@ -1212,6 +1245,7 @@
           extra_kwargs:
             method: "get_relationship_between_accounts_follows"
             directory: "bridge_api_patterns"
+
 ---
   test_name: Hivemind bridge_api.get_relationship_between_accounts ignores patterns test
 

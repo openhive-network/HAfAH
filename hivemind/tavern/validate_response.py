@@ -68,10 +68,3 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     msg = "Differences detected between response and pattern."
     raise PatternDiffException(msg)
 
-def null_result(response):
-  response_json = response.json()
-  result = response_json.get("result", None)
-  if result:
-    msg = "Error detected in response: result is {} but should be null".format(result)
-    save_json(result)
-    raise PatternDiffException(msg)
