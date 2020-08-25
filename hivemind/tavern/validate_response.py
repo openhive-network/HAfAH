@@ -68,20 +68,6 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     msg = "Differences detected between response and pattern."
     raise PatternDiffException(msg)
 
-# deprecated - replace by compare_response_with_pattern with error_response=True
-def compare_error_data(response, data):
-  response_json = response.json()
-  error = response_json.get("error", None)
-  if error['data'] != data:
-    raise PatternDiffException('error data not equal, expected: "' + data + '" given: "' + error['data'] + '"')
-
-# deprecated - replace by compare_response_with_pattern with error_response=True
-def compare_error_message(response, message):
-  response_json = response.json()
-  error = response_json.get("error", None)
-  if error['message'] != message:
-    raise PatternDiffException('error message not equal, expected: "' + message + '" given: "' + error['message'] + '"')
-
 def null_result(response):
   response_json = response.json()
   result = response_json.get("result", None)

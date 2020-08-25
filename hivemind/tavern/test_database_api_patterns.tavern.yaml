@@ -92,10 +92,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "basic_string::at: __n (which is 0) >= this->size() (which is 0):basic_string::at: __n (which is 0) >= this->size() (which is 0): unable to convert ISO-formatted string to fc::time_point_sec"
-
+          method: "list_comments_wrong_date"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" date and author
 
@@ -127,9 +129,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Assert Exception:comment != nullptr: Could not find comment etcmike/."
+          method: "list_comments_not_found_by_account"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" date and permlink
@@ -167,10 +172,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Assert Exception:comment != nullptr: Could not find comment /re-bullionstackers-screen-it-tab-it-what-are-they-20160829t061254603z."
-
+          method: "list_comments_not_found_by_permlink"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" all data
 
@@ -279,10 +286,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Assert Exception:(pt - epoch).total_seconds() <= INT32_MAX: Datetime overflowunable to convert ISO-formatted string to fc::time_point_sec"
-
+          method: "list_comments_future_date"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" no data
 
@@ -310,10 +319,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Day of month value is out of range 1..31:Day of month value is out of range 1..31: unable to convert ISO-formatted string to fc::time_point_sec"
-
+          method: "list_comments_day_of_the_month_out_of_range"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" data exist in database
 
@@ -633,9 +644,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Assert Exception:root != nullptr: Could not find comment vi1son/."
+          method: "list_comments_only_root_author"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_root" required values (comment of a post)
@@ -776,9 +790,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Assert Exception:child != nullptr: Could not find comment vi1son/."
+          method: "list_comments_not_found"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_root" wrong child_permlink 
@@ -811,9 +828,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Assert Exception:child != nullptr: Could not find comment vi1son/randomvalues."
+          method: "list_comments_not_found_vi1son_randomvalues"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_root" wrong val
@@ -846,9 +866,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Assert Exception:root != nullptr: Could not find comment giv/winner."
+          method: "list_comments_not_found_giv_winner"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 
 ########################  PARENT  ########################
 ---
@@ -1028,9 +1051,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Assert Exception:child != nullptr: Could not find comment givemeyoursteem/."
+          method: "list_comments_not_found_givemeyoursteem"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_parent" all data
@@ -1173,9 +1199,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Assert Exception:comment != nullptr: Could not find comment givemeyoursteem/."
+          method: "list_comments_not_found_givemeyoursteem2"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct date and author wrong permlink
@@ -1208,9 +1237,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Assert Exception:comment != nullptr: Could not find comment givemeyoursteem/winners-of-steemit-food-challenge-3."
+          method: "list_comments_not_found_givemeyoursteem_permlink"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
  
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct date author and permlink
@@ -1349,10 +1381,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Day of month value is out of range 1..31:Day of month value is out of range 1..31: unable to convert ISO-formatted string to fc::time_point_sec"
-
+          method: "list_comments_day_out_of_range_empty"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_last_update" date in author
 
@@ -1385,10 +1419,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Day of month value is out of range 1..31:Day of month value is out of range 1..31: unable to convert ISO-formatted string to fc::time_point_sec"
-
+          method: "list_comments_day_out_of_range_start_0"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_last_update" good date
 
@@ -1457,10 +1493,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "basic_string::at: __n (which is 0) >= this->size() (which is 0):basic_string::at: __n (which is 0) >= this->size() (which is 0): unable to convert ISO-formatted string to fc::time_point_sec"
-
+          method: "list_comments_day_out_of_range_start_1"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_last_update" very future date
 
@@ -1492,10 +1530,12 @@ stages:
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Assert Exception:(pt - epoch).total_seconds() <= INT32_MAX: Datetime overflowunable to convert ISO-formatted string to fc::time_point_sec"
-
+          method: "list_comments_day_out_of_range_start_2"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_last_update" future date
 
@@ -1558,11 +1598,14 @@ stages:
           {
             "start": ["", "2016-04-66T21:29:42", "", ""],
             "limit": 10,
-            "order": "by_last_update",
+            "order": "by_last_update"
           }
     response:
       status_code: 200
       verify_response_with:
-        function: validate_response:compare_error_message
+        function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          message: "Day of month value is out of range 1..31:Day of month value is out of range 1..31: unable to convert ISO-formatted string to fc::time_point_sec"
+          method: "list_comments_day_out_of_range_start_3"
+          directory: "database_api_patterns"
+          error_response: true
+          ignore_tags: ["timestamp"]
