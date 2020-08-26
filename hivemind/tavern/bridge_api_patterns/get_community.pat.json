@@ -1,1 +1,5 @@
-null
+{
+  "code": -32602,
+  "data": "community not found",
+  "message": "Invalid parameters"
+}

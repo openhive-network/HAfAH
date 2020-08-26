@@ -1,1 +1,5 @@
-Error detected in response: Invalid parameters
+{
+  "code": -32602,
+  "data": "community not found",
+  "message": "Invalid parameters"
+}
