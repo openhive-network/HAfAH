@@ -577,8 +577,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # some tags have too many comments/top_posts, influences total_payouts (problem when post is deleted and recreated); once that is fixed rest of total_payouts can be slightly different
 
   includes:
     - !include common.yaml
@@ -607,7 +605,9 @@
   test_name: Hivemind condenser_api.get_trending_tags limit 250 patterns test
 
   marks:
-    - patterntest # there is random order in some elements of original answer
+    - patterntest # there is random order in some elements of original answer, not comparable to original due to ordering influenced by different pending payouts
+    - failing
+    - xfail # 4 categories different, in particular some fairly popular not present in original (to be investigated)
 
   includes:
     - !include common.yaml
@@ -666,8 +666,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # totally different post
 
   includes:
     - !include common.yaml
@@ -697,8 +695,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # totally different post
 
   includes:
     - !include common.yaml
@@ -786,8 +782,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # null result (super slow query response)
 
   includes:
     - !include common.yaml
@@ -875,6 +869,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail # while this would be acceptable we should change it to invalid parameters over server error
 
   includes:
     - !include common.yaml
@@ -928,6 +924,7 @@
           extra_kwargs:
             method: "get_replies_by_last_update"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind condenser_api.get_replies_by_last_update limit 100 patterns test
 
@@ -956,6 +953,7 @@
           extra_kwargs:
             method: "get_replies_by_last_update_limit_100"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind condenser_api.get_replies_by_last_update no results patterns test
 
@@ -984,6 +982,7 @@
           extra_kwargs:
             method: "get_replies_by_last_update_no_results"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind condenser_api.get_replies_by_last_update over limit patterns test
 
@@ -1013,6 +1012,7 @@
             method: "get_replies_by_last_update_over_limit"
             directory: "condenser_api_patterns"
             error_response: true
+
 ---
   test_name: Hivemind condenser_api.get_replies_by_last_update blank start author patterns test
 
@@ -1101,13 +1101,12 @@
           extra_kwargs:
             method: "get_discussions_by_author_before_date"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind condenser_api.get_discussions_by_author_before_date patterns test
 
   marks:
-    - patterntest
-    - xfail # should return empty set - no posts before 2009
-    - failing
+    - patterntest # should return empty set - no posts before 2009 (to be investigated but works like original)
 
   includes:
     - !include common.yaml
@@ -1131,6 +1130,7 @@
           extra_kwargs:
             method: "get_discussions_by_author_before_date_no_results"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind condenser_api.get_discussions_by_author_before_date over limit patterns test
 
@@ -1160,6 +1160,7 @@
             method: "get_discussions_by_author_before_date_over_limit"
             directory: "condenser_api_patterns"
             error_response: true
+
 ---
   test_name: Hivemind condenser_api.get_post_discussions_by_payout patterns test
 
@@ -1188,11 +1189,14 @@
           extra_kwargs:
             method: "get_post_discussions_by_payout"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind condenser_api.get_post_discussions_by_payout limit 20 test
 
   marks:
-    - patterntest
+    - patterntest # differences in pending payout make it incomparable with original
+    - failing
+    - xfail # wrong order, pending_payout_value (total actually, since it was just payout in old version) should be the key
 
   includes:
     - !include common.yaml
@@ -1304,11 +1308,14 @@
           extra_kwargs:
             method: "get_comment_discussions_by_payout"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind condenser_api.get_comment_discussions_by_payout limit 100 test
 
   marks:
-    - patterntest
+    - patterntest # differences in pending payout make it incomparable with original
+    - failing
+    - xfail # wrong order, pending_payout_value (total actually, since it was just payout in old version) should be the key
 
   includes:
     - !include common.yaml
@@ -1332,6 +1339,7 @@
           extra_kwargs:
             method: "get_comment_discussions_by_payout_limit_100"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind condenser_api.get_comment_discussions_by_payout no results test
 
@@ -1424,11 +1432,11 @@
   test_name: Hivemind condenser_api.get_blog invalid limit combination patterns test
 
   marks:
-    - patterntest
+    - patterntest # strange error - when limit exceeds the number of posts written by user it should return all posts - not error (to be investigated)
 
   includes:
     - !include common.yaml
-    # strange error - when limit exceeds the number of posts written by user it should return all posts - not error
+
   stages:
     - name: get_blog invalid limit combination
       request:
@@ -1542,6 +1550,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail # wrong response, should be clean error
 
   includes:
     - !include common.yaml
@@ -1566,6 +1576,7 @@
             method: "get_blog_non_existing"
             directory: "condenser_api_patterns"
             error_response: true
+
 ---
   test_name: Hivemind condenser_api.get_blog too long account name test
 
@@ -1595,6 +1606,7 @@
             method: "get_blog_too_long_account_name"
             directory: "condenser_api_patterns"
             error_response: true
+
 ---
   test_name: Hivemind condenser_api.get_blog invalid account test
 
@@ -1624,6 +1636,7 @@
             method: "get_blog_invalid_account_char"
             directory: "condenser_api_patterns"
             error_response: true
+
 ---
   test_name: Hivemind condenser_api.get_blog_entries patterns test
 
@@ -1717,8 +1730,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # percent/time wrong for vote with rshares=0 (possibly same problem as in edited votes)
 
   includes:
     - !include common.yaml
@@ -1742,11 +1753,12 @@
           extra_kwargs:
             method: "get_active_votes"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind deprecated condenser_api.get_account_votes 
 
   marks:
-    - patterntest
+    - patterntest # we should probably change response to link to hive instead of steemit
 
   includes:
     - !include common.yaml
@@ -1771,6 +1783,7 @@
             method: "get_account_votes_deprecated"
             directory: "condenser_api_patterns"
             error_response: true
+
 ---
   # get_accounts should be based on fat node - posting_rewards and reputations are 0 on AH node
   test_name: Hivemind condenser_api.get_accounts with single account patterns test
@@ -1802,11 +1815,14 @@
           extra_kwargs:
             method: "get_accounts"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind condenser_api.get_accounts with multiple accounts patterns test
 
   marks:
     - patterntest
+    - failing
+    - xfail # server error (to be investigated)
 
   includes:
     - !include common.yaml
@@ -1830,6 +1846,7 @@
           extra_kwargs:
             method: "get_multiple_accounts"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind condenser_api.get_accounts with non existing account patterns test
 

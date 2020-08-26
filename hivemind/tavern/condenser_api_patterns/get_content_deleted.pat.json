@@ -1,5 +1,5 @@
 {
-  "code": -32000,
-  "data": "IndexError: list index out of range",
-  "message": "Server error"
+  "code": -32602,
+  "data": "post was not found in cache",
+  "message": "Invalid parameters"
 }
