@@ -324,8 +324,6 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 
 marks:
   - patterntest # incomparable with original due to cashout_time differences
-  - failing
-  - xfail # active
 
 includes:
   - !include common.yaml
@@ -360,8 +358,6 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 
 marks:
   - patterntest # incomparable with original due to cashout_time differences (same pattern as in list_comments_by_cashout_first_date)
-  - failing
-  - xfail # active
 
 includes:
   - !include common.yaml
@@ -397,8 +393,6 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 
 marks:
   - patterntest
-  - failing
-  - xfail # active
 
 includes:
   - !include common.yaml
@@ -541,7 +535,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_root" goo
 marks:
   - patterntest
   - failing
-  - xfail # active, escaping
+  - xfail # escaping
 
 includes:
   - !include common.yaml
@@ -900,7 +894,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" n
 marks:
   - patterntest # first 2 params are required
   - failing
-  - xfail # active, title
+  - xfail # title
 
 includes:
   - !include common.yaml
