@@ -28,6 +28,151 @@
             directory: "condenser_api_patterns"
 
 ---
+  test_name: Hivemind condenser_api.get_followers last patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_followers last
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_followers"
+          params: ["steemit","fjccoin","blog",1000]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_followers_last"
+            directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_followers ignore type patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_followers ignore type
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_followers"
+          params: ["steemit",null,"ignore",100]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_followers_ignore"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_followers no followers patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_followers no followers
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_followers"
+          params: ["test2",null,"blog",1000]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_followers_no_followers"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_followers over limit test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_followers over limit
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_followers"
+          params: ["steemit",null,"blog",1001]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_followers_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
+---
+  test_name: Hivemind condenser_api.get_followers wrong_type patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_followers wrong type
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_followers"
+          params: ["brightnesssoulds",null,"wrong_type",1000]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_followers_wrong_type"
+            directory: "condenser_api_patterns"
+            error_response: true
+
+---
   test_name: Hivemind condenser_api.get_following patterns test
 
   marks:
@@ -55,6 +200,150 @@
           extra_kwargs:
             method: "get_following"
             directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_following last patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_following last
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_following"
+          params: ["gtg","blocktrades","blog",1000]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_following_last"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_following no following patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_following no following
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_following"
+          params: ["test2",null,"blog",1000]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_following_no_following"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_following ignore_type patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_following ignore_type
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_following"
+          params: ["brightnesssoulds",null,"ignore",1000]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_following_ignore"
+            directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_following wrong_type patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_following wrong_type
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_following"
+          params: ["brightnesssoulds",null,"wrong_type",1000]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_following_wrong_type"
+            directory: "condenser_api_patterns"
+            error_response: true
+---
+  test_name: Hivemind condenser_api.get_following over limit test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_following last
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_following"
+          params: ["gtg","blocktrades","blog",1001]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_following_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 
 ---
   test_name: Hivemind condenser_api.get_follow_count patterns test
@@ -84,12 +373,67 @@
           extra_kwargs:
             method: "get_follow_count"
             directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_follow_count following and followers patterns test
 
+  marks:
+    - patterntest 
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_follow_count following and followers 
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_follow_count"
+          params: ["gtg"]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_follow_count_following_and_followers"
+            directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_follow_count_no_followers patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_follow_count
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_follow_count"
+          params: ["test2"]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_follow_count_no_followers"
+            directory: "condenser_api_patterns"
 ---
   test_name: Hivemind condenser_api.get_content patterns test
 
   marks:
-    - patterntest
+    - patterntest # fat node was giving more data
 
   includes:
     - !include common.yaml
@@ -113,12 +457,68 @@
           extra_kwargs:
             method: "get_content"
             directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_content gtg patterns test
 
+  marks:
+    - patterntest # fat node was giving more data
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_content gtg
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_content"
+          params: ["gtg", "witness-gtg"]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_content_gtg"
+            directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_content deleted post patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_content gtg
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_content"
+          params: ["jsc", "testing-summary"]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_content_deleted"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_content_replies patterns test
 
   marks:
-    - patterntest
+    - patterntest # fat node was giving more data
 
   includes:
     - !include common.yaml
@@ -144,7 +544,7 @@
             directory: "condenser_api_patterns"
 
 ---
-  test_name: Hivemind condenser_api.get_state patterns test
+  test_name: Hivemind condenser_api.get_state patterns test # Deprecated
 
   marks:
     - patterntest
@@ -201,6 +601,66 @@
             method: "get_trending_tags"
             directory: "condenser_api_patterns"
 
+---
+  test_name: Hivemind condenser_api.get_trending_tags limit 250 patterns test
+
+  marks:
+    - patterntest # there is random order in some elements of original answer, not comparable to original due to ordering influenced by different pending payouts
+    - failing
+    - xfail # 4 categories different, in particular some fairly popular not present in original (to be investigated)
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_trending_tags limit 250
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_trending_tags"
+          params: {"start_tag": "dream","limit":250}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_trending_tags_limit_250"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_trending_tags over limit patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_trending_tags limit 250
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_trending_tags"
+          params: {"start_tag": "dream","limit":251}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_followers_trending_tags_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 ---
   test_name: Hivemind condenser_api.get_discussions_by_trending patterns test
 
@@ -350,7 +810,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_feed patterns test
 
   marks:
-    - patterntest # can't find any params that would give nonempty results
+    - patterntest # can't find any params that would give nonempty results, tag is not a tag but account
 
   includes:
     - !include common.yaml
@@ -405,6 +865,38 @@
             directory: "condenser_api_patterns"
 
 ---
+  test_name: Hivemind condenser_api.get_discussions_by_comments unexpected keyword patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail # while this would be acceptable we should change it to invalid parameters over server error
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_replies_by_last_update unexpected keyword 
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_comments"
+          params: [{"author": "steemit"}]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_discussions_by_comments_unexpected_keyword"
+            directory: "condenser_api_patterns"
+            error_response: true
+
+---
   test_name: Hivemind condenser_api.get_replies_by_last_update patterns test
 
   marks:
@@ -434,6 +926,154 @@
             directory: "condenser_api_patterns"
 
 ---
+  test_name: Hivemind condenser_api.get_replies_by_last_update limit 100 patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_replies_by_last_update
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_replies_by_last_update"
+          params: ["gtg","",100]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_replies_by_last_update_limit_100"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_replies_by_last_update no results patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_replies_by_last_update no results
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_replies_by_last_update"
+          params: ["admin","non_existing_permlink",1]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_replies_by_last_update_no_results"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_replies_by_last_update over limit patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_replies_by_last_update over limit
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_replies_by_last_update"
+          params: ["admin","non_existing_permlink",101]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_replies_by_last_update_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
+
+---
+  test_name: Hivemind condenser_api.get_replies_by_last_update blank start author patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_replies_by_last_update blank start author
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_replies_by_last_update"
+          params: ["","non_existing_permlink",1]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_replies_by_last_update_blank_start_author"
+            directory: "condenser_api_patterns"
+            error_response: true
+
+---
+  test_name: Hivemind condenser_api.get_replies_by_last_update invalid account name length patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_replies_by_last_update invalid account name length
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_replies_by_last_update"
+          params: ["a","non_existing_permlink",1]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_replies_by_last_update_invalid_account_name"
+            directory: "condenser_api_patterns"
+            error_response: true
+            
+---
   test_name: Hivemind condenser_api.get_discussions_by_author_before_date patterns test
 
   marks:
@@ -461,6 +1101,65 @@
           extra_kwargs:
             method: "get_discussions_by_author_before_date"
             directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_discussions_by_author_before_date patterns test
+
+  marks:
+    - patterntest # should return empty set - no posts before 2009 (to be investigated but works like original)
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_discussions_by_author_before_date_no_results
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_author_before_date"
+          params: {"author":"steemit","start_permlink":"firstpost","before_date":"2009-04-19T22:49:43","limit":1}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_discussions_by_author_before_date_no_results"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_discussions_by_author_before_date over limit patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_discussions_by_author over limit
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_author_before_date"
+          params: {"author":"steemit","start_permlink":"firstpost","before_date":"2009-04-19T22:49:43","limit":101}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_discussions_by_author_before_date_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 
 ---
   test_name: Hivemind condenser_api.get_post_discussions_by_payout patterns test
@@ -492,6 +1191,96 @@
             directory: "condenser_api_patterns"
 
 ---
+  test_name: Hivemind condenser_api.get_post_discussions_by_payout limit 20 test
+
+  marks:
+    - patterntest # differences in pending payout make it incomparable with original
+    - failing
+    - xfail # wrong order, pending_payout_value (total actually, since it was just payout in old version) should be the key
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_post_discussions_by_payout limit 20
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_post_discussions_by_payout"
+          params: {"tag":"test","limit":20}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_post_discussions_by_payout_limit_20"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_post_discussions_by_payout no results test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_post_discussions_by_payout no results
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_post_discussions_by_payout"
+          params: {"tag":"non_existing_tag","limit":20}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_post_discussions_by_payout_no_results"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_post_discussions_by_payout over limit test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_post_discussions_by_payout over limit
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_post_discussions_by_payout"
+          params: {"tag":"tag","limit":101}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_post_discussions_by_payout_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
+
+---
   test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test
 
   marks:
@@ -519,6 +1308,96 @@
           extra_kwargs:
             method: "get_comment_discussions_by_payout"
             directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_comment_discussions_by_payout limit 100 test
+
+  marks:
+    - patterntest # differences in pending payout make it incomparable with original
+    - failing
+    - xfail # wrong order, pending_payout_value (total actually, since it was just payout in old version) should be the key
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_comment_discussions_by_payout limit 100
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_comment_discussions_by_payout"
+          params: {"tag":"test","limit":100}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_comment_discussions_by_payout_limit_100"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_comment_discussions_by_payout no results test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_comment_discussions_by_payout no results
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_comment_discussions_by_payout"
+          params: {"tag":"non_existing_tag","limit":100}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_comment_discussions_by_payout_no_results"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_comment_discussions_by_payout over limit test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_comment_discussions_by_payout over limit
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_comment_discussions_by_payout"
+          params: {"tag":"tag","limit":101}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_comment_discussions_by_payout_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
 
 ---
   test_name: Hivemind condenser_api.get_blog patterns test
@@ -550,6 +1429,215 @@
             directory: "condenser_api_patterns"
 
 ---
+  test_name: Hivemind condenser_api.get_blog invalid limit combination patterns test
+
+  marks:
+    - patterntest # strange error - when limit exceeds the number of posts written by user it should return all posts - not error (to be investigated)
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_blog invalid limit combination
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_blog"
+          params: {"account":"gtg","start_entry_id":11,"limit":20}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_blog_invalid_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
+            
+---
+  test_name: Hivemind condenser_api.get_blog limit 100 patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail # test should return all steemit account posts, issue: https://gitlab.syncad.com/hive/hivemind/-/issues/53
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_blog limit 100
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_blog"
+          params: {"account":"steemit","start_entry_id":0,"limit":100}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_blog_limit_100"
+            directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_blog no results test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_blog no results
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_blog"
+          params: {"account":"user","start_entry_id":0,"limit":1}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_blog_no_results"
+            directory: "condenser_api_patterns"
+---
+  test_name: Hivemind condenser_api.get_blog over limit test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_blog over limit
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_blog"
+          params: {"account":"steemit","start_entry_id":0,"limit":501}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_blog_over_limit"
+            directory: "condenser_api_patterns"
+            error_response: true
+---
+  test_name: Hivemind condenser_api.get_blog non existing account test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail # wrong response, should be clean error
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_blog non existing account
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_blog"
+          params: {"account":"non.existing","start_entry_id":0,"limit":1}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_blog_non_existing"
+            directory: "condenser_api_patterns"
+            error_response: true
+
+---
+  test_name: Hivemind condenser_api.get_blog too long account name test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_blog too long account name
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_blog"
+          params: {"account":"too.long.account.name","start_entry_id":0,"limit":1}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_blog_too_long_account_name"
+            directory: "condenser_api_patterns"
+            error_response: true
+
+---
+  test_name: Hivemind condenser_api.get_blog invalid account test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_blog invalid account
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_blog"
+          params: {"account":"invalid_account","start_entry_id":0,"limit":1}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_blog_invalid_account_char"
+            directory: "condenser_api_patterns"
+            error_response: true
+
+---
   test_name: Hivemind condenser_api.get_blog_entries patterns test
 
   marks:
@@ -579,10 +1667,11 @@
             directory: "condenser_api_patterns"
 
 ---
+  #should return reputation based on fat node, now is 0
   test_name: Hivemind condenser_api.get_account_reputations patterns test
 
   marks:
-    - patterntest # to be changed for account that has some reputation
+    - patterntest # fat node gives different answer (not only nonzero reputation but also json is generally different)
 
   includes:
     - !include common.yaml
@@ -637,7 +1726,67 @@
             directory: "condenser_api_patterns"
 
 ---
-  test_name: Hivemind condenser_api.get_accounts patterns test
+  test_name: Hivemind condenser_api.get_active_votes patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_active_votes
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_active_votes"
+          params: ["biophil","test"]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_active_votes"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind deprecated condenser_api.get_account_votes 
+
+  marks:
+    - patterntest # we should probably change response to link to hive instead of steemit
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_account_votes deprecated
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_account_votes"
+          params: ["steemit"]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_account_votes_deprecated"
+            directory: "condenser_api_patterns"
+            error_response: true
+
+---
+  # get_accounts should be based on fat node - posting_rewards and reputations are 0 on AH node
+  test_name: Hivemind condenser_api.get_accounts with single account patterns test
 
   marks:
     - patterntest
@@ -668,16 +1817,18 @@
             directory: "condenser_api_patterns"
 
 ---
-  test_name: Hivemind condenser_api.get_active_votes patterns test
+  test_name: Hivemind condenser_api.get_accounts with multiple accounts patterns test
 
   marks:
     - patterntest
+    - failing
+    - xfail # server error (to be investigated)
 
   includes:
     - !include common.yaml
 
   stages:
-    - name: get_active_votes
+    - name: get_accounts with multiple accounts
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -686,12 +1837,41 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_active_votes"
-          params: ["biophil","test"]
+          method: "condenser_api.get_accounts"
+          params: [["steemit","biophil","test"]]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "get_active_votes"
+            method: "get_multiple_accounts"
+            directory: "condenser_api_patterns"
+
+---
+  test_name: Hivemind condenser_api.get_accounts with non existing account patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include common.yaml
+
+  stages:
+    - name: get_accounts with non existing account
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_accounts"
+          params: [["nalesnik"]]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get_non_existing_accounts"
             directory: "condenser_api_patterns"
