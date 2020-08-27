@@ -46,16 +46,21 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     response_json = remove_tag(response_json, ignore_tags)
   error = response_json.get("error", None)
   result = response_json.get("result", None)
-  if error_response:
-    result = error
 
   if error is not None and not error_response:
     msg = "Error detected in response: {}".format(error["message"])
-    save_raw(response_fname, msg)
+    save_json(response_fname, response_json)
     raise PatternDiffException(msg)
+  if error is None and error_response:
+    msg = "Error expected but got result: {}".format(result)
+    save_json(response_fname, response_json)
+    raise PatternDiffException(msg)
+
+  if error_response:
+    result = error
   if result is None:
     msg = "Error detected in response: result is null, json object was expected"
-    save_raw(response_fname, msg)
+    save_json(response_fname, response_json)
     raise PatternDiffException(msg)
 
   import deepdiff

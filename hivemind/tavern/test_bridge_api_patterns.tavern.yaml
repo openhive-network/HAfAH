@@ -61,8 +61,6 @@
       # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest # original gives no error, just no result
-    - failing
-    - xfail # no error message, just no result (and while it is like in old version we need proper error)
 
   includes:
     - !include common.yaml
@@ -95,7 +93,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # gray, flag_weight
+    - xfail # gray
 
   includes:
     - !include common.yaml
@@ -153,9 +151,7 @@
   test_name: Hivemind bridge_api.get_discussion non existing permlink patterns test
       # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
-    - patterntest # original gives no error, just no result
-    - failing
-    - xfail # no error message, just no result (and while it is like in old version we need proper error)
+    - patterntest
 
 
   includes:
@@ -180,8 +176,6 @@
           extra_kwargs:
             method: "get_discussion_not_existing_permlink"
             directory: "bridge_api_patterns"
-            error_response: true
-            ignore_tags: ["timestamp"]
 
 ---
   test_name: Hivemind bridge_api.get_post patterns test
@@ -362,8 +356,6 @@
       # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
-    - failing
-    - xfail # flag_weight
 
   includes:
     - !include common.yaml
@@ -627,7 +619,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # empty results (to be investigated)
+    - xfail # empty results caused by lack of is_grayed handling (same as gray elsewhere)
 
   includes:
     - !include common.yaml
@@ -775,8 +767,6 @@
       #not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest # original gives no error, just no result
-    - failing
-    - xfail # no error message, just no result (and while it is like in old version we need proper error)
 
   includes:
     - !include common.yaml
@@ -1045,9 +1035,7 @@
   test_name: Hivemind bridge_api.get_community patterns test
       # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
-    - patterntest
-    - failing
-    - xfail # test should probably be removed from 5mln set since it will return error when incorrect community id is passed and communities did not exist then
+    - patterntest # communities do not exist in first 5mln, so only error response is possible
 
   includes:
     - !include common.yaml
@@ -1071,6 +1059,7 @@
           extra_kwargs:
             method: "get_community"
             directory: "bridge_api_patterns"
+            error_response: true
 
 ---
   test_name: Hivemind bridge_api.list_communities patterns test

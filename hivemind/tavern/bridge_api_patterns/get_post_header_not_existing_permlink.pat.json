@@ -1,1 +1,5 @@
-null
+{
+  "code": -32602,
+  "data": "post '@gtg/not_existing_permlink' does not exist",
+  "message": "Invalid parameters"
+}

@@ -870,7 +870,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # while this would be acceptable we should change it to invalid parameters over server error
+    - xfail # while this would be acceptable we should change it to invalid parameters over server error (code suggests we wanted to completely silence that, but rest passes is as generic error, old code was the same so...)
 
   includes:
     - !include common.yaml
@@ -1196,7 +1196,7 @@
   marks:
     - patterntest # differences in pending payout make it incomparable with original
     - failing
-    - xfail # wrong order, pending_payout_value (total actually, since it was just payout in old version) should be the key
+    - xfail # pattern needs to be ordered first but there are bigger differences
 
   includes:
     - !include common.yaml
@@ -1315,7 +1315,7 @@
   marks:
     - patterntest # differences in pending payout make it incomparable with original
     - failing
-    - xfail # wrong order, pending_payout_value (total actually, since it was just payout in old version) should be the key
+    - xfail # pattern needs to be ordered first but there are bigger differences
 
   includes:
     - !include common.yaml
@@ -1432,7 +1432,7 @@
   test_name: Hivemind condenser_api.get_blog invalid limit combination patterns test
 
   marks:
-    - patterntest # strange error - when limit exceeds the number of posts written by user it should return all posts - not error (to be investigated)
+    - patterntest # call returns post entries starting at start_entry_id going down towards 0 until limit, therefore limit <= start_entry_id + 1 (unless start_entry_id is 0 or -1)
 
   includes:
     - !include common.yaml
@@ -1462,9 +1462,8 @@
   test_name: Hivemind condenser_api.get_blog limit 100 patterns test
 
   marks:
-    - patterntest
-    - failing
-    - xfail # test should return all steemit account posts, issue: https://gitlab.syncad.com/hive/hivemind/-/issues/53
+    - patterntest # original had trouble with the call, when limit exceeded number of post entries error was returned
+                  # see https://gitlab.syncad.com/hive/hivemind/-/issues/53 - pattern/original prepared with limit 1
 
   includes:
     - !include common.yaml
@@ -1488,6 +1487,7 @@
           extra_kwargs:
             method: "get_blog_limit_100"
             directory: "condenser_api_patterns"
+
 ---
   test_name: Hivemind condenser_api.get_blog no results test
 
@@ -1545,13 +1545,14 @@
             method: "get_blog_over_limit"
             directory: "condenser_api_patterns"
             error_response: true
+
 ---
   test_name: Hivemind condenser_api.get_blog non existing account test
 
   marks:
     - patterntest
     - failing
-    - xfail # wrong response, should be clean error
+    - xfail # wrong response, should be clean error (now there is no way to make difference between nonexisting account and account that does not blog)
 
   includes:
     - !include common.yaml
@@ -1791,7 +1792,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # server error (to be investigated)
+    - xfail # results are so different that it looks like wrong routine is called (possible link to raw_json that is now empty)
 
   includes:
     - !include common.yaml
@@ -1822,7 +1823,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # server error (to be investigated)
+    - xfail # results are so different that it looks like wrong routine is called (possible link to raw_json that is now empty)
 
   includes:
     - !include common.yaml
