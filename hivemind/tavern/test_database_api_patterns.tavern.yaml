@@ -1499,8 +1499,6 @@ test_name: Hivemind database_api.list_comments patterns test order "by_last_upda
 
 marks:
   - patterntest # show last comments in base
-  - failing
-  - xfail # beneficiaries as dict
 
 includes:
   - !include common.yaml

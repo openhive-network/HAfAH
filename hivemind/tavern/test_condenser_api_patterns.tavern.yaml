@@ -605,9 +605,7 @@
   test_name: Hivemind condenser_api.get_trending_tags limit 250 patterns test
 
   marks:
-    - patterntest # there is random order in some elements of original answer, not comparable to original due to ordering influenced by different pending payouts
-    - failing
-    - xfail # 4 categories different, in particular some fairly popular not present in original (to be investigated)
+    - patterntest # not comparable to original due to ordering influenced by different pending payouts (also order of tags with the same payout was basically random) 
 
   includes:
     - !include common.yaml
@@ -1194,9 +1192,9 @@
   test_name: Hivemind condenser_api.get_post_discussions_by_payout limit 20 test
 
   marks:
-    - patterntest # differences in pending payout make it incomparable with original
+    - patterntest # differences in pending payout make it incomparable with original (also order of comments with the same payout was basically random)
     - failing
-    - xfail # pattern needs to be ordered first but there are bigger differences
+    - xfail # extra vote comes from the lack of muting functionality
 
   includes:
     - !include common.yaml
@@ -1313,9 +1311,7 @@
   test_name: Hivemind condenser_api.get_comment_discussions_by_payout limit 100 test
 
   marks:
-    - patterntest # differences in pending payout make it incomparable with original
-    - failing
-    - xfail # pattern needs to be ordered first but there are bigger differences
+    - patterntest # differences in pending payout make it incomparable with original (also order of comments with the same payout was basically random)
 
   includes:
     - !include common.yaml
