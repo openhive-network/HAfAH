@@ -9,8 +9,8 @@
       "feed": [],
       "json_metadata": "{\"profile\":{\"name\":null,\"about\":null,\"website\":null,\"location\":null,\"cover_image\":\"\",\"profile_image\":\"\"}}",
       "name": "steemit",
-      "net_vesting_shares": 0.0,
-      "post_count": 0,
+      "net_vesting_shares": 0,
+      "post_count": 1,
       "recent_replies": [],
       "reputation": 0,
       "transfer_history": []

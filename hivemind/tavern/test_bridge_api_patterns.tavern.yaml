@@ -674,8 +674,6 @@
       #not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
-    - failing
-    - xfail # plenty of differences, as if the whole routine does not work at all
 
   includes:
     - !include common.yaml
