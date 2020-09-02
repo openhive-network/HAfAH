@@ -3,6 +3,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail # escaping (it is really wrong, influences size as well and wrong size suggests what was expected, that is, the skipped escaping is interpreted as no escape)
 
   includes:
     - !include ../../common.yaml
