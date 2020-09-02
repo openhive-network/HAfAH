@@ -1,0 +1,37 @@
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_permlink" good permlink
+
+marks:
+  - patterntest # author first - when empty, takes alphabetical (later by permlink)
+
+includes:
+  - !include ../../common.yaml
+
+stages:
+  - name: list_comments_by_permlink
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start":
+              [
+                "",
+                "re-an-introduction-to-where-eagles-fly-the-american-wilderness-expedition-by-zedekiah-morse-20160824t212916",
+              ],
+            "limit": 10,
+            "order": "by_permlink",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "by_permlink_good_permlink"
+          directory: "database_api_patterns/list_comments"
