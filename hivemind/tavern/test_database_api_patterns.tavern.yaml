@@ -29,43 +29,6 @@
 
 ########################  CASHOUT TIME  ########################
 ---
-test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" wrong date size
-
-marks:
-  - patterntest
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_cashout_time
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          {
-            "start": ["2016-07-08", "", ""],
-            "limit": 10,
-            "order": "by_cashout_time",
-          }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_wrong_date"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
----
 test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" date and author
 
 marks:
@@ -147,12 +110,10 @@ stages:
           ignore_tags: ["timestamp"]
 
 ---
-test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" very future data
+test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" very future date
 
 marks:
-  - patterntest
-  - failing
-  - xfail
+  - patterntest # "2038-01-19T03:14:08" is the first timestamp that is "too far" for old fat node, but SQL has normal timestamps so we won't be generating error here
 
 includes:
   - !include common.yaml
@@ -181,8 +142,7 @@ stages:
         extra_kwargs:
           method: "list_comments_future_date"
           directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
+
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" no data
 
@@ -288,158 +248,6 @@ stages:
           method: "list_comments_permlink_good_params"
           directory: "database_api_patterns"
 
-########################  ROOT  ########################
----
-test_name: Hivemind database_api.list_comments patterns test order "by_root" only root_author
-
-marks:
-  - patterntest
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_root
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          {
-            "start": ["vi1son", "", "", ""],
-            "limit": 10,
-            "order": "by_root",
-          }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_only_root_author"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
-
----
-test_name: Hivemind database_api.list_comments patterns test order "by_root" with child_author 
-
-marks:
-  - patterntest # child_author, child_permlink are optional
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_root
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          {
-            "start": ["givemeyoursteem", "winners-of-steemit-food-challenge-3-desserts-to-die-for", "vi1son", ""],
-            "limit": 10,
-            "order": "by_root",
-          }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_not_found"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
-
----
-test_name: Hivemind database_api.list_comments patterns test order "by_root" wrong child_permlink 
-
-marks:
-  - patterntest
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_root
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          {
-            "start": ["givemeyoursteem", "winners-of-steemit-food-challenge-3-desserts-to-die-for", "vi1son", "randomvalues"],
-            "limit": 10,
-            "order": "by_root",
-          }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_not_found_vi1son_randomvalues"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
-
----
-test_name: Hivemind database_api.list_comments patterns test order "by_root" wrong val
-
-marks:
-  - patterntest
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_root
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          {
-            "start": ["giv", "winner", "", ""],
-            "limit": 10,
-            "order": "by_root",
-          }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_not_found_giv_winner"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
 
 ########################  PARENT  ########################
 ---
@@ -581,44 +389,6 @@ stages:
           directory: "database_api_patterns"
 
 ---
-test_name: Hivemind database_api.list_comments patterns test order "by_parent" child_author
-
-marks:
-  - patterntest # child_author, child_permlink are optional 
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_parent
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          {
-            "start": ["knozaki2015", "re-givemeyoursteem-winners-of-steemit-food-challenge-3-desserts-to-die-for-20160828t181032961z", "givemeyoursteem", ""],
-            "limit": 10,
-            "order": "by_parent",
-          }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_not_found_givemeyoursteem"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
-
----
 test_name: Hivemind database_api.list_comments patterns test order "by_parent" all data
 
 marks:
@@ -721,82 +491,6 @@ stages:
           method: "list_comments_author_last_update_corr_date"
           directory: "database_api_patterns"
 
----
-test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct date and author
-
-marks:
-  - patterntest
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_author_last_update
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          {
-            "start": ["", "2016-08-28T17:15:12", "givemeyoursteem", ""],
-            "limit": 10,
-            "order": "by_author_last_update",
-          }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_not_found_givemeyoursteem2"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
-
----
-test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct date and author wrong permlink
-
-marks:
-  - patterntest
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_author_last_update
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          {
-            "start": ["", "2016-08-28T17:15:12", "givemeyoursteem", "winners-of-steemit-food-challenge-3"],
-            "limit": 10,
-            "order": "by_author_last_update",
-          }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_not_found_givemeyoursteem_permlink"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
- 
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct date author and permlink
 
@@ -1009,49 +703,11 @@ stages:
           directory: "database_api_patterns"
 
 ---
-test_name: Hivemind database_api.list_comments patterns test order "by_last_update" wrong date
-
-marks:
-  - patterntest
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_update
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          {
-            "start": ["", "2016-08-24", "", ""],
-            "limit": 10,
-            "order": "by_last_update",
-          }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_day_out_of_range_start_1"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
----
 test_name: Hivemind database_api.list_comments patterns test order "by_last_update" very future date
 
 marks:
-  - patterntest
-  - failing
-  - xfail
+  - patterntest # "2038-01-19T03:14:08" is the first timestamp that is "too far" for old fat node, but SQL has normal timestamps so we won't be generating error here
+                # on a side note it generally makes no sense to run it without parent author specification
 
 includes:
   - !include common.yaml
@@ -1080,8 +736,7 @@ stages:
         extra_kwargs:
           method: "list_comments_day_out_of_range_start_2"
           directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
+
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_last_update" future date
 
