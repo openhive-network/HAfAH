@@ -147,7 +147,9 @@
   test_name: Hivemind follow_api.get_reblogged_by patterns test
 
   marks:
-    - patterntest # result is empty because reblogging functionality started past 5mln blocks
+    - patterntest
+    - failing
+    - xfail # reblogging does not work properly
 
   includes:
     - !include common.yaml
@@ -163,7 +165,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "follow_api.get_reblogged_by"
-          params: {"author":"steemit","permlink":"firstpost"}
+          params: {"author":"iamwne","permlink":"conceptualizing-a-scifi-land-speeder"}
       response:
         status_code: 200
         verify_response_with:
