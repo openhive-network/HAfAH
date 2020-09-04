@@ -9,7 +9,6 @@
 - get_account_references
 - get_account_reputations
 - get_account_votes
-- get_accounts
 - get_active_votes
 - get_active_witnesses
 - get_block
@@ -232,16 +231,6 @@ Windows call:
 
 Results:
 `"ApiError: get_account_votes is no longer supported, for details see https://steemit.com/steemit/@steemitdev/additional-public-api-change"
-
-#### get_accounts
-Linux call:
-`python3 get_accounts.py https://api.steem.house https://api.steemit.com ./ steemit alice steempeak
-
-Windows call:
-`python get_accounts.py https://api.steemit.com https://api.steem.house ./ steemit alice steempeak
-
-Results:
-Works fine.
 
 #### get_active_votes
 Linux call:

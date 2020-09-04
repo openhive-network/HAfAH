@@ -177,13 +177,6 @@
       - args: '{"author":"steemit","permlink":"firstpost"}'
     - <<: *base_benchmark
 
-  - benchmark:
-    - name: "get_accounts"
-    - variable_binds:
-      - method: "get_accounts"
-      - args: '[["steemit"]]'
-    - <<: *base_benchmark
-
 # No longer supported
 #  - benchmark:
 #    - name: "get_account_votes"
