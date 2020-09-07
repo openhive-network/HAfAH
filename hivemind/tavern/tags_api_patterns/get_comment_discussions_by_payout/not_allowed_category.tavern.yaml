@@ -1,0 +1,30 @@
+---
+  test_name: Hivemind tags_api.get_comment_discussions_by_payout patterns test limit not allowed category
+
+  marks:
+    - patterntest
+    # category name not allowed (starts with number)
+    # wrong output - comments with no payout
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_comment_discussions_by_payout
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "tags_api.get_comment_discussions_by_payout"
+          params: ["", "", "10", "432hz", 0]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "not_allowed_category"
+            directory: "tags_api_patterns/get_comment_discussions_by_payout"
