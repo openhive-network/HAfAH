@@ -289,8 +289,6 @@ test_name: Hivemind database_api.list_comments patterns test order "by_parent" n
 
 marks:
   - patterntest # first 2 params are required
-  - failing
-  - xfail # title
 
 includes:
   - !include common.yaml

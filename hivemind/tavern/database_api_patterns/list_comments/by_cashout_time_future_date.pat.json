@@ -22,7 +22,7 @@
       },
       "depth": 0,
       "id": 1,
-      "json_metadata": "{}",
+      "json_metadata": "",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-03-30T18:30:18",
       "max_accepted_payout": {
@@ -71,7 +71,7 @@
       },
       "depth": 1,
       "id": 2,
-      "json_metadata": "{}",
+      "json_metadata": "",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-03-30T19:52:30",
       "max_accepted_payout": {
@@ -120,7 +120,7 @@
       },
       "depth": 1,
       "id": 3,
-      "json_metadata": "{}",
+      "json_metadata": "",
       "last_payout": "2016-08-24T19:59:42",
       "last_update": "2016-03-31T13:54:33",
       "max_accepted_payout": {
