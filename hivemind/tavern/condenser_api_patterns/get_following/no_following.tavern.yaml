@@ -1,0 +1,28 @@
+---
+  test_name: Hivemind condenser_api.get_following no following patterns test
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_following no following
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_following"
+          params: ["test2",null,"blog",1000]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "no_following"
+            directory: "condenser_api_patterns/get_following"
