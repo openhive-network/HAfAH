@@ -2,9 +2,8 @@
   test_name: Hivemind tags_api.get_comment_discussions_by_payout patterns test author
 
   marks:
-    - patterntest
-    # does not work correctly, start_author does not matter in sorting
-    # take only comments with payouts
+    - patterntest # changed behaviour so when either start_author or start_permlink is passed, both have to be passed and point to actual post
+    - negative
 
   includes:
     - !include ../../common.yaml
@@ -27,4 +26,5 @@
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
             method: "author"
-            directory: "tags_api_patterns/get_comment_discussions_by_payout"
+            directory: "tags_api_negative/get_comment_discussions_by_payout"
+            error_response: true

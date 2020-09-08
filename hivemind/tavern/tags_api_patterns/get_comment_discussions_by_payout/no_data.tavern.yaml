@@ -2,7 +2,7 @@
   test_name: Hivemind tags_api.get_comment_discussions_by_payout patterns test no data
 
   marks:
-    - patterntest
+    - patterntest # differences in pending payout make it incomparable with original (also order of comments with the same payout was basically random)
 
   includes:
     - !include ../../common.yaml
