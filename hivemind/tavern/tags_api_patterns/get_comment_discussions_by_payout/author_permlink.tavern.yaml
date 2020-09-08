@@ -1,0 +1,29 @@
+---
+  test_name: Hivemind tags_api.get_comment_discussions_by_payout patterns test author permlink
+
+  marks:
+    - patterntest
+    # does not work correctly, start_author and start_permlink does not matter
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_comment_discussions_by_payout
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "tags_api.get_comment_discussions_by_payout"
+          params: ["otc", "hi-steemit-let-me-take-a-picture", "10", "photography", 0]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "author_permlink"
+            directory: "tags_api_patterns/get_comment_discussions_by_payout"
