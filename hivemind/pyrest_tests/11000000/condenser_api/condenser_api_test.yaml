@@ -175,14 +175,6 @@
       - args: '{"author":"steemit","permlink":"firstpost"}'
     - <<: *base_test
 
-# Method not found 
-#  - test:
-#    - name: "get_accounts"
-#    - variable_binds:
-#      - method: "get_accounts"
-#      - args: '[["steemit"]]'
-#    - <<: *base_test
-
 # No longer supported
 #  - test:
 #    - name: "get_account_votes"

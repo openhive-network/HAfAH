@@ -22,10 +22,6 @@ tests = [
       "params": ["", 20]
    },
    {
-      "method": "condenser_api.get_accounts",
-      "params": [["initminer","temp"]]
-   },
-   {
       "method": "condenser_api.get_active_votes",
       "params": ["temp", "test1"]
    },
