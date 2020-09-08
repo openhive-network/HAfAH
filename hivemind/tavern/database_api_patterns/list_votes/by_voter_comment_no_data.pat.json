@@ -1,0 +1,114 @@
+{
+    "votes": [
+        {
+            "id": 54513,
+            "voter": "nxt2",
+            "author": "satoshi",
+            "permlink": "bulk-generate-privkeys",
+            "weight": 287703877,
+            "rshares": "4800000000",
+            "vote_percent": 10000,
+            "last_update": "2016-06-05T06:52:00",
+            "num_changes": -1
+        },
+        {
+            "id": 54508,
+            "voter": "nxt2",
+            "author": "au1nethyb1",
+            "permlink": "reducing-friction-for-critical-mass-adoption-of-steemit",
+            "weight": 4,
+            "rshares": "4900000000",
+            "vote_percent": 10000,
+            "last_update": "2016-06-05T06:50:27",
+            "num_changes": -1
+        },
+        {
+            "id": 54511,
+            "voter": "nxt2",
+            "author": "blocktrades",
+            "permlink": "-blocktrades-adds-support-for-directly-buyingselling-steem",
+            "weight": 1,
+            "rshares": "4900000000",
+            "vote_percent": 10000,
+            "last_update": "2016-06-05T06:50:48",
+            "num_changes": -1
+        },
+        {
+            "id": 54512,
+            "voter": "nxt2",
+            "author": "nextgencrypto",
+            "permlink": "request-for-proposal-steem-wordpress-plugin",
+            "weight": 2,
+            "rshares": "4900000000",
+            "vote_percent": 10000,
+            "last_update": "2016-06-05T06:51:15",
+            "num_changes": -1
+        },
+        {
+            "id": 54509,
+            "voter": "nxt2",
+            "author": "dan",
+            "permlink": "is-the-dao-going-to-be-doa",
+            "weight": 3,
+            "rshares": "4900000000",
+            "vote_percent": 10000,
+            "last_update": "2016-06-05T06:50:36",
+            "num_changes": -1
+        },
+        {
+            "id": 54507,
+            "voter": "nxt2",
+            "author": "judyhopps",
+            "permlink": "hi-i-googled-something-and-ended-up-here",
+            "weight": 17,
+            "rshares": "5000000000",
+            "vote_percent": 10000,
+            "last_update": "2016-06-05T06:50:03",
+            "num_changes": -1
+        },
+        {
+            "id": 54504,
+            "voter": "nxt2",
+            "author": "clains",
+            "permlink": "hello-world-my-name-is-clains",
+            "weight": 9,
+            "rshares": "5000000000",
+            "vote_percent": 10000,
+            "last_update": "2016-06-05T06:48:18",
+            "num_changes": -1
+        },
+        {
+            "id": 54505,
+            "voter": "nxt2",
+            "author": "smooth",
+            "permlink": "voting-is-a-popularity-contest",
+            "weight": 12,
+            "rshares": "5000000000",
+            "vote_percent": 10000,
+            "last_update": "2016-06-05T06:48:27",
+            "num_changes": -1
+        },
+        {
+            "id": 54506,
+            "voter": "nxt2",
+            "author": "bleepcoin",
+            "permlink": "hi-im-ollie",
+            "weight": 71,
+            "rshares": "5000000000",
+            "vote_percent": 10000,
+            "last_update": "2016-06-05T06:48:30",
+            "num_changes": -1
+        },
+        {
+            "id": 54502,
+            "voter": "nxt2",
+            "author": "donkeypong",
+            "permlink": "my-name-is-ziggy-aka-donkeypongs-companion",
+            "weight": 61,
+            "rshares": "5100000000",
+            "vote_percent": 10000,
+            "last_update": "2016-06-05T06:48:12",
+            "num_changes": -1
+        }
+    ]
+}

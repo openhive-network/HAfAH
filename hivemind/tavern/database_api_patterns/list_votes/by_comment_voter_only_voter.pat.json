@@ -1,0 +1,114 @@
+{
+    "votes": [
+        {
+            "id": 603086,
+            "voter": "curator",
+            "author": "steemit",
+            "permlink": "firstpost",
+            "weight": 0,
+            "rshares": 95219365,
+            "vote_percent": 10000,
+            "last_update": "2016-07-19T04:40:30",
+            "num_changes": -1
+        },
+        {
+            "id": 1614263,
+            "voter": "dubovoy",
+            "author": "steemit",
+            "permlink": "firstpost",
+            "weight": 0,
+            "rshares": 232295871,
+            "vote_percent": 10000,
+            "last_update": "2016-07-31T19:55:21",
+            "num_changes": 0
+        },
+        {
+            "id": 4098784,
+            "voter": "solos",
+            "author": "steemit",
+            "permlink": "firstpost",
+            "weight": 0,
+            "rshares": 0,
+            "vote_percent": 10000,
+            "last_update": "2016-09-09T15:34:36",
+            "num_changes": 0
+        },
+        {
+            "id": 650424,
+            "voter": "creatorgalaxy",
+            "author": "steemit",
+            "permlink": "firstpost",
+            "weight": 0,
+            "rshares": 96945805,
+            "vote_percent": 10000,
+            "last_update": "2016-07-19T20:29:33",
+            "num_changes": -1
+        },
+        {
+            "id": 776832,
+            "voter": "trigonice29",
+            "author": "steemit",
+            "permlink": "firstpost",
+            "weight": 0,
+            "rshares": 99813231,
+            "vote_percent": 10000,
+            "last_update": "2016-07-21T12:24:27",
+            "num_changes": -1
+        },
+        {
+            "id": 3479202,
+            "voter": "blysards",
+            "author": "steemit",
+            "permlink": "firstpost",
+            "weight": 0,
+            "rshares": 0,
+            "vote_percent": 10000,
+            "last_update": "2016-08-28T16:49:57",
+            "num_changes": 0
+        },
+        {
+            "id": 2783362,
+            "voter": "uwe69",
+            "author": "steemit",
+            "permlink": "firstpost",
+            "weight": 0,
+            "rshares": 3721016208,
+            "vote_percent": 10000,
+            "last_update": "2016-08-16T10:07:39",
+            "num_changes": 0
+        },
+        {
+            "id": 911514,
+            "voter": "nigmat",
+            "author": "steemit",
+            "permlink": "firstpost",
+            "weight": 0,
+            "rshares": 1279854,
+            "vote_percent": 10000,
+            "last_update": "2016-07-23T13:32:36",
+            "num_changes": -1
+        },
+        {
+            "id": 2217163,
+            "voter": "magicmonk",
+            "author": "steemit",
+            "permlink": "firstpost",
+            "weight": 0,
+            "rshares": "13974353753",
+            "vote_percent": 10000,
+            "last_update": "2016-08-07T05:23:48",
+            "num_changes": 0
+        },
+        {
+            "id": 2633913,
+            "voter": "satoshifpv",
+            "author": "steemit",
+            "permlink": "firstpost",
+            "weight": 0,
+            "rshares": "4968585456",
+            "vote_percent": 10000,
+            "last_update": "2016-08-13T15:16:36",
+            "num_changes": 0
+        }
+    ]
+}
