@@ -618,7 +618,7 @@
   "created": "2016-03-30T18:30:18",
   "curator_payout_value": "0.756 HBD",
   "depth": 0,
-  "json_metadata": "{}",
+  "json_metadata": "",
   "last_payout": "2016-08-24T19:59:42",
   "last_update": "2016-03-30T18:30:18",
   "max_accepted_payout": "1000000.000 HBD",
