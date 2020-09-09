@@ -1,0 +1,34 @@
+---
+test_name: Hivemind database_api.list_comments day of the month out of range "by_last_update"
+
+marks:
+  - patterntest
+  - negative
+  - failing
+  - xfail
+
+includes:
+  - !include ../../common.yaml
+
+stages:
+  - name: database_api.list_comments day of the month out of range "by_last_update"
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          { "start": ["", "", "", ""], "limit": 10, "order": "by_last_update" }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "day_out_of_range_empty"
+          directory: "database_api_negative/list_comments"
+          error_response: true
+          ignore_tags: ["timestamp"]
