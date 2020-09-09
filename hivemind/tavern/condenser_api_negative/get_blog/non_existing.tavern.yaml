@@ -1,0 +1,30 @@
+---
+  test_name: Hivemind condenser_api.get_blog non existing account test
+
+  marks:
+    - patterntest # wrong response, should be clean error (now there is no way to make difference between nonexisting account and account that does not blog)
+    - negative
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_blog non existing account
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_blog"
+          params: {"account":"non.existing","start_entry_id":0,"limit":1}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "non_existing"
+            directory: "condenser_api_negative/get_blog"
+            error_response: true
