@@ -7,7 +7,7 @@
     "rshares": 375241,
     "vote_percent": 100,
     "voter": "dantheman",
-    "weight": "32866333630"
+    "weight": 32866333630
   },
   {
     "author": "admin",
@@ -27,7 +27,7 @@
     "rshares": 375241,
     "vote_percent": 100,
     "voter": "dantheman",
-    "weight": "7884736843"
+    "weight": 7884736843
   },
   {
     "author": "red",
@@ -47,7 +47,7 @@
     "rshares": 375241,
     "vote_percent": 100,
     "voter": "dantheman",
-    "weight": "33132337607"
+    "weight": 33132337607
   },
   {
     "author": "abit",
