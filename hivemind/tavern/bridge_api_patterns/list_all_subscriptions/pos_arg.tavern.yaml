@@ -1,15 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.get_profile account lacking vlaue
+  test_name: Hivemind bridge_api.list_all_subscriptions patterns test
 
   marks:
-    - patterntest
-    - negative
+    - patterntest # same with params: {account: "steemit"} # no nonempty result possible for 5mln set
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_post_header gtg
+    - name: list_all_subscriptions
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.get_profile"
-          params: {}
+          method: "bridge.list_all_subscriptions"
+          params: ["steemit"]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "account_lacking_value"
-            directory: "bridge_api_negative/get_profile"
-            error_response: true
+            method: "pos_arg"
+            directory: "bridge_api_patterns/list_all_subscriptions"
