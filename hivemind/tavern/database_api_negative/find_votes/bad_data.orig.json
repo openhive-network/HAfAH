@@ -10,17 +10,16 @@
           "file": "database_api.cpp",
           "hostname": "",
           "level": "error",
-          "line": 1050,
-          "method": "list_comments",
-          "timestamp": "2020-09-10T17:10:39"
+          "line": 1280,
+          "method": "find_votes"
         },
         "data": {
-          "a": "giv",
-          "p": "winner"
+          "a": "hiveio",
+          "p": "firstpost"
         },
-        "format": "root != nullptr: Could not find comment ${a}/${p}."
+        "format": "comment != nullptr: Could not find comment ${a}/${p}"
       }
     ]
   },
-  "message": "Assert Exception:root != nullptr: Could not find comment giv/winner."
+  "message": "Assert Exception:comment != nullptr: Could not find comment hiveio/firstpost"
 }

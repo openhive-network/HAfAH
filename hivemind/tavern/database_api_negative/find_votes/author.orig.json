@@ -10,17 +10,16 @@
           "file": "database_api.cpp",
           "hostname": "",
           "level": "error",
-          "line": 1134,
-          "method": "list_comments",
-          "timestamp": "2020-09-10T17:10:39"
+          "line": 1280,
+          "method": "find_votes"
         },
         "data": {
-          "a": "givemeyoursteem",
+          "a": "kental",
           "p": ""
         },
-        "format": "comment != nullptr: Could not find comment ${a}/${p}."
+        "format": "comment != nullptr: Could not find comment ${a}/${p}"
       }
     ]
   },
-  "message": "Assert Exception:comment != nullptr: Could not find comment givemeyoursteem/."
+  "message": "Assert Exception:comment != nullptr: Could not find comment kental/"
 }
