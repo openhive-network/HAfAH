@@ -1,0 +1,114 @@
+{
+    "votes": [
+        {
+            "id": 3341364,
+            "voter": "pickoum",
+            "author": "roelandp",
+            "permlink": "tldr-an-exploration-in-steem-botting-what-i-learned-since-it-s-inception-and-downfall-over-the-course-of-20-hours",
+            "weight": "11168221241042",
+            "rshares": 67807559,
+            "vote_percent": 10000,
+            "last_update": "2016-08-25T21:16:24",
+            "num_changes": -1
+        },
+        {
+            "id": 3397159,
+            "voter": "pfunk",
+            "author": "anxietymaven",
+            "permlink": "re-adm-re-anxietymaven-ask-yourself-one-question-fuck-steemit-or-nah-20160825t211407406z",
+            "weight": 0,
+            "rshares": -742966944841,
+            "vote_percent": -10000,
+            "last_update": "2016-08-26T22:06:21",
+            "num_changes": 0
+        },
+        {
+            "id": 3344706,
+            "voter": "boy",
+            "author": "jamielefay",
+            "permlink": "ahe-ey-sky-falling-an-original-novel-part-1-audiobook",
+            "weight": "6006017962432724",
+            "rshares": 2476122539,
+            "vote_percent": 10000,
+            "last_update": "2016-08-25T22:28:54",
+            "num_changes": -1
+        },
+        {
+            "id": 3344694,
+            "voter": "bue-witness",
+            "author": "jamielefay",
+            "permlink": "ahe-ey-sky-falling-an-original-novel-part-1-audiobook",
+            "weight": "7417167962646132",
+            "rshares": 3005691694,
+            "vote_percent": 10000,
+            "last_update": "2016-08-25T22:28:45",
+            "num_changes": -1
+        },
+        {
+            "id": 3344711,
+            "voter": "bunny",
+            "author": "jamielefay",
+            "permlink": "ahe-ey-sky-falling-an-original-novel-part-1-audiobook",
+            "weight": "1350783817158092",
+            "rshares": 557353091,
+            "vote_percent": 10000,
+            "last_update": "2016-08-25T22:28:57",
+            "num_changes": -1
+        },
+        {
+            "id": 3344696,
+            "voter": "bue",
+            "author": "jamielefay",
+            "permlink": "ahe-ey-sky-falling-an-original-novel-part-1-audiobook",
+            "weight": "104552198157919482",
+            "rshares": "42722553918",
+            "vote_percent": 10000,
+            "last_update": "2016-08-25T22:28:48",
+            "num_changes": -1
+        },
+        {
+            "id": 3344699,
+            "voter": "mini",
+            "author": "jamielefay",
+            "permlink": "ahe-ey-sky-falling-an-original-novel-part-1-audiobook",
+            "weight": "3221828527667312",
+            "rshares": 1327119432,
+            "vote_percent": 10000,
+            "last_update": "2016-08-25T22:28:48",
+            "num_changes": -1
+        },
+        {
+            "id": 3344712,
+            "voter": "moon",
+            "author": "jamielefay",
+            "permlink": "ahe-ey-sky-falling-an-original-novel-part-1-audiobook",
+            "weight": "414011598841308",
+            "rshares": 170849766,
+            "vote_percent": 10000,
+            "last_update": "2016-08-25T22:29:00",
+            "num_changes": -1
+        },
+        {
+            "id": 3344702,
+            "voter": "healthcare",
+            "author": "jamielefay",
+            "permlink": "ahe-ey-sky-falling-an-original-novel-part-1-audiobook",
+            "weight": "1207918840148852",
+            "rshares": 497724578,
+            "vote_percent": 10000,
+            "last_update": "2016-08-25T22:28:51",
+            "num_changes": -1
+        },
+        {
+            "id": 3344709,
+            "voter": "daniel.pan",
+            "author": "jamielefay",
+            "permlink": "ahe-ey-sky-falling-an-original-novel-part-1-audiobook",
+            "weight": "1851065537354896",
+            "rshares": 763593782,
+            "vote_percent": 10000,
+            "last_update": "2016-08-25T22:28:54",
+            "num_changes": -1
+        }
+    ]
+}
