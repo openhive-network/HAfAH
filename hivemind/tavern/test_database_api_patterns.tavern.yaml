@@ -806,3 +806,104 @@ stages:
           directory: "database_api_patterns"
           error_response: true
           ignore_tags: ["timestamp"]
+
+
+---
+test_name: Hivemind database_api.list_votes patterns test order "by_voter_comment"
+
+marks:
+  - patterntest # show last comments in base
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_votes_by_voter_comment
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_votes"
+        params:
+          {
+            "start":["nxt2", "roelandp", "tldr-an-exploration-in-steem-botting-what-i-learned-since-it-s-inception-and-downfall-over-the-course-of-20-hours"],
+            "limit": 10,
+            "order": "by_voter_comment",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_votes_by_voter_comment"
+          directory: "database_api_patterns"
+
+---
+test_name: Hivemind database_api.list_votes patterns test order "by_comment_voter"
+
+marks:
+  - patterntest # show last comments in base
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: list_votes_by_comment_voter
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_votes"
+        params:
+          {
+            "start":["roelandp", "tldr-an-exploration-in-steem-botting-what-i-learned-since-it-s-inception-and-downfall-over-the-course-of-20-hours", "nxt2"],
+            "limit": 10,
+            "order": "by_comment_voter",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "list_votes_by_comment_voter"
+          directory: "database_api_patterns"
+
+test_name: Hivemind database_api.find_votes patterns test
+
+marks:
+  - patterntest
+
+includes:
+  - !include common.yaml
+
+stages:
+  - name: find_votes
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.find_votes"
+        params:
+          {
+            "author":"roelandp",
+            "permlink":"tldr-an-exploration-in-steem-botting-what-i-learned-since-it-s-inception-and-downfall-over-the-course-of-20-hours"
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "find_votes"
+          directory: "database_api_patterns"

@@ -4,31 +4,31 @@
       {
         "percent": "10000",
         "reputation": 0,
-        "rshares": "170280952462",
+        "rshares": 170280952462,
         "voter": "anyx"
       },
       {
         "percent": "2500",
         "reputation": 0,
-        "rshares": "14565850595",
+        "rshares": 14565850595,
         "voter": "cheetah"
       },
       {
         "percent": "10000",
         "reputation": 0,
-        "rshares": "100056560",
+        "rshares": 100056560,
         "voter": "cheetah55"
       },
       {
         "percent": "10000",
         "reputation": 0,
-        "rshares": "120732244",
+        "rshares": 120732244,
         "voter": "cheetah56"
       },
       {
         "percent": "10000",
         "reputation": 0,
-        "rshares": "99934003",
+        "rshares": 99934003,
         "voter": "cheetah57"
       }
     ],
@@ -66,7 +66,7 @@
       {
         "percent": "10000",
         "reputation": 0,
-        "rshares": "15367342797",
+        "rshares": 15367342797,
         "voter": "cryptos"
       }
     ],
@@ -104,7 +104,7 @@
       {
         "percent": "10000",
         "reputation": 0,
-        "rshares": "3286335338",
+        "rshares": 3286335338,
         "voter": "beanz"
       }
     ],
