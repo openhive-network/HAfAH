@@ -812,7 +812,7 @@ stages:
 test_name: Hivemind database_api.list_votes patterns test order "by_voter_comment"
 
 marks:
-  - patterntest # show last comments in base
+  - patterntest
 
 includes:
   - !include common.yaml
@@ -846,7 +846,7 @@ stages:
 test_name: Hivemind database_api.list_votes patterns test order "by_comment_voter"
 
 marks:
-  - patterntest # show last comments in base
+  - patterntest
 
 includes:
   - !include common.yaml
@@ -876,6 +876,7 @@ stages:
           method: "list_votes_by_comment_voter"
           directory: "database_api_patterns"
 
+---
 test_name: Hivemind database_api.find_votes patterns test
 
 marks:
