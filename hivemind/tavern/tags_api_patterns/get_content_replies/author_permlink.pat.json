@@ -4,7 +4,7 @@
       {
         "percent": "10000",
         "reputation": 0,
-        "rshares": "742566481",
+        "rshares": 742566481,
         "voter": "patrick-g"
       }
     ],
@@ -42,13 +42,13 @@
       {
         "percent": "10000",
         "reputation": 0,
-        "rshares": "742566481",
+        "rshares": 742566481,
         "voter": "patrick-g"
       },
       {
         "percent": "10000",
         "reputation": 0,
-        "rshares": "111000395",
+        "rshares": 111000395,
         "voter": "bustillos"
       }
     ],
