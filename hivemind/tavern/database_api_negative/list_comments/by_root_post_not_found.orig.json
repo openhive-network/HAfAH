@@ -11,7 +11,8 @@
           "hostname": "",
           "level": "error",
           "line": 1050,
-          "method": "list_comments"
+          "method": "list_comments",
+          "timestamp": "2020-09-10T17:10:39"
         },
         "data": {
           "a": "giv",

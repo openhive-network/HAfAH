@@ -2,8 +2,9 @@
 test_name: Hivemind database_api.list_votes patterns test order "by_comment_voter" only voter
 
 marks:
-  - patterntest
-  - xfail # wrong output, shows first post votes
+  - patterntest # shows first post votes because primary ordering is by comment and when comment is skipped it can only start with the very first post
+  - failing
+  - xfail # to be checked why there is such a difference in order (both old and new is by voter id in this case since comment is the same)
 
 includes:
   - !include ../../common.yaml

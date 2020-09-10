@@ -1,0 +1,31 @@
+---
+test_name: Hivemind database_api.list_comments test order "by_cashout_time" no date
+
+marks:
+  - patterntest
+  - negative
+
+includes:
+  - !include ../../common.yaml
+
+stages:
+  - name: list_comments no date
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          { "start": ["", "", ""], "limit": 10, "order": "by_cashout_time" }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "by_cashout_time_no_date"
+          directory: "database_api_negative/list_comments"
+          error_response: true

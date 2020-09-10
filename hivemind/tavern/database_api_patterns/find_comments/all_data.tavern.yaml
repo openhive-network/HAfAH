@@ -20,9 +20,7 @@ stages:
         method: "database_api.find_comments"
         params:
           {
-            "comments": [["magicmonk","hello-steemit-my-name-s-eddie-a-k-a-the-magic-monk-i-am-a-youtuber-and-a-high-school-teacher-let-the-writing-begin"]],
-            "limit": 0,
-            "order": "",
+            "comments": [["magicmonk","hello-steemit-my-name-s-eddie-a-k-a-the-magic-monk-i-am-a-youtuber-and-a-high-school-teacher-let-the-writing-begin"]]
           }
     response:
       status_code: 200

@@ -2,8 +2,7 @@
 test_name: Hivemind database_api.list_votes patterns test order "by_voter_comment" author + permlink
 
 marks:
-  - patterntest
-  - xfail # show "voter": "nxt2" votes, not connected with author and permlink (like no data)
+  - patterntest # show "voter": "nxt2" votes, not connected with author and permlink (like no data)
 
 includes:
   - !include ../../common.yaml

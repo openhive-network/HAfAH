@@ -2,8 +2,7 @@
 test_name: Hivemind database_api.list_votes patterns test order "by_comment_voter" one before last voter
 
 marks:
-  - patterntest
-  - xfail # only first is correct, rest is random
+  - patterntest # only first is correct, rest is basically random
 
 includes:
   - !include ../../common.yaml
