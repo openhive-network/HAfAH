@@ -1,0 +1,30 @@
+---
+  test_name: Hivemind bridge_api.get_payout_stats too many positional arguments
+
+  marks:
+    - patterntest
+    - negative
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_payout_stats too many positional arguments
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_payout_stats"
+          params: ["10", ""]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "too_many_positional_arguments"
+            directory: "bridge_api_negative/get_payout_stats"
+            error_response: true

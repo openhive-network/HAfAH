@@ -1,0 +1,31 @@
+---
+  test_name: Hivemind bridge_api.get_relationship_between_accounts true state 3 # 8080
+            # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+            # no true from follow_blacklists and blacklisted for 5mln set
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_relationship_between_accounts correct path
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_relationship_between_accounts"
+          params: {"account1": "chhaylin","account2": "cannabisclub"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "true_state_3"
+            directory: "bridge_api_patterns/get_relationship_between_accounts"
+

@@ -1,0 +1,28 @@
+---
+  test_name: Hivemind bridge_api.list_subscribers patterns test
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+  marks:
+    - patterntest # no nonempty result possible for 5mln set
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: list_subscribers
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.list_subscribers"
+          params: {"community":"hive-123456"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "named_arg"
+            directory: "bridge_api_patterns/list_subscribers"

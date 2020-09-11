@@ -1,0 +1,30 @@
+---
+  test_name: Hivemind bridge_api.post_notifications patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail # very different result
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: post_notifications
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.post_notifications"
+          params: {"author":"admin", "permlink":"firstpost", "min_score":15}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "first"
+            directory: "bridge_api_patterns/post_notifications"
