@@ -10,7 +10,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_community_context
+    - name: get_community
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST

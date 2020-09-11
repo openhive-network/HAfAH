@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "community not found",
+  "data": "invalid account name type",
   "message": "Invalid parameters"
 }

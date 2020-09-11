@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "'permlink' parameter lacking default value",
+  "data": "missing a required argument: 'permlink'",
   "message": "Invalid parameters"
 }

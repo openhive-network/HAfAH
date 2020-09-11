@@ -1,6 +1,6 @@
 ---
-  test_name: Hivemind bridge_api.get_payout_stats over limit
-
+  test_name: Hivemind bridge_api.get_payout_stats over limit test
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
     - negative

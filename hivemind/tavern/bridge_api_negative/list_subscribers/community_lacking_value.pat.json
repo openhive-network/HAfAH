@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "'community' parameter lacking default value",
+  "data": "missing a required argument: 'community'",
   "message": "Invalid parameters"
 }

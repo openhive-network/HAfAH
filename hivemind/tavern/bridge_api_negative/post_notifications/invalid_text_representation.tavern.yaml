@@ -2,7 +2,7 @@
   test_name: bridge_api.post_notifications invalid text representation
 
   marks:
-    - patterntest
+    - patterntest # change it into proper error, server error, especially from SQL, is not good enough
     - negative
 
   includes:

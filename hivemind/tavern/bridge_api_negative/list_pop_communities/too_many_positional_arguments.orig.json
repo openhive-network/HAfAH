@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "Account 'not.existing' does not exist",
+  "data": "too many positional arguments",
   "message": "Invalid parameters"
 }

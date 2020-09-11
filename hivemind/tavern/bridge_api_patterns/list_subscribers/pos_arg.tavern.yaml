@@ -17,7 +17,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.list_subscribers"
-          params: ["789"]
+          params: ["hive-123456"]
       response:
         status_code: 200
         verify_response_with:

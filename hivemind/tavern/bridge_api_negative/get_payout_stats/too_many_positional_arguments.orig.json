@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "limit exceeds max (251 > 250)",
+  "data": "too many positional arguments",
   "message": "Invalid parameters"
 }

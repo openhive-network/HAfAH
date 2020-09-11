@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.list_all_subscriptions patterns test
 
   marks:
-    - patterntest # same with params: {account: "steemit"} # no nonempty result possible for 5mln set
+    - patterntest # no nonempty result possible for 5mln set
 
   includes:
     - !include ../../common.yaml
