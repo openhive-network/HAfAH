@@ -3,8 +3,6 @@ test_name: Hivemind database_api.list_votes patterns test order "by_voter_commen
 
 marks:
   - patterntest
-  - failing
-  - xfail # order of votes on CI is consistently different than order on steemdev
 
 includes:
   - !include ../../common.yaml

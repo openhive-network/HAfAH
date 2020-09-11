@@ -21,7 +21,7 @@ stages:
         params:
           {
             "author": "kental",
-            "permlink": "hi-steem-my-russian-trip-on-the-bike-big-party-in-moscow-tour-of-moscow-by-slava",
+            "permlink": "hi-steem-my-russian-trip-on-the-bike-big-party-in-moscow-tour-of-moscow-by-slava"
           }
     response:
       status_code: 200
