@@ -1,5 +1,5 @@
 {
-  "code": -32000,
-  "data": "ValueError: invalid literal for int() with base 10: ''",
-  "message": "Server error"
+  "code": -32602,
+  "data": "invalid literal for int() with base 10: 'abc'",
+  "message": "Invalid parameters"
 }

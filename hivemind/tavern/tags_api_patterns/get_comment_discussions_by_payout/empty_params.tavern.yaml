@@ -1,9 +1,8 @@
 ---
-  test_name: Hivemind tags_api.get_comment_discussions_by_payout patterns test no data error
+  test_name: Hivemind tags_api.get_comment_discussions_by_payout patterns test no data
 
   marks:
-    - patterntest
-    - negative
+    - patterntest # original failed on empty string as limit, but now we treat it as default, so the results are the same as if params were skipped
 
   includes:
     - !include ../../common.yaml
@@ -26,5 +25,4 @@
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
             method: "empty_params"
-            directory: "tags_api_negative/get_comment_discussions_by_payout"
-            error_response: true
+            directory: "tags_api_patterns/get_comment_discussions_by_payout"

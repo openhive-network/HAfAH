@@ -2,43 +2,43 @@
   "admin/firstpost": {
     "active_votes": [
       {
-        "rshares": "-375241",
+        "rshares": -375241,
         "voter": "dantheman"
       },
       {
-        "rshares": "5100",
+        "rshares": 5100,
         "voter": "steemit46"
       },
       {
-        "rshares": "81125",
+        "rshares": 81125,
         "voter": "roadscape"
       },
       {
-        "rshares": "425903066",
+        "rshares": 425903066,
         "voter": "gekko"
       },
       {
-        "rshares": "431616594",
+        "rshares": 431616594,
         "voter": "acidyo"
       },
       {
-        "rshares": "742566481",
+        "rshares": 742566481,
         "voter": "patrick-g"
       },
       {
-        "rshares": "58854897335",
+        "rshares": 58854897335,
         "voter": "business"
       },
       {
-        "rshares": "108855472",
+        "rshares": 108855472,
         "voter": "kingtylervvs"
       },
       {
-        "rshares": "244129227",
+        "rshares": 244129227,
         "voter": "kewpiedoll"
       },
       {
-        "rshares": "1615731741",
+        "rshares": 1615731741,
         "voter": "naturalista"
       }
     ],
@@ -83,7 +83,7 @@
   "bestmalik/re-steemit-firstpost-20160726t035722561z": {
     "active_votes": [
       {
-        "rshares": "7413824",
+        "rshares": 7413824,
         "voter": "cire81"
       }
     ],
@@ -129,7 +129,7 @@
   "business/re-red-steemit-firstpost-2-20160713t083846149z": {
     "active_votes": [
       {
-        "rshares": "724886327",
+        "rshares": 724886327,
         "voter": "patrick-g"
       }
     ],
@@ -175,35 +175,35 @@
   "business/re-steemit-firstpost-20160713t082910980z": {
     "active_votes": [
       {
-        "rshares": "724886327",
+        "rshares": 724886327,
         "voter": "patrick-g"
       },
       {
-        "rshares": "58854897335",
+        "rshares": 58854897335,
         "voter": "business"
       },
       {
-        "rshares": "628198247",
+        "rshares": 628198247,
         "voter": "graystone"
       },
       {
-        "rshares": "256298401739",
+        "rshares": 256298401739,
         "voter": "juneaugoldbuyer"
       },
       {
-        "rshares": "28483434",
+        "rshares": 28483434,
         "voter": "gjhi4552201"
       },
       {
-        "rshares": "226779353",
+        "rshares": 226779353,
         "voter": "steg"
       },
       {
-        "rshares": "54017869",
+        "rshares": 54017869,
         "voter": "zelious"
       },
       {
-        "rshares": "51109965",
+        "rshares": 51109965,
         "voter": "f1111111"
       }
     ],
@@ -249,11 +249,11 @@
   "deanliu/re-steemit-firstpost-20160810t083336206z": {
     "active_votes": [
       {
-        "rshares": "74273734",
+        "rshares": 74273734,
         "voter": "bitmaxt"
       },
       {
-        "rshares": "56152551",
+        "rshares": 56152551,
         "voter": "lovetosteemit"
       }
     ],
@@ -299,11 +299,11 @@
   "edbriv/re-steemit-firstpost-20160801t184846033z": {
     "active_votes": [
       {
-        "rshares": "-336740570",
+        "rshares": -336740570,
         "voter": "dtbahoney"
       },
       {
-        "rshares": "52272448",
+        "rshares": 52272448,
         "voter": "edbriv"
       }
     ],
@@ -349,19 +349,19 @@
   "flandude/re-steemit-firstpost-20160811t225325571z": {
     "active_votes": [
       {
-        "rshares": "47738566",
+        "rshares": 47738566,
         "voter": "alktoni"
       },
       {
-        "rshares": "555987168",
+        "rshares": 555987168,
         "voter": "funkywanderer"
       },
       {
-        "rshares": "45336058",
+        "rshares": 45336058,
         "voter": "andressilvera"
       },
       {
-        "rshares": "50997147",
+        "rshares": 50997147,
         "voter": "david.prochnow"
       }
     ],
@@ -410,7 +410,7 @@
   "future24/re-steemit-firstpost-20160818t030224104z": {
     "active_votes": [
       {
-        "rshares": "53122308",
+        "rshares": 53122308,
         "voter": "mandarin99"
       }
     ],
@@ -456,15 +456,15 @@
   "gekko/re-steemit-firstpost-20160721t223937736z": {
     "active_votes": [
       {
-        "rshares": "425903066",
+        "rshares": 425903066,
         "voter": "gekko"
       },
       {
-        "rshares": "689526018",
+        "rshares": 689526018,
         "voter": "patrick-g"
       },
       {
-        "rshares": "145914460",
+        "rshares": 145914460,
         "voter": "allmonitors"
       }
     ],
@@ -510,11 +510,11 @@
   "gopher/re-admin-firstpost-20160718t195306992z": {
     "active_votes": [
       {
-        "rshares": "742566481",
+        "rshares": 742566481,
         "voter": "patrick-g"
       },
       {
-        "rshares": "111000395",
+        "rshares": 111000395,
         "voter": "bustillos"
       }
     ],
@@ -606,11 +606,11 @@
   "imarealboy777/re-steemit-firstpost-20160801t232001768z": {
     "active_votes": [
       {
-        "rshares": "2725768",
+        "rshares": 2725768,
         "voter": "cire81"
       },
       {
-        "rshares": "154885141",
+        "rshares": 154885141,
         "voter": "lorddominik007"
       }
     ],
@@ -656,7 +656,7 @@
   "intelliguy/re-kewpiedoll-re-intelliguy-re-kewpiedoll-re-steemit-firstpost-20160721t053330322z": {
     "active_votes": [
       {
-        "rshares": "23648397",
+        "rshares": 23648397,
         "voter": "sillyfilthy"
       }
     ],
@@ -792,11 +792,11 @@
   "jelloducky/re-steemit-firstpost-20160807t215340468z": {
     "active_votes": [
       {
-        "rshares": "90409341",
+        "rshares": 90409341,
         "voter": "jelloducky"
       },
       {
-        "rshares": "58727187",
+        "rshares": 58727187,
         "voter": "rezrez"
       }
     ],
@@ -842,23 +842,23 @@
   "jennamarbles/re-steemit-firstpost-20160719t210752086z": {
     "active_votes": [
       {
-        "rshares": "707206172",
+        "rshares": 707206172,
         "voter": "patrick-g"
       },
       {
-        "rshares": "732150442",
+        "rshares": 732150442,
         "voter": "artific"
       },
       {
-        "rshares": "17012406247",
+        "rshares": 17012406247,
         "voter": "jennamarbles"
       },
       {
-        "rshares": "66705408",
+        "rshares": 66705408,
         "voter": "hipsterjesus"
       },
       {
-        "rshares": "51109965",
+        "rshares": 51109965,
         "voter": "f1111111"
       }
     ],
@@ -910,15 +910,15 @@
   "kamvreto/re-steemit-firstpost-20160722t225246211z": {
     "active_votes": [
       {
-        "rshares": "392459059",
+        "rshares": 392459059,
         "voter": "kamvreto"
       },
       {
-        "rshares": "167168344",
+        "rshares": 167168344,
         "voter": "yarike"
       },
       {
-        "rshares": "35874847",
+        "rshares": 35874847,
         "voter": "pr3ttyp3rf3ct"
       }
     ],
@@ -964,15 +964,15 @@
   "kamvreto/re-steemit-firstpost-20160725t221949749z": {
     "active_votes": [
       {
-        "rshares": "381805870",
+        "rshares": 381805870,
         "voter": "gilang-ramadhan"
       },
       {
-        "rshares": "348852497",
+        "rshares": 348852497,
         "voter": "kamvreto"
       },
       {
-        "rshares": "247328995",
+        "rshares": 247328995,
         "voter": "adinda"
       }
     ],
@@ -1018,7 +1018,7 @@
   "kewpiedoll/re-intelliguy-re-kewpiedoll-re-intelliguy-re-kewpiedoll-re-steemit-firstpost-20160721t140220709z": {
     "active_votes": [
       {
-        "rshares": "707206172",
+        "rshares": 707206172,
         "voter": "patrick-g"
       }
     ],
@@ -1068,7 +1068,7 @@
   "kewpiedoll/re-intelliguy-re-kewpiedoll-re-steemit-firstpost-20160721t052821990z": {
     "active_votes": [
       {
-        "rshares": "707206172",
+        "rshares": 707206172,
         "voter": "patrick-g"
       }
     ],
@@ -1122,15 +1122,15 @@
   "kewpiedoll/re-steemit-firstpost-20160720t210201326z": {
     "active_votes": [
       {
-        "rshares": "707206172",
+        "rshares": 707206172,
         "voter": "patrick-g"
       },
       {
-        "rshares": "231619534",
+        "rshares": 231619534,
         "voter": "eggstraordinair"
       },
       {
-        "rshares": "123321995",
+        "rshares": 123321995,
         "voter": "allmonitors"
       }
     ],
@@ -1181,7 +1181,7 @@
   "kingtylervvs/re-admin-firstpost-20160717t193811098z": {
     "active_votes": [
       {
-        "rshares": "742566481",
+        "rshares": 742566481,
         "voter": "patrick-g"
       }
     ],
@@ -1227,19 +1227,19 @@
   "kingtylervvs/re-steemit-firstpost-20160720t121101482z": {
     "active_votes": [
       {
-        "rshares": "25204741266",
+        "rshares": 25204741266,
         "voter": "justtryme90"
       },
       {
-        "rshares": "707206172",
+        "rshares": 707206172,
         "voter": "patrick-g"
       },
       {
-        "rshares": "226074637",
+        "rshares": 226074637,
         "voter": "artjedi"
       },
       {
-        "rshares": "52153025",
+        "rshares": 52153025,
         "voter": "f1111111"
       }
     ],
@@ -1333,15 +1333,15 @@
   "patrick-g/re-steemit-firstpost-20160722t201007967z": {
     "active_votes": [
       {
-        "rshares": "689526018",
+        "rshares": 689526018,
         "voter": "patrick-g"
       },
       {
-        "rshares": "46092586",
+        "rshares": 46092586,
         "voter": "matt876"
       },
       {
-        "rshares": "52153025",
+        "rshares": 52153025,
         "voter": "f1111111"
       }
     ],
@@ -1387,39 +1387,39 @@
   "proskynneo/steemit-firstpost-1": {
     "active_votes": [
       {
-        "rshares": "375241",
+        "rshares": 375241,
         "voter": "dantheman"
       },
       {
-        "rshares": "2213400",
+        "rshares": 2213400,
         "voter": "proskynneo"
       },
       {
-        "rshares": "936400",
+        "rshares": 936400,
         "voter": "ned"
       },
       {
-        "rshares": "0",
+        "rshares": 0,
         "voter": "murh"
       },
       {
-        "rshares": "742566481",
+        "rshares": 742566481,
         "voter": "patrick-g"
       },
       {
-        "rshares": "58854897335",
+        "rshares": 58854897335,
         "voter": "business"
       },
       {
-        "rshares": "239342379",
+        "rshares": 239342379,
         "voter": "kewpiedoll"
       },
       {
-        "rshares": "52153025",
+        "rshares": 52153025,
         "voter": "f1111111"
       },
       {
-        "rshares": "0",
+        "rshares": 0,
         "voter": "naumovich"
       }
     ],
@@ -1461,39 +1461,39 @@
   "red/steemit-firstpost-2": {
     "active_votes": [
       {
-        "rshares": "-376603",
+        "rshares": -376603,
         "voter": "dantheman"
       },
       {
-        "rshares": "903854",
+        "rshares": 903854,
         "voter": "mr11acdee"
       },
       {
-        "rshares": "1441",
+        "rshares": 1441,
         "voter": "red"
       },
       {
-        "rshares": "23446",
+        "rshares": 23446,
         "voter": "xeroc"
       },
       {
-        "rshares": "724886327",
+        "rshares": 724886327,
         "voter": "patrick-g"
       },
       {
-        "rshares": "60031995282",
+        "rshares": 60031995282,
         "voter": "business"
       },
       {
-        "rshares": "71498008",
+        "rshares": 71498008,
         "voter": "madhatting"
       },
       {
-        "rshares": "64967241",
+        "rshares": 64967241,
         "voter": "staceyjatkinson"
       },
       {
-        "rshares": "52153025",
+        "rshares": 52153025,
         "voter": "f1111111"
       }
     ],
@@ -1582,19 +1582,19 @@
   "rittr/re-steemit-firstpost-20160824t025355199z": {
     "active_votes": [
       {
-        "rshares": "-75407549856",
+        "rshares": -75407549856,
         "voter": "vault"
       },
       {
-        "rshares": "865125771",
+        "rshares": 865125771,
         "voter": "rittr"
       },
       {
-        "rshares": "57599604",
+        "rshares": 57599604,
         "voter": "abanks1000"
       },
       {
-        "rshares": "54993432",
+        "rshares": 54993432,
         "voter": "landarin"
       }
     ],
@@ -1640,7 +1640,7 @@
   "sictransitgloria/re-steemit-firstpost-20160721t233702742z": {
     "active_votes": [
       {
-        "rshares": "689526018",
+        "rshares": 689526018,
         "voter": "patrick-g"
       }
     ],
@@ -1686,7 +1686,7 @@
   "steem-id/re-red-steemit-firstpost-2": {
     "active_votes": [
       {
-        "rshares": "724886327",
+        "rshares": 724886327,
         "voter": "patrick-g"
       }
     ],
@@ -1728,407 +1728,407 @@
   "steemit/firstpost": {
     "active_votes": [
       {
-        "rshares": "375241",
+        "rshares": 375241,
         "voter": "dantheman"
       },
       {
-        "rshares": "886132",
+        "rshares": 886132,
         "voter": "mr11acdee"
       },
       {
-        "rshares": "5100",
+        "rshares": 5100,
         "voter": "steemit78"
       },
       {
-        "rshares": "1259167",
+        "rshares": 1259167,
         "voter": "anonymous"
       },
       {
-        "rshares": "318519",
+        "rshares": 318519,
         "voter": "hello"
       },
       {
-        "rshares": "153384",
+        "rshares": 153384,
         "voter": "world"
       },
       {
-        "rshares": "-936400",
+        "rshares": -936400,
         "voter": "ned"
       },
       {
-        "rshares": "59412",
+        "rshares": 59412,
         "voter": "fufubar1"
       },
       {
-        "rshares": "14997",
+        "rshares": 14997,
         "voter": "anonymous1"
       },
       {
-        "rshares": "1441",
+        "rshares": 1441,
         "voter": "red"
       },
       {
-        "rshares": "551390835500",
+        "rshares": 551390835500,
         "voter": "liondani"
       },
       {
-        "rshares": "82748",
+        "rshares": 82748,
         "voter": "roadscape"
       },
       {
-        "rshares": "10772",
+        "rshares": 10772,
         "voter": "xeroc"
       },
       {
-        "rshares": "7685088000",
+        "rshares": 7685088000,
         "voter": "markopaasila"
       },
       {
-        "rshares": "454510724",
+        "rshares": 454510724,
         "voter": "tshering-tamang"
       },
       {
-        "rshares": "681946946",
+        "rshares": 681946946,
         "voter": "romangelsi"
       },
       {
-        "rshares": "504895891",
+        "rshares": 504895891,
         "voter": "dedmatvey"
       },
       {
-        "rshares": "498863058",
+        "rshares": 498863058,
         "voter": "joelinux"
       },
       {
-        "rshares": "9590417",
+        "rshares": 9590417,
         "voter": "piranhax"
       },
       {
-        "rshares": "473258270",
+        "rshares": 473258270,
         "voter": "ned-reddit-login"
       },
       {
-        "rshares": "0",
+        "rshares": 0,
         "voter": "fernando-sanz"
       },
       {
-        "rshares": "425903066",
+        "rshares": 425903066,
         "voter": "gekko"
       },
       {
-        "rshares": "381805870",
+        "rshares": 381805870,
         "voter": "gilang-ramadhan"
       },
       {
-        "rshares": "392459059",
+        "rshares": 392459059,
         "voter": "kamvreto"
       },
       {
-        "rshares": "422984262",
+        "rshares": 422984262,
         "voter": "acidyo"
       },
       {
-        "rshares": "47179379651",
+        "rshares": 47179379651,
         "voter": "tosch"
       },
       {
-        "rshares": "7831667988",
+        "rshares": 7831667988,
         "voter": "klye"
       },
       {
-        "rshares": "1019950749",
+        "rshares": 1019950749,
         "voter": "coar"
       },
       {
-        "rshares": "1746058458",
+        "rshares": 1746058458,
         "voter": "murh"
       },
       {
-        "rshares": "22639073725",
+        "rshares": 22639073725,
         "voter": "drinkzya"
       },
       {
-        "rshares": "0",
+        "rshares": 0,
         "voter": "hien-tran"
       },
       {
-        "rshares": "742566481",
+        "rshares": 742566481,
         "voter": "patrick-g"
       },
       {
-        "rshares": "40624969",
+        "rshares": 40624969,
         "voter": "ben99"
       },
       {
-        "rshares": "1742755097",
+        "rshares": 1742755097,
         "voter": "sunshinecrypto"
       },
       {
-        "rshares": "108855472",
+        "rshares": 108855472,
         "voter": "kingtylervvs"
       },
       {
-        "rshares": "485112237",
+        "rshares": 485112237,
         "voter": "marinabogumil"
       },
       {
-        "rshares": "917398502",
+        "rshares": 917398502,
         "voter": "decrypt"
       },
       {
-        "rshares": "5067187498",
+        "rshares": 5067187498,
         "voter": "senseiteekay"
       },
       {
-        "rshares": "5154897955",
+        "rshares": 5154897955,
         "voter": "r33drum"
       },
       {
-        "rshares": "5033902237",
+        "rshares": 5033902237,
         "voter": "cryptosi"
       },
       {
-        "rshares": "1037079223",
+        "rshares": 1037079223,
         "voter": "condra"
       },
       {
-        "rshares": "233032838",
+        "rshares": 233032838,
         "voter": "jearson"
       },
       {
-        "rshares": "240809500",
+        "rshares": 240809500,
         "voter": "tritium"
       },
       {
-        "rshares": "123321995",
+        "rshares": 123321995,
         "voter": "allmonitors"
       },
       {
-        "rshares": "226074637",
+        "rshares": 226074637,
         "voter": "artjedi"
       },
       {
-        "rshares": "931542394",
+        "rshares": 931542394,
         "voter": "anduweb"
       },
       {
-        "rshares": "2292983350",
+        "rshares": 2292983350,
         "voter": "inertia"
       },
       {
-        "rshares": "128561059",
+        "rshares": 128561059,
         "voter": "maximkichev"
       },
       {
-        "rshares": "183438273",
+        "rshares": 183438273,
         "voter": "a9inchcock"
       },
       {
-        "rshares": "266262926",
+        "rshares": 266262926,
         "voter": "desmonid"
       },
       {
-        "rshares": "71498008",
+        "rshares": 71498008,
         "voter": "madhatting"
       },
       {
-        "rshares": "23726644841",
+        "rshares": 23726644841,
         "voter": "ubg"
       },
       {
-        "rshares": "3741408303",
+        "rshares": 3741408303,
         "voter": "royaltiffany"
       },
       {
-        "rshares": "131577259",
+        "rshares": 131577259,
         "voter": "gribgo"
       },
       {
-        "rshares": "12371398765",
+        "rshares": 12371398765,
         "voter": "deanliu"
       },
       {
-        "rshares": "28907874049",
+        "rshares": 28907874049,
         "voter": "orm"
       },
       {
-        "rshares": "528988007",
+        "rshares": 528988007,
         "voter": "qonq99"
       },
       {
-        "rshares": "129537329",
+        "rshares": 129537329,
         "voter": "rd7783"
       },
       {
-        "rshares": "615020728",
+        "rshares": 615020728,
         "voter": "slava"
       },
       {
-        "rshares": "0",
+        "rshares": 0,
         "voter": "flyboyzombie"
       },
       {
-        "rshares": "100102503",
+        "rshares": 100102503,
         "voter": "sictransitgloria"
       },
       {
-        "rshares": "95219365",
+        "rshares": 95219365,
         "voter": "curator"
       },
       {
-        "rshares": "232295871",
+        "rshares": 232295871,
         "voter": "dubovoy"
       },
       {
-        "rshares": "0",
+        "rshares": 0,
         "voter": "solos"
       },
       {
-        "rshares": "96945805",
+        "rshares": 96945805,
         "voter": "creatorgalaxy"
       },
       {
-        "rshares": "99813231",
+        "rshares": 99813231,
         "voter": "trigonice29"
       },
       {
-        "rshares": "0",
+        "rshares": 0,
         "voter": "blysards"
       },
       {
-        "rshares": "3721016208",
+        "rshares": 3721016208,
         "voter": "uwe69"
       },
       {
-        "rshares": "1279854",
+        "rshares": 1279854,
         "voter": "nigmat"
       },
       {
-        "rshares": "13974353753",
+        "rshares": 13974353753,
         "voter": "magicmonk"
       },
       {
-        "rshares": "4968585456",
+        "rshares": 4968585456,
         "voter": "satoshifpv"
       },
       {
-        "rshares": "1660613178",
+        "rshares": 1660613178,
         "voter": "naturalista"
       },
       {
-        "rshares": "10847083143",
+        "rshares": 10847083143,
         "voter": "metrox"
       },
       {
-        "rshares": "18340928",
+        "rshares": 18340928,
         "voter": "bestmalik"
       },
       {
-        "rshares": "59563315",
+        "rshares": 59563315,
         "voter": "kolyan31"
       },
       {
-        "rshares": "710989138",
+        "rshares": 710989138,
         "voter": "romancs"
       },
       {
-        "rshares": "59366614",
+        "rshares": 59366614,
         "voter": "luke490"
       },
       {
-        "rshares": "58762473",
+        "rshares": 58762473,
         "voter": "bro66"
       },
       {
-        "rshares": "201822591",
+        "rshares": 201822591,
         "voter": "future24"
       },
       {
-        "rshares": "58623688",
+        "rshares": 58623688,
         "voter": "mythras"
       },
       {
-        "rshares": "56536509",
+        "rshares": 56536509,
         "voter": "imarealboy777"
       },
       {
-        "rshares": "0",
+        "rshares": 0,
         "voter": "matrixdweller"
       },
       {
-        "rshares": "48299362",
+        "rshares": 48299362,
         "voter": "smartguylabcoat"
       },
       {
-        "rshares": "59157099",
+        "rshares": 59157099,
         "voter": "mabiturm"
       },
       {
-        "rshares": "48283979",
+        "rshares": 48283979,
         "voter": "captainamerica"
       },
       {
-        "rshares": "54761612",
+        "rshares": 54761612,
         "voter": "edbriv"
       },
       {
-        "rshares": "865125771",
+        "rshares": 865125771,
         "voter": "rittr"
       },
       {
-        "rshares": "92614447",
+        "rshares": 92614447,
         "voter": "jelloducky"
       },
       {
-        "rshares": "52740989",
+        "rshares": 52740989,
         "voter": "tcstix"
       },
       {
-        "rshares": "49467477",
+        "rshares": 49467477,
         "voter": "friedwater"
       },
       {
-        "rshares": "57366185",
+        "rshares": 57366185,
         "voter": "denisdiaz"
       },
       {
-        "rshares": "132070449",
+        "rshares": 132070449,
         "voter": "loganarchy"
       },
       {
-        "rshares": "48811442",
+        "rshares": 48811442,
         "voter": "love-spirit-nerd"
       },
       {
-        "rshares": "51549585",
+        "rshares": 51549585,
         "voter": "dikanevn"
       },
       {
-        "rshares": "54017869",
+        "rshares": 54017869,
         "voter": "zelious"
       },
       {
-        "rshares": "50129944",
+        "rshares": 50129944,
         "voter": "freebornangel"
       },
       {
-        "rshares": "53196086",
+        "rshares": 53196086,
         "voter": "f1111111"
       },
       {
-        "rshares": "0",
+        "rshares": 0,
         "voter": "anomaly"
       },
       {
-        "rshares": "52394017140",
+        "rshares": 52394017140,
         "voter": "jack8831"
       },
       {
-        "rshares": "0",
+        "rshares": 0,
         "voter": "buckland"
       },
       {
-        "rshares": "0",
+        "rshares": 0,
         "voter": "goldmatters"
       }
     ],
@@ -2195,7 +2195,7 @@
   "steemuwe/re-gopher-re-steemit-firstpost-20160720t183548381z": {
     "active_votes": [
       {
-        "rshares": "724886327",
+        "rshares": 724886327,
         "voter": "patrick-g"
       }
     ],
@@ -2244,27 +2244,27 @@
   "ubg/re-steemit-firstpost-20160813t143213453z": {
     "active_votes": [
       {
-        "rshares": "23067571373",
+        "rshares": 23067571373,
         "voter": "ubg"
       },
       {
-        "rshares": "999297062",
+        "rshares": 999297062,
         "voter": "juurop"
       },
       {
-        "rshares": "823625727",
+        "rshares": 823625727,
         "voter": "usb"
       },
       {
-        "rshares": "5546862495",
+        "rshares": 5546862495,
         "voter": "tannukas6"
       },
       {
-        "rshares": "694394716",
+        "rshares": 694394716,
         "voter": "tox"
       },
       {
-        "rshares": "692185541",
+        "rshares": 692185541,
         "voter": "runridefly"
       }
     ],

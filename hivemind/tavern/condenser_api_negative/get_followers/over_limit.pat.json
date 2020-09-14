@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "limit exceeds max (1001 > 1000)",
+  "data": "limit = 1001 outside valid range [1:1000]",
   "message": "Invalid parameters"
 }
