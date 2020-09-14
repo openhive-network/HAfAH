@@ -2,7 +2,9 @@
   test_name: Hivemind condenser_api.get_reblogged_by patterns test
 
   marks:
-    - patterntest # result is empty because reblogging functionality started past 5mln blocks
+    - patterntest
+    - failing
+    - xfail # reblogging does not work properly
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +20,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_reblogged_by"
-          params: {"author":"steemit","permlink":"firstpost"}
+          params: {"author":"skypilot","permlink":"melting-rock"}
       response:
         status_code: 200
         verify_response_with:

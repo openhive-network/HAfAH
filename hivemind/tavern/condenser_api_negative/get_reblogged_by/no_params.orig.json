@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "too many positional arguments",
+  "data": "invalid account (not specified)",
   "message": "Invalid parameters"
 }
