@@ -1,5 +1,5 @@
 {
-  "code": -32000,
-  "data": "SyntaxError: syntax error at or near \"AND\"\nLINE 40:         WHERE  posts_and_scores.score >=  AND NOT EXISTS(\n                                                   ^\n",
-  "message": "Server error"
+  "code": -32602,
+  "data": "invalid literal for int() with base 10: 'abc'",
+  "message": "Invalid parameters"
 }

@@ -344,7 +344,7 @@
       "vote_rshares": 5126864315829
     },
     {
-      "abs_rshares": "10027068167722",
+      "abs_rshares": 10001278717808,
       "active": "2016-09-15T17:56:33",
       "allow_curation_rewards": true,
       "allow_replies": true,
@@ -390,7 +390,7 @@
         "precision": 3
       },
       "total_vote_weight": 13144057225008877639,
-      "vote_rshares": "9951683621819"
+      "vote_rshares": 10001278717808
     },
     {
       "abs_rshares": 2354527407147,

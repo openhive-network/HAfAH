@@ -2,7 +2,7 @@
   test_name: bridge_api.post_notifications invalid text representation
 
   marks:
-    - patterntest # change it into proper error, server error, especially from SQL, is not good enough
+    - patterntest
     - negative
 
   includes:
@@ -19,7 +19,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.post_notifications"
-          params: ["steemit","firstpost", ""]
+          params: ["steemit","firstpost", "abc"]
       response:
         status_code: 200
         verify_response_with:

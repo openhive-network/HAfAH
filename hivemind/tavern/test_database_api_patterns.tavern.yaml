@@ -5,7 +5,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 marks:
   - patterntest
   - failing
-  - xfail # shows error when there is only one of optional value (first)
+  - xfail # should show error when there is only one of optional value (first)
 
 includes:
   - !include common.yaml
@@ -35,7 +35,6 @@ stages:
           method: "list_comments_not_found_by_account"
           directory: "database_api_patterns"
           error_response: true
-          ignore_tags: ["timestamp"]
 
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" date and permlink
@@ -43,7 +42,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_cashout_t
 marks:
   - patterntest
   - failing
-  - xfail # shows error when there is only one of optional value (first)
+  - xfail # should show error when there is only one of optional value (second)
 
 includes:
   - !include common.yaml
@@ -114,41 +113,6 @@ stages:
           method: "list_comments_future_date"
           directory: "database_api_patterns"
 
----
-test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" no data
-
-marks:
-  - patterntest
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_cashout_time
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          { "start": ["", "", ""], "limit": 10, "order": "by_cashout_time" }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_day_of_the_month_out_of_range"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
-
-
 ########################  PERMLINK  ########################
 ---
 test_name: Hivemind database_api.list_comments patterns test order "by_permlink" only author
@@ -184,8 +148,6 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 
 marks:
   - patterntest
-  - failing
-  - xfail # abs_rshares/vote_rshares prior to first payout
 
 includes:
   - !include common.yaml
@@ -564,77 +526,6 @@ stages:
 
 ########################  LAST UPDATE  ########################
 ---
-test_name: Hivemind database_api.list_comments patterns test order "by_last_update"
-
-marks:
-  - patterntest
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_update
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          { "start": ["", "", "", ""], "limit": 10, "order": "by_last_update" }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_day_out_of_range_empty"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
----
-test_name: Hivemind database_api.list_comments patterns test order "by_last_update" date in author
-
-marks:
-  - patterntest # first arg is author, not date (error about date)
-  - failing
-  - xfail
-
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_update
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          {
-            "start": ["2016-08-24T21:29:42", "", "", ""],
-            "limit": 10,
-            "order": "by_last_update",
-          }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_day_out_of_range_start_0"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
----
 test_name: Hivemind database_api.list_comments patterns test order "by_last_update" good date
 
 marks:
@@ -739,42 +630,4 @@ stages:
         extra_kwargs:
           method: "list_comments_by_last_update_future_date"
           directory: "database_api_patterns"
-
----
-test_name: Hivemind database_api.list_comments patterns test order "by_last_update" wrong day
-
-marks:
-  - patterntest
-  - failing
-  - xfail
-
-includes:
-  - !include common.yaml
-
-stages:
-  - name: list_comments_by_update
-    request:
-      url: "{service.proto:s}://{service.server:s}:{service.port}/"
-      method: POST
-      headers:
-        content-type: application/json
-      json:
-        jsonrpc: "2.0"
-        id: 1
-        method: "database_api.list_comments"
-        params:
-          {
-            "start": ["", "2016-04-66T21:29:42", "", ""],
-            "limit": 10,
-            "order": "by_last_update"
-          }
-    response:
-      status_code: 200
-      verify_response_with:
-        function: validate_response:compare_response_with_pattern
-        extra_kwargs:
-          method: "list_comments_day_out_of_range_start_3"
-          directory: "database_api_patterns"
-          error_response: true
-          ignore_tags: ["timestamp"]
 
