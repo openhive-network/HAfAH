@@ -28,4 +28,3 @@
             method: "wrong_author"
             directory: "condenser_api_negative/get_active_votes"
             error_response: true
-            ignore_tags: ["timestamp"]

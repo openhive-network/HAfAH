@@ -28,4 +28,3 @@
             method: "no_data"
             directory: "condenser_api_negative/get_active_votes"
             error_response: true
-            ignore_tags: ["timestamp"]

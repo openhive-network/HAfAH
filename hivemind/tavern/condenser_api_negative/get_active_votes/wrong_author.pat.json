@@ -1,26 +1,5 @@
 {
-  "code": -32000,
-  "data": {
-    "code": 13,
-    "message": "unknown key",
-    "name": "N5boost16exception_detail10clone_implINS0_19error_info_injectorISt12out_of_rangeEEEE",
-    "stack": [
-      {
-        "context": {
-          "file": "database.cpp",
-          "hostname": "",
-          "level": "warn",
-          "line": 606,
-          "method": "get_comment"
-        },
-        "data": {
-          "author": "ciao",
-          "permlink": "re-the-amazing-mr-hydde-20160811t213717",
-          "what": "unknown key"
-        },
-        "format": "${what}: "
-      }
-    ]
-  },
-  "message": "unknown key:unknown key: "
+  "code": -32602,
+  "data": "Post ciao/re-the-amazing-mr-hydde-20160811t213717 does not exist",
+  "message": "Invalid parameters"
 }
