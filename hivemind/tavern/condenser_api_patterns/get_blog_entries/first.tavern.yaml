@@ -5,7 +5,7 @@
     - patterntest
 
   includes:
-    - !include common.yaml
+    - !include ../../common.yaml
 
   stages:
     - name: get_blog_entries
@@ -24,6 +24,6 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "get_blog_entries"
-            directory: "condenser_api_patterns"
+            method: "first"
+            directory: "condenser_api_patterns/get_blog_entries"
 
