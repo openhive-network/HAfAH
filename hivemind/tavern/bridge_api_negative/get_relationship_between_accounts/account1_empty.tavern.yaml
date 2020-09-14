@@ -1,15 +1,15 @@
 ---
-  test_name: bridge_api.list_pop_communities invalid request error # 8080
+  test_name: Hivemind bridge_api.get_relationship_between_accounts account1 empty # 8080
 
   marks:
-    - patterntest # change to proper error, server error is barely acceptable here
+    - patterntest
     - negative
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.list_pop_communities invalid request error
+    - name: get_relationship_between_accounts account1 empty
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +18,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_pop_communities"
-          params: ["25"]
+          method: "bridge.list_all_subscriptions"
+          params: {"account":""}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_request_error"
-            directory: "bridge_api_negative/list_pop_communities"
+            method: "account1_empty"
+            directory: "bridge_api_negative/get_relationship_between_accounts"
             error_response: true

@@ -1,15 +1,16 @@
 ---
-  test_name: bridge_api.list_pop_communities invalid request error # 8080
+  test_name: Hivemind bridge.post_notifications patterns test no parames # openapi bc there is no notifs in 5mln set
 
+  # post_notifications(context, author, permlink, min_score=25, last_id=None, limit=100) last_id - notification id
   marks:
-    - patterntest # change to proper error, server error is barely acceptable here
+    - patterntest
     - negative
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.list_pop_communities invalid request error
+    - name: bridge.post_notifications patterns test no parames
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +19,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_pop_communities"
-          params: ["25"]
+          method: "bridge.post_notifications"
+          params: {}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_request_error"
-            directory: "bridge_api_negative/list_pop_communities"
+            method: "empty_params"
+            directory: "bridge_api_negative/post_notifications"
             error_response: true
