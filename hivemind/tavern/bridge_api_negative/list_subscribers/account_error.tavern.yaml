@@ -2,8 +2,9 @@
   test_name: bridge_api.list_subscribers account error # not documented
 
   marks:
-    - patterntest # error should be generated here, but we get empty result (like in original)
+    - patterntest
     - negative
+    - xfail # error should be generated here, but we get empty result (like in original)
 
   includes:
     - !include ../../common.yaml
@@ -27,3 +28,4 @@
           extra_kwargs:
             method: "account_error"
             directory: "bridge_api_negative/list_subscribers"
+            error_response: true

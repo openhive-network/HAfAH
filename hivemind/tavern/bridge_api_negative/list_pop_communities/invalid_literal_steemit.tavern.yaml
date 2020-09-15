@@ -4,7 +4,7 @@
   # no nonempty result possible for 5mln set
 
   marks:
-    - patterntest # change to proper error, server error is barely acceptable here
+    - patterntest
     - negative
 
   includes:

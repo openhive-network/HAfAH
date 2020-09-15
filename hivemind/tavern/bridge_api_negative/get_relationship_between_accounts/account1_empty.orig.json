@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "missing a required argument: 'permlink'",
+  "data": "no account name specified",
   "message": "Invalid parameters"
 }

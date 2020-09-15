@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge.get_account_posts test not existing account (yet)
+  test_name: Hivemind bridge_api.get_account_posts sort comments patterns test
 
   marks:
-    - patterntest
+    - patterntest # should return posts, now its empty (hive3 hivemind)
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_account_posts
+    - name: get_account_posts sort comments
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,11 +18,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"replies","account":"rollinshive","observer":null}
+          params: {"sort":"comments", "account":"steemit"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "rollinshive"
+            method: "comments_steemit"
             directory: "bridge_api_patterns/get_account_posts"
+

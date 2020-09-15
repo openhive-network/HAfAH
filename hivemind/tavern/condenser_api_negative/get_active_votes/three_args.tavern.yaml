@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_active_votes patterns test 3 args 33091
 
   marks:
-    - patterntest # change to proper error, server error is barely acceptable here
+    - patterntest
     - negative
 
   includes:
