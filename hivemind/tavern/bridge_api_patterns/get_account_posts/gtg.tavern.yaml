@@ -1,15 +1,14 @@
 ---
-  test_name: bridge_api.list_pop_communities invalid literal # 8080 023
+  test_name: Hivemind bridge.get_account_posts test
 
   marks:
-    - patterntest # change to proper error, server error is barely acceptable here
-    - negative
+    - patterntest
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.list_pop_communities invalid literal
+    - name: get_account_posts
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_pop_communities"
-          params: ["abc"]
+          method: "bridge.get_account_posts"
+          params: {"sort":"replies","account":"gtg","observer":null}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_literal"
-            directory: "bridge_api_negative/list_pop_communities"
-            error_response: true
+            method: "gtg"
+            directory: "bridge_api_patterns/get_account_posts"

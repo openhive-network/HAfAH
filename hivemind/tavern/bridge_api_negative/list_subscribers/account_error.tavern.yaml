@@ -1,15 +1,15 @@
 ---
-  test_name: Hivemind condenser_api.get_active_votes patterns test 3 args 33091
+  test_name: bridge_api.list_subscribers account error # not documented
 
   marks:
-    - patterntest # change to proper error, server error is barely acceptable here
+    - patterntest # error should be generated here, but we get empty result (like in original)
     - negative
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_active_votes
+    - name: bridge_api.list_subscribers community lacking value
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +18,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_active_votes"
-          params: ["ciao", "re-the-amazing-mr-hydde-20160811t213650", ""]
+          method: "bridge.list_subscribers"
+          params: ['789']
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "three_args"
-            directory: "condenser_api_negative/get_active_votes"
-            error_response: true
+            method: "account_error"
+            directory: "bridge_api_negative/list_subscribers"

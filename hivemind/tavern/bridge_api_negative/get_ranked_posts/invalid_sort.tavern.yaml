@@ -1,15 +1,15 @@
 ---
-  test_name: Hivemind condenser_api.get_active_votes patterns test 3 args 33091
+  test_name: Hivemind bridge_api.get_ranked_posts sort invalid patterns test
 
   marks:
-    - patterntest # change to proper error, server error is barely acceptable here
+    - patterntest
     - negative
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_active_votes
+    - name: bridge_api.get_ranked_posts sort invalid patterns test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +18,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_active_votes"
-          params: ["ciao", "re-the-amazing-mr-hydde-20160811t213650", ""]
+          method: "bridge.get_ranked_posts"
+          params: {"sort":"invalid_sort","tag":"","observer":"steemit"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "three_args"
-            directory: "condenser_api_negative/get_active_votes"
+            method: "invalid_sort"
+            directory: "bridge_api_negative/get_ranked_posts"
             error_response: true
