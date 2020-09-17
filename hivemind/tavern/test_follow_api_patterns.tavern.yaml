@@ -148,8 +148,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # reblogging does not work properly
 
   includes:
     - !include common.yaml
