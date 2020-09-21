@@ -1,0 +1,35 @@
+---
+  test_name: Hivemind bridge_api.get_account_posts get reblogged article test # api.hive.blog 443
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_account_posts get reblogged article
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_account_posts"
+          params: {
+            "sort":"blog",
+            "account":"gtg",
+            "limit":"1",
+            "start_author":"skypilot",
+            "start_permlink":"presenting-my-aerial-wilderness-artwork-at-the-escalante-canyon-art-festival"
+          }
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "reblog"
+            directory: "bridge_api_patterns/get_account_posts"
+
