@@ -1,0 +1,36 @@
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_parent" not full parent_permlink
+
+marks:
+  - patterntest
+  - negative
+
+includes:
+  - !include ../../../common.yaml
+
+stages:
+  - name: list_comments_by_parent
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["allasyummy", "re-givemeyoursteem-winner", "vlad", "re-allasyummyfood-re-givemeyoursteem-winners-of-steemit-food-challenge-3-desserts-to-die-for-20160829t011002757z"],
+            "limit": 10,
+            "order": "by_parent",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "wrong_start_permlink"
+          directory: "database_api_negative/list_comments/by_parent"
+          error_response: true
+
