@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind follow_api.get_followers patterns test
+  test_name: Hivemind condenser_api.get_account_reputations ste limit 4 patterns test #8080
 
   marks:
-    - patterntest
+    - patterntest # to be changed for account that has some reputation
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_followers
+    - name: get_account_reputations ste limit 4
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "follow_api.get_followers"
-          params: {"account":"steemit","start":null,"type":"blog","limit":10}
+          method: "condenser_api.get_account_reputations"
+          params: {"account_lower_bound": "ste", "limit":4}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "blog"
-            directory: "follow_api_patterns/get_followers"
+            method: "ste_limit_4"
+            directory: "condenser_api_patterns/get_account_reputations"
