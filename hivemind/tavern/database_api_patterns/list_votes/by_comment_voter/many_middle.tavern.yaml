@@ -1,0 +1,33 @@
+---
+test_name: Hivemind database_api.list_votes patterns test order "by_comment_voter"
+
+marks:
+  - patterntest
+
+includes:
+  - !include ../../../common.yaml
+
+stages:
+  - name: list_votes_by_comment_voter
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_votes"
+        params:
+          {
+            "start":["jamielefay", "ahe-ey-sky-falling-an-original-novel-part-1-audiobook", "murh"],
+            "limit": 10,
+            "order": "by_comment_voter",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "many_middle"
+          directory: "database_api_patterns/list_votes/by_comment_voter"
