@@ -1,0 +1,35 @@
+---
+test_name: Hivemind database_api.list_votes patterns test order "by_comment_voter" comment not found
+
+marks:
+  - patterntest
+  - negative
+
+includes:
+  - !include ../../../common.yaml
+
+stages:
+  - name: database_api.list_votes patterns test order "by_comment_voter" comment not found
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_votes"
+        params:
+          {
+            "start": ["roelandp", "", ""],
+            "limit": 10,
+            "order": "by_comment_voter",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "no_permlink"
+          directory: "database_api_negative/list_votes/by_comment_voter"
+          error_response: true
