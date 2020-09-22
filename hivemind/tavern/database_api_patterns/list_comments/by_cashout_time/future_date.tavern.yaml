@@ -1,0 +1,33 @@
+---
+test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" future date
+
+marks:
+  - patterntest # show first posts comments
+
+includes:
+  - !include ../../../common.yaml
+
+stages:
+  - name: list_comments_by_cashout_time
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_comments"
+        params:
+          {
+            "start": ["2030-07-08T00:45:15", "", ""],
+            "limit": 10,
+            "order": "by_cashout_time",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "future_date"
+          directory: "database_api_patterns/list_comments/by_cashout_time"
