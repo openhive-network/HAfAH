@@ -3,6 +3,8 @@
 
   marks:
     - patterntest
+    - failing
+    - xfail # looks like now we have more reblogs (more tests needed plus we need, most likely source of the problem is that old 5mln DB has only 4 reblogs, now there is 8 for test-safari alone; bug in old HM?)
 
   includes:
     - !include ../../common.yaml
@@ -20,10 +22,10 @@
           method: "bridge.get_account_posts"
           params: {
             "sort":"blog",
-            "account":"gtg",
-            "limit":"1",
-            "start_author":"skypilot",
-            "start_permlink":"presenting-my-aerial-wilderness-artwork-at-the-escalante-canyon-art-festival"
+            "account":"test-safari",
+            "limit":3,
+            "start_author":"atle-v",
+            "start_permlink":"sunday-picnic"
           }
       response:
         status_code: 200

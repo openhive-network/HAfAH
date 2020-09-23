@@ -2,9 +2,7 @@
   test_name: Hivemind bridge_api.get_ranked_posts trending polish hive community tag
 
   marks:
-    - patterntest
-    - failing
-    - xfail # empty results caused by community not implemented in 5 mln records, pattern taken from https://beta.openhive.network
+    - patterntest # empty results caused by community not present in 5 mln blocks
 
   includes:
     - !include ../../common.yaml

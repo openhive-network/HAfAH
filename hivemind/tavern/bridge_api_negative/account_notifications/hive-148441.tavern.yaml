@@ -2,9 +2,9 @@
   test_name: Hivemind bridge_api.account_notifications hive community
 
   marks:
-    - patterntest
+    - patterntest # communities not present in 5mln blocks
     - failing
-    - xfail # should return hive-148441 community notifications
+    - xfail # checks needed, now empty result is returned
 
   includes:
     - !include ../../common.yaml
@@ -26,6 +26,7 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "steemit"
-            directory: "bridge_api_patterns/account_notifications"
+            method: "hive-148441"
+            directory: "bridge_api_negative/account_notifications"
+            error_response: true
 

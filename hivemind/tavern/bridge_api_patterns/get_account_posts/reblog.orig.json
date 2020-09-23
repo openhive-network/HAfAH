@@ -2,11 +2,11 @@
   {
     "active_votes": [
       {
-        "rshares": 128594988,
+        "rshares": "128594988",
         "voter": "sergey44"
       },
       {
-        "rshares": 59129076,
+        "rshares": "59129076",
         "voter": "atle-v"
       }
     ],
@@ -37,11 +37,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 187724064,
     "payout": 0.0,
-    "payout_at": "2016-09-20T14:50:06",
+    "payout_at": "2016-10-14T14:55:09",
     "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
+    "percent_steem_dollars": 10000,
     "permlink": "sunday-picnic",
-    "post_id": 1232381,
+    "post_id": 940665,
     "promoted": "0.000 HBD",
     "reblogged_by": [
       "test-safari"
@@ -60,23 +60,23 @@
   {
     "active_votes": [
       {
-        "rshares": 2233757397,
+        "rshares": "2233757397",
         "voter": "bitland"
       },
       {
-        "rshares": 230234023,
+        "rshares": "230234023",
         "voter": "keyser"
       },
       {
-        "rshares": 706494264,
+        "rshares": "706494264",
         "voter": "wuyueling"
       },
       {
-        "rshares": 415840834,
+        "rshares": "415840834",
         "voter": "runrudy"
       },
       {
-        "rshares": 59566200,
+        "rshares": "59566200",
         "voter": "serikus"
       }
     ],
@@ -111,12 +111,12 @@
     },
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 3645892718,
-    "payout": 0.001,
-    "payout_at": "2016-09-15T20:29:24",
-    "pending_payout_value": "0.001 HBD",
-    "percent_hbd": 10000,
+    "payout": 0.0,
+    "payout_at": "2016-10-09T20:54:54",
+    "pending_payout_value": "0.000 HBD",
+    "percent_steem_dollars": 10000,
     "permlink": "conceptualizing-a-scifi-land-speeder",
-    "post_id": 1176605,
+    "post_id": 895907,
     "promoted": "0.000 HBD",
     "reblogged_by": [
       "test-safari"
