@@ -1,0 +1,4785 @@
+[
+  {
+    "active_votes": [
+      {
+        "rshares": "265241956850",
+        "voter": "gerber"
+      },
+      {
+        "rshares": "18357934984",
+        "voter": "gidlark"
+      },
+      {
+        "rshares": "612737443097",
+        "voter": "bowess"
+      },
+      {
+        "rshares": "119704795323",
+        "voter": "someguy123"
+      },
+      {
+        "rshares": "10676275677",
+        "voter": "ocisly"
+      },
+      {
+        "rshares": "2587837990",
+        "voter": "imperfect-one"
+      },
+      {
+        "rshares": "9156154187",
+        "voter": "forykw"
+      },
+      {
+        "rshares": "5388501244",
+        "voter": "aditor"
+      },
+      {
+        "rshares": "123708797655",
+        "voter": "ewkaw"
+      },
+      {
+        "rshares": "1127998251",
+        "voter": "d-pend"
+      },
+      {
+        "rshares": "59797132664",
+        "voter": "grecki-bazar-ewy"
+      },
+      {
+        "rshares": "4184907613",
+        "voter": "nicniezgrublem"
+      },
+      {
+        "rshares": "1621255797",
+        "voter": "shitsignals"
+      },
+      {
+        "rshares": "49545417566",
+        "voter": "accelerator"
+      },
+      {
+        "rshares": "26819832533",
+        "voter": "tomiscurious"
+      },
+      {
+        "rshares": "5585272621",
+        "voter": "roleerob"
+      },
+      {
+        "rshares": "4444192895",
+        "voter": "spacesheep"
+      },
+      {
+        "rshares": "79513161353",
+        "voter": "emrebeyler"
+      },
+      {
+        "rshares": "144148293799",
+        "voter": "deepresearch"
+      },
+      {
+        "rshares": "293825148186",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "3651751629",
+        "voter": "fun2learn"
+      },
+      {
+        "rshares": "103223663293",
+        "voter": "hallmann"
+      },
+      {
+        "rshares": "1744379801",
+        "voter": "santarius"
+      },
+      {
+        "rshares": "1459902679",
+        "voter": "acronyms"
+      },
+      {
+        "rshares": "58906825452",
+        "voter": "purefood"
+      },
+      {
+        "rshares": "282123298034",
+        "voter": "kubak"
+      },
+      {
+        "rshares": "686074825",
+        "voter": "unconditionalove"
+      },
+      {
+        "rshares": "50034959923",
+        "voter": "pkocjan"
+      },
+      {
+        "rshares": "684618594696",
+        "voter": "lesiopm"
+      },
+      {
+        "rshares": "79209177429",
+        "voter": "czcibor360"
+      },
+      {
+        "rshares": "39028444783",
+        "voter": "sarmaticus"
+      },
+      {
+        "rshares": "38106181969",
+        "voter": "jocieprosza"
+      },
+      {
+        "rshares": "18542377772",
+        "voter": "bestboom"
+      },
+      {
+        "rshares": "9264811944",
+        "voter": "adamada"
+      },
+      {
+        "rshares": "29414884220",
+        "voter": "herbacianymag"
+      },
+      {
+        "rshares": "13239763428",
+        "voter": "freddio"
+      },
+      {
+        "rshares": "1037863516",
+        "voter": "sensorycznyswiat"
+      },
+      {
+        "rshares": "11727106712",
+        "voter": "themightyvolcano"
+      },
+      {
+        "rshares": "12232091563",
+        "voter": "reinmar"
+      },
+      {
+        "rshares": "930995441",
+        "voter": "ifunnymemes"
+      },
+      {
+        "rshares": "199133400236",
+        "voter": "browery"
+      },
+      {
+        "rshares": "33196900367",
+        "voter": "glodniwiedzy"
+      },
+      {
+        "rshares": "60480901120",
+        "voter": "rozku"
+      },
+      {
+        "rshares": "11466331014",
+        "voter": "pannapysia"
+      },
+      {
+        "rshares": "33721645170",
+        "voter": "mespanta"
+      },
+      {
+        "rshares": "3024989408",
+        "voter": "angatt"
+      },
+      {
+        "rshares": "25826732222",
+        "voter": "pignys"
+      },
+      {
+        "rshares": "5415940226",
+        "voter": "dalz"
+      },
+      {
+        "rshares": "3352398068",
+        "voter": "bezkresu"
+      },
+      {
+        "rshares": "47942360092",
+        "voter": "dlike"
+      },
+      {
+        "rshares": "1568972128128",
+        "voter": "engrave"
+      },
+      {
+        "rshares": "8628312989",
+        "voter": "dorotti"
+      },
+      {
+        "rshares": "3260390419",
+        "voter": "bobby.madagascar"
+      },
+      {
+        "rshares": "69877135",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "991618985",
+        "voter": "ldp"
+      },
+      {
+        "rshares": "937787979",
+        "voter": "ratelmiodozer"
+      },
+      {
+        "rshares": "2847176018",
+        "voter": "gameeit"
+      },
+      {
+        "rshares": "1144137077",
+        "voter": "bgornicki"
+      },
+      {
+        "rshares": "1956814208",
+        "voter": "pl-kuchnia"
+      },
+      {
+        "rshares": "1483726852",
+        "voter": "permaculturedude"
+      },
+      {
+        "rshares": "7821267226",
+        "voter": "osavi"
+      },
+      {
+        "rshares": "571130623",
+        "voter": "potworkowestudio"
+      },
+      {
+        "rshares": "35673825812",
+        "voter": "mfblack"
+      },
+      {
+        "rshares": "2300604484",
+        "voter": "sarmagames"
+      },
+      {
+        "rshares": "557181494",
+        "voter": "zimnaherbata"
+      },
+      {
+        "rshares": "2463361544",
+        "voter": "cheer-up"
+      },
+      {
+        "rshares": "877345052",
+        "voter": "shimozurdo"
+      },
+      {
+        "rshares": "1042460468880",
+        "voter": "neoxiancityvb"
+      },
+      {
+        "rshares": "3775256637",
+        "voter": "freddio.sport"
+      },
+      {
+        "rshares": "4220613711",
+        "voter": "asteroids"
+      },
+      {
+        "rshares": "83112609",
+        "voter": "mk-sports-token"
+      },
+      {
+        "rshares": "667035400",
+        "voter": "pogarda"
+      },
+      {
+        "rshares": "3847894813",
+        "voter": "football-stats"
+      },
+      {
+        "rshares": "2063054830",
+        "voter": "dpend.active"
+      },
+      {
+        "rshares": "532696242",
+        "voter": "folklure"
+      },
+      {
+        "rshares": "11621680872",
+        "voter": "ocotuchodzi"
+      },
+      {
+        "rshares": "239466926369",
+        "voter": "dcityrewards"
+      },
+      {
+        "rshares": "739785180",
+        "voter": "hivelist"
+      },
+      {
+        "rshares": "7838212296",
+        "voter": "lesiopm2"
+      },
+      {
+        "rshares": "4245375565",
+        "voter": "gryfno.frelka"
+      },
+      {
+        "rshares": "16122900732",
+        "voter": "arenacrypto"
+      }
+    ],
+    "author": "polish.hive",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "mod",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "Za oknem pogoda nie zach\u0119ca do spacerowania. S\u0105 to wi\u0119c idealne warunki do napisania kolejnego wpisu \ud83d\ude01, a my mamy dla Was kolejn\u0105 **Akcj\u0119 inspiracj\u0119**.\n___\n\n##### WYNIKI AKCJI INSPIRACJI #14\n\nDo konkursu zosta\u0142y zg\u0142oszone tylko **dwie prace** \ud83d\ude14 (jedna zosta\u0142a zg\u0142oszona minimalnie po terminie, dlatego te\u017c postanowili\u015bmy jej nie skre\u015bla\u0107). Podium wygl\u0105da zatem nastepuj\u0105co:\n* **I miejsce** \ud83e\udd47 - @gryfno.frelka: [Naturalne kosmetyki- SZARE MYD\u0141O Z GRUBY\ud83e\udd70](https://peakd.com/polish/@gryfno.frelka/naturalne-kosmetyki-szare-mydlo-z-gruby) - nagroda: 10 HIVE,\n* **II miejsce** \ud83e\udd48 - @angatt: [Naturalne perfumy](https://peakd.com/hive-134382/@angatt/naturalne-perfumy) - nagroda: 6 HIVE,\n* **III miejsce** \ud83e\udd49 - brak\n\nDzi\u0119kujemy Wam za podj\u0119cie wyzwania \ud83d\ude00\n\n___\n___\n\n##### AKCJA INSPIRACJA #15\n\n<center>![](https://i.imgur.com/Rj2gNPJ.jpg)</center>\n\n##### Temat konkursu:\n\nTemat pi\u0119tnastej edycji konkursu to: **Witaj szko\u0142o!**.\n\nZatem aby wzi\u0105\u0107 udzia\u0142 w **Akcji Inspiracji #15** nale\u017cy napisa\u0107 post, w kt\u00f3rym opiszecie swoje przemy\u015blenia zwi\u0105zane z tematem. Mo\u017ce kto\u015b z Was czego\u015b si\u0119 uczy lub chcia\u0142by si\u0119 nauczy\u0107. Mo\u017ce kto\u015b podzieli si\u0119 spostrze\u017ceniami na temat w\u0142a\u015bnie rozpocz\u0119tego roku szkolnego, a mo\u017ce kto\u015b przygotuje jak\u0105\u015b ciekaw\u0105 prac\u0119 artystyczn\u0105. Wszystkie chwyty dozwolone, a temat ma by\u0107 tylko podpowiedzi\u0105 do Waszych skojarze\u0144 \ud83d\ude04\n<br>\n\n##### Zasady konkursu:\n* nale\u017cy opublikowa\u0107 wpis na zadany temat,\n* wpis musi by\u0107 napisany w j\u0119zyku polskim (dopuszcza si\u0119 wpisy kilku j\u0119zyczne),\n* wpis nale\u017cy oznaczy\u0107 tagiem #polish - tag musi by\u0107 u\u017cyty jako jeden z pierwszych pi\u0119ciu (fajnie gdyby post zosta\u0142 opublikowany w spo\u0142eczno\u015bci *Polish HIVE*),\n* link do swojego wpisu nale\u017cy umie\u015bci\u0107 w komentarzach do tego postu lub postu przypominaj\u0105cego o konkursie,\n* wpis powinien zosta\u0107 opublikowany we wskazanym terminie,\n* w konkursie mog\u0105 wzi\u0105\u0107 udzia\u0142 wy\u0142\u0105cznie osoby z polskiej spo\u0142eczno\u015bci.\n\n<center>![](https://i.imgur.com/5ZoJ3Hh.png)</center>\n\n##### Przebieg konkursu:\n\n* wtorek 01.09.2020r. - publikacja postu z tematem konkursowym,\n* czas zg\u0142aszania wpis\u00f3w konkursowych - od momentu ukazania si\u0119 tego postu **do niedzieli 13.09.2020r. do godziny 23:59**,\n* poniedzia\u0142ek 07.09.2020r. - post przypominaj\u0105cy o konkursie,\n* po 14.09.2020r. - publikacja wpisu z wynikami konkursu.\n<br>\n\n##### Nagrody:\nDla zwyci\u0119zc\u00f3w konkursu przewidziana jest nagroda w wysoko\u015bci **20 HIVE**.\n\nPodzia\u0142 nagrody b\u0119dzie wi\u0119c nast\u0119puj\u0105cy:\n* I miejsce - 10 HIVE,\n* II miejsce - 6 HIVE,\n* III miejsce - 4 HIVE.\n\n___\n___\n\n**Akcja Inspiracja #15** w\u0142a\u015bnie si\u0119 rozpocz\u0119\u0142a. Zapraszamy do do\u0142\u0105czenia do zabawy \ud83d\ude00\n\n___\n\n<center>[![](https://i.imgur.com/J1g6YMZ.png)](https://peakd.com/c/hive-134382/created)</center>",
+    "category": "hive-134382",
+    "children": 2,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-01T11:20:06",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "peakd/2020.08.3",
+      "countdown": "2020-09-13T21:59:39.000Z",
+      "description": "Akcja Inspiracja #15 - konkurs dla polskich u\u017cytkownik\u00f3w sieci Hive.",
+      "format": "markdown",
+      "image": [
+        "https://i.imgur.com/Rj2gNPJ.jpg",
+        "https://i.imgur.com/5ZoJ3Hh.png",
+        "https://i.imgur.com/J1g6YMZ.png"
+      ],
+      "links": [
+        "/@gryfno.frelka",
+        "/polish/@gryfno.frelka/naturalne-kosmetyki-szare-mydlo-z-gruby",
+        "/@angatt",
+        "/hive-134382/@angatt/naturalne-perfumy",
+        "/trending/polish",
+        "/c/hive-134382/created"
+      ],
+      "tags": [
+        "polish",
+        "pl-spolecznosc",
+        "pl-konkurs",
+        "pl-szkola"
+      ],
+      "users": [
+        "gryfno.frelka",
+        "angatt"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 6679158757478,
+    "payout": 2.201,
+    "payout_at": "2020-09-08T11:20:06",
+    "pending_payout_value": "2.201 HBD",
+    "percent_hbd": 10000,
+    "permlink": "akcja-inspiracja-15-witaj-szkolo",
+    "post_id": 99389536,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 81
+    },
+    "title": "Akcja Inspiracja #15: Witaj szko\u0142o!",
+    "updated": "2020-09-01T11:20:06",
+    "url": "/hive-134382/@polish.hive/akcja-inspiracja-15-witaj-szkolo"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "541788066270",
+        "voter": "kingscrown"
+      },
+      {
+        "rshares": "19003947945438",
+        "voter": "gtg"
+      },
+      {
+        "rshares": "49145972950",
+        "voter": "arcange"
+      },
+      {
+        "rshares": "378424966088",
+        "voter": "bowess"
+      },
+      {
+        "rshares": "1457831212",
+        "voter": "raphaelle"
+      },
+      {
+        "rshares": "5050273008",
+        "voter": "kiddarko"
+      },
+      {
+        "rshares": "1044569061",
+        "voter": "dadview"
+      },
+      {
+        "rshares": "31196282231",
+        "voter": "justyy"
+      },
+      {
+        "rshares": "542377972",
+        "voter": "siniceku"
+      },
+      {
+        "rshares": "273184729581",
+        "voter": "techslut"
+      },
+      {
+        "rshares": "4375926326",
+        "voter": "adventureevryday"
+      },
+      {
+        "rshares": "4744285716",
+        "voter": "cardboard"
+      },
+      {
+        "rshares": "2144418046",
+        "voter": "buzzbeergeek"
+      },
+      {
+        "rshares": "18558863745",
+        "voter": "detlev"
+      },
+      {
+        "rshares": "98338104837",
+        "voter": "drag33"
+      },
+      {
+        "rshares": "0",
+        "voter": "tomosan"
+      },
+      {
+        "rshares": "22720348592",
+        "voter": "mxzn"
+      },
+      {
+        "rshares": "1114534927",
+        "voter": "mdosev"
+      },
+      {
+        "rshares": "10347935474",
+        "voter": "lelon"
+      },
+      {
+        "rshares": "81276132208",
+        "voter": "ewkaw"
+      },
+      {
+        "rshares": "0",
+        "voter": "bolgan"
+      },
+      {
+        "rshares": "94279927544",
+        "voter": "grecki-bazar-ewy"
+      },
+      {
+        "rshares": "25276877970",
+        "voter": "yoogyart"
+      },
+      {
+        "rshares": "37448267375",
+        "voter": "elysiian"
+      },
+      {
+        "rshares": "19077305471",
+        "voter": "alcik"
+      },
+      {
+        "rshares": "21198406631325",
+        "voter": "tipu"
+      },
+      {
+        "rshares": "8634891293",
+        "voter": "andzi76"
+      },
+      {
+        "rshares": "3881194644",
+        "voter": "m-san"
+      },
+      {
+        "rshares": "1551470012",
+        "voter": "rubenbitcoin"
+      },
+      {
+        "rshares": "2194475483",
+        "voter": "fourfourfun"
+      },
+      {
+        "rshares": "160627560471",
+        "voter": "deepresearch"
+      },
+      {
+        "rshares": "10957935736",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "638521764",
+        "voter": "patricklancaster"
+      },
+      {
+        "rshares": "9331089801",
+        "voter": "calist"
+      },
+      {
+        "rshares": "145353933139",
+        "voter": "kubak"
+      },
+      {
+        "rshares": "204374101496",
+        "voter": "happy-soul"
+      },
+      {
+        "rshares": "70782796291",
+        "voter": "pkocjan"
+      },
+      {
+        "rshares": "627593871932",
+        "voter": "lesiopm"
+      },
+      {
+        "rshares": "33997360753",
+        "voter": "fego"
+      },
+      {
+        "rshares": "35178381864",
+        "voter": "jocieprosza"
+      },
+      {
+        "rshares": "20148509455",
+        "voter": "herbacianymag"
+      },
+      {
+        "rshares": "4275842141",
+        "voter": "racibo"
+      },
+      {
+        "rshares": "0",
+        "voter": "reinmar"
+      },
+      {
+        "rshares": "1020539593",
+        "voter": "hrabiaeryk"
+      },
+      {
+        "rshares": "96992690453",
+        "voter": "promobot"
+      },
+      {
+        "rshares": "176641339260",
+        "voter": "browery"
+      },
+      {
+        "rshares": "60622046757",
+        "voter": "rozku"
+      },
+      {
+        "rshares": "6507113021",
+        "voter": "pannapysia"
+      },
+      {
+        "rshares": "4600141498",
+        "voter": "sk1920"
+      },
+      {
+        "rshares": "33159364247",
+        "voter": "digital.mine"
+      },
+      {
+        "rshares": "801487053",
+        "voter": "moneybaby"
+      },
+      {
+        "rshares": "2872995674",
+        "voter": "longer"
+      },
+      {
+        "rshares": "25834959113",
+        "voter": "pignys"
+      },
+      {
+        "rshares": "11952516611",
+        "voter": "kapitanrosomak"
+      },
+      {
+        "rshares": "1062974013",
+        "voter": "mightypanda"
+      },
+      {
+        "rshares": "0",
+        "voter": "niecoinny"
+      },
+      {
+        "rshares": "2772628823",
+        "voter": "nisu"
+      },
+      {
+        "rshares": "6259086006",
+        "voter": "dorotti"
+      },
+      {
+        "rshares": "17730440484",
+        "voter": "wzp"
+      },
+      {
+        "rshares": "51868197580",
+        "voter": "ptaku"
+      },
+      {
+        "rshares": "3228300106",
+        "voter": "ratelmiodozer"
+      },
+      {
+        "rshares": "12777546958",
+        "voter": "samarek69"
+      },
+      {
+        "rshares": "781556253",
+        "voter": "adyorka"
+      },
+      {
+        "rshares": "0",
+        "voter": "bambaryla"
+      },
+      {
+        "rshares": "1928812660",
+        "voter": "pl-kuchnia"
+      },
+      {
+        "rshares": "14407895790",
+        "voter": "msmp"
+      },
+      {
+        "rshares": "6437487972",
+        "voter": "mia-cc"
+      },
+      {
+        "rshares": "6945656351",
+        "voter": "osavi"
+      },
+      {
+        "rshares": "18693739537",
+        "voter": "pedrobrito2004"
+      },
+      {
+        "rshares": "581591355",
+        "voter": "potworkowestudio"
+      },
+      {
+        "rshares": "14749311563",
+        "voter": "qbas116"
+      },
+      {
+        "rshares": "70030647737",
+        "voter": "threejay"
+      },
+      {
+        "rshares": "11130399197892",
+        "voter": "likwid"
+      },
+      {
+        "rshares": "2134411526",
+        "voter": "leighscotford"
+      },
+      {
+        "rshares": "571119752",
+        "voter": "zimnaherbata"
+      },
+      {
+        "rshares": "5195980915",
+        "voter": "cheer-up"
+      },
+      {
+        "rshares": "2658058754",
+        "voter": "jalentakesphotos"
+      },
+      {
+        "rshares": "3763242022",
+        "voter": "arenatoken"
+      },
+      {
+        "rshares": "59768127",
+        "voter": "wallar"
+      },
+      {
+        "rshares": "561411535",
+        "voter": "pogarda"
+      },
+      {
+        "rshares": "0",
+        "voter": "d4refist"
+      },
+      {
+        "rshares": "12846390859",
+        "voter": "policewala"
+      },
+      {
+        "rshares": "2163403867",
+        "voter": "asia-pl"
+      },
+      {
+        "rshares": "2147252237",
+        "voter": "likeup"
+      },
+      {
+        "rshares": "556546259",
+        "voter": "kgsupport"
+      },
+      {
+        "rshares": "1525077314",
+        "voter": "football-stats"
+      },
+      {
+        "rshares": "643654704",
+        "voter": "chromebook"
+      },
+      {
+        "rshares": "683819669",
+        "voter": "teach-me"
+      },
+      {
+        "rshares": "6465829976",
+        "voter": "ocotuchodzi"
+      },
+      {
+        "rshares": "6163259893",
+        "voter": "hf19"
+      },
+      {
+        "rshares": "6803501466",
+        "voter": "hf18"
+      },
+      {
+        "rshares": "0",
+        "voter": "saxer"
+      },
+      {
+        "rshares": "0",
+        "voter": "kozieja"
+      },
+      {
+        "rshares": "0",
+        "voter": "longerplan"
+      },
+      {
+        "rshares": "0",
+        "voter": "nalesnik"
+      }
+    ],
+    "author": "polish.hive",
+    "author_payout_value": "15.251 HBD",
+    "author_reputation": 25.0,
+    "author_role": "mod",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "Czyta\u0142e\u015b gdzie\u015b o Hive i chcia\u0142by\u015b zacz\u0105\u0107 blogowa\u0107? A mo\u017ce znajomy poleci\u0142 Ci platform\u0119 i chcia\u0142by\u015b aktywnie uczestniczy\u0107 w jej rozwoju? Dzi\u015b podpowiadamy jak to zrobi\u0107. \n\n<center>![](https://i.imgur.com/TtBzawy.jpg)</center>\n\n---\n\nNa pocz\u0105tek nale\u017cy za\u0142o\u017cy\u0107 sobie konto w sieci Hive. Mo\u017cna tego dokona\u0107 na kilka sposob\u00f3w. Sprawd\u017amy zatem mo\u017cliwo\u015bci darmowego za\u0142o\u017cenia konta:\n\n* **[poprzez ESTEEM](https://esteem.app/signup)**\n<center>![](https://i.imgur.com/dnG71aF.png)</center>\nKonto zak\u0142adane jest natychmiastowo, a do weryfikacji wymagane jest podanie adresu e-mail. \n\n* **[poprzez HIVEINVITE](https://hiveinvite.com/)**\nDzi\u0119ki uprzejmo\u015bci osoby, kt\u00f3ra jest ju\u017c u\u017cytkownikiem sieci Hive mo\u017cecie otrzyma\u0107 darmowe konto (koszt jego utworzenia ponosi osoba zapraszaj\u0105ca). Je\u015bli potrzebujecie konta Hive dajcie zna\u0107. Obecnie dysponujemy kilkoma utworzonymi w ten spos\u00f3b kontami i z ch\u0119ci\u0105 przeka\u017cemy je nowym cz\u0142onkom polskiej spo\u0142eczno\u015bci.\n\n* **[poprzez HIVEONBOARD](https://hiveonboard.com/create-account)**\nAby stworzy\u0107 konto wystarczy poda\u0107 swoj\u0105 nazw\u0119 u\u017cytkownika oraz zaakceptowa\u0107 warunki u\u017cytkowania.\n<center>![](https://i.imgur.com/gGObTYz.png)</center><br>\nPo wykonaniu tych czynno\u015bci pojawi si\u0119 kolejny ekran z podanym has\u0142em do konta.\n<center>![](https://i.imgur.com/BnDmYla.png)</center><br>\nBardzo wa\u017cne jest, aby zrobi\u0107 sobie kopi\u0119 has\u0142a r\u00f3wnie\u017c poza komputerm, gdy\u017c po jego utracie nie b\u0119dziecie mie\u0107 mo\u017cliwo\u015bci odzyskania konta. Gdy zrobicie kopi\u0119 has\u0142a mo\u017cecie klikn\u0105\u0107 przycisk utworzenia konta. Zostaniecie wtedy poproszeni o podanie numeru telefonu, na kt\u00f3ry zostanie wys\u0142any SMS weryfikacyjny.\n<center>![](https://i.imgur.com/hdff0Eu.png)</center><br>\nTeraz nale\u017cy prawid\u0142owo przepisa\u0107 kod z otrzymanego SMSa.\n<center>![](https://i.imgur.com/wQowlsr.png)</center><br>\nPo jego zatwierdzeniu otrzymacie informacj\u0119 o stworzeniu konta Hive.\n<center>![](https://i.imgur.com/GmecQeq.png)</center><br>\nMo\u017cecie teraz zacz\u0105\u0107 w pe\u0142ni korzysta\u0107 z sieci Hive.\n\n---\n\nTo jednak nie wszystko. Poni\u017cej znajdziecie kilka innych mo\u017cliwo\u015bci za\u0142o\u017cenia konta w sieci Hive. S\u0105 to opcje dodatkowo p\u0142atne:\n\n* **[poprzez BLOCKTRADES](https://blocktrades.us/en/create-hive-account) - koszt za\u0142o\u017cenia: ~ 2$ (6,1 HIVE)**\nKonto jest zak\u0142adane natychmiastowo bez weryfikacji. Powsta\u0142e konto otrzymuje na start 2 HIVE.\n\n* **[poprzez BDVOTER](https://accountcreate.bdvoter.com/) - koszt za\u0142o\u017cenia: 3 HIVE**\nKonto jest zak\u0142adane natychmiastowo bez dodatkowej weryfikacji. Powsta\u0142e konto otrzymuje 15 HP delegacji na miesi\u0105c.\n\n* **[poprzez 3SPEAK](https://signup.3speak.online/widget.html) - koszt za\u0142o\u017cenia: 1$ lub 2$ (w zale\u017cno\u015bci od wybranego pakietu)**\nKonto zak\u0142adane jest natychmiastowo bez weryfikacji. Powsta\u0142e konto otrzymuje 15 HP delegacji na 15 dni w pakiecie za 2$. W pakiecie za 1$ tworzone konto nie otrzymuje bonus\u00f3w.\n\n* **[poprzez BEEANON](https://beeanon.com/) - koszt za\u0142o\u017cenia: 3$**\nKonto zak\u0142adane jest natychmiastowo bez dodatkowej weryfikacji. Powsta\u0142e konto otrzymuje 3 HP delegacji na 30 dni.\n\n* **[poprzez HIVEWALLET](https://hivewallet.app/) - koszt za\u0142o\u017cenia: 13,99 pln (~ 3\u20ac)**\nKonto zak\u0142adane jest natychmiastowo bez weryfikacji. Aby za\u0142o\u017cy\u0107 konto nale\u017cy pobra\u0107 najpierw aplikacj\u0119 mobiln\u0105 hivewallet.\n\n---\n\nGdy ju\u017c skorzystacie z kt\u00f3rej\u015b opcji i utworzycie swoje konto Hive wa\u017cne, aby podczas pisania post\u00f3w trzyma\u0107 si\u0119 kilku elementarnych zasad przyjetych na platformie. Przede wszystkim pami\u0119tajcie by pisa\u0107 swoje autorskie teksty. Spo\u0142eczno\u015b\u0107 Hive nie lubi plagiator\u00f3w. Zwr\u00f3\u0107cie r\u00f3wnie\u017c uwag\u0119 na prawa autorskie zamieszczanych przez siebie grafik, zdj\u0119\u0107 czy video. Nie ze wszystkich mo\u017cna legalnie korzysta\u0107. Dodatkowo fajnie by\u0142oby gdyby\u015b w swoim pierwszym po\u015bcie napisa\u0142 co\u015b o sobie, o czym zamierzasz pisa\u0107. Innymi s\u0142owy daj si\u0119 pozna\u0107 istniej\u0105cej spo\u0142eczno\u015bci.\n\n**A gdzie t\u0119 spo\u0142eczno\u015b\u0107 mo\u017cecie znale\u017a\u0107?**\n* teskty polskoj\u0119zyczne zamieszczane s\u0105 pod tagiem #polish,\n* zosta\u0142a utworzona spo\u0142eczno\u015b\u0107 **[Polish HIVE](https://peakd.com/c/hive-134382/created)**,\n* mo\u017cecie te\u017c zajrze\u0107 na **[OPENHIVE.CZAT](https://openhive.chat/channel/polish)**, gdzie zosta\u0142 utworzony specjalny kana\u0142 dla polskiej spo\u0142eczno\u015bci. \n\nZapraszamy do rozejrzenia si\u0119.\n\n---\n\nTo by\u0142oby na tyle. Jeszcze tylko ma\u0142a pro\u015bba do Was. Je\u015bli macie jakie\u015b pytania na temat platformy Hive lub istnieje jaka\u015b kwestia, o kt\u00f3rej ch\u0119tnie by\u015bcie poczytali, to napiszcie nam o tym w komentarzach.\n\nDo nast\u0119pnego!\n\n---\n\n[![](https://i.imgur.com/J1g6YMZ.png)](https://peakd.com/c/hive-134382/created)",
+    "category": "hive-134382",
+    "children": 9,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-05-19T12:51:15",
+    "curator_payout_value": "14.887 HBD",
+    "depth": 0,
+    "is_paidout": true,
+    "json_metadata": {
+      "app": "peakd/2020.05.3",
+      "format": "markdown",
+      "image": [
+        "https://i.imgur.com/TtBzawy.jpg",
+        "https://i.imgur.com/dnG71aF.png",
+        "https://i.imgur.com/gGObTYz.png",
+        "https://i.imgur.com/BnDmYla.png",
+        "https://i.imgur.com/hdff0Eu.png",
+        "https://i.imgur.com/wQowlsr.png",
+        "https://i.imgur.com/GmecQeq.png",
+        "https://i.imgur.com/J1g6YMZ.png"
+      ],
+      "links": [
+        "https://esteem.app/signup",
+        "https://hiveinvite.com/",
+        "https://hiveonboard.com/create-account",
+        "https://blocktrades.us/en/create-hive-account",
+        "https://accountcreate.bdvoter.com/",
+        "https://signup.3speak.online/widget.html",
+        "https://beeanon.com/",
+        "https://hivewallet.app/",
+        "/trending/polish",
+        "/c/hive-134382/created"
+      ],
+      "tags": [
+        "polish",
+        "pl-spolecznosc",
+        "pl-hive",
+        "pl-blog"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 55080017502877,
+    "payout": 30.138,
+    "payout_at": "2020-05-26T12:51:15",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "bloguj-razem-z-hive-01-jak-zaczac-zakladamy-konto",
+    "post_id": 97465862,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 89
+    },
+    "title": "Bloguj razem z Hive #01: Jak zacz\u0105\u0107? Zak\u0142adamy konto",
+    "updated": "2020-05-19T12:51:15",
+    "url": "/hive-134382/@polish.hive/bloguj-razem-z-hive-01-jak-zaczac-zakladamy-konto"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "121604470588",
+        "voter": "ewkaw"
+      },
+      {
+        "rshares": "3769879961878",
+        "voter": "tipu"
+      },
+      {
+        "rshares": "14132527056",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "25084347659",
+        "voter": "happy-soul"
+      },
+      {
+        "rshares": "534566826",
+        "voter": "stefannikolov"
+      },
+      {
+        "rshares": "3144118113",
+        "voter": "romeskie"
+      },
+      {
+        "rshares": "48980494440",
+        "voter": "rozku"
+      },
+      {
+        "rshares": "1187121369",
+        "voter": "longer"
+      },
+      {
+        "rshares": "36613429",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "48541928440",
+        "voter": "kryptogames"
+      },
+      {
+        "rshares": "3021588817",
+        "voter": "iamyohann"
+      },
+      {
+        "rshares": "846367150",
+        "voter": "enilemor"
+      }
+    ],
+    "author": "kapitanrosomak",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "Witam was bardzo serdecznie nie by\u0142o \u017cadnych przemy\u015ble\u0144 bo ten nie by\u0142o ku temu zbyt du\u017co powod\u00f3w, a lepiej troch\u0119 poczeka\u0107 i napisa\u0107 ciekawie.\n\n32 mroczne lata za mn\u0105 ile jeszcze kto wie.\n\n![img_5347.jpg](https://images.ecency.com/DQmRFuieDKuQ4db9Z8ZnVPKFeDHQiWf7tJZ8ciKpg53Qomt/img_5347.jpg)\n\nDzi\u015b zacz\u0105\u0142em rozmy\u015bla\u0107 w jakim \u015bwiecie \u017cyje.\nPierw sprawa z mojego miasta.\nM\u0142ody m\u0119\u017cczyzna skatowa\u0142 swoj\u0105 \u017con\u0119 oraz ma\u0142ego pieska ( mo\u017cna znale\u017a\u0107 informacje na Facebooku schroniska Zawiercie), \u017cona wy\u0142adowa\u0142a w szpitalu niestety pieska si\u0119 nie uda\u0142o uratowa\u0107.\n\n\u017byjemy w dziwnym \u015bwiecie gdzie zwierz\u0119ta nie licz\u0105 si\u0119 wcale. Co mu zrobi\u0105? \u017bona pewnie powie ze nag\u0142y mia\u0142 atak i wycofa oskar\u017cenie bo \u0142obuz kocha najmocniej.\nZastanawia mnie czy by\u0142 \u015bwiadom co zrobi\u0142? Oczywi\u015bcie powie ze by\u0142 pod wp\u0142ywem alkoholu i mu \u017cal jednak potrafi\u0142 zat\u0142uc psa.\nPsa kt\u00f3ry \u017cy\u0142 w tym domu, psa kt\u00f3ry wita\u0142 i \u017cegna\u0142 go. Kto\u015b powie, ale to nie by\u0142 cz\u0142owiek, No w\u0142a\u015bnie cz\u0142owiek by si\u0119 obroni\u0142 pies jeszcze sw\u00f3j nie.\n\nCzytaj\u0105c komentarze ludzie pisz\u0105 o karze \u015bmierci. To by\u0142o by tylko w po\u0142owie rozwi\u0105zanie gdy\u017c oprawca do ko\u0144ca by nie mia\u0142 skruchy. Wiezienie dostanie w zawieszeniu i tyle w sprawie. Stad zastanawia mnie w jakim my \u015bwiecie \u017cyjemy gdzie tacy osobnicy czuja ze s\u0105 ponad prawem.\n\nKolejny przyk\u0142ad to pani kt\u00f3ra w moim mie\u015bcie mia\u0142a hodowle ps\u00f3w jednak postanowi\u0142a si\u0119 wyprowadzi\u0107 i zostawi\u0142a pastw\u0119 losu kilka ps\u00f3w. Tutaj kochaj\u0105ca pani kt\u00f3ra bez namys\u0142u zostawia bez opieki psy i jedzie kilka kilometr\u00f3w dalej by zacz\u0105\u0107 nowe \u017cycie. Jesli chcia\u0142a sko\u0144czy\u0107 swoj\u0105 hodowle mog\u0142a da\u0107 do schroniska pieski a nie tak ze s\u0105siedzi musieli zareagowa\u0107 ze co\u015b jest nie tak ( materia\u0142 by\u0142 o tym w uwadze)Po tym mnie wzi\u0119\u0142o zn\u00f3w rozmy\u015blanie  jak mocno trzeba mie\u0107 znieczulic\u0119 by zostawi\u0107 kogo\u015b na pastw\u0119 losu bez jedzenia i picia. Nie wiem jak si\u0119 sko\u0144czy\u0142 los tej pani ale mo\u017ce odpowie za to dodam mo\u017ce.\n\n\u017byjemy w dziwnych czasach.\n\nOstatnio na internecie robi furor\u0119 akcja rzucam maseczk\u0119 bo nie chodz\u0119 w kaga\u0144cu.\n\nMog\u0119 wiele zrozumie\u0107 ze dana osoba pe\u0142na zdrowia wchodz\u0105c bez maski do sklepu kupuje co chce i wchchodzi zadowolona. \n\nWszystko pi\u0119knie bo przecie\u017c jaki\u015b czas tak ka\u017cdy robi\u0142 i nie b\u0119d\u0119 tutaj zaczyna\u0142 wywod\u00f3w \u017cadnych, a mo\u017ce tylko wspomn\u0119 ze nie ka\u017cdy ma idealna odporno\u015b\u0107 i nie ka\u017cdy jest m\u0142ody. \nWiele staruszk\u00f3w i chorych ludzi robi zakupy wiec osoba kt\u00f3ra \u015bmiga niczym motyl bez maski mo\u017ce taka osob\u0119 zarazi\u0107 ( uwaga powiem grypa) kt\u00f3ra powoduje ze niekt\u00f3rzy przechodz\u0105 ja niezwykle ci\u0119\u017cka lub umieraj\u0105 bo korona to nic innego jak mocniejszy szczep grypy.\nI nie b\u0119d\u0119 tu pisa\u0142 ze zdj\u0119cie kaga\u0144ca to nasza obywatelska moralno\u015b\u0107 bo jako\u015b nikt nie zrzuci\u0142 ze sto\u0142ka Aktualnej partii, a przecie\u017c wyzwole\u0144cy mogli by to uczyni\u0107 by w kraju \u017cy\u0142o si\u0119 lepiej \n\nRozmy\u015blam dalej\nUSA \nTo co dzieje si\u0119 tam aktualnie to dla mnie jest strasznie smutne, nie chodzi o gryp\u0119 a o zamieszki jak mocno jeden zap\u0142on m\u00f3g\u0142 spowodowa\u0107 to co si\u0119 dzieje do tej pory.\nSmuci mnie bo mia\u0142em tam lecie\u0107, aktualnie robi si\u0119 coraz niebezpieczniej. C\u00f3\u017c mam nadzieje ze uspokoi si\u0119 to nied\u0142ugo i wygraj\u0105 ci pozytywni.\n\nPolska \nTolerancja w Polsce nigdy nie istnia\u0142a, b\u0119d\u0105c Polakiem, albo zostaje ci narzucone schematy, albo czujesz si\u0119 emigrantem na ziemi polskiej.\n\nIlo\u015b\u0107 absurd\u00f3w i prostetow jakie ostatnio pojawiaj\u0105 si\u0119 smuci mocno do tego stopnia ze g\u0142upio pisa\u0107 sk\u0105d si\u0119 jest bo ca\u0142y \u015bwiat si\u0119 \u015bmieje z polski z polski katolickiej kt\u00f3ra kocha bli\u017aniego swego jak siebie samego. \n\nWidz\u0105c wypowiedzi ko\u015bcio\u0142a ze trzeba wyt\u0119pi\u0107 zaraz\u0119 to tak jakby cz\u0142owiek wierz\u0105cy w Boga nala\u0142 sobie domestos do oczu bo to nie Jezus m\u00f3wi\u0142 mi\u0142ujcie si\u0119 i kochajcie si\u0119? No i gdzie ta mi\u0142o\u015b\u0107 ?\n\nKa\u017cdy ka\u017cdego by utopi\u0142 w \u0142y\u017cce wody za jego pogody czy orientacje i nie oszukujmy si\u0119 wi\u0119kszo\u015b\u0107 tak my\u015bli a w niedziele przyjmuje cia\u0142o Pana.\nZastanawia mnie kiedy zacznie si\u0119 destrukcja kt\u00f3ra wyt\u0119pi ca\u0142e z\u0142o kt\u00f3re wok\u00f3\u0142 nas kwitnie.\n\nJak mo\u017cna i\u015b\u0107 i p\u0142uc na innych a p\u00f3\u017aniej modli\u0107 si\u0119, a jeszcze gorzej je\u015bli to sam ksi\u0105dz robi to tak jakby naplu\u0142 samemu Jezusowi na krzy\u017cu.\nOk mo\u017ce troch\u0119 kontrowersyjnie, ale nie bez powodu bo zaczynamy si\u0119 gubi\u0107 w tym wszystkim ze wsZad z\u0142o, moje miasto nie ma tygodnia kiedy nie pisz\u0105 co\u015b okropnego, wiec zastanawiam si\u0119 ile cz\u0142owiek mo\u017ce wytrzyma\u0107 z\u0142a wok\u00f3\u0142 i jak mo\u017ce by\u0107 odporny by \u017cy\u0107 normalnie.\n\nNie tolerujesz innych ok, ale nie pluj innym w twarz \nNie chcesz chodzi\u0107 w kaga\u0144cu, ok ale staraj si\u0119 spojrze\u0107 na innych ludzi nie tylko m\u0142odych i z ogromna odporno\u015bci\u0105 \nJeste\u015b wariatem nie \u017cyj z kobieta i nie nie bierz psa, lepiej zacznij malowa\u0107.\n\nTakie ma\u0142e rozmy\u015blenia dzi\u015b mam. \nDzi\u0119ki za przeczytanie i zapraszam do mi\u0142ego komentowania.\n",
+    "category": "hive-134382",
+    "children": 2,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-04T18:12:24",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "ecency/3.0.3-mobile",
+      "format": "markdown+html",
+      "image": [
+        "https://images.ecency.com/DQmRFuieDKuQ4db9Z8ZnVPKFeDHQiWf7tJZ8ciKpg53Qomt/img_5347.jpg"
+      ],
+      "tags": [
+        "hive-134382",
+        "polish",
+        "pl-artykuly",
+        "pl-emocjonalnie",
+        "reakcja"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 4036994105765,
+    "payout": 1.137,
+    "payout_at": "2020-09-11T18:12:24",
+    "pending_payout_value": "1.137 HBD",
+    "percent_hbd": 10000,
+    "permlink": "przemyslenia-rosomaka-odcinek-666",
+    "post_id": 99450975,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 12
+    },
+    "title": "Przemy\u015blenia rosomaka odcinek 666",
+    "updated": "2020-09-04T18:12:24",
+    "url": "/hive-134382/@kapitanrosomak/przemyslenia-rosomaka-odcinek-666"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "3868008671077",
+        "voter": "tipu"
+      },
+      {
+        "rshares": "14681369319",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "25269281627",
+        "voter": "happy-soul"
+      },
+      {
+        "rshares": "540017642",
+        "voter": "stefannikolov"
+      },
+      {
+        "rshares": "1202372190",
+        "voter": "longer"
+      },
+      {
+        "rshares": "38220215",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "1241899633",
+        "voter": "mia-cc"
+      },
+      {
+        "rshares": "49850214854",
+        "voter": "kryptogames"
+      },
+      {
+        "rshares": "1444121703",
+        "voter": "cryptogambit"
+      },
+      {
+        "rshares": "3631694240",
+        "voter": "dappstats"
+      }
+    ],
+    "author": "herosik",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "This is a cross post of [@herosik/australia-and-covid-19-i-chiny](/polish/@herosik/australia-and-covid-19-i-chiny) by @herosik.<br><br>Zapraszam na m\u00f3j post dotycz\u0105cy sytuacji w Australii. ",
+    "category": "hive-134382",
+    "children": 0,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-04T16:35:15",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "peakd/2020.08.3",
+      "image": [],
+      "original_author": "herosik",
+      "original_permlink": "australia-and-covid-19-i-chiny",
+      "tags": [
+        "cross-post"
+      ]
+    },
+    "max_accepted_payout": "0.000 HBD",
+    "net_rshares": 3965907862500,
+    "payout": 1.12,
+    "payout_at": "2020-09-11T16:35:15",
+    "pending_payout_value": "1.120 HBD",
+    "percent_hbd": 10000,
+    "permlink": "australia-and-covid-19-i-chiny-hive-134382",
+    "post_id": 99449344,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 10
+    },
+    "title": "Australia & Covid-19 i Chiny",
+    "updated": "2020-09-04T16:35:15",
+    "url": "/hive-134382/@herosik/australia-and-covid-19-i-chiny-hive-134382"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "3066820704",
+        "voter": "techken"
+      },
+      {
+        "rshares": "3618869075359",
+        "voter": "tipu"
+      },
+      {
+        "rshares": "14805025758",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "29151320267",
+        "voter": "happy-soul"
+      },
+      {
+        "rshares": "15667002707",
+        "voter": "jancharlest"
+      },
+      {
+        "rshares": "1177882925",
+        "voter": "longer"
+      },
+      {
+        "rshares": "29327828",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "47697128986",
+        "voter": "kryptogames"
+      }
+    ],
+    "author": "herosik",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "This is a cross post of [@herosik/rekordowe-zadluzenie-polski-nowy-obowiazek-dla-przedsiebiorcow-kolejne-nowe-podatki-polska-najgorszym-krajem-do-oszczedzania-w](/polish/@herosik/rekordowe-zadluzenie-polski-nowy-obowiazek-dla-przedsiebiorcow-kolejne-nowe-podatki-polska-najgorszym-krajem-do-oszczedzania-w) by @herosik.<br><br>Zapraszam na niezbyt fajne informacje o nowych podatkach ;). Ale przynajmniej w Tatrach zrobiono pi\u0119kne zdj\u0119cie :). ",
+    "category": "hive-134382",
+    "children": 0,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-03T18:06:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "peakd/2020.08.3",
+      "image": [],
+      "original_author": "herosik",
+      "original_permlink": "rekordowe-zadluzenie-polski-nowy-obowiazek-dla-przedsiebiorcow-kolejne-nowe-podatki-polska-najgorszym-krajem-do-oszczedzania-w",
+      "tags": [
+        "cross-post"
+      ]
+    },
+    "max_accepted_payout": "0.000 HBD",
+    "net_rshares": 3730463584534,
+    "payout": 1.127,
+    "payout_at": "2020-09-10T18:06:36",
+    "pending_payout_value": "1.127 HBD",
+    "percent_hbd": 10000,
+    "permlink": "rekordowe-zadluzenie-polski-nowy-obowiazek-dla-przedsiebiorcow-kolejne-nowe-podatki-polska-najgorszym-krajem-do-oszczedzania-w-hive-134382",
+    "post_id": 99432480,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 8
+    },
+    "title": "Rekordowe zad\u0142u\u017cenie Polski, Nowy obowi\u0105zek dla przedsi\u0119biorc\u00f3w!, Kolejne nowe podatki, Polska najgorszym krajem do oszcz\u0119dzania w UE,  par\u0119 news\u00f3w dot. Covid-19, o lekcji religii w szko\u0142ach, pi\u0119kne zdj\u0119cie z Tatr i wi\u0119cej",
+    "updated": "2020-09-03T18:06:36",
+    "url": "/hive-134382/@herosik/rekordowe-zadluzenie-polski-nowy-obowiazek-dla-przedsiebiorcow-kolejne-nowe-podatki-polska-najgorszym-krajem-do-oszczedzania-w-hive-134382"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "485378070",
+        "voter": "mxzn"
+      },
+      {
+        "rshares": "3677378251273",
+        "voter": "tipu"
+      },
+      {
+        "rshares": "15358208700",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "29243688418",
+        "voter": "happy-soul"
+      },
+      {
+        "rshares": "15666445285",
+        "voter": "jancharlest"
+      },
+      {
+        "rshares": "1197014990",
+        "voter": "longer"
+      },
+      {
+        "rshares": "34506766",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "48496219405",
+        "voter": "kryptogames"
+      },
+      {
+        "rshares": "1444869138",
+        "voter": "cryptogambit"
+      },
+      {
+        "rshares": "3629196639",
+        "voter": "dappstats"
+      },
+      {
+        "rshares": "529773420",
+        "voter": "coronadino"
+      },
+      {
+        "rshares": "529773144",
+        "voter": "geneticshuffling"
+      }
+    ],
+    "author": "herosik",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "This is a cross post of [@herosik/zmienilem-zdanie-o-dzialaniach-lgbt-w-polsce-czesciowo](/polish/@herosik/zmienilem-zdanie-o-dzialaniach-lgbt-w-polsce-czesciowo) by @herosik.<br><br>M\u00f3j kr\u00f3tki tekst na temat akcji z LGBT, kt\u00f3rymi \u017cyje polskie spo\u0142ecze\u0144stwo od jakiego\u015b czasu. ",
+    "category": "hive-134382",
+    "children": 0,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-03T16:36:27",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "peakd/2020.08.3",
+      "image": [],
+      "original_author": "herosik",
+      "original_permlink": "zmienilem-zdanie-o-dzialaniach-lgbt-w-polsce-czesciowo",
+      "tags": [
+        "cross-post"
+      ]
+    },
+    "max_accepted_payout": "0.000 HBD",
+    "net_rshares": 3793993325248,
+    "payout": 1.152,
+    "payout_at": "2020-09-10T16:36:27",
+    "pending_payout_value": "1.152 HBD",
+    "percent_hbd": 10000,
+    "permlink": "zmienilem-zdanie-o-dzialaniach-lgbt-w-polsce-czesciowo-hive-134382",
+    "post_id": 99431043,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 12
+    },
+    "title": "Zmieni\u0142em zdanie o dzia\u0142aniach LGBT w Polsce. Cz\u0119\u015bciowo. ",
+    "updated": "2020-09-03T16:36:27",
+    "url": "/hive-134382/@herosik/zmienilem-zdanie-o-dzialaniach-lgbt-w-polsce-czesciowo-hive-134382"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "484303085",
+        "voter": "mxzn"
+      },
+      {
+        "rshares": "3678070887317",
+        "voter": "tipu"
+      },
+      {
+        "rshares": "15218148998",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "29070718660",
+        "voter": "happy-soul"
+      },
+      {
+        "rshares": "539911460",
+        "voter": "stefannikolov"
+      },
+      {
+        "rshares": "1197150697",
+        "voter": "longer"
+      },
+      {
+        "rshares": "22478106",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "1244921708",
+        "voter": "mia-cc"
+      },
+      {
+        "rshares": "48541423861",
+        "voter": "kryptogames"
+      },
+      {
+        "rshares": "1444869138",
+        "voter": "cryptogambit"
+      },
+      {
+        "rshares": "3807771894",
+        "voter": "bcm"
+      },
+      {
+        "rshares": "3640202650",
+        "voter": "dappstats"
+      }
+    ],
+    "author": "herosik",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "This is a cross post of [@herosik/james-bond-nowy-trailer-nowy-serial-od-producentow-got-antman3-ww-1984-adam-driver-w-filmie-sony-arnold-wystapi-w-serialu](/polish/@herosik/james-bond-nowy-trailer-nowy-serial-od-producentow-got-antman3-ww-1984-adam-driver-w-filmie-sony-arnold-wystapi-w-serialu) by @herosik.<br><br>Zapraszam na przegl\u0105d news\u00f3w i trailer najnowszego Bonda :)",
+    "category": "hive-134382",
+    "children": 0,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-03T14:35:12",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "peakd/2020.08.3",
+      "image": [],
+      "original_author": "herosik",
+      "original_permlink": "james-bond-nowy-trailer-nowy-serial-od-producentow-got-antman3-ww-1984-adam-driver-w-filmie-sony-arnold-wystapi-w-serialu",
+      "tags": [
+        "cross-post"
+      ]
+    },
+    "max_accepted_payout": "0.000 HBD",
+    "net_rshares": 3783282787574,
+    "payout": 1.15,
+    "payout_at": "2020-09-10T14:35:12",
+    "pending_payout_value": "1.150 HBD",
+    "percent_hbd": 10000,
+    "permlink": "james-bond-nowy-trailer-nowy-serial-od-producentow-got-antman3-ww-1984-adam-driver-w-filmie-sony-arnold-wystapi-w-serialu-hive-134382",
+    "post_id": 99429167,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 12
+    },
+    "title": "James Bond NOWY trailer, nowy serial od producent\u00f3w GoT, AntMan3, WW 1984, Adam Driver w filmie Sony, Arnold wyst\u0105pi w serialu,  odcinek specjalny The Fresh Prince of Bel Air, nowy aktor w Scream5",
+    "updated": "2020-09-03T14:35:12",
+    "url": "/hive-134382/@herosik/james-bond-nowy-trailer-nowy-serial-od-producentow-got-antman3-ww-1984-adam-driver-w-filmie-sony-arnold-wystapi-w-serialu-hive-134382"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "92358647616",
+        "voter": "ew-and-patterns"
+      },
+      {
+        "rshares": "28523037221",
+        "voter": "grecki-bazar-ewy"
+      },
+      {
+        "rshares": "4032935265423",
+        "voter": "mmmmkkkk311"
+      },
+      {
+        "rshares": "195719651243",
+        "voter": "kubak"
+      },
+      {
+        "rshares": "81376349485",
+        "voter": "czcibor360"
+      },
+      {
+        "rshares": "28703958052",
+        "voter": "sarmaticus"
+      },
+      {
+        "rshares": "857101846695",
+        "voter": "mariuszkarowski"
+      },
+      {
+        "rshares": "750167571",
+        "voter": "sensorycznyswiat"
+      },
+      {
+        "rshares": "3986559210",
+        "voter": "informator"
+      },
+      {
+        "rshares": "13264732623",
+        "voter": "reinmar"
+      },
+      {
+        "rshares": "27280925371",
+        "voter": "khrom"
+      },
+      {
+        "rshares": "42721048866",
+        "voter": "rozku"
+      },
+      {
+        "rshares": "11701271807",
+        "voter": "pannapysia"
+      },
+      {
+        "rshares": "2341099180",
+        "voter": "ntowl"
+      },
+      {
+        "rshares": "1289181738",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "54137768188",
+        "voter": "ludomir"
+      },
+      {
+        "rshares": "14892567187",
+        "voter": "trampmad"
+      },
+      {
+        "rshares": "908113580",
+        "voter": "pl-kuchnia"
+      },
+      {
+        "rshares": "7509804494",
+        "voter": "osavi"
+      },
+      {
+        "rshares": "1678963893",
+        "voter": "sarmagames"
+      }
+    ],
+    "author": "ocotuchodzi",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "https://www.youtube.com/watch?v=tyb_zNZW2R8\n\n##### Czy Joe Biden b\u0119dzie kolejnym prezydentem USA? \n#\nSonda\u017cownie w dalszym ci\u0105gu podaj\u0105, \u017ce ma on przewag\u0119 nad D.Trumpem. Wed\u0142ug CNN wonosi ona nawet 15 %. Zreszt\u0105 na ponad setk\u0119 bada\u0144 obecny prezydent Stan\u00f3w Zjednoczonych wygra\u0142 tylko 4 razy i 3 razy zremisowa\u0142. No, ale wiemy, \u017ce zamawiaj\u0105c sonda\u017ce polityczne wraz z nimi zamawia si\u0119 te\u017c wyniki... \n\nPatrz\u0105c, a raczej s\u0142uchaj\u0105c tego cz\u0142owieka trudno postawi\u0107 chocia\u017cby jednego centa na to, \u017ce wygra debat\u0119 z D.Trumpem, a wiemy, \u017ce spora grupa Amerykan\u00f3w podejmie decyzj\u0119 na podstawie telewizyjnego pojedynku do kt\u00f3rego dojdzie pod koniec kampanii wyborczej. Niemal ka\u017cde wyst\u0105pienie Joe Bidena ko\u0144czy si\u0119 jak\u0105\u015b wpadk\u0105, a przed nim coraz wi\u0119cej przem\u00f3wie\u0144 i wywiad\u00f3w. Google robi co mo\u017ce, aby mu pom\u00f3c i tak wpisuj\u0105c w wyszukiwarce \"Joe Biden ga\" nie podpowie nam \"gaffes\". To pewnie jaka\u015b awaria, a nie cenzura. A nawet je\u015bli to dla naszego dobra. Widocznie u\u015bmiech szkodzi zdrowiu.  :-) \n\nhttps://www.youtube.com/watch?v=wH-y_w0O5Bw\n\nJak dla mnie to r\u00f3wnym przeciwnikiem dla niego m\u00f3g\u0142by by\u0107 jedynie B.Komorowski. \n\n\n\n\nKorzysta\u0142em z:\n\nhttps://www.nytimes.com/live/2020/09/02/us/trump-vs-biden\n\nhttps://www.realclearpolitics.com/epolls/2020/president/us/general_election_trump_vs_biden-6247.html\n\nhttps://edition.cnn.com/2020/08/30/politics/trump-biden-post-convention-polling/index.html",
+    "category": "hive-134382",
+    "children": 3,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-02T22:14:51",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "hiveblog/0.1",
+      "format": "markdown",
+      "image": [
+        "https://img.youtube.com/vi/tyb_zNZW2R8/0.jpg",
+        "https://img.youtube.com/vi/wH-y_w0O5Bw/0.jpg"
+      ],
+      "links": [
+        "https://www.youtube.com/watch?v=tyb_zNZW2R8",
+        "https://www.youtube.com/watch?v=wH-y_w0O5Bw",
+        "https://www.nytimes.com/live/2020/09/02/us/trump-vs-biden",
+        "https://www.realclearpolitics.com/epolls/2020/president/us/general_election_trump_vs_biden-6247.html",
+        "https://edition.cnn.com/2020/08/30/politics/trump-biden-post-convention-polling/index.html"
+      ],
+      "tags": [
+        "polish",
+        "reakcja",
+        "folwark",
+        "joebiden"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 5499180959443,
+    "payout": 1.662,
+    "payout_at": "2020-09-09T22:14:51",
+    "pending_payout_value": "1.662 HBD",
+    "percent_hbd": 10000,
+    "permlink": "wedlug-cnn-ten-czlowiek-wygra-z-d-trumpem-w-wyborach-prezydenckich",
+    "post_id": 99417683,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 20
+    },
+    "title": "Wed\u0142ug CNN ten cz\u0142owiek wygra z D.Trumpem w wyborach prezydenckich.",
+    "updated": "2020-09-02T22:14:51",
+    "url": "/hive-134382/@ocotuchodzi/wedlug-cnn-ten-czlowiek-wygra-z-d-trumpem-w-wyborach-prezydenckich"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "6568912064",
+        "voter": "ocisly"
+      },
+      {
+        "rshares": "1577355222",
+        "voter": "imperfect-one"
+      },
+      {
+        "rshares": "1212061363",
+        "voter": "spoylerbg"
+      },
+      {
+        "rshares": "3305161853",
+        "voter": "aditor"
+      },
+      {
+        "rshares": "5604401659",
+        "voter": "dotevo"
+      },
+      {
+        "rshares": "2563213318",
+        "voter": "nicniezgrublem"
+      },
+      {
+        "rshares": "4694671446",
+        "voter": "spacesheep"
+      },
+      {
+        "rshares": "1056994630",
+        "voter": "santarius"
+      },
+      {
+        "rshares": "881570255",
+        "voter": "acronyms"
+      },
+      {
+        "rshares": "209628884439",
+        "voter": "lesiopm"
+      },
+      {
+        "rshares": "12998626661",
+        "voter": "reinmar"
+      },
+      {
+        "rshares": "60490006427",
+        "voter": "browery"
+      },
+      {
+        "rshares": "19353030650",
+        "voter": "glodniwiedzy"
+      },
+      {
+        "rshares": "1815053187",
+        "voter": "angatt"
+      },
+      {
+        "rshares": "884233443375",
+        "voter": "engrave"
+      },
+      {
+        "rshares": "58529092",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "53063420422",
+        "voter": "ludomir"
+      },
+      {
+        "rshares": "3007576148",
+        "voter": "gameeit"
+      },
+      {
+        "rshares": "679803842",
+        "voter": "bgornicki"
+      },
+      {
+        "rshares": "22000181790",
+        "voter": "qbas116"
+      },
+      {
+        "rshares": "25753665253",
+        "voter": "golden.future"
+      },
+      {
+        "rshares": "12175394539",
+        "voter": "ocotuchodzi"
+      },
+      {
+        "rshares": "2358431116",
+        "voter": "lesiopm2"
+      },
+      {
+        "rshares": "495393466",
+        "voter": "graythor"
+      },
+      {
+        "rshares": "50084628",
+        "voter": "kingjunior"
+      }
+    ],
+    "author": "kapitanrosomak",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "Kana\u0142y typu DiY wype\u0142zaj\u0105 wr\u0119cz notorycznie, nagle ka\u017cdy staje si\u0119 ekspertem tworz\u0105c fiku\u015bne papierowe motylki czy lornetki z rolki.\nJednak jest kana\u0142 kt\u00f3ry tworzy co\u015b na przek\u00f3r naszemu my\u015bleniu.\n\nSp\u00f3jrzmy sobie.\n\nhttps://youtu.be/SeAZNz0av6M\n\nWidz\u0105c obrazek jak zrobi\u0107 w\u00f3dk\u0119 ka\u017cdy sobie my\u015bli o jaki\u015b ziemniakach czy innych produktach by stworzy\u0107 alkohol, jednak ten kana\u0142 idzie o krok a mo\u017ce nawet o ca\u0142a galaktyk\u0119 dalej.\n\nhttps://youtu.be/X5ecpL7PsLE\n\nMianowicie ka\u017cdy odcinek jest psychodelicznym spojrzeniem na problemy bohatera. Surrealizm jest tutaj ogromny, miksowanie lalek, czy t\u0142uczenie lalki gdy\u017c pali\u0142a papierosa.\nPowiecie co to ma by\u0107? Odpowiem, \u017ce to spojrzenie na \u015bwiat z innej perspektywy.\nBohater nie m\u00f3wi w naszym j\u0119zyku, cz\u0119sto rzuca sobie jajkiem na siebie powoduj\u0105c nag\u0142a przyjemno\u015b\u0107.\n\nhttps://youtu.be/MvkQMoj8qqA\n\nKa\u017cdy odcinek bohater stara si\u0119 stworzy\u0107 co\u015b zgodnie z przepisem by wysz\u0142o tak jak w typowym DiY jednak jego psychika na to cz\u0119sto nie pozwala, rozwalaj\u0105c wszystko, czy ca\u0142kowicie odchodz\u0105c od przepisu. Go\u015b\u0107 kt\u00f3ry tworzy ten performance pochodzi z Australii i trzeba przyzna\u0107, ze ma du\u017ca swobod\u0119 tw\u00f3rczo\u015bci. \n\nhttps://youtu.be/D3c27ZyV_oI\n\nZawsze do swoich chorych wizji u\u017cywa warzyw, owoc\u00f3w czy mleka No i wiadomo jajka. Ogl\u0105daj\u0105c odcinki cz\u0119sto mia\u0142em wra\u017cenie ze ogl\u0105dam Salad Finger w wersji filmowej podobnie zachowuje si\u0119 bohater i podobne ma schizy mimo ze stara si\u0119 by wszystko wysz\u0142o idealnie to jego \u015bwiat jest mocno zakrzywiony i to co dla niego jest \u0142adnie zrobione dla nas wzbudza niesmak.\nIlo\u015b\u0107 zmarnowanego jedzenia w ka\u017cdym odcinku osi\u0105ga absurdalne liczby a mimo to. Cz\u0142owiek kt\u00f3ry to tworzy 6 lat si\u0119 bawi i wie ze kto\u015b to ogl\u0105da. \n\nhttps://youtu.be/3t678W5zfMA\n\nNie powiem, ze ci\u0119\u017cko by\u0142o by mi zrobi\u0107 taki odcinek, mia\u0142bym jakie\u015b opory bariery psychicznej. \n\nWiadomo to jest przekaz autora ze pluje na konsuplocjwizm jednak w taki spos\u00f3b to jest wykonane, \u017ce ci\u0119\u017cko na\u015bladowa\u0107 go i mie\u0107 resztki zdrowego rozs\u0105dku.\n\nTo jeden z tych kana\u0142\u00f3w, kt\u00f3re s\u0105 na granicy normalno\u015bci bo ca\u0142a akcja dzieje si\u0119 wok\u00f3\u0142 jedzenia wiec nic z\u0142ego si\u0119 nie dzieje, jednak surrealizm ka\u017cdej sceny powoduje, \u017ce jest widzowi z\u0142e na to co patrzy, a szybki monta\u017c powoduje ze niekiedy nasz oczy nie nad\u0105\u017caj\u0105 za tym co aktualnie ju\u017c jest na wizji.\nKana\u0142 cieszy si\u0119 wielka popularno\u015bci\u0105 bo aktualnie ma ponad 15 milion\u00f3w subskrybcji. Chyba ka\u017cdy widz\u0105c ten kana\u0142 stara si\u0119 zrozumie\u0107 sens ukryty przekaz oraz i zadaje sobie pytanie czemu? \nTo kana\u0142 kt\u00f3ry gdzie\u015b trzyma si\u0119 ostatniej linii mi\u0119dzy kana\u0142em jutube a chorymi filmikami. \nZ jednej strony jest zabawny bo wy\u015bmiewa ca\u0142e te DiY z drugiej nie ka\u017cdy b\u0119dzie chcia\u0142 zobaczy\u0107 jak to jest zrobione w innej galaktyce ;)\nTo tyle dzi\u0119ki za przeczytanie ",
+    "category": "hive-134382",
+    "children": 6,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-03T11:32:24",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "ecency/3.0.3-mobile",
+      "format": "markdown+html",
+      "links": [
+        "https://youtu.be/SeAZNz0av6M",
+        "https://youtu.be/X5ecpL7PsLE",
+        "https://youtu.be/MvkQMoj8qqA",
+        "https://youtu.be/D3c27ZyV_oI",
+        "https://youtu.be/3t678W5zfMA"
+      ],
+      "tags": [
+        "hive-134382",
+        "polish",
+        "pl-artykuly",
+        "pl-emocjonalnie"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 1335625866845,
+    "payout": 0.327,
+    "payout_at": "2020-09-10T11:32:24",
+    "pending_payout_value": "0.327 HBD",
+    "percent_hbd": 10000,
+    "permlink": "how-to-basic-czyli-jak-to-jest-zrobione",
+    "post_id": 99426598,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 25
+    },
+    "title": "How to basic czyli jak to jest zrobione.",
+    "updated": "2020-09-03T11:32:24",
+    "url": "/hive-134382/@kapitanrosomak/how-to-basic-czyli-jak-to-jest-zrobione"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "3091251527",
+        "voter": "fractalnode"
+      },
+      {
+        "rshares": "3091499888",
+        "voter": "rmach"
+      },
+      {
+        "rshares": "733159770",
+        "voter": "oleg326756"
+      },
+      {
+        "rshares": "10969287634",
+        "voter": "yadamaniart"
+      },
+      {
+        "rshares": "3898386230",
+        "voter": "valth"
+      },
+      {
+        "rshares": "7666698237",
+        "voter": "erikaflynn"
+      },
+      {
+        "rshares": "7217212902",
+        "voter": "ambyr00"
+      },
+      {
+        "rshares": "4913322409",
+        "voter": "ocisly"
+      },
+      {
+        "rshares": "1170595182",
+        "voter": "imperfect-one"
+      },
+      {
+        "rshares": "7804345186",
+        "voter": "melooo182"
+      },
+      {
+        "rshares": "30291609003",
+        "voter": "scrooger"
+      },
+      {
+        "rshares": "1451162804",
+        "voter": "coquiunlimited"
+      },
+      {
+        "rshares": "2466533411",
+        "voter": "aditor"
+      },
+      {
+        "rshares": "1180664729",
+        "voter": "lourdeshd6"
+      },
+      {
+        "rshares": "122522621537",
+        "voter": "ewkaw"
+      },
+      {
+        "rshares": "5028522080",
+        "voter": "pearica"
+      },
+      {
+        "rshares": "3274156492",
+        "voter": "guchtere"
+      },
+      {
+        "rshares": "452911906112",
+        "voter": "gunthertopp"
+      },
+      {
+        "rshares": "635955660",
+        "voter": "nolasco"
+      },
+      {
+        "rshares": "40688613408",
+        "voter": "jacekw"
+      },
+      {
+        "rshares": "1864121956",
+        "voter": "nicniezgrublem"
+      },
+      {
+        "rshares": "998642848",
+        "voter": "followforupvotes"
+      },
+      {
+        "rshares": "2541325925",
+        "voter": "imdazu"
+      },
+      {
+        "rshares": "569910202",
+        "voter": "onethousandwords"
+      },
+      {
+        "rshares": "98707916073",
+        "voter": "txatxy"
+      },
+      {
+        "rshares": "1106390511",
+        "voter": "theleapingkoala"
+      },
+      {
+        "rshares": "2003656251",
+        "voter": "garudi"
+      },
+      {
+        "rshares": "6228982288",
+        "voter": "make-a-whale"
+      },
+      {
+        "rshares": "102691057779",
+        "voter": "niallon11"
+      },
+      {
+        "rshares": "603193434",
+        "voter": "shawkr13"
+      },
+      {
+        "rshares": "15467959625",
+        "voter": "espoem"
+      },
+      {
+        "rshares": "3522593629",
+        "voter": "gotgame"
+      },
+      {
+        "rshares": "8897708935",
+        "voter": "jlsplatts"
+      },
+      {
+        "rshares": "19283722837",
+        "voter": "feedyourminnows"
+      },
+      {
+        "rshares": "1123400822",
+        "voter": "andzi76"
+      },
+      {
+        "rshares": "3913002098376",
+        "voter": "qurator"
+      },
+      {
+        "rshares": "846227445",
+        "voter": "marcoriccardi"
+      },
+      {
+        "rshares": "4098779857",
+        "voter": "spacesheep"
+      },
+      {
+        "rshares": "1148396233",
+        "voter": "che-shyr"
+      },
+      {
+        "rshares": "4932294632",
+        "voter": "zahidsun"
+      },
+      {
+        "rshares": "1021179573",
+        "voter": "dizzyjay"
+      },
+      {
+        "rshares": "8366868934",
+        "voter": "chekohler"
+      },
+      {
+        "rshares": "2782708229",
+        "voter": "skycae"
+      },
+      {
+        "rshares": "59788899939",
+        "voter": "qustodian"
+      },
+      {
+        "rshares": "12158481274",
+        "voter": "designieplay"
+      },
+      {
+        "rshares": "6251095759",
+        "voter": "carn"
+      },
+      {
+        "rshares": "287967320661",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "108490038252",
+        "voter": "hallmann"
+      },
+      {
+        "rshares": "780299198",
+        "voter": "santarius"
+      },
+      {
+        "rshares": "648670632",
+        "voter": "acronyms"
+      },
+      {
+        "rshares": "763462085",
+        "voter": "wisewoof"
+      },
+      {
+        "rshares": "9367730085",
+        "voter": "pab.ink"
+      },
+      {
+        "rshares": "622815731",
+        "voter": "gribouille"
+      },
+      {
+        "rshares": "33855889502",
+        "voter": "orlandumike"
+      },
+      {
+        "rshares": "2927718459",
+        "voter": "upfundme"
+      },
+      {
+        "rshares": "1451961859",
+        "voter": "verhp11"
+      },
+      {
+        "rshares": "19956120869",
+        "voter": "pkocjan"
+      },
+      {
+        "rshares": "5531465353",
+        "voter": "qtip"
+      },
+      {
+        "rshares": "970374166",
+        "voter": "foxyspirit"
+      },
+      {
+        "rshares": "39445303564",
+        "voter": "jocieprosza"
+      },
+      {
+        "rshares": "3843547522",
+        "voter": "grzyb77"
+      },
+      {
+        "rshares": "224566892372",
+        "voter": "a0i"
+      },
+      {
+        "rshares": "252310354",
+        "voter": "pstryk"
+      },
+      {
+        "rshares": "16705071255",
+        "voter": "qberry"
+      },
+      {
+        "rshares": "28731065672",
+        "voter": "herbacianymag"
+      },
+      {
+        "rshares": "15484144270",
+        "voter": "racibo"
+      },
+      {
+        "rshares": "1950580818",
+        "voter": "yameen"
+      },
+      {
+        "rshares": "12738125853",
+        "voter": "reinmar"
+      },
+      {
+        "rshares": "671587896",
+        "voter": "qurator-tier-0"
+      },
+      {
+        "rshares": "57383846722",
+        "voter": "saboin"
+      },
+      {
+        "rshares": "29185334967",
+        "voter": "khrom"
+      },
+      {
+        "rshares": "5615839147",
+        "voter": "beco132"
+      },
+      {
+        "rshares": "14700399406",
+        "voter": "glodniwiedzy"
+      },
+      {
+        "rshares": "83183606226",
+        "voter": "rozku"
+      },
+      {
+        "rshares": "587673771",
+        "voter": "indayclara"
+      },
+      {
+        "rshares": "39183844183",
+        "voter": "hatoto"
+      },
+      {
+        "rshares": "11056793825",
+        "voter": "pannapysia"
+      },
+      {
+        "rshares": "705573363",
+        "voter": "ntowl"
+      },
+      {
+        "rshares": "9600279866",
+        "voter": "sk1920"
+      },
+      {
+        "rshares": "1781045104",
+        "voter": "rachelleignacio"
+      },
+      {
+        "rshares": "1426442346",
+        "voter": "angatt"
+      },
+      {
+        "rshares": "5603226839",
+        "voter": "mariajruizb"
+      },
+      {
+        "rshares": "3708976594",
+        "voter": "longer"
+      },
+      {
+        "rshares": "7484396604",
+        "voter": "blewitt"
+      },
+      {
+        "rshares": "1234148172",
+        "voter": "czera"
+      },
+      {
+        "rshares": "16460505244",
+        "voter": "konradz16"
+      },
+      {
+        "rshares": "1229577742",
+        "voter": "jesusmedit"
+      },
+      {
+        "rshares": "1790065192",
+        "voter": "dronegraphica"
+      },
+      {
+        "rshares": "3542833416",
+        "voter": "bezkresu"
+      },
+      {
+        "rshares": "5463119904",
+        "voter": "minimining"
+      },
+      {
+        "rshares": "677665033479",
+        "voter": "engrave"
+      },
+      {
+        "rshares": "76682067556",
+        "voter": "ptaku"
+      },
+      {
+        "rshares": "97394351",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "51990953234",
+        "voter": "ludomir"
+      },
+      {
+        "rshares": "2677634928",
+        "voter": "gameeit"
+      },
+      {
+        "rshares": "6934853728",
+        "voter": "danieli98"
+      },
+      {
+        "rshares": "725437811",
+        "voter": "azli13"
+      },
+      {
+        "rshares": "15514246169",
+        "voter": "rasalom"
+      },
+      {
+        "rshares": "1317339335",
+        "voter": "fural"
+      },
+      {
+        "rshares": "7204675666",
+        "voter": "robmojo"
+      },
+      {
+        "rshares": "9766069626",
+        "voter": "jacuzzi"
+      },
+      {
+        "rshares": "15600904313",
+        "voter": "delabo"
+      },
+      {
+        "rshares": "558070387",
+        "voter": "marianomariano"
+      },
+      {
+        "rshares": "7068544789",
+        "voter": "osavi"
+      },
+      {
+        "rshares": "1166985015",
+        "voter": "sm-skynet"
+      },
+      {
+        "rshares": "2375265322",
+        "voter": "ambifokus"
+      },
+      {
+        "rshares": "137521286543",
+        "voter": "solairitas"
+      },
+      {
+        "rshares": "648883934",
+        "voter": "fijke"
+      },
+      {
+        "rshares": "650352475",
+        "voter": "leighscotford"
+      },
+      {
+        "rshares": "562817742",
+        "voter": "zimnaherbata"
+      },
+      {
+        "rshares": "977344033",
+        "voter": "cheer-up"
+      },
+      {
+        "rshares": "953398027",
+        "voter": "worldhelper"
+      },
+      {
+        "rshares": "1995834936",
+        "voter": "samic.sports"
+      },
+      {
+        "rshares": "8924134706",
+        "voter": "thranax"
+      },
+      {
+        "rshares": "7944966560",
+        "voter": "rafalforeigner"
+      },
+      {
+        "rshares": "93027759",
+        "voter": "mk-sports-token"
+      },
+      {
+        "rshares": "747969643",
+        "voter": "urtrailer"
+      },
+      {
+        "rshares": "128063963",
+        "voter": "fitfat"
+      },
+      {
+        "rshares": "223015394",
+        "voter": "wallar"
+      },
+      {
+        "rshares": "698837877",
+        "voter": "pogarda"
+      },
+      {
+        "rshares": "362198103",
+        "voter": "toni.sports"
+      },
+      {
+        "rshares": "5228425311",
+        "voter": "actisam"
+      },
+      {
+        "rshares": "865790832",
+        "voter": "rxge"
+      },
+      {
+        "rshares": "739718887",
+        "voter": "cabinet24"
+      },
+      {
+        "rshares": "6288440128",
+        "voter": "bella.bear"
+      },
+      {
+        "rshares": "2574682799",
+        "voter": "asia-pl"
+      },
+      {
+        "rshares": "0",
+        "voter": "toni.pal"
+      },
+      {
+        "rshares": "2727250439",
+        "voter": "juanvegetarian"
+      },
+      {
+        "rshares": "564795141",
+        "voter": "rufoodingkidding"
+      },
+      {
+        "rshares": "5181839540",
+        "voter": "im-ridd"
+      },
+      {
+        "rshares": "30174981099",
+        "voter": "solairibot"
+      },
+      {
+        "rshares": "576650535",
+        "voter": "andreina57"
+      },
+      {
+        "rshares": "1998541450",
+        "voter": "unknown0nline"
+      },
+      {
+        "rshares": "133367064876",
+        "voter": "polish.hive"
+      },
+      {
+        "rshares": "1184238474",
+        "voter": "ninnu"
+      },
+      {
+        "rshares": "809705212",
+        "voter": "kiemis"
+      },
+      {
+        "rshares": "7535401",
+        "voter": "hivemachine"
+      },
+      {
+        "rshares": "27404154749",
+        "voter": "buzzzz"
+      },
+      {
+        "rshares": "8881440638",
+        "voter": "chittysity"
+      },
+      {
+        "rshares": "17359148645",
+        "voter": "arenacrypto"
+      },
+      {
+        "rshares": "722376624",
+        "voter": "bitcome"
+      },
+      {
+        "rshares": "1705223468",
+        "voter": "hermanoskutter"
+      },
+      {
+        "rshares": "0",
+        "voter": "olusiu"
+      }
+    ],
+    "author": "ptaku",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<center>![1.jpg](https://files.peakd.com/file/peakd-hive/ptaku/WGwbriog-1.jpg)</center>\n<br>\n### Cel na niedziel\u0119 by\u0142 jeden - \n#### wdrapa\u0107 si\u0119 na \"Paso de Gawra\" (czyli popularn\u0105 prze\u0142\u0119cz Przegibek).\n\n\n**Z domu**, na pocz\u0105tek ulicy G\u00f3rskiej w Bielsku (sk\u0105d zaczyna si\u0119 podjazd na Przegibek) mam 10 km. \nDrog\u0105 asfaltowa by\u0142oby za \u0142atwo, wi\u0119c na pocz\u0105tek wybra\u0142em boczn\u0105, poln\u0105 drog\u0119. Nast\u0119pnie w Bystrej przejecha\u0142em na \u017bywieck\u0105 asfaltem, wi\u0119c nie by\u0142o sensu robi\u0107 zdj\u0119\u0107.\n\nPo dotarciu na pocz\u0105tek ulicy G\u00f3rskiej w Bielsku (miejsce og\u00f3lnie znane jako Straconka) by\u0142em ju\u017c tak zaaferowany czekaj\u0105cym mnie wyzwaniem, \u017ce nawet nie pomy\u015bla\u0142em o zrobieniu zdj\u0119\u0107 cho\u0107by z bulwar\u00f3w spacerowych. W tym temacie poprawi\u0119 si\u0119 nast\u0119pnym razem :)\nJedn\u0105 ciekawostk\u0105 kt\u00f3r\u0105 tu przytocz\u0119 jest fakt, \u017ce w Straconce urodzi\u0142a si\u0119 znana wokalistka jazzowa Urszula Dudziak.\n\nNie b\u0119d\u0119 si\u0119 zbytnio rozpisywa\u0142 na temat samego podjazdu na prze\u0142\u0119cz, bo sza\u0142u nie by\u0142o - musia\u0142em sobie zrobi\u0107 trzy przystanki. Drugi kryzys by\u0142 tak ci\u0119\u017cki, \u017ce got\u00f3w by\u0142em zrezygnowa\u0107, i zjecha\u0107 na d\u00f3\u0142. Dobrze, \u017ce jecha\u0142em z kumplem, kt\u00f3ry mnie zmotywowa\u0142 do dalszego wysi\u0142ku.\nTym sposobem dotar\u0142em na prze\u0142\u0119cz Przegibek, co jest dla mnie osobistym du\u017cym sukcesem na tym etapie kompletnego braku kondycji.\n\n<center>![2.jpg](https://files.peakd.com/file/peakd-hive/ptaku/sbBiFD3z-2.jpg)</center>\n<br>\nPrzewy\u017cszenie dobrze obrazuje poni\u017cszy wykres.\n\n<center>![2a.jpg](https://files.peakd.com/file/peakd-hive/ptaku/r0vFrSpr-2a.jpg)</center>\n<br>\nPod parasolem wypi\u0142em \"nap\u00f3j regeneracyjny\", i ruszyli\u015bmy w drog\u0119 powrotn\u0105.\n\n**Drugim** (mniejszym) celem by\u0142o znalezienie drogi powrotnej do domu wykorzystuj\u0105c dost\u0119pne boczne drogi, tak by nie trzeba by\u0142o jecha\u0107 g\u0142\u00f3wn\u0105 tras\u0105 w\u015br\u00f3d samochod\u00f3w.\n\n<center>![2b.jpg](https://files.peakd.com/file/peakd-hive/ptaku/CjLMZYrH-2b.jpg)</center>\n\nKumpel pokaza\u0142 mi \u015bwietn\u0105 boczn\u0105 drog\u0119 wzd\u0142u\u017c tor\u00f3w, przebiegaj\u0105c\u0105 od stacji kolejowej Bielsko-Bia\u0142a Leszczyny, a\u017c na rogatki miasta.\nOd granic miasta ka\u017cdy pojecha\u0142 w swoj\u0105 stron\u0119. \n\n**Tutaj zacz\u0119\u0142a si\u0119 kolejna przygoda ;)**\n\n<center>![09.jpg](https://files.peakd.com/file/peakd-hive/ptaku/hHA2huXU-09.jpg)\n<br>\n![2c.jpg](https://files.peakd.com/file/peakd-hive/ptaku/8nVC08U2-2c.jpg)</center>\n<br>\nDrog\u0119 z Bielska do Szczyrku pokona\u0142em samochodem tysi\u0105ce razy, jednak na rowerze, bocznymi drogami (i bezdro\u017cami) zdarzy\u0142o mi si\u0119 pokonywa\u0107 j\u0105 pierwszy raz.\n\n<center>![03.jpg](https://files.peakd.com/file/peakd-hive/ptaku/seGXErnm-03.jpg)\n<br>\n![3.jpg](https://files.peakd.com/file/peakd-hive/ptaku/D63OxFLe-3.jpg)</center>\n<br>\nNie oby\u0142o si\u0119 bez drobnych przyg\u00f3d. \nPewnie poczu\u0142em si\u0119 dopiero, gdy dotar\u0142em do drogi technicznej biegn\u0105cej wzd\u0142u\u017c ekpres\u00f3wki.\n\n<center>![4.jpg](https://files.peakd.com/file/peakd-hive/ptaku/dY3GOEbP-4.jpg)\n<br>\n![04.jpg](https://files.peakd.com/file/peakd-hive/ptaku/wxzhffsH-04.jpg)</center>\n<br>\n**S\u0142o\u0144ce mi\u0142o przygrzewa\u0142o**, a jazda po p\u0142askim by\u0142a bardzo przyjemna. \nMimo, \u017ce ten powr\u00f3t by\u0142 dalsz\u0105 cz\u0119\u015bci\u0105 mojego treningu, to nie mia\u0142em ju\u017c si\u0142, by cisn\u0105\u0107 na maksa.\nPozwoli\u0142em sobie na kilka kr\u00f3tkich przystank\u00f3w, by zrobi\u0107 zdj\u0119cia i napi\u0107 si\u0119 wody.\n\n<center>\n![11.jpg](https://files.peakd.com/file/peakd-hive/ptaku/7WpzmQFA-11.jpg)\n<br>\n![12.jpg](https://files.peakd.com/file/peakd-hive/ptaku/r8brrbOk-12.jpg)\n<br>\n![14.jpg](https://files.peakd.com/file/peakd-hive/ptaku/5i1pcWkP-14.jpg)\n<br>\n![16.jpg](https://files.peakd.com/file/peakd-hive/ptaku/AjYPx2P7-16.jpg)</center>\n<br>\n**W ten spos\u00f3b - bocznymi drogami - wytyczy\u0142em sobie now\u0105 tras\u0119 rowerow\u0105 z do Bielska do Szczyrku.**\n\n#### Przy okazji \"do pami\u0119tnika treningowego\" zapisuj\u0119 sw\u00f3j rekord - 42 km na rowerze.\n\n<center>![17.jpg](https://files.peakd.com/file/peakd-hive/ptaku/sIk0HL6Q-17.jpg)</center>\n<br>\n**Ca\u0142a trasa zaj\u0119\u0142a mi ponad 2,5h, a w tym czasie spali\u0142em prawie 1,6k kalorii.**\n\n<center>![18.jpg](https://files.peakd.com/file/peakd-hive/ptaku/yGES1rkH-18.jpg)\n<br>\n![19.jpg](https://files.peakd.com/file/peakd-hive/ptaku/sPiqKMa0-19.jpg)</center>\n<br>\n**Po takim wysi\u0142ku nale\u017cy si\u0119 nagroda ;)**\n\n<center>![21.jpg](https://files.peakd.com/file/peakd-hive/ptaku/Vw98TqxQ-21.jpg)</center>\n<br>",
+    "category": "hive-134382",
+    "children": 3,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-01T05:08:06",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "peakd/2020.08.3",
+      "format": "markdown",
+      "image": [
+        "https://files.peakd.com/file/peakd-hive/ptaku/WGwbriog-1.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/sbBiFD3z-2.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/r0vFrSpr-2a.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/CjLMZYrH-2b.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/hHA2huXU-09.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/8nVC08U2-2c.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/seGXErnm-03.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/D63OxFLe-3.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/dY3GOEbP-4.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/wxzhffsH-04.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/7WpzmQFA-11.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/r8brrbOk-12.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/5i1pcWkP-14.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/AjYPx2P7-16.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/sIk0HL6Q-17.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/yGES1rkH-18.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/sPiqKMa0-19.jpg",
+        "https://files.peakd.com/file/peakd-hive/ptaku/Vw98TqxQ-21.jpg"
+      ],
+      "tags": [
+        "polish",
+        "photography",
+        "curator",
+        "gems",
+        "ocd",
+        "sportstalk",
+        "photofeed",
+        "aroundworld",
+        "marlians",
+        "palnet"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 7397804754280,
+    "payout": 2.48,
+    "payout_at": "2020-09-08T05:08:06",
+    "pending_payout_value": "2.480 HBD",
+    "percent_hbd": 10000,
+    "permlink": "be-fit-or-be-dead-41-2020-31-08-przegibek",
+    "post_id": 99385290,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 143
+    },
+    "title": "Be fit Or be Dead #41.2020 - 31.08 Przegibek",
+    "updated": "2020-09-01T05:08:06",
+    "url": "/hive-134382/@ptaku/be-fit-or-be-dead-41-2020-31-08-przegibek"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "16210843381",
+        "voter": "tombstone"
+      },
+      {
+        "rshares": "2915647306",
+        "voter": "fractalnode"
+      },
+      {
+        "rshares": "112358725877",
+        "voter": "daycrypter"
+      },
+      {
+        "rshares": "272140972761",
+        "voter": "gerber"
+      },
+      {
+        "rshares": "302753676727",
+        "voter": "ezzy"
+      },
+      {
+        "rshares": "622568211",
+        "voter": "matt-a"
+      },
+      {
+        "rshares": "3419319626",
+        "voter": "gikitiki"
+      },
+      {
+        "rshares": "288210632340",
+        "voter": "exyle"
+      },
+      {
+        "rshares": "602956423339",
+        "voter": "bowess"
+      },
+      {
+        "rshares": "587429798",
+        "voter": "josepimpo"
+      },
+      {
+        "rshares": "81440210135",
+        "voter": "netaterra"
+      },
+      {
+        "rshares": "117271598584",
+        "voter": "someguy123"
+      },
+      {
+        "rshares": "17327531215",
+        "voter": "ethandsmith"
+      },
+      {
+        "rshares": "3169614000",
+        "voter": "steemitboard"
+      },
+      {
+        "rshares": "7472936581",
+        "voter": "privex"
+      },
+      {
+        "rshares": "8409339517",
+        "voter": "tabea"
+      },
+      {
+        "rshares": "25838336117",
+        "voter": "dune69"
+      },
+      {
+        "rshares": "1560234319",
+        "voter": "jagged"
+      },
+      {
+        "rshares": "84707898830",
+        "voter": "roomservice"
+      },
+      {
+        "rshares": "56651032",
+        "voter": "mys"
+      },
+      {
+        "rshares": "0",
+        "voter": "steempearls"
+      },
+      {
+        "rshares": "1194521539",
+        "voter": "rycharde"
+      },
+      {
+        "rshares": "7663374223",
+        "voter": "alphacore"
+      },
+      {
+        "rshares": "173362639842",
+        "voter": "ewkaw"
+      },
+      {
+        "rshares": "10362157426",
+        "voter": "jayna"
+      },
+      {
+        "rshares": "1507090445",
+        "voter": "techken"
+      },
+      {
+        "rshares": "1160625016",
+        "voter": "d-pend"
+      },
+      {
+        "rshares": "38299916180",
+        "voter": "jacekw"
+      },
+      {
+        "rshares": "58407177714",
+        "voter": "grecki-bazar-ewy"
+      },
+      {
+        "rshares": "9721055517",
+        "voter": "felt.buzz"
+      },
+      {
+        "rshares": "1616481440",
+        "voter": "shitsignals"
+      },
+      {
+        "rshares": "15684329303",
+        "voter": "alcik"
+      },
+      {
+        "rshares": "20026580215",
+        "voter": "felander"
+      },
+      {
+        "rshares": "3768351325081",
+        "voter": "tipu"
+      },
+      {
+        "rshares": "55780267511",
+        "voter": "accelerator"
+      },
+      {
+        "rshares": "1677413901",
+        "voter": "markjason"
+      },
+      {
+        "rshares": "1835114501",
+        "voter": "yogacoach"
+      },
+      {
+        "rshares": "26741857556",
+        "voter": "tomiscurious"
+      },
+      {
+        "rshares": "760297517541",
+        "voter": "therealwolf"
+      },
+      {
+        "rshares": "5828251838",
+        "voter": "roleerob"
+      },
+      {
+        "rshares": "8619721019",
+        "voter": "jlsplatts"
+      },
+      {
+        "rshares": "3666005750",
+        "voter": "m-san"
+      },
+      {
+        "rshares": "3649853077",
+        "voter": "fknmayhem"
+      },
+      {
+        "rshares": "80517610591",
+        "voter": "emrebeyler"
+      },
+      {
+        "rshares": "155411170993",
+        "voter": "smartsteem"
+      },
+      {
+        "rshares": "26371118889",
+        "voter": "citizensmith"
+      },
+      {
+        "rshares": "403350787",
+        "voter": "funtraveller"
+      },
+      {
+        "rshares": "2816740408",
+        "voter": "straykat"
+      },
+      {
+        "rshares": "8821768225",
+        "voter": "sco"
+      },
+      {
+        "rshares": "145970414482",
+        "voter": "deepresearch"
+      },
+      {
+        "rshares": "14328080437",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "101846331056",
+        "voter": "hallmann"
+      },
+      {
+        "rshares": "52450107147",
+        "voter": "nealmcspadden"
+      },
+      {
+        "rshares": "606730486",
+        "voter": "hadji"
+      },
+      {
+        "rshares": "59896301014",
+        "voter": "purefood"
+      },
+      {
+        "rshares": "45471449673",
+        "voter": "wadera"
+      },
+      {
+        "rshares": "2454748927",
+        "voter": "investyourvote"
+      },
+      {
+        "rshares": "7289339516",
+        "voter": "chronocrypto"
+      },
+      {
+        "rshares": "59523478127",
+        "voter": "lemony-cricket"
+      },
+      {
+        "rshares": "5516943277",
+        "voter": "warpedpoetic"
+      },
+      {
+        "rshares": "28683044467",
+        "voter": "happy-soul"
+      },
+      {
+        "rshares": "1385858326",
+        "voter": "florenceboens"
+      },
+      {
+        "rshares": "1567594330",
+        "voter": "pkocjan"
+      },
+      {
+        "rshares": "6524734507",
+        "voter": "madefrance"
+      },
+      {
+        "rshares": "7534472163",
+        "voter": "blervin"
+      },
+      {
+        "rshares": "228302891606",
+        "voter": "lesiopm"
+      },
+      {
+        "rshares": "690621287",
+        "voter": "forester-joe"
+      },
+      {
+        "rshares": "78382403822",
+        "voter": "czcibor360"
+      },
+      {
+        "rshares": "1641944004320",
+        "voter": "azircon"
+      },
+      {
+        "rshares": "573543317",
+        "voter": "greendo"
+      },
+      {
+        "rshares": "3843547522",
+        "voter": "grzyb77"
+      },
+      {
+        "rshares": "14716924964",
+        "voter": "bestboom"
+      },
+      {
+        "rshares": "29547412513",
+        "voter": "herbacianymag"
+      },
+      {
+        "rshares": "17237845258",
+        "voter": "freddio"
+      },
+      {
+        "rshares": "6244180295",
+        "voter": "themightyvolcano"
+      },
+      {
+        "rshares": "1152294960",
+        "voter": "tijntje"
+      },
+      {
+        "rshares": "744457864",
+        "voter": "taldor"
+      },
+      {
+        "rshares": "12482457681",
+        "voter": "reinmar"
+      },
+      {
+        "rshares": "36154426552",
+        "voter": "saboin"
+      },
+      {
+        "rshares": "506802231",
+        "voter": "ifunnymemes"
+      },
+      {
+        "rshares": "7854356908",
+        "voter": "zwora"
+      },
+      {
+        "rshares": "67179447186",
+        "voter": "browery"
+      },
+      {
+        "rshares": "1166447181",
+        "voter": "glodniwiedzy"
+      },
+      {
+        "rshares": "45036006812",
+        "voter": "rozku"
+      },
+      {
+        "rshares": "65479390509",
+        "voter": "steem.services"
+      },
+      {
+        "rshares": "11701878325",
+        "voter": "pannapysia"
+      },
+      {
+        "rshares": "78685521124",
+        "voter": "pladozero"
+      },
+      {
+        "rshares": "295424890117",
+        "voter": "nateaguila"
+      },
+      {
+        "rshares": "9259572324",
+        "voter": "sk1920"
+      },
+      {
+        "rshares": "89919969886",
+        "voter": "bdmillergallery"
+      },
+      {
+        "rshares": "1827923265",
+        "voter": "wolfofnostreet"
+      },
+      {
+        "rshares": "2347171747",
+        "voter": "swisswitness"
+      },
+      {
+        "rshares": "20550353473",
+        "voter": "remotehorst23"
+      },
+      {
+        "rshares": "1206405635",
+        "voter": "longer"
+      },
+      {
+        "rshares": "12522070645",
+        "voter": "pignys"
+      },
+      {
+        "rshares": "5069424155",
+        "voter": "dalz"
+      },
+      {
+        "rshares": "3367099251",
+        "voter": "bezkresu"
+      },
+      {
+        "rshares": "48339722925",
+        "voter": "dlike"
+      },
+      {
+        "rshares": "1093695431",
+        "voter": "voxmortis"
+      },
+      {
+        "rshares": "22165238264",
+        "voter": "spoke"
+      },
+      {
+        "rshares": "18233917140",
+        "voter": "julietlucy"
+      },
+      {
+        "rshares": "1341300130",
+        "voter": "nsfw-power"
+      },
+      {
+        "rshares": "56984847566",
+        "voter": "engrave"
+      },
+      {
+        "rshares": "8181329553",
+        "voter": "dorotti"
+      },
+      {
+        "rshares": "606576810",
+        "voter": "bobby.madagascar"
+      },
+      {
+        "rshares": "71851415",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "26909856871",
+        "voter": "voter003"
+      },
+      {
+        "rshares": "54128576494",
+        "voter": "ludomir"
+      },
+      {
+        "rshares": "22244460973",
+        "voter": "macoolette"
+      },
+      {
+        "rshares": "530108056",
+        "voter": "ldp"
+      },
+      {
+        "rshares": "3067379778",
+        "voter": "berthold"
+      },
+      {
+        "rshares": "21558650851",
+        "voter": "milky-concrete"
+      },
+      {
+        "rshares": "26139952128",
+        "voter": "followjohngalt"
+      },
+      {
+        "rshares": "104098706026",
+        "voter": "new-steemit"
+      },
+      {
+        "rshares": "15115833806",
+        "voter": "adalger"
+      },
+      {
+        "rshares": "0",
+        "voter": "dein-problem"
+      },
+      {
+        "rshares": "1909987520",
+        "voter": "pl-kuchnia"
+      },
+      {
+        "rshares": "2977782302",
+        "voter": "robmojo"
+      },
+      {
+        "rshares": "3217972777",
+        "voter": "jacuzzi"
+      },
+      {
+        "rshares": "1513063292",
+        "voter": "permaculturedude"
+      },
+      {
+        "rshares": "808209270",
+        "voter": "goodcontentbot"
+      },
+      {
+        "rshares": "8657274233",
+        "voter": "osavi"
+      },
+      {
+        "rshares": "1099310690",
+        "voter": "sm-skynet"
+      },
+      {
+        "rshares": "5541076872",
+        "voter": "kggymlife"
+      },
+      {
+        "rshares": "46554355336",
+        "voter": "kryptogames"
+      },
+      {
+        "rshares": "20549530769",
+        "voter": "mfblack"
+      },
+      {
+        "rshares": "28130589376",
+        "voter": "epicdice"
+      },
+      {
+        "rshares": "1056505963",
+        "voter": "likwid"
+      },
+      {
+        "rshares": "1044166283",
+        "voter": "firefuture"
+      },
+      {
+        "rshares": "559394893",
+        "voter": "zimnaherbata"
+      },
+      {
+        "rshares": "1803895918",
+        "voter": "milu-the-dog"
+      },
+      {
+        "rshares": "1408742490",
+        "voter": "triplea.bot"
+      },
+      {
+        "rshares": "86535062861",
+        "voter": "steem.leo"
+      },
+      {
+        "rshares": "4936959997",
+        "voter": "freddio.sport"
+      },
+      {
+        "rshares": "613844222",
+        "voter": "babytarazkp"
+      },
+      {
+        "rshares": "4243385270",
+        "voter": "asteroids"
+      },
+      {
+        "rshares": "3683940759",
+        "voter": "mapxv"
+      },
+      {
+        "rshares": "2460869598",
+        "voter": "botante"
+      },
+      {
+        "rshares": "4514866303",
+        "voter": "beta500"
+      },
+      {
+        "rshares": "23010539661",
+        "voter": "maxuvd"
+      },
+      {
+        "rshares": "7895503240399",
+        "voter": "curangel"
+      },
+      {
+        "rshares": "742795930",
+        "voter": "urtrailer"
+      },
+      {
+        "rshares": "3822016995",
+        "voter": "bcm"
+      },
+      {
+        "rshares": "6622631615",
+        "voter": "joshmania"
+      },
+      {
+        "rshares": "529926816",
+        "voter": "cd-leo"
+      },
+      {
+        "rshares": "12142155415",
+        "voter": "sandymeyer"
+      },
+      {
+        "rshares": "0",
+        "voter": "gerbo"
+      },
+      {
+        "rshares": "1288661119",
+        "voter": "ribary"
+      },
+      {
+        "rshares": "1098398231",
+        "voter": "juanvegetarian"
+      },
+      {
+        "rshares": "6363841406",
+        "voter": "pummeluff"
+      },
+      {
+        "rshares": "19603355974",
+        "voter": "mice-k"
+      },
+      {
+        "rshares": "3393742777",
+        "voter": "football-stats"
+      },
+      {
+        "rshares": "4960428098",
+        "voter": "curamax"
+      },
+      {
+        "rshares": "117182068",
+        "voter": "steemcityrewards"
+      },
+      {
+        "rshares": "1079979007",
+        "voter": "dpend.active"
+      },
+      {
+        "rshares": "4213313830",
+        "voter": "hivebuzz"
+      },
+      {
+        "rshares": "13522767773",
+        "voter": "ocotuchodzi"
+      },
+      {
+        "rshares": "270866330932",
+        "voter": "polish.hive"
+      },
+      {
+        "rshares": "139378335693",
+        "voter": "dcityrewards"
+      },
+      {
+        "rshares": "2404438700",
+        "voter": "hiveonboard"
+      },
+      {
+        "rshares": "719363491",
+        "voter": "hivelist"
+      },
+      {
+        "rshares": "339512380",
+        "voter": "polish.curator"
+      },
+      {
+        "rshares": "2501196392",
+        "voter": "lesiopm2"
+      },
+      {
+        "rshares": "95274651486",
+        "voter": "hivecur"
+      },
+      {
+        "rshares": "176541562",
+        "voter": "chartreader"
+      },
+      {
+        "rshares": "1903526382",
+        "voter": "issymarie2"
+      },
+      {
+        "rshares": "16554697413",
+        "voter": "arenacrypto"
+      }
+    ],
+    "author": "angatt",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<div class=\"text-justify\">\n\nDawna ta historia  ju\u017c nawet nie pami\u0119tam nazwiska sprawcy...  Pozosta\u0142o wspomnienie.  Bo by\u0142o tak: przynios\u0142 kto\u015b, kiedy\u015b do szko\u0142y perfumy. O zapachu guana.\n\n \u017be... yyyyy? \n\nZ Indii mu przywie\u017ali - w prezencie dosta\u0142, albo sam sobie kupi\u0142 tam\u017ce b\u0119dac. Jaki\u015b tam pow\u00f3d mia\u0142, \u017ce przytarga\u0142 podarunek/zakup by sie pochwali\u0107. Specjalnie sie nimi jako\u015b nie interesowa\u0142am i nosa nie wysy\u0142a\u0142am na zwiady by potwierdzi\u0107 reklamowany \"aromat\". Nazwa mi wystarczy\u0142a by sie nie zbli\u017ca\u0107 zanadto.\n\nCzemu u nich na P\u00f3\u0142wyspie, takie robi\u0105? inna kultura inny kontynent .. pewnie jest jaki\u015b pow\u00f3d. W sumie wszystkia zapachy jakie cz\u0142ek na siebie wylewa, wszelkie malunki - te wok\u00f3\u0142 oczu zw\u0142aszcza - mia\u0142y swoje pierwotne uzasadniene jako ochrona przed nachalnymi owadami czy innymi \u017cyj\u0105tkami. Bogata w przyprawy kuchnia Azji s\u0142u\u017cy temu samemu - chroni \u017co\u0142\u0105dek konsumenta przed paso\u017cytami.\n\n\nU nas wystarczy otworzy\u0107 pierwsze z brzegu, kolorowe czasopismo czy zajrzec na forum z poradami i ju\u017c wiadomo, \u017ce np, lawenda swietnie sie sprawdza jako tarcza \"antymolowa\". No, ale lawedna to lawenda mo\u017cna jej zapachu nie lubi\u0107 niemniej jednak jest to zapach. A takie guano?\n\n\u015awiecie wsp\u00f3\u0142czesny!\n\nNadaje si\u0119 w naszej kulturze takie co\u015b do szokowania bli\u017anich - happening\u00f3w czy prowokacji. Bo tak dzie\u0144 w dzie\u0144 spowija\u0107 sie z w\u0142asnej woli w aromat menelii... Mo\u017cna by tu si\u0119 podpiera\u0107 tradycj\u0105 \u015bredniowiecza, przywo\u0142ywa\u0107 jakie\u015b odore sanctitatis... hmm\n\n\n\nNasi przodkowie - ci z epok spo\u0142eczno\u015bci my\u015bliwskich   mieli wprawdzie w zwyczaju ukrywa\u0107 sw\u00f3j zapach; jednak tylko przy szczeg\u00f3lnej okazji.  Szed\u0142 taki na polowanie i jesli si\u0119 nie wytarza\u0142 w odchodach upatrzonej zwierzyny to raczej slaba by\u0142a szansa by w domu mieli co je\u015b\u0107. S\u0142o\u0144, mamut  czy inna antylopa z miejsca wyczuwa\u0142y, \u017ce oto skrada sie ku nim ktos obcy i bra\u0142y nogi za pas. Zapachowy kamufla\u017c by\u0142 wtedy logiczny\n\nAle jaki mo\u017ce by\u0107 cel produkcji tego typu perfum w naszych czasach? Nikt mnie nie przekona, \u017ce modne. :)\n\n<center>\n\n![perfumy.jpg](https://images.hive.blog/DQmeRqkVVFzREQjS4KNyfZXX3xxAs4G3AEFK67ejHpTeKkT/perfumy.jpg)\n\n\u017ae\u00f3d\u0142o: [Unsplash](https://unsplash.com/photos/3dLrus3c_oA)\n</center>\n\n</div>",
+    "category": "hive-134382",
+    "children": 2,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-08-30T22:36:21",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "hiveblog/0.1",
+      "format": "markdown",
+      "image": [
+        "https://images.hive.blog/DQmeRqkVVFzREQjS4KNyfZXX3xxAs4G3AEFK67ejHpTeKkT/perfumy.jpg"
+      ],
+      "links": [
+        "https://unsplash.com/photos/3dLrus3c_oA"
+      ],
+      "tags": [
+        "polish",
+        "pl-artykuly",
+        "pll-blog",
+        "pl-emocjonalnie",
+        "pl-spolecznosc",
+        "pl-hive"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 19724163359650,
+    "payout": 7.738,
+    "payout_at": "2020-09-06T22:36:21",
+    "pending_payout_value": "7.738 HBD",
+    "percent_hbd": 10000,
+    "permlink": "naturalne-perfumy",
+    "post_id": 99362585,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 167
+    },
+    "title": "Naturalne perfumy",
+    "updated": "2020-08-30T23:19:00",
+    "url": "/hive-134382/@angatt/naturalne-perfumy"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "8230669369992",
+        "voter": "pfunk"
+      },
+      {
+        "rshares": "20809771216043",
+        "voter": "gtg"
+      },
+      {
+        "rshares": "886514045101",
+        "voter": "gerber"
+      },
+      {
+        "rshares": "531203162",
+        "voter": "kosimoos"
+      },
+      {
+        "rshares": "56596681404",
+        "voter": "daan"
+      },
+      {
+        "rshares": "989896994696",
+        "voter": "ezzy"
+      },
+      {
+        "rshares": "1587614874300",
+        "voter": "arcange"
+      },
+      {
+        "rshares": "926571207813",
+        "voter": "exyle"
+      },
+      {
+        "rshares": "6473245004",
+        "voter": "sharker"
+      },
+      {
+        "rshares": "552289896561",
+        "voter": "bowess"
+      },
+      {
+        "rshares": "3049496861",
+        "voter": "raphaelle"
+      },
+      {
+        "rshares": "3865956475",
+        "voter": "kibela"
+      },
+      {
+        "rshares": "201257744473",
+        "voter": "lukmarcus"
+      },
+      {
+        "rshares": "974983612",
+        "voter": "alinalazareva"
+      },
+      {
+        "rshares": "9476910960",
+        "voter": "anech512"
+      },
+      {
+        "rshares": "264347749628",
+        "voter": "netaterra"
+      },
+      {
+        "rshares": "3204993988247",
+        "voter": "someguy123"
+      },
+      {
+        "rshares": "854737735",
+        "voter": "ebargains"
+      },
+      {
+        "rshares": "63072920161",
+        "voter": "vannour"
+      },
+      {
+        "rshares": "280368406199",
+        "voter": "techslut"
+      },
+      {
+        "rshares": "682707776",
+        "voter": "steemcultures"
+      },
+      {
+        "rshares": "2473812700",
+        "voter": "steemworld"
+      },
+      {
+        "rshares": "2212883048",
+        "voter": "keuudeip"
+      },
+      {
+        "rshares": "736813923",
+        "voter": "creat"
+      },
+      {
+        "rshares": "973308202",
+        "voter": "mapesa"
+      },
+      {
+        "rshares": "727342740",
+        "voter": "cisah"
+      },
+      {
+        "rshares": "19949513309",
+        "voter": "cardboard"
+      },
+      {
+        "rshares": "1550642070",
+        "voter": "pedir-museum"
+      },
+      {
+        "rshares": "803944515",
+        "voter": "aceh"
+      },
+      {
+        "rshares": "3026206766",
+        "voter": "steemitboard"
+      },
+      {
+        "rshares": "833302761",
+        "voter": "munzir"
+      },
+      {
+        "rshares": "82456330865",
+        "voter": "dune69"
+      },
+      {
+        "rshares": "304302660",
+        "voter": "mys"
+      },
+      {
+        "rshares": "1190690013",
+        "voter": "rycharde"
+      },
+      {
+        "rshares": "406618144",
+        "voter": "tomosan"
+      },
+      {
+        "rshares": "485596813",
+        "voter": "mxzn"
+      },
+      {
+        "rshares": "5431633646",
+        "voter": "dotevo"
+      },
+      {
+        "rshares": "12711498572",
+        "voter": "lelon"
+      },
+      {
+        "rshares": "22147764326",
+        "voter": "alphacore"
+      },
+      {
+        "rshares": "135736622884",
+        "voter": "maxer27"
+      },
+      {
+        "rshares": "3902273253",
+        "voter": "d-pend"
+      },
+      {
+        "rshares": "44758476588",
+        "voter": "jacekw"
+      },
+      {
+        "rshares": "108262754825",
+        "voter": "grecki-bazar-ewy"
+      },
+      {
+        "rshares": "1837386695",
+        "voter": "sannur"
+      },
+      {
+        "rshares": "5322224299",
+        "voter": "shitsignals"
+      },
+      {
+        "rshares": "18306924512",
+        "voter": "cranium"
+      },
+      {
+        "rshares": "166503759872",
+        "voter": "jasonbu"
+      },
+      {
+        "rshares": "18789756503",
+        "voter": "alcik"
+      },
+      {
+        "rshares": "750397369",
+        "voter": "dobroman"
+      },
+      {
+        "rshares": "892914181704",
+        "voter": "onetin84"
+      },
+      {
+        "rshares": "65607883650",
+        "voter": "felander"
+      },
+      {
+        "rshares": "211385273251",
+        "voter": "karja"
+      },
+      {
+        "rshares": "3967535214888",
+        "voter": "tipu"
+      },
+      {
+        "rshares": "8975608585",
+        "voter": "lmon"
+      },
+      {
+        "rshares": "480093661",
+        "voter": "fbslo"
+      },
+      {
+        "rshares": "58148770275",
+        "voter": "accelerator"
+      },
+      {
+        "rshares": "6076622126",
+        "voter": "yogacoach"
+      },
+      {
+        "rshares": "20531371269",
+        "voter": "roleerob"
+      },
+      {
+        "rshares": "3655690875",
+        "voter": "m-san"
+      },
+      {
+        "rshares": "86933764792",
+        "voter": "investegg"
+      },
+      {
+        "rshares": "3962420589",
+        "voter": "spacesheep"
+      },
+      {
+        "rshares": "260126689390",
+        "voter": "emrebeyler"
+      },
+      {
+        "rshares": "593747152",
+        "voter": "funtraveller"
+      },
+      {
+        "rshares": "10743358424",
+        "voter": "nokodemion"
+      },
+      {
+        "rshares": "7107528007",
+        "voter": "fourfourfun"
+      },
+      {
+        "rshares": "164785545963",
+        "voter": "deepresearch"
+      },
+      {
+        "rshares": "1813196538",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "108180250275",
+        "voter": "hallmann"
+      },
+      {
+        "rshares": "171255657129",
+        "voter": "nealmcspadden"
+      },
+      {
+        "rshares": "38658176240",
+        "voter": "heidimarie"
+      },
+      {
+        "rshares": "157583151162",
+        "voter": "piotrgrafik"
+      },
+      {
+        "rshares": "191789901737",
+        "voter": "purefood"
+      },
+      {
+        "rshares": "168365270481",
+        "voter": "kubak"
+      },
+      {
+        "rshares": "1276558109",
+        "voter": "unconditionalove"
+      },
+      {
+        "rshares": "3607883904",
+        "voter": "happy-soul"
+      },
+      {
+        "rshares": "51737758534",
+        "voter": "pkocjan"
+      },
+      {
+        "rshares": "782358757297",
+        "voter": "lesiopm"
+      },
+      {
+        "rshares": "95735453495",
+        "voter": "czcibor360"
+      },
+      {
+        "rshares": "8339733268",
+        "voter": "frassman"
+      },
+      {
+        "rshares": "36004371664",
+        "voter": "sarmaticus"
+      },
+      {
+        "rshares": "7169697326",
+        "voter": "kargul09"
+      },
+      {
+        "rshares": "62278814135",
+        "voter": "jocieprosza"
+      },
+      {
+        "rshares": "1388831073450",
+        "voter": "amico"
+      },
+      {
+        "rshares": "47841185528",
+        "voter": "bestboom"
+      },
+      {
+        "rshares": "80874938273",
+        "voter": "manniman"
+      },
+      {
+        "rshares": "29612072878",
+        "voter": "herbacianymag"
+      },
+      {
+        "rshares": "17998676000",
+        "voter": "freddio"
+      },
+      {
+        "rshares": "577666774",
+        "voter": "sensorycznyswiat"
+      },
+      {
+        "rshares": "20792737367",
+        "voter": "themightyvolcano"
+      },
+      {
+        "rshares": "671978043",
+        "voter": "iseeyouvee"
+      },
+      {
+        "rshares": "141481250720",
+        "voter": "tresor"
+      },
+      {
+        "rshares": "2119750000",
+        "voter": "ifunnymemes"
+      },
+      {
+        "rshares": "25915637837",
+        "voter": "khrom"
+      },
+      {
+        "rshares": "92683789709",
+        "voter": "promobot"
+      },
+      {
+        "rshares": "240445109757",
+        "voter": "browery"
+      },
+      {
+        "rshares": "153418487746",
+        "voter": "rozku"
+      },
+      {
+        "rshares": "2123206092",
+        "voter": "jancharlest"
+      },
+      {
+        "rshares": "223470096626",
+        "voter": "steem.services"
+      },
+      {
+        "rshares": "9858887689",
+        "voter": "pannapysia"
+      },
+      {
+        "rshares": "78670813620",
+        "voter": "pladozero"
+      },
+      {
+        "rshares": "295317812406",
+        "voter": "nateaguila"
+      },
+      {
+        "rshares": "10297805626",
+        "voter": "sk1920"
+      },
+      {
+        "rshares": "800443154",
+        "voter": "andruto"
+      },
+      {
+        "rshares": "7803908182",
+        "voter": "swisswitness"
+      },
+      {
+        "rshares": "1205691962",
+        "voter": "longer"
+      },
+      {
+        "rshares": "26885350799",
+        "voter": "pignys"
+      },
+      {
+        "rshares": "8685992772",
+        "voter": "donald.porter"
+      },
+      {
+        "rshares": "785136952",
+        "voter": "gallerani"
+      },
+      {
+        "rshares": "764985704",
+        "voter": "daath"
+      },
+      {
+        "rshares": "17547753878",
+        "voter": "dalz"
+      },
+      {
+        "rshares": "3618138686",
+        "voter": "bezkresu"
+      },
+      {
+        "rshares": "157089352557",
+        "voter": "dlike"
+      },
+      {
+        "rshares": "897255822",
+        "voter": "triptolemus"
+      },
+      {
+        "rshares": "1100823085",
+        "voter": "voxmortis"
+      },
+      {
+        "rshares": "17868627442",
+        "voter": "julietlucy"
+      },
+      {
+        "rshares": "1410123237856",
+        "voter": "engrave"
+      },
+      {
+        "rshares": "8209737846",
+        "voter": "dorotti"
+      },
+      {
+        "rshares": "74623985218",
+        "voter": "ptaku"
+      },
+      {
+        "rshares": "2098195293",
+        "voter": "bobby.madagascar"
+      },
+      {
+        "rshares": "61329619",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "89850622700",
+        "voter": "voter003"
+      },
+      {
+        "rshares": "53081211491",
+        "voter": "ludomir"
+      },
+      {
+        "rshares": "1835290310",
+        "voter": "ldp"
+      },
+      {
+        "rshares": "937749345",
+        "voter": "ratelmiodozer"
+      },
+      {
+        "rshares": "84804968568",
+        "voter": "followjohngalt"
+      },
+      {
+        "rshares": "7654715457",
+        "voter": "cakemonster"
+      },
+      {
+        "rshares": "-121753598",
+        "voter": "dein-problem"
+      },
+      {
+        "rshares": "6913875347",
+        "voter": "moneytron"
+      },
+      {
+        "rshares": "3586823760",
+        "voter": "pl-kuchnia"
+      },
+      {
+        "rshares": "949990654",
+        "voter": "flyingbolt"
+      },
+      {
+        "rshares": "765588213",
+        "voter": "determine"
+      },
+      {
+        "rshares": "5016049338",
+        "voter": "permaculturedude"
+      },
+      {
+        "rshares": "807115011",
+        "voter": "goodcontentbot"
+      },
+      {
+        "rshares": "8312705623",
+        "voter": "osavi"
+      },
+      {
+        "rshares": "1332319635",
+        "voter": "sm-skynet"
+      },
+      {
+        "rshares": "1202047410",
+        "voter": "hungryharish"
+      },
+      {
+        "rshares": "4337144721",
+        "voter": "cpt-sparrow"
+      },
+      {
+        "rshares": "5538341143",
+        "voter": "kggymlife"
+      },
+      {
+        "rshares": "39089165039",
+        "voter": "c4cristi3"
+      },
+      {
+        "rshares": "6114863816",
+        "voter": "kryptogames"
+      },
+      {
+        "rshares": "571250450",
+        "voter": "potworkowestudio"
+      },
+      {
+        "rshares": "66546659772",
+        "voter": "mfblack"
+      },
+      {
+        "rshares": "591442589",
+        "voter": "punia"
+      },
+      {
+        "rshares": "1479295410",
+        "voter": "sm-silva"
+      },
+      {
+        "rshares": "954701487556",
+        "voter": "likwid"
+      },
+      {
+        "rshares": "2143368145",
+        "voter": "sarmagames"
+      },
+      {
+        "rshares": "3527589400",
+        "voter": "firefuture"
+      },
+      {
+        "rshares": "690637186",
+        "voter": "egginc.org"
+      },
+      {
+        "rshares": "9797846722",
+        "voter": "helcim"
+      },
+      {
+        "rshares": "530139934",
+        "voter": "zimnaherbata"
+      },
+      {
+        "rshares": "1243849170",
+        "voter": "steemindian"
+      },
+      {
+        "rshares": "2500429109",
+        "voter": "cheer-up"
+      },
+      {
+        "rshares": "1444869138",
+        "voter": "cryptogambit"
+      },
+      {
+        "rshares": "2076069260",
+        "voter": "map10k"
+      },
+      {
+        "rshares": "2882495607",
+        "voter": "shimozurdo"
+      },
+      {
+        "rshares": "5993782618",
+        "voter": "milu-the-dog"
+      },
+      {
+        "rshares": "4690696448",
+        "voter": "triplea.bot"
+      },
+      {
+        "rshares": "282041272123",
+        "voter": "steem.leo"
+      },
+      {
+        "rshares": "5180006215",
+        "voter": "freddio.sport"
+      },
+      {
+        "rshares": "13741609407",
+        "voter": "asteroids"
+      },
+      {
+        "rshares": "3680627896",
+        "voter": "mapxv"
+      },
+      {
+        "rshares": "8055067831",
+        "voter": "botante"
+      },
+      {
+        "rshares": "680420746",
+        "voter": "one.life"
+      },
+      {
+        "rshares": "22413879183",
+        "voter": "acta"
+      },
+      {
+        "rshares": "17657629613",
+        "voter": "the-table"
+      },
+      {
+        "rshares": "5078502114",
+        "voter": "maxuv"
+      },
+      {
+        "rshares": "23401917777",
+        "voter": "maxuvd"
+      },
+      {
+        "rshares": "27687336424",
+        "voter": "maxuve"
+      },
+      {
+        "rshares": "147796582",
+        "voter": "wallar"
+      },
+      {
+        "rshares": "928340922",
+        "voter": "pogarda"
+      },
+      {
+        "rshares": "3631034016",
+        "voter": "dappstats"
+      },
+      {
+        "rshares": "118728508011",
+        "voter": "silverquest"
+      },
+      {
+        "rshares": "800723667",
+        "voter": "therealyme"
+      },
+      {
+        "rshares": "792805422",
+        "voter": "blocktvnews"
+      },
+      {
+        "rshares": "110941957",
+        "voter": "gerbo"
+      },
+      {
+        "rshares": "2523138373",
+        "voter": "asia-pl"
+      },
+      {
+        "rshares": "2798362699",
+        "voter": "hamsterpoweriii"
+      },
+      {
+        "rshares": "4299965618",
+        "voter": "ribary"
+      },
+      {
+        "rshares": "64062023714",
+        "voter": "mice-k"
+      },
+      {
+        "rshares": "3496404494",
+        "voter": "football-stats"
+      },
+      {
+        "rshares": "7431465278",
+        "voter": "curamax"
+      },
+      {
+        "rshares": "496370201",
+        "voter": "steemcityrewards"
+      },
+      {
+        "rshares": "3338079673",
+        "voter": "dpend.active"
+      },
+      {
+        "rshares": "799364556",
+        "voter": "craniuma"
+      },
+      {
+        "rshares": "3496855865",
+        "voter": "fengchao"
+      },
+      {
+        "rshares": "1035372616",
+        "voter": "folklure"
+      },
+      {
+        "rshares": "12783131625",
+        "voter": "ocotuchodzi"
+      },
+      {
+        "rshares": "266925494489",
+        "voter": "polish.hive"
+      },
+      {
+        "rshares": "420937594583",
+        "voter": "dcityrewards"
+      },
+      {
+        "rshares": "563902588",
+        "voter": "sketching"
+      },
+      {
+        "rshares": "2509625400",
+        "voter": "hivelist"
+      },
+      {
+        "rshares": "1502854170",
+        "voter": "tattytoque"
+      },
+      {
+        "rshares": "8564497341",
+        "voter": "lesiopm2"
+      },
+      {
+        "rshares": "311719452466",
+        "voter": "hivecur"
+      },
+      {
+        "rshares": "530789378",
+        "voter": "kran4"
+      },
+      {
+        "rshares": "531901128",
+        "voter": "kran5"
+      },
+      {
+        "rshares": "4066578498",
+        "voter": "gryfno.frelka"
+      },
+      {
+        "rshares": "689419583",
+        "voter": "chartreader"
+      },
+      {
+        "rshares": "43536898991",
+        "voter": "reward.app"
+      },
+      {
+        "rshares": "1289421853",
+        "voter": "manticoreyan"
+      },
+      {
+        "rshares": "1492577439",
+        "voter": "qdolphin"
+      },
+      {
+        "rshares": "1522826698",
+        "voter": "livinglava"
+      },
+      {
+        "rshares": "1110055960",
+        "voter": "adameve"
+      },
+      {
+        "rshares": "1272440004",
+        "voter": "discohedge"
+      }
+    ],
+    "author": "engrave",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "![](https://files.peakd.com/file/peakd-hive/engrave/au7U0bcS-Screenshot20from202020-08-292018-23-03.png)\n\nKilka lat temu ze wzgledu na do\u015b\u0107\u00a0spontaniczny udzia\u0142 i zwyci\u0119stwo w hackatonie ActInSpace organizowanym przez Europejsk\u0105 Agencj\u0119\u00a0Kosmiczn\u0105 moje \u017cycie zbli\u017cy\u0142o si\u0119 do sektora kosmicznego. Od zawsze interesowa\u0142em si\u0119 zar\u00f3wno astronomi\u0105, jak i technologiami kosmicznymi, ale to by\u0142 moment, w kt\u00f3rym mog\u0142em spr\u00f3bowa\u0107 zrobi\u0107 co\u015b wi\u0119cej - pozna\u0142em sektor kosmiczny od \u015brodka i mog\u0142em odby\u0107\u00a0lot w stanie niewa\u017cko\u015bci, co chyba na zawsze wp\u0142yn\u0119\u0142o na moje podej\u015bcie do \u017cycia i pracy.\n\n![](https://files.peakd.com/file/peakd-hive/engrave/zkgvEIAm-image.png)\n\nW tamtym okresie za\u0142o\u017cy\u0142em nawet niewielki startup zwi\u0105zany z transferem technologii kosmicznych do pojazd\u00f3w samochodowych. Ostatecznie nie wszystko posz\u0142o po mojej my\u015bli, ale zyska\u0142em ca\u0142kiem sporo znajomo\u015bci i do\u015bwiadczenia.\n\nTroch\u0119\u00a0ponad dwa lata temu zosta\u0142em poproszony o wyst\u0105pienie na wydarzeniu TEDx Marsza\u0142kowska. Mia\u0142em opowiedzie\u0107 o **Kolonizacji Marsa oraz o stanie polskiego sektora kosmicznego**. Wyst\u0105pienie mia\u0142o by\u0107 kr\u00f3tkie, wi\u0119c niestety nie mog\u0142em si\u0119\u00a0rozkr\u0119ci\u0107 i powiedzie\u0107 wszystkiego co bym chcia\u0142. \n\nKilka miesi\u0119cy temu TEDx postanowi\u0142 opublikowa\u0107 moje wyst\u0105pienie, a teraz ja chcia\u0142bym je przedstawi\u0107 wam. Mam nadziej\u0119, \u017ce macie wolne dziesi\u0119\u0107 minut i zechcecie mnie wys\u0142ucha\u0107.\n\nhttps://www.youtube.com/watch?v=DTmypYqRaHc\n\n***\n\nPS. Dotychczas moim g\u0142\u00f3wnym kontem by\u0142o konto @nicniezgrublem, ale jaki\u015b czas temu postanowi\u0142em korzysta\u0107 z tego. Na pocz\u0105tku chcia\u0142em, \u017ceby na konto @engrave trafia\u0142y tylko informacje o platformie blogowej, ale potem u\u015bwiadomi\u0142em sobie, \u017ce troch\u0119 szkoda marnowa\u0107 potencja\u0142u. Kumuluj\u0119 Hive Power na tym koncie i staram si\u0119\u00a0wspiera\u0107 polsk\u0105 spo\u0142eczno\u015b\u0107. Zach\u0119cam wi\u0119c do \u015bledzenia tego konta :)\n\nPS2. Kilka s\u0142\u00f3w o mojej kilkumiesi\u0119cznej nieobecno\u015bci - long story short, podczas rutynowej przeja\u017cd\u017cki na si\u0142owni\u0119 mia\u0142em wypadek samochodowy - przez chwil\u0119\u00a0by\u0142em offline, potem zacz\u0119\u0142a si\u0119\u00a0ca\u0142a sprawa z pandemi\u0105, spraw zdrowotnych do za\u0142atwienia du\u017co i tak wysz\u0142o, \u017ce wola\u0142em si\u0119 skupi\u0107 na zdrowiu ni\u017c na Hive. Teraz jest ju\u017c\u00a0wszystko w porz\u0105dku i wracam do aktywnego korzystania i rozwijania platformy :)\n\n# Engrave Witness\n\nZach\u0119cam tak\u017ce do g\u0142osowania na mnie jako na witnessa sieci Hive. Mo\u017cecie to zrobi\u0107 poprzez klikni\u0119cie na obrazku poni\u017cej.\n\n[![Vote for @engrave witness](https://i.imgur.com/lawFvZF.png)](https://hivesigner.com/sign/account-witness-vote?witness=engrave&approve=1)\n",
+    "category": "hive-134382",
+    "children": 8,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-08-29T16:50:51",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "peakd/2020.08.3",
+      "description": "Troch\u0119 ponad dwa lata temu zosta\u0142em poproszony o wyst\u0105pienie na wydarzeniu TEDx Marsza\u0142kowska. Mia\u0142em opowiedzie\u0107 o Kolonizacji Marsa oraz o stanie polskiego sektora kosmicznego.",
+      "format": "markdown",
+      "image": [
+        "https://files.peakd.com/file/peakd-hive/engrave/au7U0bcS-Screenshot20from202020-08-292018-23-03.png",
+        "https://files.peakd.com/file/peakd-hive/engrave/zkgvEIAm-image.png",
+        "https://i.imgur.com/lawFvZF.png"
+      ],
+      "links": [
+        "/@nicniezgrublem",
+        "/@engrave",
+        "https://hivesigner.com/sign/account-witness-vote?witness=engrave&amp;approve=1",
+        "/@engrave"
+      ],
+      "tags": [
+        "polish",
+        "engrave",
+        "glodniwiedzy",
+        "pl-blog",
+        "pl-kosmos",
+        "pl-artykuly"
+      ],
+      "users": [
+        "nicniezgrublem",
+        "engrave"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 54094864464623,
+    "payout": 23.224,
+    "payout_at": "2020-09-05T16:50:51",
+    "pending_payout_value": "23.224 HBD",
+    "percent_hbd": 0,
+    "permlink": "kolonizacja-marsa-a-praca-w-sektorze-kosmicznym-moje-wystapienie-na-tedx",
+    "post_id": 99341463,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 204
+    },
+    "title": "Kolonizacja Marsa a praca w sektorze kosmicznym - moje wyst\u0105pienie na TEDx",
+    "updated": "2020-08-29T16:50:51",
+    "url": "/hive-134382/@engrave/kolonizacja-marsa-a-praca-w-sektorze-kosmicznym-moje-wystapienie-na-tedx"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "6853042332",
+        "voter": "ocisly"
+      },
+      {
+        "rshares": "1647616942",
+        "voter": "imperfect-one"
+      },
+      {
+        "rshares": "3450021806",
+        "voter": "aditor"
+      },
+      {
+        "rshares": "59383839733",
+        "voter": "grecki-bazar-ewy"
+      },
+      {
+        "rshares": "2612170571",
+        "voter": "nicniezgrublem"
+      },
+      {
+        "rshares": "4182675733",
+        "voter": "spacesheep"
+      },
+      {
+        "rshares": "1982545694365",
+        "voter": "mmmmkkkk311"
+      },
+      {
+        "rshares": "1104789079",
+        "voter": "santarius"
+      },
+      {
+        "rshares": "921718649",
+        "voter": "acronyms"
+      },
+      {
+        "rshares": "27713925102",
+        "voter": "pkocjan"
+      },
+      {
+        "rshares": "202633544918",
+        "voter": "lesiopm"
+      },
+      {
+        "rshares": "420612497298",
+        "voter": "mariuszkarowski"
+      },
+      {
+        "rshares": "2072938076",
+        "voter": "informator"
+      },
+      {
+        "rshares": "59722498890",
+        "voter": "browery"
+      },
+      {
+        "rshares": "20464423969",
+        "voter": "glodniwiedzy"
+      },
+      {
+        "rshares": "44288368453",
+        "voter": "rozku"
+      },
+      {
+        "rshares": "11010619494",
+        "voter": "pannapysia"
+      },
+      {
+        "rshares": "1990144672",
+        "voter": "angatt"
+      },
+      {
+        "rshares": "942467909974",
+        "voter": "engrave"
+      },
+      {
+        "rshares": "29619190",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "2732802617",
+        "voter": "gameeit"
+      },
+      {
+        "rshares": "710044745",
+        "voter": "bgornicki"
+      },
+      {
+        "rshares": "1942969510",
+        "voter": "pl-kuchnia"
+      },
+      {
+        "rshares": "1375796885",
+        "voter": "cheer-up"
+      },
+      {
+        "rshares": "1266131575",
+        "voter": "bigsport"
+      },
+      {
+        "rshares": "34493256385",
+        "voter": "herosik"
+      },
+      {
+        "rshares": "0",
+        "voter": "toni.sports"
+      },
+      {
+        "rshares": "11163769387",
+        "voter": "ocotuchodzi"
+      },
+      {
+        "rshares": "185635147062",
+        "voter": "polish.hive"
+      },
+      {
+        "rshares": "2281988227",
+        "voter": "lesiopm2"
+      },
+      {
+        "rshares": "9345408",
+        "voter": "hivemachine"
+      },
+      {
+        "rshares": "289464695",
+        "voter": "leo.ryan20"
+      }
+    ],
+    "author": "football-stats",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "https://www.youtube.com/watch?v=l-vhjUJYEqo\n\n\n### Gdzie graj\u0105 polscy pi\u0142karze?\n#\n\n![podsumowanie.png](https://images.hive.blog/DQmUUi6ovwVfZDJL3g3ofuM5YV8JCn2nAw8JEYi12Q3p1E6/podsumowanie.png)\n\n\n\n### Kraje\n#\n\n![kraje.png](https://images.hive.blog/DQmTRjJN51pPZPmXd7Ta1WNiYLMomc7ER4miQWFo3vAuFqk/kraje.png)\n\n\n### Ligi\n#\n\n![ligi.png](https://images.hive.blog/DQmcSTKDhRVeBTTCnUqkP4QYwAG5NnQ6iEs95KohFrZqZfD/ligi.png)\n\nNajpopularniejszym kierunkiem dla polskich pi\u0142karzy jest od kilku lat P\u00f3\u0142wysep Apeni\u0144ski. W mijaj\u0105cym sezonie a\u017c 23 pi\u0142karzy walczy\u0142o na boiskach Serie A i Serie B. W\u0142ochy wyprzedzi\u0142y Niemcy (14 zawodnik\u00f3w w Bundeslidze i 2. Bundeslidze) i Angli\u0119 (11 pi\u0142karzy w Premier League i Championship). W kolejnym sezonie proporcje pomi\u0119dzy liczb\u0105 Polak\u00f3w w pierwszej i drugiej klasie rozgrywkowej na Wyspach si\u0119 odwr\u00f3c\u0105 za spraw\u0105 awansu dru\u017cyn Leeds i West Bromwich. Po 8 zawodnik\u00f3w z naszego kraju mamy w Rosji i Turcji. A\u017c 32 ze 102 pi\u0142karzy gra w 5 najmocniejszych ligach w Europie. Brakowa\u0142o nam tylko kogo\u015b w La Liga, ale i to si\u0119 zmieni od nowego sezonu, bo Damian K\u0105dzior (kt\u00f3ry 4 lata temu gra\u0142 jeszcze na zapleczu Ekstraklasy) podpisa\u0142 kontrakt z Eibar. Widzimy, \u017ce zachodnie (i wschodnie) kluby coraz ch\u0119tniej si\u0119gaj\u0105 po polskich pi\u0142karzy.",
+    "category": "hive-134382",
+    "children": 0,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-01T15:28:45",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "hiveblog/0.1",
+      "format": "markdown",
+      "image": [
+        "https://img.youtube.com/vi/l-vhjUJYEqo/0.jpg",
+        "https://images.hive.blog/DQmUUi6ovwVfZDJL3g3ofuM5YV8JCn2nAw8JEYi12Q3p1E6/podsumowanie.png",
+        "https://images.hive.blog/DQmTRjJN51pPZPmXd7Ta1WNiYLMomc7ER4miQWFo3vAuFqk/kraje.png",
+        "https://images.hive.blog/DQmcSTKDhRVeBTTCnUqkP4QYwAG5NnQ6iEs95KohFrZqZfD/ligi.png"
+      ],
+      "links": [
+        "https://www.youtube.com/watch?v=l-vhjUJYEqo"
+      ],
+      "tags": [
+        "pl-sport",
+        "polish",
+        "sportstalk"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 4037608775742,
+    "payout": 1.237,
+    "payout_at": "2020-09-08T15:28:45",
+    "pending_payout_value": "1.237 HBD",
+    "percent_hbd": 10000,
+    "permlink": "polscy-pilkarze-za-granica-podsumowanie-sezonu-2019-20",
+    "post_id": 99393561,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 32
+    },
+    "title": "Polscy pi\u0142karze za granic\u0105. Podsumowanie sezonu 2019/20.",
+    "updated": "2020-09-01T15:28:45",
+    "url": "/hive-134382/@football-stats/polscy-pilkarze-za-granica-podsumowanie-sezonu-2019-20"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "3673879076979",
+        "voter": "tipu"
+      },
+      {
+        "rshares": "14351239870",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "28333506466",
+        "voter": "happy-soul"
+      },
+      {
+        "rshares": "17096563364",
+        "voter": "jancharlest"
+      },
+      {
+        "rshares": "1200106289",
+        "voter": "longer"
+      },
+      {
+        "rshares": "29401251",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "3101420503",
+        "voter": "jacuzzi"
+      },
+      {
+        "rshares": "1242819534",
+        "voter": "mia-cc"
+      },
+      {
+        "rshares": "45827351988",
+        "voter": "kryptogames"
+      },
+      {
+        "rshares": "1444869138",
+        "voter": "cryptogambit"
+      },
+      {
+        "rshares": "462975673",
+        "voter": "jalentakesphotos"
+      },
+      {
+        "rshares": "3626293643",
+        "voter": "dappstats"
+      }
+    ],
+    "author": "herosik",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "This is a cross post of [@herosik/witcher-netflix-gra-o-tron-x-files-serial-animowany-scream-5-znamy-date-premiery-american-son-russell-crowe-nicolas-cage-i](/polish/@herosik/witcher-netflix-gra-o-tron-x-files-serial-animowany-scream-5-znamy-date-premiery-american-son-russell-crowe-nicolas-cage-i) by @herosik.<br><br>Zapraszam na kolejny przegl\u0105d news\u00f3w. ",
+    "category": "hive-134382",
+    "children": 0,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-01T14:21:48",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "peakd/2020.08.3",
+      "image": [],
+      "original_author": "herosik",
+      "original_permlink": "witcher-netflix-gra-o-tron-x-files-serial-animowany-scream-5-znamy-date-premiery-american-son-russell-crowe-nicolas-cage-i",
+      "tags": [
+        "cross-post"
+      ]
+    },
+    "max_accepted_payout": "0.000 HBD",
+    "net_rshares": 3790595624698,
+    "payout": 1.147,
+    "payout_at": "2020-09-08T14:21:48",
+    "pending_payout_value": "1.147 HBD",
+    "percent_hbd": 10000,
+    "permlink": "witcher-netflix-gra-o-tron-x-files-serial-animowany-scream-5-znamy-date-premiery-american-son-russell-crowe-nicolas-cage-i-hive-134382",
+    "post_id": 99392339,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 12
+    },
+    "title": "Witcher Netflix, Gra o Tron, X-Files serial animowany, Scream 5 znamy dat\u0119 premiery, American Son - Russell Crowe, Nicolas Cage i Amazon, Ghostrunner, Pharaoh: A New Era ",
+    "updated": "2020-09-01T14:21:48",
+    "url": "/hive-134382/@herosik/witcher-netflix-gra-o-tron-x-files-serial-animowany-scream-5-znamy-date-premiery-american-son-russell-crowe-nicolas-cage-i-hive-134382"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "169852046437",
+        "voter": "good-karma"
+      },
+      {
+        "rshares": "435475892132",
+        "voter": "esteemapp"
+      },
+      {
+        "rshares": "4200819193",
+        "voter": "esteem.app"
+      },
+      {
+        "rshares": "10789576390",
+        "voter": "pannapysia"
+      },
+      {
+        "rshares": "83972644413",
+        "voter": "sbi5"
+      },
+      {
+        "rshares": "52006043965",
+        "voter": "ludomir"
+      },
+      {
+        "rshares": "130336567",
+        "voter": "demo123"
+      },
+      {
+        "rshares": "676611221124",
+        "voter": "ecency"
+      },
+      {
+        "rshares": "1149291041",
+        "voter": "ecency.stats"
+      }
+    ],
+    "author": "dragokazo",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [
+      {
+        "account": "hiveonboard",
+        "weight": 100
+      },
+      {
+        "account": "threespeakwallet",
+        "weight": 1100
+      },
+      {
+        "account": "tipu",
+        "weight": 100
+      }
+    ],
+    "blacklists": [],
+    "body": "<center>\n\n[![](https://img.3speakcontent.online/bphtfbbs/post.png)](https://3speak.online/watch?v=dragokazo/bphtfbbs)\n\n\u25b6\ufe0f [Watch on 3Speak](https://3speak.online/watch?v=dragokazo/bphtfbbs)\n\n</center>\n\n---\n\nDzisiaj zagramy w Brawl Stars .\nOtworzymy troch\u0119 paczek, pogramy kilkoma postaciami. \nWygrana by\u0142a w zasi\u0119gu r\u0119ki, ale niestety ....\n\n---\n\n\u25b6\ufe0f [3Speak](https://3speak.online/watch?v=dragokazo/bphtfbbs)\n",
+    "category": "hive-134382",
+    "children": 1,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-02T16:35:06",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "3speak/0.3.0",
+      "tags": [
+        "ctp",
+        "neoxian",
+        "palnet",
+        "hivegaming",
+        "kidsplay"
+      ],
+      "type": "3speak/video",
+      "video": {
+        "content": {
+          "description": "Dzisiaj zagramy w Brawl Stars .\nOtworzymy troch\u0119 paczek, pogramy kilkoma postaciami. \nWygrana by\u0142a w zasi\u0119gu r\u0119ki, ale niestety ....",
+          "tags": [
+            "ctp",
+            "neoxian",
+            "palnet",
+            "hivegaming",
+            "kidsplay"
+          ]
+        },
+        "info": {
+          "author": "dragokazo",
+          "duration": 686.422,
+          "file": "UnaSoaHhWMnsyVFYXltpRBOdEgkgUPLXMYYaSvPBNEFwsvloHOrYVdLKEXmMjOun.mp4",
+          "filesize": 630610577,
+          "permlink": "bphtfbbs",
+          "platform": "3speak",
+          "title": "Mega-\u0142obuziaki graj\u0105 w Brawl Stars"
+        }
+      }
+    },
+    "max_accepted_payout": "100000.000 HBD",
+    "net_rshares": 1434187871262,
+    "payout": 0.354,
+    "payout_at": "2020-09-09T16:35:06",
+    "pending_payout_value": "0.354 HBD",
+    "percent_hbd": 10000,
+    "permlink": "bphtfbbs",
+    "post_id": 99413086,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 9
+    },
+    "title": "Mega-\u0142obuziaki graj\u0105 w Brawl Stars",
+    "updated": "2020-09-02T16:35:06",
+    "url": "/hive-134382/@dragokazo/bphtfbbs"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "94377907990",
+        "voter": "ew-and-patterns"
+      },
+      {
+        "rshares": "155316264161",
+        "voter": "kubak"
+      },
+      {
+        "rshares": "207789354303",
+        "voter": "lesiopm"
+      },
+      {
+        "rshares": "79950113954",
+        "voter": "czcibor360"
+      },
+      {
+        "rshares": "30977501870",
+        "voter": "sarmaticus"
+      },
+      {
+        "rshares": "813437242",
+        "voter": "sensorycznyswiat"
+      },
+      {
+        "rshares": "11986827112",
+        "voter": "reinmar"
+      },
+      {
+        "rshares": "28034621577",
+        "voter": "khrom"
+      },
+      {
+        "rshares": "59839652823",
+        "voter": "browery"
+      },
+      {
+        "rshares": "45418553994",
+        "voter": "rozku"
+      },
+      {
+        "rshares": "30547863177",
+        "voter": "kapitanrosomak"
+      },
+      {
+        "rshares": "112657584",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "50965675694",
+        "voter": "ludomir"
+      },
+      {
+        "rshares": "14874194211",
+        "voter": "trampmad"
+      },
+      {
+        "rshares": "1815675220",
+        "voter": "sarmagames"
+      },
+      {
+        "rshares": "2340012253",
+        "voter": "lesiopm2"
+      }
+    ],
+    "author": "ocotuchodzi",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "https://www.youtube.com/watch?v=KKYpS_Ro13U&feature=emb_title\n\n##### Promocja \"we\u017a tyle ile ud\u017awigniesz\" w Chicago.\n#\n\nW tym roku Black Friday (kto wie czy ta nazwa nie zostanie wkr\u00f3tce zmieniona?) wypadaj\u0105cy zwykle pod koniec listopada by\u0142 ju\u017c w maju. Promocje i zni\u017cki by\u0142y wyj\u0105tkowe. Jeden sklep w Chicago chyba przesadzi\u0142 z has\u0142em reklamowym, bo \"klienci\" wpadli w taki sza\u0142 zakupowy, \u017ce brali tyle ile byli w stanie ud\u017awign\u0105\u0107. Ma\u0142o tego, w tym ca\u0142ym amoku zapomnieli zap\u0142aci\u0107. Czy gdyby okaza\u0142o si\u0119, \u017ce sprz\u0119t mia\u0142 jak\u0105\u015b wad\u0119 zostanie wymieniony na nowy bez paragonu? To zbyt k\u0142opotliwe i czasoch\u0142onne. Mo\u017cna za to go wymieni\u0107 w s\u0105siaduj\u0105cym sklepie na podobnej \"promocji\".\n\n\nInne biznesy te\u017c mia\u0142y sporego pecha i licz\u0105 straty po tym jak przez USA przewin\u0119\u0142a si\u0119 fala szara\u0144czy. \n\nhttps://www.youtube.com/watch?v=BLWxWj_oxaA\n\nhttps://www.youtube.com/watch?v=ZqK60iUXfpE\n\nInsekty zmutowa\u0142y i walka z nimi nie b\u0119dzie \u0142atwa. Naukowcy debatuj\u0105 o tym czy do powstrzymania plagi wystarczy chemia czy te\u017c potrzebne b\u0119d\u0105 opryski z o\u0142owiu.\n\n\n\n\nKorzysta\u0142em z: \n\nhttps://pl.wikipedia.org/wiki/Czarny_pi%C4%85tek",
+    "category": "hive-134382",
+    "children": 5,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-09-03T08:42:42",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "hiveblog/0.1",
+      "format": "markdown",
+      "image": [
+        "https://img.youtube.com/vi/KKYpS_Ro13U/0.jpg",
+        "https://img.youtube.com/vi/BLWxWj_oxaA/0.jpg",
+        "https://img.youtube.com/vi/ZqK60iUXfpE/0.jpg"
+      ],
+      "links": [
+        "https://www.youtube.com/watch?v=KKYpS_Ro13U&feature=emb_title",
+        "https://www.youtube.com/watch?v=BLWxWj_oxaA",
+        "https://www.youtube.com/watch?v=ZqK60iUXfpE",
+        "https://pl.wikipedia.org/wiki/Czarny_pi%C4%85tek"
+      ],
+      "tags": [
+        "polish",
+        "reakcja",
+        "folwark",
+        "blm"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 815160313165,
+    "payout": 0.191,
+    "payout_at": "2020-09-10T08:42:42",
+    "pending_payout_value": "0.191 HBD",
+    "percent_hbd": 10000,
+    "permlink": "zmiana-kalendarza-w-usa",
+    "post_id": 99424650,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 16
+    },
+    "title": "Zmiana kalendarza w USA.",
+    "updated": "2020-09-03T08:42:42",
+    "url": "/hive-134382/@ocotuchodzi/zmiana-kalendarza-w-usa"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "483747519",
+        "voter": "mxzn"
+      },
+      {
+        "rshares": "3887906250691",
+        "voter": "tipu"
+      },
+      {
+        "rshares": "14447969044",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "28991035548",
+        "voter": "happy-soul"
+      },
+      {
+        "rshares": "11747222710",
+        "voter": "reinmar"
+      },
+      {
+        "rshares": "1197304797",
+        "voter": "longer"
+      },
+      {
+        "rshares": "28997783591",
+        "voter": "kapitanrosomak"
+      },
+      {
+        "rshares": "33099672",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "1589682091",
+        "voter": "jacuzzi"
+      },
+      {
+        "rshares": "48096878591",
+        "voter": "kryptogames"
+      },
+      {
+        "rshares": "462398015",
+        "voter": "jalentakesphotos"
+      }
+    ],
+    "author": "herosik",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "This is a cross post of [@herosik/recenzja-3-czesci-initial-d-legend](/polish/@herosik/recenzja-3-czesci-initial-d-legend) by @herosik.<br><br>Zapraszam do recenzji 3 filmu \"Initial:D Legend\". ",
+    "category": "hive-134382",
+    "children": 0,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-08-31T18:11:57",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "peakd/2020.08.3",
+      "image": [],
+      "original_author": "herosik",
+      "original_permlink": "recenzja-3-czesci-initial-d-legend",
+      "tags": [
+        "cross-post"
+      ]
+    },
+    "max_accepted_payout": "0.000 HBD",
+    "net_rshares": 4023953372269,
+    "payout": 1.231,
+    "payout_at": "2020-09-07T18:11:57",
+    "pending_payout_value": "1.231 HBD",
+    "percent_hbd": 10000,
+    "permlink": "recenzja-3-czesci-initial-d-legend-hive-134382",
+    "post_id": 99377385,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 11
+    },
+    "title": "Recenzja 3 cz\u0119\u015bci \"Initial D: Legend\" ",
+    "updated": "2020-08-31T18:11:57",
+    "url": "/hive-134382/@herosik/recenzja-3-czesci-initial-d-legend-hive-134382"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "3876869986764",
+        "voter": "tipu"
+      },
+      {
+        "rshares": "14165665735",
+        "voter": "bartheek"
+      },
+      {
+        "rshares": "28741579620",
+        "voter": "happy-soul"
+      },
+      {
+        "rshares": "1191358389",
+        "voter": "longer"
+      },
+      {
+        "rshares": "27955604",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "1243981456",
+        "voter": "mia-cc"
+      },
+      {
+        "rshares": "48022052298",
+        "voter": "kryptogames"
+      },
+      {
+        "rshares": "1444318943",
+        "voter": "cryptogambit"
+      },
+      {
+        "rshares": "463017209",
+        "voter": "jalentakesphotos"
+      },
+      {
+        "rshares": "3818550410",
+        "voter": "bcm"
+      },
+      {
+        "rshares": "3626708554",
+        "voter": "dappstats"
+      }
+    ],
+    "author": "herosik",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "This is a cross post of [@herosik/czajka-znowu-wylala-marne-zarobki-polakow-i-zenujacy-poziom-robotyzacji-rosnie-zadluzenie-polskich-przedsiebiorcow-nowy-podatek](/polish/@herosik/czajka-znowu-wylala-marne-zarobki-polakow-i-zenujacy-poziom-robotyzacji-rosnie-zadluzenie-polskich-przedsiebiorcow-nowy-podatek) by @herosik.<br><br>Zapraszam na \u015bwie\u017cy przegl\u0105d newsow z Polski i ze \u015bwiata ;)! ",
+    "category": "hive-134382",
+    "children": 0,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-08-31T14:39:51",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "peakd/2020.08.3",
+      "image": [],
+      "original_author": "herosik",
+      "original_permlink": "czajka-znowu-wylala-marne-zarobki-polakow-i-zenujacy-poziom-robotyzacji-rosnie-zadluzenie-polskich-przedsiebiorcow-nowy-podatek",
+      "tags": [
+        "cross-post"
+      ]
+    },
+    "max_accepted_payout": "0.000 HBD",
+    "net_rshares": 3979615174982,
+    "payout": 1.207,
+    "payout_at": "2020-09-07T14:39:51",
+    "pending_payout_value": "1.207 HBD",
+    "percent_hbd": 10000,
+    "permlink": "czajka-znowu-wylala-marne-zarobki-polakow-i-zenujacy-poziom-robotyzacji-rosnie-zadluzenie-polskich-przedsiebiorcow-nowy-podatek-hive-134382",
+    "post_id": 99374023,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 11
+    },
+    "title": "Czajka znowu wyla\u0142a, marne zarobki Polak\u00f3w i \u017cenuj\u0105cy poziom robotyzacji, Ro\u015bnie zad\u0142u\u017cenie polskich przedsi\u0119biorc\u00f3w, nowy podatek, konflikt mi\u0119dzy celebrytkami, a prostytutkami, nowe prawo w Niemczech, Hiszpania i nielegalni lokatorzy. ",
+    "updated": "2020-08-31T14:39:51",
+    "url": "/hive-134382/@herosik/czajka-znowu-wylala-marne-zarobki-polakow-i-zenujacy-poziom-robotyzacji-rosnie-zadluzenie-polskich-przedsiebiorcow-nowy-podatek-hive-134382"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": "5066631342",
+        "voter": "ocisly"
+      },
+      {
+        "rshares": "1208297376",
+        "voter": "imperfect-one"
+      },
+      {
+        "rshares": "2544265405",
+        "voter": "aditor"
+      },
+      {
+        "rshares": "5223432500",
+        "voter": "dotevo"
+      },
+      {
+        "rshares": "101003600663",
+        "voter": "ew-and-patterns"
+      },
+      {
+        "rshares": "56915364534",
+        "voter": "grecki-bazar-ewy"
+      },
+      {
+        "rshares": "1970059205",
+        "voter": "nicniezgrublem"
+      },
+      {
+        "rshares": "3942925861",
+        "voter": "m-san"
+      },
+      {
+        "rshares": "4511006278",
+        "voter": "spacesheep"
+      },
+      {
+        "rshares": "3713372128435",
+        "voter": "mmmmkkkk311"
+      },
+      {
+        "rshares": "805946150",
+        "voter": "santarius"
+      },
+      {
+        "rshares": "670251428",
+        "voter": "acronyms"
+      },
+      {
+        "rshares": "166290208744",
+        "voter": "kubak"
+      },
+      {
+        "rshares": "20426802849",
+        "voter": "pkocjan"
+      },
+      {
+        "rshares": "230991827287",
+        "voter": "lesiopm"
+      },
+      {
+        "rshares": "86778092738",
+        "voter": "czcibor360"
+      },
+      {
+        "rshares": "30322603732",
+        "voter": "sarmaticus"
+      },
+      {
+        "rshares": "868398466346",
+        "voter": "mariuszkarowski"
+      },
+      {
+        "rshares": "4028676206",
+        "voter": "informator"
+      },
+      {
+        "rshares": "12231482527",
+        "voter": "reinmar"
+      },
+      {
+        "rshares": "25006967766",
+        "voter": "khrom"
+      },
+      {
+        "rshares": "68599070280",
+        "voter": "browery"
+      },
+      {
+        "rshares": "15802433438",
+        "voter": "glodniwiedzy"
+      },
+      {
+        "rshares": "46576969233",
+        "voter": "rozku"
+      },
+      {
+        "rshares": "11236754283",
+        "voter": "pannapysia"
+      },
+      {
+        "rshares": "2361346248",
+        "voter": "ntowl"
+      },
+      {
+        "rshares": "1409947777",
+        "voter": "angatt"
+      },
+      {
+        "rshares": "747753256375",
+        "voter": "engrave"
+      },
+      {
+        "rshares": "41870301",
+        "voter": "laissez-faire"
+      },
+      {
+        "rshares": "53047638645",
+        "voter": "ludomir"
+      },
+      {
+        "rshares": "15321842584",
+        "voter": "trampmad"
+      },
+      {
+        "rshares": "2890247184",
+        "voter": "gameeit"
+      },
+      {
+        "rshares": "1859889830",
+        "voter": "pl-kuchnia"
+      },
+      {
+        "rshares": "1810064678",
+        "voter": "sarmagames"
+      },
+      {
+        "rshares": "978783180",
+        "voter": "cheer-up"
+      },
+      {
+        "rshares": "132708234414",
+        "voter": "polish.hive"
+      },
+      {
+        "rshares": "2493658009",
+        "voter": "lesiopm2"
+      },
+      {
+        "rshares": "1283076227",
+        "voter": "zjedn-suwereni"
+      },
+      {
+        "rshares": "1628630882",
+        "voter": "irokez-slava"
+      },
+      {
+        "rshares": "16227529881",
+        "voter": "arenacrypto"
+      }
+    ],
+    "author": "ocotuchodzi",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "https://cdn.pixabay.com/photo/2016/03/14/16/05/https-pixabay-1255709_960_720.jpg\n\n[foto](https://cdn.pixabay.com/photo/2016/03/14/16/05/https-pixabay-1255709_960_720.jpg)\n\n##### Burn Loot Murder ju\u017c nied\u0142ugo w Polsce?\n#\n\n\"Pokojowe protesty\" niszcz\u0105ce mienie i pl\u0105druj\u0105ce sklepy to ju\u017c codzienno\u015b\u0107 w USA. Przeje\u017cd\u017caj\u0105cych wzd\u0142u\u017c handlowych ulic w Ameryce  ju\u017c nie dziwi\u0105 witryny zabite dechami. Przest\u0119pcy co noc robi\u0105 sobie imprezy pod tytu\u0142em \"GTA na \u017cywo\". Czy te ca\u0142e zamieszki to spontaniczna akcja? Czy kto\u015b m\u00f3g\u0142 postawi\u0107 sobie kilkaset cegie\u0142 w miejscu, w kt\u00f3rym nikt nic nie buduje? Ma\u0142o kto w to wierzy. Wygl\u0105da to raczej na sprytnie wyre\u017cyserowany spektakl. Media grzej\u0105 newsy o \"wojnie rasowej\", policjant zastrzeli\u0142 przest\u0119pc\u0119 - dzie\u0144 jak co dzie\u0144 - kiedy\u015b nikt by o tym nawet nie wspomnia\u0142, a tu nagle tego typu informacje l\u0105duj\u0105 na czo\u0142\u00f3wkach wszystkich gazet. \"Protestuj\u0105cy\" przeciwko temu chodz\u0105 sobie w nocy po ulicach i okradaj\u0105 sklepy. Czy to przypadkowi ludzie, a mo\u017ce zostali do tego przygotowani?\n\n##### Co finansuj\u0105 polscy podatnicy?\n#\n\nNa co wydawane s\u0105 pieni\u0105dze podatnik\u00f3w? M.in. na \"warsztaty\" dziwnych organizacji. \"Nasz\" niedosz\u0142y (i przysz\u0142y?) prezydent przeznaczy\u0142 3,6 miliona z\u0142 na \"kulturaln\u0105\" dzia\u0142alno\u015b\u0107 teatru \"Biennale Warszawa\". Ju\u017c pomijam to czy podatnicy powinni dop\u0142aca\u0107 do takich rzeczy, ale nazywany przed 2019 r. Teatr Scena Prezentacje zaprasza\u0142 ludzi m.in. do zorganizowanej przez siebie Spo\u0142ecznej Szko\u0142y Antykapitalizmu, gdzie wyk\u0142adowcami byli ludzie przedstawiaj\u0105cy si\u0119 np. jako \"feministka, antyfaszystka, kobieta walcz\u0105ca o prawo do aborcji, migracji i mieszkania (?), sk\u0142oters, anarchista czy komunista.\n\n##### Program warsztat\u00f3w.\n#\n\nPatrz\u0105c na wyk\u0142adowc\u00f3w nie mo\u017ce nas zdziwi\u0107 program tych\u017ce \"warsztat\u00f3w\".\n\nhttps://zyciestolicy.com.pl/wp-content/uploads/plan.jpg\n\n[\u017ar\u00f3d\u0142o zyciestolicy.com.pl](https://zyciestolicy.com.pl/szwadrony-trzaskowskiego-kogo-i-po-co-szkoli-warszawa/)\n \nI tak na pierwszym miejscu mamy punkt **\"W\u0142asno\u015b\u0107 prywatna to kradzie\u017c\"**. No, ale czy to mo\u017ce nas dziwi\u0107, skoro prelegentem jest m.in. komunista. Czyli je\u017celi masz swoje buty, szczoteczk\u0119 do z\u0119b\u00f3w, mieszkanie czy samoch\u00f3d to jeste\u015b z\u0142odziejem. Lepiej si\u0119 tego pozb\u0105d\u017a, bo przyjd\u0105 do Ciebie s\u0142u\u017cby o 6 rano i zostaniesz aresztowany wraz z dowodami \"zbrodni\". Tak wi\u0119c, w\u0142asno\u015b\u0107 prywatna wg nich to kradzie\u017c, ale za to **w\u0142asno\u015b\u0107 wsp\u00f3lna to bogactwo**. Mogliby zaprosi\u0107 na te warsztaty w\u0142a\u015bcicieli biznes\u00f3w z USA, bo oni widocznie nie rozumiej\u0105, \u017ce zabezpieczaj\u0105c okna i drzwi w swoich sklepach post\u0119puj\u0105 irracjonalnie. Kolejne punkty s\u0105 te\u017c bardzo \"ciekawe\". Strajk spo\u0142eczny, My jeste\u015bmy kryzysem czy Taktyki uliczne zwane dla zmylenia **uliczn\u0105 gimnastyk\u0105**. Jak ja kocham t\u0119 nowomow\u0119...  \n\nCzy to na takich \"szkoleniach\" przygotowywane s\u0105 te wszystkie akcje typu \"pokojowe\" protesty czy  prowokacje podczas Marszu Niepodleg\u0142o\u015bci? Dlaczego p\u0142aci za to polski podatnik? Czy ludzie, kt\u00f3rzy pl\u0105druj\u0105 sklepy w USA mieli \"prane m\u00f3zgi\" na tego typu spotkaniach i czy kadry G.Sorosa planuj\u0105 podobne akcje r\u00f3wnie\u017c w innych krajach?\n\nKorzysta\u0142em z:\n\nhttps://zyciestolicy.com.pl/szwadrony-trzaskowskiego-kogo-i-po-co-szkoli-warszawa/\n\nhttps://biennalewarszawa.pl/",
+    "category": "hive-134382",
+    "children": 14,
+    "community": "hive-134382",
+    "community_title": "Polish HIVE",
+    "created": "2020-08-30T15:25:09",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "app": "hiveblog/0.1",
+      "format": "markdown",
+      "image": [
+        "https://cdn.pixabay.com/photo/2016/03/14/16/05/https-pixabay-1255709_960_720.jpg",
+        "https://zyciestolicy.com.pl/wp-content/uploads/plan.jpg"
+      ],
+      "links": [
+        "https://cdn.pixabay.com/photo/2016/03/14/16/05/https-pixabay-1255709_960_720.jpg",
+        "https://zyciestolicy.com.pl/szwadrony-trzaskowskiego-kogo-i-po-co-szkoli-warszawa/",
+        "https://biennalewarszawa.pl/"
+      ],
+      "tags": [
+        "polish",
+        "reakcja",
+        "folwark"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 6465740280821,
+    "payout": 2.146,
+    "payout_at": "2020-09-06T15:25:09",
+    "pending_payout_value": "2.146 HBD",
+    "percent_hbd": 10000,
+    "permlink": "wlasnosc-prywatna-to-kradziez",
+    "post_id": 99356599,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 40
+    },
+    "title": "W\u0142asno\u015b\u0107 prywatna to kradzie\u017c?",
+    "updated": "2020-08-30T15:25:09",
+    "url": "/hive-134382/@ocotuchodzi/wlasnosc-prywatna-to-kradziez"
+  }
+]
