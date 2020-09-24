@@ -64,64 +64,6 @@
   {
     "active_votes": [
       {
-        "rshares": 151513711,
-        "voter": "newsfeed"
-      }
-    ],
-    "author": "newsfeed",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "The Texas Rangers are 33-10 (.767) in one-run games this season. This would stand as a modern record for winning percentage in one-run games, besting the 2012 Orioles, who were 29-9 (.763).\n\n<h1><center>http://images.performgroup.com/di/library/sporting_news/a3/fa/texasrangers-getty-ftr-091516jpg_9u1oo1fjvsue1twr2494i9qcn.jpg?t=766994815</center></h1>\n\nBut if we dig deep into the archives of baseball history, we learn that this is actually the best record since the 1890 Brooklyn Bridegrooms, who were 14-4 (.778) in one-run games en route to an overall 86-43 (.667) record and the National League pennant.\n\n**Source / Read More...** <a href='http://www.sportingnews.com/mlb/news/texas-rangers-record-in-one-run-games-brooklyn-bridegrooms/irlcvzvv8fui1vgogevkmomch\n'>sportingnews.com</a> \n\n<hr>\n\n<center><img src='https://ipfs.pics/ipfs/QmUo1EuVPSs3prLRdJH95Lg97vyvzSfhH6srZH5bqRh7p6'></center>\n\n**NEWS FEED** \n*Get the latest headlines from around the world right on your Steemit Feed! With @newsfeed you always stay in the know about all sorts of topics ranging from Politics & Finance to Sports*\n\n**Currently In Beta**\n*Full news feed from hand picked creditable sources from all sides of the political and social realm. Although not fully operational, posts will be random while testing BUT do have real headlines!*",
-    "category": "newsfeed",
-    "children": 0,
-    "created": "2016-09-15T19:46:30",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "http://images.performgroup.com/di/library/sporting_news/a3/fa/texasrangers-getty-ftr-091516jpg_9u1oo1fjvsue1twr2494i9qcn.jpg?t=766994815",
-        "https://ipfs.pics/ipfs/QmUo1EuVPSs3prLRdJH95Lg97vyvzSfhH6srZH5bqRh7p6"
-      ],
-      "links": [
-        "http://www.sportingnews.com/mlb/news/texas-rangers-record-in-one-run-games-brooklyn-bridegrooms/irlcvzvv8fui1vgogevkmomch\n"
-      ],
-      "tags": [
-        "newsfeed",
-        "news",
-        "sports",
-        "rangers",
-        "baseball"
-      ],
-      "users": [
-        "newsfeed"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 151513711,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:46:30",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 0,
-    "permlink": "rangers-record-in-one-run-games-nearing-truly-historic-level",
-    "post_id": 1257930,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 1
-    },
-    "title": "Rangers' record in one-run games nearing truly historic level",
-    "updated": "2016-09-15T19:46:30",
-    "url": "/newsfeed/@newsfeed/rangers-record-in-one-run-games-nearing-truly-historic-level"
-  },
-  {
-    "active_votes": [
-      {
         "rshares": 3377256926,
         "voter": "anton333"
       }
@@ -195,6 +137,64 @@
     "title": "Origami Part 11, the model of Skeleton hands.",
     "updated": "2016-09-15T19:46:30",
     "url": "/art/@anton333/origami-part-11-the-model-of-skeleton-hands"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 151513711,
+        "voter": "newsfeed"
+      }
+    ],
+    "author": "newsfeed",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "The Texas Rangers are 33-10 (.767) in one-run games this season. This would stand as a modern record for winning percentage in one-run games, besting the 2012 Orioles, who were 29-9 (.763).\n\n<h1><center>http://images.performgroup.com/di/library/sporting_news/a3/fa/texasrangers-getty-ftr-091516jpg_9u1oo1fjvsue1twr2494i9qcn.jpg?t=766994815</center></h1>\n\nBut if we dig deep into the archives of baseball history, we learn that this is actually the best record since the 1890 Brooklyn Bridegrooms, who were 14-4 (.778) in one-run games en route to an overall 86-43 (.667) record and the National League pennant.\n\n**Source / Read More...** <a href='http://www.sportingnews.com/mlb/news/texas-rangers-record-in-one-run-games-brooklyn-bridegrooms/irlcvzvv8fui1vgogevkmomch\n'>sportingnews.com</a> \n\n<hr>\n\n<center><img src='https://ipfs.pics/ipfs/QmUo1EuVPSs3prLRdJH95Lg97vyvzSfhH6srZH5bqRh7p6'></center>\n\n**NEWS FEED** \n*Get the latest headlines from around the world right on your Steemit Feed! With @newsfeed you always stay in the know about all sorts of topics ranging from Politics & Finance to Sports*\n\n**Currently In Beta**\n*Full news feed from hand picked creditable sources from all sides of the political and social realm. Although not fully operational, posts will be random while testing BUT do have real headlines!*",
+    "category": "newsfeed",
+    "children": 0,
+    "created": "2016-09-15T19:46:30",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://images.performgroup.com/di/library/sporting_news/a3/fa/texasrangers-getty-ftr-091516jpg_9u1oo1fjvsue1twr2494i9qcn.jpg?t=766994815",
+        "https://ipfs.pics/ipfs/QmUo1EuVPSs3prLRdJH95Lg97vyvzSfhH6srZH5bqRh7p6"
+      ],
+      "links": [
+        "http://www.sportingnews.com/mlb/news/texas-rangers-record-in-one-run-games-brooklyn-bridegrooms/irlcvzvv8fui1vgogevkmomch\n"
+      ],
+      "tags": [
+        "newsfeed",
+        "news",
+        "sports",
+        "rangers",
+        "baseball"
+      ],
+      "users": [
+        "newsfeed"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 151513711,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:46:30",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 0,
+    "permlink": "rangers-record-in-one-run-games-nearing-truly-historic-level",
+    "post_id": 1257930,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 1
+    },
+    "title": "Rangers' record in one-run games nearing truly historic level",
+    "updated": "2016-09-15T19:46:30",
+    "url": "/newsfeed/@newsfeed/rangers-record-in-one-run-games-nearing-truly-historic-level"
   },
   {
     "active_votes": [
@@ -671,78 +671,6 @@
     "title": "COVER YOUR LAPTOP -and phone- CAMERA -   Comey;  DIR OF THE FBI DOES",
     "updated": "2016-09-15T19:42:36",
     "url": "/freedom/@philanthropest/cover-your-laptop-and-phone-camera-comey-dir-of-the-fbi-does"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 2041184971,
-        "voter": "profitgenerator"
-      }
-    ],
-    "author": "profitgenerator",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "Let's analyze more deeply the relationship between USD and Oil. This is a continuation of this 3 part series, and in this part I will describe my opinions how to trade Oil, despite it's unpredictability. Here is the previous part:\n\n<center>https://steemit.com/money/@profitgenerator/the-Oil-market-1-3</center>\n\n------------------------------------\n<br/>\n<center>[![oilfield-643836_1920.jpg](https://s16.postimg.org/j6asrkj79/oilfield_643836_1920.jpg)](https://postimg.org/image/5cmg2iqlt/)</center>\n\n<center><h1>Oil and Dollar</h1></center>\n\nBefore we go into strategies, I have to explain more thoroughly what relationship I was talking about in the past article.\n\nSo we know that the Oil is denominated by the US Dollar, and we know that a cheap Oil is good for the US Economy, but I wasn't very precise here, this is not entirely true, there is something more here.\n\nFirst of all the commodity market is the only thing that keeps the US Dollar stable, since the Nixon lifting of the Gold standard. The USD is printed at will and the commodities are the only thing that give it some residual value.\n\nSo the commodity market has to be as liquid as possible in order to keep the USD stable, because every ounce of Gold, gram of grain or drop of Oil bought gives value to the USD, because it goes through the USD market.\n\nBut also the commodity market cannot be high in price, because that is bad for the USD. So you have to have a very liquid commodity market, but one that has low price. It sounds very contradictory (the velocity of money theory forbids this), so how you do you achieve this?\n\nWith a Paper Ponzi Scheme: https://en.wikipedia.org/wiki/Gold_certificate\n\nBy issuing commodities on paper, that are not backed by real commodities, or in other words extremely leveraged instruments. You can read more about this popular scam here:\n\n<center>http://www.silverdoctors.com/Gold/Gold-news/comex-Gold-leverage-skyrockets-to-a-shocking-5421/\nhttp://www.zerohedge.com/news/2016-06-25/comex-registered-silver-now-more-leveraged-Gold</center>\n\n<center>[![Leverage-Of-COMEX-Registered-Silver-Contracts.png](https://s17.postimg.org/bgdwcshn3/Leverage_Of_COMEX_Registered_Silver_Contracts.png)](https://postimg.org/image/vnrc53f4b/)</center>\n<center>*(Source: https://srsroccoreport.com)*</center>\n\nNow I am not sure if the same phenomena is happening to Oil as well, but it could be possible. The entire commodity market is undervalued while derivatives and over-leveraged scams are the popular choice of investment for investors.\n\nSo if this is true, then Oil, and the whole commodity market would be into a bullish run possibly. But what about the USD? Yes, the USD itself is in trouble too. The US national debt and outstanding liabilities are too big, and I think the FED will just do QE any minute now, printing up Dollars and perhaps pumping up the commodity market too.\n\nAlright so now it is very confusing, in the past article I established a bearish trend, and now I am saying a bullish scenario could happen? So which one is it. Well let's take them 1 by 1:\n\n* Venezuela economic collapse and Middle East wars = **Bullish**\n* Big Oil price not good for US so they will suppress it with any tool available = `Bearish`\n* OPEC increased Oil production together with [Iran's lifted embargo](http://www.nytimes.com/2016/03/08/world/middleeast/embargo-lifted-iranian-Oil-reaches-europe.html) = `Bearish` \n* Russia building Oil pipeline in South Europe =  `Bearish`\n* China investing in Africa and importing Oil =  **Bullish** (since the growing Chinese economy is a big Oil demand)\n* Rising Green Energy markets = `Bearish`\n* Paper ponzi scheme could collapse anytime = **Bullish**\n* New rounds of quantitative easing to erode global debts = **Bullish**\n\nSo it looks to me like a whipsaw, again it could be quantified to have more accurate numbers, but it looks like the risk is big in the market. I would certainly not go long or short on it, since it's pretty unpredictable based on these macroeconomic trends. Whatever monopoly controls the price of Oil has made sure to make the price unpredictable, so that people will be wiped out on both sides.\n\nSo then how to trade this, if long and short positions are too risky, what to do?\n\n----------------------\n<br/>\n<center>[![money-finance-bills-500.jpg](https://s17.postimg.org/simy7jp3j/money_finance_bills_500.jpg)](https://postimg.org/image/kd4w9e0uj/)</center>\n\n\n<center><h1>Trading the Oil Market</h1></center>\n\nIf long and short positions are too risky, then hedging is the only strategy left in my opinion. I would not trade Oil naked, but if we hedge it with the right instrument, it could be profitable.\n\n<center><h2>[Hedging](https://en.wikipedia.org/wiki/Hedge_%28finance%29)</h2></center>\n\nBut what to hedge, what pairs to hedge and how? Well there are many combinations, and you have to find the pairs that will make you money nontheless.\n\nBut let's cut the crap, I have found a setup that is ultra profitable, and I will share it with you, in exchange you can donate me some SBD and upvote my post and follow me, that is the least you can do for showing you this ultra profitable trading strategy.\n\nSo here are the pairs:\n* Oil / USD\n* XAU / USD\n* USD / JPY\n* DJI / USD\n\nWe will construct our `artificial index` from these, I will call it `ProfitGenerator`:\n\n<center>[![profitgenerator.png](https://s12.postimg.org/421peh5v1/profitgenerator.png)](https://postimg.org/image/feeaw9ejt/)</center>\n\nThis is how `ProfitGenerator` looks like, it is really a @profitgenerator, going up and up since 2009. The formula is the following:\n`BUY   Oil / USD`\n`SELL   XAU / USD`\n`SELL   USD / JPY`\n`BUY   DJI / USD`\n\nSo basically by buying the DOW 30  and Oil, and selling Gold and the USD/JPY, we get this artificial index that always makes our profits go up since 2009. Of course it has dips and volatility, but the trend line looks to go up:\n\n<center>[![trend.png](https://s13.postimg.org/7c4281afb/trend.png)](https://postimg.org/image/mktzlt43n/)</center>\n\nI have extrapolated it linearly in the future, and it could be a profitable investment.Looks like easy money to me, I might check it out as well, and look for even better hedging strategies.\n\n---------------------------\n\nBasically this is how I would trade Oil at the moment, not naked, but put inside this nice hedging strategy. So if you decide to try it out, you should reward me after you made some profits!\n\n\n---------------------------\n\n*Data sources: http://www.investing.com*\n\n***Disclaimer: The information provided on this page might be incorrect. I am not responsible if you lose money using the information on this page! This is not an investment advice, just my opinion and analysis for educational purposes.***\n\n\n-------------------------------------------\n\n\n<CENTER><H1>Upvote & Follow Me: @profitgenerator</H1></CENTER>",
-    "category": "money",
-    "children": 0,
-    "created": "2016-09-15T19:39:15",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://s16.postimg.org/j6asrkj79/oilfield_643836_1920.jpg",
-        "https://s17.postimg.org/bgdwcshn3/Leverage_Of_COMEX_Registered_Silver_Contracts.png",
-        "https://s17.postimg.org/simy7jp3j/money_finance_bills_500.jpg",
-        "https://s12.postimg.org/421peh5v1/profitgenerator.png",
-        "https://s13.postimg.org/7c4281afb/trend.png"
-      ],
-      "links": [
-        "https://steemit.com/money/@profitgenerator/the-Oil-market-1-3",
-        "https://postimg.org/image/5cmg2iqlt/",
-        "https://en.wikipedia.org/wiki/Gold_certificate",
-        "http://www.silverdoctors.com/Gold/Gold-news/comex-Gold-leverage-skyrockets-to-a-shocking-5421/",
-        "https://postimg.org/image/vnrc53f4b/",
-        "https://srsroccoreport.com",
-        "http://www.nytimes.com/2016/03/08/world/middleeast/embargo-lifted-iranian-Oil-reaches-europe.html",
-        "https://postimg.org/image/kd4w9e0uj/",
-        "https://en.wikipedia.org/wiki/Hedge_%28finance%29",
-        "https://postimg.org/image/feeaw9ejt/",
-        "https://postimg.org/image/mktzlt43n/",
-        "http://www.investing.com"
-      ],
-      "tags": [
-        "money",
-        "investing",
-        "oil",
-        "trading",
-        "economics"
-      ],
-      "users": [
-        "profitgenerator"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 2041184971,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:39:15",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "the-oil-market-2-3",
-    "post_id": 1257858,
-    "promoted": "0.030 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 1
-    },
-    "title": "The Oil Market [2/3]",
-    "updated": "2016-09-15T19:39:15",
-    "url": "/money/@profitgenerator/the-oil-market-2-3"
   },
   {
     "active_votes": [
@@ -1645,6 +1573,78 @@
   {
     "active_votes": [
       {
+        "rshares": 2041184971,
+        "voter": "profitgenerator"
+      }
+    ],
+    "author": "profitgenerator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "Let's analyze more deeply the relationship between USD and Oil. This is a continuation of this 3 part series, and in this part I will describe my opinions how to trade Oil, despite it's unpredictability. Here is the previous part:\n\n<center>https://steemit.com/money/@profitgenerator/the-Oil-market-1-3</center>\n\n------------------------------------\n<br/>\n<center>[![oilfield-643836_1920.jpg](https://s16.postimg.org/j6asrkj79/oilfield_643836_1920.jpg)](https://postimg.org/image/5cmg2iqlt/)</center>\n\n<center><h1>Oil and Dollar</h1></center>\n\nBefore we go into strategies, I have to explain more thoroughly what relationship I was talking about in the past article.\n\nSo we know that the Oil is denominated by the US Dollar, and we know that a cheap Oil is good for the US Economy, but I wasn't very precise here, this is not entirely true, there is something more here.\n\nFirst of all the commodity market is the only thing that keeps the US Dollar stable, since the Nixon lifting of the Gold standard. The USD is printed at will and the commodities are the only thing that give it some residual value.\n\nSo the commodity market has to be as liquid as possible in order to keep the USD stable, because every ounce of Gold, gram of grain or drop of Oil bought gives value to the USD, because it goes through the USD market.\n\nBut also the commodity market cannot be high in price, because that is bad for the USD. So you have to have a very liquid commodity market, but one that has low price. It sounds very contradictory (the velocity of money theory forbids this), so how you do you achieve this?\n\nWith a Paper Ponzi Scheme: https://en.wikipedia.org/wiki/Gold_certificate\n\nBy issuing commodities on paper, that are not backed by real commodities, or in other words extremely leveraged instruments. You can read more about this popular scam here:\n\n<center>http://www.silverdoctors.com/Gold/Gold-news/comex-Gold-leverage-skyrockets-to-a-shocking-5421/\nhttp://www.zerohedge.com/news/2016-06-25/comex-registered-silver-now-more-leveraged-Gold</center>\n\n<center>[![Leverage-Of-COMEX-Registered-Silver-Contracts.png](https://s17.postimg.org/bgdwcshn3/Leverage_Of_COMEX_Registered_Silver_Contracts.png)](https://postimg.org/image/vnrc53f4b/)</center>\n<center>*(Source: https://srsroccoreport.com)*</center>\n\nNow I am not sure if the same phenomena is happening to Oil as well, but it could be possible. The entire commodity market is undervalued while derivatives and over-leveraged scams are the popular choice of investment for investors.\n\nSo if this is true, then Oil, and the whole commodity market would be into a bullish run possibly. But what about the USD? Yes, the USD itself is in trouble too. The US national debt and outstanding liabilities are too big, and I think the FED will just do QE any minute now, printing up Dollars and perhaps pumping up the commodity market too.\n\nAlright so now it is very confusing, in the past article I established a bearish trend, and now I am saying a bullish scenario could happen? So which one is it. Well let's take them 1 by 1:\n\n* Venezuela economic collapse and Middle East wars = **Bullish**\n* Big Oil price not good for US so they will suppress it with any tool available = `Bearish`\n* OPEC increased Oil production together with [Iran's lifted embargo](http://www.nytimes.com/2016/03/08/world/middleeast/embargo-lifted-iranian-Oil-reaches-europe.html) = `Bearish` \n* Russia building Oil pipeline in South Europe =  `Bearish`\n* China investing in Africa and importing Oil =  **Bullish** (since the growing Chinese economy is a big Oil demand)\n* Rising Green Energy markets = `Bearish`\n* Paper ponzi scheme could collapse anytime = **Bullish**\n* New rounds of quantitative easing to erode global debts = **Bullish**\n\nSo it looks to me like a whipsaw, again it could be quantified to have more accurate numbers, but it looks like the risk is big in the market. I would certainly not go long or short on it, since it's pretty unpredictable based on these macroeconomic trends. Whatever monopoly controls the price of Oil has made sure to make the price unpredictable, so that people will be wiped out on both sides.\n\nSo then how to trade this, if long and short positions are too risky, what to do?\n\n----------------------\n<br/>\n<center>[![money-finance-bills-500.jpg](https://s17.postimg.org/simy7jp3j/money_finance_bills_500.jpg)](https://postimg.org/image/kd4w9e0uj/)</center>\n\n\n<center><h1>Trading the Oil Market</h1></center>\n\nIf long and short positions are too risky, then hedging is the only strategy left in my opinion. I would not trade Oil naked, but if we hedge it with the right instrument, it could be profitable.\n\n<center><h2>[Hedging](https://en.wikipedia.org/wiki/Hedge_%28finance%29)</h2></center>\n\nBut what to hedge, what pairs to hedge and how? Well there are many combinations, and you have to find the pairs that will make you money nontheless.\n\nBut let's cut the crap, I have found a setup that is ultra profitable, and I will share it with you, in exchange you can donate me some SBD and upvote my post and follow me, that is the least you can do for showing you this ultra profitable trading strategy.\n\nSo here are the pairs:\n* Oil / USD\n* XAU / USD\n* USD / JPY\n* DJI / USD\n\nWe will construct our `artificial index` from these, I will call it `ProfitGenerator`:\n\n<center>[![profitgenerator.png](https://s12.postimg.org/421peh5v1/profitgenerator.png)](https://postimg.org/image/feeaw9ejt/)</center>\n\nThis is how `ProfitGenerator` looks like, it is really a @profitgenerator, going up and up since 2009. The formula is the following:\n`BUY   Oil / USD`\n`SELL   XAU / USD`\n`SELL   USD / JPY`\n`BUY   DJI / USD`\n\nSo basically by buying the DOW 30  and Oil, and selling Gold and the USD/JPY, we get this artificial index that always makes our profits go up since 2009. Of course it has dips and volatility, but the trend line looks to go up:\n\n<center>[![trend.png](https://s13.postimg.org/7c4281afb/trend.png)](https://postimg.org/image/mktzlt43n/)</center>\n\nI have extrapolated it linearly in the future, and it could be a profitable investment.Looks like easy money to me, I might check it out as well, and look for even better hedging strategies.\n\n---------------------------\n\nBasically this is how I would trade Oil at the moment, not naked, but put inside this nice hedging strategy. So if you decide to try it out, you should reward me after you made some profits!\n\n\n---------------------------\n\n*Data sources: http://www.investing.com*\n\n***Disclaimer: The information provided on this page might be incorrect. I am not responsible if you lose money using the information on this page! This is not an investment advice, just my opinion and analysis for educational purposes.***\n\n\n-------------------------------------------\n\n\n<CENTER><H1>Upvote & Follow Me: @profitgenerator</H1></CENTER>",
+    "category": "money",
+    "children": 0,
+    "created": "2016-09-15T19:39:15",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "https://s16.postimg.org/j6asrkj79/oilfield_643836_1920.jpg",
+        "https://s17.postimg.org/bgdwcshn3/Leverage_Of_COMEX_Registered_Silver_Contracts.png",
+        "https://s17.postimg.org/simy7jp3j/money_finance_bills_500.jpg",
+        "https://s12.postimg.org/421peh5v1/profitgenerator.png",
+        "https://s13.postimg.org/7c4281afb/trend.png"
+      ],
+      "links": [
+        "https://steemit.com/money/@profitgenerator/the-Oil-market-1-3",
+        "https://postimg.org/image/5cmg2iqlt/",
+        "https://en.wikipedia.org/wiki/Gold_certificate",
+        "http://www.silverdoctors.com/Gold/Gold-news/comex-Gold-leverage-skyrockets-to-a-shocking-5421/",
+        "https://postimg.org/image/vnrc53f4b/",
+        "https://srsroccoreport.com",
+        "http://www.nytimes.com/2016/03/08/world/middleeast/embargo-lifted-iranian-Oil-reaches-europe.html",
+        "https://postimg.org/image/kd4w9e0uj/",
+        "https://en.wikipedia.org/wiki/Hedge_%28finance%29",
+        "https://postimg.org/image/feeaw9ejt/",
+        "https://postimg.org/image/mktzlt43n/",
+        "http://www.investing.com"
+      ],
+      "tags": [
+        "money",
+        "investing",
+        "oil",
+        "trading",
+        "economics"
+      ],
+      "users": [
+        "profitgenerator"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 2041184971,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:39:15",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "the-oil-market-2-3",
+    "post_id": 1257858,
+    "promoted": "0.030 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 1
+    },
+    "title": "The Oil Market [2/3]",
+    "updated": "2016-09-15T19:39:15",
+    "url": "/money/@profitgenerator/the-oil-market-2-3"
+  },
+  {
+    "active_votes": [
+      {
         "rshares": 99588913,
         "voter": "rebeccamorgan"
       },
@@ -2116,33 +2116,85 @@
   {
     "active_votes": [
       {
-        "rshares": 59061355186,
-        "voter": "lehard"
+        "rshares": 503970587,
+        "voter": "fkn"
       },
       {
-        "rshares": 1708336843,
-        "voter": "dimon14"
+        "rshares": 662437860,
+        "voter": "elishagh1"
       },
       {
-        "rshares": 101627835,
-        "voter": "pollina"
+        "rshares": 1061309796,
+        "voter": "murh"
       },
       {
-        "rshares": 159631404,
-        "voter": "kamil5"
+        "rshares": 5342866379,
+        "voter": "kimziv"
       },
       {
-        "rshares": 4546813061,
-        "voter": "nadin3"
+        "rshares": 2460297505,
+        "voter": "furion"
+      },
+      {
+        "rshares": 116544591,
+        "voter": "poseidon"
+      },
+      {
+        "rshares": 408706835,
+        "voter": "positive"
+      },
+      {
+        "rshares": 902920974,
+        "voter": "sisterholics"
+      },
+      {
+        "rshares": 31930537676,
+        "voter": "laonie"
+      },
+      {
+        "rshares": 1332539475,
+        "voter": "myfirst"
+      },
+      {
+        "rshares": 6481343102,
+        "voter": "somebody"
+      },
+      {
+        "rshares": 242331170,
+        "voter": "flysaga"
+      },
+      {
+        "rshares": 1431774250,
+        "voter": "midnightoil"
+      },
+      {
+        "rshares": 3581211307,
+        "voter": "xiaohui"
+      },
+      {
+        "rshares": 161721174,
+        "voter": "elfkitchen"
+      },
+      {
+        "rshares": 111957361,
+        "voter": "xiaokongcom"
+      },
+      {
+        "rshares": 225687011,
+        "voter": "xianjun"
+      },
+      {
+        "rshares": 2550264720,
+        "voter": "benberger"
       }
     ],
-    "author": "nadin3",
+    "author": "benberger",
     "author_payout_value": "0.000 HBD",
     "author_reputation": 25.0,
     "beneficiaries": [],
     "blacklists": [],
-    "body": "<html>\n<p>http://i.imgur.com/PW0v4ZA.jpg</p>\n<h3>Hello, my friends! If you are tired of plain pancakes I advise you to get some work done and you'll get a very delicious pie and a nice dessert for tea time.</h3>\n<p>\u041f\u0440\u0438\u0432\u0435\u0442 \u0434\u0440\u0443\u0437\u044c\u044f! \u0415\u0441\u043b\u0438 \u0432\u0430\u043c \u043d\u0430\u0434\u043e\u0435\u043b\u0438 \u043f\u0440\u043e\u0441\u0442\u043e \u0431\u043b\u0438\u043d\u044b ,\u043f\u0440\u0435\u0434\u043b\u0430\u0433\u0430\u044e \u043d\u0435\u043c\u043d\u043e\u0433\u043e \u043f\u043e\u0442\u0440\u0443\u0434\u0438\u0442\u044c\u0441\u044f \u0438 \u0432\u044b \u043f\u043e\u043b\u0443\u0447\u0438\u0442\u0435 \u043e\u0447\u0435\u043d\u044c \u0432\u043a\u0443\u0441\u043d\u044b\u0439 \u0442\u043e\u0440\u0442\u0438\u043a \u0438 \u043d\u0435\u0436\u043d\u044b\u0439 \u0434\u0435\u0441\u0435\u0440\u0442 \u043a \u0447\u0430\u044e!&nbsp;</p>\n<h3>Ingredients :</h3>\n<h3>Pancakes</h3>\n<h3>500ml sour cream</h3>\n<h3>1pack vanilla sugar</h3>\n<h3>800g of frozen or preserved cherry</h3>\n<p>\u0418\u043d\u0433\u0440\u0435\u0434\u0438\u0435\u043d\u0442\u044b:&nbsp;</p>\n<p>\u0411\u043b\u0438\u043d\u044b&nbsp;</p>\n<p>\u0421\u043c\u0435\u0442\u0430\u043d\u0430 500\u043c\u043b&nbsp;</p>\n<p>\u0421\u0430\u0445\u0430\u0440 1 \u0441\u0442\u0430\u043a\u0430\u043d&nbsp;</p>\n<p>\u0412\u0430\u043d\u0438\u043b\u044c\u043d\u044b\u0439 \u0441\u0430\u0445\u0430\u0440 - 1 \u043f\u0430\u043a\u0435\u0442\u0438\u043a&nbsp;</p>\n<p>\u0412\u0438\u0448\u043d\u044f \u0437\u0430\u043c\u043e\u0440\u043e\u0436\u0435\u043d\u043d\u0430\u044f \u0438\u043b\u0438 \u043a\u043e\u043d\u0441\u0435\u0440\u0432\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u0430\u044f 800\u0433\u0440</p>\n<p>http://i.imgur.com/oguMRtZ.jpg</p>\n<h3>Make pancakes the way you like them</h3>\n<h3>It's very important that all the juice that comes out of cherries has dripped into a bow. Whip sour cream (at least 20% fat) with sugar and vanilla</h3>\n<p>\u0413\u043e\u0442\u043e\u0432\u0438\u043c \u0431\u043b\u0438\u043d\u044b \u043f\u043e \u0441\u0432\u043e\u0435\u043c\u0443 \u0440\u0435\u0446\u0435\u043f\u0442\u0443 .\u0421 \u0432\u0438\u0448\u043d\u0438 \u0432\u0430\u0436\u043d\u043e \u0447\u0442\u043e\u0431\u044b \u0441\u0442\u0435\u043a \u0432\u0435\u0441\u044c \u0441\u043e\u043a.&nbsp;\u0421\u043c\u0435\u0442\u0430\u043d\u0443 \u0436\u0438\u0440\u043d\u0443\u044e \u043d\u0435 \u043c\u0435\u043d\u0435\u0435 20% \u0432\u0437\u0431\u0438\u0442\u044c \u0441 \u0441\u0430\u0445\u0430\u0440\u043e\u043c \u0438 \u0432\u0430\u043d\u0438\u043b\u0438\u043d\u043e\u043c&nbsp;.</p>\n<p>http://i.imgur.com/8YMOHzf.jpg</p>\n<p>http://i.imgur.com/8KzsX0I.jpg</p>\n<p>http://i.imgur.com/LCZJXWX.jpg</p>\n<p>http://i.imgur.com/cSqfUeR.jpg</p>\n<h3>Put a row of cherries on one edge of a pancake and roll. Put those rolls on a plate and cream them with the cream we've made before. Then make one more layer of pancake rolls and so on, making a pyramid.</h3>\n<p>\u0421\u0432\u0435\u0440\u043d\u0443\u0442\u044c \u0431\u043b\u0438\u043d\u044b \u0432 \u0442\u0440\u0443\u0431\u043e\u0447\u043a\u0443 \u0438 \u0432\u044b\u043b\u043e\u0436\u0438\u0442\u044c \u043d\u0430 \u0431\u043b\u044e\u0434\u043e \u0432 \u0440\u044f\u0434. \u041f\u0440\u043e\u043c\u0430\u0437\u0430\u0442\u044c \u0445\u043e\u0440\u043e\u0448\u043e \u0441\u043c\u0435\u0442\u0430\u043d\u043d\u044b\u043c \u043a\u0440\u0435\u043c\u043e\u043c . \u0417\u0430\u0442\u0435\u043c \u043e\u043f\u044f\u0442\u044c \u0440\u044f\u0434 \u0431\u043b\u0438\u043d\u043e\u0432 \u043d\u043e \u043f\u043e\u043c\u0435\u043d\u044c\u0448\u0435, \u0441\u043b\u043e\u0439 \u043a\u0440\u0435\u043c\u0430 \u0438 \u0442\u0430\u043a \u0434\u0430\u043b\u0435\u0435. \u0412\u044b\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u043c \u043f\u043e\u043b\u0435\u043d\u043d\u0438\u0446\u0443.&nbsp;</p>\n<p>http://i.imgur.com/jMNEtFR.jpg</p>\n<p>http://i.imgur.com/UyGHCOn.jpg</p>\n<p>http://i.imgur.com/G7kN563.jpg</p>\n<p>http://i.imgur.com/Cjs81fe.jpg</p>\n<p>http://i.imgur.com/RTeoS7n.jpg</p>\n<p>http://i.imgur.com/uy10SVo.jpg</p>\n<h3>Put cream on top and decorative as you like.</h3>\n<p>\u0421\u0432\u0435\u0440\u0445\u0443 \u043e\u0431\u043c\u0430\u0436\u0435\u043c \u043a\u0440\u0435\u043c\u043e\u043c \u0438 \u0443\u043a\u0440\u0430\u0448\u0430\u0435\u043c \u043d\u0430 \u0441\u0432\u043e\u0439 \u0432\u043a\u0443\u0441</p>\n<p>http://i.imgur.com/SvwKADp.jpg</p>\n<h3>Bon appetite!!!</h3>\n<p>http://i.imgur.com/Mlh4uXf.jpg</p>\n<p>\u041f\u0440\u0438\u044f\u0442\u043d\u043e\u0433\u043e \u0430\u043f\u043f\u0435\u0442\u0438\u0442\u0430!!!</p>\n<p>http://i.imgur.com/xv13Hu9.jpg</p>\n<p><br></p>\n<p><br></p>\n<p><br></p>\n</html>",
-    "category": "food",
+    "body": "http://i67.tinypic.com/307wwzn.jpg",
+    "category": "life",
     "children": 0,
     "created": "2016-09-15T19:33:00",
     "curator_payout_value": "0.000 HBD",
@@ -2150,47 +2202,34 @@
     "is_paidout": false,
     "json_metadata": {
       "image": [
-        "http://i.imgur.com/PW0v4ZA.jpg",
-        "http://i.imgur.com/oguMRtZ.jpg",
-        "http://i.imgur.com/8YMOHzf.jpg",
-        "http://i.imgur.com/8KzsX0I.jpg",
-        "http://i.imgur.com/LCZJXWX.jpg",
-        "http://i.imgur.com/cSqfUeR.jpg",
-        "http://i.imgur.com/jMNEtFR.jpg",
-        "http://i.imgur.com/UyGHCOn.jpg",
-        "http://i.imgur.com/G7kN563.jpg",
-        "http://i.imgur.com/Cjs81fe.jpg",
-        "http://i.imgur.com/RTeoS7n.jpg",
-        "http://i.imgur.com/uy10SVo.jpg",
-        "http://i.imgur.com/SvwKADp.jpg",
-        "http://i.imgur.com/Mlh4uXf.jpg",
-        "http://i.imgur.com/xv13Hu9.jpg"
+        "http://i67.tinypic.com/307wwzn.jpg"
       ],
       "tags": [
-        "food",
-        "recipes",
-        "photography",
-        "ru"
+        "life",
+        "fun",
+        "comedy",
+        "fail",
+        "cartoon"
       ]
     },
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 65577764329,
-    "payout": 0.014,
+    "net_rshares": 59508421773,
+    "payout": 0.013,
     "payout_at": "2016-09-22T19:33:00",
-    "pending_payout_value": "0.014 HBD",
+    "pending_payout_value": "0.013 HBD",
     "percent_hbd": 10000,
-    "permlink": "a-pancake-pie-with-cherry-it-s-very-delicious-blinnyi-tort-s-vishnei-ochen-ochen-vkusnyi",
-    "post_id": 1257787,
+    "permlink": "please-identify-your-sexuell-orientation",
+    "post_id": 1257788,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
-      "total_votes": 5
+      "total_votes": 18
     },
-    "title": "A pancake pie with cherry!  It's very delicious!!! \u0411\u043b\u0438\u043d\u043d\u044b\u0439 \u0442\u043e\u0440\u0442 \u0441 \u0432\u0438\u0448\u043d\u0435\u0439! \u041e\u0447\u0435\u043d\u044c,\u043e\u0447\u0435\u043d\u044c \u0432\u043a\u0443\u0441\u043d\u044b\u0439!!!",
+    "title": "Please identify your sexuell orientation:",
     "updated": "2016-09-15T19:33:00",
-    "url": "/food/@nadin3/a-pancake-pie-with-cherry-it-s-very-delicious-blinnyi-tort-s-vishnei-ochen-ochen-vkusnyi"
+    "url": "/life/@benberger/please-identify-your-sexuell-orientation"
   }
 ]
