@@ -2,7 +2,8 @@
   test_name: Hivemind bridge.get_account_posts test not existing account (yet)
 
   marks:
-    - patterntest
+    - patterntest # original didn't test for account existence, only returned empty results
+    - negative
 
   includes:
     - !include ../../common.yaml
@@ -25,4 +26,5 @@
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
             method: "replies_rollinshive"
-            directory: "bridge_api_patterns/get_account_posts"
+            directory: "bridge_api_negative/get_account_posts"
+            error_response: true

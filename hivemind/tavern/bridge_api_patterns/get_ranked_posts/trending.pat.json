@@ -19948,6 +19948,902 @@
   {
     "active_votes": [
       {
+        "rshares": 518181875581,
+        "voter": "barrie"
+      },
+      {
+        "rshares": 31620103450538,
+        "voter": "smooth"
+      },
+      {
+        "rshares": 260759332327,
+        "voter": "anonymous"
+      },
+      {
+        "rshares": 2047759927809,
+        "voter": "badassmother"
+      },
+      {
+        "rshares": 2099340340625,
+        "voter": "hr1"
+      },
+      {
+        "rshares": 1402227395408,
+        "voter": "rossco99"
+      },
+      {
+        "rshares": 23338638054,
+        "voter": "jaewoocho"
+      },
+      {
+        "rshares": 1910039425215,
+        "voter": "xeroc"
+      },
+      {
+        "rshares": 1661657401786,
+        "voter": "joseph"
+      },
+      {
+        "rshares": 471982260599,
+        "voter": "recursive3"
+      },
+      {
+        "rshares": 3187826540990,
+        "voter": "recursive"
+      },
+      {
+        "rshares": 1282783470,
+        "voter": "mineralwasser"
+      },
+      {
+        "rshares": 702252849815,
+        "voter": "boombastic"
+      },
+      {
+        "rshares": 1719075621,
+        "voter": "bingo-1"
+      },
+      {
+        "rshares": 5936571539134,
+        "voter": "smooth.witness"
+      },
+      {
+        "rshares": 457719147730,
+        "voter": "boatymcboatface"
+      },
+      {
+        "rshares": 9890456090,
+        "voter": "idol"
+      },
+      {
+        "rshares": 131787410217,
+        "voter": "team"
+      },
+      {
+        "rshares": 1702427102,
+        "voter": "jocelyn"
+      },
+      {
+        "rshares": 461461082967,
+        "voter": "leesunmoo"
+      },
+      {
+        "rshares": 1247396916090,
+        "voter": "gavvet"
+      },
+      {
+        "rshares": 74913635150,
+        "voter": "eeks"
+      },
+      {
+        "rshares": 8567499992,
+        "voter": "fkn"
+      },
+      {
+        "rshares": 11261443630,
+        "voter": "elishagh1"
+      },
+      {
+        "rshares": 599827540724,
+        "voter": "nanzo-scoop"
+      },
+      {
+        "rshares": 161287532172,
+        "voter": "steve-walschot"
+      },
+      {
+        "rshares": 182039074638,
+        "voter": "mummyimperfect"
+      },
+      {
+        "rshares": 313666285,
+        "voter": "coar"
+      },
+      {
+        "rshares": 109431915950,
+        "voter": "asch"
+      },
+      {
+        "rshares": 1414823587,
+        "voter": "murh"
+      },
+      {
+        "rshares": 6375528917,
+        "voter": "cryptofunk"
+      },
+      {
+        "rshares": 2219594239,
+        "voter": "error"
+      },
+      {
+        "rshares": 5268583124,
+        "voter": "marta-zaidel"
+      },
+      {
+        "rshares": 38749275184,
+        "voter": "ranko-k"
+      },
+      {
+        "rshares": 985447048915,
+        "voter": "cyber"
+      },
+      {
+        "rshares": 63472911304,
+        "voter": "theshell"
+      },
+      {
+        "rshares": 52177367591,
+        "voter": "ak2020"
+      },
+      {
+        "rshares": 417566592605,
+        "voter": "taoteh1221"
+      },
+      {
+        "rshares": 375915775849,
+        "voter": "hedge-x"
+      },
+      {
+        "rshares": 18668166065,
+        "voter": "samether"
+      },
+      {
+        "rshares": 33779461634,
+        "voter": "ratel"
+      },
+      {
+        "rshares": 85401868413,
+        "voter": "herzmeister"
+      },
+      {
+        "rshares": 5287000077,
+        "voter": "tee-em"
+      },
+      {
+        "rshares": 30496214097,
+        "voter": "michaelx"
+      },
+      {
+        "rshares": 5950236300,
+        "voter": "mark-waser"
+      },
+      {
+        "rshares": 130482031811,
+        "voter": "geoffrey"
+      },
+      {
+        "rshares": 74777860177,
+        "voter": "kimziv"
+      },
+      {
+        "rshares": 79450691320,
+        "voter": "emily-cook"
+      },
+      {
+        "rshares": 2251928158,
+        "voter": "superfreek"
+      },
+      {
+        "rshares": 471516850,
+        "voter": "mrhankeh"
+      },
+      {
+        "rshares": 17908173089,
+        "voter": "grey580"
+      },
+      {
+        "rshares": 68200649381,
+        "voter": "bacchist"
+      },
+      {
+        "rshares": 20382051466,
+        "voter": "thebatchman"
+      },
+      {
+        "rshares": 59056857395,
+        "voter": "lehard"
+      },
+      {
+        "rshares": 76017835973,
+        "voter": "rubybian"
+      },
+      {
+        "rshares": 18268797910,
+        "voter": "konstantin"
+      },
+      {
+        "rshares": 2649402156,
+        "voter": "romel"
+      },
+      {
+        "rshares": 6941291365,
+        "voter": "gatoso"
+      },
+      {
+        "rshares": 41821532061,
+        "voter": "furion"
+      },
+      {
+        "rshares": 200664863,
+        "voter": "barbara2"
+      },
+      {
+        "rshares": 223036409,
+        "voter": "ch0c0latechip"
+      },
+      {
+        "rshares": 206422340,
+        "voter": "doge4lyf"
+      },
+      {
+        "rshares": 12011310308,
+        "voter": "asim"
+      },
+      {
+        "rshares": 85512692,
+        "voter": "snowden"
+      },
+      {
+        "rshares": 14804978653,
+        "voter": "aaseb"
+      },
+      {
+        "rshares": 4431003942,
+        "voter": "karen13"
+      },
+      {
+        "rshares": 1455625353,
+        "voter": "jrd8526"
+      },
+      {
+        "rshares": 21565632626,
+        "voter": "artific"
+      },
+      {
+        "rshares": 7164402609,
+        "voter": "lichtblick"
+      },
+      {
+        "rshares": 37826396801,
+        "voter": "creemej"
+      },
+      {
+        "rshares": 84865861,
+        "voter": "wildchild"
+      },
+      {
+        "rshares": 3871359622,
+        "voter": "maximkichev"
+      },
+      {
+        "rshares": 167294697812,
+        "voter": "blueorgy"
+      },
+      {
+        "rshares": 1631211812,
+        "voter": "poseidon"
+      },
+      {
+        "rshares": 2083366228,
+        "voter": "iamwne"
+      },
+      {
+        "rshares": 362447415925,
+        "voter": "calaber24p"
+      },
+      {
+        "rshares": 10466922918,
+        "voter": "rpf"
+      },
+      {
+        "rshares": 3694190342,
+        "voter": "bitcoiner"
+      },
+      {
+        "rshares": 33624572763,
+        "voter": "deanliu"
+      },
+      {
+        "rshares": 459345887,
+        "voter": "meteor78"
+      },
+      {
+        "rshares": 30193718340,
+        "voter": "zaebars"
+      },
+      {
+        "rshares": 6948016204,
+        "voter": "positive"
+      },
+      {
+        "rshares": 780088825,
+        "voter": "raymonjohnstone"
+      },
+      {
+        "rshares": 19827631792,
+        "voter": "krabgat"
+      },
+      {
+        "rshares": 11734541225,
+        "voter": "sisterholics"
+      },
+      {
+        "rshares": 1483259422,
+        "voter": "alex.chien"
+      },
+      {
+        "rshares": 8921616604,
+        "voter": "royalmacro"
+      },
+      {
+        "rshares": 233934645,
+        "voter": "fnait"
+      },
+      {
+        "rshares": 207827906,
+        "voter": "keepcalmand"
+      },
+      {
+        "rshares": 1838091863,
+        "voter": "remlaps"
+      },
+      {
+        "rshares": 3445177864,
+        "voter": "glitterpig"
+      },
+      {
+        "rshares": 7221227809,
+        "voter": "uwe69"
+      },
+      {
+        "rshares": 896285424,
+        "voter": "metaflute"
+      },
+      {
+        "rshares": 50575844297,
+        "voter": "gomeravibz"
+      },
+      {
+        "rshares": 9193626491,
+        "voter": "taker"
+      },
+      {
+        "rshares": 2236809039,
+        "voter": "merej99"
+      },
+      {
+        "rshares": 414945627496,
+        "voter": "laonie"
+      },
+      {
+        "rshares": 166006086500,
+        "voter": "twinner"
+      },
+      {
+        "rshares": 22430898487,
+        "voter": "laonie1"
+      },
+      {
+        "rshares": 22947696195,
+        "voter": "laonie2"
+      },
+      {
+        "rshares": 22955764004,
+        "voter": "laonie3"
+      },
+      {
+        "rshares": 25206296089,
+        "voter": "laoyao"
+      },
+      {
+        "rshares": 14653942462,
+        "voter": "myfirst"
+      },
+      {
+        "rshares": 90711449970,
+        "voter": "somebody"
+      },
+      {
+        "rshares": 3391693609,
+        "voter": "flysaga"
+      },
+      {
+        "rshares": 5465055585,
+        "voter": "brendio"
+      },
+      {
+        "rshares": 2084677795,
+        "voter": "gmurph"
+      },
+      {
+        "rshares": 18607683624,
+        "voter": "midnightoil"
+      },
+      {
+        "rshares": 2280336943,
+        "voter": "kalimor"
+      },
+      {
+        "rshares": 504711698206,
+        "voter": "glitterfart"
+      },
+      {
+        "rshares": 22951578069,
+        "voter": "laonie4"
+      },
+      {
+        "rshares": 22949307467,
+        "voter": "laonie5"
+      },
+      {
+        "rshares": 22946449112,
+        "voter": "laonie6"
+      },
+      {
+        "rshares": 22942428841,
+        "voter": "laonie7"
+      },
+      {
+        "rshares": 3489545901,
+        "voter": "kurtbeil"
+      },
+      {
+        "rshares": 22939097897,
+        "voter": "laonie8"
+      },
+      {
+        "rshares": 22936432119,
+        "voter": "laonie9"
+      },
+      {
+        "rshares": 46536921016,
+        "voter": "xiaohui"
+      },
+      {
+        "rshares": 177527074798,
+        "voter": "terrycraft"
+      },
+      {
+        "rshares": 1321003450,
+        "voter": "dolov"
+      },
+      {
+        "rshares": 88179884,
+        "voter": "bigsambucca"
+      },
+      {
+        "rshares": 2287717822,
+        "voter": "elfkitchen"
+      },
+      {
+        "rshares": 105894845081,
+        "voter": "joele"
+      },
+      {
+        "rshares": 6166349652,
+        "voter": "oflyhigh"
+      },
+      {
+        "rshares": 2229123966,
+        "voter": "paynode"
+      },
+      {
+        "rshares": 1566982177,
+        "voter": "xiaokongcom"
+      },
+      {
+        "rshares": 253808801,
+        "voter": "xcepta"
+      },
+      {
+        "rshares": 3158713250,
+        "voter": "xianjun"
+      },
+      {
+        "rshares": 12796476601,
+        "voter": "borran"
+      },
+      {
+        "rshares": 64119004,
+        "voter": "jupiter.zeus"
+      },
+      {
+        "rshares": 70633121,
+        "voter": "stevescriber"
+      },
+      {
+        "rshares": 50027573,
+        "voter": "loli"
+      },
+      {
+        "rshares": 51199976,
+        "voter": "nano2nd"
+      },
+      {
+        "rshares": 2249451928,
+        "voter": "njall"
+      },
+      {
+        "rshares": 206879958,
+        "voter": "microluck"
+      },
+      {
+        "rshares": 6547835526,
+        "voter": "userlogin"
+      },
+      {
+        "rshares": 6802729666,
+        "voter": "rubenalexander"
+      },
+      {
+        "rshares": 59219258,
+        "voter": "photo00"
+      },
+      {
+        "rshares": 604279479,
+        "voter": "tagira"
+      },
+      {
+        "rshares": 2131733339,
+        "voter": "chinadaily"
+      },
+      {
+        "rshares": 108403024,
+        "voter": "pollina"
+      },
+      {
+        "rshares": 2649789126,
+        "voter": "levycore"
+      },
+      {
+        "rshares": 22930483067,
+        "voter": "laonie10"
+      },
+      {
+        "rshares": 332237822,
+        "voter": "mrlogic"
+      },
+      {
+        "rshares": 59229074587,
+        "voter": "mandibil"
+      },
+      {
+        "rshares": 2132454023,
+        "voter": "shadowspub"
+      },
+      {
+        "rshares": 59067894,
+        "voter": "bonapetit"
+      },
+      {
+        "rshares": 5053531368,
+        "voter": "richardcrill"
+      },
+      {
+        "rshares": 22091338934,
+        "voter": "laonie11"
+      },
+      {
+        "rshares": 2101664455,
+        "voter": "eight-rad"
+      },
+      {
+        "rshares": 3336919086,
+        "voter": "xanoxt"
+      },
+      {
+        "rshares": 1661479473,
+        "voter": "davidjkelley"
+      },
+      {
+        "rshares": 187911420,
+        "voter": "team101"
+      },
+      {
+        "rshares": 109225703,
+        "voter": "rusla"
+      },
+      {
+        "rshares": 4892645779,
+        "voter": "mscleverclocks"
+      },
+      {
+        "rshares": 727103786,
+        "voter": "ksena"
+      },
+      {
+        "rshares": 11069296957,
+        "voter": "sponge-bob"
+      },
+      {
+        "rshares": 4268200560,
+        "voter": "l0k1"
+      },
+      {
+        "rshares": 15569990970,
+        "voter": "digital-wisdom"
+      },
+      {
+        "rshares": 3791420478,
+        "voter": "ethical-ai"
+      },
+      {
+        "rshares": 6830905360,
+        "voter": "jwaser"
+      },
+      {
+        "rshares": 50858762,
+        "voter": "apparat"
+      },
+      {
+        "rshares": 212888896291,
+        "voter": "asksisk"
+      },
+      {
+        "rshares": 2675382304,
+        "voter": "bwaser"
+      },
+      {
+        "rshares": 350998373,
+        "voter": "panther"
+      },
+      {
+        "rshares": 659649765,
+        "voter": "ct-gurus"
+      },
+      {
+        "rshares": 54793782,
+        "voter": "park.bom"
+      },
+      {
+        "rshares": 395173675944,
+        "voter": "charlieshrem"
+      },
+      {
+        "rshares": 60104450664,
+        "voter": "tracemayer"
+      },
+      {
+        "rshares": 23239991726,
+        "voter": "brains"
+      },
+      {
+        "rshares": 407083055,
+        "voter": "anomaly"
+      },
+      {
+        "rshares": 2401189699,
+        "voter": "ellepdub"
+      },
+      {
+        "rshares": 61292139,
+        "voter": "inarix03"
+      },
+      {
+        "rshares": 172352271,
+        "voter": "ola1"
+      },
+      {
+        "rshares": 12396603737,
+        "voter": "herpetologyguy"
+      },
+      {
+        "rshares": 51826827,
+        "voter": "drac59"
+      },
+      {
+        "rshares": 4816713747,
+        "voter": "morgan.waser"
+      },
+      {
+        "rshares": 297771990,
+        "voter": "thefinanceguy"
+      },
+      {
+        "rshares": 1258344048,
+        "voter": "anns"
+      },
+      {
+        "rshares": 50907857,
+        "voter": "oxygen"
+      },
+      {
+        "rshares": 50875769,
+        "voter": "cyan"
+      },
+      {
+        "rshares": 50868434,
+        "voter": "jumbo"
+      },
+      {
+        "rshares": 50865840,
+        "voter": "sting"
+      },
+      {
+        "rshares": 50796122,
+        "voter": "factom"
+      },
+      {
+        "rshares": 50794039,
+        "voter": "autodesk"
+      },
+      {
+        "rshares": 50568084,
+        "voter": "brazzers"
+      },
+      {
+        "rshares": 50543061,
+        "voter": "rabobank"
+      },
+      {
+        "rshares": 50538694,
+        "voter": "fenix"
+      },
+      {
+        "rshares": 50349676,
+        "voter": "albertheijn"
+      },
+      {
+        "rshares": 3689644671,
+        "voter": "strong-ai"
+      },
+      {
+        "rshares": 52329350,
+        "voter": "ninjapainter"
+      },
+      {
+        "rshares": 254506659,
+        "voter": "darkminded153"
+      },
+      {
+        "rshares": 527435916,
+        "voter": "grisha-danunaher"
+      },
+      {
+        "rshares": 162917785,
+        "voter": "ctu"
+      },
+      {
+        "rshares": 162911190,
+        "voter": "front"
+      },
+      {
+        "rshares": 1630327346,
+        "voter": "rusteemitblog"
+      },
+      {
+        "rshares": 161089804,
+        "voter": "pyro"
+      },
+      {
+        "rshares": 159025535,
+        "voter": "xtreme"
+      },
+      {
+        "rshares": 155528114,
+        "voter": "icesteem"
+      },
+      {
+        "rshares": 158602900,
+        "voter": "steem-wallet"
+      },
+      {
+        "rshares": 158560941,
+        "voter": "steemthis"
+      },
+      {
+        "rshares": 74838700,
+        "voter": "dealzgal"
+      },
+      {
+        "rshares": 255357124,
+        "voter": "orenshani7"
+      },
+      {
+        "rshares": 68013381,
+        "voter": "storage"
+      },
+      {
+        "rshares": 58460105,
+        "voter": "blackmarket"
+      },
+      {
+        "rshares": 61530871,
+        "voter": "gifts"
+      },
+      {
+        "rshares": 93882016,
+        "voter": "expat"
+      },
+      {
+        "rshares": 154566975,
+        "voter": "dimaisrael"
+      },
+      {
+        "rshares": 1593664040,
+        "voter": "steemlift"
+      },
+      {
+        "rshares": 138651704,
+        "voter": "toddemaher1"
+      }
+    ],
+    "author": "terrycraft",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<br />\n\nhttp://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman18.jpg\n<a href=\"http://bigpicture.ru/?p=384365&fb_comment_id=180555112091488_997346\">Image credit / \u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a \u0444\u043e\u0442\u043e</a>\n\n<html>\n<p>When looking through old photographs, you realize how much the world has changed around us.</p>\n<blockquote>\u041f\u0440\u043e\u0441\u043c\u0430\u0442\u0440\u0438\u0432\u0430\u044f \u0441\u0442\u0430\u0440\u044b\u0435 \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u0438, \u043e\u0441\u043e\u0437\u043d\u0430\u0451\u0448\u044c \u043d\u0430\u0441\u043a\u043e\u043b\u044c\u043a\u043e \u0438\u0437\u043c\u0435\u043d\u0438\u043b\u0441\u044f \u043c\u0438\u0440 \u0432\u043e\u043a\u0440\u0443\u0433 \u043d\u0430\u0441.</blockquote>\n</html>\n\nhttp://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman16.jpg\n<a href=\"http://bigpicture.ru/?p=384365&fb_comment_id=180555112091488_997346\">Image credit / \u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a \u0444\u043e\u0442\u043e</a>\n\n<html>\n<p>I am deeply convinced that the people imprinted on these black-and-white photographs never suspected what will happen to them in the future, whether it is immediate or distant As well as they didn't realized how quickly the years will pass, changing all the world around. So, as you look at their careless faces, you fairly quickly realize that your current situation is not much different.</p>\n<blockquote>\u042f \u0433\u043b\u0443\u0431\u043e\u043a\u043e \u0443\u0432\u0435\u0440\u0435\u043d\u0430 \u0432 \u0442\u043e\u043c, \u0447\u0442\u043e \u043b\u044e\u0434\u0438, \u0437\u0430\u043f\u0435\u0447\u0430\u0442\u043b\u0451\u043d\u043d\u044b\u0435 \u043d\u0430 \u0447\u0451\u0440\u043d\u043e-\u0431\u0435\u043b\u044b\u0445 \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u044f\u0445, \u043d\u0435 \u043f\u043e\u0434\u043e\u0437\u0440\u0435\u0432\u0430\u043b\u0438, \u0447\u0442\u043e \u0441\u0442\u0430\u043d\u0435\u0442 \u0441 \u043d\u0438\u043c\u0438 \u0432 \u0431\u043b\u0438\u0436\u0430\u0439\u0448\u0435\u043c, \u0438 \u043d\u0435 \u043e\u0447\u0435\u043d\u044c, \u0431\u0443\u0434\u0443\u0449\u0435\u043c. \u041d\u0435 \u0437\u043d\u0430\u043b\u0438 \u043e\u043d\u0438 \u0442\u0430\u043a\u0436\u0435, \u043d\u0430\u0441\u043a\u043e\u043b\u044c\u043a\u043e \u0441\u0442\u0440\u0435\u043c\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u043f\u0440\u043e\u0439\u0434\u0443\u0442 \u0433\u043e\u0434\u044b, \u0438 \u043a\u0430\u043a \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u0441\u044f \u043c\u0438\u0440 \u0432\u043e\u043a\u0440\u0443\u0433. \u041f\u043e\u044d\u0442\u043e\u043c\u0443, \u0433\u043b\u044f\u0434\u044f \u043d\u0430 \u0438\u0445 \u0431\u0435\u0441\u043f\u0435\u0447\u043d\u044b\u0435 \u043b\u0438\u0446\u0430, \u0434\u043e\u0432\u043e\u043b\u044c\u043d\u043e \u0431\u044b\u0441\u0442\u0440\u043e \u043e\u0441\u043e\u0437\u043d\u0430\u0451\u0448\u044c, \u0447\u0442\u043e \u0442\u0432\u043e\u0451 \u043f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u0441\u0435\u0439\u0447\u0430\u0441 \u043c\u0430\u043b\u043e \u0447\u0435\u043c \u043e\u0442\u043b\u0438\u0447\u0430\u0435\u0442\u0441\u044f.</blockquote>\n</html>\n\nhttp://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman14.jpg\n<a href=\"http://bigpicture.ru/?p=384365&fb_comment_id=180555112091488_997346\">Image credit / \u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a \u0444\u043e\u0442\u043e</a>\n\n<html>\n<p>Everything that happens around us changes the world we are witnessing. We live in an age of technological progress; the advent of the first computers, the Internet, gadgets, social networks, online games, e-commerce, cryptocurrency and, finally, a blockchain social network - the Steemit, which makes our minds work for creation of good content and its curation.</p>\n<blockquote>\u0412\u0441\u0451 \u043f\u0440\u043e\u0438\u0441\u0445\u043e\u0434\u044f\u0449\u0435\u0435 \u0432\u043e\u043a\u0440\u0443\u0433 \u043d\u0430\u0441 \u043c\u0435\u043d\u044f\u0435\u0442 \u043c\u0438\u0440 \u043d\u0430 \u043d\u0430\u0448\u0438\u0445 \u0433\u043b\u0430\u0437\u0430\u0445. \u041c\u044b \u0436\u0438\u0432\u0451\u043c \u0432 \u0432\u0435\u043a \u0442\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0447\u0435\u0441\u043a\u043e\u0433\u043e \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0430; \u043f\u043e\u044f\u0432\u043b\u0435\u043d\u0438\u0435 \u043f\u0435\u0440\u0432\u044b\u0445 \u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440\u043e\u0432, \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442\u0430, \u0433\u0430\u0434\u0436\u0435\u0442\u043e\u0432, \u0441\u043e\u0446\u0438\u0430\u043b\u044c\u043d\u044b\u0445 \u0441\u0435\u0442\u0435\u0439, \u043e\u043d\u043b\u0430\u0439\u043d-\u0438\u0433\u0440, \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442-\u043c\u0430\u0433\u0430\u0437\u0438\u043d\u043e\u0432, \u043a\u0440\u0438\u043f\u0442\u043e\u0432\u0430\u043b\u044e\u0442 \u0438, \u043d\u0430\u043a\u043e\u043d\u0435\u0446, \u0441\u043e\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0439 \u0441\u0435\u0442\u0438 \u043d\u0430 \u0431\u043b\u043e\u043a\u0447\u0435\u0439\u043d\u0435 - Steemit, \u043a\u043e\u0442\u043e\u0440\u0430\u044f \u0437\u0430\u0441\u0442\u0430\u0432\u043b\u044f\u0435\u0442 \u043d\u0430\u0448\u0438 \u0443\u043c\u044b \u0440\u0430\u0431\u043e\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u0445\u043e\u0440\u043e\u0448\u0435\u0433\u043e \u043a\u043e\u043d\u0442\u0435\u043d\u0442\u0430 \u0438 \u0435\u0433\u043e \u043a\u0443\u0440\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f.</blockquote>\n</html>\n\nhttp://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman09.jpg\n<a href=\"http://bigpicture.ru/?p=384365&fb_comment_id=180555112091488_997346\">Image credit / \u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a \u0444\u043e\u0442\u043e</a>\n\n<html>\n<p>And in 10 years, or maybe much earlier, we will see a completely different picture of reality. Generation Steem is coming. The generation that changed everything around and changed itself as well, in opposite to that generation you run with your eyes, trying to convince its immutability and the impossibility of change. No, this already will be the world of the past.</p>\n<blockquote>\u0418 \u043b\u0435\u0442 \u0447\u0435\u0440\u0435\u0437 10, \u0430 \u043c\u043e\u0436\u0435\u0442 \u0437\u043d\u0430\u0447\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0440\u0430\u043d\u044c\u0448\u0435, \u043c\u044b \u0443\u0432\u0438\u0434\u0438\u043c \u0432 \u043a\u0430\u0434\u0440\u0435 \u0441\u043e\u0432\u0435\u0440\u0448\u0435\u043d\u043d\u043e \u0434\u0440\u0443\u0433\u0443\u044e \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c. \u0413\u0440\u044f\u0434\u0451\u0442 Steem \u043f\u043e\u043a\u043e\u043b\u0435\u043d\u0438\u0435, \u043f\u043e\u043a\u043e\u043b\u0435\u043d\u0438\u0435, \u0438\u0437\u043c\u0435\u043d\u0438\u0432\u0448\u0435\u0435 \u0432\u0441\u0451 \u0432\u043e\u043a\u0440\u0443\u0433 \u0441\u0435\u0431\u044f \u0438 \u0438\u0437\u043c\u0435\u043d\u0438\u0432\u0448\u0435\u0435\u0441\u044f \u0441\u0430\u043c\u043e, \u0430 \u043d\u0435 \u0442\u043e, \u043a\u043e\u0442\u043e\u0440\u043e\u0435 \u0441\u0435\u0439\u0447\u0430\u0441, \u043e\u0431\u0432\u043e\u0434\u044f \u0432\u0437\u0433\u043b\u044f\u0434\u043e\u043c, \u0432\u044b \u043f\u044b\u0442\u0430\u0435\u0442\u0435\u0441\u044c \u0443\u0431\u0435\u0434\u0438\u0442\u044c \u0432 \u0435\u0433\u043e \u043d\u0435\u0437\u044b\u0431\u043b\u0435\u043c\u043e\u0441\u0442\u0438 \u0438 \u043d\u0435\u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0438 \u043f\u0435\u0440\u0435\u043c\u0435\u043d. \u041d\u0435\u0442, \u044d\u0442\u043e \u0443\u0436\u0435 \u0431\u0443\u0434\u0435\u0442 \u043c\u0438\u0440 \u043f\u0440\u043e\u0448\u043b\u043e\u0433\u043e.</blockquote>\n</html>\n\n<html>\n<h3><em>Written to the music: Antonio Vivaldi - The Four Seasons.</em></h3>\n</html>\n\nPlease follow me\n<a href=\"https://steemit.com/@panther\">@panther</a>\n\n<br />\n\n---\n\nIf you like this article not follow only me, but also follow the author - @panther\n\n---\n\nAll STEEM Dollars for this post go to the featured author. \u0412\u0441\u0435 SD \u0437\u0430 \u043f\u043e\u0441\u0442 \u043f\u043e\u043b\u0443\u0447\u0438\u0442 \u0430\u0432\u0442\u043e\u0440.",
+    "category": "philosophy",
+    "children": 16,
+    "created": "2016-09-15T12:27:27",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman18.jpg",
+        "http://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman16.jpg",
+        "http://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman14.jpg",
+        "http://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman09.jpg"
+      ],
+      "links": [
+        "http://bigpicture.ru/?p=384365&fb_comment_id=180555112091488_997346",
+        "https://steemit.com/@panther"
+      ],
+      "tags": [
+        "philosophy",
+        "thoughts",
+        "steemit",
+        "ru"
+      ],
+      "users": [
+        "panther"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 61603577309634,
+    "payout": 220.99,
+    "payout_at": "2016-09-22T12:27:27",
+    "pending_payout_value": "220.990 HBD",
+    "percent_hbd": 10000,
+    "permlink": "a-look-from-the-past-vzglyad-iz-proshlogo-featuring-panther-as-author",
+    "post_id": 1253231,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 210
+    },
+    "title": "A Look From the Past / \u0412\u0437\u0433\u043b\u044f\u0434 \u0438\u0437 \u043f\u0440\u043e\u0448\u043b\u043e\u0433\u043e (featuring @panther as author).",
+    "updated": "2016-09-15T12:27:27",
+    "url": "/philosophy/@terrycraft/a-look-from-the-past-vzglyad-iz-proshlogo-featuring-panther-as-author"
+  },
+  {
+    "active_votes": [
+      {
         "rshares": 480436179104,
         "voter": "barrie"
       },
@@ -21593,902 +22489,6 @@
     "title": "Steempay upgrade - Pay on site | SteemFEST | Mobile wallet",
     "updated": "2016-09-14T06:20:42",
     "url": "/steempay/@steve-walschot/steempay-upgrade-pay-on-site-or-steemfest-or-mobile-wallet"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 518181875581,
-        "voter": "barrie"
-      },
-      {
-        "rshares": 31620103450538,
-        "voter": "smooth"
-      },
-      {
-        "rshares": 260759332327,
-        "voter": "anonymous"
-      },
-      {
-        "rshares": 2047759927809,
-        "voter": "badassmother"
-      },
-      {
-        "rshares": 2099340340625,
-        "voter": "hr1"
-      },
-      {
-        "rshares": 1402227395408,
-        "voter": "rossco99"
-      },
-      {
-        "rshares": 23338638054,
-        "voter": "jaewoocho"
-      },
-      {
-        "rshares": 1910039425215,
-        "voter": "xeroc"
-      },
-      {
-        "rshares": 1661657401786,
-        "voter": "joseph"
-      },
-      {
-        "rshares": 471982260599,
-        "voter": "recursive3"
-      },
-      {
-        "rshares": 3187826540990,
-        "voter": "recursive"
-      },
-      {
-        "rshares": 1282783470,
-        "voter": "mineralwasser"
-      },
-      {
-        "rshares": 702252849815,
-        "voter": "boombastic"
-      },
-      {
-        "rshares": 1719075621,
-        "voter": "bingo-1"
-      },
-      {
-        "rshares": 5936571539134,
-        "voter": "smooth.witness"
-      },
-      {
-        "rshares": 457719147730,
-        "voter": "boatymcboatface"
-      },
-      {
-        "rshares": 9890456090,
-        "voter": "idol"
-      },
-      {
-        "rshares": 131787410217,
-        "voter": "team"
-      },
-      {
-        "rshares": 1702427102,
-        "voter": "jocelyn"
-      },
-      {
-        "rshares": 461461082967,
-        "voter": "leesunmoo"
-      },
-      {
-        "rshares": 1247396916090,
-        "voter": "gavvet"
-      },
-      {
-        "rshares": 74913635150,
-        "voter": "eeks"
-      },
-      {
-        "rshares": 8567499992,
-        "voter": "fkn"
-      },
-      {
-        "rshares": 11261443630,
-        "voter": "elishagh1"
-      },
-      {
-        "rshares": 599827540724,
-        "voter": "nanzo-scoop"
-      },
-      {
-        "rshares": 161287532172,
-        "voter": "steve-walschot"
-      },
-      {
-        "rshares": 182039074638,
-        "voter": "mummyimperfect"
-      },
-      {
-        "rshares": 313666285,
-        "voter": "coar"
-      },
-      {
-        "rshares": 109431915950,
-        "voter": "asch"
-      },
-      {
-        "rshares": 1414823587,
-        "voter": "murh"
-      },
-      {
-        "rshares": 6375528917,
-        "voter": "cryptofunk"
-      },
-      {
-        "rshares": 2219594239,
-        "voter": "error"
-      },
-      {
-        "rshares": 5268583124,
-        "voter": "marta-zaidel"
-      },
-      {
-        "rshares": 38749275184,
-        "voter": "ranko-k"
-      },
-      {
-        "rshares": 985447048915,
-        "voter": "cyber"
-      },
-      {
-        "rshares": 63472911304,
-        "voter": "theshell"
-      },
-      {
-        "rshares": 52177367591,
-        "voter": "ak2020"
-      },
-      {
-        "rshares": 417566592605,
-        "voter": "taoteh1221"
-      },
-      {
-        "rshares": 375915775849,
-        "voter": "hedge-x"
-      },
-      {
-        "rshares": 18668166065,
-        "voter": "samether"
-      },
-      {
-        "rshares": 33779461634,
-        "voter": "ratel"
-      },
-      {
-        "rshares": 85401868413,
-        "voter": "herzmeister"
-      },
-      {
-        "rshares": 5287000077,
-        "voter": "tee-em"
-      },
-      {
-        "rshares": 30496214097,
-        "voter": "michaelx"
-      },
-      {
-        "rshares": 5950236300,
-        "voter": "mark-waser"
-      },
-      {
-        "rshares": 130482031811,
-        "voter": "geoffrey"
-      },
-      {
-        "rshares": 74777860177,
-        "voter": "kimziv"
-      },
-      {
-        "rshares": 79450691320,
-        "voter": "emily-cook"
-      },
-      {
-        "rshares": 2251928158,
-        "voter": "superfreek"
-      },
-      {
-        "rshares": 471516850,
-        "voter": "mrhankeh"
-      },
-      {
-        "rshares": 17908173089,
-        "voter": "grey580"
-      },
-      {
-        "rshares": 68200649381,
-        "voter": "bacchist"
-      },
-      {
-        "rshares": 20382051466,
-        "voter": "thebatchman"
-      },
-      {
-        "rshares": 59056857395,
-        "voter": "lehard"
-      },
-      {
-        "rshares": 76017835973,
-        "voter": "rubybian"
-      },
-      {
-        "rshares": 18268797910,
-        "voter": "konstantin"
-      },
-      {
-        "rshares": 2649402156,
-        "voter": "romel"
-      },
-      {
-        "rshares": 6941291365,
-        "voter": "gatoso"
-      },
-      {
-        "rshares": 41821532061,
-        "voter": "furion"
-      },
-      {
-        "rshares": 200664863,
-        "voter": "barbara2"
-      },
-      {
-        "rshares": 223036409,
-        "voter": "ch0c0latechip"
-      },
-      {
-        "rshares": 206422340,
-        "voter": "doge4lyf"
-      },
-      {
-        "rshares": 12011310308,
-        "voter": "asim"
-      },
-      {
-        "rshares": 85512692,
-        "voter": "snowden"
-      },
-      {
-        "rshares": 14804978653,
-        "voter": "aaseb"
-      },
-      {
-        "rshares": 4431003942,
-        "voter": "karen13"
-      },
-      {
-        "rshares": 1455625353,
-        "voter": "jrd8526"
-      },
-      {
-        "rshares": 21565632626,
-        "voter": "artific"
-      },
-      {
-        "rshares": 7164402609,
-        "voter": "lichtblick"
-      },
-      {
-        "rshares": 37826396801,
-        "voter": "creemej"
-      },
-      {
-        "rshares": 84865861,
-        "voter": "wildchild"
-      },
-      {
-        "rshares": 3871359622,
-        "voter": "maximkichev"
-      },
-      {
-        "rshares": 167294697812,
-        "voter": "blueorgy"
-      },
-      {
-        "rshares": 1631211812,
-        "voter": "poseidon"
-      },
-      {
-        "rshares": 2083366228,
-        "voter": "iamwne"
-      },
-      {
-        "rshares": 362447415925,
-        "voter": "calaber24p"
-      },
-      {
-        "rshares": 10466922918,
-        "voter": "rpf"
-      },
-      {
-        "rshares": 3694190342,
-        "voter": "bitcoiner"
-      },
-      {
-        "rshares": 33624572763,
-        "voter": "deanliu"
-      },
-      {
-        "rshares": 459345887,
-        "voter": "meteor78"
-      },
-      {
-        "rshares": 30193718340,
-        "voter": "zaebars"
-      },
-      {
-        "rshares": 6948016204,
-        "voter": "positive"
-      },
-      {
-        "rshares": 780088825,
-        "voter": "raymonjohnstone"
-      },
-      {
-        "rshares": 19827631792,
-        "voter": "krabgat"
-      },
-      {
-        "rshares": 11734541225,
-        "voter": "sisterholics"
-      },
-      {
-        "rshares": 1483259422,
-        "voter": "alex.chien"
-      },
-      {
-        "rshares": 8921616604,
-        "voter": "royalmacro"
-      },
-      {
-        "rshares": 233934645,
-        "voter": "fnait"
-      },
-      {
-        "rshares": 207827906,
-        "voter": "keepcalmand"
-      },
-      {
-        "rshares": 1838091863,
-        "voter": "remlaps"
-      },
-      {
-        "rshares": 3445177864,
-        "voter": "glitterpig"
-      },
-      {
-        "rshares": 7221227809,
-        "voter": "uwe69"
-      },
-      {
-        "rshares": 896285424,
-        "voter": "metaflute"
-      },
-      {
-        "rshares": 50575844297,
-        "voter": "gomeravibz"
-      },
-      {
-        "rshares": 9193626491,
-        "voter": "taker"
-      },
-      {
-        "rshares": 2236809039,
-        "voter": "merej99"
-      },
-      {
-        "rshares": 414945627496,
-        "voter": "laonie"
-      },
-      {
-        "rshares": 166006086500,
-        "voter": "twinner"
-      },
-      {
-        "rshares": 22430898487,
-        "voter": "laonie1"
-      },
-      {
-        "rshares": 22947696195,
-        "voter": "laonie2"
-      },
-      {
-        "rshares": 22955764004,
-        "voter": "laonie3"
-      },
-      {
-        "rshares": 25206296089,
-        "voter": "laoyao"
-      },
-      {
-        "rshares": 14653942462,
-        "voter": "myfirst"
-      },
-      {
-        "rshares": 90711449970,
-        "voter": "somebody"
-      },
-      {
-        "rshares": 3391693609,
-        "voter": "flysaga"
-      },
-      {
-        "rshares": 5465055585,
-        "voter": "brendio"
-      },
-      {
-        "rshares": 2084677795,
-        "voter": "gmurph"
-      },
-      {
-        "rshares": 18607683624,
-        "voter": "midnightoil"
-      },
-      {
-        "rshares": 2280336943,
-        "voter": "kalimor"
-      },
-      {
-        "rshares": 504711698206,
-        "voter": "glitterfart"
-      },
-      {
-        "rshares": 22951578069,
-        "voter": "laonie4"
-      },
-      {
-        "rshares": 22949307467,
-        "voter": "laonie5"
-      },
-      {
-        "rshares": 22946449112,
-        "voter": "laonie6"
-      },
-      {
-        "rshares": 22942428841,
-        "voter": "laonie7"
-      },
-      {
-        "rshares": 3489545901,
-        "voter": "kurtbeil"
-      },
-      {
-        "rshares": 22939097897,
-        "voter": "laonie8"
-      },
-      {
-        "rshares": 22936432119,
-        "voter": "laonie9"
-      },
-      {
-        "rshares": 46536921016,
-        "voter": "xiaohui"
-      },
-      {
-        "rshares": 177527074798,
-        "voter": "terrycraft"
-      },
-      {
-        "rshares": 1321003450,
-        "voter": "dolov"
-      },
-      {
-        "rshares": 88179884,
-        "voter": "bigsambucca"
-      },
-      {
-        "rshares": 2287717822,
-        "voter": "elfkitchen"
-      },
-      {
-        "rshares": 105894845081,
-        "voter": "joele"
-      },
-      {
-        "rshares": 6166349652,
-        "voter": "oflyhigh"
-      },
-      {
-        "rshares": 2229123966,
-        "voter": "paynode"
-      },
-      {
-        "rshares": 1566982177,
-        "voter": "xiaokongcom"
-      },
-      {
-        "rshares": 253808801,
-        "voter": "xcepta"
-      },
-      {
-        "rshares": 3158713250,
-        "voter": "xianjun"
-      },
-      {
-        "rshares": 12796476601,
-        "voter": "borran"
-      },
-      {
-        "rshares": 64119004,
-        "voter": "jupiter.zeus"
-      },
-      {
-        "rshares": 70633121,
-        "voter": "stevescriber"
-      },
-      {
-        "rshares": 50027573,
-        "voter": "loli"
-      },
-      {
-        "rshares": 51199976,
-        "voter": "nano2nd"
-      },
-      {
-        "rshares": 2249451928,
-        "voter": "njall"
-      },
-      {
-        "rshares": 206879958,
-        "voter": "microluck"
-      },
-      {
-        "rshares": 6547835526,
-        "voter": "userlogin"
-      },
-      {
-        "rshares": 6802729666,
-        "voter": "rubenalexander"
-      },
-      {
-        "rshares": 59219258,
-        "voter": "photo00"
-      },
-      {
-        "rshares": 604279479,
-        "voter": "tagira"
-      },
-      {
-        "rshares": 2131733339,
-        "voter": "chinadaily"
-      },
-      {
-        "rshares": 108403024,
-        "voter": "pollina"
-      },
-      {
-        "rshares": 2649789126,
-        "voter": "levycore"
-      },
-      {
-        "rshares": 22930483067,
-        "voter": "laonie10"
-      },
-      {
-        "rshares": 332237822,
-        "voter": "mrlogic"
-      },
-      {
-        "rshares": 59229074587,
-        "voter": "mandibil"
-      },
-      {
-        "rshares": 2132454023,
-        "voter": "shadowspub"
-      },
-      {
-        "rshares": 59067894,
-        "voter": "bonapetit"
-      },
-      {
-        "rshares": 5053531368,
-        "voter": "richardcrill"
-      },
-      {
-        "rshares": 22091338934,
-        "voter": "laonie11"
-      },
-      {
-        "rshares": 2101664455,
-        "voter": "eight-rad"
-      },
-      {
-        "rshares": 3336919086,
-        "voter": "xanoxt"
-      },
-      {
-        "rshares": 1661479473,
-        "voter": "davidjkelley"
-      },
-      {
-        "rshares": 187911420,
-        "voter": "team101"
-      },
-      {
-        "rshares": 109225703,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 4892645779,
-        "voter": "mscleverclocks"
-      },
-      {
-        "rshares": 727103786,
-        "voter": "ksena"
-      },
-      {
-        "rshares": 11069296957,
-        "voter": "sponge-bob"
-      },
-      {
-        "rshares": 4268200560,
-        "voter": "l0k1"
-      },
-      {
-        "rshares": 15569990970,
-        "voter": "digital-wisdom"
-      },
-      {
-        "rshares": 3791420478,
-        "voter": "ethical-ai"
-      },
-      {
-        "rshares": 6830905360,
-        "voter": "jwaser"
-      },
-      {
-        "rshares": 50858762,
-        "voter": "apparat"
-      },
-      {
-        "rshares": 212888896291,
-        "voter": "asksisk"
-      },
-      {
-        "rshares": 2675382304,
-        "voter": "bwaser"
-      },
-      {
-        "rshares": 350998373,
-        "voter": "panther"
-      },
-      {
-        "rshares": 659649765,
-        "voter": "ct-gurus"
-      },
-      {
-        "rshares": 54793782,
-        "voter": "park.bom"
-      },
-      {
-        "rshares": 395173675944,
-        "voter": "charlieshrem"
-      },
-      {
-        "rshares": 60104450664,
-        "voter": "tracemayer"
-      },
-      {
-        "rshares": 23239991726,
-        "voter": "brains"
-      },
-      {
-        "rshares": 407083055,
-        "voter": "anomaly"
-      },
-      {
-        "rshares": 2401189699,
-        "voter": "ellepdub"
-      },
-      {
-        "rshares": 61292139,
-        "voter": "inarix03"
-      },
-      {
-        "rshares": 172352271,
-        "voter": "ola1"
-      },
-      {
-        "rshares": 12396603737,
-        "voter": "herpetologyguy"
-      },
-      {
-        "rshares": 51826827,
-        "voter": "drac59"
-      },
-      {
-        "rshares": 4816713747,
-        "voter": "morgan.waser"
-      },
-      {
-        "rshares": 297771990,
-        "voter": "thefinanceguy"
-      },
-      {
-        "rshares": 1258344048,
-        "voter": "anns"
-      },
-      {
-        "rshares": 50907857,
-        "voter": "oxygen"
-      },
-      {
-        "rshares": 50875769,
-        "voter": "cyan"
-      },
-      {
-        "rshares": 50868434,
-        "voter": "jumbo"
-      },
-      {
-        "rshares": 50865840,
-        "voter": "sting"
-      },
-      {
-        "rshares": 50796122,
-        "voter": "factom"
-      },
-      {
-        "rshares": 50794039,
-        "voter": "autodesk"
-      },
-      {
-        "rshares": 50568084,
-        "voter": "brazzers"
-      },
-      {
-        "rshares": 50543061,
-        "voter": "rabobank"
-      },
-      {
-        "rshares": 50538694,
-        "voter": "fenix"
-      },
-      {
-        "rshares": 50349676,
-        "voter": "albertheijn"
-      },
-      {
-        "rshares": 3689644671,
-        "voter": "strong-ai"
-      },
-      {
-        "rshares": 52329350,
-        "voter": "ninjapainter"
-      },
-      {
-        "rshares": 254506659,
-        "voter": "darkminded153"
-      },
-      {
-        "rshares": 527435916,
-        "voter": "grisha-danunaher"
-      },
-      {
-        "rshares": 162917785,
-        "voter": "ctu"
-      },
-      {
-        "rshares": 162911190,
-        "voter": "front"
-      },
-      {
-        "rshares": 1630327346,
-        "voter": "rusteemitblog"
-      },
-      {
-        "rshares": 161089804,
-        "voter": "pyro"
-      },
-      {
-        "rshares": 159025535,
-        "voter": "xtreme"
-      },
-      {
-        "rshares": 155528114,
-        "voter": "icesteem"
-      },
-      {
-        "rshares": 158602900,
-        "voter": "steem-wallet"
-      },
-      {
-        "rshares": 158560941,
-        "voter": "steemthis"
-      },
-      {
-        "rshares": 74838700,
-        "voter": "dealzgal"
-      },
-      {
-        "rshares": 255357124,
-        "voter": "orenshani7"
-      },
-      {
-        "rshares": 68013381,
-        "voter": "storage"
-      },
-      {
-        "rshares": 58460105,
-        "voter": "blackmarket"
-      },
-      {
-        "rshares": 61530871,
-        "voter": "gifts"
-      },
-      {
-        "rshares": 93882016,
-        "voter": "expat"
-      },
-      {
-        "rshares": 154566975,
-        "voter": "dimaisrael"
-      },
-      {
-        "rshares": 1593664040,
-        "voter": "steemlift"
-      },
-      {
-        "rshares": 138651704,
-        "voter": "toddemaher1"
-      }
-    ],
-    "author": "terrycraft",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<br />\n\nhttp://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman18.jpg\n<a href=\"http://bigpicture.ru/?p=384365&fb_comment_id=180555112091488_997346\">Image credit / \u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a \u0444\u043e\u0442\u043e</a>\n\n<html>\n<p>When looking through old photographs, you realize how much the world has changed around us.</p>\n<blockquote>\u041f\u0440\u043e\u0441\u043c\u0430\u0442\u0440\u0438\u0432\u0430\u044f \u0441\u0442\u0430\u0440\u044b\u0435 \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u0438, \u043e\u0441\u043e\u0437\u043d\u0430\u0451\u0448\u044c \u043d\u0430\u0441\u043a\u043e\u043b\u044c\u043a\u043e \u0438\u0437\u043c\u0435\u043d\u0438\u043b\u0441\u044f \u043c\u0438\u0440 \u0432\u043e\u043a\u0440\u0443\u0433 \u043d\u0430\u0441.</blockquote>\n</html>\n\nhttp://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman16.jpg\n<a href=\"http://bigpicture.ru/?p=384365&fb_comment_id=180555112091488_997346\">Image credit / \u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a \u0444\u043e\u0442\u043e</a>\n\n<html>\n<p>I am deeply convinced that the people imprinted on these black-and-white photographs never suspected what will happen to them in the future, whether it is immediate or distant As well as they didn't realized how quickly the years will pass, changing all the world around. So, as you look at their careless faces, you fairly quickly realize that your current situation is not much different.</p>\n<blockquote>\u042f \u0433\u043b\u0443\u0431\u043e\u043a\u043e \u0443\u0432\u0435\u0440\u0435\u043d\u0430 \u0432 \u0442\u043e\u043c, \u0447\u0442\u043e \u043b\u044e\u0434\u0438, \u0437\u0430\u043f\u0435\u0447\u0430\u0442\u043b\u0451\u043d\u043d\u044b\u0435 \u043d\u0430 \u0447\u0451\u0440\u043d\u043e-\u0431\u0435\u043b\u044b\u0445 \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u044f\u0445, \u043d\u0435 \u043f\u043e\u0434\u043e\u0437\u0440\u0435\u0432\u0430\u043b\u0438, \u0447\u0442\u043e \u0441\u0442\u0430\u043d\u0435\u0442 \u0441 \u043d\u0438\u043c\u0438 \u0432 \u0431\u043b\u0438\u0436\u0430\u0439\u0448\u0435\u043c, \u0438 \u043d\u0435 \u043e\u0447\u0435\u043d\u044c, \u0431\u0443\u0434\u0443\u0449\u0435\u043c. \u041d\u0435 \u0437\u043d\u0430\u043b\u0438 \u043e\u043d\u0438 \u0442\u0430\u043a\u0436\u0435, \u043d\u0430\u0441\u043a\u043e\u043b\u044c\u043a\u043e \u0441\u0442\u0440\u0435\u043c\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u043f\u0440\u043e\u0439\u0434\u0443\u0442 \u0433\u043e\u0434\u044b, \u0438 \u043a\u0430\u043a \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u0441\u044f \u043c\u0438\u0440 \u0432\u043e\u043a\u0440\u0443\u0433. \u041f\u043e\u044d\u0442\u043e\u043c\u0443, \u0433\u043b\u044f\u0434\u044f \u043d\u0430 \u0438\u0445 \u0431\u0435\u0441\u043f\u0435\u0447\u043d\u044b\u0435 \u043b\u0438\u0446\u0430, \u0434\u043e\u0432\u043e\u043b\u044c\u043d\u043e \u0431\u044b\u0441\u0442\u0440\u043e \u043e\u0441\u043e\u0437\u043d\u0430\u0451\u0448\u044c, \u0447\u0442\u043e \u0442\u0432\u043e\u0451 \u043f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u0441\u0435\u0439\u0447\u0430\u0441 \u043c\u0430\u043b\u043e \u0447\u0435\u043c \u043e\u0442\u043b\u0438\u0447\u0430\u0435\u0442\u0441\u044f.</blockquote>\n</html>\n\nhttp://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman14.jpg\n<a href=\"http://bigpicture.ru/?p=384365&fb_comment_id=180555112091488_997346\">Image credit / \u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a \u0444\u043e\u0442\u043e</a>\n\n<html>\n<p>Everything that happens around us changes the world we are witnessing. We live in an age of technological progress; the advent of the first computers, the Internet, gadgets, social networks, online games, e-commerce, cryptocurrency and, finally, a blockchain social network - the Steemit, which makes our minds work for creation of good content and its curation.</p>\n<blockquote>\u0412\u0441\u0451 \u043f\u0440\u043e\u0438\u0441\u0445\u043e\u0434\u044f\u0449\u0435\u0435 \u0432\u043e\u043a\u0440\u0443\u0433 \u043d\u0430\u0441 \u043c\u0435\u043d\u044f\u0435\u0442 \u043c\u0438\u0440 \u043d\u0430 \u043d\u0430\u0448\u0438\u0445 \u0433\u043b\u0430\u0437\u0430\u0445. \u041c\u044b \u0436\u0438\u0432\u0451\u043c \u0432 \u0432\u0435\u043a \u0442\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0447\u0435\u0441\u043a\u043e\u0433\u043e \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0430; \u043f\u043e\u044f\u0432\u043b\u0435\u043d\u0438\u0435 \u043f\u0435\u0440\u0432\u044b\u0445 \u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440\u043e\u0432, \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442\u0430, \u0433\u0430\u0434\u0436\u0435\u0442\u043e\u0432, \u0441\u043e\u0446\u0438\u0430\u043b\u044c\u043d\u044b\u0445 \u0441\u0435\u0442\u0435\u0439, \u043e\u043d\u043b\u0430\u0439\u043d-\u0438\u0433\u0440, \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442-\u043c\u0430\u0433\u0430\u0437\u0438\u043d\u043e\u0432, \u043a\u0440\u0438\u043f\u0442\u043e\u0432\u0430\u043b\u044e\u0442 \u0438, \u043d\u0430\u043a\u043e\u043d\u0435\u0446, \u0441\u043e\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0439 \u0441\u0435\u0442\u0438 \u043d\u0430 \u0431\u043b\u043e\u043a\u0447\u0435\u0439\u043d\u0435 - Steemit, \u043a\u043e\u0442\u043e\u0440\u0430\u044f \u0437\u0430\u0441\u0442\u0430\u0432\u043b\u044f\u0435\u0442 \u043d\u0430\u0448\u0438 \u0443\u043c\u044b \u0440\u0430\u0431\u043e\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u0445\u043e\u0440\u043e\u0448\u0435\u0433\u043e \u043a\u043e\u043d\u0442\u0435\u043d\u0442\u0430 \u0438 \u0435\u0433\u043e \u043a\u0443\u0440\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f.</blockquote>\n</html>\n\nhttp://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman09.jpg\n<a href=\"http://bigpicture.ru/?p=384365&fb_comment_id=180555112091488_997346\">Image credit / \u0418\u0441\u0442\u043e\u0447\u043d\u0438\u043a \u0444\u043e\u0442\u043e</a>\n\n<html>\n<p>And in 10 years, or maybe much earlier, we will see a completely different picture of reality. Generation Steem is coming. The generation that changed everything around and changed itself as well, in opposite to that generation you run with your eyes, trying to convince its immutability and the impossibility of change. No, this already will be the world of the past.</p>\n<blockquote>\u0418 \u043b\u0435\u0442 \u0447\u0435\u0440\u0435\u0437 10, \u0430 \u043c\u043e\u0436\u0435\u0442 \u0437\u043d\u0430\u0447\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0440\u0430\u043d\u044c\u0448\u0435, \u043c\u044b \u0443\u0432\u0438\u0434\u0438\u043c \u0432 \u043a\u0430\u0434\u0440\u0435 \u0441\u043e\u0432\u0435\u0440\u0448\u0435\u043d\u043d\u043e \u0434\u0440\u0443\u0433\u0443\u044e \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c. \u0413\u0440\u044f\u0434\u0451\u0442 Steem \u043f\u043e\u043a\u043e\u043b\u0435\u043d\u0438\u0435, \u043f\u043e\u043a\u043e\u043b\u0435\u043d\u0438\u0435, \u0438\u0437\u043c\u0435\u043d\u0438\u0432\u0448\u0435\u0435 \u0432\u0441\u0451 \u0432\u043e\u043a\u0440\u0443\u0433 \u0441\u0435\u0431\u044f \u0438 \u0438\u0437\u043c\u0435\u043d\u0438\u0432\u0448\u0435\u0435\u0441\u044f \u0441\u0430\u043c\u043e, \u0430 \u043d\u0435 \u0442\u043e, \u043a\u043e\u0442\u043e\u0440\u043e\u0435 \u0441\u0435\u0439\u0447\u0430\u0441, \u043e\u0431\u0432\u043e\u0434\u044f \u0432\u0437\u0433\u043b\u044f\u0434\u043e\u043c, \u0432\u044b \u043f\u044b\u0442\u0430\u0435\u0442\u0435\u0441\u044c \u0443\u0431\u0435\u0434\u0438\u0442\u044c \u0432 \u0435\u0433\u043e \u043d\u0435\u0437\u044b\u0431\u043b\u0435\u043c\u043e\u0441\u0442\u0438 \u0438 \u043d\u0435\u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0438 \u043f\u0435\u0440\u0435\u043c\u0435\u043d. \u041d\u0435\u0442, \u044d\u0442\u043e \u0443\u0436\u0435 \u0431\u0443\u0434\u0435\u0442 \u043c\u0438\u0440 \u043f\u0440\u043e\u0448\u043b\u043e\u0433\u043e.</blockquote>\n</html>\n\n<html>\n<h3><em>Written to the music: Antonio Vivaldi - The Four Seasons.</em></h3>\n</html>\n\nPlease follow me\n<a href=\"https://steemit.com/@panther\">@panther</a>\n\n<br />\n\n---\n\nIf you like this article not follow only me, but also follow the author - @panther\n\n---\n\nAll STEEM Dollars for this post go to the featured author. \u0412\u0441\u0435 SD \u0437\u0430 \u043f\u043e\u0441\u0442 \u043f\u043e\u043b\u0443\u0447\u0438\u0442 \u0430\u0432\u0442\u043e\u0440.",
-    "category": "philosophy",
-    "children": 16,
-    "created": "2016-09-15T12:27:27",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "http://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman18.jpg",
-        "http://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman16.jpg",
-        "http://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman14.jpg",
-        "http://bigpicture.ru/wp-content/uploads/2013/03/sovietwoman09.jpg"
-      ],
-      "links": [
-        "http://bigpicture.ru/?p=384365&fb_comment_id=180555112091488_997346",
-        "https://steemit.com/@panther"
-      ],
-      "tags": [
-        "philosophy",
-        "thoughts",
-        "steemit",
-        "ru"
-      ],
-      "users": [
-        "panther"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 61603577309634,
-    "payout": 220.99,
-    "payout_at": "2016-09-22T12:27:27",
-    "pending_payout_value": "220.990 HBD",
-    "percent_hbd": 10000,
-    "permlink": "a-look-from-the-past-vzglyad-iz-proshlogo-featuring-panther-as-author",
-    "post_id": 1253231,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 210
-    },
-    "title": "A Look From the Past / \u0412\u0437\u0433\u043b\u044f\u0434 \u0438\u0437 \u043f\u0440\u043e\u0448\u043b\u043e\u0433\u043e (featuring @panther as author).",
-    "updated": "2016-09-15T12:27:27",
-    "url": "/philosophy/@terrycraft/a-look-from-the-past-vzglyad-iz-proshlogo-featuring-panther-as-author"
   },
   {
     "active_votes": [

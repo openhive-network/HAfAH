@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.get_ranked_posts promoted paging patterns test
 
   marks:
-    - patterntest
+    - patterntest # change in behaviour compared to original, not only replies but also top posts are in results
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_ranked_posts"
-          params: {"sort":"promoted","tag":"","start_author":"zein","start_permlink":"re-jesta-re-bmann-re-jesta-update-on-the-steempress-theme-bounty-20160829t093247333z", "limit":2}
+          params: {"sort":"promoted","tag":"","start_author":"iggy","start_permlink":"part-i-of-detailing-to-perfection-1988-porsche-911-carrera-3-2-targa-one-of-559-ever-produced-from-1985-to-1989", "limit":3}
       response:
         status_code: 200
         verify_response_with:

@@ -3560,122 +3560,95 @@
   {
     "active_votes": [
       {
-        "rshares": 25299389880141,
-        "voter": "ned"
+        "rshares": 35321225455025,
+        "voter": "jamesc"
       },
       {
-        "rshares": 6927705674664,
-        "voter": "wackou"
-      },
-      {
-        "rshares": 992154852299,
-        "voter": "liondani"
-      },
-      {
-        "rshares": 3103959302,
+        "rshares": 3104786127,
         "voter": "boy"
       },
       {
-        "rshares": 3768577454,
+        "rshares": 3769614077,
         "voter": "bue-witness"
       },
       {
-        "rshares": 683986391,
+        "rshares": 684099809,
         "voter": "bunny"
       },
       {
-        "rshares": 54809820514,
+        "rshares": 54952584675,
         "voter": "bue"
       },
       {
-        "rshares": 1663237841,
+        "rshares": 1663623227,
         "voter": "mini"
       },
       {
-        "rshares": 213793127,
+        "rshares": 213807099,
         "voter": "moon"
       },
       {
-        "rshares": 624976946,
+        "rshares": 625076388,
         "voter": "healthcare"
       },
       {
-        "rshares": 973085978,
+        "rshares": 973278654,
         "voter": "daniel.pan"
       },
       {
-        "rshares": 288350184,
+        "rshares": 288376577,
         "voter": "helen.tan"
       },
       {
-        "rshares": 347492602044,
-        "voter": "blakemiles84"
+        "rshares": 64567952685,
+        "voter": "cheetah"
       },
       {
-        "rshares": 445654522,
-        "voter": "kooshikoo"
+        "rshares": 100261624,
+        "voter": "cheetah43"
       },
       {
-        "rshares": 113354733694,
-        "voter": "shaka"
+        "rshares": 141949259,
+        "voter": "cheetah44"
       },
       {
-        "rshares": 46418159604,
-        "voter": "capitalism"
-      },
-      {
-        "rshares": 4864933964,
-        "voter": "ats-david"
-      },
-      {
-        "rshares": 9260376832,
-        "voter": "goose"
+        "rshares": 121089288,
+        "voter": "cheetah45"
       }
     ],
-    "author": "dana-edwards",
+    "author": "cheetah",
     "author_payout_value": "0.000 HBD",
     "author_reputation": 25.0,
     "beneficiaries": [],
     "blacklists": [],
-    "body": "1 needs modification, 2 is a good idea\n----\n\nDespite some who call 2 an exit fee, I think Steem Power should stop being marketed as an **\"investment\"** to **\"investors\"**. Market it to users of the platform who want to power up their accounts but make powering up or upgrading a lot easier. Make it possible with a gift card,  fiat, a credit card, or Paypal. People should never see Bitcoin or blockchain anywhere on the Steemit official marketing.\n\nUse gamification to make people want to upgrade their Steem Power. Market Steem Dollars to crypto investors for the 10% interest.\n\nSteem Power a purchasable upgrade for accounts\n-----\n\n>reddit gold is our premium membership program. It grants you access to extra features to improve your reddit experience. It also makes you really quite dapper.\n\nAnd Alice goes to Walgreens with her Visa Card and buys the Steem Card instead of the Netflix card. It's also possible to sell a Steem Power subscription for people who want to buy a little bit at a time, remeber WoW is subscription based and. Second Life has Linden Dollars which are like our Steem Dollars and can be marketed in a similar way.\n\nDo not make the mistake of listening to crypto anarchists or crypto people when it comes to marketing. Crypto people are horrible at marketing and that includes Bitcoin. All of crypto has a bad reputaton and horrible marketing. Look at Pokemon Go or even Reddit Gold to see how to do marketing, or just hire a profesisonal in gamification and marketing guru. Do not listen to Steemit whales and don't even listen to me. Hire people who are from the gaming world, or who marketed popular social networks.\n\n**Note: notice games and social networks never use words like \"investor\" or \"speculator\",  as this would be like trying to market the social network as a gambling site which is something they all avoid.**\n\n**UPDATE: IF ANYONE CAN GET IN CONTACT WITH [Jane McGonigal](https://janemcgonigal.com/) AND HIRE HER AS A CONSULTANT IT WOULD BE GREAT FOR STEEMIT. SHE IS A THOUGHT LEADER IN \"PURPOSE DRIVEN GAMING\" AND HAVING HER ASSOCIATED WITH STEEMIT WOULD BRING MOMENTUM.**\n\nReferences\n1. https://community.secondlife.com/t5/English-Knowledge-Base/Buying-and-selling-Linden-dollars/ta-p/700107\n2. https://www.reddit.com/gold/about/\n3. https://www.quora.com/Who-are-the-best-gamification-experts\n4. https://www.linkedin.com/title/gamification-expert",
-    "category": "steem",
-    "children": 7,
-    "created": "2016-09-08T05:07:51",
+    "body": "Warning! This user is on my black list, likely as a known plagiarist, spammer or ID thief. Please be cautious with this post!\nTo get off this list, please chat with us in the #steemitabuse-appeals channel in [steemit.chat](http://steemit.chat).",
+    "category": "nsfw",
+    "children": 0,
+    "created": "2016-09-06T06:15:21",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
-    "json_metadata": {
-      "links": [
-        "https://janemcgonigal.com/",
-        "https://community.secondlife.com/t5/English-Knowledge-Base/Buying-and-selling-Linden-dollars/ta-p/700107",
-        "https://www.reddit.com/gold/about/",
-        "https://www.quora.com/Who-are-the-best-gamification-experts",
-        "https://www.linkedin.com/title/gamification-expert"
-      ],
-      "tags": [
-        "steem"
-      ]
-    },
+    "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 33807216655501,
-    "parent_author": "ned",
-    "parent_permlink": "increasing-curation-demand-for-steem-power-and-community-interaction",
-    "payout": 116.932,
-    "payout_at": "2016-09-15T05:07:51",
-    "pending_payout_value": "116.932 HBD",
+    "net_rshares": 35452431954514,
+    "parent_author": "tatyanasvitsa",
+    "parent_permlink": "the-real-story-lesbian-love",
+    "payout": 127.206,
+    "payout_at": "2016-09-13T06:15:21",
+    "pending_payout_value": "127.206 HBD",
     "percent_hbd": 10000,
-    "permlink": "re-ned-increasing-curation-demand-for-steem-power-and-community-interaction-20160908t050749903z",
-    "post_id": 1168452,
+    "permlink": "re-the-real-story-lesbian-love-20160906t061516",
+    "post_id": 1143691,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
-      "total_votes": 18
+      "total_votes": 14
     },
-    "title": "RE: Increasing Curation, Demand for Steem Power and Community Interaction",
-    "updated": "2016-09-08T20:47:24",
-    "url": "/steem/@ned/increasing-curation-demand-for-steem-power-and-community-interaction#@dana-edwards/re-ned-increasing-curation-demand-for-steem-power-and-community-interaction-20160908t050749903z"
+    "title": "RE: The real story lesbian love!",
+    "updated": "2016-09-06T06:15:21",
+    "url": "/nsfw/@tatyanasvitsa/the-real-story-lesbian-love#@cheetah/re-the-real-story-lesbian-love-20160906t061516"
   }
 ]
