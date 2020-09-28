@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.get_ranked_posts promoted patterns test
 
   marks:
-    - patterntest
+    - patterntest # change in behaviour compared to original, not only replies are in results, but top posts as well
 
   includes:
     - !include ../../common.yaml
