@@ -4,7 +4,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # looks like now we have more reblogs (more tests needed plus we need, most likely source of the problem is that old 5mln DB has only 4 reblogs, now there is 8 for test-safari alone; bug in old HM?)
+    - xfail # looks like now we have more reblogs (more tests needed, most likely source of the problem is that old 5mln DB has only 4 reblogs, now there is 8 for test-safari alone; bug in old HM?)
 
   includes:
     - !include ../../common.yaml
