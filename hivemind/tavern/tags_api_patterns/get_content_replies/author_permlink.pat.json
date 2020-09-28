@@ -3,7 +3,7 @@
     "active_votes": [
       {
         "percent": "10000",
-        "reputation": 353432699790,
+        "reputation": 1005278051807,
         "rshares": 742566481,
         "voter": "patrick-g"
       }
@@ -41,13 +41,13 @@
     "active_votes": [
       {
         "percent": "10000",
-        "reputation": 3871208629,
+        "reputation": 1005278051807,
         "rshares": 742566481,
         "voter": "patrick-g"
       },
       {
         "percent": "10000",
-        "reputation": 3871208629,
+        "reputation": -40589644,
         "rshares": 111000395,
         "voter": "bustillos"
       }
