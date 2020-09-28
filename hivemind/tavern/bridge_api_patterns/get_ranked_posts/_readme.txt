@@ -1,4 +1,4 @@
-Gives full information on given community. When observer is also given it adds context information for that account (see get_community_context)
+Lists posts depending on given ranking criteria and filters.
 
 method: "bridge.get_ranked_posts"
 params:
