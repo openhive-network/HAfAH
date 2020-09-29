@@ -1,4 +1,5 @@
 Lists posts of given author that are not newer than given date.
+Note, fat node had a bug - despite existence of proper index, it used exactly the same one as for by_last_update, so results are not comparable.
 
 method: "database_api.list_comments"
 params:

@@ -2,7 +2,7 @@
 test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct author and date
 
 marks:
-  - patterntest 
+  - patterntest # at exactly the update date of oldest post
 
 includes:
   - !include ../../../common.yaml
