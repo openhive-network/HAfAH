@@ -1,0 +1,30 @@
+---
+  test_name: Hivemind bridge_api.get_ranked_posts invalid observer patterns test
+
+  marks:
+    - patterntest
+    - negative
+
+  includes:
+    - !include ../../../common.yaml
+
+  stages:
+    - name: bridge_api.get_ranked_posts invalid observer patterns test
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_ranked_posts"
+          params: {"sort":"trending", "tag":"", "observer":"invalid_account"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "invalid_observer"
+            directory: "bridge_api_negative/get_ranked_posts/created"
+            error_response: true
