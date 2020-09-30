@@ -5,7 +5,7 @@
     - patterntest
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
     - name: get_account_posts
@@ -18,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"posts","account":"gtg","observer":null}
+          params: {"sort":"replies","account":"gtg","observer":null}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "posts_gtg"
-            directory: "bridge_api_patterns/get_account_posts"
+            method: "gtg"
+            directory: "bridge_api_patterns/get_account_posts/by_replies"

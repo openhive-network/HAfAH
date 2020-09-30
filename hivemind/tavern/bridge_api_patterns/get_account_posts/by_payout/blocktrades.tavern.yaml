@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge.get_account_posts test
+  test_name: Hivemind bridge_api.get_account_posts sort payout patterns test
 
   marks:
-    - patterntest
+    - patterntest # should return posts, now its empty (hive3 hivemind)
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts
+    - name: get_account_posts sort payout
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,11 +18,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"replies","account":"gtg","observer":null}
+          params: {"sort":"payout", "account":"blocktrades"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "replies_gtg"
-            directory: "bridge_api_patterns/get_account_posts"
+            method: "blocktrades"
+            directory: "bridge_api_patterns/get_account_posts/by_payout"
+
