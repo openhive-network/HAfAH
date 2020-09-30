@@ -1,0 +1,31 @@
+---
+  test_name: Hivemind bridge_api.get_account_posts sort feed patterns test
+
+  marks:
+    - patterntest # since original only gives posts from last month (counted from now()) there can be no nonempty results
+    - failing
+    - xfail # marked as failing for now, since we need to change it so it counts time from head block
+
+  includes:
+    - !include ../../../common.yaml
+
+  stages:
+    - name: get_account_posts sort feed
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_account_posts"
+          params: {"sort":"feed", "account":"proskynneo"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "proskynneo"
+            directory: "bridge_api_patterns/get_account_posts/feed"
+

@@ -1,0 +1,37 @@
+---
+  test_name: Hivemind bridge_api.get_account_posts get reblogged article test # api.hive.blog 443
+
+  marks:
+    - patterntest # test-safari only has reblogs and replies, no top posts
+    - failing
+    - xfail # looks like now we have more reblogs (more tests needed, most likely source of the problem is that old 5mln DB has only 4 reblogs, now there is 8 for test-safari alone; bug in old HM?)
+
+  includes:
+    - !include ../../../common.yaml
+
+  stages:
+    - name: get_account_posts get reblogged article
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_account_posts"
+          params: {
+            "sort":"blog",
+            "account":"test-safari",
+            "limit":3,
+            "start_author":"atle-v",
+            "start_permlink":"sunday-picnic"
+          }
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "reblog"
+            directory: "bridge_api_patterns/get_account_posts/blog"
+
