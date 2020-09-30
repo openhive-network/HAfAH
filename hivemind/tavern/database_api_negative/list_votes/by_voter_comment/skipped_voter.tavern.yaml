@@ -1,15 +1,15 @@
 ---
-test_name: Hivemind database_api.list_votes patterns test order "by_voter_comment" only voter
+test_name: Hivemind database_api.list_votes patterns test order "by_voter_comment"
 
 marks:
-  - patterntest # fat node showed first post votes because primary ordering was by comment and when comment is skipped it can only start with the very first post
+  - patterntest
   - negative
 
 includes:
   - !include ../../../common.yaml
 
 stages:
-  - name: database_api.list_votes patterns test order "by_voter_comment" only voter
+  - name: database_api.list_votes
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST

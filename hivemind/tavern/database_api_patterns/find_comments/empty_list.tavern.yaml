@@ -1,15 +1,14 @@
 ---
-test_name: Hivemind database_api.find_votes only permlink
+test_name: Hivemind database_api.find_comments empty list of requested comments
 
 marks:
-  - patterntest # fat node didn't care about extra params
-  - negative
+  - patterntest
 
 includes:
   - !include ../../common.yaml
 
 stages:
-  - name: database_api.find_votes only permlink
+  - name: database_api.find_comments unknown extra arguments
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -18,18 +17,15 @@ stages:
       json:
         jsonrpc: "2.0"
         id: 1
-        method: "database_api.find_votes"
+        method: "database_api.find_comments"
         params:
           {
-            "author": "gtg",
-            "permlink": "witness-gtg",
-            "extra_parameter": "extra"
+            "comments": []
           }
     response:
       status_code: 200
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "extra_parameter"
-          directory: "database_api_negative/find_votes"
-          error_response: true
+          method: "empty_list"
+          directory: "database_api_patterns/find_comments"

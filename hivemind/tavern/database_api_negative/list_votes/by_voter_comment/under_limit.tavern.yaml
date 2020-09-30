@@ -2,7 +2,7 @@
 test_name: Hivemind database_api.list_votes patterns test "by_voter_comment" permlink not found
 
 marks:
-  - patterntest
+  - patterntest # fat node just gave empty results
   - negative
 
 includes:
@@ -21,7 +21,7 @@ stages:
         method: "database_api.list_votes"
         params:
           {
-            "start": ["roelandp", "tldr-an-exploration-in-steem-botting-what-i-learned-since-it-s-inception-and-downfall-over-the-course-of-20-hours", "winstonwolfe"],
+            "start": ["winstonwolfe", "roelandp", "tldr-an-exploration-in-steem-botting-what-i-learned-since-it-s-inception-and-downfall-over-the-course-of-20-hours"],
             "limit": 0,
             "order": "by_voter_comment",
           }

@@ -2,7 +2,7 @@
 test_name: Hivemind database_api.list_votes patterns test "by_comment_voter" permlink not found
 
 marks:
-  - patterntest
+  - patterntest # fat node just gave empty results
   - negative
 
 includes:

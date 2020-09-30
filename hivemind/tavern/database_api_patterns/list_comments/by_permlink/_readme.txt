@@ -6,12 +6,12 @@ params:
 {
   "start": ["{author}","{permlink}"],
 
-     author : optional (can be left black but not skipped), can be part of author name
-     permlink : optional (can be left black but not skipped), can be part of permlink; makes sense to pass it only with valid author, but it is not checked
+     author : optional (can be left blank but not skipped), can be part of author name
+     permlink : optional (can be left blank but not skipped), can be part of permlink; makes sense to pass it only with valid author, but it is not checked
 
   "limit": {number},
 
-     mandatory 1..1000
+     optional 1..1000, default = 1000
 
   "order": "by_permlink"
 }

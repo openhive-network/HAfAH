@@ -5,7 +5,7 @@ marks:
   - patterntest
 
 includes:
-  - !include ../../../common.yaml
+  - !include ../../common.yaml
 
 stages:
   - name: list_votes_by_comment_voter
@@ -21,13 +21,13 @@ stages:
         params:
           {
             "start":["jamielefay", "ahe-ey-sky-falling-an-original-novel-part-1-audiobook", ""],
-            "order": "by_comment_voter"
+            "limit": 10
           }
     response:
       status_code: 200
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "no_limit"
-          directory: "database_api_negative/list_votes/by_comment_voter"
+          method: "no_order"
+          directory: "database_api_negative/list_votes"
           error_response: true

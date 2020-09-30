@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "missing a required argument: 'limit'",
+  "data": "Expected array of author+permlink pairs",
   "message": "Invalid parameters"
 }
