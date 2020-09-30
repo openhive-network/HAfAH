@@ -1,0 +1,35 @@
+---
+test_name: Hivemind database_api.list_votes patterns test order "by_voter_comment"
+
+marks:
+  - patterntest
+  - failing
+  - xfail # we are not filtering votes to deleted posts
+
+includes:
+  - !include ../../../common.yaml
+
+stages:
+  - name: list_votes_by_voter_comment
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_votes"
+        params:
+          {
+            "start":["boy", "", ""],
+            "limit": 1000,
+            "order": "by_voter_comment",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "max_limit"
+          directory: "database_api_patterns/list_votes/by_voter_comment"

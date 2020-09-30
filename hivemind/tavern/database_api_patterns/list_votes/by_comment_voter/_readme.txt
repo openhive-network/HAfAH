@@ -1,4 +1,4 @@
-Lists voters that voted on given post.
+Lists votes that were cast on given post.
 
 method: "database_api.list_votes"
 params:
@@ -10,7 +10,7 @@ params:
 
   "limit": {number},
 
-     mandatory 1..1000
+     optional 1..1000, default = 1000
 
   "order": "by_comment_voter"
 }

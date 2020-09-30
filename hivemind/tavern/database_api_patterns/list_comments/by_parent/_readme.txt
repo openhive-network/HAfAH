@@ -10,7 +10,7 @@ params:
 
   "limit": {number},
 
-     mandatory 1..1000
+     optional 1..1000, default = 1000
 
   "order": "by_parent"
 }

@@ -1,0 +1,35 @@
+---
+test_name: Hivemind database_api.list_votes patterns test order "by_voter_comment"
+
+marks:
+  - patterntest
+  - negative
+
+includes:
+  - !include ../../../common.yaml
+
+stages:
+  - name: database_api.list_votes
+    request:
+      url: "{service.proto:s}://{service.server:s}:{service.port}/"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        jsonrpc: "2.0"
+        id: 1
+        method: "database_api.list_votes"
+        params:
+          {
+            "start": ["steemship", "sticky-things-like-a-readable-summary-of-how-steem-power-and-vests-work"],
+            "limit": 10,
+            "order": "by_voter_comment",
+          }
+    response:
+      status_code: 200
+      verify_response_with:
+        function: validate_response:compare_response_with_pattern
+        extra_kwargs:
+          method: "skipped_voter"
+          directory: "database_api_negative/list_votes/by_voter_comment"
+          error_response: true
