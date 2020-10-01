@@ -1,12 +1,11 @@
 ---
-  test_name: Hivemind bridge.get_account_posts test not existing account (yet)
+  test_name: Hivemind bridge.get_account_posts test
 
   marks:
-    - patterntest # original didn't test for account existence, only returned empty results
-    - negative
+    - patterntest
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
     - name: get_account_posts
@@ -19,12 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"replies","account":"rollinshive","observer":null}
+          params: {"sort":"posts","account":"gtg","observer":null}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "replies_rollinshive"
-            directory: "bridge_api_negative/get_account_posts"
-            error_response: true
+            method: "gtg"
+            directory: "bridge_api_patterns/get_account_posts/posts"

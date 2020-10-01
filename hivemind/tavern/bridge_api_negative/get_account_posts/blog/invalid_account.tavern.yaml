@@ -1,14 +1,15 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts sort payout patterns test
+  test_name: Hivemind bridge.get_account_posts
 
   marks:
-    - patterntest # should return posts, now its empty (hive3 hivemind)
+    - patterntest
+    - negative
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts sort payout
+    - name: get_account_posts
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,12 +19,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"payout", "account":"steemit"}
+          params: {"sort":"blog","account":"rollinshive"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "payout_steemit"
-            directory: "bridge_api_patterns/get_account_posts"
-
+            method: "invalid_account"
+            directory: "bridge_api_negative/get_account_posts/blog"
+            error_response: true

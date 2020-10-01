@@ -2,10 +2,10 @@
   test_name: Hivemind bridge_api.get_account_posts sort comments patterns test
 
   marks:
-    - patterntest # should return posts, now its empty (hive3 hivemind)
+    - patterntest
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
     - name: get_account_posts sort comments
@@ -18,12 +18,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"comments", "account":"steemit"}
+          params: {"sort":"comments", "account":"blocktrades"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "comments_steemit"
-            directory: "bridge_api_patterns/get_account_posts"
+            method: "blocktrades"
+            directory: "bridge_api_patterns/get_account_posts/comments"
 

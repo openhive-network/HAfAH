@@ -1,11 +1,12 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts patterns test
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+  test_name: Hivemind bridge.get_account_posts test not existing account (yet)
+
   marks:
-    - patterntest
+    - patterntest # original didn't test for account existence, only returned empty results
+    - negative
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
     - name: get_account_posts
@@ -18,11 +19,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"posts", "account":"steemit"}
+          params: {"sort":"replies","account":"rollinshive","observer":null}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "posts_steemit"
-            directory: "bridge_api_patterns/get_account_posts"
+            method: "invalid_account"
+            directory: "bridge_api_negative/get_account_posts/replies"
+            error_response: true
