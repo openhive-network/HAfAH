@@ -1,0 +1,28 @@
+---
+  test_name: Hivemind bridge_api.get_ranked_posts promoted tag patterns test
+
+  marks:
+    - patterntest # pagination not working correctly, as in other API calls start permlink its first record,
+    # here there are no post with start_permlink in results
+  includes:
+    - !include ../../../common.yaml
+
+  stages:
+    - name: bridge_api.get_ranked_posts promoted tag patterns test
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_ranked_posts"
+          params: {"sort":"promoted","tag":"steemit", "start_author":"fyrstikken", "start_permlink": "steemit-harassment-wow-it-finally-happened-to-me-too-d"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "tag_steemit_paginated"
+            directory: "bridge_api_patterns/get_ranked_posts/promoted"
