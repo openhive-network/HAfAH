@@ -3,8 +3,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # very different result
 
   includes:
     - !include ../../common.yaml

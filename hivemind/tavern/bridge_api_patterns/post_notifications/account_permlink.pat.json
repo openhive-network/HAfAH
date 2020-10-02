@@ -1,50 +1,58 @@
 [
   {
+    "date": "2016-08-12T13:01:36",
+    "id": 17257187186157945,
+    "msg": "@mafia replied to your comment",
+    "score": 40,
+    "type": "reply_comment",
+    "url": "@venuspcs/re-minion-how-to-summon-one-of-the-biggest-and-most-powerful-steemit-whales-berniesanders-20160812t010731631z"
+  },
+  {
+    "date": "2016-08-12T01:07:39",
+    "id": 17195940952738184,
+    "msg": "@venuspcs voted on your post",
+    "score": 25,
+    "type": "vote",
+    "url": "@venuspcs/re-minion-how-to-summon-one-of-the-biggest-and-most-powerful-steemit-whales-berniesanders-20160812t010731631z"
+  },
+  {
     "date": "2016-08-12T01:07:30",
-    "id": 443441,
+    "id": 17195928067769848,
     "msg": "@venuspcs mentioned you",
-    "score": 12,
+    "score": 70,
     "type": "mention",
     "url": "@venuspcs/re-minion-how-to-summon-one-of-the-biggest-and-most-powerful-steemit-whales-berniesanders-20160812t010731631z"
   },
   {
     "date": "2016-08-12T01:07:30",
-    "id": 443440,
+    "id": 17195928067769847,
     "msg": "@venuspcs mentioned you",
-    "score": 12,
+    "score": 70,
     "type": "mention",
     "url": "@venuspcs/re-minion-how-to-summon-one-of-the-biggest-and-most-powerful-steemit-whales-berniesanders-20160812t010731631z"
   },
   {
     "date": "2016-08-12T01:07:30",
-    "id": 443439,
+    "id": 17195928067769846,
     "msg": "@venuspcs mentioned you",
-    "score": 12,
+    "score": 70,
     "type": "mention",
     "url": "@venuspcs/re-minion-how-to-summon-one-of-the-biggest-and-most-powerful-steemit-whales-berniesanders-20160812t010731631z"
   },
   {
     "date": "2016-08-12T01:07:30",
-    "id": 443438,
+    "id": 17195928067769845,
     "msg": "@venuspcs mentioned you",
-    "score": 12,
+    "score": 70,
     "type": "mention",
     "url": "@venuspcs/re-minion-how-to-summon-one-of-the-biggest-and-most-powerful-steemit-whales-berniesanders-20160812t010731631z"
   },
   {
     "date": "2016-08-12T01:07:30",
-    "id": 443437,
+    "id": 17195928067769844,
     "msg": "@venuspcs mentioned you",
-    "score": 12,
+    "score": 70,
     "type": "mention",
-    "url": "@venuspcs/re-minion-how-to-summon-one-of-the-biggest-and-most-powerful-steemit-whales-berniesanders-20160812t010731631z"
-  },
-  {
-    "date": "2016-08-12T01:07:30",
-    "id": 443436,
-    "msg": "@venuspcs replied to your post",
-    "score": 20,
-    "type": "reply",
     "url": "@venuspcs/re-minion-how-to-summon-one-of-the-biggest-and-most-powerful-steemit-whales-berniesanders-20160812t010731631z"
   }
 ]

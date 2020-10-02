@@ -1,5 +1,6 @@
 ---
-  test_name: Hivemind bridge.post_notifications patterns test valid account and permlink
+  test_name: Hivemind bridge_api.account_notifications patterns test
+
   marks:
     - patterntest
 
@@ -7,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge.post_notifications
+    - name: account_notifications
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -16,12 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.post_notifications"
-          params: {"author":"venuspcs","permlink":"re-minion-how-to-summon-one-of-the-biggest-and-most-powerful-steemit-whales-berniesanders-20160812t010731631z","min_score":10}
+          method: "bridge.account_notifications"
+          params: {"account":"dantheman"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "account_permlink"
-            directory: "bridge_api_patterns/post_notifications"
+            method: "dantheman"
+            directory: "bridge_api_patterns/account_notifications"
+
