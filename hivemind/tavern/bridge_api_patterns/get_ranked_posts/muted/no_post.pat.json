@@ -1,0 +1,2656 @@
+[
+  {
+    "active_votes": [
+      {
+        "rshares": 17735315160760,
+        "voter": "itsascam"
+      },
+      {
+        "rshares": 17865766992651,
+        "voter": "steemed"
+      },
+      {
+        "rshares": 3091007147,
+        "voter": "boy"
+      },
+      {
+        "rshares": 3751778512,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 703064185,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 52778799199,
+        "voter": "bue"
+      },
+      {
+        "rshares": 1656856120,
+        "voter": "mini"
+      },
+      {
+        "rshares": 213490026,
+        "voter": "moon"
+      },
+      {
+        "rshares": 621592296,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 923609344,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 287848982,
+        "voter": "helen.tan"
+      },
+      {
+        "rshares": 27692743706,
+        "voter": "r4fken"
+      }
+    ],
+    "author": "r4fken",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": -5.58,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "Do I understand correctly that you're referencing the initial \"mining\" by a select group of devs and friends, resulting in \"overwhelming control\" by means of vests now?\nOr am I just imagining things? :)",
+    "category": "philosophy",
+    "children": 0,
+    "created": "2016-08-20T09:06:27",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 2,
+    "is_paidout": false,
+    "json_metadata": {
+      "tags": [
+        "philosophy"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 35692802942928,
+    "parent_author": "steemed",
+    "parent_permlink": "re-dantheman-our-corrupt-sense-of-fairness-20160820t035220528z",
+    "payout": 196.246,
+    "payout_at": "2016-08-27T09:06:27",
+    "pending_payout_value": "196.246 HBD",
+    "percent_hbd": 10000,
+    "permlink": "re-steemed-re-dantheman-our-corrupt-sense-of-fairness-20160820t090630202z",
+    "post_id": 903103,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 12
+    },
+    "title": "RE: Our Corrupt Sense of Fairness",
+    "updated": "2016-08-20T09:07:12",
+    "url": "/philosophy/@dantheman/our-corrupt-sense-of-fairness#@r4fken/re-steemed-re-dantheman-our-corrupt-sense-of-fairness-20160820t090630202z"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 20736048327416,
+        "voter": "dantheman"
+      },
+      {
+        "rshares": 2472573792,
+        "voter": "boy"
+      },
+      {
+        "rshares": 3001108476,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 562413629,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 42176902013,
+        "voter": "bue"
+      },
+      {
+        "rshares": 1325367544,
+        "voter": "mini"
+      },
+      {
+        "rshares": 170787830,
+        "voter": "moon"
+      },
+      {
+        "rshares": 497243104,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 737438203,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 230272201,
+        "voter": "helen.tan"
+      },
+      {
+        "rshares": 5072953140,
+        "voter": "holabebe"
+      },
+      {
+        "rshares": 1799587902,
+        "voter": "murh"
+      },
+      {
+        "rshares": 115361382518,
+        "voter": "bravenewcoin"
+      },
+      {
+        "rshares": 166899192,
+        "voter": "soupernerd"
+      },
+      {
+        "rshares": 5429807428,
+        "voter": "qamarpinkpanda"
+      },
+      {
+        "rshares": 4494852918,
+        "voter": "aaseb"
+      },
+      {
+        "rshares": 2162953561,
+        "voter": "the-future"
+      },
+      {
+        "rshares": 289441856,
+        "voter": "illlefr4u"
+      },
+      {
+        "rshares": 11382937008,
+        "voter": "pinkisland"
+      },
+      {
+        "rshares": 3420690714,
+        "voter": "pigatron"
+      },
+      {
+        "rshares": 163854600,
+        "voter": "weenis"
+      },
+      {
+        "rshares": 309113169,
+        "voter": "jonaswakefield"
+      },
+      {
+        "rshares": 984803370,
+        "voter": "jsantana"
+      },
+      {
+        "rshares": 61805391,
+        "voter": "cehuneke"
+      },
+      {
+        "rshares": 6199940304,
+        "voter": "craigwilliamz"
+      },
+      {
+        "rshares": 57122450,
+        "voter": "thebrickranger"
+      },
+      {
+        "rshares": 57108081,
+        "voter": "vbrasher"
+      },
+      {
+        "rshares": 2980829211,
+        "voter": "ashleywilliamz"
+      },
+      {
+        "rshares": 57736694,
+        "voter": "abbywilliamz"
+      },
+      {
+        "rshares": 57604403,
+        "voter": "colleenwilliamz"
+      },
+      {
+        "rshares": 3202748238,
+        "voter": "luminousvisions"
+      },
+      {
+        "rshares": 57682239,
+        "voter": "canadian-coconut"
+      },
+      {
+        "rshares": 381198814,
+        "voter": "ghasemkiani"
+      },
+      {
+        "rshares": 54839161,
+        "voter": "cyborg"
+      },
+      {
+        "rshares": 50931848,
+        "voter": "analyzethis"
+      },
+      {
+        "rshares": 51780266,
+        "voter": "roadhog"
+      },
+      {
+        "rshares": 52777051,
+        "voter": "doggnostic"
+      },
+      {
+        "rshares": 52504270,
+        "voter": "jenny-talls"
+      },
+      {
+        "rshares": 54522752,
+        "voter": "robovirtuoso"
+      },
+      {
+        "rshares": 50090625,
+        "voter": "birdiewonder"
+      },
+      {
+        "rshares": 1092907021,
+        "voter": "robotev"
+      },
+      {
+        "rshares": 51074637,
+        "voter": "goaldigger"
+      }
+    ],
+    "author": "craigwilliamz",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": -0.27,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "![The Crown Family Photo](http://steemit-dub.s3.amazonaws.com/alex/the-crown-family1.png 'The Crown Family Photo')\n\nMy Family is Pretty Cool\n-\n![Family](http://steemit-dub.s3.amazonaws.com/family-800.jpg 'Family')\n\nMy favorite people in the world are my children. They are kind, generous, full of life, fun to be around and crazy creative. They are really cool people.\n\nWe have four children, Alex, Ashley, Abby and Austin. My wife's idea to name them all \"A\" names. They are referred to as the \"A Team\".\n\nWe have a close family. We argue very little and maintain open communication. We have treated them like people from early on and they have behaved as such.\n\n![Guitar](http://steemit-dub.s3.amazonaws.com/alex/guitar.png 'Guitar')\n\n\n\nAn Eye Opening Experience\n-\nA few weeks ago I was in Dallas visiting a friend whom I had not seen in many years. There were other people there as well that I had also not seen in a very long time. I struck up a conversation with one of them and the discussion of family ensued. He told me about his children and what it had been like for him to become a father. He has a wonderful family with children that are still very young. When the time came for me to share about my children, I began listing off what each one was doing from the oldest to the youngest. Before I could get to the youngest one, his mouth was gaped open and he burst out, \"What are you feeding them!\" We had a big laugh as I told him about the youngest and expanded on our philosophy of family.\n\nWe have had many compliments on our children throughout their life. Even today, the people with whom they interact; family, friends and the people who work with them in stage productions, make a point of complimenting them. I am around them all the time, and many of their friends are homeschooled as well so sometimes I forget how special they are and the impact they have on others.\n\n![Railroad tracks](http://steemit-dub.s3.amazonaws.com/alex/alex-railroad-tracks-600.jpg 'Railroad tracks')\n\nWhy Am I Sharing\n-\nI hope to convey a few things here. First, if you are considering homeschooling and have reservations, may these stories encourage you. If you already homeschool and wonder if it is all worth it, maybe our stories will give you hope and encouragement as well.\n\nAnd lastly, I am proud of them and want to share their success with you.\n\n![Sis](http://steemit-dub.s3.amazonaws.com/alex/children-800.jpg 'Children')\n\nWhy We Homeschool\n-\nMy personal experience in public schools was a nightmare. I moved a lot when I was young and changed schools every three to six months. During one stretch of five years, I switched schools nineteen times. I did not build long term relationships and being the new kid all the time often created struggles with teachers.\n\nThere is a very long story to my history so I will not get into that here. It is however, the main reason I became excited about homeschooling when my wife suggested it.\n\nOur Oldest Child Alex\n-\n![Alex](http://steemit-dub.s3.amazonaws.com/alexthrowback.jpg 'Alex')\n\nAlex has always been intelligent as I believe all children are. He had memorized many of the family members phone numbers and home addresses by the time he was six. We started him off in Montessori school at age four where he attended three years. We would have kept him in Montessori but they did not offer classes above six years old. \n\nAt that time my wife was still concerned about her ability to homeschool so we enrolled him in a Christian private school for one year. After that, she had researched enough to build her confidence. She was ready to go. (As the years went by, she found out that she was more than capable. We are guides.)\n\nPre-Teen\n-\n![Sis](http://steemit-dub.s3.amazonaws.com/alex/alex-littlekid1.jpeg 'Alex and Sister')\n\nAlex took two years of Latin and one year of Japanese. He acted in plays and did what most children do, play a lot.\n\nTeen Years\n-\n![Sis](http://steemit-dub.s3.amazonaws.com/ateam.jpg 'Alex and Sister')\n\nMany people will tell you that you will have to deal with the teenage years. \"Brace yourself,\" they will say. \"You will become their enemy!\" We did not experience this with Alex or our other children. Alex would come to me for advice about issues him and his friends were discussing. When he would share how I reacted to some of our serious conversations, his friends were astonished and would respond with descriptions of their parents exploding if they attempted to have the same discussions with their parents.\n\nKeeping your cool when one of your children comes to you with a confession is a sure way to have them trust you with other issues of concern.\n\nDuring his teen years, Alex took CLEP tests and earned twelve college hours.\n\nAt sixteen, he began to gain interest in programming. I had introduced it to him when he was nine but he wasn't interested. Then again around eleven but still no interest. At sixteen, the interest was all his. Had I forced him to do it earlier, he may have never liked it.\n\n![Graduation](http://steemit-dub.s3.amazonaws.com/alex/graduation.jpg 'Graduation')\n\nBecoming an Adult\n-\n![Alex](http://steemit-dub.s3.amazonaws.com/alex/alex-adult1.jpeg 'Alex')\n\nOne his eighteenth birthday, he begin working his first job as a software developer. He was hired as an apprentice and was promoted to junior developer after only three months. At that time, he began mentoring two of his friends. Within a few months he had taken on a third person to mentor. Within a year or so, each of them have now changed their path and work as software developers. It has significantly changed their lives. Alex just recently began mentoring another friend. Pretty cool to pass forward. He had received help from some of my co-workers early on which made all the difference in his progression.\n\nHe now speaks French and Mandarin and has aspirations to learn many more. He has traveled to seven countries and has an arrangement with his employer to work from anywhere in the world as long as he is at the office for part of the year.\n\n![Alex](http://steemit-dub.s3.amazonaws.com/alex/amsterdamcollage.jpg 'Alex')\n\nHe gives technical talks at local meet ups, plays both acoustic and electric guitar, has never met a stranger and has made no enemies.\n\nHe is an inspiration to others, his family and siblings. The bar has been set high but the other children have many interests and accomplishments of their own. I'll share those in subsequent posts.\n\n![Leon](http://steemit-dub.s3.amazonaws.com/alex/leoncollage.jpg 'Leon')\n\nWhat was our part?\n-\nMy wife has worked hard to keep them supplied with good school material, staying compliant with state requirements and providing some structure for learning. We never set up a school room like environment. There are never set hours of study. Homeschooling hours vary depending on the age of the child and what they are working on at that phase of their education. I would say that most of the time they spend less time doing actual school work and the rest of the time exploring, using their imagination and focusing their energy on things they are interested in.\n\nFor Alex, that was a foreign language. Other times it was memorizing all the Pokemon cards and building decks and playing in tournaments. Alex said one of the things that has helped him so much in learning new things was the fact that he had memorized so much Pokemon data. He developed the ability to store and retrieve things in his mind.\n\nThe simple fact is\u2026 we didn't do it. Alex did. He deserves all the credit. He did all the work. We provided the canvas, the paint and the paintbrushes. \n\nConclusion\n-\nI feel we have a pretty cool family. There are many ways to raise your children. The most important thing is to love them unconditionally, give them room to grow and treat them as you would your very best friend. They are people and are smarter than most give them credit.\n\nI hope I have been able to convey how proud we are of Alex. These are but a few highlights of his life as he is only twenty-one. There is so much in store for him.\n\nI am so grateful that as much as possible we have given Alex the opportunity to live life on his own terms and he has flourished.",
+    "category": "life",
+    "children": 3,
+    "created": "2016-08-17T02:23:30",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://steemit-dub.s3.amazonaws.com/alex/the-crown-family1.png"
+      ],
+      "tags": [
+        "life",
+        "photography",
+        "travel",
+        "parenting",
+        "family"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 20952886915040,
+    "payout": 45.82,
+    "payout_at": "2016-08-24T02:23:30",
+    "pending_payout_value": "45.820 HBD",
+    "percent_hbd": 10000,
+    "permlink": "how-to-raise-fantastic-children-part-1",
+    "post_id": 845687,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 42
+    },
+    "title": "How to Raise Fantastic Children - Part 1",
+    "updated": "2016-08-17T02:41:03",
+    "url": "/life/@craigwilliamz/how-to-raise-fantastic-children-part-1"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 6110298615385,
+        "voter": "abit"
+      },
+      {
+        "rshares": 147501011215,
+        "voter": "ozmaster"
+      },
+      {
+        "rshares": 2475588575,
+        "voter": "boy"
+      },
+      {
+        "rshares": 3004997792,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 562918093,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 5613233031399,
+        "voter": "complexring"
+      },
+      {
+        "rshares": 42638940309,
+        "voter": "bue"
+      },
+      {
+        "rshares": 1326847006,
+        "voter": "mini"
+      },
+      {
+        "rshares": 170845704,
+        "voter": "moon"
+      },
+      {
+        "rshares": 497656797,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 1149362909097,
+        "voter": "tuck-fheman"
+      },
+      {
+        "rshares": 758055771,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 230367336,
+        "voter": "helen.tan"
+      },
+      {
+        "rshares": 134106565208,
+        "voter": "edgeland"
+      },
+      {
+        "rshares": 19742650585,
+        "voter": "joelinux"
+      },
+      {
+        "rshares": 9643353346,
+        "voter": "richman"
+      },
+      {
+        "rshares": 7917346997,
+        "voter": "censor-this"
+      },
+      {
+        "rshares": 2164056980,
+        "voter": "murh"
+      },
+      {
+        "rshares": 1211348418,
+        "voter": "tee-em"
+      },
+      {
+        "rshares": 25349822848,
+        "voter": "djm34"
+      },
+      {
+        "rshares": 226688266301,
+        "voter": "tomkirkham"
+      },
+      {
+        "rshares": 406954777,
+        "voter": "endgame"
+      },
+      {
+        "rshares": 4469111855,
+        "voter": "sebastien"
+      },
+      {
+        "rshares": 2263852120,
+        "voter": "moonjelly"
+      },
+      {
+        "rshares": 12749599354,
+        "voter": "shredlord"
+      },
+      {
+        "rshares": 4590247494,
+        "voter": "hagie"
+      },
+      {
+        "rshares": 451134055,
+        "voter": "raymonjohnstone"
+      },
+      {
+        "rshares": 11281334218,
+        "voter": "bergy"
+      },
+      {
+        "rshares": 2008372383,
+        "voter": "theprophet0"
+      },
+      {
+        "rshares": 1553952443,
+        "voter": "coinbar"
+      },
+      {
+        "rshares": 149764365242,
+        "voter": "ozchartart"
+      },
+      {
+        "rshares": 4977363121,
+        "voter": "croatia"
+      },
+      {
+        "rshares": 4678252310,
+        "voter": "kryptik"
+      },
+      {
+        "rshares": 170230804,
+        "voter": "minnowsunited"
+      },
+      {
+        "rshares": 7371306594,
+        "voter": "stephen.king989"
+      },
+      {
+        "rshares": 18742071917,
+        "voter": "eneismijmich"
+      },
+      {
+        "rshares": 1114311519,
+        "voter": "quantumanomaly"
+      },
+      {
+        "rshares": 149386074,
+        "voter": "naifaz"
+      },
+      {
+        "rshares": 1910105759,
+        "voter": "catherinebleish"
+      },
+      {
+        "rshares": 5114340641,
+        "voter": "professorx"
+      },
+      {
+        "rshares": 65542448666,
+        "voter": "justinlaak"
+      },
+      {
+        "rshares": 191282778,
+        "voter": "comcentrate"
+      },
+      {
+        "rshares": 242182757,
+        "voter": "wizwom"
+      },
+      {
+        "rshares": 6548817310,
+        "voter": "heretickitten"
+      },
+      {
+        "rshares": 155385736,
+        "voter": "alina1"
+      },
+      {
+        "rshares": 143562405,
+        "voter": "inwoxer"
+      },
+      {
+        "rshares": 53141513,
+        "voter": "whatsup"
+      },
+      {
+        "rshares": 51593171,
+        "voter": "freebornangel"
+      },
+      {
+        "rshares": 51431138,
+        "voter": "steemwelcome"
+      },
+      {
+        "rshares": 51996577,
+        "voter": "tldr"
+      }
+    ],
+    "author": "tldr",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": -1.13,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "Steemit is about great content. But sometimes it just gets a bit, well, too long... So you didn't read. \n\nIntroducing, me! @tldr - the summarise bot! \n\nI come to the rescue, at least I try! I will monitor the blockchain and propose summaries as a comment under articles and try to summarize the long text you had to read before you decide to upvote :)\n\nI won't make it long this time, otherwise I would have to TLDR this post, and then, ...... infinite loop NOOOOOOOOS....\n\n<h3>I will run for 24 hours (see payout timer) after which I will analyse the results and see whether to continue or not. Your input is much valued below:</h3>\nCurrent parameters:\n1. Post must have more than 5000 chars\n2. Summary must be smaller than 15% of original content\n3. Summary must be max 7 sentences\n\n\nhttp://i.giphy.com/jChlcC99Vqu2I.gif",
+    "category": "tldr",
+    "children": 22,
+    "created": "2016-08-24T21:56:39",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://i.giphy.com/jChlcC99Vqu2I.gif"
+      ],
+      "tags": [
+        "tldr",
+        "bot"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 13805683329893,
+    "payout": 31.621,
+    "payout_at": "2016-08-31T21:56:39",
+    "pending_payout_value": "31.621 HBD",
+    "percent_hbd": 10000,
+    "permlink": "i-m-tldr-an-experimental-bot-for-summarizing-your-long-articles",
+    "post_id": 973482,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 50
+    },
+    "title": "I'm @tldr - an experimental bot for summarizing your long articles.",
+    "updated": "2016-08-24T23:26:03",
+    "url": "/tldr/@tldr/i-m-tldr-an-experimental-bot-for-summarizing-your-long-articles"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 11357569835389,
+        "voter": "berniesanders"
+      },
+      {
+        "rshares": 86746642898,
+        "voter": "nextgenwitness"
+      },
+      {
+        "rshares": 273812540770,
+        "voter": "justin"
+      },
+      {
+        "rshares": 552847788283,
+        "voter": "silver"
+      },
+      {
+        "rshares": 1251914367375,
+        "voter": "silversteem"
+      },
+      {
+        "rshares": 1930805191057,
+        "voter": "nextgencrypto"
+      },
+      {
+        "rshares": 190090757518,
+        "voter": "steemservices"
+      },
+      {
+        "rshares": 957733653490,
+        "voter": "boombastic"
+      },
+      {
+        "rshares": 8536011764,
+        "voter": "bingo-0"
+      },
+      {
+        "rshares": 2238572115,
+        "voter": "bingo-1"
+      },
+      {
+        "rshares": 429169643,
+        "voter": "scientihark"
+      },
+      {
+        "rshares": 2144600092,
+        "voter": "murh"
+      },
+      {
+        "rshares": 64184842487,
+        "voter": "beerbloke"
+      },
+      {
+        "rshares": 9651283220,
+        "voter": "romait"
+      },
+      {
+        "rshares": 1090790161,
+        "voter": "gidlark"
+      },
+      {
+        "rshares": 96663454240,
+        "voter": "rubybian"
+      },
+      {
+        "rshares": 504731722,
+        "voter": "jillfeint"
+      },
+      {
+        "rshares": 24388027122,
+        "voter": "creemej"
+      },
+      {
+        "rshares": 1680830998,
+        "voter": "the-future"
+      },
+      {
+        "rshares": 1487880898,
+        "voter": "iamwne"
+      },
+      {
+        "rshares": 1819480598,
+        "voter": "alex.chien"
+      },
+      {
+        "rshares": 5328526582,
+        "voter": "shortcut"
+      },
+      {
+        "rshares": 8943159633,
+        "voter": "gargon"
+      },
+      {
+        "rshares": 607950836,
+        "voter": "future24"
+      },
+      {
+        "rshares": 15277887140,
+        "voter": "thecurator"
+      },
+      {
+        "rshares": 90179446,
+        "voter": "michelnilles"
+      },
+      {
+        "rshares": 56326177,
+        "voter": "kaosdlanor"
+      },
+      {
+        "rshares": 425810977,
+        "voter": "thefeature"
+      },
+      {
+        "rshares": 56770700,
+        "voter": "elsievr"
+      },
+      {
+        "rshares": 50663058,
+        "voter": "champ333"
+      },
+      {
+        "rshares": 170136269,
+        "voter": "terrano"
+      },
+      {
+        "rshares": 51239204,
+        "voter": "spinx"
+      }
+    ],
+    "author": "spinx",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": -1.16,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<html>\n<p><img src=\"http://i64.tinypic.com/2ceg9qa.jpg\"/></p>\n<p><br></p>\n<p>One of the few precious truths I learned is life is not about waiting for the storm to pass, it is about learning to dance in...</p>\n<p><strong>The Rain</strong></p>\n<p>A ray of sunshine does not always mean happiness nor does a drop of rain mean total loneliness. Through time writers of all kinds being the sensitive, emotional and deep people that they are, have always associated the rain with loneliness. Today, whenever a cold wind blows through an open window or an empty space on a street, we are swept with its glum, warning us of a heavy feeling, reminding us of what we have lost, memories that are only too sad we almost wish could bury everything in a shroud of oblivion. Regrets come again, as well as faces of people from the past as a teardrop suddenly threatens to fall anytime from already lost and almost hollow eyes. The cold brought by the rain along with the dark clouds lurking outside makes us want to wrap our arms protectively around ourselves to keep us warm or to shut out any sad thoughts that dare to overstep the arms engulfing our curled bodies.</p>\n<p><img src=\"http://i63.tinypic.com/6iwlyw.jpg\"/></p>\n<p><br></p>\n<p>But its not always like that. Not if we can help it, no. The Rain is perceived negatively most of the time but we can care enough to see beyond what is often seen. GO, outside on an early September morning and you will see that the rain leaves a magnificent dew drenched flower or a grass all the more alive as the sunlight hits the few drops left from last night's rain. All for you to behold. See that under umbrellas are faces of people smiling and radiant as you meet them on the street. Really, the rain cant be that bad. Not at all. It is natures gift, a gift from the Almighty. And after a rain, what do the heavens hold for you? An array of colors painting the sky and we know it as rainbow. Just as we know that after the tears, laughter comes, making us very much worthy of the joy because of what we have gone through.</p>\n<p><img src=\"http://i64.tinypic.com/fnzjtl.jpg\"/></p>\n<p><br></p>\n<p>All our days cannot simply be filled with sunshine and it cannot be simply all laughter and smiles. We have to grow as a person just as the rain lets the flowers in the meadow bloom and grow. The flowers need the rain just as much as they need sunshine. Same is true with people. We need to be happy just as we need to be lonely so that we can grow as a person. Then can we only bring ourselves to realize that the bad is not so bad afer all as long as we allow the growth it brings to us as individuals.</p>\n<p><img src=\"http://i63.tinypic.com/16kp014.jpg\"/></p>\n<p><br></p>\n<p>You cannot escape the rain, nor chase it away. Dare to hear its pitter patter rhythm as something which can never be a hindrance for you to see things in a different and brighter way no matter how dark the clouds and heavy the downpour. It is as inevitable as the troubles we come across. Learn from the rain because it is the law of nature. Learn from loneliness or troubles because... It is the law of life.</p>\n<p><br></p>\n<p><br></p>\n<p>(c) to the owner of the picture I used...</p>\n</html>",
+    "category": "life",
+    "children": 5,
+    "created": "2016-08-29T07:57:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://i64.tinypic.com/2ceg9qa.jpg",
+        "http://i63.tinypic.com/6iwlyw.jpg",
+        "http://i64.tinypic.com/fnzjtl.jpg",
+        "http://i63.tinypic.com/16kp014.jpg"
+      ],
+      "tags": [
+        "life",
+        "story",
+        "blog",
+        ""
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 16847399101862,
+    "payout": 18.413,
+    "payout_at": "2016-09-05T07:57:36",
+    "pending_payout_value": "18.413 HBD",
+    "percent_hbd": 10000,
+    "permlink": "the-rain-it-is-the-law-of-life",
+    "post_id": 1038468,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 32
+    },
+    "title": "The Rain - It is the law of life",
+    "updated": "2016-08-29T07:57:36",
+    "url": "/life/@spinx/the-rain-it-is-the-law-of-life"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 7357840890403,
+        "voter": "dantheman"
+      },
+      {
+        "rshares": 636585679281,
+        "voter": "smooth"
+      },
+      {
+        "rshares": 114397608549,
+        "voter": "smooth.witness"
+      },
+      {
+        "rshares": 9972433406,
+        "voter": "mranderson"
+      },
+      {
+        "rshares": 557862447353,
+        "voter": "kevinwong"
+      },
+      {
+        "rshares": 277802855204,
+        "voter": "kaylinart"
+      },
+      {
+        "rshares": 57022148924,
+        "voter": "norbu"
+      },
+      {
+        "rshares": 19970133668,
+        "voter": "mustafaomar"
+      },
+      {
+        "rshares": 11501604178,
+        "voter": "darrantrute"
+      },
+      {
+        "rshares": 50023639,
+        "voter": "herves"
+      }
+    ],
+    "author": "mustafaomar",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 6.13,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hey dan , please if u read this comment i have a problem with my reputation score , it used to be (5) before the reputation update feature , i have no downvote on any of my posts or comments it suppose to be above (50) , i tried steemit chat but no response! im very disappointed .thanks",
+    "category": "philosophy",
+    "children": 3,
+    "created": "2016-09-01T06:49:27",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 1,
+    "is_paidout": false,
+    "json_metadata": {
+      "tags": [
+        "philosophy"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 9043005824605,
+    "parent_author": "dantheman",
+    "parent_permlink": "why-do-we-fight-to-change-the-world",
+    "payout": 11.554,
+    "payout_at": "2016-09-08T06:49:27",
+    "pending_payout_value": "11.554 HBD",
+    "percent_hbd": 10000,
+    "permlink": "re-dantheman-why-do-we-fight-to-change-the-world-20160901t064921336z",
+    "post_id": 1081218,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 10
+    },
+    "title": "RE: Why do we fight to change the world?",
+    "updated": "2016-09-01T06:49:27",
+    "url": "/philosophy/@dantheman/why-do-we-fight-to-change-the-world#@mustafaomar/re-dantheman-why-do-we-fight-to-change-the-world-20160901t064921336z"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 6587286082573,
+        "voter": "fuzzyvest"
+      },
+      {
+        "rshares": 3088907799,
+        "voter": "boy"
+      },
+      {
+        "rshares": 3749065785,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 702664664,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 52565334359,
+        "voter": "bue"
+      },
+      {
+        "rshares": 1655760877,
+        "voter": "mini"
+      },
+      {
+        "rshares": 213404176,
+        "voter": "moon"
+      },
+      {
+        "rshares": 304937604388,
+        "voter": "officialfuzzy"
+      },
+      {
+        "rshares": 621248858,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 914299192,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 287724583,
+        "voter": "helen.tan"
+      },
+      {
+        "rshares": 1799335267,
+        "voter": "murh"
+      },
+      {
+        "rshares": 222525224,
+        "voter": "soupernerd"
+      },
+      {
+        "rshares": 1021024059,
+        "voter": "basicstepnetwork"
+      },
+      {
+        "rshares": 10605797241,
+        "voter": "npl77"
+      },
+      {
+        "rshares": 128749966,
+        "voter": "jlwk0lb"
+      },
+      {
+        "rshares": 218467175,
+        "voter": "weenis"
+      },
+      {
+        "rshares": 62986247,
+        "voter": "dantrell"
+      },
+      {
+        "rshares": 57247118,
+        "voter": "jusan"
+      },
+      {
+        "rshares": 54541580,
+        "voter": "venetor"
+      },
+      {
+        "rshares": 6598752809,
+        "voter": "bluehorseshoe"
+      },
+      {
+        "rshares": -75916320,
+        "voter": "siren"
+      }
+    ],
+    "author": "basicstepnetwork",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 4.15,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<html>\n<p><br></p>\nhttps://www.youtube.com/watch?v=ogeCQZsumQo&feature=youtu.be\n<p><br></p>\n<p><br></p>\n<p>All Free Download List:</p>\n<p>Here are the best new games announced at the show.</p>\n<p>**MUST HAVE UTORRENT OR BITTORRENT FOR DL **</p>\n<p>You need uTorrent or BitTorrent for downloading .torrent files</p>\n<p><br></p>\n<p>#10 State Of Decay 2</p>\n<p>Platform: PC</p>\n<p>Free Download:<a href=\" http://sh.st/CipSL\"> http://sh.st/CipSL</a></p>\n<p><br></p>\n<p>#9 Days Gone</p>\n<p>Platform: PC</p>\n<p>Free Download: <a href=\"http://sh.st/CiaaB\">http://sh.st/CiaaB</a></p>\n<p><br></p>\n<p>#8 Steep</p>\n<p>Platform: PC</p>\n<p>Free Download: <a href=\"http://sh.st/CiaGF\">http://sh.st/CiaGF</a></p>\n<p><br></p>\n<p>#7 Dead Rising 4</p>\n<p>Platform:PC</p>\n<p>Free Download: <a href=\" http://sh.st/CishT\">http://sh.st/CishT</a></p>\n<p><br></p>\n<p>#6 Amazing Spiderman</p>\n<p>Platform: PC</p>\n<p>Free Download: <a href=\"http://sh.st/CidwF\">http://sh.st/CidwF</a></p>\n<p><br></p>\n<p>#5 Prey</p>\n<p>Platform: PC</p>\n<p>Free Download: <a href=\"http://sh.st/CidQg\">http://sh.st/CidQg</a></p>\n<p><br></p>\n<p>#4 Quake Champions</p>\n<p>Platform: PC</p>\n<p>Free Download: <a href=\"http://sh.st/CidGA\">http://sh.st/CidGA</a></p>\n<p><br></p>\n<p>#3 Resident Evil 7</p>\n<p>Platform: &nbsp;PC</p>\n<p>Free Download: <a href=\"http://sh.st/Cid3I\">http://sh.st/Cid3I</a></p>\n<p><br></p>\n<p>#2 Death Stranding</p>\n<p>Platform: PC</p>\n<p>Free Download: <a href=\"http://sh.st/Cifgp\">http://sh.st/Cifgp</a></p>\n<p><br></p>\n<p>#1 God of War 2016</p>\n<p>Platform: PC</p>\n<p>Free Download: <a href=\"http://sh.st/CifUE\">http://sh.st/CifUE</a></p>\n\n #upvoteforupvote #trevonjb #craigrant \n</html>",
+    "category": "steemit",
+    "children": 1,
+    "created": "2016-08-18T21:40:54",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "links": [
+        "https://www.youtube.com/watch?v=ogeCQZsumQo&feature=youtu.be",
+        " http://sh.st/CipSL",
+        "http://sh.st/CiaaB",
+        "http://sh.st/CiaGF",
+        " http://sh.st/CishT",
+        "http://sh.st/CidwF",
+        "http://sh.st/CidQg",
+        "http://sh.st/CidGA",
+        "http://sh.st/Cid3I",
+        "http://sh.st/Cifgp",
+        "http://sh.st/CifUE"
+      ],
+      "tags": [
+        "steemit",
+        "game",
+        "trevonjb",
+        "craigrant",
+        "upvoteforupvote"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 6976715607620,
+    "payout": 9.244,
+    "payout_at": "2016-08-25T21:40:54",
+    "pending_payout_value": "9.244 HBD",
+    "percent_hbd": 10000,
+    "permlink": "10-best-new-pc-games-of-e3-2016-free-download",
+    "post_id": 878287,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 22
+    },
+    "title": "10 Best NEW PC Games Of E3 2016 (Free Download)",
+    "updated": "2016-08-18T21:40:54",
+    "url": "/steemit/@basicstepnetwork/10-best-new-pc-games-of-e3-2016-free-download"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 5540489973862,
+        "voter": "kushed"
+      },
+      {
+        "rshares": 2470472546,
+        "voter": "boy"
+      },
+      {
+        "rshares": 2998422452,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 567643295,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 41978929338,
+        "voter": "bue"
+      },
+      {
+        "rshares": 1324285393,
+        "voter": "mini"
+      },
+      {
+        "rshares": 170710638,
+        "voter": "moon"
+      },
+      {
+        "rshares": 496905907,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 727043994,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 230154255,
+        "voter": "helen.tan"
+      },
+      {
+        "rshares": 450445142,
+        "voter": "germansailor"
+      }
+    ],
+    "author": "arvydas",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 13.79,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "First heard about this project. Thank you! I will grab some coins to Hodl.",
+    "category": "steemit",
+    "children": 0,
+    "created": "2016-08-17T19:06:45",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 1,
+    "is_paidout": false,
+    "json_metadata": {
+      "tags": [
+        "steemit"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 5591904986822,
+    "parent_author": "stoner19",
+    "parent_permlink": "hodlcoin-the-hidden-gem",
+    "payout": 8.715,
+    "payout_at": "2016-08-24T19:06:45",
+    "pending_payout_value": "8.715 HBD",
+    "percent_hbd": 10000,
+    "permlink": "re-stoner19-hodlcoin-the-hidden-gem-20160817t190639815z",
+    "post_id": 857512,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 11
+    },
+    "title": "RE: HOdlcoin, the hidden Gem",
+    "updated": "2016-08-17T19:06:45",
+    "url": "/steemit/@stoner19/hodlcoin-the-hidden-gem#@arvydas/re-stoner19-hodlcoin-the-hidden-gem-20160817t190639815z"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 5426057994994,
+        "voter": "kushed"
+      },
+      {
+        "rshares": 249477849,
+        "voter": "concave"
+      }
+    ],
+    "author": "feminism",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": -4.68,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "I agree with @sean-king here @kato you give feminism a bad name... :)",
+    "category": "life",
+    "children": 2,
+    "created": "2016-08-16T16:28:33",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 2,
+    "is_paidout": false,
+    "json_metadata": {
+      "tags": [
+        "life"
+      ],
+      "users": [
+        "sean-king",
+        "kato"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 5426307472843,
+    "parent_author": "sean-king",
+    "parent_permlink": "re-kato-the-crap-i-put-up-with-as-a-woman-in-crypto-because-you-say-you-re-not-a-feminist-20160815t231355973z",
+    "payout": 7.588,
+    "payout_at": "2016-08-23T16:28:33",
+    "pending_payout_value": "7.588 HBD",
+    "percent_hbd": 10000,
+    "permlink": "re-sean-king-re-kato-the-crap-i-put-up-with-as-a-woman-in-crypto-because-you-say-you-re-not-a-feminist-20160816t162832308z",
+    "post_id": 836711,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 2
+    },
+    "title": "RE: The Crap I Put Up With (as a Woman in Crypto) Because You Say You're \"Not a feminist\"",
+    "updated": "2016-08-16T16:28:33",
+    "url": "/life/@kato/the-crap-i-put-up-with-as-a-woman-in-crypto-because-you-say-you-re-not-a-feminist#@feminism/re-sean-king-re-kato-the-crap-i-put-up-with-as-a-woman-in-crypto-because-you-say-you-re-not-a-feminist-20160816t162832308z"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 8229633790630,
+        "voter": "blocktrades"
+      },
+      {
+        "rshares": 6284016428383,
+        "voter": "xeldal"
+      },
+      {
+        "rshares": 1851629352,
+        "voter": "boy"
+      },
+      {
+        "rshares": 2247283666,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 425489351,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 31397849088,
+        "voter": "bue"
+      },
+      {
+        "rshares": 992584992,
+        "voter": "mini"
+      },
+      {
+        "rshares": 127988174,
+        "voter": "moon"
+      },
+      {
+        "rshares": -17245953882,
+        "voter": "proctologic"
+      },
+      {
+        "rshares": 370346749,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 538576214,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 172539971,
+        "voter": "helen.tan"
+      },
+      {
+        "rshares": 27038563836,
+        "voter": "james-show"
+      },
+      {
+        "rshares": 254132895141,
+        "voter": "pal"
+      },
+      {
+        "rshares": 76841612019,
+        "voter": "the-ivor"
+      },
+      {
+        "rshares": -9396124751,
+        "voter": "klye"
+      },
+      {
+        "rshares": 537544738952,
+        "voter": "cyber"
+      },
+      {
+        "rshares": 483922286,
+        "voter": "spartanza"
+      },
+      {
+        "rshares": 3156609773,
+        "voter": "pangur-ban"
+      },
+      {
+        "rshares": 7668166874,
+        "voter": "somedude"
+      },
+      {
+        "rshares": 1393762199097,
+        "voter": "sean-king"
+      },
+      {
+        "rshares": -316344659193,
+        "voter": "fyrstikken"
+      },
+      {
+        "rshares": 223735241839,
+        "voter": "asmolokalo"
+      },
+      {
+        "rshares": 1745587694,
+        "voter": "gazm"
+      },
+      {
+        "rshares": 282550383,
+        "voter": "illlefr4u"
+      },
+      {
+        "rshares": 7100643884,
+        "voter": "fiveboringgames"
+      },
+      {
+        "rshares": 1331590583,
+        "voter": "bola"
+      },
+      {
+        "rshares": 9960069882,
+        "voter": "pinkisland"
+      },
+      {
+        "rshares": -63326245,
+        "voter": "foni-rejeki"
+      },
+      {
+        "rshares": 65582382,
+        "voter": "luke490"
+      },
+      {
+        "rshares": 57126890,
+        "voter": "becomingwhtur"
+      },
+      {
+        "rshares": 60086764,
+        "voter": "rwgunderson"
+      },
+      {
+        "rshares": 170954240,
+        "voter": "greatness"
+      },
+      {
+        "rshares": 52317958,
+        "voter": "dobermansden"
+      },
+      {
+        "rshares": 51556603,
+        "voter": "lighter"
+      },
+      {
+        "rshares": 51533378,
+        "voter": "badman"
+      },
+      {
+        "rshares": 52626437,
+        "voter": "boooya"
+      },
+      {
+        "rshares": 52779572,
+        "voter": "goodtime"
+      },
+      {
+        "rshares": 52467626,
+        "voter": "sunnyd"
+      },
+      {
+        "rshares": 53411423,
+        "voter": "jayc"
+      },
+      {
+        "rshares": 53117718,
+        "voter": "lilwayne"
+      },
+      {
+        "rshares": 53113856,
+        "voter": "blackchyna"
+      },
+      {
+        "rshares": 53015939,
+        "voter": "snoopdog"
+      },
+      {
+        "rshares": 53013240,
+        "voter": "tyga"
+      },
+      {
+        "rshares": 53010767,
+        "voter": "macklemore"
+      },
+      {
+        "rshares": 51646593,
+        "voter": "ezrathecat"
+      },
+      {
+        "rshares": 53262394,
+        "voter": "michal"
+      },
+      {
+        "rshares": 52465053,
+        "voter": "ms-awareness"
+      }
+    ],
+    "author": "ezrathecat",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 4.37,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "Within minutes, my whole outlook on Steemit changed.\n\nI am new to the Steemit platform. I decided to give it a try just a day ago. The thing I liked about it right away was the fact that you can post positive blogs and also get paid for this. We need more positive things around us.\n\nWell my last post was a pet safety tips post to help increase awareness on pets in the summer heat. I had original content as a header, but did add some tips in the body of the post of advise I found on a pet safety page.\n\nWithin minutes, I got multiple flags and my rating went from 44 to 18. I understand keeping content original on here, but this is an extremely harsh and negative response to a positive and informal post. This type of aggressive flagging will ultimately drive people away from this website.  I can't even post a picture now.\n\nAll that needed to be done was send a message to request a correction or if it is 100% copied, a moderator should just delete the post and inform the blogger why. These aggressive negative flags that drive a persons reputation instantly down to the floor for one single post will absolutely make people think twice about investing time into this website. I think the flags should be done with altogether because of the negative response it has on content, original or not.\n\nI work in IT and I also am an Animal Rights Advocate. I have a lot to offer Steemit and could help it grow. I have already had one person sign up in 1 day of being a member! But if this ultra aggressive flagging procedure doesn't change, I will be leaving as quickly as I came and also advise others of what I have experienced.\n\nThanks for your time.\nRM",
+    "category": "steemit",
+    "children": 6,
+    "created": "2016-08-17T01:55:42",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "tags": [
+        "steemit",
+        "flag",
+        "aggressive",
+        "negative",
+        "downfall"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 16754651923575,
+    "payout": 6.685,
+    "payout_at": "2016-08-24T01:55:42",
+    "pending_payout_value": "6.685 HBD",
+    "percent_hbd": 10000,
+    "permlink": "ultra-aggressive-flagging-the-achillies-heel-of-steemit",
+    "post_id": 845395,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 2.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 48
+    },
+    "title": "Ultra Aggressive Flagging  - The Achillies Heel of Steemit?",
+    "updated": "2016-08-17T01:56:15",
+    "url": "/steemit/@ezrathecat/ultra-aggressive-flagging-the-achillies-heel-of-steemit"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 8857021686984,
+        "voter": "ned"
+      },
+      {
+        "rshares": 94049519439,
+        "voter": "jchch"
+      },
+      {
+        "rshares": 30619147143,
+        "voter": "james-show"
+      },
+      {
+        "rshares": 11782181474,
+        "voter": "cian.dafe"
+      },
+      {
+        "rshares": 728657487,
+        "voter": "steemswede"
+      },
+      {
+        "rshares": 169634024,
+        "voter": "christianus"
+      },
+      {
+        "rshares": 1691876421,
+        "voter": "earnest"
+      },
+      {
+        "rshares": 174782107,
+        "voter": "beanz"
+      },
+      {
+        "rshares": 15951816066,
+        "voter": "clevecross"
+      },
+      {
+        "rshares": 1907943359,
+        "voter": "bullionstackers"
+      },
+      {
+        "rshares": 41183197838,
+        "voter": "rampant"
+      },
+      {
+        "rshares": 22400149479,
+        "voter": "cryptos"
+      },
+      {
+        "rshares": 7025939305,
+        "voter": "solarguy"
+      },
+      {
+        "rshares": 8791576380,
+        "voter": "gvargas123"
+      },
+      {
+        "rshares": 59446465,
+        "voter": "gduran"
+      },
+      {
+        "rshares": 304334506,
+        "voter": "codymac40"
+      },
+      {
+        "rshares": 736031742,
+        "voter": "freeinthought"
+      },
+      {
+        "rshares": 158874655,
+        "voter": "skeptic"
+      },
+      {
+        "rshares": 2120514131,
+        "voter": "whatsup"
+      },
+      {
+        "rshares": 219004308,
+        "voter": "anomaly"
+      },
+      {
+        "rshares": 484531196,
+        "voter": "cathi-xx"
+      },
+      {
+        "rshares": 1492564250,
+        "voter": "robotev"
+      },
+      {
+        "rshares": 54840587,
+        "voter": "saiku"
+      },
+      {
+        "rshares": 180182986,
+        "voter": "apolymask"
+      },
+      {
+        "rshares": 151658404,
+        "voter": "bicolisarog"
+      },
+      {
+        "rshares": 105584407,
+        "voter": "dirlei.sdias"
+      }
+    ],
+    "author": "skeptic",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 21.42,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<a href=\"https://imgflip.com/i/1amcm3\"><img src=\"https://i.imgflip.com/1amcm3.jpg\" title=\"made at imgflip.com\"/></a>\nBasically what my perception of what Steemit is like in a little meme comic. I'm sure the people know who they are. Hope you enjoy it as much as I did making it.\n\nTrying this 100% steem thingy again.",
+    "category": "censorship",
+    "children": 9,
+    "created": "2016-09-15T00:38:42",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "https://i.imgflip.com/1amcm3.jpg"
+      ],
+      "links": [
+        "https://imgflip.com/i/1amcm3"
+      ],
+      "tags": [
+        "censorship",
+        "steemit",
+        "steem",
+        "life",
+        "steememe"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 9099565675143,
+    "payout": 6.62,
+    "payout_at": "2016-09-22T00:38:42",
+    "pending_payout_value": "6.620 HBD",
+    "percent_hbd": 0,
+    "permlink": "hey-steemit",
+    "post_id": 1249103,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 26
+    },
+    "title": "Hey Steemit",
+    "updated": "2016-09-15T00:38:42",
+    "url": "/censorship/@skeptic/hey-steemit"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 3183092946187,
+        "voter": "lafona-miner"
+      },
+      {
+        "rshares": 377383371450,
+        "voter": "lafona"
+      },
+      {
+        "rshares": 771217364103,
+        "voter": "delegate.lafona"
+      },
+      {
+        "rshares": 314381836565,
+        "voter": "lafona5"
+      },
+      {
+        "rshares": 1450654362,
+        "voter": "murh"
+      },
+      {
+        "rshares": 213748838981,
+        "voter": "java1959"
+      },
+      {
+        "rshares": 28099595830,
+        "voter": "vladislav"
+      },
+      {
+        "rshares": 9330030997,
+        "voter": "sherwood"
+      },
+      {
+        "rshares": 271080621,
+        "voter": "tatiko"
+      },
+      {
+        "rshares": 17817802549,
+        "voter": "jlove"
+      },
+      {
+        "rshares": 229666628,
+        "voter": "sintal1ty"
+      },
+      {
+        "rshares": 702670594,
+        "voter": "rnobrega"
+      },
+      {
+        "rshares": 10929421349,
+        "voter": "trending"
+      },
+      {
+        "rshares": 73464066,
+        "voter": "ialex"
+      },
+      {
+        "rshares": 55329603,
+        "voter": "kristina011891"
+      }
+    ],
+    "author": "kristina011891",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 8.07,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<html>\n<p>http://fototelegraf.ru/wp-content/uploads/2016/02/guantanamo-24-9.jpg</p>\n<p>&nbsp;US authorities have handed over to the Government of the United Arab Emirates 15 prisoners - 12 people in Yemen and three Afghans - from the prison at Guantanamo Bay, according to Reuters.&nbsp;</p>\n<p>This turned out to be the largest transfer in the history of the institution. \"According to the executive presidential decree of January 22, 2009, an interagency group conducted a comprehensive review of these cases, taking into account a number of factors, including security issues\" - quoted by TASS message Pentagon. The interagency group includes representatives of the Ministry of Defense, Ministry of National Security, Ministry of Justice, Department of State, Joint Chiefs of Staff, and the Director of National Intelligence Office.&nbsp;</p>\n<p>\"The United States is grateful to the UAE authorities for the manifestation of humanity and willingness to support US efforts, which aim to closing the prison at Guantanamo Bay,\" - noted in the Pentagon. Special prison at Guantanamo Bay, Cuba on one of the US bases, was opened in 2001 after the September 11 attacks. In connection with the anti-terrorist operation in Afghanistan began receiving prisoners to militants \"Al-Qaeda\", supporters of the \"Taliban\" and other terrorist organizations. Many prisoners alleged that they are subject to such prohibited interrogation methods as sleep deprivation, exposure to extreme temperatures, loud music, waterboarding.&nbsp;</p>\n<p>In 2003, the number of prisoners at Guantanamo Bay has reached 680 people, compared to January 2016 it decreased to 93 persons. US President Barack Obama was in favor of closing the prison because of its cost and inefficiency. When he became head of state, 245 prisoners are held at Guantanamo. After the transfer of 15 prisoners in the UAE in jail was 61 prisoner. Due to the closure of the US prison authorities hope to reduce budget spending, because every year for the maintenance of Guantanamo spent 445 million dollars.&nbsp;</p>\n</html>",
+    "category": "prisoners",
+    "children": 0,
+    "created": "2016-08-16T02:51:45",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://fototelegraf.ru/wp-content/uploads/2016/02/guantanamo-24-9.jpg"
+      ],
+      "tags": [
+        "prisoners",
+        "guantanamo",
+        "usa",
+        "uae",
+        "government"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 4928784073885,
+    "payout": 5.04,
+    "payout_at": "2016-08-23T02:51:45",
+    "pending_payout_value": "5.040 HBD",
+    "percent_hbd": 10000,
+    "permlink": "us-authorities-transferred-the-uae-15-prisoners-from-guantanamo",
+    "post_id": 828131,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 15
+    },
+    "title": "US authorities transferred the UAE 15 prisoners from Guantanamo",
+    "updated": "2016-08-16T02:51:45",
+    "url": "/prisoners/@kristina011891/us-authorities-transferred-the-uae-15-prisoners-from-guantanamo"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 3335009995389,
+        "voter": "abit"
+      },
+      {
+        "rshares": 3085197652,
+        "voter": "boy"
+      },
+      {
+        "rshares": 3744410921,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 708979370,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 52275677031,
+        "voter": "bue"
+      },
+      {
+        "rshares": 1653869296,
+        "voter": "mini"
+      },
+      {
+        "rshares": 213274356,
+        "voter": "moon"
+      },
+      {
+        "rshares": 613532784,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 893835290,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 72625264918,
+        "voter": "jchch"
+      },
+      {
+        "rshares": 287509506,
+        "voter": "helen.tan"
+      },
+      {
+        "rshares": 1450896035,
+        "voter": "murh"
+      },
+      {
+        "rshares": 19071163989,
+        "voter": "minfon"
+      },
+      {
+        "rshares": 18973543151,
+        "voter": "deanliu"
+      },
+      {
+        "rshares": 429924480,
+        "voter": "wuyueling"
+      },
+      {
+        "rshares": 55271378,
+        "voter": "hamer"
+      },
+      {
+        "rshares": 50649614,
+        "voter": "alina1"
+      },
+      {
+        "rshares": 53599608,
+        "voter": "zzzzzzzzz"
+      }
+    ],
+    "author": "zzzzzzzzz",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 3.64,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "http://newpix.ru/wp-content/uploads/2013/07/tb.jpg\n\u658b\u6d66\u5c14\u5e02\u662f\u5370\u5ea6\u6700\u6709\u8da3\u7684\u5730\u65b9\u4e4b\u4e00\u3002\u5b83\u6210\u7acb\u4e8e1727\u5e74\uff0c\u5e76\u7acb\u523b\u6210\u4e3a\u5370\u5ea6\u6700\u5927\u7684\u90a6\u7684\u9996\u5e9c - \u62c9\u8d3e\u65af\u5766\u90a6\u3002\u658b\u6d66\u5c14\u662f\u5f88\u5bb9\u6613\u5728\u7167\u7247\u4e2d\u8ba4\u56e0\u5efa\u7b51\u7269\u7684\u72ec\u7279\u7684\u8272\u5f69......\u636e\u5a01\u5c14\u58eb\u738b\u5b50\u5230\u6765\u4e4b\u524d\u57281876\u5e74\u7684\u4e00\u4e2a\u6545\u4e8b\u88ab\u52d2\u4ee4\u6f06\u7c89\u7ea2\u8272\u6240\u6709\u7684\u5efa\u7b51\uff0c\u4ece\u800c\u663e\u793a\u4e86\u5f53\u5730\u5c45\u6c11\u7684\u53cb\u5584\u548c\u597d\u5ba2\u3002\u5728\u8fd9\u91cc\uff0c\u81ea\u90a3\u65f6\u4ee5\u6765\uff0c\u658b\u6d66\u5c14\u5f97\u5230\u4e86\u5b83\u7684\u7b2c\u4e8c\u4e2a\u540d\u5b57 - \u201c\u7c89\u7ea2\u4e4b\u57ce\u201d\u3002\u658b\u6d66\u5c14\u662f\u8236\u6765\u54c1\uff0c\u65b0\u7684\u7ecf\u9a8c\u548c\u96c4\u4f1f\u7684\u5bab\u6bbf\u7684\u65c5\u6e38\u7231\u597d\u8005\u4e2d\u5f88\u53d7\u6b22\u8fce......\u5927\u591a\u6570\u658b\u6d66\u5c14\u7684\u65c5\u6e38\u666f\u70b9\u7684\u57ce\u5899\u5185\u6536\u96c6\u3002\u57ce\u5e02\u7684\u4e3b\u8981\u666f\u70b9\uff0c\u4e3b\u8981\u6709\u53e4\u5370\u5ea6\u5efa\u7b51\u7684\u6770\u4f5c\u65e0\u4e0e\u4f26\u6bd4\u6709\u5173\u3002\u57ce\u5e02\u5bab\u6bbf\u5efa\u7b51\u7fa4 - \u57ce\u5e02\uff0c\u5982\u4eca\uff0c\u5b83\u7ed3\u5408\u4e86\u5927\u7406\u77f3\u96d5\u523b\u548c\u8c6a\u534e\u5ba2\u623f\uff0c\u56ed\u666f\u82b1\u56ed\u7684\u72ec\u7279\u7ed3\u6784\uff0c\u8ba9\u4eba\u60f3\u8d77\u4e86\u82f1\u56fd\u7684\u516c\u56ed\uff0c\u7c89\u7ea2\u8272\u7684\u77f3\u5934\u7684\u975e\u51e1\u7801......\u5728\u5bab\u6bbf\u4ee5\u524d\u4e3e\u884c\u9605\u5175\u4eea\u5f0f\u548c\u62db\u5f85\u4f1a\u7684\u5bbd\u655e\u7684\u5927\u5385\u4e00\u4e2a\u5efa\u7b51\u5947\u8ff9\u7684\u4e3b\u8981\u5438\u5f15\u529b\uff0c\u73b0\u5728\uff0c\u5b83\u62e5\u6709\u4e00\u4e2a\u535a\u7269\u9986\u3002\u4f8b\u5982\uff0c\u5728\u5efa\u7b51\u4e4b\u4e00 - \u7a46\u5df4\u62c9\u514b\u6cf0\u59ec\u9675\u662f\u9762\u6599\uff0c\u4e50\u5668\u548c\u670d\u88c5\u535a\u7269\u9986\u3002\u5728Sileh\u6c57\u662f\u9ec4\u91d1\u793c\u4eea\u6b66\u5668\u6536\u96c6\uff0c\u94bb\u77f3\u6307\u793a\u3002\u6b64\u5916\uff0c\u5728\u5927\u541b\u7684\u5bab\u6bbf\u662f\u4e2a\u4eba\u56fe\u4e66\u9986\uff0c\u5728\u90a3\u91cc\u7a00\u6709\u7684\u624b\u7a3f\u548c\u624b\u7a3f\u88ab\u5b58\u50a8\u3002\u970d\u5c14\u9a6c\u514b\u658b\u6d66\u5c14\u88ab\u8ba4\u4e3a\u662f\u53e6\u4e00\u4e2a\u5bab\u6bbf\u5efa\u7b51 - \u98ce\u4e4b\u5bab\u6bbf\uff0c\u5b83\u5efa\u4e8e1799\u5e74\u3002\u5f53\u7136\uff0c\u5efa\u7b51\u662f\u7531\u7c89\u7ea2\u8272\u7802\u5ca9\u3002\u6574\u4e2a\u5efa\u7b51\u88c5\u9970\u7740\u7cbe\u81f4\u7684\u88c5\u9970\u54c1\u548c\u5217\uff0c\u6240\u4ee5\u5bab\u6bbf\u66f4\u50cf\u662f\u4e00\u4e2a\u9996\u9970\u76d2\u3002\nhttp://www.indiacitytrip.com/images/Jaipur/Amber-Fort-1.jpg\n\u540c\u6837\u4ee4\u4eba\u632f\u594b\u7684\u5c06\u662f\u4e00\u4e2a\u6e38\u89c8\u7684\u7425\u73c0\u5bab\u3002\u4e4d\u4e00\u770b\uff0c\u6765\u52bf\u6c79\u6c79\u7684\u5899\u58c1\u6709\u70b9\u5413\u4eba\uff0c\u4f46\u8fd9\u4e9b\u5899\u9690\u85cf\u90a3\u4e9b\u8c01\u6b23\u8d4f\u827a\u672f\u771f\u6b63\u7684\u5b9d\u5e93\u3002\u5bab\u6bbf\u7684\u5899\u58c1\u4e0a\u7528\u5b9d\u77f3\uff0c\u4e0d\u540c\u5bfb\u5e38\u7684\u955c\u5b50\u548c\u4fdd\u5b58\u5b8c\u597d\u7684\u753b\uff0c\u63cf\u7ed8\u7684\u6218\u4e89\u573a\u9762\u88c5\u9970\u3002\u7425\u73c0\u5305\u62ec\u5929\u4e95\u201cDzhaleb\u96c6\u5e02\u201d - \u6709\u7eaa\u5ff5\u54c1\u5546\u5e97\u548c\u4f5c\u574a\uff0c\u65b0\u7f57\u5fb7\u7ef4\u5bfa\u7b49\u3002\u4e00\u822c\u60c5\u51b5\u4e0b\uff0c\u5728\u5f98\u5f8a\u5883\u5185\uff0c\u4f60\u53ef\u4ee5\u627e\u5230\u5f88\u591a\u6709\u8da3\u7684\u5730\u65b9\u3002\u987a\u4fbf\u8bf4\u4e00\u53e5\uff0c\u5982\u679c\u4f60\u5df2\u7ecf\u538c\u5026\u4e86\u8d70\u5728\u5bab\u6bbf\u6240\u5728\u5730\u7684\u7425\u73c0\u5e94\u8be5\u53bb\u8fdc\u4e00\u70b9\u7684\u5821\u5792Dzhaygar\uff0c\u56e0\u4e3a\u6ca1\u6709\u770b\u5230\u7684\u4e1c\u897f\u3002\u4e00\u5b9a\u8981\u68c0\u67e5\uff1a\u4e16\u754c\u4e0a\u6700\u5927\u7684\u8f6e\u5927\u70ae\uff0c\u8eb2\u8fc7\u89c2\u6d4b\u5854\u548c\u5c1a\u5b58\u5821Nahagarh\u63d0\u4f9b\u6e56\u6ee1\u8428\u683c\u5c14\u7684\u975e\u5e38\u7f8e\u4e3d\u7684\u666f\u8272\u3002",
+    "category": "cn",
+    "children": 3,
+    "created": "2016-08-16T16:38:21",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://newpix.ru/wp-content/uploads/2013/07/tb.jpg"
+      ],
+      "tags": [
+        "cn",
+        "steemit",
+        "chinese",
+        "travel"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 3511196594768,
+    "payout": 3.853,
+    "payout_at": "2016-08-23T16:38:21",
+    "pending_payout_value": "3.853 HBD",
+    "percent_hbd": 10000,
+    "permlink": "59mymt",
+    "post_id": 836864,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 18
+    },
+    "title": "\u4f11\u606f\u3002\u658b\u6d66\u5c14\uff1a\u201c\u7c89\u7ea2\u4e4b\u57ce\u201d\u5370\u5ea6",
+    "updated": "2016-08-16T16:38:21",
+    "url": "/cn/@zzzzzzzzz/59mymt"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 8833695851088,
+        "voter": "pharesim"
+      },
+      {
+        "rshares": 2468539488,
+        "voter": "boy"
+      },
+      {
+        "rshares": 2996002946,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 567264912,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 41835959713,
+        "voter": "bue"
+      },
+      {
+        "rshares": 1323295404,
+        "voter": "mini"
+      },
+      {
+        "rshares": 170640910,
+        "voter": "moon"
+      },
+      {
+        "rshares": -17995777964,
+        "voter": "proctologic"
+      },
+      {
+        "rshares": 492323222,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 716601913,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 88328024901,
+        "voter": "jchch"
+      },
+      {
+        "rshares": 230037599,
+        "voter": "helen.tan"
+      },
+      {
+        "rshares": 10035855487,
+        "voter": "valtr"
+      },
+      {
+        "rshares": -9396124751,
+        "voter": "klye"
+      },
+      {
+        "rshares": 44852696610,
+        "voter": "ranko-k"
+      },
+      {
+        "rshares": -308019799740,
+        "voter": "fyrstikken"
+      },
+      {
+        "rshares": 218408212271,
+        "voter": "asmolokalo"
+      },
+      {
+        "rshares": 2840673246,
+        "voter": "karen13"
+      },
+      {
+        "rshares": 137603006665,
+        "voter": "jl777"
+      },
+      {
+        "rshares": 12140099528,
+        "voter": "proto"
+      },
+      {
+        "rshares": 5945019388,
+        "voter": "taker"
+      },
+      {
+        "rshares": 121961698,
+        "voter": "french.fyde"
+      },
+      {
+        "rshares": 121666707,
+        "voter": "hdphotography"
+      },
+      {
+        "rshares": 53798534,
+        "voter": "ezrathecat"
+      }
+    ],
+    "author": "ezrathecat",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 4.37,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<html>\n<p><img src=\"https://s-media-cache-ak0.pinimg.com/736x/63/44/c5/6344c5efc7cab86be6662e781ddb018e.jpg\" width=\"300\" height=\"300\"/></p>\n</html>\nRagdolls are the most fluffy and lovable cats around!\n\nSIZE: \nFemales usually weigh 10 to 15 pounds, and some males weigh more than 20 pounds.\n\nPERSONALITY: \nUnlike many cats, Ragdolls are notable for collapsing into the arms of anyone who holds them, even if they are cradled on their back. They love their people, greeting them at the door, following them around the house, and leaping into a lap or snuggling in bed whenever given the chance. They often learn to come when called or to retrieve toys that are thrown for them.\n\nThe word most often used to describe them is docile, but that doesn\u2019t mean they are inactive. They like to play with toys and enter into any family activities. With positive reinforcement in the form of praise and food rewards when they do something you like, Ragdolls learn quickly and can pick up tricks as well as good behaviors such as using a scratching post. In a small, sweet voice, they remind you of mealtime or ask for petting but are not excessively vocal.\n\nRagdolls have nice manners and are easy to live with. You will find a Ragdoll on your sofa or bed, but generally not much higher than that. He prefers to stay on the same level with his people rather than the highest point in a room.\n\nRagdolls are undoubtedly the most Fluffy and Lovable Cats EVER! \n\nCat Friends, please VOTE and Follow!!  =)",
+    "category": "cat",
+    "children": 1,
+    "created": "2016-08-16T20:02:57",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "https://s-media-cache-ak0.pinimg.com/736x/63/44/c5/6344c5efc7cab86be6662e781ddb018e.jpg"
+      ],
+      "tags": [
+        "cat",
+        "ragdoll",
+        "kitten",
+        "animals",
+        "meow"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 9069535829775,
+    "payout": 3.43,
+    "payout_at": "2016-08-23T20:02:57",
+    "pending_payout_value": "3.430 HBD",
+    "percent_hbd": 10000,
+    "permlink": "ragdolls-the-most-fluffy-lovable-cat-ever",
+    "post_id": 840433,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 2.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 24
+    },
+    "title": "Ragdolls... The Most Fluffy Lovable Cat EVER!",
+    "updated": "2016-08-16T20:54:30",
+    "url": "/cat/@ezrathecat/ragdolls-the-most-fluffy-lovable-cat-ever"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 6055709930651,
+        "voter": "proskynneo"
+      },
+      {
+        "rshares": 2275182541,
+        "voter": "whatsup"
+      }
+    ],
+    "author": "skeptic",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 21.42,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "You promised big breasted hens this time! child porn is wrong! :/",
+    "category": "photography",
+    "children": 2,
+    "created": "2016-09-14T20:37:30",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 1,
+    "is_paidout": false,
+    "json_metadata": {
+      "tags": [
+        "photography"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 6057985113192,
+    "parent_author": "whatsup",
+    "parent_permlink": "hot-chick-pic-of-the-day",
+    "payout": 3.403,
+    "payout_at": "2016-09-21T20:37:30",
+    "pending_payout_value": "3.403 HBD",
+    "percent_hbd": 10000,
+    "permlink": "re-whatsup-hot-chick-pic-of-the-day-20160914t203729575z",
+    "post_id": 1246994,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 2
+    },
+    "title": "RE: Hot Chick Pic of the Day!",
+    "updated": "2016-09-14T20:37:51",
+    "url": "/photography/@whatsup/hot-chick-pic-of-the-day#@skeptic/re-whatsup-hot-chick-pic-of-the-day-20160914t203729575z"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 4408551494317,
+        "voter": "riverhead"
+      },
+      {
+        "rshares": 181124117718,
+        "voter": "gardenlady"
+      },
+      {
+        "rshares": 83077237410,
+        "voter": "edgeland"
+      },
+      {
+        "rshares": 1413080680,
+        "voter": "murh"
+      },
+      {
+        "rshares": 1648149968,
+        "voter": "leksimus"
+      },
+      {
+        "rshares": 20189521713,
+        "voter": "artific"
+      },
+      {
+        "rshares": 116773642,
+        "voter": "bkdbkd"
+      },
+      {
+        "rshares": 115810043,
+        "voter": "hightek"
+      },
+      {
+        "rshares": 115958450,
+        "voter": "bullionstackers"
+      },
+      {
+        "rshares": 6144702800,
+        "voter": "mahekg"
+      },
+      {
+        "rshares": 12286423875,
+        "voter": "borran"
+      },
+      {
+        "rshares": 61520687,
+        "voter": "alfaman"
+      },
+      {
+        "rshares": 2858450111,
+        "voter": "netaterra"
+      },
+      {
+        "rshares": 2023932295,
+        "voter": "penguinpablo"
+      },
+      {
+        "rshares": 6923011432,
+        "voter": "einsteinpotsdam"
+      },
+      {
+        "rshares": 1665281730,
+        "voter": "edgarsart"
+      },
+      {
+        "rshares": 193804150,
+        "voter": "james1987"
+      },
+      {
+        "rshares": 157763675,
+        "voter": "william001"
+      },
+      {
+        "rshares": 156589766,
+        "voter": "gentleman"
+      },
+      {
+        "rshares": 158278233,
+        "voter": "gapel"
+      },
+      {
+        "rshares": 155131494,
+        "voter": "dealzgal"
+      },
+      {
+        "rshares": 154288882,
+        "voter": "risabold"
+      }
+    ],
+    "author": "william001",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 9.31,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<html>\n<p><img src=\"https://lh3.googleusercontent.com/EQiKwsIo2htxdeWPRMNKSwDYFwBSiPZTgdcZgPJ-IyEL5Mc-38PEorOamtem8kHedaQr29p8XSPN5XW7TJLZPaAeMfrluASubuPH9f-rrmXEgbTtNdeh7JSYt3bk1Y0VUQNR-i-hQUR7ysl8Mo5gHH5O9pS2peoycFtahG32RR89szk7YA8rV3OVpCdNGGcOrqzYMQUiD6J2jlwRVuw4d8X99UexyiYCEkqYMDMEKC4iLLqlKDrm3fU230H_j0B7UoQKmpzE0y6c3RGeDSOxCujg7aY0dWGKUcDaeB9ipESsZeCwXimGmLsof04Iiw17mCzuaIZteCTD76EjiHsVT2JERRmJYHw8bLNZfoD7wiagkTK0cMQnHumgfrGfzdibcKOky940pNB4Sy3clraWMAv4sOUB9F97v9dsBImT6YkCsaFKBlJVSjHlQQ1F01FhRc693prFJ33BcIdFjVF5dLEA1o2bhQCvIdTdxEaX4y-YTyKx01_9rn8ppR97pJm63uUCI3m0hdONY7l3bByCJJtfM7Q3TsSfDCqg9tYhEwf2IuGPtZvj0VN9vmr2gnxItlXZJA_MziyAbbyfbqf6KiWeaQSR2Y9Grq0Gxl5AqvIqLclq=w550-h465-no\" width=\"550\" height=\"465\"/></p>\n<p>Drinking Water in the morning it brings many benefits</p>\n<p>What are the benefits?</p>\n<p>Healthy Recipes companions consider first why the White Water intake should be satisfied.</p>\n<p><img src=\"https://lh3.googleusercontent.com/liatmWFnRVHsBdtrLLo5dZZigN1Uv-aN2fYM4Gvlut2JXG9bbQcbsYY3WmuIHgPXO3G5awDk8Ipjx8HSKSNy0zgbpY0wW09_2tb-_mhs5yja4zVIPiyjBhP17OKeV5TuLebhQvQpzmcqypbQKZ7hcrMe2CVg4V0dCkvOXRcKIxAkDVeJ0t0h-7DZvRBaDJcIRxsW8XRVbJr705xor2-Uvutc7CGNAR6c4Vu35ucsIn5RdBrUyalZDmBTTAU6EyE0Zdo69vycaN0TWlC3IfrCjhLRByWjo7irGPAcm60CpnVkpENJ7HDEaz-0piKT7DdA8bFvfVOyVfSwgPoTgfAqj3vWgYHADUsZ9YOeYr0ae5ZNgdzJv7-0TKpPcU6HpKTeJ9cXJmPPx4MeCoOHkIl4UzR8Zh3OxGq1H3YdBx5Oyc-AAGHY17SaC8GyeuGd9-DTyCVfjvHVnlzP2mOKyURWop6CKkJOOACNzV22GkdzAyCIwhmCKU54drtFBBWWDNQZDE6iSPsFzyEUDQgroU4Dk_CkcD6i0nfV97uaZiklUBWTMva1-t87HSVBKgA9BXmIjSmyNDCTN5V3SmcbZiHj0HFMVzYJPx23nqk018B4B-wWnoOX=w640-h425-no\" width=\"640\" height=\"425\"/></p>\n<h2>Do not Think Trivial Water</h2>\n<p>Healthy Recipes companions do not consider this a trivial water yes.</p>\n<p>Water is one of the nutrients that can not be replaced by other drinks. At White Water, there are seven natural mineral needed by the body.</p>\n<p>There are seven minerals that make the White Water is important for consumption are:</p>\n<ol>\n  <li>Chloride (serves to keep the teeth from caries formation and bone strength)</li>\n  <li>Sodium (maintaining the balance of body fluids)</li>\n  <li>Calcium (bone health, blood vessels and muscle contraction)</li>\n  <li>Magnesium (for heart health, blood vessels and bones)</li>\n  <li>Silica (helps the integrity and moisture)</li>\n  <li>and Zinc (co-enzyme, keep the immune system and brain function)</li>\n</ol>\n<p>With seven mineral content of the water consumed is recommended at least 8 glasses a day. With details like this:</p>\n<ul>\n  <li>For adults, a total of 2 liters or eight glasses of water</li>\n  <li>Seniors: 1 liter to 1.5 liters or four to six cups a day</li>\n  <li>Children: 1.6 liters a day, or 6 to 7 cups a day.</li>\n</ul>\n<h3>Benefits of Drinking Water</h3>\n<p>The benefits of drinking water include:</p>\n<ul>\n  <li>Maintain body fluid levels, so that the body does not experience a disruption in food digestion and absorption function, circulation, kidney, and is important in maintaining a normal body temperature.</li>\n  <li>Increase Productivity Brain</li>\n  <li>Retain moisture, making the skin brighter, smoother and firmer</li>\n  <li>Prevent headaches</li>\n  <li>Helps remove toxins</li>\n  <li>Regulates body temperature</li>\n  <li>Produce red blood cells</li>\n  <li>Help distribute nutrients and oxygen throughout the body</li>\n  <li>Controlling calories and lose weight</li>\n</ul>\n<p><img src=\"https://lh3.googleusercontent.com/KRwgOrOAqT4--HSn29vjLpKS4RiutI8E5EdS1L9f5q5uuFxyu5cYuO7rWXmkWFqoXSWEs0CFcKE7p4FgXcUPZrw4kxTLHKgzADv3CYh6-oDOADzWZhgEIx_SfuYLzrQNEmWvwYhO_Vn8Ik1-BnvIyCFZhEr3ZxW3_NEp_yPpuBCYzbQVr-A2tMT6v3KO71OYY1Qz96DADKCtUCGg0TeY7SVSJu2hPf18NPUzTe1RaFExNp5jLnbcNgKHqobIsH8l-5WSu130y_9A7f_dNYN0DLD96UJajpN0-U_FZhN_IYCkuF-zh6HpA-HRPMQityAdQXiyabODJpcI09J1fQkPBMYZ3yZnbfu_WWkXnEKIOtaGcIopphPSsmontGGmxTa5P4UAHamHKKDYrqRCGziZYGu0mk5yIMus0B3kkKp3ofNEa33llH3r5M5WXc0OX-eQJ10vTZAAkuUsuxWejnNPGojFndiAb9MuV_bAezRqUKDVJ70KzpWD3Xr9CKIQ9nTuWTzAKBX6R85yyr03ETxG17bEXI4xq7f1Kvq0dIfd5W2Z2FR4urauO7PKzSarYnzhjNOmeYZ7ufn75t1kRXi_FAlOrgHQ2U3vjHotPf4ahXar2eV3=w417-h820-no\" width=\"417\" height=\"820\"/></p>\n<h3>Benefits of Drinking Water in the morning</h3>\n<ol>\n  <li>Drinking water in the morning is very effective throwing and clean the toxins that are in the blood through sweat and urine. So the body will be healthy and fresh throughout the day. A healthy body and fresh made Companion Healthy Recipes ageless.</li>\n  <li>Drinking water in the morning helpful for muscular organ and whole blood cells in the body.</li>\n  <li>Balancing lymph system. When the lymph system to work optimally, the body will have more power to fight infections that could undermine the quality of health of the body you have.</li>\n  <li>Streamlining defecation. If Sahabat Recipes Sehat\u00c2 experience constipation or difficult bowel movements in the morning, coba\u00c2 drinking water after waking \u00c2 to help smooth bowel movement.</li>\n  <li>Controlling Body Weight. The ideal weight is the dream of every person. For those of you who want to adjust the weight proportional, then start to meet the need of water in the morning.</li>\n  <li>Colon is one organ in our pencernan system. With drinking water in the morning. will have a positive impact on the health of the colon. So that absorption of nutrients from food can run well too.</li>\n  <li>Organ Kidney Healthier. Sufficient water intake in the morning can help alleviate the kidneys while keeping the kidney organ health.</li>\n</ol>\n<h3>Tips for White Water Intake fulfilled:</h3>\n<ul>\n  <li>Bring water bottles or drinking place wherever traveling companions Healthy Recipes</li>\n  <li>If Sahabat Healthy Recipes working, use a large glass or bottle of drinking water consumption during the work (before taking an afternoon nap) and place not far from reach.</li>\n</ul>\n<p><br></p>\n</html>",
+    "category": "health",
+    "children": 6,
+    "created": "2016-09-10T19:41:18",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "https://lh3.googleusercontent.com/EQiKwsIo2htxdeWPRMNKSwDYFwBSiPZTgdcZgPJ-IyEL5Mc-38PEorOamtem8kHedaQr29p8XSPN5XW7TJLZPaAeMfrluASubuPH9f-rrmXEgbTtNdeh7JSYt3bk1Y0VUQNR-i-hQUR7ysl8Mo5gHH5O9pS2peoycFtahG32RR89szk7YA8rV3OVpCdNGGcOrqzYMQUiD6J2jlwRVuw4d8X99UexyiYCEkqYMDMEKC4iLLqlKDrm3fU230H_j0B7UoQKmpzE0y6c3RGeDSOxCujg7aY0dWGKUcDaeB9ipESsZeCwXimGmLsof04Iiw17mCzuaIZteCTD76EjiHsVT2JERRmJYHw8bLNZfoD7wiagkTK0cMQnHumgfrGfzdibcKOky940pNB4Sy3clraWMAv4sOUB9F97v9dsBImT6YkCsaFKBlJVSjHlQQ1F01FhRc693prFJ33BcIdFjVF5dLEA1o2bhQCvIdTdxEaX4y-YTyKx01_9rn8ppR97pJm63uUCI3m0hdONY7l3bByCJJtfM7Q3TsSfDCqg9tYhEwf2IuGPtZvj0VN9vmr2gnxItlXZJA_MziyAbbyfbqf6KiWeaQSR2Y9Grq0Gxl5AqvIqLclq=w550-h465-no",
+        "https://lh3.googleusercontent.com/liatmWFnRVHsBdtrLLo5dZZigN1Uv-aN2fYM4Gvlut2JXG9bbQcbsYY3WmuIHgPXO3G5awDk8Ipjx8HSKSNy0zgbpY0wW09_2tb-_mhs5yja4zVIPiyjBhP17OKeV5TuLebhQvQpzmcqypbQKZ7hcrMe2CVg4V0dCkvOXRcKIxAkDVeJ0t0h-7DZvRBaDJcIRxsW8XRVbJr705xor2-Uvutc7CGNAR6c4Vu35ucsIn5RdBrUyalZDmBTTAU6EyE0Zdo69vycaN0TWlC3IfrCjhLRByWjo7irGPAcm60CpnVkpENJ7HDEaz-0piKT7DdA8bFvfVOyVfSwgPoTgfAqj3vWgYHADUsZ9YOeYr0ae5ZNgdzJv7-0TKpPcU6HpKTeJ9cXJmPPx4MeCoOHkIl4UzR8Zh3OxGq1H3YdBx5Oyc-AAGHY17SaC8GyeuGd9-DTyCVfjvHVnlzP2mOKyURWop6CKkJOOACNzV22GkdzAyCIwhmCKU54drtFBBWWDNQZDE6iSPsFzyEUDQgroU4Dk_CkcD6i0nfV97uaZiklUBWTMva1-t87HSVBKgA9BXmIjSmyNDCTN5V3SmcbZiHj0HFMVzYJPx23nqk018B4B-wWnoOX=w640-h425-no",
+        "https://lh3.googleusercontent.com/KRwgOrOAqT4--HSn29vjLpKS4RiutI8E5EdS1L9f5q5uuFxyu5cYuO7rWXmkWFqoXSWEs0CFcKE7p4FgXcUPZrw4kxTLHKgzADv3CYh6-oDOADzWZhgEIx_SfuYLzrQNEmWvwYhO_Vn8Ik1-BnvIyCFZhEr3ZxW3_NEp_yPpuBCYzbQVr-A2tMT6v3KO71OYY1Qz96DADKCtUCGg0TeY7SVSJu2hPf18NPUzTe1RaFExNp5jLnbcNgKHqobIsH8l-5WSu130y_9A7f_dNYN0DLD96UJajpN0-U_FZhN_IYCkuF-zh6HpA-HRPMQityAdQXiyabODJpcI09J1fQkPBMYZ3yZnbfu_WWkXnEKIOtaGcIopphPSsmontGGmxTa5P4UAHamHKKDYrqRCGziZYGu0mk5yIMus0B3kkKp3ofNEa33llH3r5M5WXc0OX-eQJ10vTZAAkuUsuxWejnNPGojFndiAb9MuV_bAezRqUKDVJ70KzpWD3Xr9CKIQ9nTuWTzAKBX6R85yyr03ETxG17bEXI4xq7f1Kvq0dIfd5W2Z2FR4urauO7PKzSarYnzhjNOmeYZ7ufn75t1kRXi_FAlOrgHQ2U3vjHotPf4ahXar2eV3=w417-h820-no"
+      ],
+      "tags": [
+        "health",
+        "life",
+        ""
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 4729291323071,
+    "payout": 3.36,
+    "payout_at": "2016-09-17T19:41:18",
+    "pending_payout_value": "3.360 HBD",
+    "percent_hbd": 10000,
+    "permlink": "benefits-of-drinking-water-in-the-morning",
+    "post_id": 1199900,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 22
+    },
+    "title": "Benefits of Drinking Water in the morning",
+    "updated": "2016-09-10T19:41:18",
+    "url": "/health/@william001/benefits-of-drinking-water-in-the-morning"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 4331412700958,
+        "voter": "kushed"
+      }
+    ],
+    "author": "skeptic",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 21.42,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "when are you going to post something on player tendencies or something more then simple outs and odds? Maybe even bankroll management. You should try to hook up the real poker players with info not the noobs. \nhttp://www.cardplayer.com/poker-tools/odds-calculator/texas-holdem",
+    "category": "poker",
+    "children": 2,
+    "created": "2016-09-10T22:44:57",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 1,
+    "is_paidout": false,
+    "json_metadata": {
+      "links": [
+        "http://www.cardplayer.com/poker-tools/odds-calculator/texas-holdem"
+      ],
+      "tags": [
+        "poker"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 4331412700958,
+    "parent_author": "armen",
+    "parent_permlink": "poker-tip-man-armen-how-to-calculate-outs",
+    "payout": 3.243,
+    "payout_at": "2016-09-17T22:44:57",
+    "pending_payout_value": "3.243 HBD",
+    "percent_hbd": 10000,
+    "permlink": "re-armen-poker-tip-man-armen-how-to-calculate-outs-20160910t224504733z",
+    "post_id": 1201688,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 1
+    },
+    "title": "RE: Poker Tip Man Armen-How to calculate \u201cOuts\"",
+    "updated": "2016-09-10T22:44:57",
+    "url": "/poker/@armen/poker-tip-man-armen-how-to-calculate-outs#@skeptic/re-armen-poker-tip-man-armen-how-to-calculate-outs-20160910t224504733z"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 4393144360640,
+        "voter": "riverhead"
+      },
+      {
+        "rshares": 1412786230,
+        "voter": "murh"
+      },
+      {
+        "rshares": 10761222243,
+        "voter": "catchfire"
+      },
+      {
+        "rshares": 495574357,
+        "voter": "chamviet"
+      },
+      {
+        "rshares": 2917621088,
+        "voter": "sveokla"
+      },
+      {
+        "rshares": 35191623868,
+        "voter": "diana.catherine"
+      },
+      {
+        "rshares": 676834345,
+        "voter": "kellywin21"
+      },
+      {
+        "rshares": 4872257156,
+        "voter": "almerri"
+      },
+      {
+        "rshares": 83347013,
+        "voter": "flourishing"
+      },
+      {
+        "rshares": 87313738,
+        "voter": "dmitriyso"
+      },
+      {
+        "rshares": 163738684,
+        "voter": "sergey039"
+      },
+      {
+        "rshares": 130952373,
+        "voter": "kalipo"
+      }
+    ],
+    "author": "sergey039",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 10.26,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "http://i.imgsafe.org/326884b4aa.jpg\nhttp://i.imgsafe.org/326e30daf5.jpg\nhttp://i.imgsafe.org/326f3eaea6.jpg\nhttp://i.imgsafe.org/32702f1d9f.jpg\nhttp://i.imgsafe.org/3270c98ea5.jpg\nhttp://i.imgsafe.org/32722277f1.jpg\nhttp://i.imgsafe.org/3272d64f88.jpg\nhttp://i.imgsafe.org/3273a0f1f7.jpg\nhttp://i.imgsafe.org/327488a544.jpg\nhttp://i.imgsafe.org/3276139002.jpg\nhttp://i.imgsafe.org/3278d88d08.jpg\nTerminal and sterling Elmore, who live in Oklahoma, recently celebrated the 57th anniversary of their marriage. Granddaughter a charming couple decided to congratulate grandma and grandpa with this event \u2014 and ordered them for a photo shoot in the style of one of my favorite movies Terminal: \"the notebook\".\nLoving each other for 57 years now and counting....\"What God has Joined together\"... These two very special people have left a Legacy that is pretty special. Please feel free to share this post, especially if you think this couple is the cutest! So sweet! They melt my heart. Clemma Elmore, Amber Elmore-Christ, Shelly Roulston-Elmore, Jessica Harwell-Elmore , Riley Elmore, Paula Elmore Smith, Mary Evelyn Photography by Stacy Welch-Christ, Stacy Welch Christ\n\nMy personal opinion,we should all learn from this...",
+    "category": "life",
+    "children": 1,
+    "created": "2016-09-09T21:28:15",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://i.imgsafe.org/326884b4aa.jpg"
+      ],
+      "tags": [
+        "life",
+        "story",
+        "beauty",
+        "popularscience",
+        "psychology"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 4449937631735,
+    "payout": 3.242,
+    "payout_at": "2016-09-16T21:28:15",
+    "pending_payout_value": "3.242 HBD",
+    "percent_hbd": 10000,
+    "permlink": "they-have-been-together-for-57-years-take-the-example-of-this-couple",
+    "post_id": 1189196,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 12
+    },
+    "title": "They have been together for 57 years! Take the example of this couple...",
+    "updated": "2016-09-09T21:28:15",
+    "url": "/life/@sergey039/they-have-been-together-for-57-years-take-the-example-of-this-couple"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 2880006712141,
+        "voter": "dantheman"
+      },
+      {
+        "rshares": 2472573792,
+        "voter": "boy"
+      },
+      {
+        "rshares": 3001108476,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 562413629,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 42176902013,
+        "voter": "bue"
+      },
+      {
+        "rshares": 1325367544,
+        "voter": "mini"
+      },
+      {
+        "rshares": 170787830,
+        "voter": "moon"
+      },
+      {
+        "rshares": 497243104,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 737438203,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 230272201,
+        "voter": "helen.tan"
+      }
+    ],
+    "author": "craigwilliamz",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": -0.27,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "Before I had children, I would look at other parents who were giving their children soda and a pacifier and think, \"Those are horrible parents. Don't they know what harm soda is and all the things that are wrong with pacifiers!\" Then I had children. We have four. It was a lot harder than I thought it would be. When children are very young, you cannot reason with them. You cannot get through to them with logic.\n\nI hope you continue on Steemit and share your experiences with your children. You do have children, right?\n\nI love the concepts being presented by this an other posts to raise our children and never discipline them but what I am not seeing are examples of how to do that. Not once they are old enough to reason, between 4 and 6, but before that.\n\nI am a strong opponent to child abuse. I grew up in a **very** unstable home. That was something I did not want and did not do in my own family but each of my children did receive a few spankings when they were very young. Once they were old enough to reason with, we discussed matters and consequences came into play.\n\nI have a post on my oldest son, he is 21 now and I talk about homeschooling and letting children play a large role in their life. It is __their__ life after all.\n\nhttps://steemit.com/life/@craigwilliamz/how-to-raise-fantastic-children-part-1",
+    "category": "voluntaryism",
+    "children": 4,
+    "created": "2016-08-20T02:19:39",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 1,
+    "is_paidout": false,
+    "json_metadata": {
+      "links": [
+        "https://steemit.com/life/@craigwilliamz/how-to-raise-fantastic-children-part-1"
+      ],
+      "tags": [
+        "voluntaryism"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 2931180818933,
+    "parent_author": "anarcho-andrei",
+    "parent_permlink": "stop-hitting-your-kids",
+    "payout": 2.672,
+    "payout_at": "2016-08-27T02:19:39",
+    "pending_payout_value": "2.672 HBD",
+    "percent_hbd": 10000,
+    "permlink": "re-anarcho-andrei-stop-hitting-your-kids-20160820t021940362z",
+    "post_id": 899598,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 10
+    },
+    "title": "RE: Stop Hitting Your Kids",
+    "updated": "2016-08-20T02:19:39",
+    "url": "/voluntaryism/@anarcho-andrei/stop-hitting-your-kids#@craigwilliamz/re-anarcho-andrei-stop-hitting-your-kids-20160820t021940362z"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 2475545095,
+        "voter": "boy"
+      },
+      {
+        "rshares": 3004943442,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 562911298,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 2877607015480,
+        "voter": "complexring"
+      },
+      {
+        "rshares": 42631240754,
+        "voter": "bue"
+      },
+      {
+        "rshares": 1326826625,
+        "voter": "mini"
+      },
+      {
+        "rshares": 170845704,
+        "voter": "moon"
+      },
+      {
+        "rshares": 497652721,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 758046260,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 230367336,
+        "voter": "helen.tan"
+      }
+    ],
+    "author": "cryptocurrency1",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": -1.01,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "This is a great idea. Is it a button on Steemit website to change skin colors?",
+    "category": "skins",
+    "children": 1,
+    "created": "2016-08-24T22:04:51",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 1,
+    "is_paidout": false,
+    "json_metadata": {
+      "tags": [
+        "skins"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 2929265394715,
+    "parent_author": "complexring",
+    "parent_permlink": "preview-of-custom-steemit-com-skins-by-maximkichev",
+    "payout": 2.566,
+    "payout_at": "2016-08-31T22:04:51",
+    "pending_payout_value": "2.566 HBD",
+    "percent_hbd": 10000,
+    "permlink": "re-complexring-preview-of-custom-steemit-com-skins-by-maximkichev-20160824t220504965z",
+    "post_id": 973567,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 10
+    },
+    "title": "RE: Preview of Custom Steemit.com Skins by @maximkichev",
+    "updated": "2016-08-24T22:06:48",
+    "url": "/skins/@complexring/preview-of-custom-steemit-com-skins-by-maximkichev#@cryptocurrency1/re-complexring-preview-of-custom-steemit-com-skins-by-maximkichev-20160824t220504965z"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 3711205927,
+        "voter": "boy"
+      },
+      {
+        "rshares": 4504724576,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 844003587,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 63583161024,
+        "voter": "bue"
+      },
+      {
+        "rshares": 1989232258,
+        "voter": "mini"
+      },
+      {
+        "rshares": 256225439,
+        "voter": "moon"
+      },
+      {
+        "rshares": 1321824728363,
+        "voter": "steempower"
+      },
+      {
+        "rshares": -18043727157,
+        "voter": "proctologic"
+      },
+      {
+        "rshares": 746204041,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 1122192090,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 345481157,
+        "voter": "helen.tan"
+      },
+      {
+        "rshares": 18130623493,
+        "voter": "ninzacode"
+      },
+      {
+        "rshares": 19579728523,
+        "voter": "asch"
+      },
+      {
+        "rshares": 1441410721,
+        "voter": "murh"
+      },
+      {
+        "rshares": 144284670425,
+        "voter": "dragonslayer109"
+      },
+      {
+        "rshares": 194963248456,
+        "voter": "kaylinart"
+      },
+      {
+        "rshares": 431023484863,
+        "voter": "infovore"
+      },
+      {
+        "rshares": -352000065249,
+        "voter": "fyrstikken"
+      },
+      {
+        "rshares": 9028831979,
+        "voter": "cannav"
+      },
+      {
+        "rshares": 100315608,
+        "voter": "aidar88"
+      },
+      {
+        "rshares": 15094205360,
+        "voter": "mrgreen"
+      },
+      {
+        "rshares": 294848433,
+        "voter": "aleksandrm"
+      },
+      {
+        "rshares": 1434151683,
+        "voter": "bitland"
+      },
+      {
+        "rshares": 164019440758,
+        "voter": "knozaki2015"
+      },
+      {
+        "rshares": 4627710622,
+        "voter": "fishborne"
+      },
+      {
+        "rshares": 161258267,
+        "voter": "chako5555"
+      },
+      {
+        "rshares": 115172592,
+        "voter": "wunju"
+      },
+      {
+        "rshares": 52199775,
+        "voter": "reported"
+      },
+      {
+        "rshares": 622616810,
+        "voter": "spinner"
+      },
+      {
+        "rshares": 72641585564,
+        "voter": "malaiandrueth"
+      },
+      {
+        "rshares": 3762657526,
+        "voter": "jed78"
+      },
+      {
+        "rshares": 51193516,
+        "voter": "krushing"
+      },
+      {
+        "rshares": 20982017048,
+        "voter": "capitalism"
+      },
+      {
+        "rshares": 51162835,
+        "voter": "scotthelms89"
+      },
+      {
+        "rshares": 52412795,
+        "voter": "southbaybits"
+      },
+      {
+        "rshares": 816316004,
+        "voter": "bofadeez"
+      },
+      {
+        "rshares": 51239701,
+        "voter": "whatyouganjado"
+      },
+      {
+        "rshares": 266798869,
+        "voter": "bitcoindon23"
+      },
+      {
+        "rshares": 55083761,
+        "voter": "theperfect2"
+      },
+      {
+        "rshares": 54611425,
+        "voter": "colgatetreasure"
+      },
+      {
+        "rshares": 50970346,
+        "voter": "joystickwind"
+      },
+      {
+        "rshares": 50969080,
+        "voter": "maniacdinosaur"
+      },
+      {
+        "rshares": 54607795,
+        "voter": "spoonwine"
+      },
+      {
+        "rshares": 54599870,
+        "voter": "microphonefish"
+      },
+      {
+        "rshares": 54596788,
+        "voter": "grillingpurring"
+      },
+      {
+        "rshares": 54596538,
+        "voter": "liesmetro"
+      },
+      {
+        "rshares": 54584276,
+        "voter": "soundtacos"
+      },
+      {
+        "rshares": 50929598,
+        "voter": "obeypicky"
+      },
+      {
+        "rshares": 54515137,
+        "voter": "googlemetro"
+      },
+      {
+        "rshares": 54391386,
+        "voter": "pumpenthusiasm"
+      },
+      {
+        "rshares": 54355220,
+        "voter": "slablever"
+      },
+      {
+        "rshares": 265754773,
+        "voter": "cognoscere"
+      },
+      {
+        "rshares": 52501036,
+        "voter": "highnye"
+      },
+      {
+        "rshares": 118439226,
+        "voter": "steevc"
+      },
+      {
+        "rshares": 59390673,
+        "voter": "ajavajive"
+      },
+      {
+        "rshares": 55118561,
+        "voter": "smashalee"
+      },
+      {
+        "rshares": 50176060,
+        "voter": "eyeye"
+      },
+      {
+        "rshares": 2544635202,
+        "voter": "einsteinpotsdam"
+      },
+      {
+        "rshares": 51067200,
+        "voter": "waltrichards"
+      },
+      {
+        "rshares": 26898067018,
+        "voter": "zahnspange"
+      },
+      {
+        "rshares": 2543726436,
+        "voter": "doitvoluntarily"
+      },
+      {
+        "rshares": 314475463,
+        "voter": "steemorama"
+      },
+      {
+        "rshares": 55191596,
+        "voter": "michal"
+      },
+      {
+        "rshares": 53021436,
+        "voter": "morganpearl"
+      },
+      {
+        "rshares": 51967212,
+        "voter": "fluffy"
+      }
+    ],
+    "author": "morganpearl",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 4.64,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "That is why it is necessary to close the camera on the laptop. I did not know about this danger!\nBe careful, for you can watch via webcam! Even the director of the FBI acknowledges that adheres the protective tape on her laptop.\nhttps://marketium.ru/wp-content/uploads/2016/06/c4ca4238a0b923820dcc509a6f75849b35.jpg\nIn recent decades, manufacturers of electronic products have tried to improve its products and inserted all the better camera technology, which we use almost every day.\nToday, however, it can be seen that the market is full of various labels and plastic covers, which are designed to cover the front camera on different devices: phones, laptops and even TVs. What was the reason for the appearance of such products?\nhttp://izbavljaemsja.ru/wp-content/uploads/2015/12/kak-izbavitsa-ot-carapin-na-kamere-telefona-650x340.jpg\nFor many years in the field of computer security researchers warned that hackers and intruders can obtain an image with a camera without the user's knowledge, and remotely monitor the people. But laptops, tablets, phones, or \"see\" TV significant part of your personal life!\nNot long ago, FBI Director James Comey made a sensational confession: \"I stuck to the camera with a special film because I saw how it was done by those who are smarter and more experienced than me.\"\nThat's why companies producing covers and stickers for web cameras, called the production \"a bestseller on the market today.\"\nThose who know better than anyone that the Internet is always watching you, have long been used to close the camera. This is the first rule of safety, if you do not want your personal life became the property of Internet users.\nEva Galperin, an analyst with the Electronic Frontier Foundation, told reporters that always covers the camera on my laptop since the time when it bought its first MacBook Pro in 2007.\nElectronic Frontier Foundation began to print their labels for webcams in 2013. They sell and distribute stickers for the camera, which states the following:\n\"These removable stickers - anti-surveillance technology, which is impossible to crack.\"\nA spokesman for the organization said that people are constantly buying such devices.\nFear of web-cameras have long penetrated into modern society. For example, in the trailer of a new biopic about the employee of the CIA 'Snowden' protagonist glances nervously at his laptop camera at the time of the intimate scenes with his girlfriend.\nWhy is everyone so afraid of cameras, and is there a real reason to do so?\nIt turns out that this is not paranoia, and not science fiction. Back in 2013 a group of researchers have shown how you can easily activate the camera Macbook transparent to the user, without the inclusion of green light.\nA couple of America said that the hacker posted on the network of their home video of an intimate nature, which he received after breaking a smart TV. It is already known that the FBI and other intelligence agencies, too, are well aware of how to use a laptop camera to follow the user!\nMany have already earned a lot of money on this!\nCamPatch company describes itself as the most successful company among manufacturers of protective tapes for webcams. CamPatch was created in 2013 after the founders have watched presentations by experts in the field of cybersecurity Pentagon. It said that the webcam - a new \"attack vector.\"\nCamPatch Management does not disclose all financial information, but they said that the company received a \"six-figure income over the past few years,\" sold more than 250,000 labels. And it's a given that the company sells its products at an affordable price (at $ 2.79).\nDo not use protective tapes only careless people and those who are not yet aware of the danger!\nWith the development of modern services, there are more opportunities to spy on users!\nSmart speaker from Echo of Amazon.com, who knows how to listen to the commands of their owners, was a great success immediately after the release. Google is also going to release a similar product called Google Home.\nIn February this year the Director of National Intelligence James Clapper, acknowledged that the so-called \"Internet of Things\" can be used \"for the identification, surveillance, monitoring, tracking, location and orientation for employment or to gain access to the network or user credentials \".\nDo you already use a protective cover for the camera on their devices?",
+    "category": "camera",
+    "children": 5,
+    "created": "2016-08-22T06:38:24",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "https://marketium.ru/wp-content/uploads/2016/06/c4ca4238a0b923820dcc509a6f75849b35.jpg"
+      ],
+      "tags": [
+        "camera",
+        "surveillance",
+        "security",
+        "services",
+        "gadgets"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 2166345011394,
+    "payout": 2.566,
+    "payout_at": "2016-08-29T06:38:24",
+    "pending_payout_value": "2.566 HBD",
+    "percent_hbd": 10000,
+    "permlink": "that-is-why-it-is-necessary-to-close-the-camera-on-the-laptop-i-did-not-know-about-this-danger",
+    "post_id": 930809,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 2.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 65
+    },
+    "title": "That is why it is necessary to close the camera on the laptop. I did not know about this danger!",
+    "updated": "2016-08-22T06:38:24",
+    "url": "/camera/@morganpearl/that-is-why-it-is-necessary-to-close-the-camera-on-the-laptop-i-did-not-know-about-this-danger"
+  }
+]
