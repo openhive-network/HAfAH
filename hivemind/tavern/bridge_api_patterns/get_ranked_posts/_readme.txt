@@ -35,5 +35,5 @@ params:
 
   "observer": "{account}"
 
-     mandatory for "my" tag, points to valid account; otherwise ignored
+     mandatory for "my" tag, points to valid account; otherwise used for supplementing blacklist stats in posts
 }
