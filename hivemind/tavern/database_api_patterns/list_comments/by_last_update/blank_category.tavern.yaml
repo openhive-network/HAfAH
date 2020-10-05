@@ -1,8 +1,8 @@
 ---
-test_name: Hivemind database_api.list_comments patterns test order "by_last_update" author wiyh blank category posts
+test_name: Hivemind database_api.list_comments patterns test order "by_last_update" author with blank category posts
 
 marks:
-  - patterntest
+  - patterntest # fat node didn't limit results to replies to posts of given author
 
 includes:
   - !include ../../../common.yaml

@@ -3,6 +3,8 @@ test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 
 marks:
   - patterntest
+  - failing
+  - xfail # net_votes; see get_active_votes/net_votes in condenser_api tests or find_votes/net_votes in database_api tests
 
 includes:
   - !include ../../../common.yaml

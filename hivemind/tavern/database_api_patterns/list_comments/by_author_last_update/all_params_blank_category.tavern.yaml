@@ -2,7 +2,7 @@
 test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" correct paremeters but with wierd post - blank cateogory
 
 marks:
-  - patterntest
+  - patterntest # incomparable with original (bug in fat node using wrong index)
 
 includes:
   - !include ../../../common.yaml

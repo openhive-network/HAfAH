@@ -2,7 +2,7 @@
 test_name: Hivemind database_api.list_comments patterns test order "by_parent" required data with specific post - with blank cateory
 
 marks:
-  - patterntest
+  - patterntest # fat node didn't limit results to replies to given post
 
 includes:
   - !include ../../../common.yaml
