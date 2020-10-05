@@ -2,7 +2,7 @@
 test_name: Hivemind database_api.list_comments patterns test order "by_root" all values correct bit special post (with undefined category)
 
 marks:
-  - patterntest
+  - patterntest # fat node didn't limit results to posts from given discussion
 
 includes:
   - !include ../../../common.yaml
