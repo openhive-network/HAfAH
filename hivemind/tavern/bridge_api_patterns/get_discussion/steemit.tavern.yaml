@@ -4,8 +4,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # gray
 
   includes:
     - !include ../../common.yaml
