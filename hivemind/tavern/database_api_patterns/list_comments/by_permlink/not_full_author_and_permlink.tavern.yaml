@@ -2,7 +2,7 @@
 test_name: Hivemind database_api.list_comments patterns test order "by_permlink" invalid auhtor and  permlink
 
 marks:
-  - patterntest # return same with just valid author ["camilla"] 
+  - patterntest # return same with just valid author ["camilla"]
 
 includes:
   - !include ../../../common.yaml
