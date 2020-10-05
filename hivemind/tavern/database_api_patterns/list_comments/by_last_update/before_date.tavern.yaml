@@ -3,6 +3,7 @@ test_name: Hivemind database_api.list_comments patterns test order "by_last_upda
 
 marks:
   - patterntest # paging mechanism not work properly, output the same as without start_author and start_permlink
+                # (like in fat node that is the result of ordering by update first and only within it by post id)
 
 includes:
   - !include ../../../common.yaml

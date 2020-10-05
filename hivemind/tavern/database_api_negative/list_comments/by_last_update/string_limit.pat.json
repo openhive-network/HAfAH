@@ -1,5 +1,0 @@
-{
-  "code": -32000,
-  "data": "OperationalError: server closed the connection unexpectedly\n\tThis probably means the server terminated abnormally\n\tbefore or while processing the request.\n",
-  "message": "Server error"
-}
