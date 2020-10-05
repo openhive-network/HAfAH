@@ -2,9 +2,8 @@
 test_name: Hivemind database_api.list_comments patterns test order "by_cashout_time" all data
 
 marks:
-  - patterntest # wrong data message "data": "Date should be in format Y-m-d H:M:S or Y-m-dTH:M:S"
-  - xfail
-  - failing
+  - patterntest # fat node didn't like that format of date (so original made with regular ISO format date)
+                # also results incomparable with original due to differences in cashout (pattern the same as in author_permlink)
 
 includes:
   - !include ../../../common.yaml
