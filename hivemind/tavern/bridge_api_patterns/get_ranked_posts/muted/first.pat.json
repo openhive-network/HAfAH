@@ -52,7 +52,7 @@
     ],
     "author": "r4fken",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -5.58,
     "beneficiaries": [],
     "blacklists": [],
     "body": "Do I understand correctly that you're referencing the initial \"mining\" by a select group of devs and friends, resulting in \"overwhelming control\" by means of vests now?\nOr am I just imagining things? :)",
@@ -72,11 +72,11 @@
     "parent_author": "steemed",
     "parent_permlink": "re-dantheman-our-corrupt-sense-of-fairness-20160820t035220528z",
     "payout": 196.246,
-    "payout_at": "2016-09-20T07:22:48",
+    "payout_at": "2016-08-27T09:06:27",
     "pending_payout_value": "196.246 HBD",
     "percent_hbd": 10000,
     "permlink": "re-steemed-re-dantheman-our-corrupt-sense-of-fairness-20160820t090630202z",
-    "post_id": 681168,
+    "post_id": 903103,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -88,6 +88,221 @@
     "title": "RE: Our Corrupt Sense of Fairness",
     "updated": "2016-08-20T09:07:12",
     "url": "/philosophy/@dantheman/our-corrupt-sense-of-fairness#@r4fken/re-steemed-re-dantheman-our-corrupt-sense-of-fairness-20160820t090630202z"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 20736048327416,
+        "voter": "dantheman"
+      },
+      {
+        "rshares": 2472573792,
+        "voter": "boy"
+      },
+      {
+        "rshares": 3001108476,
+        "voter": "bue-witness"
+      },
+      {
+        "rshares": 562413629,
+        "voter": "bunny"
+      },
+      {
+        "rshares": 42176902013,
+        "voter": "bue"
+      },
+      {
+        "rshares": 1325367544,
+        "voter": "mini"
+      },
+      {
+        "rshares": 170787830,
+        "voter": "moon"
+      },
+      {
+        "rshares": 497243104,
+        "voter": "healthcare"
+      },
+      {
+        "rshares": 737438203,
+        "voter": "daniel.pan"
+      },
+      {
+        "rshares": 230272201,
+        "voter": "helen.tan"
+      },
+      {
+        "rshares": 5072953140,
+        "voter": "holabebe"
+      },
+      {
+        "rshares": 1799587902,
+        "voter": "murh"
+      },
+      {
+        "rshares": 115361382518,
+        "voter": "bravenewcoin"
+      },
+      {
+        "rshares": 166899192,
+        "voter": "soupernerd"
+      },
+      {
+        "rshares": 5429807428,
+        "voter": "qamarpinkpanda"
+      },
+      {
+        "rshares": 4494852918,
+        "voter": "aaseb"
+      },
+      {
+        "rshares": 2162953561,
+        "voter": "the-future"
+      },
+      {
+        "rshares": 289441856,
+        "voter": "illlefr4u"
+      },
+      {
+        "rshares": 11382937008,
+        "voter": "pinkisland"
+      },
+      {
+        "rshares": 3420690714,
+        "voter": "pigatron"
+      },
+      {
+        "rshares": 163854600,
+        "voter": "weenis"
+      },
+      {
+        "rshares": 309113169,
+        "voter": "jonaswakefield"
+      },
+      {
+        "rshares": 984803370,
+        "voter": "jsantana"
+      },
+      {
+        "rshares": 61805391,
+        "voter": "cehuneke"
+      },
+      {
+        "rshares": 6199940304,
+        "voter": "craigwilliamz"
+      },
+      {
+        "rshares": 57122450,
+        "voter": "thebrickranger"
+      },
+      {
+        "rshares": 57108081,
+        "voter": "vbrasher"
+      },
+      {
+        "rshares": 2980829211,
+        "voter": "ashleywilliamz"
+      },
+      {
+        "rshares": 57736694,
+        "voter": "abbywilliamz"
+      },
+      {
+        "rshares": 57604403,
+        "voter": "colleenwilliamz"
+      },
+      {
+        "rshares": 3202748238,
+        "voter": "luminousvisions"
+      },
+      {
+        "rshares": 57682239,
+        "voter": "canadian-coconut"
+      },
+      {
+        "rshares": 381198814,
+        "voter": "ghasemkiani"
+      },
+      {
+        "rshares": 54839161,
+        "voter": "cyborg"
+      },
+      {
+        "rshares": 50931848,
+        "voter": "analyzethis"
+      },
+      {
+        "rshares": 51780266,
+        "voter": "roadhog"
+      },
+      {
+        "rshares": 52777051,
+        "voter": "doggnostic"
+      },
+      {
+        "rshares": 52504270,
+        "voter": "jenny-talls"
+      },
+      {
+        "rshares": 54522752,
+        "voter": "robovirtuoso"
+      },
+      {
+        "rshares": 50090625,
+        "voter": "birdiewonder"
+      },
+      {
+        "rshares": 1092907021,
+        "voter": "robotev"
+      },
+      {
+        "rshares": 51074637,
+        "voter": "goaldigger"
+      }
+    ],
+    "author": "craigwilliamz",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": -0.27,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "![The Crown Family Photo](http://steemit-dub.s3.amazonaws.com/alex/the-crown-family1.png 'The Crown Family Photo')\n\nMy Family is Pretty Cool\n-\n![Family](http://steemit-dub.s3.amazonaws.com/family-800.jpg 'Family')\n\nMy favorite people in the world are my children. They are kind, generous, full of life, fun to be around and crazy creative. They are really cool people.\n\nWe have four children, Alex, Ashley, Abby and Austin. My wife's idea to name them all \"A\" names. They are referred to as the \"A Team\".\n\nWe have a close family. We argue very little and maintain open communication. We have treated them like people from early on and they have behaved as such.\n\n![Guitar](http://steemit-dub.s3.amazonaws.com/alex/guitar.png 'Guitar')\n\n\n\nAn Eye Opening Experience\n-\nA few weeks ago I was in Dallas visiting a friend whom I had not seen in many years. There were other people there as well that I had also not seen in a very long time. I struck up a conversation with one of them and the discussion of family ensued. He told me about his children and what it had been like for him to become a father. He has a wonderful family with children that are still very young. When the time came for me to share about my children, I began listing off what each one was doing from the oldest to the youngest. Before I could get to the youngest one, his mouth was gaped open and he burst out, \"What are you feeding them!\" We had a big laugh as I told him about the youngest and expanded on our philosophy of family.\n\nWe have had many compliments on our children throughout their life. Even today, the people with whom they interact; family, friends and the people who work with them in stage productions, make a point of complimenting them. I am around them all the time, and many of their friends are homeschooled as well so sometimes I forget how special they are and the impact they have on others.\n\n![Railroad tracks](http://steemit-dub.s3.amazonaws.com/alex/alex-railroad-tracks-600.jpg 'Railroad tracks')\n\nWhy Am I Sharing\n-\nI hope to convey a few things here. First, if you are considering homeschooling and have reservations, may these stories encourage you. If you already homeschool and wonder if it is all worth it, maybe our stories will give you hope and encouragement as well.\n\nAnd lastly, I am proud of them and want to share their success with you.\n\n![Sis](http://steemit-dub.s3.amazonaws.com/alex/children-800.jpg 'Children')\n\nWhy We Homeschool\n-\nMy personal experience in public schools was a nightmare. I moved a lot when I was young and changed schools every three to six months. During one stretch of five years, I switched schools nineteen times. I did not build long term relationships and being the new kid all the time often created struggles with teachers.\n\nThere is a very long story to my history so I will not get into that here. It is however, the main reason I became excited about homeschooling when my wife suggested it.\n\nOur Oldest Child Alex\n-\n![Alex](http://steemit-dub.s3.amazonaws.com/alexthrowback.jpg 'Alex')\n\nAlex has always been intelligent as I believe all children are. He had memorized many of the family members phone numbers and home addresses by the time he was six. We started him off in Montessori school at age four where he attended three years. We would have kept him in Montessori but they did not offer classes above six years old. \n\nAt that time my wife was still concerned about her ability to homeschool so we enrolled him in a Christian private school for one year. After that, she had researched enough to build her confidence. She was ready to go. (As the years went by, she found out that she was more than capable. We are guides.)\n\nPre-Teen\n-\n![Sis](http://steemit-dub.s3.amazonaws.com/alex/alex-littlekid1.jpeg 'Alex and Sister')\n\nAlex took two years of Latin and one year of Japanese. He acted in plays and did what most children do, play a lot.\n\nTeen Years\n-\n![Sis](http://steemit-dub.s3.amazonaws.com/ateam.jpg 'Alex and Sister')\n\nMany people will tell you that you will have to deal with the teenage years. \"Brace yourself,\" they will say. \"You will become their enemy!\" We did not experience this with Alex or our other children. Alex would come to me for advice about issues him and his friends were discussing. When he would share how I reacted to some of our serious conversations, his friends were astonished and would respond with descriptions of their parents exploding if they attempted to have the same discussions with their parents.\n\nKeeping your cool when one of your children comes to you with a confession is a sure way to have them trust you with other issues of concern.\n\nDuring his teen years, Alex took CLEP tests and earned twelve college hours.\n\nAt sixteen, he began to gain interest in programming. I had introduced it to him when he was nine but he wasn't interested. Then again around eleven but still no interest. At sixteen, the interest was all his. Had I forced him to do it earlier, he may have never liked it.\n\n![Graduation](http://steemit-dub.s3.amazonaws.com/alex/graduation.jpg 'Graduation')\n\nBecoming an Adult\n-\n![Alex](http://steemit-dub.s3.amazonaws.com/alex/alex-adult1.jpeg 'Alex')\n\nOne his eighteenth birthday, he begin working his first job as a software developer. He was hired as an apprentice and was promoted to junior developer after only three months. At that time, he began mentoring two of his friends. Within a few months he had taken on a third person to mentor. Within a year or so, each of them have now changed their path and work as software developers. It has significantly changed their lives. Alex just recently began mentoring another friend. Pretty cool to pass forward. He had received help from some of my co-workers early on which made all the difference in his progression.\n\nHe now speaks French and Mandarin and has aspirations to learn many more. He has traveled to seven countries and has an arrangement with his employer to work from anywhere in the world as long as he is at the office for part of the year.\n\n![Alex](http://steemit-dub.s3.amazonaws.com/alex/amsterdamcollage.jpg 'Alex')\n\nHe gives technical talks at local meet ups, plays both acoustic and electric guitar, has never met a stranger and has made no enemies.\n\nHe is an inspiration to others, his family and siblings. The bar has been set high but the other children have many interests and accomplishments of their own. I'll share those in subsequent posts.\n\n![Leon](http://steemit-dub.s3.amazonaws.com/alex/leoncollage.jpg 'Leon')\n\nWhat was our part?\n-\nMy wife has worked hard to keep them supplied with good school material, staying compliant with state requirements and providing some structure for learning. We never set up a school room like environment. There are never set hours of study. Homeschooling hours vary depending on the age of the child and what they are working on at that phase of their education. I would say that most of the time they spend less time doing actual school work and the rest of the time exploring, using their imagination and focusing their energy on things they are interested in.\n\nFor Alex, that was a foreign language. Other times it was memorizing all the Pokemon cards and building decks and playing in tournaments. Alex said one of the things that has helped him so much in learning new things was the fact that he had memorized so much Pokemon data. He developed the ability to store and retrieve things in his mind.\n\nThe simple fact is\u2026 we didn't do it. Alex did. He deserves all the credit. He did all the work. We provided the canvas, the paint and the paintbrushes. \n\nConclusion\n-\nI feel we have a pretty cool family. There are many ways to raise your children. The most important thing is to love them unconditionally, give them room to grow and treat them as you would your very best friend. They are people and are smarter than most give them credit.\n\nI hope I have been able to convey how proud we are of Alex. These are but a few highlights of his life as he is only twenty-one. There is so much in store for him.\n\nI am so grateful that as much as possible we have given Alex the opportunity to live life on his own terms and he has flourished.",
+    "category": "life",
+    "children": 3,
+    "created": "2016-08-17T02:23:30",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://steemit-dub.s3.amazonaws.com/alex/the-crown-family1.png"
+      ],
+      "tags": [
+        "life",
+        "photography",
+        "travel",
+        "parenting",
+        "family"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 20952886915040,
+    "payout": 45.82,
+    "payout_at": "2016-08-24T02:23:30",
+    "pending_payout_value": "45.820 HBD",
+    "percent_hbd": 10000,
+    "permlink": "how-to-raise-fantastic-children-part-1",
+    "post_id": 845687,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 42
+    },
+    "title": "How to Raise Fantastic Children - Part 1",
+    "updated": "2016-08-17T02:41:03",
+    "url": "/life/@craigwilliamz/how-to-raise-fantastic-children-part-1"
   },
   {
     "active_votes": [
@@ -294,7 +509,7 @@
     ],
     "author": "tldr",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -1.13,
     "beneficiaries": [],
     "blacklists": [],
     "body": "Steemit is about great content. But sometimes it just gets a bit, well, too long... So you didn't read. \n\nIntroducing, me! @tldr - the summarise bot! \n\nI come to the rescue, at least I try! I will monitor the blockchain and propose summaries as a comment under articles and try to summarize the long text you had to read before you decide to upvote :)\n\nI won't make it long this time, otherwise I would have to TLDR this post, and then, ...... infinite loop NOOOOOOOOS....\n\n<h3>I will run for 24 hours (see payout timer) after which I will analyse the results and see whether to continue or not. Your input is much valued below:</h3>\nCurrent parameters:\n1. Post must have more than 5000 chars\n2. Summary must be smaller than 15% of original content\n3. Summary must be max 7 sentences\n\n\nhttp://i.giphy.com/jChlcC99Vqu2I.gif",
@@ -316,11 +531,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 13805683329893,
     "payout": 31.621,
-    "payout_at": "2016-09-25T02:39:54",
+    "payout_at": "2016-08-31T21:56:39",
     "pending_payout_value": "31.621 HBD",
     "percent_hbd": 10000,
     "permlink": "i-m-tldr-an-experimental-bot-for-summarizing-your-long-articles",
-    "post_id": 736365,
+    "post_id": 973482,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -332,221 +547,6 @@
     "title": "I'm @tldr - an experimental bot for summarizing your long articles.",
     "updated": "2016-08-24T23:26:03",
     "url": "/tldr/@tldr/i-m-tldr-an-experimental-bot-for-summarizing-your-long-articles"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 20736048327416,
-        "voter": "dantheman"
-      },
-      {
-        "rshares": 2472573792,
-        "voter": "boy"
-      },
-      {
-        "rshares": 3001108476,
-        "voter": "bue-witness"
-      },
-      {
-        "rshares": 562413629,
-        "voter": "bunny"
-      },
-      {
-        "rshares": 42176902013,
-        "voter": "bue"
-      },
-      {
-        "rshares": 1325367544,
-        "voter": "mini"
-      },
-      {
-        "rshares": 170787830,
-        "voter": "moon"
-      },
-      {
-        "rshares": 497243104,
-        "voter": "healthcare"
-      },
-      {
-        "rshares": 737438203,
-        "voter": "daniel.pan"
-      },
-      {
-        "rshares": 230272201,
-        "voter": "helen.tan"
-      },
-      {
-        "rshares": 5072953140,
-        "voter": "holabebe"
-      },
-      {
-        "rshares": 1799587902,
-        "voter": "murh"
-      },
-      {
-        "rshares": 115361382518,
-        "voter": "bravenewcoin"
-      },
-      {
-        "rshares": 166899192,
-        "voter": "soupernerd"
-      },
-      {
-        "rshares": 5429807428,
-        "voter": "qamarpinkpanda"
-      },
-      {
-        "rshares": 4494852918,
-        "voter": "aaseb"
-      },
-      {
-        "rshares": 2162953561,
-        "voter": "the-future"
-      },
-      {
-        "rshares": 289441856,
-        "voter": "illlefr4u"
-      },
-      {
-        "rshares": 11382937008,
-        "voter": "pinkisland"
-      },
-      {
-        "rshares": 3420690714,
-        "voter": "pigatron"
-      },
-      {
-        "rshares": 163854600,
-        "voter": "weenis"
-      },
-      {
-        "rshares": 309113169,
-        "voter": "jonaswakefield"
-      },
-      {
-        "rshares": 984803370,
-        "voter": "jsantana"
-      },
-      {
-        "rshares": 61805391,
-        "voter": "cehuneke"
-      },
-      {
-        "rshares": 6199940304,
-        "voter": "craigwilliamz"
-      },
-      {
-        "rshares": 57122450,
-        "voter": "thebrickranger"
-      },
-      {
-        "rshares": 57108081,
-        "voter": "vbrasher"
-      },
-      {
-        "rshares": 2980829211,
-        "voter": "ashleywilliamz"
-      },
-      {
-        "rshares": 57736694,
-        "voter": "abbywilliamz"
-      },
-      {
-        "rshares": 57604403,
-        "voter": "colleenwilliamz"
-      },
-      {
-        "rshares": 3202748238,
-        "voter": "luminousvisions"
-      },
-      {
-        "rshares": 57682239,
-        "voter": "canadian-coconut"
-      },
-      {
-        "rshares": 381198814,
-        "voter": "ghasemkiani"
-      },
-      {
-        "rshares": 54839161,
-        "voter": "cyborg"
-      },
-      {
-        "rshares": 50931848,
-        "voter": "analyzethis"
-      },
-      {
-        "rshares": 51780266,
-        "voter": "roadhog"
-      },
-      {
-        "rshares": 52777051,
-        "voter": "doggnostic"
-      },
-      {
-        "rshares": 52504270,
-        "voter": "jenny-talls"
-      },
-      {
-        "rshares": 54522752,
-        "voter": "robovirtuoso"
-      },
-      {
-        "rshares": 50090625,
-        "voter": "birdiewonder"
-      },
-      {
-        "rshares": 1092907021,
-        "voter": "robotev"
-      },
-      {
-        "rshares": 51074637,
-        "voter": "goaldigger"
-      }
-    ],
-    "author": "craigwilliamz",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "![The Crown Family Photo](http://steemit-dub.s3.amazonaws.com/alex/the-crown-family1.png 'The Crown Family Photo')\n\nMy Family is Pretty Cool\n-\n![Family](http://steemit-dub.s3.amazonaws.com/family-800.jpg 'Family')\n\nMy favorite people in the world are my children. They are kind, generous, full of life, fun to be around and crazy creative. They are really cool people.\n\nWe have four children, Alex, Ashley, Abby and Austin. My wife's idea to name them all \"A\" names. They are referred to as the \"A Team\".\n\nWe have a close family. We argue very little and maintain open communication. We have treated them like people from early on and they have behaved as such.\n\n![Guitar](http://steemit-dub.s3.amazonaws.com/alex/guitar.png 'Guitar')\n\n\n\nAn Eye Opening Experience\n-\nA few weeks ago I was in Dallas visiting a friend whom I had not seen in many years. There were other people there as well that I had also not seen in a very long time. I struck up a conversation with one of them and the discussion of family ensued. He told me about his children and what it had been like for him to become a father. He has a wonderful family with children that are still very young. When the time came for me to share about my children, I began listing off what each one was doing from the oldest to the youngest. Before I could get to the youngest one, his mouth was gaped open and he burst out, \"What are you feeding them!\" We had a big laugh as I told him about the youngest and expanded on our philosophy of family.\n\nWe have had many compliments on our children throughout their life. Even today, the people with whom they interact; family, friends and the people who work with them in stage productions, make a point of complimenting them. I am around them all the time, and many of their friends are homeschooled as well so sometimes I forget how special they are and the impact they have on others.\n\n![Railroad tracks](http://steemit-dub.s3.amazonaws.com/alex/alex-railroad-tracks-600.jpg 'Railroad tracks')\n\nWhy Am I Sharing\n-\nI hope to convey a few things here. First, if you are considering homeschooling and have reservations, may these stories encourage you. If you already homeschool and wonder if it is all worth it, maybe our stories will give you hope and encouragement as well.\n\nAnd lastly, I am proud of them and want to share their success with you.\n\n![Sis](http://steemit-dub.s3.amazonaws.com/alex/children-800.jpg 'Children')\n\nWhy We Homeschool\n-\nMy personal experience in public schools was a nightmare. I moved a lot when I was young and changed schools every three to six months. During one stretch of five years, I switched schools nineteen times. I did not build long term relationships and being the new kid all the time often created struggles with teachers.\n\nThere is a very long story to my history so I will not get into that here. It is however, the main reason I became excited about homeschooling when my wife suggested it.\n\nOur Oldest Child Alex\n-\n![Alex](http://steemit-dub.s3.amazonaws.com/alexthrowback.jpg 'Alex')\n\nAlex has always been intelligent as I believe all children are. He had memorized many of the family members phone numbers and home addresses by the time he was six. We started him off in Montessori school at age four where he attended three years. We would have kept him in Montessori but they did not offer classes above six years old. \n\nAt that time my wife was still concerned about her ability to homeschool so we enrolled him in a Christian private school for one year. After that, she had researched enough to build her confidence. She was ready to go. (As the years went by, she found out that she was more than capable. We are guides.)\n\nPre-Teen\n-\n![Sis](http://steemit-dub.s3.amazonaws.com/alex/alex-littlekid1.jpeg 'Alex and Sister')\n\nAlex took two years of Latin and one year of Japanese. He acted in plays and did what most children do, play a lot.\n\nTeen Years\n-\n![Sis](http://steemit-dub.s3.amazonaws.com/ateam.jpg 'Alex and Sister')\n\nMany people will tell you that you will have to deal with the teenage years. \"Brace yourself,\" they will say. \"You will become their enemy!\" We did not experience this with Alex or our other children. Alex would come to me for advice about issues him and his friends were discussing. When he would share how I reacted to some of our serious conversations, his friends were astonished and would respond with descriptions of their parents exploding if they attempted to have the same discussions with their parents.\n\nKeeping your cool when one of your children comes to you with a confession is a sure way to have them trust you with other issues of concern.\n\nDuring his teen years, Alex took CLEP tests and earned twelve college hours.\n\nAt sixteen, he began to gain interest in programming. I had introduced it to him when he was nine but he wasn't interested. Then again around eleven but still no interest. At sixteen, the interest was all his. Had I forced him to do it earlier, he may have never liked it.\n\n![Graduation](http://steemit-dub.s3.amazonaws.com/alex/graduation.jpg 'Graduation')\n\nBecoming an Adult\n-\n![Alex](http://steemit-dub.s3.amazonaws.com/alex/alex-adult1.jpeg 'Alex')\n\nOne his eighteenth birthday, he begin working his first job as a software developer. He was hired as an apprentice and was promoted to junior developer after only three months. At that time, he began mentoring two of his friends. Within a few months he had taken on a third person to mentor. Within a year or so, each of them have now changed their path and work as software developers. It has significantly changed their lives. Alex just recently began mentoring another friend. Pretty cool to pass forward. He had received help from some of my co-workers early on which made all the difference in his progression.\n\nHe now speaks French and Mandarin and has aspirations to learn many more. He has traveled to seven countries and has an arrangement with his employer to work from anywhere in the world as long as he is at the office for part of the year.\n\n![Alex](http://steemit-dub.s3.amazonaws.com/alex/amsterdamcollage.jpg 'Alex')\n\nHe gives technical talks at local meet ups, plays both acoustic and electric guitar, has never met a stranger and has made no enemies.\n\nHe is an inspiration to others, his family and siblings. The bar has been set high but the other children have many interests and accomplishments of their own. I'll share those in subsequent posts.\n\n![Leon](http://steemit-dub.s3.amazonaws.com/alex/leoncollage.jpg 'Leon')\n\nWhat was our part?\n-\nMy wife has worked hard to keep them supplied with good school material, staying compliant with state requirements and providing some structure for learning. We never set up a school room like environment. There are never set hours of study. Homeschooling hours vary depending on the age of the child and what they are working on at that phase of their education. I would say that most of the time they spend less time doing actual school work and the rest of the time exploring, using their imagination and focusing their energy on things they are interested in.\n\nFor Alex, that was a foreign language. Other times it was memorizing all the Pokemon cards and building decks and playing in tournaments. Alex said one of the things that has helped him so much in learning new things was the fact that he had memorized so much Pokemon data. He developed the ability to store and retrieve things in his mind.\n\nThe simple fact is\u2026 we didn't do it. Alex did. He deserves all the credit. He did all the work. We provided the canvas, the paint and the paintbrushes. \n\nConclusion\n-\nI feel we have a pretty cool family. There are many ways to raise your children. The most important thing is to love them unconditionally, give them room to grow and treat them as you would your very best friend. They are people and are smarter than most give them credit.\n\nI hope I have been able to convey how proud we are of Alex. These are but a few highlights of his life as he is only twenty-one. There is so much in store for him.\n\nI am so grateful that as much as possible we have given Alex the opportunity to live life on his own terms and he has flourished.",
-    "category": "life",
-    "children": 3,
-    "created": "2016-08-17T02:23:30",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "http://steemit-dub.s3.amazonaws.com/alex/the-crown-family1.png"
-      ],
-      "tags": [
-        "life",
-        "photography",
-        "travel",
-        "parenting",
-        "family"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 20952886915040,
-    "payout": 28.712,
-    "payout_at": "2016-09-17T02:57:45",
-    "pending_payout_value": "28.712 HBD",
-    "percent_hbd": 10000,
-    "permlink": "how-to-raise-fantastic-children-part-1",
-    "post_id": 635822,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": true,
-      "hide": false,
-      "total_votes": 42
-    },
-    "title": "How to Raise Fantastic Children - Part 1",
-    "updated": "2016-08-17T02:41:03",
-    "url": "/life/@craigwilliamz/how-to-raise-fantastic-children-part-1"
   },
   {
     "active_votes": [
@@ -681,7 +681,7 @@
     ],
     "author": "spinx",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -1.16,
     "beneficiaries": [],
     "blacklists": [],
     "body": "<html>\n<p><img src=\"http://i64.tinypic.com/2ceg9qa.jpg\"/></p>\n<p><br></p>\n<p>One of the few precious truths I learned is life is not about waiting for the storm to pass, it is about learning to dance in...</p>\n<p><strong>The Rain</strong></p>\n<p>A ray of sunshine does not always mean happiness nor does a drop of rain mean total loneliness. Through time writers of all kinds being the sensitive, emotional and deep people that they are, have always associated the rain with loneliness. Today, whenever a cold wind blows through an open window or an empty space on a street, we are swept with its glum, warning us of a heavy feeling, reminding us of what we have lost, memories that are only too sad we almost wish could bury everything in a shroud of oblivion. Regrets come again, as well as faces of people from the past as a teardrop suddenly threatens to fall anytime from already lost and almost hollow eyes. The cold brought by the rain along with the dark clouds lurking outside makes us want to wrap our arms protectively around ourselves to keep us warm or to shut out any sad thoughts that dare to overstep the arms engulfing our curled bodies.</p>\n<p><img src=\"http://i63.tinypic.com/6iwlyw.jpg\"/></p>\n<p><br></p>\n<p>But its not always like that. Not if we can help it, no. The Rain is perceived negatively most of the time but we can care enough to see beyond what is often seen. GO, outside on an early September morning and you will see that the rain leaves a magnificent dew drenched flower or a grass all the more alive as the sunlight hits the few drops left from last night's rain. All for you to behold. See that under umbrellas are faces of people smiling and radiant as you meet them on the street. Really, the rain cant be that bad. Not at all. It is natures gift, a gift from the Almighty. And after a rain, what do the heavens hold for you? An array of colors painting the sky and we know it as rainbow. Just as we know that after the tears, laughter comes, making us very much worthy of the joy because of what we have gone through.</p>\n<p><img src=\"http://i64.tinypic.com/fnzjtl.jpg\"/></p>\n<p><br></p>\n<p>All our days cannot simply be filled with sunshine and it cannot be simply all laughter and smiles. We have to grow as a person just as the rain lets the flowers in the meadow bloom and grow. The flowers need the rain just as much as they need sunshine. Same is true with people. We need to be happy just as we need to be lonely so that we can grow as a person. Then can we only bring ourselves to realize that the bad is not so bad afer all as long as we allow the growth it brings to us as individuals.</p>\n<p><img src=\"http://i63.tinypic.com/16kp014.jpg\"/></p>\n<p><br></p>\n<p>You cannot escape the rain, nor chase it away. Dare to hear its pitter patter rhythm as something which can never be a hindrance for you to see things in a different and brighter way no matter how dark the clouds and heavy the downpour. It is as inevitable as the troubles we come across. Learn from the rain because it is the law of nature. Learn from loneliness or troubles because... It is the law of life.</p>\n<p><br></p>\n<p><br></p>\n<p>(c) to the owner of the picture I used...</p>\n</html>",
@@ -708,11 +708,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 16847399101862,
     "payout": 18.413,
-    "payout_at": "2016-09-29T09:39:45",
+    "payout_at": "2016-09-05T07:57:36",
     "pending_payout_value": "18.413 HBD",
     "percent_hbd": 10000,
     "permlink": "the-rain-it-is-the-law-of-life",
-    "post_id": 787056,
+    "post_id": 1038468,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -738,7 +738,7 @@
     ],
     "author": "feminism",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -4.68,
     "beneficiaries": [],
     "blacklists": [],
     "body": "I agree with @sean-king here @kato you give feminism a bad name... :)",
@@ -762,11 +762,11 @@
     "parent_author": "sean-king",
     "parent_permlink": "re-kato-the-crap-i-put-up-with-as-a-woman-in-crypto-because-you-say-you-re-not-a-feminist-20160815t231355973z",
     "payout": 7.588,
-    "payout_at": "2016-09-17T00:58:51",
+    "payout_at": "2016-08-23T16:28:33",
     "pending_payout_value": "7.588 HBD",
     "percent_hbd": 10000,
     "permlink": "re-sean-king-re-kato-the-crap-i-put-up-with-as-a-woman-in-crypto-because-you-say-you-re-not-a-feminist-20160816t162832308z",
-    "post_id": 628745,
+    "post_id": 836711,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -824,7 +824,7 @@
     ],
     "author": "craigwilliamz",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -0.27,
     "beneficiaries": [],
     "blacklists": [],
     "body": "Before I had children, I would look at other parents who were giving their children soda and a pacifier and think, \"Those are horrible parents. Don't they know what harm soda is and all the things that are wrong with pacifiers!\" Then I had children. We have four. It was a lot harder than I thought it would be. When children are very young, you cannot reason with them. You cannot get through to them with logic.\n\nI hope you continue on Steemit and share your experiences with your children. You do have children, right?\n\nI love the concepts being presented by this an other posts to raise our children and never discipline them but what I am not seeing are examples of how to do that. Not once they are old enough to reason, between 4 and 6, but before that.\n\nI am a strong opponent to child abuse. I grew up in a **very** unstable home. That was something I did not want and did not do in my own family but each of my children did receive a few spankings when they were very young. Once they were old enough to reason with, we discussed matters and consequences came into play.\n\nI have a post on my oldest son, he is 21 now and I talk about homeschooling and letting children play a large role in their life. It is __their__ life after all.\n\nhttps://steemit.com/life/@craigwilliamz/how-to-raise-fantastic-children-part-1",
@@ -847,11 +847,11 @@
     "parent_author": "anarcho-andrei",
     "parent_permlink": "stop-hitting-your-kids",
     "payout": 2.672,
-    "payout_at": "2016-09-20T02:13:36",
+    "payout_at": "2016-08-27T02:19:39",
     "pending_payout_value": "2.672 HBD",
     "percent_hbd": 10000,
     "permlink": "re-anarcho-andrei-stop-hitting-your-kids-20160820t021940362z",
-    "post_id": 678454,
+    "post_id": 899598,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -909,7 +909,7 @@
     ],
     "author": "cryptocurrency1",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -1.01,
     "beneficiaries": [],
     "blacklists": [],
     "body": "This is a great idea. Is it a button on Steemit website to change skin colors?",
@@ -929,11 +929,11 @@
     "parent_author": "complexring",
     "parent_permlink": "preview-of-custom-steemit-com-skins-by-maximkichev",
     "payout": 2.566,
-    "payout_at": "2016-09-24T23:52:36",
+    "payout_at": "2016-08-31T22:04:51",
     "pending_payout_value": "2.566 HBD",
     "percent_hbd": 10000,
     "permlink": "re-complexring-preview-of-custom-steemit-com-skins-by-maximkichev-20160824t220504965z",
-    "post_id": 736431,
+    "post_id": 973567,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -1219,7 +1219,7 @@
     ],
     "author": "r4fken",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -5.58,
     "beneficiaries": [],
     "blacklists": [],
     "body": "Today is an historical day for me. This is my **thousandth** post on Steemit already, I hit **100** followers today \u00e1nd I'm finally past the magical limit of **3000** SP! :D\n![Achievement unlocked](http://rlv.zcache.com/achievement_unlocked_bumper_sticker-r50c3a5b34b904bb4a8d9e6aad6b920a1_v9wht_8byvr_512.jpg)\n#### Thanks!\nThanks to all my followers, voters and friends! I hope we'll meet again soon, and continue scoring milestones! :)\nAlso, a thank you for the devs, we **love** your work, keep going!",
@@ -1244,11 +1244,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": -25406680605573,
     "payout": 2.101,
-    "payout_at": "2016-09-22T12:39:06",
+    "payout_at": "2016-08-28T20:34:39",
     "pending_payout_value": "2.101 HBD",
     "percent_hbd": 10000,
     "permlink": "my-1000th-post-and-other-steemit-achievements",
-    "post_id": 698270,
+    "post_id": 925021,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -1314,7 +1314,7 @@
     ],
     "author": "loveangel",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -0.89,
     "beneficiaries": [],
     "blacklists": [],
     "body": "If people would be able to use Steem for remittances, then I feel this could just blow up out of proportion for Steem, as there would be no need to convert Steem's to bitcoin and then to local currencies.  \n\nIts dependency on bitcoin would be negated and we can then truly consider it as a global currency :-)",
@@ -1334,11 +1334,11 @@
     "parent_author": "jvper",
     "parent_permlink": "international-money-transfer-provider-started-using-steem",
     "payout": 1.417,
-    "payout_at": "2016-09-23T13:51:39",
+    "payout_at": "2016-08-30T14:27:00",
     "pending_payout_value": "1.417 HBD",
     "percent_hbd": 10000,
     "permlink": "re-jvper-international-money-transfer-provider-started-using-steem-20160823t142700478z",
-    "post_id": 718957,
+    "post_id": 951443,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -1360,7 +1360,7 @@
     ],
     "author": "feminism",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -4.68,
     "beneficiaries": [],
     "blacklists": [],
     "body": "proofreading: quiet-> quite",
@@ -1380,11 +1380,11 @@
     "parent_author": "sean-king",
     "parent_permlink": "faith-versus-religion-refuting-god-s-undertaker-part-1",
     "payout": 1.308,
-    "payout_at": "2016-09-21T14:54:18",
+    "payout_at": "2016-08-28T14:12:24",
     "pending_payout_value": "1.308 HBD",
     "percent_hbd": 10000,
     "permlink": "re-sean-king-faith-versus-religion-refuting-god-s-undertaker-part-1-20160821t141224417z",
-    "post_id": 694518,
+    "post_id": 920346,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -1406,7 +1406,7 @@
     ],
     "author": "feminism",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -4.68,
     "beneficiaries": [],
     "blacklists": [],
     "body": "money quote: \"And it's also just as likely that God ejaculated out the universe after an epic masterbation session\"\n\nproofreading: masturbation",
@@ -1426,11 +1426,11 @@
     "parent_author": "sean-king",
     "parent_permlink": "faith-versus-religion-refuting-god-s-undertaker-part-1",
     "payout": 1.276,
-    "payout_at": "2016-09-21T14:54:18",
+    "payout_at": "2016-08-28T15:40:45",
     "pending_payout_value": "1.276 HBD",
     "percent_hbd": 10000,
     "permlink": "re-sean-king-faith-versus-religion-refuting-god-s-undertaker-part-1-20160821t154045710z",
-    "post_id": 695353,
+    "post_id": 921362,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -1492,7 +1492,7 @@
     ],
     "author": "feminism",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -4.68,
     "beneficiaries": [],
     "blacklists": [],
     "body": "it is a great exercise in epistemology, I agree.\nand most people are sheeps, meaning, they dont know how they know what \"they know\", meaning they dont know shit",
@@ -1512,11 +1512,11 @@
     "parent_author": "cryptoctopus",
     "parent_permlink": "the-earth-is-flat-the-ultimate-test-for-open-mindedness",
     "payout": 1.256,
-    "payout_at": "2016-09-24T23:11:33",
+    "payout_at": "2016-08-31T22:50:51",
     "pending_payout_value": "1.256 HBD",
     "percent_hbd": 10000,
     "permlink": "re-cryptoctopus-the-earth-is-flat-the-ultimate-test-for-open-mindedness-20160824t225052573z",
-    "post_id": 736865,
+    "post_id": 974104,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -1574,7 +1574,7 @@
     ],
     "author": "feminism",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -4.68,
     "beneficiaries": [],
     "blacklists": [],
     "body": "proofreading: lessor",
@@ -1594,11 +1594,11 @@
     "parent_author": "sean-king",
     "parent_permlink": "nothing-in-biology-makes-sense-except-in-the-light-of-evolution-theodosius-dobzhansky",
     "payout": 1.099,
-    "payout_at": "2016-09-19T19:24:12",
+    "payout_at": "2016-08-26T19:52:06",
     "pending_payout_value": "1.099 HBD",
     "percent_hbd": 10000,
     "permlink": "re-sean-king-nothing-in-biology-makes-sense-except-in-the-light-of-evolution-theodosius-dobzhansky-20160819t195205251z",
-    "post_id": 674727,
+    "post_id": 894879,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -1664,7 +1664,7 @@
     ],
     "author": "feminism",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -4.68,
     "beneficiaries": [],
     "blacklists": [],
     "body": "OMG  Sasha Grey\nwhy are you doing this to me Sean ???\n:)",
@@ -1684,11 +1684,11 @@
     "parent_author": "sean-king",
     "parent_permlink": "me-cindy-and",
     "payout": 1.049,
-    "payout_at": "2016-09-24T23:35:06",
+    "payout_at": "2016-08-31T22:52:51",
     "pending_payout_value": "1.049 HBD",
     "percent_hbd": 10000,
     "permlink": "re-sean-king-me-cindy-and-20160824t225250885z",
-    "post_id": 736890,
+    "post_id": 974129,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -1710,7 +1710,7 @@
     ],
     "author": "feminism",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -4.68,
     "beneficiaries": [],
     "blacklists": [],
     "body": "\"It\u2019s also the reason why poetry is often able to convey a truer understanding of an ideal than prose: The ineffable, transcendental concepts of art and religion defy encapsulation in mere words. \"\nThats the reason why I dont bother explaining myself with mere prose,\nbut instead I use poetry and music, the closest piece of poetry or music I know\nthat conveys what Im trying to convey.",
@@ -1730,11 +1730,11 @@
     "parent_author": "sean-king",
     "parent_permlink": "the-bible-isn-t-mainly-history",
     "payout": 1.031,
-    "payout_at": "2016-09-27T18:51:57",
+    "payout_at": "2016-09-03T18:45:48",
     "pending_payout_value": "1.031 HBD",
     "percent_hbd": 10000,
     "permlink": "re-sean-king-the-bible-isn-t-mainly-history-20160827t184548731z",
-    "post_id": 769459,
+    "post_id": 1016444,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -1796,7 +1796,7 @@
     ],
     "author": "feminism",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -4.68,
     "beneficiaries": [],
     "blacklists": [],
     "body": "Here is a post with a song dedicated to you Sean,\nhttp://steemit.com/science/@feminism/the-symphony-of-science-dedicated-to-sean-king\nyou're really growing on me, thank you for your work.\nI wish I could be as polite as you are with people.",
@@ -1819,11 +1819,11 @@
     "parent_author": "sean-king",
     "parent_permlink": "paraphilia",
     "payout": 1.023,
-    "payout_at": "2016-09-20T06:12:45",
+    "payout_at": "2016-08-27T16:45:12",
     "pending_payout_value": "1.023 HBD",
     "percent_hbd": 10000,
     "permlink": "re-sean-king-paraphilia-20160820t164510821z",
-    "post_id": 684831,
+    "post_id": 907839,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -1835,52 +1835,6 @@
     "title": "RE: Paraphilia",
     "updated": "2016-08-20T16:45:12",
     "url": "/photography/@sean-king/paraphilia#@feminism/re-sean-king-paraphilia-20160820t164510821z"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 1396646939582,
-        "voter": "sean-king"
-      }
-    ],
-    "author": "feminism",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "That picture is mind blowing, to say anything less would be dishonest.",
-    "category": "photography",
-    "children": 0,
-    "created": "2016-08-22T23:44:24",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 1,
-    "is_paidout": false,
-    "json_metadata": {
-      "tags": [
-        "photography"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 1396646939582,
-    "parent_author": "sean-king",
-    "parent_permlink": "mystical",
-    "payout": 1.0,
-    "payout_at": "2016-09-23T01:34:54",
-    "pending_payout_value": "1.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "re-sean-king-mystical-20160822t234424169z",
-    "post_id": 712384,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": true,
-      "hide": false,
-      "total_votes": 1
-    },
-    "title": "RE: Mystical Momma",
-    "updated": "2016-08-22T23:44:24",
-    "url": "/photography/@sean-king/mystical#@feminism/re-sean-king-mystical-20160822t234424169z"
   },
   {
     "active_votes": [
@@ -1963,7 +1917,7 @@
     ],
     "author": "steemwelcome",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -2.46,
     "beneficiaries": [],
     "blacklists": [],
     "body": "As I told already on my [introduction post](https://steemit.com/introduceyourself/@steemwelcome/hello-steemians-i-m-steemwelcome) I AM NOT A BOT, I am a manual curator of new accounts on steemit.\n\nMy journey was  just welcoming each verified new user I could MANUALLY. There is nothing wrong about that, but whale @smooth decided to flag me, destroying my reputation and so my ability to greet new steemians. Just look at the messages on my introductory post and you will see how much I was apreciated for this initiative: no one complained.\n\nThis is unfair! Flagging me as if I were a \"bot\" is an insult to the time I took to salute each new steemian I could.\n\nNo one complained about me and only positive reactions from new steemians is what you could read (if my reputation wasn't destroyed by @smooth). So what kind of \"spam\" is the one that makes people happy when they are personaly greeted when they join (and how could this be compared with an \"spambot\", it's my time that was there dedicated for this task). What is the problem if I found time to do this \"repetitive\" task?\n\n@steemwelcome",
@@ -1990,12 +1944,12 @@
     },
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 1663672556305,
-    "payout": 0.999,
-    "payout_at": "2016-10-01T13:33:12",
-    "pending_payout_value": "0.999 HBD",
+    "payout": 1.002,
+    "payout_at": "2016-09-07T00:33:33",
+    "pending_payout_value": "1.002 HBD",
     "percent_hbd": 10000,
     "permlink": "help-i-was-unfairly-flagged-i-m-not-a-bot-i-m-a-manual-curator",
-    "post_id": 807303,
+    "post_id": 1064182,
     "promoted": "0.001 HBD",
     "replies": [],
     "stats": {
@@ -2007,6 +1961,52 @@
     "title": "Help I was unfairly flagged, I'm not a \"bot\" I'm a manual curator!",
     "updated": "2016-08-31T01:15:33",
     "url": "/steemit/@steemwelcome/help-i-was-unfairly-flagged-i-m-not-a-bot-i-m-a-manual-curator"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 1396646939582,
+        "voter": "sean-king"
+      }
+    ],
+    "author": "feminism",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": -4.68,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "That picture is mind blowing, to say anything less would be dishonest.",
+    "category": "photography",
+    "children": 0,
+    "created": "2016-08-22T23:44:24",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 1,
+    "is_paidout": false,
+    "json_metadata": {
+      "tags": [
+        "photography"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 1396646939582,
+    "parent_author": "sean-king",
+    "parent_permlink": "mystical",
+    "payout": 1.0,
+    "payout_at": "2016-08-29T23:44:24",
+    "pending_payout_value": "1.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "re-sean-king-mystical-20160822t234424169z",
+    "post_id": 942999,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 1
+    },
+    "title": "RE: Mystical Momma",
+    "updated": "2016-08-22T23:44:24",
+    "url": "/photography/@sean-king/mystical#@feminism/re-sean-king-mystical-20160822t234424169z"
   },
   {
     "active_votes": [
@@ -2137,7 +2137,7 @@
     ],
     "author": "spinx",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -1.16,
     "beneficiaries": [],
     "blacklists": [],
     "body": "<html>\n<p><img src=\"http://i67.tinypic.com/sg1gfm.jpg\"/></p>\n<p><br></p>\n<p>&nbsp;A boy went to war in 1914 and left his bike chained to a tree. He never came home &amp; the family left the bike there as a memorial to the fallen soldier.&nbsp;</p>\n</html>",
@@ -2159,11 +2159,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 1520007920729,
     "payout": 0.992,
-    "payout_at": "2016-09-28T14:08:12",
+    "payout_at": "2016-09-04T13:58:00",
     "pending_payout_value": "0.992 HBD",
     "percent_hbd": 10000,
     "permlink": "bike-chained-to-a-tree",
-    "post_id": 777632,
+    "post_id": 1026778,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -2185,7 +2185,7 @@
     ],
     "author": "craigwilliamz",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": -0.27,
     "beneficiaries": [],
     "blacklists": [],
     "body": "Welcome to Steemit! If you would like to see statistics of any post on Steemit, you can use Steemd.com. I have made a bookmark for your convenience in accessing Steemd. https://steemit.com/steemd/@craigwilliamz/steemd-statistics-bookmark-for-easy-access-to-steemd",
@@ -2201,11 +2201,11 @@
     "parent_author": "nestorstable",
     "parent_permlink": "hello-steemit-i-d-like-to-introduce-myself-and-a-short-history-of-becoming-a-cooking-enthusiast",
     "payout": 0.633,
-    "payout_at": "2016-09-28T03:21:15",
+    "payout_at": "2016-09-04T02:32:30",
     "pending_payout_value": "0.633 HBD",
     "percent_hbd": 10000,
     "permlink": "re-hello-steemit-i-d-like-to-introduce-myself-and-a-short-history-of-becoming-a-cooking-enthusiast-20160828t023230",
-    "post_id": 773395,
+    "post_id": 1021350,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
