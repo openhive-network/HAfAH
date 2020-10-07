@@ -1,0 +1,29 @@
+---
+  test_name: Hivemind tags_api.get_comment_discussions_by_payout pre_appbase patterns test
+
+  marks:
+    - patterntest # `call` requires condenser_api
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: tags_api.get_blog pre_appbase patterns test
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "call"
+          params: ["tags_api", "get_comment_discussions_by_payout", ["otc", "", "10", "", 0]]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "pre_appbase"
+            directory: "tags_api_negative/get_comment_discussions_by_payout"
+            error_response: true
