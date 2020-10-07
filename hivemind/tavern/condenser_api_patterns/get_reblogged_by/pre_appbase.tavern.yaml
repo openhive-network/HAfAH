@@ -2,8 +2,7 @@
   test_name: Hivemind condenser_api.get_reblogged_by pre_appbase patterns test
 
   marks:
-    - patterntest
-    - xfail # not working - problem with parameters
+    - patterntest # bug in old hivemind
 
   includes:
     - !include ../../common.yaml

@@ -3,8 +3,6 @@
 
   marks:
     - patterntest # communities not present in 5mln blocks
-    - failing
-    - xfail # checks needed, now empty result is returned
 
   includes:
     - !include ../../common.yaml

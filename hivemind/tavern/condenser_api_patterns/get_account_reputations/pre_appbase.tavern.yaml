@@ -2,8 +2,7 @@
   test_name: Hivemind condenser_api.get_account_reputations pre_appbase patterns test
 
   marks:
-    - patterntest
-    - xfail # not working - to fix
+    - patterntest # bug in old hivemind
 
   includes:
     - !include ../../common.yaml
