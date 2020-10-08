@@ -54,3 +54,23 @@ Examples of running benchmarks:
 
 `./run_api_benchmarks.sh https://api.hive.blog`
 
+## Tavern API tests:
+To run tavern test:
+1. Enter `tavern` directory
+2. Edit `common.yaml` and set variables to desired values
+3. Install tavern/pytest `python3 -m pip install tavern[pytest]`
+4. Run all tests:
+```
+export HIVEMIND_ADDRESS=127.0.0.1
+export HIVEMIND_PORT=8080
+PYTHONPATH=$PYTHONPATH:$(pwd) pytest -v -n auto --durations=0 .
+```
+5. Run tests from given directory
+```
+PYTHONPATH=$PYTHONPATH:$(pwd) pytest -v -n auto --durations=0 <directory_name>
+```
+
+Remarks:
+- To increase verbosity use `-vv` option instead of `-v`.
+- `durations` option gives time measurement for tests, set to `0` will show durations of all tests. `Number` greater than zero will show only `number` slowest tests.
+- `-n` option allows to run tests on multiple cores, `auto` will use all available cores
