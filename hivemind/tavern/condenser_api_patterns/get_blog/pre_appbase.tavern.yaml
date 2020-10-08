@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.account_notifications hive community
+  test_name: Hivemind condenser_api.get_blog pre_appbase patterns test
 
   marks:
-    - patterntest # communities not present in 5mln blocks
+    - patterntest
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: account_notifications hive community
+    - name: condenser_api.get_blog pre_appbase patterns test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,14 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.account_notifications"
-          params: {"account":"hive-148441","limit":50}
+          method: "call"
+          params: ["condenser_api", "get_blog", ["steemit",0,1]]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "hive-148441"
-            directory: "bridge_api_negative/account_notifications"
-            error_response: true
-
+            method: "pre_appbase"
+            directory: "condenser_api_patterns/get_blog"

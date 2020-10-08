@@ -1,15 +1,14 @@
 ---
-  test_name: Hivemind deprecated condenser_api.get_account_votes 
+  test_name: Hivemind condenser_api.get_discussions_by_blog pre_appbase patterns test
 
   marks:
     - patterntest
-    - negative
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_account_votes deprecated
+    - name: condenser_api.get_discussions_by_blog pre_appbase patterns test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_account_votes"
-          params: ["steemit"]
+          method: "call"
+          params: ["condenser_api", "get_discussions_by_blog", [{"tag":"steemit","start_author":"steemit","start_permlink":"firstpost","limit":1}]]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "deprecated"
-            directory: "condenser_api_negative/get_account_votes"
-            error_response: true
+            method: "pre_appbase"
+            directory: "condenser_api_patterns/get_discussions_by_blog"

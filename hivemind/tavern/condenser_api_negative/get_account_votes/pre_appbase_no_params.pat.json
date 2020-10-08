@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "Account hive-148441 does not exist",
+  "data": "missing a required argument: 'params'",
   "message": "Invalid parameters"
 }

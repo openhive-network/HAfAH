@@ -1,15 +1,15 @@
 ---
-  test_name: Hivemind deprecated condenser_api.get_account_votes 
+  test_name: Hivemind condenser_api pre_appbase test with nonexisting method
 
   marks:
     - patterntest
     - negative
 
   includes:
-    - !include ../../common.yaml
+    - !include ../common.yaml
 
   stages:
-    - name: get_account_votes deprecated
+    - name: condenser_api pre_appbase test with nonexisting method
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +18,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_account_votes"
-          params: ["steemit"]
+          method: "call"
+          params: ["condenser_api", "find_comments", ["gtg","witness-gtg"]]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "deprecated"
-            directory: "condenser_api_negative/get_account_votes"
+            method: "pre_appbase_wrong_call"
+            directory: "condenser_api_negative"
             error_response: true
