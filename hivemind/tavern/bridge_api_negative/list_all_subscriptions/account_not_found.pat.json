@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "Account wyuh does not exist",
+  "data": "account not found: `wyuh`",
   "message": "Invalid parameters"
 }
