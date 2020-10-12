@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "invalid account name length: `pa`",
+  "data": "invalid permlink length",
   "message": "Invalid parameters"
 }
