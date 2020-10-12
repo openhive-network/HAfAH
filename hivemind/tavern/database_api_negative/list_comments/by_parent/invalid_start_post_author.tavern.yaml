@@ -2,7 +2,7 @@
 test_name: Hivemind database_api.list_comments patterns test order "by_parent" invalid start_post_author
 
 marks:
-  - patterntest # fat node did not require author account
+  - patterntest
   - negative
 
 includes:

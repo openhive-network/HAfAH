@@ -2,9 +2,7 @@
 test_name: Hivemind database_api.list_comments patterns test order "by_permlink" invalid permlink
 
 marks:
-  - patterntest # fat node did not require author account
-  - xfail # post does not exists, why API call returns results?
-  - negative
+  - patterntest
 
 includes:
   - !include ../../../common.yaml
@@ -22,7 +20,7 @@ stages:
         method: "database_api.list_comments"
         params:
           {
-            "start": ["gtg", "too_long_invalid_permlink_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
+            "start": ["gtg", "too_long_invalid_permlink_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
             "limit": 10,
             "order": "by_permlink",
           }
@@ -31,6 +29,5 @@ stages:
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "invalid_permlink"
-          directory: "database_api_negative/list_comments/by_permlink"
-          error_response: true
+          method: "too_long_permlink"
+          directory: "database_api_patterns/list_comments/by_permlink"

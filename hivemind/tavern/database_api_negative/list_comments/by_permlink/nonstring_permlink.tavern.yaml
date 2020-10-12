@@ -1,5 +1,5 @@
 ---
-test_name: Hivemind database_api.list_comments patterns test order "by_parent" too many arguments
+test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
 
 marks:
   - patterntest
@@ -9,7 +9,7 @@ includes:
   - !include ../../../common.yaml
 
 stages:
-  - name: list_comments by_parent too many arguments
+  - name: list_comments by_permlink
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -21,15 +21,15 @@ stages:
         method: "database_api.list_comments"
         params:
           {
-            "start": ["gtg", "hello-world", "", "", ""],
-            "limit": 10,
-            "order": "by_parent",
+            "start": ["gtg", ["hello","world"]],
+            "limit": 2,
+            "order": "by_permlink",
           }
     response:
       status_code: 200
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "too_many_arguments"
-          directory: "database_api_negative/list_comments/by_parent"
+          method: "nonstring_permlink"
+          directory: "database_api_negative/list_comments/by_permlink"
           error_response: true
