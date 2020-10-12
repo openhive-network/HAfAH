@@ -1,15 +1,14 @@
 ---
-  test_name: Hivemind bridge.get_account_posts invalid account
+  test_name: Hivemind bridge_api.get_account_posts sort blog min limit patterns test
 
   marks:
     - patterntest
-    - negative
 
   includes:
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts invalid account
+    - name: get_account_posts sort blog min limit
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -19,12 +18,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"blog","account":"invalid_account"}
+          params: {"sort":"blog", "account":"gtg", "limit":1}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_account"
-            directory: "bridge_api_negative/get_account_posts/blog"
-            error_response: true
+            method: "min_limit"
+            directory: "bridge_api_patterns/get_account_posts/blog"
+
