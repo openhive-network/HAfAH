@@ -2,8 +2,7 @@
 test_name: Hivemind database_api.list_comments patterns test order "by_permlink" only author
 
 marks:
-  - patterntest # fat node didn't validate author or permlink in any way
-  - negative
+  - patterntest
 
 includes:
   - !include ../../../common.yaml
@@ -26,5 +25,4 @@ stages:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
           method: "short_author"
-          directory: "database_api_negative/list_comments/by_permlink"
-          error_response: true
+          directory: "database_api_patterns/list_comments/by_permlink"
