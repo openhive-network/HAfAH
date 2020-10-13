@@ -1,0 +1,29 @@
+---
+  test_name: Hivemind condenser_api.get_blog no results test
+
+  marks:
+    - patterntest
+    - xfail # should return 0 or all posts? returns 1 post
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_blog no results
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_blog"
+          params: {"account":"gtg","start_entry_id":0,"limit":0}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "limit_0"
+            directory: "condenser_api_patterns/get_blog"
