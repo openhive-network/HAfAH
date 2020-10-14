@@ -1,15 +1,15 @@
 ---
-  test_name: Hivemind bridge.get_account_posts invalid account
+  test_name: Hivemind condenser_api.get_blog no results test
 
   marks:
     - patterntest
-    - negative
+    - xfail # should return 0 or all posts? returns 1 post
 
   includes:
-    - !include ../../../common.yaml
+    - !include ../../common.yaml
 
   stages:
-    - name: get_account_posts invalid account
+    - name: get_blog no results
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +18,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.get_account_posts"
-          params: {"sort":"blog","account":"invalid_account"}
+          method: "condenser_api.get_blog"
+          params: {"account":"gtg","start_entry_id":0,"limit":0}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_account"
-            directory: "bridge_api_negative/get_account_posts/blog"
-            error_response: true
+            method: "limit_0"
+            directory: "condenser_api_patterns/get_blog"

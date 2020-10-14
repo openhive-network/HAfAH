@@ -1,15 +1,15 @@
 ---
-  test_name: Hivemind bridge.get_account_posts invalid account
+  test_name: bridge_api.list_pop_communities under limit # 8080
 
   marks:
     - patterntest
     - negative
 
   includes:
-    - !include ../../../common.yaml
+    - !include ../../common.yaml
 
   stages:
-    - name: get_account_posts invalid account
+    - name: bridge_api.list_pop_communities under limit
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +18,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.get_account_posts"
-          params: {"sort":"blog","account":"invalid_account"}
+          method: "bridge.list_pop_communities"
+          params: [0]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_account"
-            directory: "bridge_api_negative/get_account_posts/blog"
+            method: "under_limit"
+            directory: "bridge_api_negative/list_pop_communities"
             error_response: true

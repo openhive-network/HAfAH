@@ -1,15 +1,15 @@
 ---
-  test_name: Hivemind bridge.get_account_posts invalid account
+  test_name: Hivemind bridge_api.get_post_header no_permlink_parameter patterns test
 
   marks:
     - patterntest
     - negative
 
   includes:
-    - !include ../../../common.yaml
+    - !include ../../common.yaml
 
   stages:
-    - name: get_account_posts invalid account
+    - name: get_post_header no_permlink_parameter
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +18,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.get_account_posts"
-          params: {"sort":"blog","account":"invalid_account"}
+          method: "bridge.get_post_header"
+          params: {"author":"invalid_account"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_account"
-            directory: "bridge_api_negative/get_account_posts/blog"
+            method: "no_permlink_parameter"
+            directory: "bridge_api_negative/get_post_header"
             error_response: true

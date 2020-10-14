@@ -1,15 +1,14 @@
 ---
-  test_name: Hivemind bridge.get_account_posts invalid account
+  test_name: Hivemind condenser_api.get_blog limit at least 100 patterns test
 
   marks:
     - patterntest
-    - negative
 
   includes:
-    - !include ../../../common.yaml
+    - !include ../../common.yaml
 
   stages:
-    - name: get_account_posts invalid account
+    - name: get_blog limit at least 100
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.get_account_posts"
-          params: {"sort":"blog","account":"invalid_account"}
+          method: "condenser_api.get_blog"
+          params: {"account":"steemit","start_entry_id":-1,"limit":100}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_account"
-            directory: "bridge_api_negative/get_account_posts/blog"
-            error_response: true
+            method: "limit_at_least_100"
+            directory: "condenser_api_patterns/get_blog"
