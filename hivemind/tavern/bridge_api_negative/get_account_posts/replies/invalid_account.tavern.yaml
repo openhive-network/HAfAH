@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge.get_account_posts test not existing account (yet)
+  test_name: Hivemind bridge.get_account_posts test not existing account
 
   marks:
     - patterntest # original didn't test for account existence, only returned empty results
@@ -19,7 +19,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"replies","account":"rollinshive","observer":null}
+          params: {"sort":"replies","account":"rollinshive2","observer":null}
       response:
         status_code: 200
         verify_response_with:
