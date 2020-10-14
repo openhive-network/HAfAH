@@ -1,15 +1,14 @@
 ---
-test_name: Hivemind database_api.list_comments patterns test order "by_permlink" only author
+test_name: Hivemind database_api.list_comments patterns test order "by_last_update" correct author and date
 
 marks:
-  - patterntest # fat node did not validate anything when it comes to author or permlink
+  - patterntest
   - negative
-
 includes:
   - !include ../../../common.yaml
 
 stages:
-  - name: list_comments_by_permlink
+  - name: list_comments_by_last_update
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -19,12 +18,17 @@ stages:
         jsonrpc: "2.0"
         id: 1
         method: "database_api.list_comments"
-        params: { "start": ["12", ""], "limit": 10, "order": "by_permlink" }
+        params:
+          {
+            "start": ["gtg", "2016-08-28 17:15:12", "", ""],
+            "limit": 0,
+            "order": "by_last_update",
+          }
     response:
       status_code: 200
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "bad_author"
-          directory: "database_api_negative/list_comments/by_permlink"
+          method: "under_limit"
+          directory: "database_api_negative/list_comments/by_last_update"
           error_response: true

@@ -2,8 +2,6 @@
   test_name: Hivemind bridge.post_notifications patterns test valid account and permlink
   marks:
     - patterntest
-    - failing
-    - xfail # very different result
 
   includes:
     - !include ../../common.yaml

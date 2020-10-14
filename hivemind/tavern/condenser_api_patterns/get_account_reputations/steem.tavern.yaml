@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_account_reputations patterns test #8080
 
   marks:
-    - patterntest # to be changed for account that has some reputation
+    - patterntest # fat node had slightly different implementation, did not accept arguments by name (.fatnode pattern made with positional call)
 
   includes:
     - !include ../../common.yaml
