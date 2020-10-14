@@ -9,7 +9,7 @@ params:
 
   "permlink":"{permlink}"
 
-     optional, default = 0; with author when given have to point to valid start post; paging mechanism
+     optional, with author when given have to point to valid start post; paging mechanism
 
   "limit":"{limit}"
 
