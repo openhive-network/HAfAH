@@ -2,14 +2,13 @@
   test_name: Hivemind condenser_api.get_content deleted post patterns test
 
   marks:
-    - patterntest # bug in old HM and empty post in fat node
-    - negative
+    - patterntest # post deleted 7 times within 5mln blocks but recreated yet one more time at the end
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_content gtg
+    - name: get_content
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -19,12 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_content"
-          params: ["jsc", "testing-summary"]
+          params: ["murdock1", "test1"]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "deleted_post"
-            directory: "condenser_api_negative/get_content"
-            error_response: true
+            method: "multi_deleted_post"
+            directory: "condenser_api_patterns/get_content"
