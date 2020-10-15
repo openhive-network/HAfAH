@@ -1,15 +1,15 @@
 ---
-  test_name: Hivemind condenser_api.get_content deleted post patterns test
+  test_name: Hivemind condenser_api.get_content_replies deleted post patterns test
 
   marks:
-    - patterntest # bug in old HM and empty post in fat node
+    - patterntest # empty result in old HM and fat node; post deleted 5 times within 5mln blocks and not recreated at the end
     - negative
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_content
+    - name: get_content_replies
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +18,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_content"
-          params: ["jsc", "testing-summary"]
+          method: "condenser_api.get_content_replies"
+          params: ["ilmam", "test"]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "deleted_post"
-            directory: "condenser_api_negative/get_content"
+            method: "multi_deleted_post"
+            directory: "condenser_api_negative/get_content_replies"
             error_response: true

@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.account_notifications patterns test
 
   marks:
-    - patterntest
+    - patterntest # old notification score was related to voting power, now it is related to reputation, since vp is not available to HM
 
   includes:
     - !include ../../common.yaml
