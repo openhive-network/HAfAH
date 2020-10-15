@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.list_subscribers patterns test
+  test_name: Hivemind bridge_api.list_communities sort_subs
 
   marks:
     - fullsynctest
 
   includes:
-    - !include ../../../common.yaml
+    - !include ../../common.yaml
 
   stages:
-    - name: list_subscribers
+    - name: bridge_api.list_communities sort_subs
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_subscribers"
-          params: {"community":"hive-148441"}
+          method: "bridge.list_communities"
+          params: {"sort":"subs"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "gems"
-            directory: "full_sync/bridge_api_patterns/list_subscribers"
+            method: "sort_subs"
+            directory: "bridge_api_patterns/list_communities"

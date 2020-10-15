@@ -25,6 +25,6 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "hive-148441"
+            method: "hive-197922"
             directory: "bridge_api_negative/account_notifications"
             error_response: true
