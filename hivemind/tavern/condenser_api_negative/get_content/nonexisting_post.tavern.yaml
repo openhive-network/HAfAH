@@ -1,14 +1,15 @@
 ---
-  test_name: Hivemind bridge_api.post_notifications patterns test
+  test_name: Hivemind condenser_api.get_content nonexisting post patterns test
 
   marks:
-    - patterntest
+    - patterntest # bug in old HM and empty post in fat node
+    - negative
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: post_notifications
+    - name: get_content
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +18,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.post_notifications"
-          params: {"author":"admin", "permlink":"firstpost", "min_score":15}
+          method: "condenser_api.get_content"
+          params: ["jsc", "nonexisting-post"]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "first"
-            directory: "bridge_api_patterns/post_notifications"
+            method: "nonexisting_post"
+            directory: "condenser_api_negative/get_content"
+            error_response: true
