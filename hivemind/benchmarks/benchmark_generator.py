@@ -18,7 +18,7 @@ def test_{}(benchmark):
     error = response_json.get("error", None)
     result = response_json.get("result", None)
 
-    assert error or result, "No error or result in response"
+    assert error is not None or result is not None, "No error or result in response"
     """.format(test_name, address, test_payload)
 
 def get_request_from_yaml(path_to_yaml):
