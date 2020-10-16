@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.list_communities sort_rank gtg observer
+  test_name: Hivemind bridge_api.get_account_posts comments animalcontrol
 
   marks:
-    - fullsynctest
+    - patterntest
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
-    - name: bridge_api.list_communities sort_rank gtg observer
+    - name: get_account_posts sort comments animalcontrol
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_communities"
-          params: {"sort":"rank", "observer": "gtg"}
+          method: "bridge.get_account_posts"
+          params: {"sort":"comments", "account":"animalcontrol"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "sort_rank_gtg_observer"
-            directory: "bridge_api_patterns/list_communities"
+            method: "animalcontrol"
+            directory: "bridge_api_patterns/get_account_posts/comments"
+

@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.list_communities sort_subs
+  test_name: Hivemind bridge_api.get_account_posts sort comments patterns test
 
   marks:
-    - fullsynctest
+    - patterntest
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
-    - name: bridge_api.list_communities sort_subs
+    - name: get_account_posts sort comments
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_communities"
-          params: {"sort":"subs"}
+          method: "bridge.get_account_posts"
+          params: {"sort":"comments", "account":"steemitboard"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "sort_subs"
-            directory: "bridge_api_patterns/list_communities"
+            method: "most_comments"
+            directory: "bridge_api_patterns/get_account_posts/comments"
+

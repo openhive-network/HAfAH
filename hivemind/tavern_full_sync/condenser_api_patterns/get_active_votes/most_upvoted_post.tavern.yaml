@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.list_communities sort_new
+  test_name: Hivemind condenser_api.get_active_votes most upvoted
 
   marks:
     - fullsynctest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.list_communities sort_new
+    - name: condenser_api.get_active_votes most upvoted
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_communities"
-          params: {"sort":"new"}
+          method: "condenser_api.get_active_votes"
+          params: {"author":"hvr", "permlink": "my-weekly-travel-photo-25"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "sort_new"
-            directory: "bridge_api_patterns/list_communities"
+            method: "most_upvoted_post"
+            directory: "condenser_api_patterns/get_active_votes"
