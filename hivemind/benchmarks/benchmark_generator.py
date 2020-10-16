@@ -36,7 +36,7 @@ def get_request_from_yaml(path_to_yaml):
 
 def make_test_name_from_path(test_path):
     splited = test_path.split("/")
-    return ("_".join(splited[-3:])).replace(".", "_")
+    return ("_".join(splited[-3:])).replace(".", "_").replace("-", "_")
 
 def make_benchmark_test_file(file_name, address, tests_root_dir):
     import os
