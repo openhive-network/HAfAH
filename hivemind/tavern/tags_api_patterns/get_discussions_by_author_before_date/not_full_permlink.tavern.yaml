@@ -3,6 +3,7 @@
 
   marks:
     - patterntest
+    - negative
 
 
   includes:
@@ -27,3 +28,4 @@
           extra_kwargs:
             method: "not_full_permlink"
             directory: "tags_api_patterns/get_discussions_by_author_before_date"
+            error_response: true
