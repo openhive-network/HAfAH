@@ -3,13 +3,9 @@ Lists discussions based on payout sort.
 method: "condenser_api.get_comment_discussion_by_payout"
 params:
 {
-  "author":"{author}"
+  "start_author":"{author}", "start_permlink":"{permlink}"
 
-     optional, points to valid start account
-
-  "permlink":"{permlink}"
-
-     optional, with author when given have to point to valid start post; paging mechanism
+     optional, when given have to point to valid start post; paging mechanism
 
   "limit":"{limit}"
 
