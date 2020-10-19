@@ -5,9 +5,9 @@ params:
 {
   "account_lower_bound": "{account}",
 
-     optional, name of account or fragment of it; paging mechanism
+     optional, account or fragment; paging mechanism
 
   "limit": {number}
 
-     optional, 1..1000, default = 1000
+     mandatory, 1..1000
 }
