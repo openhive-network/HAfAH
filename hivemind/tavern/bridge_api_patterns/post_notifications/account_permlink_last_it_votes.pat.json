@@ -1,7 +1,15 @@
 [
   {
     "date": "2016-08-12T01:07:30",
-    "id": 17195928067769844,
+    "id": 17195928067769804,
+    "msg": "@venuspcs mentioned you",
+    "score": 70,
+    "type": "mention",
+    "url": "@venuspcs/re-minion-how-to-summon-one-of-the-biggest-and-most-powerful-steemit-whales-berniesanders-20160812t010731631z"
+  },
+  {
+    "date": "2016-08-12T01:07:30",
+    "id": 17195928067769803,
     "msg": "@venuspcs mentioned you",
     "score": 70,
     "type": "mention",
