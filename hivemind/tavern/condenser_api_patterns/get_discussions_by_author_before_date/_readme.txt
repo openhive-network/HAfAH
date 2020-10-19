@@ -14,7 +14,7 @@ params:
 
   "limit":"{limit}",
 
-     optional, range 1...500; default = 20
+     optional, range 1...100; default = 20
 
    "before_date":"{date}",
 

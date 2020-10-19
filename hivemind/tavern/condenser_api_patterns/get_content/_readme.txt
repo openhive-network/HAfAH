@@ -3,13 +3,9 @@ Gives content for given post.
 method: "condenser_api.get_content"
 params:
 {
-  "account": "{account}",
+  "account": "{account}", "permlink": {permlink},
   
-     mandatory, points to valid account
-
-  "permlink": {permlink},
-
-     mandatory, with account points to valid post
+     mandatory, points to valid post
 
    "observer": "{account}",
 
