@@ -9,7 +9,7 @@ params:
 
   "start":"{account}"
 
-     optional, when given have to point on start account of followers
+     mandatory, points on start account of followers
 
   "limit:"{number}"
 
