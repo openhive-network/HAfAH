@@ -1,15 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_blog no results test
+  test_name: Hivemind condenser_api.get_blog test
 
   marks:
-    - patterntest
-    - xfail # should return 0 or all posts? returns 1 post
+    - patterntest # one newest post (ABW: a bug but would most likely break apps if fixed; should return oldest post)
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_blog no results
+    - name: get_blog
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST

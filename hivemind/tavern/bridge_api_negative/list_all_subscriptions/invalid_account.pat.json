@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "got an unexpected keyword argument 'extra_parameter'",
+  "data": "invalid account char",
   "message": "Invalid parameters"
 }

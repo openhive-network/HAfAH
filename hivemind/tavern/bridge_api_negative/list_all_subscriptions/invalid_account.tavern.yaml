@@ -19,7 +19,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.list_all_subscriptions"
-          params: {"account":"steemit", "extra_parameter": "extra_value"}
+          params: {"account":"invalid_account"}
       response:
         status_code: 200
         verify_response_with:

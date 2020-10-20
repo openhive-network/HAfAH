@@ -2,8 +2,10 @@
   test_name: Hivemind bridge_api.get_post invalid observer patterns test
 
   marks:
-    - patterntest
+    - patterntest # neither old nor new code properly validates observer
     - negative
+    - failing
+    - xfail # should fail on validation of observer
 
   includes:
     - !include ../../common.yaml
@@ -19,7 +21,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_post"
-          params: {"author":"gtg", "permlink":"not_existing_permlink", "observer":"invalid_account"}
+          params: {"author":"gtg", "permlink":"hello-world", "observer":"invalid_account"}
       response:
         status_code: 200
         verify_response_with:

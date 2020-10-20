@@ -2,9 +2,7 @@
   test_name: Hivemind bridge_api.get_account_posts get reblogged article test # api.hive.blog 443
 
   marks:
-    - patterntest # test-safari only has reblogs and replies, no top posts
-    - failing
-    - xfail # looks like now we have more reblogs (more tests needed, most likely source of the problem is that old 5mln DB has only 4 reblogs, now there is 8 for test-safari alone; bug in old HM?)
+    - patterntest # test-safari only has reblogs and replies, no top posts; original had less reblogs, most likely a bug
 
   includes:
     - !include ../../../common.yaml

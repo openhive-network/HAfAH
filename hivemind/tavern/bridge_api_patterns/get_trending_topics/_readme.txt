@@ -1,5 +1,5 @@
 Lists top communities ranked by sum of pending payouts, number of distinct authors, posts and subscribers.
-When there is not enough ranked communities (not posible on fully synced but happens in tests) some hardcoded topics are added.
+When there is not enough ranked communities (not possible on fully synced but happens in tests) some hardcoded topics are added.
 
 method: "bridge.get_trending_topics"
 params:

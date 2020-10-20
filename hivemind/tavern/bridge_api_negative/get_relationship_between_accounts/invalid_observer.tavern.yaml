@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.get_relationship_between_accounts invalid observer
 
   marks:
-    - patterntest
+    - patterntest # observer ignored by both old and new implementation
     - negative
     - xfail # it should fail after implementing observer filtering to get_relationship_between_accounts
 
