@@ -2,10 +2,8 @@
   test_name: Hivemind bridge.get_account_posts invalid observer
 
   marks:
-    - patterntest
+    - patterntest # original validated observer but then ignored (it is also ignored now even though it makes no sense)
     - negative
-    - failing
-    - xfail # observer not validated and not used (original validated it but then ignored)
 
   includes:
     - !include ../../../common.yaml

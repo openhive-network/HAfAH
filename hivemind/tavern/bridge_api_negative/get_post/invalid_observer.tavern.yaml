@@ -2,10 +2,8 @@
   test_name: Hivemind bridge_api.get_post invalid observer patterns test
 
   marks:
-    - patterntest # neither old nor new code properly validates observer
+    - patterntest # old code did not validate observer
     - negative
-    - failing
-    - xfail # should fail on validation of observer
 
   includes:
     - !include ../../common.yaml
