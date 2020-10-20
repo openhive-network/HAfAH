@@ -1,15 +1,15 @@
 ---
-  test_name: Hivemind condenser_api.get_blog invalid limit combination patterns test
+  test_name: Hivemind condenser_api.get_blog negative offset test
 
   marks:
-    - patterntest # call returns post entries starting at start_entry_id going down towards 0 until limit, therefore limit <= start_entry_id + 1 (unless start_entry_id is 0 or -1)
+    - patterntest
     - negative
-    
+
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_blog invalid limit combination
+    - name: get_blog negative offset
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -19,12 +19,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_blog"
-          params: {"account":"gtg","start_entry_id":11,"limit":20}
+          params: {"account":"steemit","start_entry_id":-2,"limit":500}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_limit_combo"
+            method: "negative_offset"
             directory: "condenser_api_negative/get_blog"
             error_response: true
