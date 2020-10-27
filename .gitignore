@@ -8,3 +8,9 @@
 
 # filter diff files
 *.diff.json
+
+#tavern tests
+/hived/tavern_run/.eggs
+/hived/tavern_run/.tox
+/hived/tavern_run/hive.egg-info
+/hived/tavern_run/tests
