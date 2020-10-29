@@ -3,6 +3,7 @@
 
   marks:
     - patterntest # communities not present in 5mln blocks
+    - negative
 
   includes:
     - !include ../../common.yaml
@@ -18,13 +19,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.account_notifications"
-          params: {"account":"hive-148441","limit":50}
+          params: {"account":"hive-197922","limit":50}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "hive-148441"
+            method: "hive-197922"
             directory: "bridge_api_negative/account_notifications"
             error_response: true
-

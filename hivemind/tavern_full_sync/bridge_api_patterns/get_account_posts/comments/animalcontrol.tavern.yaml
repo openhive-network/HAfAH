@@ -1,15 +1,14 @@
 ---
-  test_name: Hivemind bridge.get_account_posts
+  test_name: Hivemind bridge_api.get_account_posts comments animalcontrol
 
   marks:
     - patterntest
-    - negative
 
   includes:
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts
+    - name: get_account_posts sort comments animalcontrol
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -19,12 +18,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"feed","account":"rollinshive2"}
+          params: {"sort":"comments", "account":"animalcontrol"}
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_response_with_pattern
+          function: validate_response:has_valid_response
           extra_kwargs:
-            method: "invalid_account"
-            directory: "bridge_api_negative/get_account_posts/feed"
-            error_response: true
+            method: "animalcontrol"
+            directory: "bridge_api_patterns/get_account_posts/comments"
+
