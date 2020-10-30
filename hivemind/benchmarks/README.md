@@ -4,6 +4,8 @@ Script `benchmark_generator` will scan given test directory for tavern test file
 test parameters from each file and will create benchmark test basing on that parameters. Benchmarks generated
 from directory are stored in a single file.
 
+Script moved to hivemind scripts/ci/ directory.
+
 
 ## Examples
 ```bash
