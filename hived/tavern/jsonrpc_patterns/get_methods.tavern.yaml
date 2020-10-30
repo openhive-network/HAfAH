@@ -1,5 +1,5 @@
 ---
-  test_name: Hived account_history_api get_transaction
+  test_name: Hived jsonrpc get_methods
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../common.yaml
 
   stages:
-    - name: account_history_api get_transaction
+    - name: jsonrpc get_methods
       request:
         url: "{service.url:s}"
         method: POST

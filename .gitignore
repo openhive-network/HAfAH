@@ -14,3 +14,6 @@
 /hived/tavern_run/.tox
 /hived/tavern_run/hive.egg-info
 /hived/tavern_run/tests
+/hived/tavern_run/version.py
+/hived/tavern_run/advanced_benchmark.json
+/hived/tavern_run/r_advanced_benchmark.json
