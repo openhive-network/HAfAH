@@ -1,25 +1,27 @@
-Lists posts sorted by creation date.
+Lists all top posts ordered by creation date (newer first).
+Aside from different post format routine is the same as bridge.get_ranked_posts with created sort (does not handle community pinned posts in special way though).
 
 method: "condenser_api.get_discussions_by_created"
 params:
 {
-  "start_author":"{author}" + "start_permlink":"{permlink}",
+  "start_author":"{author}", "start_permlink":"{permlink}",
 
-     optional, should point to valid apost
+    start_author + start_permlink : optional, when given have to point to valid start post; paging mechanism (cuts out this and newer posts)
 
-   "limit":"{number}",
+  "limit":"{number}",
 
-     optional, range 1...100; default = 20
+    optional, 1..100, default = 20
 
-   "tag":"{tag}",
+  "tag":"{tag}",
 
-     optional, turns on filtering for posts with given tag
+    optional, turns on filtering for posts with given tag; when community tag is used it filters for community posts
+    (compared to original version, posts that are only tagged with community tag, but don't belong to community, are no longer put in results)
 
-   "truncate_body":{number}
+  "truncate_body":{number}
 
-     optional, default = 0; 
+    optional, default = 0 (meaning no truncation); reduces maximal size of post body, cutting out all excess
 
-   "filter_tags":"{list_of_tags}",
+  "filter_tags":"{list_of_tags}"
 
-     optional, not supported
+    has to be left empty, not supported
 }

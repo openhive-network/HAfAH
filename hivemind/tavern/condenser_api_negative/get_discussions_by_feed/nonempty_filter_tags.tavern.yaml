@@ -1,0 +1,30 @@
+---
+  test_name: Hivemind condenser_api.get_discussions_by_feed
+
+  marks:
+    - patterntest
+    - negative
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_discussions_by_feed
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_feed"
+          params: {"tag":"steemit","filter_tags": ["steemit","photography"]}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "nonempty_filter_tags"
+            directory: "condenser_api_negative/get_discussions_by_feed"
+            error_response: true
