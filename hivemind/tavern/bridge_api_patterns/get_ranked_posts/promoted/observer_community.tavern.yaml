@@ -3,6 +3,7 @@
 
   marks:
     - patterntest
+    - negative
 
   includes:
     - !include ../../../common.yaml
@@ -26,3 +27,4 @@
           extra_kwargs:
             method: "observer_community"
             directory: "bridge_api_patterns/get_ranked_posts/promoted"
+            error_response: true
