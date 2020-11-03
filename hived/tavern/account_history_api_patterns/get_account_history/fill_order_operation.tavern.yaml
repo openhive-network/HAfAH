@@ -1,14 +1,15 @@
 ---
-  test_name: Hived account_history_api get_account_history filter to limit_order_create2_operation
+  test_name: Hived account_history_api fill_order_operation
 
   marks:
-    - patterntest # no noempty result
+    - patterntest # result should be empty bc there is no this type of operation in 5mln blocks
+    # 2 ^ 62
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: account_history_api get_account_history limit_order_create2_operation
+    - name: account_history_api fill_order_operation
       request:
         url: "{service.url:s}"
         method: POST
@@ -18,11 +19,10 @@
           jsonrpc: "2.0"
           id: 1
           method: "account_history_api.get_account_history"
-          params: {"account":"blocktrades","operation_filter_low": 2097152,"start": 1000,"limit": 1000}
+          params: {"account":"blocktrades", "operation_filter_low": 4611686018427387904, "start": 1000, "limit": 1000}
       response:
-        status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "limit_order_create2_operation"
+            method: "fill_order_operation"
             directory: "account_history_api_patterns/get_account_history"
