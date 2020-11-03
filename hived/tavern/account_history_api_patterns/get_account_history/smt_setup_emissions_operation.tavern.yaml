@@ -3,6 +3,7 @@
 
   marks:
     - patterntest # no noempty result in 5mln blocks
+    # only if HIVE_ENABLE_SMT
 
   includes:
     - !include ../../common.yaml

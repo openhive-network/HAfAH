@@ -2,7 +2,7 @@
   test_name: Hived account_history_api fill_vesting_withdraw_operation
 
   marks:
-    - patterntest # no noempty result in 5mln blocks
+    - patterntest # virtual
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "account_history_api.get_account_history"
-          params: {"account":"blocktrades", "operation_filter_low": 2305843009213693952, "start": 1000, "limit": 1000}
+          params: {"account":"adm", "operation_filter_low": 18014398509481984, "start": 3210, "limit": 1}
       response:
         status_code: 200
         verify_response_with:

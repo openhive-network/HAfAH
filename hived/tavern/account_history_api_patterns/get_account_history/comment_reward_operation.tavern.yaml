@@ -2,7 +2,7 @@
   test_name: Hived account_history_api comment_reward_operation
 
   marks:
-    - patterntest # no noempty result in 5mln blocks
+    - patterntest # virtual
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "account_history_api.get_account_history"
-          params: {"account":"blocktrades", "operation_filter_low": 288230376151711744, "start": 1000, "limit": 1000}
+          params: {"account":"xeroc", "operation_filter_low": 2251799813685248, "start": 18935, "limit": 5}
       response:
         status_code: 200
         verify_response_with:

@@ -2,7 +2,8 @@
   test_name: Hived account_history_api smt_set_runtime_parameters_operation
 
   marks:
-    - patterntest # no noempty result in 5mln blocks
+    - patterntest # virtual
+    # only if HIVE_ENABLE_SMT
 
   includes:
     - !include ../../common.yaml

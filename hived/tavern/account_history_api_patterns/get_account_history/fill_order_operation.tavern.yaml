@@ -2,8 +2,7 @@
   test_name: Hived account_history_api fill_order_operation
 
   marks:
-    - patterntest # result should be empty bc there is no this type of operation in 5mln blocks
-    # 2 ^ 62
+    - patterntest # virtual
 
   includes:
     - !include ../../common.yaml
@@ -19,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "account_history_api.get_account_history"
-          params: {"account":"blocktrades", "operation_filter_low": 4611686018427387904, "start": 1000, "limit": 1000}
+          params: {"account":"adm", "operation_filter_low": 36028797018963968, "start": 4000, "limit": 100}
       response:
         verify_response_with:
           function: validate_response:compare_response_with_pattern
