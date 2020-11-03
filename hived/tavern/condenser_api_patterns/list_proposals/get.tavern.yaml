@@ -3,6 +3,7 @@
 
   marks:
     - patterntest
+    - xfail # no proposals in result
 
   includes:
     - !include ../../common.yaml

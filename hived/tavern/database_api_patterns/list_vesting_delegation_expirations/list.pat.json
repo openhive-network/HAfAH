@@ -1,0 +1,104 @@
+{
+  "delegations": [
+    {
+      "delegator": "mimismartypants",
+      "expiration": "2020-11-03T12:42:45",
+      "id": 4718077,
+      "vesting_shares": {
+        "amount": "65274540868",
+        "nai": "@@000000037",
+        "precision": 6
+      }
+    },
+    {
+      "delegator": "theoutlaw",
+      "expiration": "2020-11-03T14:00:36",
+      "id": 4718078,
+      "vesting_shares": {
+        "amount": "3200000000000",
+        "nai": "@@000000037",
+        "precision": 6
+      }
+    },
+    {
+      "delegator": "tobias-g",
+      "expiration": "2020-11-03T14:16:06",
+      "id": 4718079,
+      "vesting_shares": {
+        "amount": "194107154060",
+        "nai": "@@000000037",
+        "precision": 6
+      }
+    },
+    {
+      "delegator": "tobias-g",
+      "expiration": "2020-11-03T14:16:15",
+      "id": 4718080,
+      "vesting_shares": {
+        "amount": "386481970308",
+        "nai": "@@000000037",
+        "precision": 6
+      }
+    },
+    {
+      "delegator": "tobias-g",
+      "expiration": "2020-11-03T14:16:24",
+      "id": 4718081,
+      "vesting_shares": {
+        "amount": "19336659034162",
+        "nai": "@@000000037",
+        "precision": 6
+      }
+    },
+    {
+      "delegator": "quello",
+      "expiration": "2020-11-03T14:17:33",
+      "id": 4718082,
+      "vesting_shares": {
+        "amount": "11634024820",
+        "nai": "@@000000037",
+        "precision": 6
+      }
+    },
+    {
+      "delegator": "quello",
+      "expiration": "2020-11-03T14:17:39",
+      "id": 4718083,
+      "vesting_shares": {
+        "amount": "11633700395",
+        "nai": "@@000000037",
+        "precision": 6
+      }
+    },
+    {
+      "delegator": "quello",
+      "expiration": "2020-11-03T14:17:45",
+      "id": 4718084,
+      "vesting_shares": {
+        "amount": "11633888948",
+        "nai": "@@000000037",
+        "precision": 6
+      }
+    },
+    {
+      "delegator": "quello",
+      "expiration": "2020-11-03T14:17:51",
+      "id": 4718085,
+      "vesting_shares": {
+        "amount": "11631601569",
+        "nai": "@@000000037",
+        "precision": 6
+      }
+    },
+    {
+      "delegator": "quello",
+      "expiration": "2020-11-03T14:18:00",
+      "id": 4718086,
+      "vesting_shares": {
+        "amount": "11610643649",
+        "nai": "@@000000037",
+        "precision": 6
+      }
+    }
+  ]
+}

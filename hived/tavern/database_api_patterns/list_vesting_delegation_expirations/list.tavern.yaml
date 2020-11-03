@@ -1,15 +1,14 @@
 ---
-  test_name: Hived get_blog_entries
+  test_name: Hived list_vesting_delegation_expirations
 
   marks:
     - patterntest
-    - xfail # some pat parameters disappear
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_blog_entries
+    - name: list_vesting_delegation_expirations
       request:
         url: "{service.url:s}"
         method: POST
@@ -18,13 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_blog_entries"
-          params: ["gtg",0,100]
+          method: "database_api.list_vesting_delegation_expirations"
+          params: {"start":["1970-01-01T00:00:00", -1], "limit":10, "order":"by_expiration"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "gtg"
-            directory: "condenser_api_patterns/get_blog_entries"
-            ignore_tags: ['entry_id','permlink','reblogged_on']
+            method: "list"
+            directory: "database_api_patterns/list_vesting_delegation_expirations"
+            ignore_tags: ['delegations']

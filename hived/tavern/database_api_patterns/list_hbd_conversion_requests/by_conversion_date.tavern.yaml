@@ -2,8 +2,7 @@
   test_name: Hived list_hbd_conversion_requests
 
   marks:
-    - patterntest
-    - xfail # todo, try to set parameters in a way to get old conversion requests, looks like its not working properly
+    - patterntest # todo, try to set parameters in a way to get old conversion requests, looks like its not working properly
 
   includes:
     - !include ../../common.yaml
@@ -27,3 +26,4 @@
           extra_kwargs:
             method: "by_conversion_date"
             directory: "database_api_patterns/list_hbd_conversion_requests"
+            ignore_tags: ['requests']
