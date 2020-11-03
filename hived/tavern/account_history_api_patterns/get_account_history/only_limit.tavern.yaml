@@ -2,7 +2,7 @@
   test_name: Hived account_history_api get_account_history only limit
 
   marks:
-    - patterntest
+    - patterntest # 5mln block
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "account_history_api.get_account_history"
-          params: {"account": "camilla","limit": 0}
+          params: {"account": "camilla","limit": 1}
       response:
         status_code: 200
         verify_response_with:

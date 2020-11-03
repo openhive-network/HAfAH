@@ -2,7 +2,7 @@
   test_name: Hived account_history_api get_account_history default values
 
   marks:
-    - patterntest # when start = -1 limit can be "greater" than start
+    - patterntest
 
   includes:
     - !include ../../common.yaml

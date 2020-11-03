@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "account_history_api.get_account_history"
-          params: {"account":"jsc","operation_filter_low": 262144,"start": 9000,"limit": 1000}
+          params: {"account":"jsc","operation_filter_low": 262144,"start": 3590,"limit": 16}
       response:
         status_code: 200
         verify_response_with:

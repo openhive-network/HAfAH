@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "account_history_api.get_account_history"
-          params: {"account":"aizen24","operation_filter_low": 1048576,"start": 9000,"limit": 1000}
+          params: {"account":"aizen24","operation_filter_low": 1048576,"start": 251,"limit": 8}
       response:
         status_code: 200
         verify_response_with:

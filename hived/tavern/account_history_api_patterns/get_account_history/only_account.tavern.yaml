@@ -2,7 +2,7 @@
   test_name: Hived account_history_api get_account_history only account
 
   marks:
-    - patterntest
+    - patterntest # 5mln block
 
   includes:
     - !include ../../common.yaml
