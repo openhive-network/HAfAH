@@ -1,14 +1,14 @@
 ---
-  test_name: Hived find_escrows
+  test_name: Hived list_limit_orders
 
   marks:
-    - patterntest # todo find nonempty escrows
+    - patterntest
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: find_escrows
+    - name: list_limit_orders
       request:
         url: "{service.url:s}"
         method: POST
@@ -17,12 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "database_api.find_escrows"
-          params: {"start":["gtg", 1], "limit":10, "order":"by_from_id"}
+          method: "database_api.list_limit_orders"
+          params: {"start":["gtg", 1], "limit":10, "order":"by_account"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "find"
-            directory: "database_api_patterns/find_escrows"
+            method: "by_account"
+            directory: "database_api_patterns/list_limit_orders"
+            ignore_tags: ['orders']

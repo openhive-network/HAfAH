@@ -19,7 +19,7 @@
       "can_vote": true,
       "comment_count": 0,
       "created": "2016-06-30T17:22:18",
-      "curation_rewards": 31313441,
+      "curation_rewards": 31334574,
       "delayed_votes": [],
       "delegated_vesting_shares": {
         "amount": "0",
@@ -27,17 +27,17 @@
         "precision": 6
       },
       "downvote_manabar": {
-        "current_mana": "273518370165848",
-        "last_update_time": 1604409438
+        "current_mana": "273710368766170",
+        "last_update_time": 1604501208
       },
       "hbd_balance": {
-        "amount": "34",
+        "amount": "40",
         "nai": "@@000000013",
         "precision": 3
       },
       "hbd_last_interest_payment": "2020-10-15T08:47:24",
-      "hbd_seconds": "34197489",
-      "hbd_seconds_last_update": "2020-11-02T21:26:36",
+      "hbd_seconds": "39626499",
+      "hbd_seconds_last_update": "2020-11-04T14:46:27",
       "id": 14007,
       "is_smt": false,
       "json_metadata": "{\"profile\": {\"witness_description\": \"Gandalf the Grey, Steem Pressure, improving Steem infrastructure.\", \"about\": \"IT Wizard, Steem Witness\", \"profile_image\": \"https://grey.house/img/grey_4.jpg\", \"name\": \"Gandalf the Grey\", \"location\": \"Steem\"}}",
@@ -63,12 +63,12 @@
         ],
         "weight_threshold": 1
       },
-      "pending_claimed_accounts": 12251,
+      "pending_claimed_accounts": 12277,
       "pending_transfers": 0,
       "post_bandwidth": 10000,
       "post_count": 5591,
       "post_voting_power": {
-        "amount": "1094073480663395",
+        "amount": "1094841475064686",
         "nai": "@@000000037",
         "precision": 6
       },
@@ -83,10 +83,10 @@
         "weight_threshold": 1
       },
       "posting_json_metadata": "{\"profile\":{\"witness_description\":\"Gandalf the Grey, Building Hive.\",\"about\":\"IT Wizard, Hive Witness\",\"profile_image\":\"https://grey.house/img/grey_4.jpg\",\"name\":\"Gandalf the Grey\",\"location\":\"Hive\",\"version\":2}}",
-      "posting_rewards": 13408349,
+      "posting_rewards": 13408464,
       "proxied_vsf_votes": [
-        "4739442202456920",
-        "39346225171991",
+        "4737195157018077",
+        "39356563895873",
         214349887,
         0
       ],
@@ -134,7 +134,7 @@
       "savings_withdraw_requests": 0,
       "to_withdraw": 0,
       "vesting_shares": {
-        "amount": "1085443853874105",
+        "amount": "1086211848275396",
         "nai": "@@000000037",
         "precision": 6
       },
@@ -144,8 +144,8 @@
         "precision": 6
       },
       "voting_manabar": {
-        "current_mana": "1094073480663395",
-        "last_update_time": 1604409438
+        "current_mana": "1094841475064686",
+        "last_update_time": 1604501208
       },
       "withdraw_routes": 0,
       "withdrawn": 0,

@@ -1,5 +1,5 @@
 ---
-  test_name: Hived list_change_recovery_account_requests
+  test_name: Hived list_accounts
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: list_change_recovery_account_requests
+    - name: list_accounts
       request:
         url: "{service.url:s}"
         method: POST
@@ -17,13 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "database_api.list_change_recovery_account_requests"
-          params: {"start":"gtg", "limit":10, "order":"by_account"}
+          method: "database_api.list_accounts"
+          params: {"start":["", ""], "limit":10, "order":"by_proxy"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "list"
-            directory: "database_api_patterns/list_change_recovery_account_requests"
-            ignore_tags: ['requests']
+            method: "by_proxy"
+            directory: "database_api_patterns/list_accounts"
+            ignore_tags: ['accounts']

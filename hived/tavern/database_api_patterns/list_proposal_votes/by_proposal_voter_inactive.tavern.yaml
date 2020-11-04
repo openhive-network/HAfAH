@@ -1,5 +1,5 @@
 ---
-  test_name: Hived list_proposal_votes
+  test_name: Hived list_proposal_votes by_proposal_voter_inactive
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: list_proposal_votes
+    - name: list_proposal_votes by_proposal_voter_inactive
       request:
         url: "{service.url:s}"
         method: POST
@@ -24,6 +24,6 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "list"
+            method: "by_proposal_voter_inactive"
             directory: "database_api_patterns/list_proposal_votes"
             ignore_tags: ['total_votes']

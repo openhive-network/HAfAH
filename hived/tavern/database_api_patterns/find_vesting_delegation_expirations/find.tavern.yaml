@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "database_api.find_vesting_delegation_expirations"
-          params: {"account": "gtg"}
+          params: {"account": "hive.test"}
       response:
         status_code: 200
         verify_response_with:

@@ -1,5 +1,5 @@
 ---
-  test_name: Hived list_accounts
+  test_name: Hived list_decline_voting_rights_requests
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: list_accounts
+    - name: list_decline_voting_rights_requests
       request:
         url: "{service.url:s}"
         method: POST
@@ -17,13 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "database_api.list_accounts"
-          params: {"start":"gtg", "limit":10, "order":"by_name"}
+          method: "database_api.list_decline_voting_rights_requests"
+          params: {"start":["1960-01-01T00:00:00", "gtg"], "limit":10, "order":"by_effective_date"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "list"
-            directory: "database_api_patterns/list_accounts"
-            ignore_tags: ['accounts']
+            method: "empty"
+            directory: "database_api_patterns/list_decline_voting_rights_requests"
+            ignore_tags: ['requests']
