@@ -5,9 +5,9 @@ params:
 {
   "start_tag":"{tag}",
 
-     optional, when given has to point to valid tag; paging mechanism (cuts out this and more paying categories)
+    optional, when given has to point to valid tag; paging mechanism (cuts out this and more paying categories)
 
   "limit":{number}
 
-     optional, 1..250, default = 250
+    optional, 1..250, default = 250
 }
