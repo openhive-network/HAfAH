@@ -5,6 +5,6 @@ params:
 {
   "account":"{account}",
 
-     mandatory, point on valid account
+    mandatory, points to valid account
 
 }
