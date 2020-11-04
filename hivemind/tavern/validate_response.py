@@ -36,6 +36,10 @@ def remove_tag(data, tags_to_remove):
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
   """ This method will compare response with pattern file """
   import os
+  # disable coparison with pattern on demand
+  if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
+    return
+
   response_fname = directory + "/" + method + RESPONSE_FILE_EXT
   if os.path.exists(response_fname):
     os.remove(response_fname)
