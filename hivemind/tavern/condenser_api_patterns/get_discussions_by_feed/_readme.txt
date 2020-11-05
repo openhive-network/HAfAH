@@ -1,4 +1,31 @@
-It's possible to check original values on 0.23 hivemind. It has to be done manually, due to the error when `last_month` is calculated.
+Lists posts created/reblogged by those followed by selected account.
+Gives posts that were created/reblogged within last month.
+
+method: "condenser_api.get_discussions_by_feed"
+params:
+{
+  "tag":"{account}",
+
+   mandatory, have to point on valid account whose feed we are looking at
+
+  "start_author":"{author}" + "start_permlink":"{permlink}",
+
+     optional, should point to valid apost
+
+   "limit":"{number}",
+
+     optional, range 1...100; default = 20
+
+   "truncate_body":{number}
+
+     optional, default = 0; 
+
+   "filter_tags":"{list_of_tags}"
+
+     optional, not supported
+}
+Notes for creating patterns:
+It's possible to check original values on 0.23 hivemind. It has to be done manually, because in old version `last_month` was calculated from now() and not from head block timestamp making all results empty.
 
 Example:
 params: {"tag":"blocktrades","start_author":"michelle.gent","start_permlink":"dusty-the-demon-hunter-part-4","limit":10}
@@ -33,4 +60,3 @@ ORDER BY MIN(hive_feed_cache.created_at) DESC
 ) T ON hpc.post_id = T.post_id
 ORDER BY post_id DESC
 LIMIT _LIMIT(here 10)
-------------

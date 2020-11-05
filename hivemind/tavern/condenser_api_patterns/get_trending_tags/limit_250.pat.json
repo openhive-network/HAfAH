@@ -1,11 +1,5 @@
 [
   {
-    "comments": 16,
-    "name": "dream",
-    "top_posts": 11,
-    "total_payouts": "31.138 HBD"
-  },
-  {
     "comments": 14,
     "name": "governmentinsanity",
     "top_posts": 1,
@@ -1498,5 +1492,11 @@
     "name": "spirit",
     "top_posts": 4,
     "total_payouts": "7.461 HBD"
+  },
+  {
+    "comments": 1,
+    "name": "vpn",
+    "top_posts": 3,
+    "total_payouts": "7.308 HBD"
   }
 ]
