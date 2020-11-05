@@ -1,5 +1,5 @@
 ---
-  test_name: Hived market_history_api.get_trade_history
+  test_name: Hived database_api.verify_account_authority
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: market_history_api.get_trade_history
+    - name: database_api.verify_account_authority
       request:
         url: "{service.url:s}"
         method: POST
@@ -17,17 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "market_history_api.get_trade_history"
-          params: {
-            "bucket_seconds": 1000,
-            "start": "2016-08-11T00:00:00",
-            "end": "2017-01-11T00:00:00"
-          }
+          method: "database_api.verify_account_authority"
+          params: {"account": "temp", "signers": ["STM8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"]}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
             method: "get"
-            directory: "market_history_api_patterns/get_trade_history"
-            ignore_tags: ['current_pays','date','open_pays']
+            directory: "database_api_patterns/verify_account_authority"
