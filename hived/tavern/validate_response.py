@@ -1,6 +1,9 @@
 class PatternDiffException(Exception):
   pass
 
+class NoResultException(Exception):
+  pass
+
 def json_pretty_string(json_obj):
   from json import dumps
   return dumps(json_obj, sort_keys=True, indent=2)
@@ -73,3 +76,24 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     msg = "Differences detected between response and pattern."
     raise PatternDiffException(msg)
 
+def has_valid_response(response, method=None, directory=None, error_response=False, response_fname=None):
+  import os
+  if not response_fname:
+    response_fname = directory + "/" + method + RESPONSE_FILE_EXT
+
+  if os.path.exists(response_fname):
+    os.remove(response_fname)
+
+  response_json = response.json()
+  if error_response:
+    correct_response = response_json.get("error", None)
+  else:
+    correct_response = response_json.get("result", None)
+
+
+  if correct_response is None:
+    save_json(response_fname, response_json)
+    msg = "Error detected in response: result is null, json object was expected"
+    raise NoResultException(msg)
+  else:
+    save_json(response_fname, correct_response)
