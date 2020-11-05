@@ -26,3 +26,4 @@
           extra_kwargs:
             method: "list"
             directory: "database_api_patterns/list_savings_withdrawals"
+            ignore_tags: ['amount','complete','from','id','memo','request_id','to']

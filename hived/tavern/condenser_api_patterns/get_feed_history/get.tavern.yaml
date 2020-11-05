@@ -26,4 +26,4 @@
           extra_kwargs:
             method: "get"
             directory: "condenser_api_patterns/get_feed_history"
-            ignore_tags: ['base']
+            ignore_tags: ['base','quote']

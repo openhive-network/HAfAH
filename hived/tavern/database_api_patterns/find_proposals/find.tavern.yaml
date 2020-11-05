@@ -26,3 +26,4 @@
           extra_kwargs:
             method: "find"
             directory: "database_api_patterns/find_proposals"
+            ignore_tags: ['total_votes']
