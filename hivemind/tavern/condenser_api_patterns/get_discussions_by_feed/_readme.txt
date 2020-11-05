@@ -24,6 +24,7 @@ params:
 
      optional, not supported
 }
+
 Notes for creating patterns:
 It's possible to check original values on 0.23 hivemind. It has to be done manually, because in old version `last_month` was calculated from now() and not from head block timestamp making all results empty.
 

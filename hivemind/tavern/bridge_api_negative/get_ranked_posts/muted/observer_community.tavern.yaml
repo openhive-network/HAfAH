@@ -26,5 +26,5 @@
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
             method: "observer_community"
-            directory: "bridge_api_patterns/get_ranked_posts/muted"
+            directory: "bridge_api_negative/get_ranked_posts/muted"
             error_response: true
