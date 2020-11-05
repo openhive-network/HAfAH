@@ -1,21 +1,21 @@
-Gives accounts which follow given account.
+Gives accounts which follow/ignore given account.
 
 method: "condenser_api.get_followers"
 params:
 {
   "account":"{account}",
 
-     mandatory, points on valid account
+    mandatory, points to valid account
 
   "start":"{account}"
 
-     mandatory, points on start account of followers
+    optional, when provided has to point to valid account, paging mechanism (cuts out this and newer follows)
 
   "limit:"{number}"
 
-     mandatory, range of 1...1000;
+    optional, 1..1000, default = 1000
 
   "follow_type":"{follow_type}"
 
-     optional; default = 'blog'; other option 'ignore' to account which muted given account
+    optional, 'blog'/'ignore' (should be extended with 'blacklists' etc.), default = 'blog'
 }

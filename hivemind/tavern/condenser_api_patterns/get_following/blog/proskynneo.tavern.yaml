@@ -1,12 +1,11 @@
 ---
-  test_name: Hivemind condenser_api.get_following over limit test
+  test_name: Hivemind condenser_api.get_following patterns test
 
   marks:
     - patterntest
-    - negative
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
     - name: get_following
@@ -19,12 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_following"
-          params: ["gtg","blocktrades","blog",1001]
+          params: ["proskynneo",null,"blog",10]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "over_limit"
-            directory: "condenser_api_negative/get_following"
-            error_response: true
+            method: "proskynneo"
+            directory: "condenser_api_patterns/get_following/blog"

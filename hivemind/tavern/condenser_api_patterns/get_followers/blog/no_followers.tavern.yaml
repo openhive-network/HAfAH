@@ -1,15 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_following over limit test
+  test_name: Hivemind condenser_api.get_followers no followers patterns test
 
   marks:
     - patterntest
-    - negative
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
-    - name: get_following
+    - name: get_followers no followers
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_following"
-          params: ["gtg","blocktrades","blog",1001]
+          method: "condenser_api.get_followers"
+          params: ["test2",null,"blog",1000]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "over_limit"
-            directory: "condenser_api_negative/get_following"
-            error_response: true
+            method: "no_followers"
+            directory: "condenser_api_patterns/get_followers/blog"

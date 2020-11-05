@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_following over limit test
+  test_name: Hivemind condenser_api.get_following
 
   marks:
     - patterntest
@@ -19,12 +19,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_following"
-          params: ["gtg","blocktrades","blog",1001]
+          params: {"account":"gtg","start":"nonexisting","limit":10}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "over_limit"
+            method: "bad_start"
             directory: "condenser_api_negative/get_following"
             error_response: true
