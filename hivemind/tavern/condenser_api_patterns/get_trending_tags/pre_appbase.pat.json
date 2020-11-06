@@ -1,11 +1,5 @@
 [
   {
-    "comments": 10141,
-    "name": "steem",
-    "top_posts": 1158,
-    "total_payouts": "82690.698 HBD"
-  },
-  {
     "comments": 5633,
     "name": "travel",
     "top_posts": 1159,
@@ -58,5 +52,11 @@
     "name": "philosophy",
     "top_posts": 367,
     "total_payouts": "24387.618 HBD"
+  },
+  {
+    "comments": 2462,
+    "name": "stats",
+    "top_posts": 91,
+    "total_payouts": "18385.027 HBD"
   }
 ]
