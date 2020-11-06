@@ -15,7 +15,7 @@ params:
 
   "limit": {number}
 
-     optional, 1..500, default = {start_entry_id} + 1; part of paging mechanism
+     optional, 1..500 (0 functions as skipped), default = {start_entry_id} + 1; part of paging mechanism
      call selects up to limit blog posts starting at start_entry_id and going down by creation/reblog time
        ABW: as you can see it is not possible to select just the oldest post because adequate call of 0,1 produces
        newest post due to special meaning of 0 as start_entry_id (it is a bug IMHO)
