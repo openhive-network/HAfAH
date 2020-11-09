@@ -3,7 +3,6 @@
 
   marks:
     - patterntest
-    - xfail # no proposals in result
 
   includes:
     - !include ../../common.yaml
@@ -19,12 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.list_proposals"
-          params: [["2016-08-07T16:54:03"], 10, "by_start_date", "ascending", "inactive"]
+          params: [["aggroed"], 10, "by_creator", "ascending", "inactive"]
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_response_with_pattern
+          function: validate_response:has_valid_response
           extra_kwargs:
-            method: "get"
+            method: "creator"
             directory: "condenser_api_patterns/list_proposals"
-            ignore_tags: ['creator','daily_pay','end_date','id','permlink','proposal_id','receiver','start_date','subject','total_votes']

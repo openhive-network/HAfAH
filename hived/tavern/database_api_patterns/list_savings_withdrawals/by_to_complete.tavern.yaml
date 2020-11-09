@@ -1,5 +1,5 @@
 ---
-  test_name: Hived list_savings_withdrawals
+  test_name: Hived list_savings_withdrawals by_to_complete
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: list_savings_withdrawals
+    - name: list_savings_withdrawals by_to_complete
       request:
         url: "{service.url:s}"
         method: POST
@@ -24,6 +24,6 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "list"
+            method: "by_to_complete"
             directory: "database_api_patterns/list_savings_withdrawals"
-            ignore_tags: ['amount','complete','from','id','memo','request_id','to']
+            ignore_tags: ['withdrawals']
