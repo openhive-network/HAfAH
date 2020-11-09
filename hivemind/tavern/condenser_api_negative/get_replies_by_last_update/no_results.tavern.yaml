@@ -3,6 +3,7 @@
 
   marks:
     - patterntest
+    - negative
 
   includes:
     - !include ../../common.yaml
@@ -25,4 +26,5 @@
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
             method: "no_results"
-            directory: "condenser_api_patterns/get_replies_by_last_update"
+            directory: "condenser_api_negative/get_replies_by_last_update"
+            error_response: true
