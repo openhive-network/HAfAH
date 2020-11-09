@@ -3,6 +3,7 @@
 
   marks:
     - patterntest # virtual
+    # next and last one is 791 of the same account
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +19,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "account_history_api.get_account_history"
-          params: {"account":"blocktrades", "operation_filter_high": 128, "start": 1000, "limit": 1000}
+          params: {"account":"jsc", "operation_filter_high": 128, "start": 595, "limit": 2}
       response:
         status_code: 200
         verify_response_with:

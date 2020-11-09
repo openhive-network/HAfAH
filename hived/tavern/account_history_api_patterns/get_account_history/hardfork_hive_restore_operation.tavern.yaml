@@ -1,7 +1,9 @@
 ---
   test_name: Hived account_history_api hardfork_hive_restore_operation
+  
   marks:
     - patterntest # virtual
+      # no noempty results
 
   includes:
     - !include ../../common.yaml

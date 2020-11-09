@@ -3,6 +3,7 @@
 
   marks:
     - patterntest # virtual
+    # no noempty results
 
   includes:
     - !include ../../common.yaml
