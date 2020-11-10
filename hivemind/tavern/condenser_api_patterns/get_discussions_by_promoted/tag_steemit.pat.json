@@ -1019,6 +1019,12 @@
       },
       {
         "percent": "10000",
+        "reputation": 12584108052916,
+        "rshares": 69909261962,
+        "voter": "noganoo"
+      },
+      {
+        "percent": "10000",
         "reputation": 200733663789408,
         "rshares": 2217132176566,
         "voter": "stellabelle"
@@ -6168,6 +6174,12 @@
         "reputation": 1444446898291,
         "rshares": 10554741746,
         "voter": "johnerfx"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12584108052916,
+        "rshares": 73500629943,
+        "voter": "noganoo"
       },
       {
         "percent": "10000",
@@ -23450,6 +23462,12 @@
         "reputation": 1444446898291,
         "rshares": 13246631412,
         "voter": "johnerfx"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12584108052916,
+        "rshares": 75867207382,
+        "voter": "noganoo"
       },
       {
         "percent": "10000",

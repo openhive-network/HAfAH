@@ -2,9 +2,7 @@
 test_name: Hivemind database_api.list_votes patterns test order "by_voter_comment"
 
 marks:
-  - patterntest
-  - failing
-  - xfail # we are not filtering votes to deleted posts
+  - patterntest # compared to original extra vote was cast on post that was later deleted
 
 includes:
   - !include ../../../common.yaml

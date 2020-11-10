@@ -2,9 +2,7 @@
   test_name: Hivemind condenser_api.get_post_discussions_by_payout patterns test
 
   marks:
-    - patterntest
-    - failing
-    - xfail # extra votes are likely caused by problems with muting
+    - patterntest # compared to original extra votes are due to removed vote muting
 
   includes:
     - !include ../../common.yaml

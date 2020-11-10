@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_promoted patterns test
+  test_name: Hivemind condenser_api.get_account_reputations patterns test
 
   marks:
-    - patterntest # compared to original extra vote is due to removed vote muting
+    - patterntest # original HM as well as fat node didn't like skipping parameters (patterns made with all params given)
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: condenser_api.get_discussions_by_promoted
+    - name: get_account_reputations
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_discussions_by_promoted"
-          params: {"limit":100}
+          method: "condenser_api.get_account_reputations"
+          params: {}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "max_limit"
-            directory: "condenser_api_patterns/get_discussions_by_promoted"
+            method: "defaults"
+            directory: "condenser_api_patterns/get_account_reputations"

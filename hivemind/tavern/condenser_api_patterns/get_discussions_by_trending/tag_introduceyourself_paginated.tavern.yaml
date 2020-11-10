@@ -2,9 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_trending patterns test
 
   marks:
-    - patterntest
-    - failing
-    - xfail # extra votes due to muting not working
+    - patterntest # compared to original extra votes are due to removed vote muting
 
   includes:
     - !include ../../common.yaml

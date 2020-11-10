@@ -3,8 +3,7 @@
 
   marks:
     - patterntest # oldest posts in blog - call with self-set limit
-    - failing
-    - xfail # extra vote (possibly result of muting not working like before)
+                  # compared to original extra vote is due to removed vote muting
 
   includes:
     - !include ../../common.yaml

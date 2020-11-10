@@ -1,4 +1,4 @@
-Lists all information about of given account or/and post. Depraceted.
+Lists all information about of given account or/and post. Deprecated.
 
 method: "condenser_api.get_state"
 params:
