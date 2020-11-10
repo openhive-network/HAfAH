@@ -2841,6 +2841,12 @@
       },
       {
         "percent": "10000",
+        "reputation": 0,
+        "rshares": 1167515065,
+        "voter": "kdtkaren"
+      },
+      {
+        "percent": "10000",
         "reputation": 6887127798781,
         "rshares": 21464239330,
         "voter": "xtester"
@@ -9412,6 +9418,12 @@
         "reputation": 9090232372242,
         "rshares": 95985729250,
         "voter": "eric-boucher"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12584108052916,
+        "rshares": 71549506001,
+        "voter": "noganoo"
       },
       {
         "percent": "10000",

@@ -2421,6 +2421,17 @@
       "weight": 193363039811881
     },
     {
+      "author": "shredlord",
+      "id": 887615,
+      "last_update": "2016-07-23T02:40:12",
+      "num_changes": 0,
+      "permlink": "whales-dolphins-and-minnows",
+      "rshares": 28708778596,
+      "vote_percent": 10000,
+      "voter": "boy",
+      "weight": 129135020657308058
+    },
+    {
       "author": "wrightlabs",
       "id": 887501,
       "last_update": "2016-07-23T02:37:21",
@@ -10988,17 +10999,6 @@
       "vote_percent": 10000,
       "voter": "boy",
       "weight": 0
-    },
-    {
-      "author": "gustavopasquini",
-      "id": 988174,
-      "last_update": "2016-07-24T13:13:39",
-      "num_changes": 0,
-      "permlink": "hello-steemit-the-first-steemit-member-will-be-on-board-in-a-cruise-ship",
-      "rshares": 1221800303,
-      "vote_percent": 10000,
-      "voter": "boy",
-      "weight": 85645923643785
     }
   ]
 }

@@ -4,7 +4,7 @@
   marks:
     - patterntest
     - failing
-    - xfail # blacklists - see max_limit.tavern.yaml in ../created; newline in image link
+    - xfail # blacklists - see max_limit.tavern.yaml in ../created
 
   includes:
     - !include ../../../common.yaml

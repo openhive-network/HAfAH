@@ -2,9 +2,7 @@
   test_name: Hivemind condenser_api.get_state patterns test without account# Deprecated
 
   marks:
-    - patterntest
-    - failing
-    - xfail # extra vote most likely caused by muting not working like before
+    - patterntest # compared to original extra vote is due to removed vote muting
 
   includes:
     - !include ../../common.yaml

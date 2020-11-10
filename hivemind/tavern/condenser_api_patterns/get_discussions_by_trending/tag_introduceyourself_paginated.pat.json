@@ -39,6 +39,12 @@
       },
       {
         "percent": "10000",
+        "reputation": 12584108052916,
+        "rshares": 74144975879,
+        "voter": "noganoo"
+      },
+      {
+        "percent": "10000",
         "reputation": 0,
         "rshares": 1599219991,
         "voter": "chocolatemilk"
@@ -3218,6 +3224,12 @@
         "reputation": 9090232372242,
         "rshares": 92740604537,
         "voter": "eric-boucher"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12584108052916,
+        "rshares": 73914375496,
+        "voter": "noganoo"
       },
       {
         "percent": "10000",

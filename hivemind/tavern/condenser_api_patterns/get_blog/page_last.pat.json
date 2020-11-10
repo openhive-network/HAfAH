@@ -8903,6 +8903,12 @@
           "reputation": 1681235382225,
           "rshares": 523321581,
           "voter": "niasweetz"
+        },
+        {
+          "percent": "10000",
+          "reputation": 12584108052916,
+          "rshares": 2645180254,
+          "voter": "noganoo"
         }
       ],
       "author": "nkdk",

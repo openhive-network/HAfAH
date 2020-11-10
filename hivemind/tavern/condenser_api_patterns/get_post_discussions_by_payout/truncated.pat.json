@@ -1205,6 +1205,12 @@
     "active_votes": [
       {
         "percent": "10000",
+        "reputation": 12584108052916,
+        "rshares": 69480434791,
+        "voter": "noganoo"
+      },
+      {
+        "percent": "10000",
         "reputation": 191217797933,
         "rshares": 63736720,
         "voter": "zionuziriel"

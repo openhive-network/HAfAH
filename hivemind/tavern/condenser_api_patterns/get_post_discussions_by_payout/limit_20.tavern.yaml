@@ -3,8 +3,7 @@
 
   marks:
     - patterntest # differences in pending payout make it incomparable with original (also order of comments with the same payout was basically random)
-    - failing
-    - xfail # extra vote comes from the lack of muting functionality
+                  # compared to original extra vote is due to removed vote muting
 
   includes:
     - !include ../../common.yaml
