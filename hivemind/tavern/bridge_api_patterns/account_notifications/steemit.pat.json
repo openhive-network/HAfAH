@@ -24,6 +24,14 @@
     "url": "@therajmahal"
   },
   {
+    "date": "2016-08-22T17:57:33",
+    "id": 21390066711475932,
+    "msg": "@tyler-fletcher followed you",
+    "score": 50,
+    "type": "follow",
+    "url": "@tyler-fletcher"
+  },
+  {
     "date": "2016-09-14T21:33:36",
     "id": 21361062797440303,
     "msg": "@twitterbot mentioned you",
@@ -150,13 +158,5 @@
     "score": 40,
     "type": "mention",
     "url": "@buckland/re-abol-re-buckland-this-was-the-so-called-nano-thermite-that-was-found-everywhere-people-need-the-truth-but-can-they-swallow-it-20160912t232044338z"
-  },
-  {
-    "date": "2016-09-12T08:49:06",
-    "id": 21049574589261201,
-    "msg": "@peterz mentioned you",
-    "score": 50,
-    "type": "mention",
-    "url": "@peterz/re-aleco-zakon-cipfa-rabotaet-li-on-v-steemit-20160912t084906549z"
   }
 ]

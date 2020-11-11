@@ -160,6 +160,14 @@
     "url": "@swtcamito"
   },
   {
+    "date": "2016-08-31T15:04:51",
+    "id": 20221680988190111,
+    "msg": "@benadapt followed you",
+    "score": 60,
+    "type": "follow",
+    "url": "@benadapt"
+  },
+  {
     "date": "2016-09-04T10:02:15",
     "id": 20069712160324716,
     "msg": "@q1248 followed you",
@@ -248,14 +256,6 @@
     "url": "@gtg/witness-gtg"
   },
   {
-    "date": "2016-08-31T15:04:51",
-    "id": 19602260804760991,
-    "msg": "@benadapt followed you",
-    "score": 60,
-    "type": "follow",
-    "url": "@benadapt"
-  },
-  {
     "date": "2016-08-31T02:16:54",
     "id": 19536427545870499,
     "msg": "@melissarhiann replied to your comment",
@@ -302,6 +302,22 @@
     "score": 50,
     "type": "reply_comment",
     "url": "@gtg/re-emsenn-introducing-myself-bitcoin-early-adopter-content-producer-and-designer-20160829t213519226z"
+  },
+  {
+    "date": "2016-08-19T16:57:57",
+    "id": 19373820084194393,
+    "msg": "@cryptojoy.com followed you",
+    "score": 60,
+    "type": "follow",
+    "url": "@cryptojoy.com"
+  },
+  {
+    "date": "2016-08-26T18:27:48",
+    "id": 19316791508402902,
+    "msg": "@mynameisricky followed you",
+    "score": 40,
+    "type": "follow",
+    "url": "@mynameisricky"
   },
   {
     "date": "2016-08-28T18:54:36",
@@ -352,6 +368,14 @@
     "url": "@gtg/re-skypilot-my-first-real-post-was-a-success-and-i-would-like-to-share-the-story-20160827t111440904z"
   },
   {
+    "date": "2016-08-15T14:54:36",
+    "id": 19067580326062966,
+    "msg": "@fyrstikken followed you",
+    "score": 70,
+    "type": "follow",
+    "url": "@fyrstikken"
+  },
+  {
     "date": "2016-08-27T04:15:48",
     "id": 19053303854621572,
     "msg": "@eternalmoon replied to your comment",
@@ -374,14 +398,6 @@
     "score": 60,
     "type": "reply_comment",
     "url": "@gtg/re-orcish-my-introduction-20160826t080607987z"
-  },
-  {
-    "date": "2016-08-26T18:27:48",
-    "id": 19003911730823894,
-    "msg": "@mynameisricky followed you",
-    "score": 40,
-    "type": "follow",
-    "url": "@mynameisricky"
   },
   {
     "date": "2016-08-26T18:20:12",
@@ -520,6 +536,14 @@
     "url": "@yongyoon"
   },
   {
+    "date": "2016-08-21T14:41:48",
+    "id": 18507555245380736,
+    "msg": "@ivanba12 followed you",
+    "score": 50,
+    "type": "follow",
+    "url": "@ivanba12"
+  },
+  {
     "date": "2016-08-22T12:29:45",
     "id": 18483000917305129,
     "msg": "@royaltiffany followed you",
@@ -558,14 +582,6 @@
     "score": 25,
     "type": "vote",
     "url": "@gtg/re-ash-steemit-chat-stats-and-rules-20160821t143046855z"
-  },
-  {
-    "date": "2016-08-21T14:41:48",
-    "id": 18371902998303872,
-    "msg": "@ivanba12 followed you",
-    "score": 50,
-    "type": "follow",
-    "url": "@ivanba12"
   },
   {
     "date": "2016-08-21T14:39:39",
@@ -632,6 +648,14 @@
     "url": "@team101"
   },
   {
+    "date": "2016-08-09T21:51:27",
+    "id": 18247284522215795,
+    "msg": "@frol followed you",
+    "score": 50,
+    "type": "follow",
+    "url": "@frol"
+  },
+  {
     "date": "2016-08-19T20:16:03",
     "id": 18154590538013310,
     "msg": "@brains followed you",
@@ -646,14 +670,6 @@
     "score": 50,
     "type": "follow",
     "url": "@skyefox"
-  },
-  {
-    "date": "2016-08-19T16:57:57",
-    "id": 18137775741045849,
-    "msg": "@cryptojoy.com followed you",
-    "score": 60,
-    "type": "follow",
-    "url": "@cryptojoy.com"
   },
   {
     "date": "2016-08-19T11:40:30",
@@ -782,21 +798,5 @@
     "score": 50,
     "type": "vote",
     "url": "@gtg/heavy-duty-witness-node-infrastructure"
-  },
-  {
-    "date": "2016-08-17T14:15:06",
-    "id": 17878630299452934,
-    "msg": "@modprobe voted on your post ($4.10)",
-    "score": 75,
-    "type": "vote",
-    "url": "@gtg/heavy-duty-witness-node-infrastructure"
-  },
-  {
-    "date": "2016-08-17T13:29:48",
-    "id": 17874756238772113,
-    "msg": "@jackkang followed you",
-    "score": 50,
-    "type": "follow",
-    "url": "@jackkang"
   }
 ]
