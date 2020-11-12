@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -25,11 +25,11 @@ if __name__ == "__main__":
   print("Proposal ID: {}".format(args.proposal_id))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.find_proposals", 
+    "jsonrpc":"2.0",
+    "method":"database_api.find_proposals",
     "params": {
       "proposal_ids" : args.proposal_id
-    }, 
+    },
     "id":1
   }
 

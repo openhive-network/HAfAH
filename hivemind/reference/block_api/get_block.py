@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 
 import os
@@ -30,8 +30,8 @@ if __name__ == "__main__":
     "jsonrpc": "2.0",
     "id": 1,
     "method": "block_api.get_block",
-    "params": { 
-      "block_num": "{}".format(args.block_number) 
+    "params": {
+      "block_num": "{}".format(args.block_number)
     }
   }
 

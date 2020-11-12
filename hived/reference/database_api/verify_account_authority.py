@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -27,8 +27,8 @@ if __name__ == "__main__":
   print("Signers: {}".format(args.signers))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.verify_account_authority", 
+    "jsonrpc":"2.0",
+    "method":"database_api.verify_account_authority",
     "params" : {
       "account" : args.account,
       "signers" : args.signers

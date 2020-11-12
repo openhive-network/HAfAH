@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -25,8 +25,8 @@ if __name__ == "__main__":
   print("Trx: {}".format(args.trx))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.get_potential_signatures", 
+    "jsonrpc":"2.0",
+    "method":"database_api.get_potential_signatures",
     "params" : {
       "trx" : json.loads(args.trx)
     },

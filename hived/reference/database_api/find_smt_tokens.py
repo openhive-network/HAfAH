@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -25,12 +25,12 @@ if __name__ == "__main__":
   print("Work dir: {}".format(args.work_dir))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.find_smt_tokens", 
+    "jsonrpc":"2.0",
+    "method":"database_api.find_smt_tokens",
     "params": {
       "symbols" : args.symbols,
       "ignore_precision" : args.ignore_precision
-    }, 
+    },
     "id":1
   }
 

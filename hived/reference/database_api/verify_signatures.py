@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -25,8 +25,8 @@ if __name__ == "__main__":
   print("Params: {}".format(args.params))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.verify_authority", 
+    "jsonrpc":"2.0",
+    "method":"database_api.verify_authority",
     "params" : json.loads(args.params),
     "id":1
   }
