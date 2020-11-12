@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts sort feed biggest feed
+  test_name: Hivemind bridge_api.get_account_posts sort replies blocktrades long call
 
   marks:
-    - fullsynctest # steemit is not following anyone, so results are empty
+    - fullsynctest # slow_calls file - 3.528s
 
   includes:
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts sort feed biggest feed
+    - name: get_account_posts sort replies blocktrades
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,12 +18,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"feed", "account":"angeli-b"}
+          params: {"account": "blocktrades", "observer": "blocktrades", "sort": "replies"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "biggest_feed"
-            directory: "bridge_api_patterns/get_account_posts/feed"
+            method: "blocktrades"
+            directory: "bridge_api_patterns/get_account_posts/replies"
 

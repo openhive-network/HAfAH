@@ -1,7 +1,8 @@
 ---
   test_name: Hivemind bridge_api.get_account_posts sort replies jlkreiss
+  
   marks:
-    - patterntest
+    - fullsynctest
 
   includes:
     - !include ../../../common.yaml
@@ -25,4 +26,3 @@
           extra_kwargs:
             method: "jlkreiss"
             directory: "bridge_api_patterns/get_account_posts/replies"
-
