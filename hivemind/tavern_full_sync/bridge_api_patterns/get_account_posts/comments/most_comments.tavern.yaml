@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.get_account_posts sort comments patterns test
 
   marks:
-    - patterntest
+    - fullsynctest # timeouts
 
   includes:
     - !include ../../../common.yaml

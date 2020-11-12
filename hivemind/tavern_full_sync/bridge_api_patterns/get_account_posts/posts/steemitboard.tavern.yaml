@@ -1,8 +1,9 @@
 ---
   test_name: Hivemind bridge_api.get_account_posts patterns test
       # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+
   marks:
-    - patterntest
+    - fullsynctest # timeouts
 
   includes:
     - !include ../../../common.yaml
