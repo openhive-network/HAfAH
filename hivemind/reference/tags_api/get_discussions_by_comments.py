@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # Currently unworking argument are commented.
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     "jsonrpc": "2.0",
     "id": 1,
     "method": "tags_api.get_discussions_by_comments",
-    "params": { 
+    "params": {
       "start_author": "{}".format(args.start_author),
       "start_permlink": "{}".format(args.start_permlink),
       "limit": "{}".format(args.limit)

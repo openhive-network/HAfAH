@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -27,9 +27,9 @@ if __name__ == "__main__":
     "jsonrpc": "2.0",
     "id": 1,
     "method": "account_history_api.get_ops_in_block",
-    "params": { 
-      "block_num": "{}".format(args.block_number), 
-      "only_virtual": False 
+    "params": {
+      "block_num": "{}".format(args.block_number),
+      "only_virtual": False
     }
   }
 

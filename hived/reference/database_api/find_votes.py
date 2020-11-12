@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -27,10 +27,10 @@ if __name__ == "__main__":
   print("Permlink: {}".format(args.permlink))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.find_votes", 
+    "jsonrpc":"2.0",
+    "method":"database_api.find_votes",
     "params": {
-      "author":args.author, 
+      "author":args.author,
       "permlink":args.permlink
     },
     "id":1

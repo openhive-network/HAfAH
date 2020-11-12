@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -29,8 +29,8 @@ if __name__ == "__main__":
   print("Order: {}".format(args.order))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.list_smt_token_emissions", 
+    "jsonrpc":"2.0",
+    "method":"database_api.list_smt_token_emissions",
     "params" : {
       "start" : json.loads(args.start),
       "limit" : args.limit,

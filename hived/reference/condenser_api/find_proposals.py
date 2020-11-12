@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     "id": 1,
     "method": "condenser_api.find_proposals",
     "params": args.proposal_id
-    
+
   }
 
   if tester.compare_results(test_args, True):

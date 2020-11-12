@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -25,11 +25,11 @@ if __name__ == "__main__":
   print("Account name: {}".format(args.account))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.find_vesting_delegations", 
+    "jsonrpc":"2.0",
+    "method":"database_api.find_vesting_delegations",
     "params": {
       "account" : args.account
-    }, 
+    },
     "id":1
   }
 

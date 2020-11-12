@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # Currently unworking argument are commented.
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     "jsonrpc": "2.0",
     "id": 1,
     "method": "tags_api.get_discussions_by_children",
-    "params": { 
+    "params": {
       "tag": "{}".format(args.tag),
       "limit": "{}".format(args.limit)
     }

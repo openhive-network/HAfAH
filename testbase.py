@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import os
 import json
@@ -65,7 +65,7 @@ class SimpleJsonTest(object):
       json.dump(data, f, indent=2, sort_keys=True)
       f.close()
       return True
-    except: 
+    except:
       print( "Cannot open file:", dest_file )
     return False
 
@@ -133,7 +133,7 @@ class SimpleJsonTest(object):
           self.write_to_file(filename1, json1, self._test_node)
         if json2_error is None:
           self.write_to_file(filename2, json2, self._ref_node)
-        
+
         print( "Compare break with error")
         return False
 
@@ -151,7 +151,7 @@ if __name__ == "__main__":
 
   parser.add_argument("api", type = str, help = "Full api name. i.e: database_api.get_block")
   parser.add_argument("params", type = str, help = "JSON with parameters")
-  
+
   parser.add_argument("--test-node", dest = "test_node", type = str, default = "https://api.steem.house", help = "IP address of test node")
   parser.add_argument("--test-node-is-hive", dest = "test_node_is_hive", type = bool, default = True, help = "Test node is hive node?")
   parser.add_argument("--ref-node", dest = "ref_node", type = str, default = "https://api.steemit.com", help = "IP address of reference node")

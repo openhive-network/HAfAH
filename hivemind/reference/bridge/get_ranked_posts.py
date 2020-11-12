@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -17,7 +17,7 @@ if __name__ == "__main__":
   parser.add_argument("work_dir", type = str, help = "Work dir")
   parser.add_argument("sort", type = str, help = "Supported sort values: (trending, hot, created, promoted, payout, payout_comments, muted)")
   parser.add_argument("tag", type = str, help = "Any valid tag")
-  parser.add_argument("observer", type = str, help = "Any valid account, can be empty string")                                                
+  parser.add_argument("observer", type = str, help = "Any valid account, can be empty string")
 
   args = parser.parse_args()
   tester = SimpleJsonTest(args.test_node, args.ref_node, args.work_dir)
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     "jsonrpc": "2.0",
     "id": 1,
     "method": "bridge.get_ranked_posts",
-    "params": { 
+    "params": {
       "sort": "{}".format(args.sort),
       "tag": "{}".format(args.tag),
       "observer": "{}".format(args.observer)
