@@ -1,15 +1,14 @@
 ---
-  test_name: Hived account_history_api shutdown_witness_operation
+  test_name: Hived account_history_api effective_comment_vote_operation
 
   marks:
     - patterntest # virtual
-    # no noempty results
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: account_history_api shutdown_witness_operation
+    - name: account_history_api effective_comment_vote_operation
       request:
         url: "{service.url:s}"
         method: POST
@@ -19,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "account_history_api.get_account_history"
-          params: {"account":"blocktrades", "operation_filter_low": 72057594037927936, "start": 1000, "limit": 1000}
+          params: {"account":"blocktrades", "operation_filter_high": 64, "start": 3976, "limit": 50}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "shutdown_witness_operation"
+            method: "effective_comment_vote_operation"
             directory: "account_history_api_patterns/get_account_history"
