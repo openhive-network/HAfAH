@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_replies_by_last_update no results patterns test
 
   marks:
-    - patterntest
+    - patterntest # original did not validate post, just gave empty results
     - negative
 
   includes:
@@ -25,6 +25,6 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "no_results"
+            method: "bad_post"
             directory: "condenser_api_negative/get_replies_by_last_update"
             error_response: true

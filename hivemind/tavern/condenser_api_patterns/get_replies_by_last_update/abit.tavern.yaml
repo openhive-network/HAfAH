@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_replies_by_last_update patterns test
 
   marks:
-    - patterntest
+    - patterntest # original made overlapping pages, that was corrected
 
   includes:
     - !include ../../common.yaml

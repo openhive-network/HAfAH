@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_followers patterns test
 
   marks:
-    - patterntest
+    - patterntest # see paginated.tavern.yaml
 
   includes:
     - !include ../../../common.yaml

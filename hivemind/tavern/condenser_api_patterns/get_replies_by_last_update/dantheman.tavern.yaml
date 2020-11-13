@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_replies_by_last_update"
-          params: ["dantheman","re-roadscape-re-red-broadcasted-20160414t144014018z",10]
+          params: ["dantheman","",10]
       response:
         status_code: 200
         verify_response_with:

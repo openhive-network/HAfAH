@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts get reblogged article test # api.hive.blog 443
+  test_name: Hivemind bridge_api.get_account_posts
 
   marks:
-    - patterntest # test-safari only has reblogs and replies, no top posts; original had less reblogs, most likely a bug
+    - patterntest
 
   includes:
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts get reblogged article
+    - name: get_account_posts
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
