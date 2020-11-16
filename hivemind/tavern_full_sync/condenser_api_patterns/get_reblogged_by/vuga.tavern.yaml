@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_blog most posts
+  test_name: Hivemind condenser_api.get_reblogged_by vuga
 
   marks:
     - patterntest
-    - xfail # follow_api_plugin not enabled
+
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_blog most posts
+    - name: get_reblogged_by vuga
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,13 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_blog"
-          params: ["steemitboard",0,0]
+          method: "condenser_api.get_reblogged_by"
+          params: {'author': 'vuga', 'permlink': 'afro-music-genres-a-deeper-understanding'}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "most_blog_posts"
-            directory: "condenser_api_patterns/get_blog"
+            method: "vuga"
+            directory: "condenser_api_patterns/get_reblogged_by"
 
