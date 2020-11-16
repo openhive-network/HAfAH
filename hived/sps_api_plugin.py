@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import requests
 import json
@@ -33,10 +33,10 @@ def list_voter_proposals(start, order_by, order_direction, limit, status):
      payload = {
     "jsonrpc" : "2.0",
     "id" : get_random_id(),
-    "method" : "sps_api.list_voter_proposals", 
+    "method" : "sps_api.list_voter_proposals",
     "params" : {
       "start" : start,
-      "order_by" : order_by, 
+      "order_by" : order_by,
       "order_direction" : order_direction,
       "limit" : limit,
       "status" : status
@@ -50,7 +50,7 @@ def find_proposals(id_set):
      payload = {
     "jsonrpc" : "2.0",
     "id" : get_random_id(),
-    "method" : "sps_api.find_proposals", 
+    "method" : "sps_api.find_proposals",
     "params" : {
       "id_set" : id_set
     }
@@ -63,10 +63,10 @@ def list_proposals(start, order_by, order_direction, limit, status):
   payload = {
     "jsonrpc" : "2.0",
     "id" : get_random_id(),
-    "method" : "sps_api.list_proposals", 
+    "method" : "sps_api.list_proposals",
     "params" : {
       "start" : start,
-      "order_by" : order_by, 
+      "order_by" : order_by,
       "order_direction" : order_direction,
       "limit" : limit,
       "status" : status
@@ -80,7 +80,7 @@ def condenser_list_proposals(start, order_by, order_direction, limit, status):
   payload = {
     "jsonrpc" : "2.0",
     "id" : get_random_id(),
-    "method" : "condenser_api.list_proposals", 
+    "method" : "condenser_api.list_proposals",
     "params" : [start, order_by, order_direction, limit, status]
   }
   ret = json.dumps(payload)
@@ -91,7 +91,7 @@ def condenser_list_voter_proposals(start, order_by, order_direction, limit, stat
   payload = {
     "jsonrpc" : "2.0",
     "id" : get_random_id(),
-    "method" : "condenser_api.list_voter_proposals", 
+    "method" : "condenser_api.list_voter_proposals",
     "params" : [start, order_by, order_direction, limit, status]
   }
   ret = json.dumps(payload)
@@ -102,7 +102,7 @@ def condenser_find_proposals(id_set):
   payload = {
     "jsonrpc" : "2.0",
     "id" : get_random_id(),
-    "method" : "condenser_api.find_proposals", 
+    "method" : "condenser_api.find_proposals",
     "params" : [id_set]
   }
   ret = json.dumps(payload)

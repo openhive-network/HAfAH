@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -33,7 +33,7 @@ if __name__ == "__main__":
   print("Status: {}".format(args.status))
 
   test_args = {
-    "jsonrpc":"2.0", 
+    "jsonrpc":"2.0",
     "method":"condenser_api.list_proposals",
     "params" : [
       json.loads(args.start),

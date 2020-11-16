@@ -20,7 +20,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_community"
-          params: {"name":"hive-123456", "observer":"steemit"}
+          params: {"name":"hive-197922", "observer":"steemit"}
       response:
         status_code: 200
         verify_response_with:

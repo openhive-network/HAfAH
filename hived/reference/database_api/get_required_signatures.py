@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -27,8 +27,8 @@ if __name__ == "__main__":
   print("Available keys: {}".format(args.available_keys))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.get_required_signatures", 
+    "jsonrpc":"2.0",
+    "method":"database_api.get_required_signatures",
     "params" : {
       "trx" : json.loads(args.trx),
       "available_keys" : args.available_keys

@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "invalid follow_type `wrong_type`",
+  "data": "Unsupported follow type, valid types: blog, ignore",
   "message": "Invalid parameters"
 }

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -30,8 +30,8 @@ if __name__ == "__main__":
     "jsonrpc": "2.0",
     "id": 1,
     "method": "account_history_api.get_transaction",
-    "params": { 
-      "id": "{}".format(args.id), 
+    "params": {
+      "id": "{}".format(args.id),
     }
   }
 

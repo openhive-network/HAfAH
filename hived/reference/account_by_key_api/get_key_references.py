@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 
 import os
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     "jsonrpc": "2.0",
     "id": 1,
     "method": "account_by_key_api.get_key_references",
-    "params": { 
+    "params": {
       "keys":args.keys
     }
   }

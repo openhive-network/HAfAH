@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     "jsonrpc": "2.0",
     "id": 1,
     "method": "tags_api.get_active_votes",
-    "params": { 
+    "params": {
       "author": "{}".format(args.author),
       "permlink": "{}".format(args.permlink)
     }

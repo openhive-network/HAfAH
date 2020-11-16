@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -33,8 +33,8 @@ if __name__ == "__main__":
     "jsonrpc": "2.0",
     "id": 1,
     "method": "account_history_api.enum_virtual_ops",
-    "params": { 
-      "block_range_begin": "{}".format(args.block_range_begin), 
+    "params": {
+      "block_range_begin": "{}".format(args.block_range_begin),
       "block_range_end": "{}".format(args.block_range_end)
     }
   }

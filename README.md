@@ -70,6 +70,16 @@ PYTHONPATH=$PYTHONPATH:$(pwd) pytest -v -n auto --durations=0 .
 PYTHONPATH=$PYTHONPATH:$(pwd) pytest -v -n auto --durations=0 <directory_name>
 ```
 
+To Run Tavern full sync with specified URL PORT for hivemind node, that checks if API call returns results use:
+```
+./scripts/run_tests_full_sync.sh URL PORT
+```
+
+To Run Tavern full sync for pattern tests without checking patterns use:
+```
+./scripts/run_full_sync_tests.sh URL PORT ../tavern/
+```
+
 Remarks:
 - To increase verbosity use `-vv` option instead of `-v`.
 - `durations` option gives time measurement for tests, set to `0` will show durations of all tests. `Number` greater than zero will show only `number` slowest tests.

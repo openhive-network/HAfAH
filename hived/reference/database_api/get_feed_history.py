@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -23,8 +23,8 @@ if __name__ == "__main__":
   print("Work dir: {}".format(args.work_dir))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.get_feed_history", 
+    "jsonrpc":"2.0",
+    "method":"database_api.get_feed_history",
     "id":1
   }
 

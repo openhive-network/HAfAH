@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -25,11 +25,11 @@ if __name__ == "__main__":
   print("From: {}".format(args.escrow_from))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.find_escrows", 
+    "jsonrpc":"2.0",
+    "method":"database_api.find_escrows",
     "params": {
       "from":args.escrow_from
-    }, 
+    },
     "id":1
   }
 

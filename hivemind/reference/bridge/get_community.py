@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     "jsonrpc": "2.0",
     "id": 1,
     "method": "bridge.get_community",
-    "params": { 
+    "params": {
       "name": "{}".format(args.community_name),
       "observer": "{}".format(args.observer_name)
     }

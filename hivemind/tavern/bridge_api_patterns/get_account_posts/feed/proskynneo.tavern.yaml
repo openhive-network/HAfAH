@@ -2,9 +2,7 @@
   test_name: Hivemind bridge_api.get_account_posts sort feed patterns test
 
   marks:
-    - patterntest # since original only gives posts from last month (counted from now()) there can be no nonempty results
-    - failing
-    - xfail # marked as failing for now, since we need to change it so it counts time from head block
+    - patterntest # original only gives posts from last month (counted from now()) so there can be no nonempty results
 
   includes:
     - !include ../../../common.yaml

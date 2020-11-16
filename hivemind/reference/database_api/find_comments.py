@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -23,9 +23,9 @@ if __name__ == "__main__":
   print("Work dir: {}".format(args.work_dir))
 
   test_args = {
-    "jsonrpc":"2.0", 
-    "method":"database_api.find_comments", 
-    "params": {"start":[["temp","test1"],["temp","foobar"]], "limit":10, "order":"by_account"}, 
+    "jsonrpc":"2.0",
+    "method":"database_api.find_comments",
+    "params": {"start":[["temp","test1"],["temp","foobar"]], "limit":10, "order":"by_account"},
     "id":1
   }
 
