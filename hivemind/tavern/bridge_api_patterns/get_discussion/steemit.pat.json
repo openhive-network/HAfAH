@@ -1541,7 +1541,9 @@
     "author_payout_value": "0.000 HBD",
     "author_reputation": 0.15,
     "beneficiaries": [],
-    "blacklists": [],
+    "blacklists": [
+      "reputation-0"
+    ],
     "body": "https://steemit.com/bitcoin/@rednetkjh/bitcoin-chart-analysis-service",
     "category": "meta",
     "children": 0,
@@ -2272,7 +2274,9 @@
     "author_payout_value": "0.000 HBD",
     "author_reputation": -1.63,
     "beneficiaries": [],
-    "blacklists": [],
+    "blacklists": [
+      "reputation-0"
+    ],
     "body": "You have quadruple the liquidity any of the exchanges have. \n## Just make it rain!\nhttp://i.imgur.com/Maj5zM2.gif",
     "category": "meta",
     "children": 0,
