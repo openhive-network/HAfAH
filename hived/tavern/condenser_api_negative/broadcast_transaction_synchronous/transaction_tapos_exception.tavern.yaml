@@ -41,4 +41,4 @@
             method: "transaction_tapos_exception"
             directory: "condenser_api_negative/broadcast_transaction_synchronous"
             error_response: true
-            ignore_tags: ['context']
+            ignore_tags: ['stack']
