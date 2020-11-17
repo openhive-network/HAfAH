@@ -3,7 +3,7 @@
 
   marks:
     - patterntest
-    - xfail # follow_api_plugin not enabled
+
   includes:
     - !include ../../common.yaml
 
