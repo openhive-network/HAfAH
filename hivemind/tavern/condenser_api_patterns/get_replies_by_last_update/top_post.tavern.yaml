@@ -1,9 +1,8 @@
 ---
-  test_name: Hivemind condenser_api.get_replies_by_last_update patterns test
+  test_name: Hivemind condenser_api.get_replies_by_last_update
 
   marks:
-    - patterntest # original made overlapping pages, that was corrected
-                  # (compare with steemit.tavern.yaml - @admin/firstpost is the last - oldest - reply to any post by steemit, therefore there is nothing on page defined by it)
+    - patterntest # since permlink is given call tries to look for parent post to get blogger account, but this is top post, so blogger is effectively NULL
 
   includes:
     - !include ../../common.yaml
@@ -19,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_replies_by_last_update"
-          params: ["admin","firstpost",1]
+          params: ["gregory-f","the-facebook-strikes-back",10]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "admin"
+            method: "top_post"
             directory: "condenser_api_patterns/get_replies_by_last_update"

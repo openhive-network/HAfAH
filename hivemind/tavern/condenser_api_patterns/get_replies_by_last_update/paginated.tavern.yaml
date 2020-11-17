@@ -1,9 +1,9 @@
 ---
-  test_name: Hivemind condenser_api.get_replies_by_last_update patterns test
+  test_name: Hivemind condenser_api.get_replies_by_last_update
 
   marks:
-    - patterntest # original made overlapping pages, that was corrected
-                  # (compare with steemit.tavern.yaml - @admin/firstpost is the last - oldest - reply to any post by steemit, therefore there is nothing on page defined by it)
+    - patterntest # replies to posts of gtg
+                  # original overlapped pages, but that was corrected
 
   includes:
     - !include ../../common.yaml
@@ -19,11 +19,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_replies_by_last_update"
-          params: ["admin","firstpost",1]
+          params: ["brandonp","re-gtg-heavy-duty-witness-node-infrastructure-20160816t200131779z",3]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "admin"
+            method: "paginated"
             directory: "condenser_api_patterns/get_replies_by_last_update"

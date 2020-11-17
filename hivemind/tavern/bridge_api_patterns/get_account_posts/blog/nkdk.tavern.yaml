@@ -1,0 +1,35 @@
+---
+  test_name: Hivemind bridge_api.get_account_posts
+
+  marks:
+    - patterntest
+
+  includes:
+    - !include ../../../common.yaml
+
+  stages:
+    - name: get_account_posts
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_account_posts"
+          params: {
+            "sort":"blog",
+            "account":"nkdk",
+            "limit":20,
+            "start_author":"nkdk",
+            "start_permlink":"i-wonder-what-makes-it-turn"
+          }
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "nkdk"
+            directory: "bridge_api_patterns/get_account_posts/blog"
+

@@ -3,7 +3,6 @@
 
   marks:
     - patterntest # original made overlapping pages, that was corrected
-                  # (compare with steemit.tavern.yaml - @admin/firstpost is the last - oldest - reply to any post by steemit, therefore there is nothing on page defined by it)
 
   includes:
     - !include ../../common.yaml
@@ -19,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_replies_by_last_update"
-          params: ["admin","firstpost",1]
+          params: ["abit","re-summersolstice-cabbage-moths--cheap-solutions-20160525t114306407z",10]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "admin"
+            method: "abit"
             directory: "condenser_api_patterns/get_replies_by_last_update"
