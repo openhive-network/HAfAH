@@ -2,10 +2,7 @@
   test_name: Hivemind bridge_api.get_ranked_posts maximum limit patterns test
 
   marks:
-    - patterntest
-    - failing
-    - xfail # blacklists - we should most likely setup service for blacklists that will be unchanging and used by both hive-3 and CI,
-            # otherwise even if we correctly handle blacklists those might fail when situation changes or external service stops working
+    - patterntest # blacklists matched with mock data
 
   includes:
     - !include ../../../common.yaml

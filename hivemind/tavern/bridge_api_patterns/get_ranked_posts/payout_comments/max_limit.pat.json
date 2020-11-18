@@ -10128,7 +10128,9 @@
     "author_payout_value": "0.000 HBD",
     "author_reputation": 62.11,
     "beneficiaries": [],
-    "blacklists": [],
+    "blacklists": [
+      "spaminator"
+    ],
     "body": "Leah I understand your frustration:\n\nHowever saying that we have disregarded your safety is false\n\nWe cannot help what information people can find from other sources and post.\n\nWe can build the site to allow for muting.  If muting hasn't worked please accept my apology. We are working around the clock to move this website forward.\n\nTo give context to this situation, Dan responded to you personally, even offering that we would look into the identity of the offender and disclose that information law permitting, and the entire message thread considered, it appears your quotes are taken out of context.  Dan was only trying to help when he asked if you had responded to him.\n\nAs far as moving this platform forward, we are actively engaging in creative problem solving to improve the economics of post and curation rewards as well as turn Steemit from a blockchain-site into a thriving and personalized social media site.  More on that soon.\n\nAs far as comparisons to Synereo and other blockchain-based platforms for social networking, I would like to see more comparisons of the economics at the protocol and rewards levels.  This is the third comparison piece I've seen in three days and none have ventured to go so far as to compare the economic incentive models and friction points",
     "category": "synereo",
     "children": 78,
