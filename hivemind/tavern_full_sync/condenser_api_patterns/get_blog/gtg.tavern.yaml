@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_blog most posts
 
   marks:
-    - patterntest
+    - patterntest # timeout
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_blog"
-          params: ["steemitboard",0,0]
+          params: ["gtg",0,0]
       response:
         status_code: 200
         verify_response_with:
