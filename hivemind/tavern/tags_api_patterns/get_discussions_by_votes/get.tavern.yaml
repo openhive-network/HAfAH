@@ -1,0 +1,29 @@
+---
+  test_name: Hivemind tags_api.get_discussions_by_votes patterns test
+
+  marks:
+    - patterntest
+    - xfail # NotImplementedError
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_discussions_by_votes
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "tags_api.get_discussions_by_votes"
+          params: ["hive",10,["hbd"],["gtg"],["hive"],255]
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "get"
+            directory: "tags_api_patterns/get_discussions_by_votes"
