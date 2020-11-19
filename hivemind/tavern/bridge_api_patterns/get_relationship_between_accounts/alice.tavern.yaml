@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.get_profile davr86 with observer patterns test
+  test_name: Hivemind bridge_api.get_relationship_between_accounts follows patterns test
 
   marks:
-    - patterntest # observer would have no effect on 5 mln blocks but mock data added necessary follows
+    - patterntest # relies on mock data
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_profile davr86 with observer
+    - name: get_relationship_between_accounts follows
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.get_profile"
-          params: {"account":"davr86","observer":"ignoreall"}
+          method: "bridge.get_relationship_between_accounts"
+          params: {"account1": "alice", "account2": "hivewatchers"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "davr86_with_observer"
-            directory: "bridge_api_patterns/get_profile"
+            method: "alice"
+            directory: "bridge_api_patterns/get_relationship_between_accounts"
+
