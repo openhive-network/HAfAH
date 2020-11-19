@@ -1,6 +1,7 @@
 {
+  "blacklists": false,
   "follows": false,
   "follows_blacklists": false,
-  "ignores": true,
-  "is_blacklisted": false
+  "follows_muted": false,
+  "ignores": true
 }

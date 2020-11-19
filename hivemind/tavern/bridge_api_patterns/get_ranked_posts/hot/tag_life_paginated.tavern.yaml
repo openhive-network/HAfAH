@@ -2,9 +2,7 @@
   test_name: Hivemind bridge_api.get_ranked_posts hot tag_life limit 10 patterns test
 
   marks:
-    - patterntest
-    - failing
-    - xfail # blacklists - see max_limit.tavern.yaml in ../created
+    - patterntest # difference in blacklist caused by lack of global/default blacklist - observer always needed
 
   includes:
     - !include ../../../common.yaml

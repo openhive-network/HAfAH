@@ -3,8 +3,7 @@
 
   marks:
     - patterntest # incomparable with original since top posts are also selected now (initial pattern made with get_post)
-    - failing
-    - xfail # blacklists - see max_limit.tavern.yaml in ../created
+                  # blacklists matched with mock data
 
   includes:
     - !include ../../../common.yaml

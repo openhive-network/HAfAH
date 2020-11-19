@@ -1,7 +1,7 @@
 {
-    "follows": false,
-    "follows_blacklists": false,
-    "ignores": true,
-    "is_blacklisted": false
-  }
-  
+  "blacklists": false,
+  "follows": false,
+  "follows_blacklists": false,
+  "follows_muted": false,
+  "ignores": true
+}

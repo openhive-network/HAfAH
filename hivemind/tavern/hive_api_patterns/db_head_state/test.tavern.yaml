@@ -1,5 +1,5 @@
 ---
-  test_name: Hived bridge_api get_follow_list blocktrades follow_type muted
+  test_name: Hivemind hive.db_head_state
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api get_follow_list blocktrades muted
+    - name: hive.db_head_state
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.get_follow_list"
-          params: {"observer": "blocktrades", "follow_type": "muted"}
+          method: "hive.db_head_state"
+          params: {}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "blocktrades_muted"
-            directory: "bridge_api_patterns/get_follow_list"
+            method: "test"
+            directory: "hive_api_patterns/db_head_state"
+            ignore_tags: ['db_head_age']

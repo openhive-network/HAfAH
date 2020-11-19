@@ -2,9 +2,7 @@
   test_name: Hivemind bridge_api.get_ranked_posts payout_comments maximum limit patterns test
 
   marks:
-    - patterntest
-    - failing
-    - xfail # blacklists - see max_limit.tavern.yaml in ../created
+    - patterntest # blacklists matched with mock data
 
   includes:
     - !include ../../../common.yaml
