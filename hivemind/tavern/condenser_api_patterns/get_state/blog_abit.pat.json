@@ -2,6 +2,8 @@
   "accounts": {
     "abit": {
       "blog": [
+        "abit/anaconda02",
+        "abit/anaconda01",
         "abit/abit-witness-log-2016-9-3-2016-9-9",
         "abit/abit-witness-log-2016-9-2",
         "abit/i-ve-started-flagging-suspected-machine-translated-posts-with-cn-tag",
@@ -19,9 +21,7 @@
         "abit/to-authors-with-large-steem-power-please-consider-not-voting-for-yourself-when-posting-an-post-for-better-curation-reward",
         "abit/my-steem-witness-voting-changes",
         "abit/give-more-love-to-comments-show-trending-comments-on-main-page",
-        "abit/for-smoother-consensus-change-or-no-change-a-fix-for-steem-050-to-avoid-crashing-on-july-4th",
-        "abit/a-proposal-to-change-the-early-voting-penalty-and-benefit-minnow-voters",
-        "abit/new-curation-reward-algorithm-huge-penalty-to-early-voters"
+        "abit/for-smoother-consensus-change-or-no-change-a-fix-for-steem-050-to-avoid-crashing-on-july-4th"
       ],
       "comments": [],
       "created": "2016-04-04 11:33:18",
@@ -29,177 +29,13 @@
       "json_metadata": "{\"profile\":{\"name\":\"\",\"about\":\"\",\"website\":\"\",\"location\":\"\",\"cover_image\":\"\",\"profile_image\":\"\"}}",
       "name": "abit",
       "net_vesting_shares": 0,
-      "post_count": 1028,
+      "post_count": 1030,
       "recent_replies": [],
       "reputation": 20297981245452,
       "transfer_history": []
     }
   },
   "content": {
-    "abit/a-proposal-to-change-the-early-voting-penalty-and-benefit-minnow-voters": {
-      "active_votes": [
-        {
-          "percent": "10000",
-          "reputation": 19032535635212,
-          "rshares": 14121797136646,
-          "voter": "steemed"
-        },
-        {
-          "percent": "100",
-          "reputation": 0,
-          "rshares": 805710160,
-          "voter": "afew"
-        },
-        {
-          "percent": "2000",
-          "reputation": 0,
-          "rshares": 156019344,
-          "voter": "alittle"
-        },
-        {
-          "percent": "10000",
-          "reputation": 36749432321730,
-          "rshares": 568045888906,
-          "voter": "liondani"
-        },
-        {
-          "percent": "10000",
-          "reputation": 89703349977794,
-          "rshares": 855436096872,
-          "voter": "xeroc"
-        },
-        {
-          "percent": "10000",
-          "reputation": 71087197697999,
-          "rshares": 524791074950,
-          "voter": "benjojo"
-        },
-        {
-          "percent": "10000",
-          "reputation": 147478489309626,
-          "rshares": 165073747980,
-          "voter": "tuck-fheman"
-        },
-        {
-          "percent": "10000",
-          "reputation": 6977251504339,
-          "rshares": 4933550636,
-          "voter": "dedriss"
-        },
-        {
-          "percent": "10000",
-          "reputation": 4013874407471,
-          "rshares": 26285624165,
-          "voter": "linouxis9"
-        },
-        {
-          "percent": "10000",
-          "reputation": 898254694090,
-          "rshares": 1830262326,
-          "voter": "anonimau5"
-        },
-        {
-          "percent": "10000",
-          "reputation": 12188250813227,
-          "rshares": 2532534889,
-          "voter": "acidsun"
-        },
-        {
-          "percent": "10000",
-          "reputation": 2830877880805,
-          "rshares": 133171597646,
-          "voter": "vato"
-        },
-        {
-          "percent": "10000",
-          "reputation": 22378434861462,
-          "rshares": 415279662,
-          "voter": "stino-san"
-        },
-        {
-          "percent": "1133",
-          "reputation": 2902053059801,
-          "rshares": 1045256796,
-          "voter": "murh"
-        },
-        {
-          "percent": "10000",
-          "reputation": 11429090901893,
-          "rshares": 309819291,
-          "voter": "kenny-crane"
-        },
-        {
-          "percent": "10000",
-          "reputation": 203607188002,
-          "rshares": 269431886,
-          "voter": "alaa-el-shazly"
-        },
-        {
-          "percent": "-10000",
-          "reputation": -467198824411,
-          "rshares": -219009749,
-          "voter": "jalantikus"
-        },
-        {
-          "percent": "10000",
-          "reputation": 216392531645,
-          "rshares": 9530265,
-          "voter": "vkoreshkoff"
-        },
-        {
-          "percent": "10000",
-          "reputation": 7172977970558,
-          "rshares": 125120561,
-          "voter": "ace108"
-        },
-        {
-          "percent": "10000",
-          "reputation": -4429007921326,
-          "rshares": 980961343,
-          "voter": "jillstein2016"
-        },
-        {
-          "percent": "0",
-          "reputation": 0,
-          "rshares": 1209188,
-          "voter": "mest"
-        },
-        {
-          "percent": "10000",
-          "reputation": 724002012994,
-          "rshares": 96313081,
-          "voter": "theflowers"
-        }
-      ],
-      "author": "abit",
-      "author_reputation": 20297981245452,
-      "beneficiaries": [],
-      "body": "The new curation reward algorithm proposed by Steemit in [this post](https://steemit.com/steem/@steemitblog/latest-curation-reward-solution) is highly bias to authors, and greatly negatively impacts voting experience, as I've described in [this post](https://steemit.com/steem/@abit/new-curation-reward-algorithm-huge-penalty-to-early-voters) earlier. With this proposal, minnows have no chance to earn anything by voting, their either vote early so most benefit will go to authors, or vote late so their voting weight will be highly diluted by earlier voters especially whales. In the meanwhile bots can still adjust their strategy to make a reasonable return.\n\nHere is my proposal:\n* set a time window, for example 5 minutes after an author post a new article, in this window, everyone have same time-weight, so bots have few advantage, and normal voters have chance to read the article and vote accordingly\n* within the time window, let Steem Power be weighted by a curve flatter than linear, for example `log(n)` or `n^0.5` , so minnows will get bigger benefit\n* after the time window, linear or super linear time-weight kicks in, and linear or super linear Steem Power weight kicks in, so whales and bots compete on boosting the content reward for better curation reward, in the meanwhile give early voters more benefit\n* 50% to voters, 50% to authors. No cut to discussions (which imo will lead to spamming and self voting).\n\nThoughts?\n\n//Update:\nI noticed that there is a new 'vote' check-box while creating a new article. IMO this give authors unfair advantage to leech curation rewards, which is against the principle/consensus of sharing. An author would already know her post is expected to be valuable or not, thus this early vote brings few value to the system. If the author is a minnow, it's acceptable to gain a little more reward. But I won't vote on any article with a meaningful weighted instant vote from the author. Above proposal addresses this issue ideally.",
-      "body_length": 1981,
-      "cashout_time": "1969-12-31T23:59:59",
-      "category": "steem",
-      "children": 12,
-      "created": "2016-06-24T08:08:00",
-      "curator_payout_value": "13.369 HBD",
-      "depth": 0,
-      "json_metadata": "{\"tags\":[\"steem\",\"steem-ideas\"],\"links\":[\"https://steemit.com/steem/@steemitblog/latest-curation-reward-solution\",\"https://steemit.com/steem/@abit/new-curation-reward-algorithm-huge-penalty-to-early-voters\"]}",
-      "last_payout": "2016-08-19T17:03:54",
-      "last_update": "2016-06-24T11:14:45",
-      "max_accepted_payout": "1000000.000 HBD",
-      "net_rshares": 16407893156844,
-      "parent_author": "",
-      "parent_permlink": "steem",
-      "pending_payout_value": "0.000 HBD",
-      "percent_hbd": 10000,
-      "permlink": "a-proposal-to-change-the-early-voting-penalty-and-benefit-minnow-voters",
-      "post_id": 42479,
-      "promoted": "0.000 HBD",
-      "replies": [],
-      "root_title": "A Proposal to Change the Early Voting Penalty and Benefit Minnow Voters",
-      "title": "A Proposal to Change the Early Voting Penalty and Benefit Minnow Voters",
-      "total_payout_value": "13.370 HBD",
-      "url": "/steem/@abit/a-proposal-to-change-the-early-voting-penalty-and-benefit-minnow-voters"
-    },
     "abit/abit-witness-log-2016-9-2": {
       "active_votes": [
         {
@@ -1595,6 +1431,68 @@
       "title": "Abit Witness Log 2016-9-3 ~ 2016-9-9",
       "total_payout_value": "0.000 HBD",
       "url": "/witness-category/@abit/abit-witness-log-2016-9-3-2016-9-9"
+    },
+    "abit/anaconda01": {
+      "active_votes": [],
+      "author": "abit",
+      "author_reputation": 20297981245452,
+      "beneficiaries": [],
+      "body": "only snakes 01",
+      "body_length": 14,
+      "cashout_time": "2016-09-22T19:47:39",
+      "category": "hive-117600",
+      "children": 0,
+      "created": "2016-09-15T19:47:39",
+      "curator_payout_value": "0.000 HBD",
+      "depth": 0,
+      "json_metadata": "{}",
+      "last_payout": "1969-12-31T23:59:59",
+      "last_update": "2016-09-15T19:47:39",
+      "max_accepted_payout": "1000000.000 HBD",
+      "net_rshares": 0,
+      "parent_author": "",
+      "parent_permlink": "hive-117600",
+      "pending_payout_value": "0.000 HBD",
+      "percent_hbd": 10000,
+      "permlink": "anaconda01",
+      "post_id": 1257946,
+      "promoted": "0.000 HBD",
+      "replies": [],
+      "root_title": "powerful snake 01",
+      "title": "powerful snake 01",
+      "total_payout_value": "0.000 HBD",
+      "url": "/hive-117600/@abit/anaconda01"
+    },
+    "abit/anaconda02": {
+      "active_votes": [],
+      "author": "abit",
+      "author_reputation": 20297981245452,
+      "beneficiaries": [],
+      "body": "only snakes 02",
+      "body_length": 14,
+      "cashout_time": "2016-09-22T19:47:39",
+      "category": "hive-117600",
+      "children": 0,
+      "created": "2016-09-15T19:47:39",
+      "curator_payout_value": "0.000 HBD",
+      "depth": 0,
+      "json_metadata": "{}",
+      "last_payout": "1969-12-31T23:59:59",
+      "last_update": "2016-09-15T19:47:39",
+      "max_accepted_payout": "1000000.000 HBD",
+      "net_rshares": 0,
+      "parent_author": "",
+      "parent_permlink": "hive-117600",
+      "pending_payout_value": "0.000 HBD",
+      "percent_hbd": 10000,
+      "permlink": "anaconda02",
+      "post_id": 1257947,
+      "promoted": "0.000 HBD",
+      "replies": [],
+      "root_title": "powerful snake 02",
+      "title": "powerful snake 02",
+      "total_payout_value": "0.000 HBD",
+      "url": "/hive-117600/@abit/anaconda02"
     },
     "abit/auto-reply-bots-came-back": {
       "active_votes": [
@@ -6271,266 +6169,6 @@
       "title": "My Steem witness voting changes",
       "total_payout_value": "1.348 HBD",
       "url": "/witness-category/@abit/my-steem-witness-voting-changes"
-    },
-    "abit/new-curation-reward-algorithm-huge-penalty-to-early-voters": {
-      "active_votes": [
-        {
-          "percent": "10000",
-          "reputation": 51047995307721,
-          "rshares": 5587818092453,
-          "voter": "pharesim"
-        },
-        {
-          "percent": "10000",
-          "reputation": 0,
-          "rshares": 2344770615200,
-          "voter": "lafona-miner"
-        },
-        {
-          "percent": "10000",
-          "reputation": 9111465318256,
-          "rshares": 212938830126,
-          "voter": "lafona"
-        },
-        {
-          "percent": "100",
-          "reputation": 0,
-          "rshares": 805710160,
-          "voter": "afew"
-        },
-        {
-          "percent": "2000",
-          "reputation": 0,
-          "rshares": 156019344,
-          "voter": "alittle"
-        },
-        {
-          "percent": "10000",
-          "reputation": 20297981245452,
-          "rshares": 3647432865969,
-          "voter": "abit"
-        },
-        {
-          "percent": "10000",
-          "reputation": 36749432321730,
-          "rshares": 568045888906,
-          "voter": "liondani"
-        },
-        {
-          "percent": "10000",
-          "reputation": 5992588876858,
-          "rshares": 4371779113,
-          "voter": "hcf27"
-        },
-        {
-          "percent": "10000",
-          "reputation": 179829390709,
-          "rshares": 14744766042,
-          "voter": "fusan"
-        },
-        {
-          "percent": "10000",
-          "reputation": 37454101478493,
-          "rshares": 11449379316,
-          "voter": "chitty"
-        },
-        {
-          "percent": "10000",
-          "reputation": 4013874407471,
-          "rshares": 25960668072,
-          "voter": "linouxis9"
-        },
-        {
-          "percent": "10000",
-          "reputation": 12188250813227,
-          "rshares": 2587589996,
-          "voter": "acidsun"
-        },
-        {
-          "percent": "10000",
-          "reputation": 3444102146490,
-          "rshares": 4174672933,
-          "voter": "gregory-f"
-        },
-        {
-          "percent": "10000",
-          "reputation": 204869765185479,
-          "rshares": 3155687954,
-          "voter": "gavvet"
-        },
-        {
-          "percent": "10000",
-          "reputation": 5045406568403,
-          "rshares": 4137501588,
-          "voter": "james-show"
-        },
-        {
-          "percent": "10000",
-          "reputation": 503318537891,
-          "rshares": 403677999,
-          "voter": "jerome-colley"
-        },
-        {
-          "percent": "-10000",
-          "reputation": 10093114621632,
-          "rshares": -433360498,
-          "voter": "william-noe"
-        },
-        {
-          "percent": "10000",
-          "reputation": 3864679285504,
-          "rshares": 441824143,
-          "voter": "avarice"
-        },
-        {
-          "percent": "10000",
-          "reputation": 8364732813017,
-          "rshares": 63956223556,
-          "voter": "psylains"
-        },
-        {
-          "percent": "1133",
-          "reputation": 2902053059801,
-          "rshares": 1394432126,
-          "voter": "murh"
-        },
-        {
-          "percent": "10000",
-          "reputation": 6692979624912,
-          "rshares": 447998169,
-          "voter": "alyssas"
-        },
-        {
-          "percent": "10000",
-          "reputation": 18165011697633,
-          "rshares": 36481604,
-          "voter": "tinfoilfedora"
-        },
-        {
-          "percent": "10000",
-          "reputation": 10395665548525,
-          "rshares": 68850213215,
-          "voter": "billbutler"
-        },
-        {
-          "percent": "10000",
-          "reputation": 77590508815145,
-          "rshares": 48489983006,
-          "voter": "kaylinart"
-        },
-        {
-          "percent": "10000",
-          "reputation": 2733362192608,
-          "rshares": 325268972,
-          "voter": "brandonp"
-        },
-        {
-          "percent": "10000",
-          "reputation": 48542961182602,
-          "rshares": 409266656340,
-          "voter": "sean-king"
-        },
-        {
-          "percent": "10000",
-          "reputation": 1708095635013,
-          "rshares": 78230116426,
-          "voter": "djleo"
-        },
-        {
-          "percent": "10000",
-          "reputation": 203607188002,
-          "rshares": 269431886,
-          "voter": "alaa-el-shazly"
-        },
-        {
-          "percent": "10000",
-          "reputation": 668633470533,
-          "rshares": 180213488,
-          "voter": "stijn"
-        },
-        {
-          "percent": "-10000",
-          "reputation": -467198824411,
-          "rshares": -219009749,
-          "voter": "jalantikus"
-        },
-        {
-          "percent": "10000",
-          "reputation": 255334396905,
-          "rshares": 191417506,
-          "voter": "damono"
-        },
-        {
-          "percent": "10000",
-          "reputation": 216392531645,
-          "rshares": 9530265,
-          "voter": "vkoreshkoff"
-        },
-        {
-          "percent": "10000",
-          "reputation": 338909620445,
-          "rshares": 2040617138,
-          "voter": "blockchainbilly"
-        },
-        {
-          "percent": "10000",
-          "reputation": 1241600128334,
-          "rshares": 4224455034,
-          "voter": "kewpiedoll"
-        },
-        {
-          "percent": "10000",
-          "reputation": -4429007921326,
-          "rshares": 980961343,
-          "voter": "jillstein2016"
-        },
-        {
-          "percent": "10000",
-          "reputation": 134345349682,
-          "rshares": 4799493283,
-          "voter": "slimjim"
-        },
-        {
-          "percent": "0",
-          "reputation": 0,
-          "rshares": 1209188,
-          "voter": "mest"
-        },
-        {
-          "percent": "10000",
-          "reputation": 724002012994,
-          "rshares": 96313081,
-          "voter": "theflowers"
-        }
-      ],
-      "author": "abit",
-      "author_reputation": 20297981245452,
-      "beneficiaries": [],
-      "body": "//Update:\nThe code has changed, from `^2` to linear, so less penalty now, but still some. Link is [here](https://github.com/steemit/steem/commit/6300a795cae5e78f68b52d03ea0918bf8354e600)\n\n// Update 2:\nThe penalty on voters goes to the author. So, potential (evil?) effective voting strategies:\n* authors vote for self to earn more liquid SD, and dilutes later voters weight\n* bots vote for the authors who agree to compensate (since authors will get more liquid SD, so even easier to compensate)\n* greedy voters be more selectively\n\n-----------Original post----------------------\nAccording to the [code](https://github.com/steemit/steem/blob/dd86ddecf99ec238bc7e3a3a40c53e12f017d782/libraries/chain/steem_evaluator.cpp#L712-L721), the new algo brings a huge penalty to early voters. The formula is \n```\ncuration_reward_weight = standard_weight * [(now - post_create_time) / 30_minutes]^2\n```\nwhere `standard_weight` is related to one's steem power,  voting power, and total weight of earlier voters.\n\nIt means\n* if vote 30 minutes after a post is created, the weight for reward is `(30/30)^2 = 100% * standard_weight`\n* if vote 20 minutes after a post is created, the weight for reward is `(20/30)^2 = 44% * standard_weight`\n* if vote 10 minutes after a post is created, the weight for reward is `(10/30)^2 = 11% * standard_weight`\n* if vote 5 minutes after a post is created, the weight for reward is `(5/30)^2 = 2.8% * standard_weight`\n* if vote 3 minutes after a post is  created, the weight for reward is `(3/30)^2 = 1% * standard_weight`\n\nReference: [latest proposal](https://steemit.com/steem/@steemitblog/latest-curation-reward-solution):\n>Our solution is to offer a reverse auction for curation rewards on votes cast within the first 30 minutes. The price starts out at 100% of your curation reward and falls toward 0% over 30 minutes using the curve (1-t2). The longer a bot waits to vote, the lower the fee will be. However, if someone else chooses to vote before you it would lower your potential absolute reward.",
-      "body_length": 2024,
-      "cashout_time": "1969-12-31T23:59:59",
-      "category": "steem",
-      "children": 21,
-      "created": "2016-06-23T14:11:39",
-      "curator_payout_value": "8.836 HBD",
-      "depth": 0,
-      "json_metadata": "{\"tags\":[\"steem\"],\"links\":[\"https://github.com/steemit/steem/commit/6300a795cae5e78f68b52d03ea0918bf8354e600\",\"https://github.com/steemit/steem/blob/dd86ddecf99ec238bc7e3a3a40c53e12f017d782/libraries/chain/steem_evaluator.cpp#L712-L721\",\"https://steemit.com/steem/@steemitblog/latest-curation-reward-solution\"]}",
-      "last_payout": "2016-08-18T12:18:51",
-      "last_update": "2016-06-24T03:16:03",
-      "max_accepted_payout": "1000000.000 HBD",
-      "net_rshares": 13116534214693,
-      "parent_author": "",
-      "parent_permlink": "steem",
-      "pending_payout_value": "0.000 HBD",
-      "percent_hbd": 10000,
-      "permlink": "new-curation-reward-algorithm-huge-penalty-to-early-voters",
-      "post_id": 41529,
-      "promoted": "0.000 HBD",
-      "replies": [],
-      "root_title": "New Curation Reward Algorithm: Penalty to Early Voters",
-      "title": "New Curation Reward Algorithm: Penalty to Early Voters",
-      "total_payout_value": "8.863 HBD",
-      "url": "/steem/@abit/new-curation-reward-algorithm-huge-penalty-to-early-voters"
     },
     "abit/steem": {
       "active_votes": [

@@ -5,6 +5,9 @@
     - patterntest # tag is not a tag but account whose feed we are looking at (set of posts created/reblogged by those followed by selected account)
                   # there can be no nonempty results for not-up-to-date HM because it only gives posts that were created/reblogged within last month (no param to change it)
 
+  # Communities not implemented under 5 mln blocks, but some were created by mock mechanism.
+  # For these communities some posts were created, therefore an original result is different from original pattern.
+
   includes:
     - !include ../../common.yaml
 

@@ -2,7 +2,8 @@
   test_name: Hivemind bridge_api.get_trending_topics patterns max limit test
 
   marks:
-    - patterntest # returns only 7 because there is no communities under 5 mln blocks, works correcly on fully sync node
+    - patterntest
+    # Communities not implemented under 5 mln blocks, but some were created by mock mechanism, therefore they are in result.
 
   includes:
     - !include ../../common.yaml

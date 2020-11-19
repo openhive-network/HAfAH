@@ -5,6 +5,9 @@
     - patterntest # old didn't correct limit when it was too big, also there was less reblogs due to some bug (.orig prepared with max valid limit 4)
                   # finally time of reblog was incorrectly taken from post, now it is time when reblog happened
 
+  # Communities not implemented under 5 mln blocks, but some were created by mock mechanism.
+  # For these communities for account `test-safari` were created 4 artificial comments. Permlinks: `secrets1`, `secrets2`, `secrets4`, `secrets5`.
+
   includes:
     - !include ../../common.yaml
 

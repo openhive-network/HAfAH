@@ -4,6 +4,10 @@
   marks:
     - patterntest
 
+  # Communities not implemented under 5 mln blocks, but some were created by mock mechanism.
+  # For these communities some posts were created, therefore an original result is different from original pattern.
+  # For these communities for account `blocktrades` were created 3 artificial comments. Permlinks: `crocodile01`, `crocodile02`, `crocodile03`
+
   includes:
     - !include ../../common.yaml
 
