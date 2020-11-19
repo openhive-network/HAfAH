@@ -1,0 +1,28 @@
+---
+  test_name: Hived bridge_api get_follow_list jes2850 follow_type blacklisted
+
+  marks:
+    - patterntest # tested on anyx.io
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: bridge_api get_follow_list jes2850 blacklisted
+      request:
+        url: "{service.url:s}"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_follow_list"
+          params: {"observer": "jes2850", "follow_type": "blacklisted"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "jes2850_blacklisted"
+            directory: "bridge_api_patterns/get_follow_list"
