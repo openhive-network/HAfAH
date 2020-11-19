@@ -1,15 +1,14 @@
 ---
-  test_name: Hivemind tags_api.get_active_votes patterns test
+  test_name: Hivemind hive.db_head_state
 
   marks:
     - patterntest
-    - xfail # result is sorted randomly, so pattern isn't correct
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_active_votes
+    - name: hive.db_head_state
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,12 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "tags_api.get_active_votes"
-          params: ["noodhoog","steem-opening-the-forgotten-economy"]
+          method: "hive.db_head_state"
+          params: {}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "all_data"
-            directory: "tags_api_patterns/get_active_votes"
+            method: "test"
+            directory: "hive_api_patterns/db_head_state"
+            ignore_tags: ['db_head_age']

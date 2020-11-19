@@ -1,28 +1,28 @@
 ---
-  test_name: Hived bridge_api does_user_follow_any_lists jes285
+  test_name: Hived bridge_api get_follow_list follow_type muted
 
   marks:
-    - patterntest # tested on anyx.io
+    - patterntest # relies on mock data
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api does_user_follow_any_lists jes285
+    - name: bridge_api get_follow_list muted
       request:
-        url: "{service.url:s}"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.does_user_follow_any_lists"
-          params: {"observer": "jes285"}
+          method: "bridge.get_follow_list"
+          params: {"observer": "ignoreall", "follow_type": "muted"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "jes285"
+            method: "ignoreall_muted"
             directory: "bridge_api_patterns/get_follow_list"

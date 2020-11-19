@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind follow_api.get_blog_authors patterns test
+  test_name: Hived bridge_api get_follow_list jes2850 follow_type follow_muted
 
   marks:
-    - patterntest
-    - xfail # NotImplementedError
+    - patterntest # relies on mock data
+
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_feed
+    - name: bridge_api get_follow_list jes2850 follow_muted
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,13 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "follow_api.get_blog_authors"
-          params: {"blog_account":"steemit"}
+          method: "bridge.get_follow_list"
+          params: {"observer": "alice", "follow_type": "follow_muted"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "get"
-            directory: "follow_api_patterns/get_blog_authors"
-
+            method: "alice_follow_muted"
+            directory: "bridge_api_patterns/get_follow_list"

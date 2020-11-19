@@ -1,15 +1,14 @@
 ---
-  test_name: Hivemind tags_api.get_discussions_by_active patterns test
+  test_name: Hived bridge_api get_follow_list jes2850 follow_type follow_blacklist
 
   marks:
-    - patterntest
-    - xfail # NotImplementedError
+    - patterntest # relies on mock data
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_discussions_by_active
+    - name: bridge_api get_follow_list jes2850 follow_blacklist
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "tags_api.get_discussions_by_active"
-          params: ["hive",10,["hbd"],["gtg"],["hive"],255]
+          method: "bridge.get_follow_list"
+          params: {"observer": "alice", "follow_type": "follow_blacklist"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "get"
-            directory: "tags_api_patterns/get_discussions_by_active"
+            method: "alice_follow_blacklist"
+            directory: "bridge_api_patterns/get_follow_list"

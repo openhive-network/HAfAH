@@ -2,7 +2,7 @@
   test_name: Hived bridge_api get_follow_list blocktrades follow_type muted
 
   marks:
-    - patterntest # tested on anyx.io
+    - patterntest
 
   includes:
     - !include ../../common.yaml
@@ -10,7 +10,7 @@
   stages:
     - name: bridge_api get_follow_list blocktrades muted
       request:
-        url: "{service.url:s}"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json

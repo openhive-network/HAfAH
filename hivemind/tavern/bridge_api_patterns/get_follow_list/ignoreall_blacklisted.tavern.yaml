@@ -1,16 +1,18 @@
 ---
-  test_name: Hived bridge_api get_follow_list jes2850 follow_type muted
+  test_name: Hived bridge_api get_follow_list jes2850 follow_type blacklisted
 
   marks:
-    - patterntest # tested on anyx.io
+    - patterntest # relies on mock data
+    - failing
+    - xfail # problem with follow overriding when two operations are in the same block
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api get_follow_list jes2850 muted
+    - name: bridge_api get_follow_list jes2850 blacklisted
       request:
-        url: "{service.url:s}"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -18,11 +20,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_follow_list"
-          params: {"observer": "jes2850", "follow_type": "muted"}
+          params: {"observer": "ignoreall", "follow_type": "blacklisted"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "jes2850_muted"
+            method: "ignoreall_blacklisted"
             directory: "bridge_api_patterns/get_follow_list"

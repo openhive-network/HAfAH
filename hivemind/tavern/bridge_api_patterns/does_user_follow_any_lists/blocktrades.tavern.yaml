@@ -1,5 +1,5 @@
 ---
-  test_name: Hived bridge_api does_user_follow_any_lists blocktrades
+  test_name: Hivemind bridge_api does_user_follow_any_lists blocktrades
 
   marks:
     - patterntest # tested on anyx.io
@@ -10,7 +10,7 @@
   stages:
     - name: bridge_api does_user_follow_any_lists blocktrades
       request:
-        url: "{service.url:s}"
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
           content-type: application/json
@@ -25,4 +25,4 @@
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
             method: "blocktrades"
-            directory: "bridge_api_patterns/get_follow_list"
+            directory: "bridge_api_patterns/does_user_follow_any_lists"

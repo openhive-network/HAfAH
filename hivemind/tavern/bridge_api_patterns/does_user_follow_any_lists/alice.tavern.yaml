@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind hive.get_info
+  test_name: Hivemind bridge_api.does_user_follow_any_lists alice
 
   marks:
-    - patterntest
+    - patterntest # relies on mock data
 
   includes:
-    - !include ../common.yaml
+    - !include ../../common.yaml
 
   stages:
-    - name: hive.get_info
+    - name: bridge_api does_user_follow_any_lists alice
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,13 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "hive.get_info"
-          params: {}
+          method: "bridge.does_user_follow_any_lists"
+          params: {"observer": "alice"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "get_info"
-            directory: "hive_patterns"
-            ignore_tags: ["database_schema_version", "hivemind_git_rev","hivemind_version"]
+            method: "alice"
+            directory: "bridge_api_patterns/does_user_follow_any_lists"

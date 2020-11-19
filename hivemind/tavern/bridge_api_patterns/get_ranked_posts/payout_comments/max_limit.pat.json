@@ -12120,9 +12120,9 @@
     "author_reputation": 67.62,
     "beneficiaries": [],
     "blacklists": [
-      "spaminator",
       "buildawhale",
-      "redeemer"
+      "redeemer",
+      "spaminator"
     ],
     "body": "Tone Vays = old ways",
     "category": "steem",
