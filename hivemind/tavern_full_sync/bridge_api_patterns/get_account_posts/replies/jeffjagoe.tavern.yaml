@@ -4,7 +4,7 @@
   marks:
     - fullsynctest # slow_calls file - 3.168s
 
-  includes:`
+  includes:
     - !include ../../../common.yaml
 
   stages:
