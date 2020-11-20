@@ -1,5 +1,6 @@
 ---
-  test_name: Hivemind condenser_api.get_blog most posts
+  test_name: Hivemind bridge_api.get_discussion most discussed
+   # SELECT  COUNT(id) as record_count, root_id FROM hive_posts GROUP BY(root_id) ORDER BY record_count DESC LIMIT 10;
 
   marks:
     - fullsynctest
@@ -8,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_blog most posts
+    - name: bridge_api.get_discussion most discussed
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,13 +18,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_blog"
-          params: ["steemitboard",0,0]
+          method: "bridge.get_discussion"
+          params: {"author":"et42k", "permlink":"iqx-hashtag"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "most_blog_posts"
-            directory: "condenser_api_patterns/get_blog"
-
+            method: "most_discussed"
+            directory: "bridge_api_patterns/get_discussion"
