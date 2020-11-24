@@ -1,0 +1,26 @@
+{
+  "active": "2016-04-29T22:28:00",
+  "blacklists": [],
+  "created": "2016-03-25T15:09:27",
+  "id": 241,
+  "metadata": {
+    "profile": {
+      "about": "",
+      "blacklist_description": "",
+      "cover_image": "",
+      "location": "",
+      "muted_list_description": "",
+      "name": "",
+      "profile_image": "",
+      "website": ""
+    }
+  },
+  "name": "alice",
+  "post_count": 0,
+  "reputation": 25,
+  "stats": {
+    "followers": 24,
+    "following": 0,
+    "rank": 0
+  }
+}
