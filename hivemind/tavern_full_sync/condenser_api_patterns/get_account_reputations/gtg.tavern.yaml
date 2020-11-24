@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.list_subscribers patterns test
+  test_name: Hivemind get_account_reputations gtg
 
   marks:
     - fullsynctest
 
   includes:
-    - !include ../../../common.yaml
+    - !include ../../common.yaml
 
   stages:
-    - name: list_subscribers
+    - name: get_account_reputations gtg
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_subscribers"
-          params: {"community":"hive-148441"}
+          method: "condenser_api.get_account_reputations"
+          params: ["gtg",1000]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "gems"
-            directory: "full_sync/bridge_api_patterns/list_subscribers"
+            method: "gtg"
+            directory: "condenser_api_patterns/get_account_reputations"

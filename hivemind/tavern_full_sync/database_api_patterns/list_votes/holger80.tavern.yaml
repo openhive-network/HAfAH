@@ -2,7 +2,7 @@
   test_name: Hivemind database_api.list_votes holger80
 
   marks:
-    - patterntest
+    - fullsynctest
 
   includes:
     - !include ../../common.yaml

@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_followers good-karma unpopular
 
   marks:
-    - patterntest
+    - fullsynctest
 
   includes:
     - !include ../../common.yaml

@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.get_community leofinance
+  test_name: Hivemind bridge_api.get_relationship_between_accounts themarkymark
 
   marks:
     - fullsynctest
 
   includes:
-    - !include ../../../common.yaml
+    - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.get_community leofinance
+    - name: get_relationship_between_accounts themarkymark
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.get_community"
-          params: {"name":"hive-167922"}
+          method: "bridge.get_relationship_between_accounts"
+          params: {"account1": "themarkymark","account2": "steemit"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "leo_finance"
-            directory: "full_sync/bridge_api_patterns/get_community"
+            method: "themarkymark"
+            directory: "bridge_api_patterns/get_relationship_between_accounts"
+

@@ -1,8 +1,8 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts comments animalcontrol
+  test_name: Hivemind bridge_api.get_account_posts comments animalcontrol slow call
 
   marks:
-    - fullsynctest
+    - fullsynctest # timeout
 
   includes:
     - !include ../../../common.yaml

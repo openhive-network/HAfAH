@@ -2,8 +2,7 @@
   test_name: Hivemind bridge_api.does_user_follow_any_lists
 
   marks:
-    - fullsynctest
-    - xfail # to fix - SyntaxError: syntax error at or near "from" LINE 2: from hive_accounts join hive_follows on (hi...
+    - fullsynctest  # result false
 
   includes:
     - !include ../../common.yaml
