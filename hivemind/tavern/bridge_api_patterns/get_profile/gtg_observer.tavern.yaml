@@ -1,0 +1,28 @@
+---
+  test_name: Hivemind bridge_api.get_profile gtg with new observer patterns test
+
+  marks:
+    - patterntest # new field followed (true/false) by observer (and muted if true)
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_profile gtg observer
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_profile"
+          params: {"account":"gtg", "observer":"roelandp"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "gtg_observer"
+            directory: "bridge_api_patterns/get_profile"
