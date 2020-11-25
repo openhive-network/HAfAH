@@ -2,8 +2,8 @@
   test_name: Hivemind bridge_api.account_notifications under score patterns test
 
   marks:
-    - patterntest
-    - failing
+    - patterntest # original did not validate score properly
+    - negative
 
   includes:
     - !include ../../common.yaml

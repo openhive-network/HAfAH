@@ -3,9 +3,6 @@
 
   marks:
     - patterntest # order in original when promotion amount was equal was basically random, so posts are ordered differently
-                  # note post /life/@thecryptofiend/things-i-wish-i-d-known-when-i-was-18
-                  # it is in the results despite not having 'steemit' in 'tags'
-                  # it is because the post was edited and was changing tags - we don't clear old tags during edit (should be fixed at some point)
                   # compared to original extra votes are due to removed vote muting
 
   includes:

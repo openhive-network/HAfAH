@@ -2,9 +2,7 @@
   test_name: Hivemind bridge_api.account_notifications max score patterns test
 
   marks:
-    - patterntest
-    - failing
-    - xfail # very different result
+    - patterntest # there used to be no posts with max score (but since now score is calculated differently...)
 
   includes:
     - !include ../../common.yaml

@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.account_notifications min limit patterns test
 
   marks:
-    - patterntest
+    - patterntest # changed due to mock data
 
   includes:
     - !include ../../common.yaml
