@@ -1,8 +1,8 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_blog patterns test - tag with large number of entries not empty start author/permlink
+  test_name: Hivemind condenser_api.get_discussions_by_blog patterns test
 
   marks:
-    - patterntest # old HM produced overlapping pages - that was corrected
+    - patterntest # old HM produced overlapping pages, this was corrected
 
   includes:
     - !include ../../common.yaml
@@ -18,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_discussions_by_blog"
-          params: {"tag":"nkdk","start_author":"nkdk","start_permlink":"withered--distort-engulf-official-premiere","limit":10}
+          params: {"tag":"funny","start_author":"funny","start_permlink":"a-new-steemit-logo-for-you-guys","limit":100}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "large002"
+            method: "paginated"
             directory: "condenser_api_patterns/get_discussions_by_blog"

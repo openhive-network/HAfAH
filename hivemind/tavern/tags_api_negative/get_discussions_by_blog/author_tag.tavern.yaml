@@ -1,8 +1,9 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_blog patterns test
+  test_name: Hivemind tags_api.get_discussions_by_blog patterns test author tag
 
   marks:
-    - patterntest
+    - patterntest # it used to only check permlink when looking for start post, now both author and permlink trigger page (and are required to point to valid post)
+    - negative
 
   includes:
     - !include ../../common.yaml
@@ -17,12 +18,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_discussions_by_blog"
-          params: {"tag":"steemit","start_author":"","start_permlink":"","limit":1}
+          method: "tags_api.get_discussions_by_blog"
+          params: ["dragonho", "life"] 
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "steemit"
-            directory: "condenser_api_patterns/get_discussions_by_blog"
+            method: "author_tag"
+            directory: "tags_api_negative/get_discussions_by_blog"
+            error_response: true

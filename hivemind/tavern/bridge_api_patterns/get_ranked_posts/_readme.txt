@@ -35,5 +35,6 @@ params:
 
   "observer": "{account}"
 
-     mandatory for "my" tag, points to valid account; otherwise used for supplementing blacklist stats in posts
+     mandatory for "my" tag, points to valid account; when given supplements blacklists stats in posts and
+     filters out posts of muted authors (with exception of "muted" sort)
 }

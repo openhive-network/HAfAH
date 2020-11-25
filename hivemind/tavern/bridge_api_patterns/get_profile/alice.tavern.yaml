@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_blog pre_appbase patterns test
+  test_name: Hivemind bridge_api.get_profile
 
   marks:
-    - patterntest
+    - patterntest # relies on mock data
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: condenser_api.get_discussions_by_blog pre_appbase patterns test
+    - name: get_profile alice
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "call"
-          params: ["condenser_api", "get_discussions_by_blog", [{"tag":"steemit","start_author":"","start_permlink":"","limit":1}]]
+          method: "bridge.get_profile"
+          params: {"account":"alice"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "pre_appbase"
-            directory: "condenser_api_patterns/get_discussions_by_blog"
+            method: "alice"
+            directory: "bridge_api_patterns/get_profile"
