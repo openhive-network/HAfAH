@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_blog patterns test - tag with large number of entries not empty start author/permlink
 
   marks:
-    - patterntest
+    - patterntest # old HM produced overlapping pages - that was corrected
 
   includes:
     - !include ../../common.yaml

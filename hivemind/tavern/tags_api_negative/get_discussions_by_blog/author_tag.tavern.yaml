@@ -2,7 +2,8 @@
   test_name: Hivemind tags_api.get_discussions_by_blog patterns test author tag
 
   marks:
-    - patterntest
+    - patterntest # it used to only check permlink when looking for start post, now both author and permlink trigger page (and are required to point to valid post)
+    - negative
 
   includes:
     - !include ../../common.yaml
@@ -25,4 +26,5 @@
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
             method: "author_tag"
-            directory: "tags_api_patterns/get_discussions_by_blog"
+            directory: "tags_api_negative/get_discussions_by_blog"
+            error_response: true

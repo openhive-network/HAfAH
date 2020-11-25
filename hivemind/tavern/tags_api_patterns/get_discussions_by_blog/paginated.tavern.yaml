@@ -1,8 +1,8 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_blog patterns test
+  test_name: Hivemind tags_api.get_discussions_by_blog patterns test author tag
 
   marks:
-    - patterntest # partially relies on mock data (two first posts artificially reblogged)
+    - patterntest # old version used overlapping paging - that was corrected
 
   includes:
     - !include ../../common.yaml
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_discussions_by_blog"
-          params: {"tag":"funny","limit":100}
+          method: "tags_api.get_discussions_by_blog"
+          params: ["dragonho", "dragonho", "pursuit-the-desired-status-of-happiness"] 
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "max_limit"
-            directory: "condenser_api_patterns/get_discussions_by_blog"
+            method: "paginated"
+            directory: "tags_api_patterns/get_discussions_by_blog"

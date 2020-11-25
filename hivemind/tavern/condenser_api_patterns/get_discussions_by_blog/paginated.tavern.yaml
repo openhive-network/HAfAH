@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_blog patterns test
 
   marks:
-    - patterntest
+    - patterntest # old HM produced overlapping pages, this was corrected
 
   includes:
     - !include ../../common.yaml
