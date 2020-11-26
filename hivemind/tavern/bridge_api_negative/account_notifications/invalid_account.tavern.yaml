@@ -3,7 +3,7 @@
 
   marks:
     - patterntest
-    - failing
+    - negative
 
   includes:
     - !include ../../common.yaml

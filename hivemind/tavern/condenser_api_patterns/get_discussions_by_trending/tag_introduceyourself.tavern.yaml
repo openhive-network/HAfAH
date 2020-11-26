@@ -2,8 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_trending patterns test
 
   marks:
-    - patterntest # post @fabio/tag-vorschlag-stelldichvor not present in original (despite proper trend value) because it was edited and lost
-                  # 'introduceyourself' tag in last edit (but new hivemind does not make such edits - it needs to be fixed at some point)
+    - patterntest
 
   includes:
     - !include ../../common.yaml
