@@ -1,3 +1,7 @@
+import logging
+from datetime import datetime
+
+log = logging.getLogger(__name__)
 class PatternDiffException(Exception):
   pass
 
@@ -36,6 +40,7 @@ def remove_tag(data, tags_to_remove):
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
   """ This method will compare response with pattern file """
   import os
+  print("compare_response_with_pattern for {} started at: {}".format(directory + "/" + method, datetime.now()))
 
   response_fname = directory + "/" + method + RESPONSE_FILE_EXT
   if os.path.exists(response_fname):
