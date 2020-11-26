@@ -1,5 +1,7 @@
+import os
 import logging
 from datetime import datetime
+from time import perf_counter as perf
 
 log = logging.getLogger(__name__)
 class PatternDiffException(Exception):
@@ -39,7 +41,7 @@ def remove_tag(data, tags_to_remove):
 
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
   """ This method will compare response with pattern file """
-  import os
+  t_start = perf()
   print("compare_response_with_pattern for {} started at: {}".format(directory + "/" + method, datetime.now()))
 
   response_fname = directory + "/" + method + RESPONSE_FILE_EXT
@@ -82,4 +84,5 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     save_json(response_fname, result)
     msg = "Differences detected between response and pattern."
     raise PatternDiffException(msg)
-
+  print("compare_response_with_pattern for {} ended at: {}".format(directory + "/" + method, datetime.now()))
+  print("comparing {} took {:4f}s".format(directory + "/" + method, perf() - t_start))
