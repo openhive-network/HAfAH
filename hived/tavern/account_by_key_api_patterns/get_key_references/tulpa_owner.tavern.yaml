@@ -1,5 +1,5 @@
 ---
-  test_name: Hived get_active_votes
+  test_name: Hived account_history_api get_key_references tulpa_owner
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_active_votes
+    - name: account_history_api get_key_references tulpa_owner
       request:
         url: "{service.url:s}"
         method: POST
@@ -17,14 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_active_votes"
-          params: ["gtg","wrong_permlink"]
+          method: "account_by_key_api.get_key_references"
+          params: {"keys":["STM6wxeXR9kg8uu7vX5LS4HBgKw8sdqHBpzAaacqPwPxYfRx9h5bS"]}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "wrong_permlink"
-            directory: "condenser_api_negative/get_active_votes"
-            error_response: true
-            ignore_tags: ["timestamp"]
+            method: "tulpa_owner"
+            directory: "account_by_key_api_patterns/get_key_references"

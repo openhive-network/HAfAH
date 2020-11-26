@@ -1,5 +1,5 @@
 ---
-  test_name: Hived account_history_api get_transaction unknown
+  test_name: Hived block_api.get_block_range
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: account_history_api get_transaction unknown
+    - name: block_api.get_block_range
       request:
         url: "{service.url:s}"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "account_by_key_api.get_key_references"
-          params: {"keys":["STM5jZtLoV8YbxCxr4imnbWn61zMB24wwonpnVhfXRmv7j6fk3dTH"]}
+          method: "block_api.get_block_range"
+          params: {"starting_block_num": 1, "count": 1000}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "steemit1"
-            directory: "account_by_key_api_patterns/get_key_references"
+            method: "one"
+            directory: "block_api_patterns/get_block_range"

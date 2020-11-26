@@ -1,5 +1,5 @@
 ---
-  test_name: Hived get_active_votes
+  test_name: Hived block_api.get_block_range non existing
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_active_votes
+    - name: block_api.get_block_range non existing
       request:
         url: "{service.url:s}"
         method: POST
@@ -17,14 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_active_votes"
-          params: ["gtg","wrong_permlink"]
+          method: "block_api.get_block_range"
+          params: {"starting_block_num": 1000000000, "count": 1000}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "wrong_permlink"
-            directory: "condenser_api_negative/get_active_votes"
-            error_response: true
-            ignore_tags: ["timestamp"]
+            method: "non_existing"
+            directory: "block_api_patterns/get_block_range"
