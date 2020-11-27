@@ -1,12 +1,8 @@
 import os
 import csv
 import logging
-from datetime import datetime
-from dateutil import parser
 from time import perf_counter as perf
 
-
-log = logging.getLogger(__name__)
 class PatternDiffException(Exception):
   pass
 
@@ -44,10 +40,7 @@ def remove_tag(data, tags_to_remove):
 
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
   """ This method will compare response with pattern file """
-  t_start = perf()
   sent_at = response.headers.get('Sent-At', None)
-  log.info("compare_response_with_pattern respose for {} sent at: {}".format(directory + "/" + method, sent_at))
-  log.info("compare_response_with_pattern for {} started at: {}".format(directory + "/" + method, datetime.now()))
 
   response_fname = directory + "/" + method + RESPONSE_FILE_EXT
   if os.path.exists(response_fname):
@@ -77,15 +70,12 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     raise PatternDiffException(msg)
 
   # disable coparison with pattern on demand
+  # and save 
   if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
-    now = datetime.now()
     if sent_at is not None:
       with open("benchmark.csv", 'a') as benchmark_file:
         writer = csv.writer(benchmark_file)
-        writer.writerow([directory + "/" + method, (now - parser.isoparse(sent_at)).total_seconds()])
-
-    log.info("compare_response_with_pattern for {} ended at: {}".format(directory + "/" + method, now))
-    log.info("comparing {} took {:4f}s".format(directory + "/" + method, perf() - t_start))
+        writer.writerow([directory + "/" + method, perf() - float(sent_at)])
     return
 
   import deepdiff
@@ -97,5 +87,3 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     save_json(response_fname, result)
     msg = "Differences detected between response and pattern."
     raise PatternDiffException(msg)
-  log.info("compare_response_with_pattern for {} ended at: {}".format(directory + "/" + method, datetime.now()))
-  log.info("comparing {} took {:4f}s".format(directory + "/" + method, perf() - t_start))
