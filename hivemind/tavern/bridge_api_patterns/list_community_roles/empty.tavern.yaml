@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.list_community_roles patterns test
+  test_name: Hivemind bridge_api.list_community_roles empty patterns test
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: list_community_roles
+    - name: list_community_roles empty
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.list_community_roles"
-          params: {"community":"hive-117600"}
+          params: {"community":"hive-123456"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "named_arg"
+            method: "empty"
             directory: "bridge_api_patterns/list_community_roles"

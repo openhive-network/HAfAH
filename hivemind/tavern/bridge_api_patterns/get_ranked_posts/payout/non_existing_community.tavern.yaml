@@ -2,8 +2,7 @@
   test_name: Hivemind bridge_api.get_ranked_posts payout community patterns test
 
   marks:
-    - patterntest # community exists but there is no posts related
-    # todo add mock with related post
+    - patterntest
 
   includes:
     - !include ../../../common.yaml
@@ -19,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_ranked_posts"
-          params: {"sort":"payout", "tag":"hive-117600", "limit":5}
+          params: {"sort":"payout", "tag":"hive-173493", "limit":5}
       response:
         status_code: 200
         verify_response_with:

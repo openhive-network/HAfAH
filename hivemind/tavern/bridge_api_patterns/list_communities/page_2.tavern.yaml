@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.list_communities patterns test
+  test_name: Hivemind bridge_api.list_communities patterns test page_2
       # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: list_communities
+    - name: list_communities page_2
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -19,12 +19,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.list_communities"
-          params: {"limit":1}
+          params: {"last": "hive-103459", "limit":100}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "one"
+            method: "page_2"
             directory: "bridge_api_patterns/list_communities"
             ignore_tags: ['admins'] # random order of admins
