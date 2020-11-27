@@ -73,6 +73,8 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
 
   # disable coparison with pattern on demand
   if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
+    log.warning("compare_response_with_pattern for {} ended at: {}".format(directory + "/" + method, datetime.now()))
+    log.warning("comparing {} took {:4f}s".format(directory + "/" + method, perf() - t_start))
     return
 
   import deepdiff
