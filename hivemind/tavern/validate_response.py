@@ -91,5 +91,5 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
 def get_headers():
   return {
     "content-type": "application/json",
-    "Sent-At" : perf()
+    "Sent-At" : str(perf())
   }
