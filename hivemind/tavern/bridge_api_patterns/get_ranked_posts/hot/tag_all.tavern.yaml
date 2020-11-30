@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_ranked_posts hot tag all limit 10 patterns test
+  test_name: Hivemind bridge_api.get_ranked_posts hot tag all patterns test
 
   marks:
     - patterntest
