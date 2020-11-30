@@ -40,7 +40,7 @@ def remove_tag(data, tags_to_remove):
 
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
   """ This method will compare response with pattern file """
-  received_at = response.headers.get('Received-At', None)
+  received_at = response.headers.get('Sent-At', None)
 
   response_fname = directory + "/" + method + RESPONSE_FILE_EXT
   if os.path.exists(response_fname):
@@ -87,3 +87,9 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     save_json(response_fname, result)
     msg = "Differences detected between response and pattern."
     raise PatternDiffException(msg)
+
+def get_headers():
+  return {
+    "content-type": "application/json",
+    "Sent-At" : perf()
+  }
