@@ -2,7 +2,8 @@
   test_name: Hivemind bridge_api.list_communities patterns test
       # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
-    - patterntest # no nonempty result possible for 5mln set
+    - patterntest
+    # Communities not implemented under 5 mln blocks, but some were created by mock mechanism, therefore they are in result.
 
   includes:
     - !include ../../common.yaml

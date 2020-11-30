@@ -2,64 +2,6 @@
   {
     "active_votes": [
       {
-        "rshares": 128594988,
-        "voter": "sergey44"
-      },
-      {
-        "rshares": 59129076,
-        "voter": "atle-v"
-      }
-    ],
-    "author": "atle-v",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 30.63,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<html>\n<h1>A beautiful day in September</h1>\n<p>We went for a Sunday picnic in the nice weather on September 4 and it was so beautiful that I would like to share some pictures and a video with you good Steemit people.</p>\n<p><img src=\"http://home.lyse.net/atlev/steemit/Artikkel%204/20160904_135701.jpg\"/></p>\n<p>September is the beginning of fall here and the days are getting shorter and colder, but there can be some very nice and warm days too and this was one of those days.</p>\n<p>Being from Budapest, Anita knows what warm is, and what she felt that Sunday, she said, she'd been missing all summer. When the warm air gently stroked her cheek, it reminded her of spring in Hungary.</p>\n<p>Karoline does not like the car seat very much, so we don\u2019t go very far. We drove about 16 km from our house to a place I used to spend a lot of time growing up. From where we parked the car to where we had our picnic, is just a small walk in very flat terrain. It was so peaceful and quiet; we could hear the small bells on the sheep, and a stream and the nice breeze.</p>\n<p>I apologieses for my heavy breathing that is audible in the video. I was filming and taking pictures with my phone.</p>\n</html>",
-    "category": "photography",
-    "children": 1,
-    "created": "2016-09-13T14:50:06",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "http://home.lyse.net/atlev/steemit/Artikkel%204/20160904_135701.jpg"
-      ],
-      "tags": [
-        "photography",
-        "life",
-        "picnic",
-        "family",
-        "beautiful"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 187724064,
-    "payout": 0.0,
-    "payout_at": "2016-09-20T14:50:06",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "sunday-picnic",
-    "post_id": 1232381,
-    "promoted": "0.000 HBD",
-    "reblogged_by": [
-      "test-safari"
-    ],
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 2
-    },
-    "title": "Sunday picnic",
-    "updated": "2016-09-14T12:19:21",
-    "url": "/photography/@atle-v/sunday-picnic"
-  },
-  {
-    "active_votes": [
-      {
         "rshares": 2233757397,
         "voter": "bitland"
       },
@@ -357,5 +299,150 @@
     "title": "Chop veggies like a ninja it's easy!!",
     "updated": "2016-09-08T19:36:39",
     "url": "/food/@meesterboom/chop-veggies-like-a-ninja-it-s-easy"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 27255267301,
+        "voter": "ratel"
+      },
+      {
+        "rshares": 581218698,
+        "voter": "svamiva"
+      },
+      {
+        "rshares": 2593410614,
+        "voter": "alexft"
+      },
+      {
+        "rshares": 9861245659,
+        "voter": "romait"
+      },
+      {
+        "rshares": 62887677303,
+        "voter": "lehard"
+      },
+      {
+        "rshares": 268840530,
+        "voter": "lexus083"
+      },
+      {
+        "rshares": 6413695158,
+        "voter": "smolalit"
+      },
+      {
+        "rshares": 361947925,
+        "voter": "kellywin21"
+      },
+      {
+        "rshares": 5576305202,
+        "voter": "sharker"
+      },
+      {
+        "rshares": 8902151171,
+        "voter": "fishborne"
+      },
+      {
+        "rshares": 18150655919,
+        "voter": "carlidos"
+      },
+      {
+        "rshares": 11194023167,
+        "voter": "crypto.owl"
+      },
+      {
+        "rshares": 231254136,
+        "voter": "alexbezimeni"
+      },
+      {
+        "rshares": 170287271,
+        "voter": "kibela"
+      },
+      {
+        "rshares": 123410225,
+        "voter": "ap2002"
+      },
+      {
+        "rshares": 982306236,
+        "voter": "fooblic"
+      },
+      {
+        "rshares": 58933010,
+        "voter": "sijoittaja"
+      },
+      {
+        "rshares": 62179775,
+        "voter": "evgenyche"
+      },
+      {
+        "rshares": 51510158,
+        "voter": "stanislav1"
+      },
+      {
+        "rshares": 3457634605,
+        "voter": "ekaterina4ka"
+      },
+      {
+        "rshares": 521560776,
+        "voter": "grisha-danunaher"
+      },
+      {
+        "rshares": 157466875,
+        "voter": "anyuta312"
+      },
+      {
+        "rshares": 159596355,
+        "voter": "irensche"
+      },
+      {
+        "rshares": 68971389,
+        "voter": "serikus"
+      }
+    ],
+    "author": "smolalit",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 50.83,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "Science too can be beautiful.\n>\u041d\u0430\u0443\u043a\u0430 \u0442\u043e\u0436\u0435 \u043c\u043e\u0436\u0435\u0442 \u0431\u044b\u0442\u044c \u043f\u0440\u0435\u043a\u0440\u0430\u0441\u043d\u043e\u0439.\n\n<center>![](https://ipfs.pics/ipfs/Qmdr3TXnYv86QkaCqPz7uHZurCAy2JPQfBeV3RY2iykPRy)</center>\n\n*performed by the author\n\u0430\u0432\u0442\u043e\u0440\u0441\u043a\u0438\u0439 \u0444\u0440\u0430\u043a\u0442\u0430\u043b*",
+    "category": "art",
+    "children": 5,
+    "created": "2016-09-08T19:12:18",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "https://ipfs.pics/ipfs/Qmdr3TXnYv86QkaCqPz7uHZurCAy2JPQfBeV3RY2iykPRy"
+      ],
+      "tags": [
+        "art",
+        "photography",
+        "science",
+        "ru"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 160091549458,
+    "payout": 0.058,
+    "payout_at": "2016-09-15T19:12:18",
+    "pending_payout_value": "0.058 HBD",
+    "percent_hbd": 10000,
+    "permlink": "simple-fractal-prostoi-fraktal",
+    "post_id": 1175622,
+    "promoted": "0.000 HBD",
+    "reblogged_by": [
+      "test-safari"
+    ],
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 24
+    },
+    "title": "Fractal - mood (\u0424\u0440\u0430\u043a\u0442\u0430\u043b-\u043d\u0430\u0441\u0442\u0440\u043e\u0435\u043d\u0438\u0435)",
+    "updated": "2016-09-08T19:32:18",
+    "url": "/art/@smolalit/simple-fractal-prostoi-fraktal"
   }
 ]
