@@ -1,0 +1,28 @@
+---
+  test_name: Hivemind block_api.get_block
+
+  marks:
+    - fullsynctest # slow call - 2.492s
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_block
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "block_api.get_block"
+          params: {'block_num': 36756964}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:has_valid_response
+          extra_kwargs:
+            method: "36756964"
+            directory: "block_api_patterns/get_block"
