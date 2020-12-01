@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.get_discussion prc
+  test_name: Hivemind bridge_api.get_discussion with observer muted author
 
   marks:
-    - fullsynctest # slow call - 2.324s
+    - fullsynctest
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.get_discussion prc
+    - name: bridge_api.get_discussion with observer muted author
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_discussion"
-          params: {'author': 'prc', 'permlink': 'introducing-dsound-a-decentralized-sound-platform-using-steem-and-ipfs'}
+          params: {"author": "mighty-panda", "permlink": "steem-monsters-kickstarter-pledge-usd85", "observer": "upmyvote"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "prc"
+            method: "observer_muted"
             directory: "bridge_api_patterns/get_discussion"
