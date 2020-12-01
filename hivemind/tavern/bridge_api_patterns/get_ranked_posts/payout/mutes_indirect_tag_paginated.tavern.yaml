@@ -18,11 +18,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_ranked_posts"
-          params: {"sort":"payout", "tag":"life","observer":"alice"}
+          params: {"sort":"payout", "tag":"life","observer":"alice","limit":3,
+                   "start_author":"susanne","start_permlink":"i-asked-35-people-what-they-were-afraid-of-and-here-s-what-they-answered"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "mutes_tag_indirect"
+            method: "mutes_indirect_tag_paginated"
             directory: "bridge_api_patterns/get_ranked_posts/payout"
