@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.list_communities patterns test
+  test_name: Hivemind bridge_api.get_community_context patterns test hive-186669 subscribed guest
       # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
   marks:
     - patterntest
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: list_communities
+    - name: get_community_context hive-186669 subscribed guest
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +18,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_communities"
-          params: {"limit":1}
+          method: "bridge.get_community_context"
+          params: {"name":"hive-186669", "account": "roadscape"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "one"
-            directory: "bridge_api_patterns/list_communities"
-            ignore_tags: ['admins'] # random order of admins
+            method: "hive-186669_subscribed_guest"
+            directory: "bridge_api_patterns/get_community_context"

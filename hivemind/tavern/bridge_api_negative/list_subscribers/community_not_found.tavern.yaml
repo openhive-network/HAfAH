@@ -1,14 +1,16 @@
 ---
-  test_name: Hivemind bridge_api.list_community_roles patterns test
+  test_name: bridge_api.list_subscribers community not found
 
   marks:
     - patterntest
+    - negative
+    - xfail # is there should be an error that community not exists?
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: list_community_roles
+    - name: bridge_api.list_subscribers community not found
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +19,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_community_roles"
-          params: {"community":"hive-117600"}
+          method: "bridge.list_subscribers"
+          params: {"community":"hive-197922"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "named_arg"
-            directory: "bridge_api_patterns/list_community_roles"
+            method: "community_not_found"
+            directory: "bridge_api_negative/list_subscribers"
+            error_response: true
