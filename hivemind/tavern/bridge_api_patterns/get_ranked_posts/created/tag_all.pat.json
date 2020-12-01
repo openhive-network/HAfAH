@@ -1,5 +1,785 @@
 [
   {
+    "active_votes": [],
+    "author": "blocktrades",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 68.63,
+    "author_role": "admin",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "only crocodiles 03",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:45",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:45",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "crocodile03",
+    "post_id": 1257952,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "powerful crocodile 03",
+    "updated": "2016-09-15T19:47:45",
+    "url": "/hive-135485/@blocktrades/crocodile03"
+  },
+  {
+    "active_votes": [],
+    "author": "blocktrades",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 68.63,
+    "author_role": "admin",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "only crocodiles 02",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:45",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:45",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "crocodile02",
+    "post_id": 1257951,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "powerful crocodile 02",
+    "updated": "2016-09-15T19:47:45",
+    "url": "/hive-135485/@blocktrades/crocodile02"
+  },
+  {
+    "active_votes": [],
+    "author": "blocktrades",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 68.63,
+    "author_role": "admin",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "only crocodiles 01",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:45",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:45",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "crocodile01",
+    "post_id": 1257950,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 0
+    },
+    "title": "powerful crocodile 01",
+    "updated": "2016-09-15T19:47:45",
+    "url": "/hive-135485/@blocktrades/crocodile01"
+  },
+  {
+    "active_votes": [],
+    "author": "good-karma",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 62.74,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "only spiders 02",
+    "category": "hive-117600",
+    "children": 0,
+    "created": "2016-09-15T19:47:42",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:42",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "spider02",
+    "post_id": 1257949,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "powerful spider 02",
+    "updated": "2016-09-15T19:47:42",
+    "url": "/hive-117600/@good-karma/spider02"
+  },
+  {
+    "active_votes": [],
+    "author": "good-karma",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 62.74,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "only spiders 01",
+    "category": "hive-117600",
+    "children": 0,
+    "created": "2016-09-15T19:47:42",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:42",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "spider01",
+    "post_id": 1257948,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "powerful spider 01",
+    "updated": "2016-09-15T19:47:42",
+    "url": "/hive-117600/@good-karma/spider01"
+  },
+  {
+    "active_votes": [],
+    "author": "abit",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 63.77,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "only snakes 02",
+    "category": "hive-117600",
+    "children": 0,
+    "created": "2016-09-15T19:47:39",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:39",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "anaconda02",
+    "post_id": 1257947,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "powerful snake 02",
+    "updated": "2016-09-15T19:47:39",
+    "url": "/hive-117600/@abit/anaconda02"
+  },
+  {
+    "active_votes": [],
+    "author": "abit",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 63.77,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "only snakes 01",
+    "category": "hive-117600",
+    "children": 0,
+    "created": "2016-09-15T19:47:39",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:39",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "anaconda01",
+    "post_id": 1257946,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "powerful snake 01",
+    "updated": "2016-09-15T19:47:39",
+    "url": "/hive-117600/@abit/anaconda01"
+  },
+  {
+    "active_votes": [],
+    "author": "test-safari",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "tell me secret 05",
+    "category": "hive-117600",
+    "children": 0,
+    "created": "2016-09-15T19:47:15",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:15",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "secrets5",
+    "post_id": 1257944,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "I love secrets 05",
+    "updated": "2016-09-15T19:47:15",
+    "url": "/hive-117600/@test-safari/secrets5"
+  },
+  {
+    "active_votes": [],
+    "author": "test-safari",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "tell me secret 04",
+    "category": "hive-117600",
+    "children": 0,
+    "created": "2016-09-15T19:47:15",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:15",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "secrets4",
+    "post_id": 1257943,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "I love secrets 04",
+    "updated": "2016-09-15T19:47:15",
+    "url": "/hive-117600/@test-safari/secrets4"
+  },
+  {
+    "active_votes": [],
+    "author": "test-safari",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "admin",
+    "author_title": "Bill Gates",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "tell me secret 02",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:15",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:15",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "secrets2",
+    "post_id": 1257941,
+    "promoted": "0.011 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 0
+    },
+    "title": "I love secrets 02",
+    "updated": "2016-09-15T19:47:15",
+    "url": "/hive-135485/@test-safari/secrets2"
+  },
+  {
+    "active_votes": [],
+    "author": "test-safari",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "author_role": "admin",
+    "author_title": "Bill Gates",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "tell me secret 01",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:15",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:15",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "secrets1",
+    "post_id": 1257940,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "total_votes": 0
+    },
+    "title": "I love secrets 01",
+    "updated": "2016-09-15T19:47:15",
+    "url": "/hive-135485/@test-safari/secrets1"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 155925481,
+        "voter": "szklaneczka"
+      }
+    ],
+    "author": "szklaneczka",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "**ICONOMI found management platform** is currently in ICO and you can still invest. \n\nThat is most anticipated platform of 2016 why You may ask me. I will give you some graph and explanation. Solutions like ICONOMI are very popular in old economy people want be rich and wanted get more profit so they tried give money to people who know more about trading. Found management platforms preforms much better than average investors. Big guys just want invest not day trading. In crypto ICOMI will be 1st such project - such needed project.\n\nNow true facts and everything that I show you, is now publicly available on web. Graphs taken from coinmarketcap.com are showing us, what is going on cryptocurrency markets right now:\n![](http://i.imgur.com/FLe0WeF.jpg) \n![](http://i.imgur.com/s6Aeke2.jpg) \n![](http://i.imgur.com/RX0JK1z.jpg) \n\nYou see on won eyes that: Bitcoin is loosing over time market share to other alt coins. There is many multiple reasons for that. Without ICONOMI getting on cryptocurrency board for new investors will be VERY hard. \nThat is:\n  \n- choose right one coin. \n- skip scams \n- buy valuable coins \n-  crypto markets are getting bigger and bigger all time, there is about over 700coins tradable now\n\n\nICONOMI will be platform that for **every investor looking for big profits**. \nICONOMI will give us 2 founds:\n\n- **The ICONOMI.INDEX FUND** - a \"Passive\" - Coin Traded Fund (CTF). This fund operates on special rules, variables that manage the fund through automation. This Found will be the fastest available to investors at launch in Q4 2016 - The ICONOMI.PERFORMANCE FUND - an \"\nActive\"\n- **Coin Managed Fund (CMF)**, Operated by and managed by best investors. This fund will be invitation only available. If you invest in ICO you will get you invitation for free. I bet is worth its price. Those found will be carefully managed by ICONOMI experts and will provide best profits available.\n\nGraphs shows that volume of alt coins is rising heavily and will move up. Without ICONOMI founds many investors will probably lose cash on market, while rypto currency market will rise as whole. **If buy some ICO shares you will get dividends forever as share holder.**\n Soon real professional traders will come to cryptocurrency and you as investor in order to get big profits will have to use service of ICONOMI. \n\nPersonally I have invested in ICO and believe that **ICONOMI is future of crypto trading**. Don't miss a chance and invest here:[ico.iconomi.net](ico.iconomi.net) \n\nIf you want invest in ICO: ![](http://i.imgur.com/iqDpTag.png) \n\nOfficial Links:\n \n- [ico.iconomi.net](ico.iconomi.net \"Main site\") \n- [https://www.facebook.com/iconomi.net/](https://www.facebook.com/iconomi.net/ \"Facebook\") \n- [https://twitter.com/iconominet](https://twitter.com/iconominet\"twitter.com\")\n- [https://www.linkedin.com/company/iconomi-the-financial-services-for-decentralised-economy/](https://www.linkedin.com/company/iconomi-the-financial-services-for-decentralised-economy/) \n- [https://telegram.me/iconomi](https://telegram.me/iconomi)\n- [https://medium.com/iconominet](https://medium.com/iconominet)\n- [https://iconominet.herokuapp.com](https://iconominet.herokuapp.com)",
+    "category": "cryptocurrency",
+    "children": 0,
+    "created": "2016-09-15T19:47:00",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://i.imgur.com/FLe0WeF.jpg",
+        "http://i.imgur.com/s6Aeke2.jpg",
+        "http://i.imgur.com/RX0JK1z.jpg",
+        "http://i.imgur.com/iqDpTag.png"
+      ],
+      "links": [
+        "ico.iconomi.net",
+        "https://www.facebook.com/iconomi.net/",
+        "https://twitter.com/iconominet\"twitter.com\"",
+        "https://www.linkedin.com/company/iconomi-the-financial-services-for-decentralised-economy/",
+        "https://telegram.me/iconomi",
+        "https://medium.com/iconominet",
+        "https://iconominet.herokuapp.com"
+      ],
+      "tags": [
+        "cryptocurrency",
+        "bitcoin",
+        "profit",
+        "altcoin"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 155925481,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:00",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "iconomi-why-we-need-found-management-explained-on-graphs",
+    "post_id": 1257938,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 1
+    },
+    "title": "ICONOMI - why we need found management explained on graphs.",
+    "updated": "2016-09-15T19:47:00",
+    "url": "/cryptocurrency/@szklaneczka/iconomi-why-we-need-found-management-explained-on-graphs"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 3377256926,
+        "voter": "anton333"
+      }
+    ],
+    "author": "anton333",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 54.81,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<html>\n<h2>Model of Skeleton hands,without scissors and glue.</h2>\n<a href='https://postimg.org/image/byivq2oqt/' target='_blank'><img src='https://s18.postimg.org/fi4tfvrgp/image.jpg' border='0' alt='1'/><br /><a target='_blank' href='https://postimage.org/index.php?lang=russian'></a><br /><br />\n<a href='https://postimg.org/image/ivepluv0b/' target='_blank'><img src='https://s9.postimg.org/kn7ogredb/image.jpg' border='0' alt='2'/><br /><a target='_blank' href='https://postimage.org/index.php?lang=russian'></a><br /><br />\n\n<p><br></p>\n<h2>I need a piece of paper.</h2>\n<a href='https://postimg.org/image/efv1n0qmt/' target='_blank'><img src='https://s10.postimg.org/nnna3pxp5/image.jpg' border='0' alt='3'/><br /><a target='_blank' href='https://postimage.org/index.php?lang=russian'></a><br /><br />\n<a href='https://postimg.org/image/u9lgfmvnt/' target='_blank'><img src='https://s12.postimg.org/dltyd50wd/image.jpg' border='0' alt='4'/><br /><a target='_blank' href='https://postimage.org/index.php?lang=russian'></a><br /><br />\n<a href='https://postimg.org/image/gzhee9knd/' target='_blank'><img src='https://s12.postimg.org/qwsf7bs99/image.jpg' border='0' alt='5'/><br /><a target='_blank' href='https://postimage.org/index.php?lang=russian'></a><br /><br />\n<a href='https://postimg.org/image/gwtumvm6n/' target='_blank'><img src='https://s3.postimg.org/7p1m66f4j/image.jpg' border='0' alt='6'/><br /><a target='_blank' href='https://postimage.org/index.php?lang=russian'></a><br /><br />\n<a href='https://postimg.org/image/55ifcrhhp/' target='_blank'><img src='https://s22.postimg.org/4388u7yoh/image.jpg' border='0' alt='7'/><br /><a target='_blank' href='https://postimage.org/index.php?lang=russian'></a><br /><br />\n<a href='https://postimg.org/image/4cbh56p1p/' target='_blank'><img src='https://s14.postimg.org/qo99yko5t/image.jpg' border='0' alt='1'/><br /><a target='_blank' href='https://postimage.org/index.php?lang=russian'></a><br /><br />\n<h2><a href=\"https://steemit.com/art/@anton333/origami-start-with-the-simplest\">Part 1</a> <a href=\"https://steemit.com/art/@anton333/origami-part-two-do-a-swan\">Part 2 </a><a href=\"https://steemit.com/art/@anton333/origami-part-3-the-model-of-a-mouse\">Part 3 </a><a href=\"https://steemit.com/art/@anton333/origami-part-4-the-model-of-a-rose-petals\">Part4 </a><a href=\"https://steemit.com/art/@anton333/origami-part-5-the-model-of-master-yoda\">Part5 </a><a href=\"https://steemit.com/art/@anton333/origami-part-6-the-model-of-eagle\">Part6 </a><a href=\"https://steemit.com/art/@anton333/origami-part-7-the-model-of-dagger\">Part7 </a><a href=\"https://steemit.com/art/@anton333/origami-part-8-the-model-of-spider\">Part8 </a><a href=\"https://steemit.com/art/@anton333/origami-part-9-the-model-of-tooth\">Part9 </a><a href=\"https://steemit.com/art/@anton333/origami-part-10-the-model-of-flower\">Part10</a></h2>\n</html>",
+    "category": "art",
+    "children": 0,
+    "created": "2016-09-15T19:46:30",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "https://s18.postimg.org/fi4tfvrgp/image.jpg",
+        "https://s9.postimg.org/kn7ogredb/image.jpg",
+        "https://s10.postimg.org/nnna3pxp5/image.jpg",
+        "https://s12.postimg.org/dltyd50wd/image.jpg",
+        "https://s12.postimg.org/qwsf7bs99/image.jpg",
+        "https://s3.postimg.org/7p1m66f4j/image.jpg",
+        "https://s22.postimg.org/4388u7yoh/image.jpg",
+        "https://s14.postimg.org/qo99yko5t/image.jpg"
+      ],
+      "links": [
+        "https://postimg.org/image/byivq2oqt/",
+        "https://postimage.org/index.php?lang=russian",
+        "https://postimg.org/image/ivepluv0b/",
+        "https://postimg.org/image/efv1n0qmt/",
+        "https://postimg.org/image/u9lgfmvnt/",
+        "https://postimg.org/image/gzhee9knd/",
+        "https://postimg.org/image/gwtumvm6n/",
+        "https://postimg.org/image/55ifcrhhp/",
+        "https://postimg.org/image/4cbh56p1p/",
+        "https://steemit.com/art/@anton333/origami-start-with-the-simplest",
+        "https://steemit.com/art/@anton333/origami-part-two-do-a-swan",
+        "https://steemit.com/art/@anton333/origami-part-3-the-model-of-a-mouse",
+        "https://steemit.com/art/@anton333/origami-part-4-the-model-of-a-rose-petals",
+        "https://steemit.com/art/@anton333/origami-part-5-the-model-of-master-yoda",
+        "https://steemit.com/art/@anton333/origami-part-6-the-model-of-eagle",
+        "https://steemit.com/art/@anton333/origami-part-7-the-model-of-dagger",
+        "https://steemit.com/art/@anton333/origami-part-8-the-model-of-spider",
+        "https://steemit.com/art/@anton333/origami-part-9-the-model-of-tooth",
+        "https://steemit.com/art/@anton333/origami-part-10-the-model-of-flower"
+      ],
+      "tags": [
+        "art",
+        "photography",
+        "origami"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 3377256926,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:46:30",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "origami-part-11-the-model-of-skeleton-hands",
+    "post_id": 1257931,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 1
+    },
+    "title": "Origami Part 11, the model of Skeleton hands.",
+    "updated": "2016-09-15T19:46:30",
+    "url": "/art/@anton333/origami-part-11-the-model-of-skeleton-hands"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 151513711,
+        "voter": "newsfeed"
+      }
+    ],
+    "author": "newsfeed",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 36.03,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "The Texas Rangers are 33-10 (.767) in one-run games this season. This would stand as a modern record for winning percentage in one-run games, besting the 2012 Orioles, who were 29-9 (.763).\n\n<h1><center>http://images.performgroup.com/di/library/sporting_news/a3/fa/texasrangers-getty-ftr-091516jpg_9u1oo1fjvsue1twr2494i9qcn.jpg?t=766994815</center></h1>\n\nBut if we dig deep into the archives of baseball history, we learn that this is actually the best record since the 1890 Brooklyn Bridegrooms, who were 14-4 (.778) in one-run games en route to an overall 86-43 (.667) record and the National League pennant.\n\n**Source / Read More...** <a href='http://www.sportingnews.com/mlb/news/texas-rangers-record-in-one-run-games-brooklyn-bridegrooms/irlcvzvv8fui1vgogevkmomch\n'>sportingnews.com</a> \n\n<hr>\n\n<center><img src='https://ipfs.pics/ipfs/QmUo1EuVPSs3prLRdJH95Lg97vyvzSfhH6srZH5bqRh7p6'></center>\n\n**NEWS FEED** \n*Get the latest headlines from around the world right on your Steemit Feed! With @newsfeed you always stay in the know about all sorts of topics ranging from Politics & Finance to Sports*\n\n**Currently In Beta**\n*Full news feed from hand picked creditable sources from all sides of the political and social realm. Although not fully operational, posts will be random while testing BUT do have real headlines!*",
+    "category": "newsfeed",
+    "children": 0,
+    "created": "2016-09-15T19:46:30",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://images.performgroup.com/di/library/sporting_news/a3/fa/texasrangers-getty-ftr-091516jpg_9u1oo1fjvsue1twr2494i9qcn.jpg?t=766994815",
+        "https://ipfs.pics/ipfs/QmUo1EuVPSs3prLRdJH95Lg97vyvzSfhH6srZH5bqRh7p6"
+      ],
+      "links": [
+        "http://www.sportingnews.com/mlb/news/texas-rangers-record-in-one-run-games-brooklyn-bridegrooms/irlcvzvv8fui1vgogevkmomch\n"
+      ],
+      "tags": [
+        "newsfeed",
+        "news",
+        "sports",
+        "rangers",
+        "baseball"
+      ],
+      "users": [
+        "newsfeed"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 151513711,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:46:30",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 0,
+    "permlink": "rangers-record-in-one-run-games-nearing-truly-historic-level",
+    "post_id": 1257930,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 1
+    },
+    "title": "Rangers' record in one-run games nearing truly historic level",
+    "updated": "2016-09-15T19:46:30",
+    "url": "/newsfeed/@newsfeed/rangers-record-in-one-run-games-nearing-truly-historic-level"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 64358062,
+        "voter": "agartha"
+      }
+    ],
+    "author": "agartha",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25.0,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "I think I just hacked Monero lol it's a joke but the security too thou \n\nLook at this! \n\n\nhttps://www.facebook.com/agartha.white.3/posts/179267779175393",
+    "category": "steemit",
+    "children": 0,
+    "created": "2016-09-15T19:44:00",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "links": [
+        "https://www.facebook.com/agartha.white.3/posts/179267779175393"
+      ],
+      "tags": [
+        "steemit",
+        "hack",
+        "monero",
+        "bitcoin",
+        "lol"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 64358062,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:44:00",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "i-hack-monero-xmr",
+    "post_id": 1257912,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 1
+    },
+    "title": "I hack Monero (Xmr) ?",
+    "updated": "2016-09-15T19:44:00",
+    "url": "/steemit/@agartha/i-hack-monero-xmr"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 1202120459,
+        "voter": "varda"
+      }
+    ],
+    "author": "varda",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 50.73,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<html>\n<p>&nbsp;&nbsp;In the morning, at 5 am when the moon completes his round, the alarm rings, my deepest sleep I wake up painfully. K\u00e9ops my cat starts singing tour and stops only when he filled his mess tin. Sweety then, the cat of my son jumps on the furniture in the kitchen and also claimed his bowl. Kashmir him not to come after me, until I make him hugs.</p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/DSCN0477faad0.jpg\" width=\"2758\" height=\"2736\"/></p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/keops0029612b.jpg\" width=\"1464\" height=\"1162\"/></p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/Au-sommet81f7b.jpg\" width=\"731\" height=\"645\"/></p>\n<p>&nbsp;A small cup of coffee and I'm up for the day. After my shower, I have to feed the fish pond and two hens, they are waiting for me impatiently for me to release them from their cages.</p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/16e3c4.jpg\" width=\"620\" height=\"464\"/></p>\n<p><br></p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/Photo0224b24a.jpg\" width=\"2048\" height=\"1536\"/></p>\n<p><br></p>\n<p>&nbsp;6:15, I start my bag on her arm, my water bottle and my biscuit for lunch. On the road I am alone, few vehicles I meet. Great to run your car on a deserted road. In the winter when it snowed, I am the first to make tracks in the whiteness of the snow grows like cotton wool, sometimes, crazy beyond me and skids, it is an adrenaline rush. In summer the sun rises gives the sky a color of red sweetness, yellow, orange. In autumn, the trees begin to change color, it is a season because I love the beauty of trees is unique.&nbsp;</p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/d85917d4a45b3d581b5f40d1d7a7504a3bb1e.jpg\" width=\"236\" height=\"234\"/></p>\n<p><br></p>\n<p>Here I come down the street or is my workplace, hospital, regional hospital, the CHR. Vehicles coming after one another because we start at 7am. The staff is found, speak, tells their evening then everyone goes to the same place: the time clock, control object of our hours worked.</p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/chr841bd.jpg\" width=\"916\" height=\"613\"/></p>\n<p><br></p>\n<p>&nbsp;In the ladies locker room, it gets held: white jacket with blue and green patterns representing the logo of the institution, blue pants with various pockets which we do not serve!&nbsp;</p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/DSCN1513-Copiee7a4d.jpg\" width=\"410\" height=\"681\"/></p>\n<p><br></p>\n<p>We arrive in our service, mine is the neurological rehabilitation service: we give up (or so) of people who have a stroke, an accident with neurological trauma, people who have multiple sclerosis or Guillain barred and other chronic diseases whose name is almost unknown.&nbsp;</p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/Capture2bb0b8.jpg\" width=\"539\" height=\"627\"/></p>\n<p><br></p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/370086-1f7d83.jpg\" width=\"325\" height=\"300\"/></p>\n<p><br></p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/Capturec0ccc.jpg\" width=\"589\" height=\"598\"/></p>\n<p><br></p>\n<p>We start our day with a report on each patient last night, we have 20 in service. After beginning the nursing: we make the toilet of the patient who is totally dependent. We get up in the chair. For others, we must educate, continue the actions he has learned with the therapist in the individual care, the patient should regain maximum independence so they can go home and take care only . It's a job that can last from 3 months to 6 months beyond, we can not do anything for them.&nbsp;</p>\n<p><img src=\"https://www.steemimg.com/images/2016/09/15/souleve-malade-foldyadb08.jpg\" width=\"480\" height=\"640\"/></p>\n<p><br></p>\n<p>Headline in this service is: you come to bed but you leave again walking.&nbsp;</p>\n<p><br></p>\n<p>Sometimes, we fail either because the patient does not want a return to autonomy, or because the patient is too ill. We give the same chance to everyone, rich, poor, alcoholic, drug addict, young or old.&nbsp;</p>\n<p><br></p>\n<p>The management of a patient goes from shaving the beard of a man to the presentation on the toilet, the room arrangement the carefully tended beds.&nbsp;</p>\n<p><br></p>\n<p>Lunch arrived around 8:30 am, few patient is in the dining hall for breakfast, other unfinished eat in bed Logistical assistance serves meals that are different if the patient is diabetic, diet, dieters, old, or in solid supply resumption. You should know that when the patient has had a stroke, a stroke, swallowing is absent, which means that if the patient eats a sandwich, but he swallows the bread goes in the bronchial tubes and not in the stomach, giving a false swallowing, bronchi become infected and it's a disaster. So this patient who made false swallowing should eat while cream consistency and drink thickened liquid. Which is not very good but I admit it must go through these stages in order to re-eat a day normally.&nbsp;</p>\n<p><br></p>\n<p>Physiotherapists arrive at 9am and leave a 17h, occupational therapists also. There is also a neuropsychologist, a speech therapist and all do work that allows the patient to regain maximum independence, which means that the patient all day is busy. Visitors can come between 14:30 and 19:30.&nbsp;</p>\n<p><br></p>\n<p>After lunch, we continue our work, when all is well, we finish around 10:30 or 11am but sometimes it is noon we are still in the rooms.&nbsp;</p>\n<p><br></p>\n<p>In terms of handling, the entry of the patient, it is usually in bed or in a wheelchair with a right hemiplegia or left, some have forgotten that they had half a disabled body, so it must withstand and no wear and show him how to do with one leg to go from wheelchair to bed and vice versa. Others are completely invalid, they know not move neither arms nor legs, and for those, or we wear them either we lift them with a forklift.&nbsp;</p>\n<p><br></p>\n<p>During dinner, we feed the disabled and we encode our care in the computer.</p>\n<p><br></p>\n<p>&nbsp;Around 13h, we are a few naps after going on the toilet. Sometimes we have a problem in the pants, oops! When everyone is changed to bed, we have a service change ratio and the time, the hour of the end of our service is lagging. At 14h is the start of the morning shift. For my part, I take a good shower and I take the way home or waiting for my cats and my dog makes me a big party.&nbsp;</p>\n<p><br></p>\n<p>We must not believe that the nursing profession is simple, each service is different and you can not compare the care of each other.&nbsp;</p>\n<p><br></p>\n<p>I hope I have not bothered you with this long text, I wish you a good day to you all. &nbsp;&nbsp;&nbsp;&nbsp;</p>\n</html>",
+    "category": "story",
+    "children": 0,
+    "created": "2016-09-15T19:43:54",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "https://www.steemimg.com/images/2016/09/15/DSCN0477faad0.jpg",
+        "https://www.steemimg.com/images/2016/09/15/keops0029612b.jpg",
+        "https://www.steemimg.com/images/2016/09/15/Au-sommet81f7b.jpg",
+        "https://www.steemimg.com/images/2016/09/15/16e3c4.jpg",
+        "https://www.steemimg.com/images/2016/09/15/Photo0224b24a.jpg",
+        "https://www.steemimg.com/images/2016/09/15/d85917d4a45b3d581b5f40d1d7a7504a3bb1e.jpg",
+        "https://www.steemimg.com/images/2016/09/15/chr841bd.jpg",
+        "https://www.steemimg.com/images/2016/09/15/DSCN1513-Copiee7a4d.jpg",
+        "https://www.steemimg.com/images/2016/09/15/Capture2bb0b8.jpg",
+        "https://www.steemimg.com/images/2016/09/15/370086-1f7d83.jpg",
+        "https://www.steemimg.com/images/2016/09/15/Capturec0ccc.jpg",
+        "https://www.steemimg.com/images/2016/09/15/souleve-malade-foldyadb08.jpg"
+      ],
+      "tags": [
+        "story",
+        "health"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 1202120459,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:43:54",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "my-day-hospital",
+    "post_id": 1257908,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 1
+    },
+    "title": "My day hospital",
+    "updated": "2016-09-15T19:43:54",
+    "url": "/story/@varda/my-day-hospital"
+  },
+  {
+    "active_votes": [
+      {
+        "rshares": 54846770,
+        "voter": "ejaredallen"
+      }
+    ],
+    "author": "ejaredallen",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 31.81,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<html>\n<p><img src=\"http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/image-986x1024-289x300.jpeg\"/></p>\n<h1>Nature</h1>\n<p>I haven't stopped and taken a picture of the beauty around me in a long time. It's funny how we can get so caught up in work and the business of a crazy life and miss the simply beauty along the way. Sometime you've just got to stop and smell the roses; and while you're there, take a picture!</p>\n<p><img src=\"http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/image-3-1024x768-300x225.jpeg\"/></p>\n<p>These aren't roses, I know: they're wild flowers. They don't get the nurture and care that roses do, and yet they are provided for and they bloom into beautiful blossoms in their own time. They have a harder life than others, and that's how we humans are as well. Some of us were well taken care of growing up and were treated like roses, while others were left in the field to grow up alone and without the love and care we should have had. But we are all beautiful in our own ways and if we survive long enough, we will blossom into something spectacular.</p>\n<p><img src=\"http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/img_6440-1024x1024-300x300.jpg\"/></p>\n<h2>Colorado mountain rivers</h2>\n<p>When the snow on the tops of the mountains melt, it feed the rushing rivers that carve their way down the mountainside. The climbing is excellent, the whether and the views are truly gorgeous, but something about the rivers rushing through the mountains draws you in. There is a memorization about the brave rivers unafraid of the mountains and simply rushing on by recklessly.</p>\n<p><img src=\"http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/img_6031-1024x1024-300x300.jpg\"/></p>\n<h2>Mississippi at sunset</h2>\n<p>Sometimes the world just slows down and magic happens. This was one of those times. On the night before my sister's wedding in Tupelo, Mississippi the sky exploded in color. What a calm reassurance before a monumental event: the approval stamp of God upon the sanction of their marriage.</p>\n<p><img src=\"http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/img_5829-1024x1024-300x300.jpg\"/></p>\n<h2>Hundreds of years old Indian hieroglyphs in Arizona</h2>\n<p>This was an incredible hike in the Arizona mountain ranges to discover a place where the Apache Indians, or perhaps some other tribe had lived hundreds of years ago!</p>\n<p><img src=\"http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/2015-07-13-06-37-59-1024x1024-300x300.jpg\"/></p>\n<h2>Uganda, Africa at twilight, from a moving bus</h2>\n<p>Africa is always an adventure, but in 2015 we took a safari on the northern rim and caught this shot on the way back to the lodge. I love how the beauty of the world is unique in its diversity from place to place, even across the Atlantic.</p>\n<p><img src=\"http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/img_7281-1024x1024-300x300.jpg\"/></p>\n<p>This is one of my favorite shots. I don't remember where I took it or when, but the colors, the bliss, the peacefulness of this field of flowers was stunning. I'm glad I was able to capture an image of its beauty to remember it by. And to think, all of this beauty was made by God in a second! His power to create a world is amazing and perfect in every way. We get to see His marvelous creation every day!&nbsp;</p>\n<h2>Follow me <a href=\"https://steemit.com/@ejaredallen\">@ejaredallen </a>for more pictures and great content!</h2>\n</html>",
+    "category": "photography",
+    "children": 0,
+    "created": "2016-09-15T19:42:24",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/image-986x1024-289x300.jpeg",
+        "http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/image-3-1024x768-300x225.jpeg",
+        "http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/img_6440-1024x1024-300x300.jpg",
+        "http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/img_6031-1024x1024-300x300.jpg",
+        "http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/img_5829-1024x1024-300x300.jpg",
+        "http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/2015-07-13-06-37-59-1024x1024-300x300.jpg",
+        "http://www.theanonymousnovelist.com/wp-content/uploads/2016/09/img_7281-1024x1024-300x300.jpg"
+      ],
+      "links": [
+        "https://steemit.com/@ejaredallen"
+      ],
+      "tags": [
+        "photography",
+        "pictures",
+        "art",
+        "steemit",
+        "travel"
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 54846770,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:42:24",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "wanna-see-something-cool",
+    "post_id": 1257893,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 1
+    },
+    "title": "Shot From Around The Block On An iPhone!",
+    "updated": "2016-09-15T19:43:33",
+    "url": "/photography/@ejaredallen/wanna-see-something-cool"
+  },
+  {
     "active_votes": [
       {
         "rshares": 1979857275,
@@ -255,952 +1035,5 @@
     "title": "So, Uh... Vape Tricks Are Cool Now?",
     "updated": "2016-09-15T19:40:36",
     "url": "/art/@blend/so-uh-vape-tricks-are-cool-now"
-  },
-  {
-    "active_votes": [],
-    "author": "philanthropest",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 29.41,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<html>\n<p>James Comey -the Director of the FBI - puts tape over his personal laptop camera and webcams. &nbsp;</p>\n<p>I'm not crazy for having masking tape over my camera...I'm not alone....</p>\n<p>https://www.youtube.com/watch?v=y02aBfNT8n4</p>\n<p>WHY AREN'T PEOPLE MORE CONCERNED ABOUT BEING LISTENED TO...YES, IT IS INVASIVE TO KNOW YOU ARE BEING WATCHED, BUT....</p>\n<ul>\n  <li>People SAY more revealing and interesting stuff than they DO....so, I would much rather be a blind fly on the wall than deaf. &nbsp;</li>\n</ul>\n<h1><strong>AS IF THEY AREN'T LISTENING</strong> TO YOU/ME....IF THEY ARE WATCHING...THEY ARE OBVIOUSLY LISTENING</h1>\n</html>",
-    "category": "freedom",
-    "children": 0,
-    "created": "2016-09-15T19:40:21",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://img.youtube.com/vi/y02aBfNT8n4/0.jpg"
-      ],
-      "links": [
-        "https://www.youtube.com/watch?v=y02aBfNT8n4"
-      ],
-      "tags": [
-        "freedom",
-        "anarchy",
-        "steem",
-        "life",
-        ""
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:40:21",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "cover-your-laptop-and-phone-camera-comey-dir-of-the-fbi-does",
-    "post_id": 1257871,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 0
-    },
-    "title": "COVER YOUR LAPTOP -and phone- CAMERA -   Comey;  DIR OF THE FBI DOES",
-    "updated": "2016-09-15T19:42:36",
-    "url": "/freedom/@philanthropest/cover-your-laptop-and-phone-camera-comey-dir-of-the-fbi-does"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 231815399848,
-        "voter": "anonymous"
-      },
-      {
-        "rshares": 1856124515188,
-        "voter": "badassmother"
-      },
-      {
-        "rshares": 1950776472028,
-        "voter": "xeroc"
-      },
-      {
-        "rshares": 466189427281,
-        "voter": "recursive2"
-      },
-      {
-        "rshares": 440845842,
-        "voter": "lee2"
-      },
-      {
-        "rshares": 26932369613,
-        "voter": "lee3"
-      },
-      {
-        "rshares": 8677356665,
-        "voter": "lee4"
-      },
-      {
-        "rshares": 22149156424,
-        "voter": "lee5"
-      },
-      {
-        "rshares": 24694558802,
-        "voter": "fkn"
-      },
-      {
-        "rshares": 468295495,
-        "voter": "paco-steem"
-      },
-      {
-        "rshares": 5641891453,
-        "voter": "spaninv"
-      },
-      {
-        "rshares": 31733693573,
-        "voter": "instructor2121"
-      },
-      {
-        "rshares": 319978787382,
-        "voter": "teamsteem"
-      },
-      {
-        "rshares": 32459455171,
-        "voter": "elishagh1"
-      },
-      {
-        "rshares": 584301957019,
-        "voter": "nanzo-scoop"
-      },
-      {
-        "rshares": 183455862202,
-        "voter": "steve-walschot"
-      },
-      {
-        "rshares": 177422979921,
-        "voter": "mummyimperfect"
-      },
-      {
-        "rshares": 1061309796,
-        "voter": "murh"
-      },
-      {
-        "rshares": 40553528416,
-        "voter": "ranko-k"
-      },
-      {
-        "rshares": 970610699889,
-        "voter": "cyber"
-      },
-      {
-        "rshares": 49581638772,
-        "voter": "ak2020"
-      },
-      {
-        "rshares": 61303208719,
-        "voter": "justtryme90"
-      },
-      {
-        "rshares": 35244223389,
-        "voter": "drinkzya"
-      },
-      {
-        "rshares": 3848697023555,
-        "voter": "satoshifund"
-      },
-      {
-        "rshares": 365370465,
-        "voter": "stiletto"
-      },
-      {
-        "rshares": 55960464168,
-        "voter": "thecryptodrive"
-      },
-      {
-        "rshares": 275083790158,
-        "voter": "trogdor"
-      },
-      {
-        "rshares": 5047565689,
-        "voter": "tee-em"
-      },
-      {
-        "rshares": 31346657524,
-        "voter": "michaelx"
-      },
-      {
-        "rshares": 203028922423,
-        "voter": "kimziv"
-      },
-      {
-        "rshares": 45359587433,
-        "voter": "honeythief"
-      },
-      {
-        "rshares": 75335893384,
-        "voter": "emily-cook"
-      },
-      {
-        "rshares": 34073741916,
-        "voter": "cryptoiskey"
-      },
-      {
-        "rshares": 484636799,
-        "voter": "mrhankeh"
-      },
-      {
-        "rshares": 36267999733,
-        "voter": "clement"
-      },
-      {
-        "rshares": 49807514764,
-        "voter": "isteemit"
-      },
-      {
-        "rshares": 68450624110,
-        "voter": "bacchist"
-      },
-      {
-        "rshares": 52094130602,
-        "voter": "venuspcs"
-      },
-      {
-        "rshares": 462747522217,
-        "voter": "roelandp"
-      },
-      {
-        "rshares": 5271256317,
-        "voter": "riscadox"
-      },
-      {
-        "rshares": 118094280271,
-        "voter": "furion"
-      },
-      {
-        "rshares": 578386960,
-        "voter": "barbara2"
-      },
-      {
-        "rshares": 642869652,
-        "voter": "ch0c0latechip"
-      },
-      {
-        "rshares": 594982040,
-        "voter": "doge4lyf"
-      },
-      {
-        "rshares": 14886225123,
-        "voter": "ausbitbank"
-      },
-      {
-        "rshares": 2531219186,
-        "voter": "steem1653"
-      },
-      {
-        "rshares": 185306737687,
-        "voter": "anyx"
-      },
-      {
-        "rshares": 80777327,
-        "voter": "snowden"
-      },
-      {
-        "rshares": 5250267854,
-        "voter": "thegoodguy"
-      },
-      {
-        "rshares": 13847065167,
-        "voter": "aaseb"
-      },
-      {
-        "rshares": 4209550858,
-        "voter": "karen13"
-      },
-      {
-        "rshares": 89580632,
-        "voter": "wildchild"
-      },
-      {
-        "rshares": 14455781997,
-        "voter": "nippel66"
-      },
-      {
-        "rshares": 4428694472,
-        "voter": "poseidon"
-      },
-      {
-        "rshares": 3709674578,
-        "voter": "bitcoiner"
-      },
-      {
-        "rshares": 30989849211,
-        "voter": "zaebars"
-      },
-      {
-        "rshares": 20026634941,
-        "voter": "positive"
-      },
-      {
-        "rshares": 799615699,
-        "voter": "raymonjohnstone"
-      },
-      {
-        "rshares": 50626015,
-        "voter": "steemchain"
-      },
-      {
-        "rshares": 34310997040,
-        "voter": "sisterholics"
-      },
-      {
-        "rshares": 4150694741,
-        "voter": "tygergamer"
-      },
-      {
-        "rshares": 674282213,
-        "voter": "fnait"
-      },
-      {
-        "rshares": 599033376,
-        "voter": "keepcalmand"
-      },
-      {
-        "rshares": 21249911268,
-        "voter": "sisters"
-      },
-      {
-        "rshares": 135241026997,
-        "voter": "steemdrive"
-      },
-      {
-        "rshares": 50580942653,
-        "voter": "gomeravibz"
-      },
-      {
-        "rshares": 2157263872,
-        "voter": "merej99"
-      },
-      {
-        "rshares": 1181429894047,
-        "voter": "laonie"
-      },
-      {
-        "rshares": 22969530313,
-        "voter": "laonie1"
-      },
-      {
-        "rshares": 23486336661,
-        "voter": "laonie2"
-      },
-      {
-        "rshares": 23494631758,
-        "voter": "laonie3"
-      },
-      {
-        "rshares": 41308723727,
-        "voter": "myfirst"
-      },
-      {
-        "rshares": 246291037911,
-        "voter": "somebody"
-      },
-      {
-        "rshares": 9208584487,
-        "voter": "flysaga"
-      },
-      {
-        "rshares": 5831884826,
-        "voter": "brendio"
-      },
-      {
-        "rshares": 54407421509,
-        "voter": "midnightoil"
-      },
-      {
-        "rshares": 4190432650,
-        "voter": "ullikume"
-      },
-      {
-        "rshares": 538023492,
-        "voter": "marinaz"
-      },
-      {
-        "rshares": 50577648,
-        "voter": "michellek"
-      },
-      {
-        "rshares": 23490308796,
-        "voter": "laonie4"
-      },
-      {
-        "rshares": 23488038283,
-        "voter": "laonie5"
-      },
-      {
-        "rshares": 23485060556,
-        "voter": "laonie6"
-      },
-      {
-        "rshares": 23480907119,
-        "voter": "laonie7"
-      },
-      {
-        "rshares": 3157899297,
-        "voter": "kurtbeil"
-      },
-      {
-        "rshares": 23477459041,
-        "voter": "laonie8"
-      },
-      {
-        "rshares": 23474757706,
-        "voter": "laonie9"
-      },
-      {
-        "rshares": 2370331931,
-        "voter": "steemleak"
-      },
-      {
-        "rshares": 136086029693,
-        "voter": "xiaohui"
-      },
-      {
-        "rshares": 88206053,
-        "voter": "bigsambucca"
-      },
-      {
-        "rshares": 6630568148,
-        "voter": "elfkitchen"
-      },
-      {
-        "rshares": 99940391922,
-        "voter": "joele"
-      },
-      {
-        "rshares": 2354334523,
-        "voter": "paynode"
-      },
-      {
-        "rshares": 4254379739,
-        "voter": "xiaokongcom"
-      },
-      {
-        "rshares": 8576106418,
-        "voter": "xianjun"
-      },
-      {
-        "rshares": 72135954,
-        "voter": "stevescriber"
-      },
-      {
-        "rshares": 51247757,
-        "voter": "loli"
-      },
-      {
-        "rshares": 52419023,
-        "voter": "nano2nd"
-      },
-      {
-        "rshares": 576343622,
-        "voter": "microluck"
-      },
-      {
-        "rshares": 60225791,
-        "voter": "cryptoblu"
-      },
-      {
-        "rshares": 60219243,
-        "voter": "instructor"
-      },
-      {
-        "rshares": 802020725261,
-        "voter": "dollarvigilante"
-      },
-      {
-        "rshares": 3977281078,
-        "voter": "lamech-m"
-      },
-      {
-        "rshares": 23468551300,
-        "voter": "laonie10"
-      },
-      {
-        "rshares": 8536250240,
-        "voter": "garywilson"
-      },
-      {
-        "rshares": 50829277,
-        "voter": "bitchplease"
-      },
-      {
-        "rshares": 99130059443,
-        "voter": "barrycooper"
-      },
-      {
-        "rshares": 31611733517,
-        "voter": "hilarski"
-      },
-      {
-        "rshares": 2029369552,
-        "voter": "shadowspub"
-      },
-      {
-        "rshares": 8390958262,
-        "voter": "rimann"
-      },
-      {
-        "rshares": 56999917,
-        "voter": "rickmiller"
-      },
-      {
-        "rshares": 5401518277,
-        "voter": "nulliusinverba"
-      },
-      {
-        "rshares": 22792452702,
-        "voter": "mikehere"
-      },
-      {
-        "rshares": 22621847215,
-        "voter": "laonie11"
-      },
-      {
-        "rshares": 3411072843,
-        "voter": "xanoxt"
-      },
-      {
-        "rshares": 174778016,
-        "voter": "greatness"
-      },
-      {
-        "rshares": 26574132419,
-        "voter": "sponge-bob"
-      },
-      {
-        "rshares": 4044803243,
-        "voter": "l0k1"
-      },
-      {
-        "rshares": 50798127,
-        "voter": "freesteem"
-      },
-      {
-        "rshares": 2353724275,
-        "voter": "zettar"
-      },
-      {
-        "rshares": 1655277599,
-        "voter": "smisi"
-      },
-      {
-        "rshares": 53413720,
-        "voter": "lighter"
-      },
-      {
-        "rshares": 258239323,
-        "voter": "maarnio"
-      },
-      {
-        "rshares": 50931848,
-        "voter": "analyzethis"
-      },
-      {
-        "rshares": 5934390558,
-        "voter": "dexter-k"
-      },
-      {
-        "rshares": 51716816,
-        "voter": "doggnostic"
-      },
-      {
-        "rshares": 659649765,
-        "voter": "ct-gurus"
-      },
-      {
-        "rshares": 51449632,
-        "voter": "jenny-talls"
-      },
-      {
-        "rshares": 415654681468,
-        "voter": "charlieshrem"
-      },
-      {
-        "rshares": 63546443837,
-        "voter": "tracemayer"
-      },
-      {
-        "rshares": 26568286493,
-        "voter": "brains"
-      },
-      {
-        "rshares": 1702730509,
-        "voter": "alwayzgame"
-      },
-      {
-        "rshares": 1282974860,
-        "voter": "bitcoinparadise"
-      },
-      {
-        "rshares": 50528809,
-        "voter": "cwb"
-      },
-      {
-        "rshares": 2127783725,
-        "voter": "steemsquad"
-      },
-      {
-        "rshares": 61292139,
-        "voter": "inarix03"
-      },
-      {
-        "rshares": 431087473,
-        "voter": "littlemorelove"
-      },
-      {
-        "rshares": 51636819,
-        "voter": "mbizryu0"
-      },
-      {
-        "rshares": 51631638,
-        "voter": "archij"
-      },
-      {
-        "rshares": 51530815,
-        "voter": "movie7283"
-      },
-      {
-        "rshares": 51527606,
-        "voter": "ppcompp2"
-      },
-      {
-        "rshares": 51520427,
-        "voter": "jj1968"
-      },
-      {
-        "rshares": 51516489,
-        "voter": "cineger"
-      },
-      {
-        "rshares": 51497383,
-        "voter": "sksduddk"
-      },
-      {
-        "rshares": 51490214,
-        "voter": "jjc0719"
-      },
-      {
-        "rshares": 50233449,
-        "voter": "teemsteem"
-      },
-      {
-        "rshares": 50677982,
-        "voter": "sjytoy"
-      },
-      {
-        "rshares": 50676799,
-        "voter": "shy2675"
-      },
-      {
-        "rshares": 50675747,
-        "voter": "suance1009"
-      },
-      {
-        "rshares": 50674176,
-        "voter": "hasqmd"
-      },
-      {
-        "rshares": 50673722,
-        "voter": "fischer67"
-      },
-      {
-        "rshares": 50672116,
-        "voter": "elya1"
-      },
-      {
-        "rshares": 50632828,
-        "voter": "xclamp45"
-      },
-      {
-        "rshares": 50618471,
-        "voter": "likeagame1"
-      },
-      {
-        "rshares": 50616898,
-        "voter": "apple4006"
-      },
-      {
-        "rshares": 50615195,
-        "voter": "bigbell61"
-      },
-      {
-        "rshares": 50612850,
-        "voter": "dolpo777"
-      },
-      {
-        "rshares": 50611931,
-        "voter": "dongperi"
-      },
-      {
-        "rshares": 50610620,
-        "voter": "lion2byung"
-      },
-      {
-        "rshares": 50610002,
-        "voter": "cwj1973"
-      },
-      {
-        "rshares": 50609329,
-        "voter": "psj212"
-      },
-      {
-        "rshares": 50608661,
-        "voter": "owithed2"
-      },
-      {
-        "rshares": 50606929,
-        "voter": "fiself2"
-      },
-      {
-        "rshares": 50605131,
-        "voter": "trablinever1"
-      },
-      {
-        "rshares": 50603861,
-        "voter": "nuals1940"
-      },
-      {
-        "rshares": 50602310,
-        "voter": "fanceth2"
-      },
-      {
-        "rshares": 50355943,
-        "voter": "forea1995"
-      },
-      {
-        "rshares": 50354561,
-        "voter": "holow1968"
-      },
-      {
-        "rshares": 50353969,
-        "voter": "peaces1952"
-      },
-      {
-        "rshares": 50346496,
-        "voter": "himighar2"
-      },
-      {
-        "rshares": 50345607,
-        "voter": "aromese1974"
-      },
-      {
-        "rshares": 50344921,
-        "voter": "runis1943"
-      },
-      {
-        "rshares": 50344067,
-        "voter": "tong1962"
-      },
-      {
-        "rshares": 50340744,
-        "voter": "hishe1997"
-      },
-      {
-        "rshares": 1979857275,
-        "voter": "cwbrooch"
-      },
-      {
-        "rshares": 52329350,
-        "voter": "ninjapainter"
-      },
-      {
-        "rshares": 51393104,
-        "voter": "buit1989"
-      },
-      {
-        "rshares": 51389981,
-        "voter": "imadecoult1"
-      },
-      {
-        "rshares": 51387526,
-        "voter": "infees2"
-      },
-      {
-        "rshares": 51384095,
-        "voter": "suar1997"
-      },
-      {
-        "rshares": 51382067,
-        "voter": "sobsell93"
-      },
-      {
-        "rshares": 51380710,
-        "voter": "stroned96"
-      },
-      {
-        "rshares": 51378107,
-        "voter": "drethe"
-      },
-      {
-        "rshares": 51377505,
-        "voter": "qualwas"
-      },
-      {
-        "rshares": 51376367,
-        "voter": "phent1994"
-      },
-      {
-        "rshares": 51375075,
-        "voter": "baboyes"
-      },
-      {
-        "rshares": 51373532,
-        "voter": "whor1973"
-      },
-      {
-        "rshares": 51372739,
-        "voter": "youreforn"
-      },
-      {
-        "rshares": 51371902,
-        "voter": "voll1981"
-      },
-      {
-        "rshares": 51370717,
-        "voter": "copenty2"
-      },
-      {
-        "rshares": 51369717,
-        "voter": "maject2"
-      },
-      {
-        "rshares": 51367233,
-        "voter": "coust1997"
-      },
-      {
-        "rshares": 51366398,
-        "voter": "busionea84"
-      },
-      {
-        "rshares": 51365174,
-        "voter": "therver1"
-      },
-      {
-        "rshares": 51364022,
-        "voter": "appirdsmanne1990"
-      },
-      {
-        "rshares": 51362967,
-        "voter": "alienighted87"
-      },
-      {
-        "rshares": 51359746,
-        "voter": "anity1994"
-      },
-      {
-        "rshares": 59959066,
-        "voter": "themphe1"
-      },
-      {
-        "rshares": 51355864,
-        "voter": "abild1988"
-      },
-      {
-        "rshares": 51353540,
-        "voter": "spoll1973"
-      },
-      {
-        "rshares": 66162576,
-        "voter": "afteld1"
-      },
-      {
-        "rshares": 1630374239,
-        "voter": "rusteemitblog"
-      },
-      {
-        "rshares": 31008332335,
-        "voter": "goldmatters"
-      },
-      {
-        "rshares": 68608760,
-        "voter": "dealzgal"
-      },
-      {
-        "rshares": 64921864,
-        "voter": "storage"
-      },
-      {
-        "rshares": 55388665,
-        "voter": "blackmarket"
-      },
-      {
-        "rshares": 58454327,
-        "voter": "gifts"
-      },
-      {
-        "rshares": 93882016,
-        "voter": "expat"
-      },
-      {
-        "rshares": 188217107,
-        "voter": "techslut"
-      },
-      {
-        "rshares": 137659447,
-        "voter": "steemtrail"
-      },
-      {
-        "rshares": 3035584586,
-        "voter": "steemlift"
-      },
-      {
-        "rshares": 123580867,
-        "voter": "toddemaher1"
-      }
-    ],
-    "author": "charlieshrem",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 67.32,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "[![1427721443457173 (1).jpg](https://s15.postimg.org/e6gxjg8cb/1427721443457173_1.jpg)](https://postimg.org/image/5bg38xjjr/)\n\nThe day I went to prison I published an article Bitcoin for Prison. While I didn't get to read or see the article until someone mailed me a physical copy, I found out that my article had started a number of discussions and follow-on commentary.\n\nDuring my stay at Lewisburg Federal Prison Camp I observed many economic theories put into effect by inmates and the prison administration, including Gresham's law, hyperinflation, currency exchange, and others.\n\nThere are two markets in prison, the \"Administration Run Market\" (ARM) and the \"Inmate Run Market\" (IRM). \n\nFor the ARM, family and friends can add money to your account through Western Union, MoneyGram, or mailing a check. These funds get added to your account fairly quickly and can be used almost immediately, however with a strict spending limit. You get 300 minutes of phone use per month for about $70, and email costs about $0.05 a minute and is only available at specific times to specific people. Once a week you can shop in the commissary with a $360 a month spending limit. Further, certain products have limits of how much you can buy, for example the Mackerel (described below). Alternatively, the IRM is where you can buy sandwiches, wraps, pizzas, Italian ices, hire a personal trainer, get a haircut, pay someone to clean your cube, repair a watch, even inmate run caterers for your birthday or going home party. Additionally there were inmate run 'stores' which sold commissary items at a markup since you could only commissary shop once a week.\n\n[![mackerel-203x300.png](https://s18.postimg.org/pkn7zm1h5/mackerel_203x300.png)](https://postimg.org/image/iu6qq6eb9/)\n\nThe Mackerel (meaning literal packets of fish) is one of the competing currencies in the IRM. It has utility by being one of the best sources of protein on the compound. You can save it for a long time, the shelf life is a few years. The price is relatively the same across all prisons in the country, so even if you transfer prisons your property comes with you, including your Mackerel which is worth the same somewhere else. Unlike tunafish, chicken packets and protein bars, more people eat Mackerel. Those other food items can be used as currency as well, for example the guy who fixes your watch may only accept protein bars because he hates fish. There was even a form of digital currency being used, which I will discuss in another post.\n\n[![pzyQaHU.png](https://s15.postimg.org/tggsqn3uj/pzy_Qa_HU.png)](https://postimg.org/image/nfj3tkh87/)\n\nUtility and medium of exchange give it some value but what about scarcity ? If there is a virtually unlimited amount of Mackerel in the IRM, just like the Federal Reserve printing money, there is no scarcity and hyperinflation can occure if it is debased. \n\nUsing a simple equation, 467 (Number of Inmates) * 14 (Maximum Quantity Allowed to Purchase Per Inmate) * 52 (weeks, assuming every inmate buys the maximum mount of Mackerel every week)\n\nSo if in 2015 we assume that the Supply and Velocity grows at the exact same rate with the Price Level and Transactions unchanging, the amount of Mackerel would essentially double on an even inflation rate. This does not factor in the 3 year shelf life, where expired Mackerel becomes a secondary currency. I will discuss in my next post. \n\nI like to believe that the value of money is determined also psychological factors, like a commodity and not only by mechanical or mathematical factors. In prison many of these psychological factors come into play.\n\n[![1867-1967-Ten-10\u00a2-Cents-Commemorative-Centennial.jpg](https://s15.postimg.org/yqgpkthrv/1867_1967_Ten_10_Cents_Commemorative_Centennial.jpg)](https://postimg.org/image/ceiwrfinr/)\n\nMost people use Mackerel as a day-to-day currency for normal transactions, but for reasons I will explain in my next post, they are not the best long term store of value which is important for a currency. For longer term store of value, many inmates use stamps. Stamps have a set rate by the United States Postal Service and have similar characteristics as Mackerel aside for being edible. However, with the introduction of email on the compound many people stopped writing letters as email is cheaper and faster therefore reducing stamps ability to be a transactional currency as a majority of the inmates have no use for them. As a store of value they still hold weight because they are small and easy to store large amounts, while Mackerel is not.\n\nThe biggest value stamps have is that they can be mailed home and your family can redeem them for dollars as the local post office, but that feature can be stopped by better mail screening and overnight the stamp could lose its store of value utility. \n\nIn my next post I will discuss how currency exchangers work, what happens when the prison administration purposely floods the market, and how a secondary currency was created out of expired Mackerel called \u201cMoney Maks\u201d",
-    "category": "story",
-    "children": 2,
-    "created": "2016-09-15T19:39:15",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://s15.postimg.org/e6gxjg8cb/1427721443457173_1.jpg",
-        "https://s18.postimg.org/pkn7zm1h5/mackerel_203x300.png",
-        "https://s15.postimg.org/tggsqn3uj/pzy_Qa_HU.png",
-        "https://s15.postimg.org/yqgpkthrv/1867_1967_Ten_10_Cents_Commemorative_Centennial.jpg"
-      ],
-      "links": [
-        "https://postimg.org/image/5bg38xjjr/",
-        "https://postimg.org/image/iu6qq6eb9/",
-        "https://postimg.org/image/nfj3tkh87/",
-        "https://postimg.org/image/ceiwrfinr/"
-      ],
-      "tags": [
-        "story",
-        "life",
-        "bitcoin"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 16647533396431,
-    "payout": 18.922,
-    "payout_at": "2016-09-22T19:39:15",
-    "pending_payout_value": "18.922 HBD",
-    "percent_hbd": 10000,
-    "permlink": "mackerelcoin-and-my-socioeconomic-observations-from-prison-part-1-by-charlie-shrem",
-    "post_id": 1257859,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 211
-    },
-    "title": "MackerelCoin & My Socioeconomic Observations from Prison (Part 1 by Charlie Shrem)",
-    "updated": "2016-09-15T19:39:15",
-    "url": "/story/@charlieshrem/mackerelcoin-and-my-socioeconomic-observations-from-prison-part-1-by-charlie-shrem"
   }
 ]

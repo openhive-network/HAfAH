@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.get_ranked_posts promoted community patterns test
 
   marks:
-    - patterntest
+    - patterntest # relies on mock data (there was no communities in 5mln blocks)
 
   includes:
     - !include ../../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_ranked_posts"
-          params: {"sort":"promoted","tag":"hive-120019"}
+          params: {"sort":"promoted","tag":"hive-135485"}
       response:
         status_code: 200
         verify_response_with:
