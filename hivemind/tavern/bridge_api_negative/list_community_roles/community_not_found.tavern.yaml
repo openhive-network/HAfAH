@@ -1,14 +1,15 @@
 ---
-  test_name: Hivemind bridge_api.list_community_roles empty patterns test
+  test_name: Hivemind bridge_api.list_community_roles
 
   marks:
-    - patterntest
+    - patterntest # original did not validate community
+    - negative
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: list_community_roles empty
+    - name: list_community_roles
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,5 +25,6 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "empty"
-            directory: "bridge_api_patterns/list_community_roles"
+            method: "community_not_found"
+            directory: "bridge_api_negative/list_community_roles"
+            error_response: true

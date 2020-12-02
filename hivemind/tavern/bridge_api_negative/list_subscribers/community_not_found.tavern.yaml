@@ -2,9 +2,8 @@
   test_name: bridge_api.list_subscribers community not found
 
   marks:
-    - patterntest
+    - patterntest # original did not validate community
     - negative
-    - xfail # is there should be an error that community not exists?
 
   includes:
     - !include ../../common.yaml

@@ -2,9 +2,8 @@
   test_name: bridge_api.list_subscribers account error # not documented
 
   marks:
-    - patterntest
+    - patterntest # original did not validate community
     - negative
-    - xfail # error should be generated here, but we get empty result (like in original)
 
   includes:
     - !include ../../common.yaml
