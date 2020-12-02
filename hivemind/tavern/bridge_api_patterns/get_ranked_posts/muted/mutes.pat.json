@@ -54,10 +54,7 @@
     "author_payout_value": "0.000 HBD",
     "author_reputation": -5.58,
     "beneficiaries": [],
-    "blacklists": [
-      "ignoreall (mute list)",
-      "reputation-0"
-    ],
+    "blacklists": [],
     "body": "Do I understand correctly that you're referencing the initial \"mining\" by a select group of devs and friends, resulting in \"overwhelming control\" by means of vests now?\nOr am I just imagining things? :)",
     "category": "philosophy",
     "children": 0,
@@ -1236,10 +1233,7 @@
     "author_payout_value": "0.000 HBD",
     "author_reputation": -5.58,
     "beneficiaries": [],
-    "blacklists": [
-      "ignoreall (mute list)",
-      "reputation-0"
-    ],
+    "blacklists": [],
     "body": "Today is an historical day for me. This is my **thousandth** post on Steemit already, I hit **100** followers today \u00e1nd I'm finally past the magical limit of **3000** SP! :D\n![Achievement unlocked](http://rlv.zcache.com/achievement_unlocked_bumper_sticker-r50c3a5b34b904bb4a8d9e6aad6b920a1_v9wht_8byvr_512.jpg)\n#### Thanks!\nThanks to all my followers, voters and friends! I hope we'll meet again soon, and continue scoring milestones! :)\nAlso, a thank you for the devs, we **love** your work, keep going!",
     "category": "steemit",
     "children": 35,
