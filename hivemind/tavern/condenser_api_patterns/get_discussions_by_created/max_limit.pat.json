@@ -22,7 +22,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile03",
-    "post_id": 1257952,
+    "post_id": 1257963,
     "promoted": "0.000 HBD",
     "replies": [],
     "root_title": "powerful crocodile 03",
@@ -53,7 +53,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile02",
-    "post_id": 1257951,
+    "post_id": 1257962,
     "promoted": "0.000 HBD",
     "replies": [],
     "root_title": "powerful crocodile 02",
@@ -84,7 +84,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile01",
-    "post_id": 1257950,
+    "post_id": 1257961,
     "promoted": "0.000 HBD",
     "replies": [],
     "root_title": "powerful crocodile 01",
@@ -115,7 +115,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "spider02",
-    "post_id": 1257949,
+    "post_id": 1257960,
     "promoted": "0.000 HBD",
     "replies": [],
     "root_title": "powerful spider 02",
@@ -146,7 +146,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "spider01",
-    "post_id": 1257948,
+    "post_id": 1257959,
     "promoted": "0.000 HBD",
     "replies": [],
     "root_title": "powerful spider 01",
@@ -177,7 +177,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "anaconda02",
-    "post_id": 1257947,
+    "post_id": 1257958,
     "promoted": "0.000 HBD",
     "replies": [],
     "root_title": "powerful snake 02",
@@ -208,13 +208,168 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "anaconda01",
-    "post_id": 1257946,
+    "post_id": 1257957,
     "promoted": "0.000 HBD",
     "replies": [],
     "root_title": "powerful snake 01",
     "title": "powerful snake 01",
     "total_payout_value": "0.000 HBD",
     "url": "/hive-117600/@abit/anaconda01"
+  },
+  {
+    "active_votes": [],
+    "author": "test-reblog-01",
+    "author_reputation": 0,
+    "beneficiaries": [],
+    "body": "tell me about monkeys 05",
+    "body_length": 24,
+    "cashout_time": "2016-09-22T19:47:33",
+    "category": "undefined",
+    "children": 0,
+    "created": "2016-09-15T19:47:33",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "json_metadata": "{}",
+    "last_payout": "1969-12-31T23:59:59",
+    "last_update": "2016-09-15T19:47:33",
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "parent_author": "",
+    "parent_permlink": "",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "monkey-05",
+    "post_id": 1257956,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "root_title": "I love monkeys 05",
+    "title": "I love monkeys 05",
+    "total_payout_value": "0.000 HBD",
+    "url": "//@test-reblog-01/monkey-05"
+  },
+  {
+    "active_votes": [],
+    "author": "test-reblog-01",
+    "author_reputation": 0,
+    "beneficiaries": [],
+    "body": "tell me about monkeys 03",
+    "body_length": 24,
+    "cashout_time": "2016-09-22T19:47:33",
+    "category": "undefined",
+    "children": 0,
+    "created": "2016-09-15T19:47:33",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "json_metadata": "{}",
+    "last_payout": "1969-12-31T23:59:59",
+    "last_update": "2016-09-15T19:47:33",
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "parent_author": "",
+    "parent_permlink": "",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "monkey-03",
+    "post_id": 1257954,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "root_title": "I love monkeys 03",
+    "title": "I love monkeys 03",
+    "total_payout_value": "0.000 HBD",
+    "url": "//@test-reblog-01/monkey-03"
+  },
+  {
+    "active_votes": [],
+    "author": "test-reblog-03",
+    "author_reputation": 0,
+    "beneficiaries": [],
+    "body": "tell me about parrots 03",
+    "body_length": 24,
+    "cashout_time": "2016-09-22T19:47:15",
+    "category": "undefined",
+    "children": 0,
+    "created": "2016-09-15T19:47:15",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "json_metadata": "{}",
+    "last_payout": "1969-12-31T23:59:59",
+    "last_update": "2016-09-15T19:47:15",
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "parent_author": "",
+    "parent_permlink": "",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "parrot-03",
+    "post_id": 1257948,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "root_title": "I love parrots 03",
+    "title": "I love parrots 03",
+    "total_payout_value": "0.000 HBD",
+    "url": "//@test-reblog-03/parrot-03"
+  },
+  {
+    "active_votes": [],
+    "author": "test-reblog-02",
+    "author_reputation": 0,
+    "beneficiaries": [],
+    "body": "tell me about parrots 02",
+    "body_length": 24,
+    "cashout_time": "2016-09-22T19:47:15",
+    "category": "undefined",
+    "children": 0,
+    "created": "2016-09-15T19:47:15",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "json_metadata": "{}",
+    "last_payout": "1969-12-31T23:59:59",
+    "last_update": "2016-09-15T19:47:15",
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "parent_author": "",
+    "parent_permlink": "",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "parrot-02",
+    "post_id": 1257947,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "root_title": "I love parrots 02",
+    "title": "I love parrots 02",
+    "total_payout_value": "0.000 HBD",
+    "url": "//@test-reblog-02/parrot-02"
+  },
+  {
+    "active_votes": [],
+    "author": "test-reblog-01",
+    "author_reputation": 0,
+    "beneficiaries": [],
+    "body": "tell me about parrots 01",
+    "body_length": 24,
+    "cashout_time": "2016-09-22T19:47:15",
+    "category": "undefined",
+    "children": 0,
+    "created": "2016-09-15T19:47:15",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "json_metadata": "{}",
+    "last_payout": "1969-12-31T23:59:59",
+    "last_update": "2016-09-15T19:47:15",
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "parent_author": "",
+    "parent_permlink": "",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "parrot-01",
+    "post_id": 1257946,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "root_title": "I love parrots 01",
+    "title": "I love parrots 01",
+    "total_payout_value": "0.000 HBD",
+    "url": "//@test-reblog-01/parrot-01"
   },
   {
     "active_votes": [],
@@ -8792,597 +8947,5 @@
     "title": "Depression",
     "total_payout_value": "0.000 HBD",
     "url": "/reflexions/@pablopb/depression"
-  },
-  {
-    "active_votes": [
-      {
-        "percent": "10000",
-        "reputation": 204177601345,
-        "rshares": 225204295,
-        "voter": "mashatik87"
-      }
-    ],
-    "author": "mashatik87",
-    "author_reputation": 204177601345,
-    "beneficiaries": [],
-    "body": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/ojUrmdHNFD0\" frameborder=\"0\" allowfullscreen></iframe>",
-    "body_length": 122,
-    "cashout_time": "2016-09-22T18:54:24",
-    "category": "tags",
-    "children": 0,
-    "created": "2016-09-15T18:54:24",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "json_metadata": "{\"tags\":[\"tags\",\"youtube\",\"subscribe\",\"video\",\"\"]}",
-    "last_payout": "1969-12-31T23:59:59",
-    "last_update": "2016-09-15T18:54:24",
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 225204295,
-    "parent_author": "",
-    "parent_permlink": "tags",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "32-random-questions-tag-or-mashiface",
-    "post_id": 1257352,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "root_title": "32 Random Questions Tag | Mashiface",
-    "title": "32 Random Questions Tag | Mashiface",
-    "total_payout_value": "0.000 HBD",
-    "url": "/tags/@mashatik87/32-random-questions-tag-or-mashiface"
-  },
-  {
-    "active_votes": [
-      {
-        "percent": "10000",
-        "reputation": 10980042082204,
-        "rshares": 21017552483,
-        "voter": "skapaneas"
-      },
-      {
-        "percent": "-10000",
-        "reputation": -209142316,
-        "rshares": -125177473,
-        "voter": "cheetah01"
-      },
-      {
-        "percent": "-10000",
-        "reputation": 80245481,
-        "rshares": -102169064,
-        "voter": "cheetah03"
-      },
-      {
-        "percent": "-10000",
-        "reputation": 53035376,
-        "rshares": -102168682,
-        "voter": "cheetah04"
-      },
-      {
-        "percent": "-10000",
-        "reputation": 53568813,
-        "rshares": -102161368,
-        "voter": "cheetah05"
-      },
-      {
-        "percent": "-10000",
-        "reputation": 53249658,
-        "rshares": -102159434,
-        "voter": "cheetah06"
-      },
-      {
-        "percent": "-10000",
-        "reputation": -64689350,
-        "rshares": -102108064,
-        "voter": "cheetah02"
-      },
-      {
-        "percent": "-10000",
-        "reputation": 53886256,
-        "rshares": -102085954,
-        "voter": "cheetah07"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3137399626023,
-        "rshares": 4242191670,
-        "voter": "steembeast"
-      },
-      {
-        "percent": "10000",
-        "reputation": 982331434653,
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1502200909130,
-        "rshares": 123221500,
-        "voter": "ola1"
-      },
-      {
-        "percent": "10000",
-        "reputation": 447567061326,
-        "rshares": 355619437,
-        "voter": "koskl"
-      },
-      {
-        "percent": "10000",
-        "reputation": 308198215903,
-        "rshares": 298372096,
-        "voter": "james1987"
-      }
-    ],
-    "author": "steembeast",
-    "author_reputation": 3137399626023,
-    "beneficiaries": [],
-    "body": "<html>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Let's say that it is time for your kid to mail an application to a college.</p>\n<p>You spent days writing an application and your kid's future depends on it.</p>\n<p>Would you use the Post Office to mail it or would you use a private company like FedEx.</p>\n<p>What it all boils down to is which one is the most effective and the most trustworthy.</p>\n<p><em>&nbsp;</em><img src=\"https://s18.postimg.org/9jrtr4sex/Public_private_sectors.jpg\" width=\"400\" height=\"290\"/></p>\n<p><br></p>\n<p><em>Lets analyse both sectors.</em></p>\n<p><br></p>\n<h2><em>Private sector.</em></h2>\n<p>Private sector companies are run by individuals like you and me or even board members of savvy businessmen etc and they always have one thing in mind,Profit. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In order for a private company to become and remain profitable they have to offer good prices,good products/services and stay ahead of the game. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Very often more than one companies offer us the same products and in order to earn our precious $$$ they have to entice us,therefore offering lower prices.</p>\n<p><br></p>\n<h2>Public sector.</h2>\n<p>Public sector by not having profit as their main goal can end up going two roads. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>1st</strong> Offer great prices</p>\n<p><strong>2nd </strong>Offer very bad product/service.</p>\n<p>Even though the funding of those public &nbsp;companies is by our tax dollars those businesses usually burn money as if money is irrelevant .</p>\n<p><br></p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dont get me wrong, government spending tax dollars on FD or PD is a perfect way to spend them since they are offering a much needed service.It's the specific fund allocation that the problems start from and the lack of accountability when money is spent in useless ways.</p>\n<p>One of the worst run public businesses is the Post Office which has tens of billions of debt therefore the tax payers money have to be used to save it.When perfectly good alternatives are out there WE DONT NEED P.O.</p>\n<p><em><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></em></p>\n<p><em><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Closing &nbsp;</strong></em>Some businesses make sense to be in the public sector like the army or the police.But for less important services like mail or parking lots it makes more sense to by run by people who risk their own money and have in mind the customer satisfaction.</p>\n</html>",
-    "body_length": 4235,
-    "cashout_time": "2016-09-22T18:54:18",
-    "category": "life",
-    "children": 2,
-    "created": "2016-09-15T18:54:18",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "json_metadata": "{\"tags\":[\"life\",\"money\",\"economics\",\"government\",\"taxdollars\"],\"image\":[\"https://s18.postimg.org/9jrtr4sex/Public_private_sectors.jpg\"]}",
-    "last_payout": "1969-12-31T23:59:59",
-    "last_update": "2016-09-15T18:54:18",
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 25399054013,
-    "parent_author": "",
-    "parent_permlink": "life",
-    "pending_payout_value": "0.005 HBD",
-    "percent_hbd": 10000,
-    "permlink": "do-you-trust-government-companies-explaining-the-private-sector-benefits",
-    "post_id": 1257350,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "root_title": "Do you trust government companies? Explaining the private sector benefits.",
-    "title": "Do you trust government companies? Explaining the private sector benefits.",
-    "total_payout_value": "0.000 HBD",
-    "url": "/life/@steembeast/do-you-trust-government-companies-explaining-the-private-sector-benefits"
-  },
-  {
-    "active_votes": [
-      {
-        "percent": "10000",
-        "reputation": 8779714777561,
-        "rshares": 4134632281224,
-        "voter": "riverhead"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 2531219186,
-        "voter": "steem1653"
-      },
-      {
-        "percent": "10000",
-        "reputation": 982331434653,
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "percent": "10000",
-        "reputation": 70958274,
-        "rshares": 56055247,
-        "voter": "whoknows"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1502200909130,
-        "rshares": 123221500,
-        "voter": "ola1"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1663398753211,
-        "rshares": 2337017256,
-        "voter": "ayim"
-      }
-    ],
-    "author": "ayim",
-    "author_reputation": 1663398753211,
-    "beneficiaries": [],
-    "body": "<center>![](http://svmassagetherapy.com/blog/wp-content/uploads/2014/11/slumpshoulder.jpg)</center>\nHello Steemit, this might be something that can change your life.  Muscle pain is inevitable, it can be an old injury, or just something that suddenly start irritating you and it will not stop. Having over worked muscles or your posture compromised causes a lot of kinks and knots in our body.  Having deep tissue massage is great for alleviating pain. \n\n\n<h4>The benefits of have a deep tissue massage: </h4>\n* Increases blow flow in the body which causes healing to improve\n* Reduces inflammation\n* Loosen tight muscles cluster\n* Improve overall blood pressure \n* Breaks up scar tissue\n* Stress reliever. \n\n90 percent of the people who read this knows that massages are great. I'm an anomaly, I am not a fan of massages but I do believe in the benefits.  I do help out the family when I was younger when they asked for massages and I have a natural talent for it. They were confused and would ask how did I know what to do to fix their back. it still remains a mystery til this day. There are many reason why people can't get massages because of the inconvenience, money, or unavailability which brings me to...\n\n<center> <h3>Lacrosse ball</h3>\n![](http://d2ydh70d4b5xgv.cloudfront.net/images/7/7/mobilitas-mobility-peanut-the-original-double-lacrosse-ball-and-myofascial-1a1f82b10a664b959539aacdbdcf0a96.jpg)\n[Peanut Lacrosse ball](https://www.amazon.com/gp/product/B0140NJXY6/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B0140NJXY6&linkCode=as2&tag=lasted-20&linkId=1edab9bdbe3612327d257f4edd57cfb5)\n</center>\nThis improve many of my family's lives when they started using it. My mother, dad, brother, and uncles all are a huge fan of these. The idea of lacrosse ball is to place it either on a wall and lean into or placed on the ground and lay on top of it to target stubborn pains and aches caused by tight muscles. It is used by many athletes but also adored by people that hate the idea of working out. The purpose (for example) is to place it somewhere on your back where it is the most uncomfortable and leave it there for around 20 - 30 seconds so that your muscle in that area would slowly release itself.  What I personally do is to put 2 of these under my desk roll my feet with them. \n<center> <h3>Foam roller</h3>\n![](https://images-na.ssl-images-amazon.com/images/I/71VxfEt9NtL._SL1500_.jpg)\n[Foam Roller](https://www.amazon.com/gp/product/B00KAEJ3V8/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00KAEJ3V8&linkCode=as2&tag=lasted-20&linkId=08ef65112539bb10114ba72a89ab1edd)</center>\nThey are great for the overall body. Less intense as the lacrosse ball but they can improve your posture as you roll on top. Here you also do the same thing as the lacrosse ball you lay on top of it and find a tender spot and hold it there for around 20 - 30 seconds if you can and move to the next spot. I don't advise rolling the lower back since your spine is already curve in and your creating more of a sway back. This improve circulation on your thighs, side torso, chest, or any part of your body that can rest on top of this.\n\n<center> <h3>Theracane</h3>\n![](https://images-na.ssl-images-amazon.com/images/I/31VpBRHxbUL.jpg)\n[Theracane](https://www.amazon.com/gp/product/B000PRMCJU/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B000PRMCJU&linkCode=as2&tag=lasted-20&linkId=e0fcdc173eac78ceda3dccef5b82dcaf)\n</center>\n\nThis is the first thing I purchased when I had tense shoulders because I had a laptop bag which was a sling style bag. The uneven weight distribution caused intense pain and knots in my shoulder which I had no way of stretching it out. During that time I was a student living in the dorms. No car, not a lot of money,  and it was super inconvenient to travel one hour to see a physical therapist for a massage. This was introduced to me by my brother who has knots majority of his life because he had bad posture. I gave it a go and it worked! This is great for people who are in a chair and can't just lay down on the floor suddenly like in an office setting. This can be used when reading something on your computer or anything that doesn't requires hands you can start using this to help reduce the pain on your shoulder and neck. \n\nThese three products I always use if I feel that my muscles are tight or overworked that particular day. They are always in hands reach and has improved my over knot issues. Have a great day Steemit, hope this helps!",
-    "body_length": 4518,
-    "cashout_time": "2016-09-22T18:53:51",
-    "category": "life",
-    "children": 0,
-    "created": "2016-09-15T18:53:51",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "json_metadata": "{\"tags\":[\"life\",\"story\",\"fitness\",\"health\",\"blog\"],\"image\":[\"http://svmassagetherapy.com/blog/wp-content/uploads/2014/11/slumpshoulder.jpg\",\"http://d2ydh70d4b5xgv.cloudfront.net/images/7/7/mobilitas-mobility-peanut-the-original-double-lacrosse-ball-and-myofascial-1a1f82b10a664b959539aacdbdcf0a96.jpg\",\"https://images-na.ssl-images-amazon.com/images/I/71VxfEt9NtL._SL1500_.jpg\",\"https://images-na.ssl-images-amazon.com/images/I/31VpBRHxbUL.jpg\"],\"links\":[\"https://www.amazon.com/gp/product/B0140NJXY6/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B0140NJXY6&linkCode=as2&tag=lasted-20&linkId=1edab9bdbe3612327d257f4edd57cfb5\",\"https://www.amazon.com/gp/product/B00KAEJ3V8/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00KAEJ3V8&linkCode=as2&tag=lasted-20&linkId=08ef65112539bb10114ba72a89ab1edd\",\"https://www.amazon.com/gp/product/B000PRMCJU/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B000PRMCJU&linkCode=as2&tag=lasted-20&linkId=e0fcdc173eac78ceda3dccef5b82dcaf\"]}",
-    "last_payout": "1969-12-31T23:59:59",
-    "last_update": "2016-09-15T18:57:33",
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 4139779921279,
-    "parent_author": "",
-    "parent_permlink": "life",
-    "pending_payout_value": "1.845 HBD",
-    "percent_hbd": 10000,
-    "permlink": "fixing-posture-part-5-massages",
-    "post_id": 1257346,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "root_title": "Fixing Posture - Part 5: Massages",
-    "title": "Fixing Posture - Part 5: Massages",
-    "total_payout_value": "0.000 HBD",
-    "url": "/life/@ayim/fixing-posture-part-5-massages"
-  },
-  {
-    "active_votes": [
-      {
-        "percent": "10000",
-        "reputation": 8779714777561,
-        "rshares": 4134640392195,
-        "voter": "riverhead"
-      },
-      {
-        "percent": "10000",
-        "reputation": 8980249791516,
-        "rshares": 253514770855,
-        "voter": "lovejoy"
-      },
-      {
-        "percent": "10000",
-        "reputation": 28971806962251,
-        "rshares": 1535071696382,
-        "voter": "joseph"
-      },
-      {
-        "percent": "10000",
-        "reputation": 67589992585,
-        "rshares": 8927535677,
-        "voter": "idol"
-      },
-      {
-        "percent": "10000",
-        "reputation": 368156222,
-        "rshares": 1536625837,
-        "voter": "jocelyn"
-      },
-      {
-        "percent": "10000",
-        "reputation": 54345938068170,
-        "rshares": 374437048490,
-        "voter": "craig-grant"
-      },
-      {
-        "percent": "287",
-        "reputation": 12382143533351,
-        "rshares": 29966325092,
-        "voter": "eeks"
-      },
-      {
-        "percent": "600",
-        "reputation": 4931834878069,
-        "rshares": 1511911763,
-        "voter": "fkn"
-      },
-      {
-        "percent": "600",
-        "reputation": 5414208804644,
-        "rshares": 1987313581,
-        "voter": "elishagh1"
-      },
-      {
-        "percent": "10000",
-        "reputation": 15854806148148,
-        "rshares": 7803257741,
-        "voter": "richman"
-      },
-      {
-        "percent": "10000",
-        "reputation": 58571016273092,
-        "rshares": 584301957019,
-        "voter": "nanzo-scoop"
-      },
-      {
-        "percent": "10000",
-        "reputation": 21903005256174,
-        "rshares": 172753954134,
-        "voter": "mummyimperfect"
-      },
-      {
-        "percent": "2900",
-        "reputation": 1663549830469,
-        "rshares": 313699965,
-        "voter": "coar"
-      },
-      {
-        "percent": "5555",
-        "reputation": 2902053059801,
-        "rshares": 1061283659,
-        "voter": "murh"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 2003404389,
-        "voter": "error"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3037854988445,
-        "rshares": 49581638772,
-        "voter": "ak2020"
-      },
-      {
-        "percent": "10000",
-        "reputation": 15857384273210,
-        "rshares": 206092862903,
-        "voter": "alexc"
-      },
-      {
-        "percent": "9300",
-        "reputation": 598181152117,
-        "rshares": 192336700354,
-        "voter": "kimziv"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3708822694051,
-        "rshares": 75335893384,
-        "voter": "emily-cook"
-      },
-      {
-        "percent": "10000",
-        "reputation": 601987961462,
-        "rshares": 2187607792,
-        "voter": "superfreek"
-      },
-      {
-        "percent": "600",
-        "reputation": 19111656178138,
-        "rshares": 7380892516,
-        "voter": "furion"
-      },
-      {
-        "percent": "10000",
-        "reputation": 719807689,
-        "rshares": 240666456,
-        "voter": "tasman"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 2632467953,
-        "voter": "steem1653"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1537463763,
-        "rshares": 33739229218,
-        "voter": "creemej"
-      },
-      {
-        "percent": "9300",
-        "reputation": 782596410473,
-        "rshares": 4195475503,
-        "voter": "poseidon"
-      },
-      {
-        "percent": "10000",
-        "reputation": 361552742284,
-        "rshares": 472134488,
-        "voter": "nin0000"
-      },
-      {
-        "percent": "600",
-        "reputation": 10519849768972,
-        "rshares": 1226120506,
-        "voter": "positive"
-      },
-      {
-        "percent": "9300",
-        "reputation": 17698439393799,
-        "rshares": 31601214153,
-        "voter": "sisterholics"
-      },
-      {
-        "percent": "9300",
-        "reputation": 10771708337101,
-        "rshares": 1117528556435,
-        "voter": "laonie"
-      },
-      {
-        "percent": "9300",
-        "reputation": 18027204457681,
-        "rshares": 38642686402,
-        "voter": "myfirst"
-      },
-      {
-        "percent": "9300",
-        "reputation": 5776723480371,
-        "rshares": 233320672689,
-        "voter": "somebody"
-      },
-      {
-        "percent": "9300",
-        "reputation": 206355094166,
-        "rshares": 8723640942,
-        "voter": "flysaga"
-      },
-      {
-        "percent": "287",
-        "reputation": 1751717743,
-        "rshares": 833888549,
-        "voter": "gmurph"
-      },
-      {
-        "percent": "9300",
-        "reputation": 97845484474,
-        "rshares": 50110479436,
-        "voter": "midnightoil"
-      },
-      {
-        "percent": "9500",
-        "reputation": 3016325652890,
-        "rshares": 128918653572,
-        "voter": "xiaohui"
-      },
-      {
-        "percent": "9300",
-        "reputation": 6111268639849,
-        "rshares": 6306903180,
-        "voter": "elfkitchen"
-      },
-      {
-        "percent": "9300",
-        "reputation": 1851205309677,
-        "rshares": 4030335230,
-        "voter": "xiaokongcom"
-      },
-      {
-        "percent": "9300",
-        "reputation": 4195733833721,
-        "rshares": 8124462008,
-        "voter": "xianjun"
-      },
-      {
-        "percent": "9300",
-        "reputation": 730408370151,
-        "rshares": 546776422,
-        "voter": "microluck"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2357768295588,
-        "rshares": 3562389763,
-        "voter": "movievertigo"
-      },
-      {
-        "percent": "2500",
-        "reputation": 6263695706748,
-        "rshares": 4633082667,
-        "voter": "steemitpatina"
-      },
-      {
-        "percent": "10000",
-        "reputation": 982331434653,
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "percent": "10000",
-        "reputation": 7306624703593,
-        "rshares": 17087288555,
-        "voter": "kommienezuspadt"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2012742263000,
-        "rshares": 3030462572,
-        "voter": "mikkolyytinen"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1996672246136,
-        "rshares": 271448835,
-        "voter": "anomaly"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1502200909130,
-        "rshares": 123221500,
-        "voter": "ola1"
-      },
-      {
-        "percent": "10000",
-        "reputation": 50126130,
-        "rshares": 51615652,
-        "voter": "rayzzz"
-      },
-      {
-        "percent": "10000",
-        "reputation": 617740454942,
-        "rshares": 796357358,
-        "voter": "zombiedoll"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1026372953,
-        "rshares": 50820410,
-        "voter": "nazmood"
-      }
-    ],
-    "author": "kommienezuspadt",
-    "author_reputation": 7306624703593,
-    "beneficiaries": [],
-    "body": "<html>\n<p><img src=\"http://www.madeineighty.com/wp-content/uploads/2015/07/steemit0104.jpg\" width=\"800\" height=\"600\"/></p>\n<p>My entire life, I knew however things shook out, I\u2019d eventually be making comic books as a career. At 36, I\u2019m later to the party than I originally anticipated, but I\u2019ve had three decades to prepare for this! I remember as a kid, just being enamored with comic book art [\u2026and still am]. For years, I\u2019d draw these snake characters during class with my friend Neal. Just page after endless page of snakes killing each other. The kind of gratuitous fantasy violence that defines weirdos in high school.</p>\n<p>Eventually, photography took over my life, but I still read comics, thought about comics and drew comics when I managed to make time. A couple years ago I began stringing together a story for a comic called THEIA. A sci-fi conspiracy story rooted in the real world, based on actual science. I learned how to format full script for comics and graphic novels [\u2026you can read the finished <a href=\"www.theiacomic.com\">THEIA</a> script in my previous blog, <a href=\"https://steemit.com/writing/@kommienezuspadt/full-script-of-theia-sci-fi-comic-book-theia-exclusively-on-steemit\">\u201cFull script of THEIA sci-fi comic book! Exclusively on Steemit!\u201d</a>]. This was a big divergence than my hack and slash snake comics with Neal [\u2026who\u2019s stories progressed with each turn of the page, like a Miyazaki film, but really horrible].</p>\n<p><img src=\"http://www.madeineighty.com/wp-content/uploads/2015/07/steemit0105.jpg\" width=\"800\" height=\"1132\"/></p>\n<p>It was during the process of writing the first draft for <a href=\"www.theiacomic.com\">THEIA</a> that I realized all these years I\u2019ve been so drawn to comics, the real allure for me was story telling and character creation, even more than great art. I\u2019ve been creating comics my entire life, and thus, creating characters along the way. Once I began disciplining myself with taking writing more seriously, I discovered other helpful tools to aide in the creation process. I began taking &nbsp;inventories, outlining in depth documentation of each characters lives, affiliations and personalities.&nbsp;</p>\n<p>Character profiles are something I\u2019ve done for 20 years. I mimicked my favorite fantasy artists like Gerald Brom, Boris Vallejo and the one and only, Frank Frazetta. I\u2019d seen pencil sketches of their concept designs with monsters, heroes and heroines, and just did my best to emulate them. I used to draw the typical front, side, three-quarter and head sketches as a reference bible [\u2026granted, much easier when it was just snakes].</p>\n<p><img src=\"http://www.madeineighty.com/wp-content/uploads/2015/07/steemit0106.jpg\" width=\"800\" height=\"519\"/></p>\n<p>I\u2019ve been enjoying a renaissance of creativity since committing to doing comics full time, and character creation is where I spend most of my time. THEIA is still my priority as I have an active <a href=\"www.theiacomic.com\">Patreon</a> campaign and those pledging support are doing so for that particular title. I do, however, have two other stories I\u2019m developing which are currently knee deep in the character creation process. A Bukowski-esk pulp crime genre during the late 80\u2019s following a private investigator throughout his struggle with sobriety in Queens, NY.</p>\n<p><img src=\"http://www.madeineighty.com/wp-content/uploads/2015/07/SketchUpdate004.jpg\" width=\"800\" height=\"1130\"/></p>\n<p>The other is a dark ghost story taking place in the mid-1800\u2019s, surrounding a recently deceased, troubled soul that finds himself caught between the realm of the living, and the afterlife; unable to pass for fear of judgement after a life of heinous acts. The characters in this story were inspired by my most interesting friends, and obscure tales of macabre lore during the industrial revolution and the Southwestern US history.</p>\n<p>I wish I was further along in my pursuit of story telling, world building and character creation. I wish I had decades of experience to share here on Steemit. I don\u2019t want to come across like I\u2019m the authority on these complex, disciplined skills; I\u2019ve only been seriously absorbing the art for a couple of years. I imagine, however, there are quite a few new writers, artists and creators here, navigating their own discoveries and process. With that in mind, [and in the spirit of all the things that makes Steemit great for me personally] here a few techniques I use to further my writing and a few resources I\u2019ve found helpful in house, right here on Steemit.</p>\n<p><strong>\u2022 Real-life Inspiration:</strong> As mentioned, take inspiration from people in life. Friends, or even family. Accentuate the personalities. Exaggerate the quirks or circumstances. For me personally, it\u2019s a big help to to have someone in mind when drawing, and developing a character.</p>\n<p><strong>\u2022 Character Inventories:</strong> Write up an involved character inventory [\u2026sometimes called a character bible]. A reference of everything you can imagine that defines that character. Their ethnicity, background, where they were born, how old they are, where they went to college, their diet, etc. It\u2019s tedious if you\u2019re working on a character heavy story with a big \u201ccast\u201d, but it pays dividends. Once you have those inventories, you can stick characters in situations and the story literally writes itself. If you have a character that\u2019s a passionate vegan, you can immediately come up with dozens of possibilities if they were accidentally locked in a butcher\u2019s freezer. Same with politics, religious, social issues. It really unloads much of the burden of dreaming up a brilliant scene.</p>\n<p><img src=\"http://www.madeineighty.com/wp-content/uploads/2015/07/steemit0107.jpg\" width=\"800\" height=\"1765\"/></p>\n<p><strong>\u2022 Name Generators:</strong> Name generators are something I rely on quite a bit. There are many available online. They\u2019re usually free, and they\u2019re a great place to launch in to naming a character. Often times, once you have a name, more of the personality and background unfolds organically. <a href=\"www.seventhsanctum.com\">www.seventhsanctum.com</a> has an excellent list of name generators tailored specifically for several genres and character types.</p>\n<p><strong>\u2022 Research:</strong> This is one of those things that seems obvious, but I challenge you to go deeper. For my ghost story, I started researching life in the mid-1800\u2019s in the Southwest and Dust Bowl of the United States. As I dug through historical sites, I found some of the events of that time. A few hours in, I read about droughts and plagues, which would have been rich content for a story, but going even deeper, I read about these crazy grasshopper plagues! Even deeper, I found accounts of specific families and individuals that described enormous clouds of locusts that swept through their homes and ate everything, including the clothes off their bodies! I encourage you to obsessively push through references, way past where most people would get their first idea and start writing. Beyond that is where you\u2019re going to unearth something truly unique and memorable. I\u2019ve already written a treatment for this epic locust plague in my ghost story [\u2026sort of nervous about what that\u2019s going to be like to draw, though].</p>\n<p><strong>\u2022 Don\u2019t Lose The Magic:</strong> For me, the magic happens in the moments before I fall asleep. Without fail, that\u2019s where I get my best, originally ideas. Sometimes it\u2019s just a small line a dialog. Other times it\u2019s as vague as a plot point. It\u2019s a tough discipline to wake yourself up and write it down, but that [\u2026for me] is where the magic happens. It\u2019s invaluable, and worth the trouble of having to fall back asleep. I jot things down in the Notes app of my phone. I have some friends that just wake up and make audio recordings. You might get your best ideas during different times. Sometimes I have brilliant moments on long drives. Either way, document it! You\u2019ll be glad you did.</p>\n<p>Honestly, Steemit has been a revolution for me as well. Since the platform is incentivized, there is a tremendous wealth of references on writing, drawing, how-to\u2019s. Beyond that, I spent much of my time reading and curating novels and short stories posted by the authors bringing their work to the site. Just this morning, I found a comprehensive article by @jamielefay titled <a href=\"https://steemit.com/steemit/@jamielefay/steemit-and-the-future-of-book-publishing\">\u201cSteemit and the future of book publishing\u201d</a>. Everything here, totally relevant if you\u2019re creating comics or graphic novels.</p>\n<p><img src=\"http://www.madeineighty.com/wp-content/uploads/2015/07/SketchUpdate011.jpg\" width=\"800\" height=\"1130\"/></p>\n<p>Keep writing, creating and sharing! More work from my comic,<a href=\"www.theiacomic.com\"> THIEA</a>, and other stories to come. I\u2019d love feedback and constructive criticism.</p>\n<p>I post daily. Follow me <a href=\"https://steemit.com/@kommienezuspadt\">@kommienezuspadt</a> so you don\u2019t miss a post.</p>\n</html>",
-    "body_length": 9020,
-    "cashout_time": "2016-09-22T18:53:42",
-    "category": "art",
-    "children": 0,
-    "created": "2016-09-15T18:53:42",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "json_metadata": "{\"tags\":[\"art\",\"writing\",\"story\",\"blog\",\"comic\"],\"users\":[\"jamielefay\"],\"image\":[\"http://www.madeineighty.com/wp-content/uploads/2015/07/steemit0104.jpg\",\"http://www.madeineighty.com/wp-content/uploads/2015/07/steemit0105.jpg\",\"http://www.madeineighty.com/wp-content/uploads/2015/07/steemit0106.jpg\",\"http://www.madeineighty.com/wp-content/uploads/2015/07/SketchUpdate004.jpg\",\"http://www.madeineighty.com/wp-content/uploads/2015/07/steemit0107.jpg\",\"http://www.madeineighty.com/wp-content/uploads/2015/07/SketchUpdate011.jpg\"],\"links\":[\"www.theiacomic.com\",\"https://steemit.com/writing/@kommienezuspadt/full-script-of-theia-sci-fi-comic-book-theia-exclusively-on-steemit\",\"www.seventhsanctum.com\",\"https://steemit.com/steemit/@jamielefay/steemit-and-the-future-of-book-publishing\",\"https://steemit.com/@kommienezuspadt\"]}",
-    "last_payout": "1969-12-31T23:59:59",
-    "last_update": "2016-09-15T19:11:12",
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 9343647949820,
-    "parent_author": "",
-    "parent_permlink": "art",
-    "pending_payout_value": "6.848 HBD",
-    "percent_hbd": 10000,
-    "permlink": "bringing-characters-and-worlds-to-life-an-ode-to-the-steemit-creators",
-    "post_id": 1257344,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "root_title": "Bringing worlds and characters to life; an ode to the Steemit creators!",
-    "title": "Bringing worlds and characters to life; an ode to the Steemit creators!",
-    "total_payout_value": "0.000 HBD",
-    "url": "/art/@kommienezuspadt/bringing-characters-and-worlds-to-life-an-ode-to-the-steemit-creators"
-  },
-  {
-    "active_votes": [
-      {
-        "percent": "10000",
-        "reputation": 2170055933924,
-        "rshares": 1899047308,
-        "voter": "jackgallenhall"
-      },
-      {
-        "percent": "10000",
-        "reputation": 982331434653,
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1502200909130,
-        "rshares": 98577200,
-        "voter": "ola1"
-      }
-    ],
-    "author": "jackgallenhall",
-    "author_reputation": 2170055933924,
-    "beneficiaries": [],
-    "body": "<html>\n<p>https://youtu.be/JlnMXnpLuPU</p>\n</html>",
-    "body_length": 50,
-    "cashout_time": "2016-09-22T18:52:48",
-    "category": "te",
-    "children": 0,
-    "created": "2016-09-15T18:52:48",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "json_metadata": "{\"tags\":[\"\",\"steemit\",\"te\"],\"image\":[\"https://img.youtube.com/vi/JlnMXnpLuPU/0.jpg\"],\"links\":[\"https://youtu.be/JlnMXnpLuPU\"]}",
-    "last_payout": "1969-12-31T23:59:59",
-    "last_update": "2016-09-15T18:53:39",
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 2097751374,
-    "parent_author": "",
-    "parent_permlink": "te",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "steemit-led-tittle-video",
-    "post_id": 1257332,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "root_title": "Steemit Led Tittle Video",
-    "title": "Steemit Led Tittle Video",
-    "total_payout_value": "0.000 HBD",
-    "url": "/te/@jackgallenhall/steemit-led-tittle-video"
   }
 ]
