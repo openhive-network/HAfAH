@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_ranked_posts"
-          params: {"sort":"created","tag":"life", "limit":5}
+          params: {"sort":"created","tag":"life"}
       response:
         status_code: 200
         verify_response_with:

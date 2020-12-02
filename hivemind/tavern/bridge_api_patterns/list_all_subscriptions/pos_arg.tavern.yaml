@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.list_all_subscriptions patterns test
 
   marks:
-    - patterntest # no nonempty result possible for 5mln set
+    - patterntest
 
   includes:
     - !include ../../common.yaml

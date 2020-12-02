@@ -27,3 +27,4 @@
           extra_kwargs:
             method: "one"
             directory: "bridge_api_patterns/list_communities"
+            ignore_tags: ['admins'] # random order of admins

@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.list_community_roles patterns test
 
   marks:
-    - patterntest # no nonempty result possible for 5mln set
+    - patterntest
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.list_community_roles"
-          params: {"community":"hive-123456"}
+          params: {"community":"hive-117600"}
       response:
         status_code: 200
         verify_response_with:
