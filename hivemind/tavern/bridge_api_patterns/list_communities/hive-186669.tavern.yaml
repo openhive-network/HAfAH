@@ -27,4 +27,3 @@
           extra_kwargs:
             method: "hive-186669"
             directory: "bridge_api_patterns/list_communities"
-            ignore_tags: ['admins'] # random order of admins

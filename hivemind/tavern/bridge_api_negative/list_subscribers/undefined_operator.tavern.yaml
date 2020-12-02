@@ -2,7 +2,7 @@
   test_name: bridge_api.list_subscribers undefined operator # not documented
 
   marks:
-    - patterntest # change it into proper error, server error, especially from SQL, is not good enough
+    - patterntest # used to have a bug related to invalid call when nonstring was passed
     - negative
 
   includes:

@@ -3,7 +3,7 @@
 
   marks:
     - patterntest
-    - xfail # pattern difference - sort order is not deterministic
+
   includes:
     - !include ../../common.yaml
 
