@@ -1,0 +1,28 @@
+---
+  test_name: Hivemind condenser_api.get_discussions_by_hot patterns test observer
+
+  marks:
+    - patterntest # test to compare with observers alice and ignoreall
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_discussions_by_hot observer
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_hot"
+          params: {"observer":"camilla"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "observer_not_muted"
+            directory: "condenser_api_patterns/get_discussions_by_hot"
