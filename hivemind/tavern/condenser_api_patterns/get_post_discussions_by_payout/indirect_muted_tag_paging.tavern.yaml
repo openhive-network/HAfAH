@@ -1,0 +1,29 @@
+---
+  test_name: Hivemind condenser_api.get_post_discussions_by_payout patterns test observer alice with tag and paging mechanism
+
+  marks:
+    - patterntest # alice follows muted of ignoreall that ignores kental (mock data)
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_post_discussions_by_payout observer alice with tag and paging mechanism
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_post_discussions_by_payout"
+          params: {"tag":"life","observer":"alice","limit":3,
+                   "start_author": "kental", "start_permlink": "the-impressive-difference-between-bees-and-wasps-bees-vs-wasps"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "indirect_muted_tag_paging"
+            directory: "condenser_api_patterns/get_post_discussions_by_payout"
