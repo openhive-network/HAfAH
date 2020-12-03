@@ -3,8 +3,8 @@ Lists communities by new subscriber count. Returns names and titles community li
 method: "bridge.list_pop_communities"
 params:
 {
-  "limit":"{number}",
+  "limit":{number}
 
-    optional, range 1..25; default = 25;
+    optional, 1..25, default = 25
 
 }

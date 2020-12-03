@@ -1,11 +1,11 @@
-Lists information about communities.
+Lists communities depending on chosen ranking.
 
 method: "bridge.list_communities"
 params:
 {
   "last":"{name}",
 
-     optional, name of community; given community not appear in result; used for paging mechanism 
+    optional, name of community; paging mechanism (cuts out this and "higher" communities, depends on chosen ranking)
 
   "limit":"{number}",
 
@@ -13,19 +13,19 @@ params:
 
   "query":"{title}",
 
-    optional, when given turns on filtering on given name/ part of name
+    optional, when given turns on filtering for given set of words - words are looked for in 'title' and 'about' fields
 
   "sort": "{order}",
 
-     optional, determines order of returned communities' default = "rank"
-     values:
-       "rank" - communities with highest rank (trending) score first
-       "new" - newest communities first
-       "subs" - communities with largest number of subscribers first
+    optional, determines order of returned communities, default = "rank"
+    values:
+      "rank" - communities with highest rank (trending) score first
+      "new" - newest communities first
+      "subs" - communities with largest number of subscribers first
 
-  "observer":"{account}",
+  "observer":"{account}"
 
-     optional (can be skipped or passed empty), when passed has to point to valid account
-     used to hide show relation between account and community (subscribed, role and title)
+    optional (can be skipped or passed empty), when passed has to point to valid account
+    used to show relation between account and community (subscribed, role and title)
 
 }

@@ -9,10 +9,10 @@ params:
 
   "last":"{name}",
 
-     optional, appears to be broken 
+    optional, paging mechanism (broken - most likely was meant to point to account)
 
-  "limit":"{number}",
+  "limit":{number}
 
-    optional, must be positive; default = 50;
+    optional, unspecified range, default = 50 (to be changed - needs to enforce positive integer within range that also needs to be defined)
 
 }
