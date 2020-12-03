@@ -4,8 +4,8 @@ Similar to condenser_api.get_trending_tags but gives slightly different values a
 method: "bridge.get_payout_stats"
 params:
 {
-  "limit":"{number}"
+  "limit":{number}
 
-     optional, range 1..250; default = 250
+     optional, 1..250, default = 250
 
 }

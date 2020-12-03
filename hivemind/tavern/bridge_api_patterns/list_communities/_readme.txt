@@ -7,7 +7,7 @@ params:
 
     optional, name of community; paging mechanism (cuts out this and "higher" communities, depends on chosen ranking)
 
-  "limit":"{number}",
+  "limit":{number},
 
     optional, range 1..100; default = 100
 
