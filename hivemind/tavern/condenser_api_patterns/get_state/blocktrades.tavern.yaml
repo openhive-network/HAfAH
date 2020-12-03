@@ -17,8 +17,7 @@
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
         headers:
-          $ext:
-            function: validate_response:get_headers
+          content-type: application/json
         json:
           jsonrpc: "2.0"
           id: 1
