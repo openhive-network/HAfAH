@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.list_subscribers patterns test
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+  test_name: Hivemind database_api.find_comments patterns test
+
   marks:
-    - patterntest # no nonempty result possible for 5mln set
+    - patterntest
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: list_subscribers
+    - name: find_comments
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_subscribers"
-          params: {"community":"hive-123456"}
+          method: "database_api.find_comments"
+          params: {"comments":[["'::VARCHAR","The permlink of this post is: ' AND DROP DATABASE 'hive"]]}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "named_arg"
-            directory: "bridge_api_patterns/list_subscribers"
+            method: "escape_chars"
+            directory: "database_api_patterns/find_comments"
