@@ -9,7 +9,7 @@ params:
 
      start_author + start_permlink : optional, when given have to point to valid start post; paging mechanism (cuts out this and more paying replies)
 
-  "limit":"{number}",
+  "limit":{number},
 
      optional, 1..100, default = 20
 

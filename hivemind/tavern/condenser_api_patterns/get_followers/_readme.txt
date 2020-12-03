@@ -15,7 +15,7 @@ params:
 
     optional, 'blog'/'ignore' (should be extended with 'blacklists' etc.), default = 'blog'
 
-  "limit:"{number}"
+  "limit:{number}
 
     optional, 1..1000, default = 1000
 }

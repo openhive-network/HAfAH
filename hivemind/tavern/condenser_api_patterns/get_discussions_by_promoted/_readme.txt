@@ -8,7 +8,7 @@ params:
 
     start_author + start_permlink : optional, when given have to point to valid start post; paging mechanism (cuts out this and more promoted posts)
 
-  "limit":"{number}",
+  "limit":{number},
 
     optional, 1..100, default = 20
 
@@ -21,7 +21,7 @@ params:
 
     optional, default = 0 (meaning no truncation); reduces maximal size of post body, cutting out all excess
 
-  "filter_tags":"{list_of_tags}"
+  "filter_tags":[{list_of_tags}]
 
     has to be left empty, not supported
 }
