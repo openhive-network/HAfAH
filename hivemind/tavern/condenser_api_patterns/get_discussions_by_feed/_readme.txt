@@ -6,23 +6,23 @@ params:
 {
   "tag":"{account}",
 
-   mandatory, have to point on valid account whose feed we are looking at
+    mandatory, have to point on valid account whose feed we are looking at
 
   "start_author":"{author}" + "start_permlink":"{permlink}",
 
-     optional, should point to valid apost
+    optional, should point to valid apost
 
-   "limit":"{number}",
+  "limit":{number},
 
-     optional, range 1...100; default = 20
+    optional, 1..100, default = 20
 
-   "truncate_body":{number}
+  "truncate_body":{number}
 
-     optional, default = 0; 
+    optional, default = 0 (meaning no truncation); reduces maximal size of post body, cutting out all excess
 
-   "filter_tags":"{list_of_tags}"
+  "filter_tags":[{list_of_tags}]
 
-     optional, not supported
+    has to be left empty, not supported
 }
 
 Notes for creating patterns:

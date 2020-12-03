@@ -11,7 +11,7 @@ params:
 
     optional, when provided has to point to valid account, paging mechanism (cuts out this and newer follows)
 
-  "limit:"{number}"
+  "limit:{number}
 
     optional, 1..1000, default = 1000
 

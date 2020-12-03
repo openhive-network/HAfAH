@@ -12,9 +12,9 @@ params:
 
      optional, with author when given have to point to valid start post; paging mechanism
 
-  "limit":"{limit}",
+  "limit":{number},
 
-     optional, range 1...100; default = 20
+     optional, 1..100, default = 20
 
    "before_date":"{date}",
 
@@ -22,5 +22,5 @@ params:
 
    "truncate_body":{number}
 
-     optional, default = 0; 
+     optional, default = 0 (meaning no truncation); reduces maximal size of post body, cutting out all excess
 }

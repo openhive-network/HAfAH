@@ -13,11 +13,11 @@ params:
 
     optional, when passed it has to point to valid post (paired with start_author)
 
-  "limit":"{number}",
+  "limit":{number},
 
     optional, 1..100, default = 20
 
-  "truncate_body":"{number}"
+  "truncate_body":{number}
 
     optional, default = 0 (meaning no truncation); reduces maximal size of post body, cutting out all excess
 }
