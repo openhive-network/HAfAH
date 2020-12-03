@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test
+  test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test paging mechanism
 
   marks:
-    - patterntest
+    - patterntest # test to compare with observers alice and ignoreall
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_comment_discussions_by_payout
+    - name: get_comment_discussions_by_payout paging mechanism
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_comment_discussions_by_payout"
-          params: {}
+          params: {"limit":3, "start_author":"anyx","start_permlink":"re-dopezzz123-why-muscles-get-sore-20160815t225638685z"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "no_tag"
+            method: "no_observer_paging"
             directory: "condenser_api_patterns/get_comment_discussions_by_payout"
