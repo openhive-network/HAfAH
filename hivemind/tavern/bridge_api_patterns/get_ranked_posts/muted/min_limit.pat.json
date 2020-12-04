@@ -54,7 +54,9 @@
     "author_payout_value": "0.000 HBD",
     "author_reputation": -5.58,
     "beneficiaries": [],
-    "blacklists": [],
+    "blacklists": [
+      "reputation-0"
+    ],
     "body": "Do I understand correctly that you're referencing the initial \"mining\" by a select group of devs and friends, resulting in \"overwhelming control\" by means of vests now?\nOr am I just imagining things? :)",
     "category": "philosophy",
     "children": 0,
