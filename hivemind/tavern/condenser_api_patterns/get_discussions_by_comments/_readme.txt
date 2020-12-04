@@ -11,15 +11,15 @@ params:
 
      optional, when given have to point on valid start comment
 
-   "limit":"{number}",
+   "limit":{number},
 
-     optional, range 1...100; default = 20
+     optional, range 1..100; default = 20
 
    "truncate_body":{number}
 
-     optional, default = 0; 
+     optional, default = 0 (meaning no truncation); reduces maximal size of post body, cutting out all excess
 
-   "filter_tags":"{list_of_tags}",
+   "filter_tags":[{list_of_tags}]
 
-     optional, not supported
+     has to be left empty, not supported
 }
