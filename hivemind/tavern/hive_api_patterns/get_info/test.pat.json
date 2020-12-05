@@ -1,6 +1,5 @@
 {
-  "database_head_block": 5000016,
+  "database_head_block": 5000015,
   "database_schema_version": 18,
-  "hivemind_git_rev": "449e8ea0",
   "hivemind_version": "0.0.1"
 }
