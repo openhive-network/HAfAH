@@ -63,11 +63,11 @@ To run tavern test:
 ```
 export HIVEMIND_ADDRESS=127.0.0.1
 export HIVEMIND_PORT=8080
-PYTHONPATH=$PYTHONPATH:$(pwd) pytest -v -n auto --durations=0 .
+PYTHONPATH=$PYTHONPATH:$(pwd) pytest --workers auto --tests-per-worker auto .
 ```
 5. Run tests from given directory
 ```
-PYTHONPATH=$PYTHONPATH:$(pwd) pytest -v -n auto --durations=0 <directory_name>
+PYTHONPATH=$PYTHONPATH:$(pwd) pytest --workers auto --tests-per-worker auto <directory_name>
 ```
 
 To Run Tavern full sync with specified URL PORT for hivemind node, that checks if API call returns results use:
