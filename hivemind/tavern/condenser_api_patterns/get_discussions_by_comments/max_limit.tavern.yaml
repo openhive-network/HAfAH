@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_comments patterns test
 
   marks:
-    - patterntest
+    - patterntest # original produced overlapping pages
 
   includes:
     - !include ../../common.yaml
@@ -18,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_discussions_by_comments"
-          params: {"start_author":"admin","limit":1}
+          params: {"start_author":"stellabelle","start_permlink":"re-extie-dasilva-my-thoughts-on-steemit-20160909t154633902z","limit":100}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "admin"
+            method: "max_limit"
             directory: "condenser_api_patterns/get_discussions_by_comments"
