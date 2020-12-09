@@ -1,14 +1,15 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_comments pre_appbase patterns test
+  test_name: Hivemind condenser_api.get_replies_by_last_update blank start author patterns test
 
   marks:
     - patterntest
+    - negative
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: condenser_api.get_discussions_by_comments pre_appbase patterns test
+    - name: get_replies_by_last_update blank start author
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +18,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "call"
-          params: ["condenser_api", "get_discussions_by_comments", [{"start_author":"admin","start_permlink":"","limit":1}]]
+          method: "condenser_api.get_replies_by_last_update"
+          params: {"start_permlink":"non_existing_permlink","limit":1}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "pre_appbase"
-            directory: "condenser_api_patterns/get_discussions_by_comments"
+            method: "no_start_author"
+            directory: "condenser_api_negative/get_replies_by_last_update"
+            error_response: true
