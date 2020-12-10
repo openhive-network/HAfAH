@@ -31,4 +31,5 @@ params:
      optional (can be skipped or passed empty), ignored for "blog", "feed" and "replies", otherwise when passed has to point to valid account
      used to fill blacklist stats and mark posts of authors blacklisted by observer
      (looks like it might be a bug since blacklist is applied to places where it makes no sense, while it is ignored where it would make sense to apply it)
+     (update: still WIP, for the time being observer is basically ignored)
 }

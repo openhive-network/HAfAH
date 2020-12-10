@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_comments patterns test
+  test_name: Hivemind bridge_api.get_account_posts sort comments patterns test
 
   marks:
     - patterntest
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
-    - name: get_discussions_by_comments
+    - name: get_account_posts sort comments
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,13 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_discussions_by_comments"
-          params: {"start_author":"admin","limit":1}
+          method: "bridge.get_account_posts"
+          params: {"sort":"comments", "account":"cheetah","limit":100}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "admin"
-            directory: "condenser_api_patterns/get_discussions_by_comments"
+            method: "max_limit"
+            directory: "bridge_api_patterns/get_account_posts/comments"
+

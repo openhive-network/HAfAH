@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_comments pre_appbase patterns test
+  test_name: Hivemind condenser_api.get_replies_by_last_update limit 100 patterns test
 
   marks:
-    - patterntest
+    - patterntest # similar to limit_100 but this one actually reaches the limit
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: condenser_api.get_discussions_by_comments pre_appbase patterns test
+    - name: get_replies_by_last_update
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "call"
-          params: ["condenser_api", "get_discussions_by_comments", [{"start_author":"admin","start_permlink":"","limit":1}]]
+          method: "condenser_api.get_replies_by_last_update"
+          params: ["gavvet","",100]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "pre_appbase"
-            directory: "condenser_api_patterns/get_discussions_by_comments"
+            method: "max_limit"
+            directory: "condenser_api_patterns/get_replies_by_last_update"
