@@ -3,6 +3,7 @@
 
   marks:
     - patterntest # see also zaitsevalesyaa.tavern.yaml; observer is only used to mark blacklists
+                  # (note that it is not yet clear how blacklists are going to be handled in get_account_posts - for now observer is basically ignored)
 
   includes:
     - !include ../../../common.yaml
