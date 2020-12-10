@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_relationship_between_accounts follows patterns test (5-4)
+  test_name: Hivemind bridge_api.get_relationship_between_accounts follows patterns test (5-1)
 
   marks:
     - patterntest # relies on mock data
@@ -18,12 +18,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_relationship_between_accounts"
-          params: {"account1": "tester5", "account2": "tester4"}
+          params: {"account1": "tester5", "account2": "tester1"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "tester5_tester4"
+            method: "tester5_tester1"
             directory: "mock_tests/get_relationship_between_accounts"
 
