@@ -1,3 +1,8 @@
+import os
+import csv
+import logging
+from time import perf_counter as perf
+
 class PatternDiffException(Exception):
   pass
 
@@ -35,7 +40,7 @@ def remove_tag(data, tags_to_remove):
 
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
   """ This method will compare response with pattern file """
-  import os
+  received_at = response.headers.get('Sent-At', None)
 
   response_fname = directory + "/" + method + RESPONSE_FILE_EXT
   if os.path.exists(response_fname):
@@ -65,7 +70,12 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     raise PatternDiffException(msg)
 
   # disable coparison with pattern on demand
+  # and save 
   if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
+    if received_at is not None:
+      with open("benchmark.csv", 'a') as benchmark_file:
+        writer = csv.writer(benchmark_file)
+        writer.writerow([directory + "/" + method, perf() - float(received_at)])
     return
 
   import deepdiff
@@ -77,4 +87,3 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     save_json(response_fname, result)
     msg = "Differences detected between response and pattern."
     raise PatternDiffException(msg)
-
