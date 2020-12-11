@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_author_before_date patterns test
 
   marks:
-    - patterntest # should return empty set - no posts before 2009 (to be investigated but works like original)
+    - patterntest # no posts before 2009 so it should return empty set, however date is completely ignored
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_discussions_by_author_before_date"
-          params: {"author":"steemit","start_permlink":"firstpost","before_date":"2009-04-19T22:49:43","limit":1}
+          params: {"author":"steemit","start_permlink":"","before_date":"2009-04-19T22:49:43","limit":1}
       response:
         status_code: 200
         verify_response_with:

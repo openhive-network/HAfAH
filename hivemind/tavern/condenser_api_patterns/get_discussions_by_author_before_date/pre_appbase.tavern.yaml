@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "call"
-          params: ["condenser_api", "get_discussions_by_author_before_date", ["steemit", "firstpost", "2016-04-19T22:49:43", 1]]
+          params: ["condenser_api", "get_discussions_by_author_before_date", ["steemit", "", "2016-04-19T22:49:43", 1]]
       response:
         status_code: 200
         verify_response_with:
