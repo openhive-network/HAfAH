@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind tags_api.get_discussions_by_author_before_date patterns test not existing author empty result
+  test_name: Hivemind condenser_api.get_blog_entries patterns test
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_discussions_by_author_before_date
+    - name: get_blog_entries
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "tags_api.get_discussions_by_author_before_date"
-          params: ["kr3", "", "", 1]
+          method: "condenser_api.get_blog_entries"
+          params: {"account":"cryptocurrency1","start_entry_id":-1,"limit":500}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "not_existing_author"
-            directory: "tags_api_patterns/get_discussions_by_author_before_date"
+            method: "max_limit"
+            directory: "condenser_api_patterns/get_blog_entries"
