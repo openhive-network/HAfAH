@@ -2,542 +2,6 @@
   {
     "active_votes": [
       {
-        "percent": "10000",
-        "reputation": 949715155915,
-        "rshares": 7189765117913,
-        "voter": "steempty"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 1758650605407,
-        "voter": "fantasy"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 3096347121358,
-        "voter": "lafona-miner"
-      },
-      {
-        "percent": "10000",
-        "reputation": 9111465318256,
-        "rshares": 443115789439,
-        "voter": "lafona"
-      },
-      {
-        "percent": "10000",
-        "reputation": 8358591595454,
-        "rshares": 5704113357028,
-        "voter": "kushed"
-      },
-      {
-        "percent": "10000",
-        "reputation": 358840960832,
-        "rshares": 1462277966740,
-        "voter": "rossco99"
-      },
-      {
-        "percent": "10000",
-        "reputation": 454674995328,
-        "rshares": 1053812806549,
-        "voter": "delegate.lafona"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 311716524620,
-        "voter": "lafona5"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 4657282411338,
-        "voter": "steemit200"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1214229078,
-        "rshares": 3103809281,
-        "voter": "boy"
-      },
-      {
-        "percent": "10000",
-        "reputation": 4712949449,
-        "rshares": 3768391494,
-        "voter": "bue-witness"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1789951494550,
-        "rshares": 691001807,
-        "voter": "bunny"
-      },
-      {
-        "percent": "10000",
-        "reputation": 103443134841,
-        "rshares": 54776083621,
-        "voter": "bue"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 1663169085,
-        "voter": "mini"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 213791564,
-        "voter": "moon"
-      },
-      {
-        "percent": "10000",
-        "reputation": 12928765689257,
-        "rshares": 78891294747,
-        "voter": "aizensou"
-      },
-      {
-        "percent": "10000",
-        "reputation": 49549461527,
-        "rshares": 521250289282,
-        "voter": "boatymcboatface"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 624958194,
-        "voter": "healthcare"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 973053164,
-        "voter": "daniel.pan"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 288347059,
-        "voter": "helen.tan"
-      },
-      {
-        "percent": "10000",
-        "reputation": 21498120740,
-        "rshares": 9112903566,
-        "voter": "gregory60"
-      },
-      {
-        "percent": "10000",
-        "reputation": 4931834878069,
-        "rshares": 18659534148,
-        "voter": "fkn"
-      },
-      {
-        "percent": "10000",
-        "reputation": 35537325381339,
-        "rshares": 973967568018,
-        "voter": "hipster"
-      },
-      {
-        "percent": "10000",
-        "reputation": 5414208804644,
-        "rshares": 24544701292,
-        "voter": "elishagh1"
-      },
-      {
-        "percent": "10000",
-        "reputation": 42741727265739,
-        "rshares": 152212377868,
-        "voter": "steve-walschot"
-      },
-      {
-        "percent": "10000",
-        "reputation": 14968641922913,
-        "rshares": 55784839677,
-        "voter": "oaldamster"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1663549830469,
-        "rshares": 446046136,
-        "voter": "coar"
-      },
-      {
-        "percent": "3301",
-        "reputation": 2902053059801,
-        "rshares": 1069533112,
-        "voter": "murh"
-      },
-      {
-        "percent": "10000",
-        "reputation": 373944484737,
-        "rshares": 1383235744,
-        "voter": "dmitry"
-      },
-      {
-        "percent": "10000",
-        "reputation": 4509451541223,
-        "rshares": 72055092368,
-        "voter": "theshell"
-      },
-      {
-        "percent": "10000",
-        "reputation": 10395665548525,
-        "rshares": 249625471161,
-        "voter": "billbutler"
-      },
-      {
-        "percent": "10000",
-        "reputation": 11765473490257,
-        "rshares": 51311928063,
-        "voter": "justtryme90"
-      },
-      {
-        "percent": "10000",
-        "reputation": 71931696380,
-        "rshares": 3841140545064,
-        "voter": "satoshifund"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1380612911758,
-        "rshares": 4567261739,
-        "voter": "dahaz159"
-      },
-      {
-        "percent": "10000",
-        "reputation": 77590508815145,
-        "rshares": 387985733469,
-        "voter": "kaylinart"
-      },
-      {
-        "percent": "10000",
-        "reputation": 9186061899783,
-        "rshares": 32141869782,
-        "voter": "michaelx"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3929147028870,
-        "rshares": 14767102458,
-        "voter": "magnebit"
-      },
-      {
-        "percent": "10000",
-        "reputation": 6105332515536,
-        "rshares": 12304387392,
-        "voter": "primus"
-      },
-      {
-        "percent": "10000",
-        "reputation": 85777133037,
-        "rshares": 510500434,
-        "voter": "mrhankeh"
-      },
-      {
-        "percent": "10000",
-        "reputation": 10314872786861,
-        "rshares": 55523531238,
-        "voter": "isteemit"
-      },
-      {
-        "percent": "10000",
-        "reputation": 336763673779,
-        "rshares": 243469311828,
-        "voter": "asmolokalo"
-      },
-      {
-        "percent": "10000",
-        "reputation": 15603689614497,
-        "rshares": 32438700122,
-        "voter": "good-karma"
-      },
-      {
-        "percent": "10000",
-        "reputation": 18799092030582,
-        "rshares": 117576364187,
-        "voter": "derekareith"
-      },
-      {
-        "percent": "10000",
-        "reputation": 6340616331847,
-        "rshares": 27196917779,
-        "voter": "picokernel"
-      },
-      {
-        "percent": "10000",
-        "reputation": 19111656178138,
-        "rshares": 57464079766,
-        "voter": "furion"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3891722,
-        "rshares": 450690091,
-        "voter": "barbara2"
-      },
-      {
-        "percent": "10000",
-        "reputation": 9142611234,
-        "rshares": 500796799,
-        "voter": "ch0c0latechip"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3871042,
-        "rshares": 463489897,
-        "voter": "doge4lyf"
-      },
-      {
-        "percent": "10000",
-        "reputation": 322912672117,
-        "rshares": 77799484,
-        "voter": "cynetyc"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1648396897354,
-        "rshares": 11012705941,
-        "voter": "asim"
-      },
-      {
-        "percent": "10000",
-        "reputation": 38947133984552,
-        "rshares": 207913769477,
-        "voter": "jesta"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1510234773828,
-        "rshares": 3521079151,
-        "voter": "bitland"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2397831198773,
-        "rshares": 3317742975,
-        "voter": "karen13"
-      },
-      {
-        "percent": "10000",
-        "reputation": 777812727227,
-        "rshares": 18913653840,
-        "voter": "artific"
-      },
-      {
-        "percent": "10000",
-        "reputation": -883682716676,
-        "rshares": 91926117,
-        "voter": "wildchild"
-      },
-      {
-        "percent": "10000",
-        "reputation": 4603449402273,
-        "rshares": 7610839667,
-        "voter": "bitcoiner"
-      },
-      {
-        "percent": "10000",
-        "reputation": 14988694886527,
-        "rshares": 161321493342,
-        "voter": "jl777"
-      },
-      {
-        "percent": "10000",
-        "reputation": 10519849768972,
-        "rshares": 15117633226,
-        "voter": "positive"
-      },
-      {
-        "percent": "10000",
-        "reputation": 58190631451,
-        "rshares": 13748160995,
-        "voter": "proto"
-      },
-      {
-        "percent": "10000",
-        "reputation": 147425730,
-        "rshares": 511421569,
-        "voter": "fnait"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3720753029,
-        "rshares": 466607624,
-        "voter": "keepcalmand"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3005005344055,
-        "rshares": 26623466582,
-        "voter": "fabien"
-      },
-      {
-        "percent": "10000",
-        "reputation": 106575300404,
-        "rshares": 3733883806,
-        "voter": "glitterpig"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1275505236,
-        "rshares": 6948566921,
-        "voter": "taker"
-      },
-      {
-        "percent": "10000",
-        "reputation": 4116067655741,
-        "rshares": 7011114855,
-        "voter": "sykochica"
-      },
-      {
-        "percent": "10000",
-        "reputation": 16577047541,
-        "rshares": 14290322836,
-        "voter": "sunshine"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 1561551841,
-        "voter": "paynode"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 52467942,
-        "voter": "loli"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1062400368532,
-        "rshares": 101260657045,
-        "voter": "helikopterben"
-      },
-      {
-        "percent": "100",
-        "reputation": 11683040603469,
-        "rshares": 1437734042,
-        "voter": "anotherjoe"
-      },
-      {
-        "percent": "10000",
-        "reputation": 324640729094,
-        "rshares": 13552961624,
-        "voter": "cryptomancer"
-      },
-      {
-        "percent": "10000",
-        "reputation": -642566206250,
-        "rshares": 6943720311,
-        "voter": "craigwilliamz"
-      },
-      {
-        "percent": "10000",
-        "reputation": 970572315676,
-        "rshares": 967388016,
-        "voter": "fiat19"
-      },
-      {
-        "percent": "10000",
-        "reputation": 670779587392,
-        "rshares": 54647248,
-        "voter": "ahmetova"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 924455261,
-        "voter": "smisi"
-      },
-      {
-        "percent": "10000",
-        "reputation": 501396601216,
-        "rshares": 226955419,
-        "voter": "pjo"
-      },
-      {
-        "percent": "10000",
-        "reputation": 19674745811334,
-        "rshares": 57687974024,
-        "voter": "tracemayer"
-      },
-      {
-        "percent": "10000",
-        "reputation": 9789912031,
-        "rshares": 55496395,
-        "voter": "feruz"
-      },
-      {
-        "percent": "10000",
-        "reputation": 563927807986,
-        "rshares": 1314420433,
-        "voter": "bitcoinparadise"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1066308215,
-        "rshares": 88742390,
-        "voter": "inarix03"
-      },
-      {
-        "percent": "10000",
-        "reputation": 4971287291,
-        "rshares": 53469216,
-        "voter": "libertyadvocate"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 155715771,
-        "voter": "nadil"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2432802,
-        "rshares": 146166760,
-        "voter": "daniel.brest"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 139701223,
-        "voter": "edward.shroder"
-      }
-    ],
-    "author": "good-karma",
-    "author_reputation": 15603689614497,
-    "beneficiaries": [],
-    "body": "I am pleased to announce my application for witness. \n\nMy background, I have been in crypto space since 2012. I have mined Bitcoin at very early days, then try to contribute where I can with my skill set. When I find out about Nxt, decided to create client and contribute to the project. I have developed one of the early clients (Clienxt) and later due to one client favored by community, development discontinued. I also developed Nxt Mobile application. Since then I have been busy with other projects but always watched for next potentially great projects on crypto.\n\nCurrently I am contributing Steem community with eSteem mobile application project and have many other projects in line to improve the platform, bring more users, grow awareness.\nEven though I have been anonymous for most part before, I took different approach with Steem and decided to take route of transparency and entrepreneurship. I have wide range of programming skills, UX and Quality oriented.\n<center>https://s5.postimg.org/it2gooa2f/witness_good_karma_steem.png</center>\nCheck out for my recent works on github/feruzm, twitter/feruzm\nWitness is highly reliable, ready to upscale when needed. Nodes are in US central and US east area. Vote from cli_wallet\n`vote_for_witness your-account good-karma true true`\n\n* Witness:   `good-karma`\n* Seed node: `104.196.141.163:2001`\n------------\n\n### To vote me for witness, please check\n### https://steemit.com/~witnesses\n### and vote for `good-karma` if you cannot find it in list\nScroll to the bottom of the page\nhttps://img1.steemit.com/0x0/https://sc-cdn.scaleengine.net/i/3a36aeae99432e2cfec853ec6e5357c6.png\nEnter `good-karma`\nClick **VOTE**\n\n### Follow to get updates on projects I am working and Steeming on...\n\n## Update: witness listed and up for voting... Sorry for those who tried and couldn't vote, please try again.\n\n~ Feruz",
-    "body_length": 1859,
-    "cashout_time": "2016-09-14T18:50:00",
-    "category": "witness-category",
-    "children": 8,
-    "created": "2016-09-07T18:50:00",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "json_metadata": "{\"tags\":[\"witness-category\"],\"links\":[\"https://steemit.com/~witnesses\"],\"image\":[\"https://s5.postimg.org/it2gooa2f/witness_good_karma_steem.png\",\"https://img1.steemit.com/0x0/https://sc-cdn.scaleengine.net/i/3a36aeae99432e2cfec853ec6e5357c6.png\"]}",
-    "last_payout": "1969-12-31T23:59:59",
-    "last_update": "2016-09-08T06:55:39",
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 33470856816257,
-    "parent_author": "",
-    "parent_permlink": "witness-category",
-    "pending_payout_value": "85.091 HBD",
-    "percent_hbd": 10000,
-    "permlink": "good-karma-witness-thread",
-    "post_id": 1162291,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "root_title": "good-karma Witness Thread",
-    "title": "good-karma Witness Thread",
-    "total_payout_value": "0.000 HBD",
-    "url": "/witness-category/@good-karma/good-karma-witness-thread"
-  },
-  {
-    "active_votes": [
-      {
         "percent": "3800",
         "reputation": 145171381514207,
         "rshares": 10768240913245,
@@ -6714,5 +6178,97 @@
     "title": "eSteem Mobile App Development Updates 1.1.2",
     "total_payout_value": "0.000 HBD",
     "url": "/steemit/@good-karma/esteem-mobile-app-development-updates-1-1-2"
+  },
+  {
+    "active_votes": [
+      {
+        "percent": "10000",
+        "reputation": 35537325381339,
+        "rshares": 973967568018,
+        "voter": "hipster"
+      },
+      {
+        "percent": "3301",
+        "reputation": 2902053059801,
+        "rshares": 1426450295,
+        "voter": "murh"
+      },
+      {
+        "percent": "10000",
+        "reputation": 10395665548525,
+        "rshares": 208003523717,
+        "voter": "billbutler"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1394374008782,
+        "rshares": 1830127738,
+        "voter": "billykeed"
+      },
+      {
+        "percent": "10000",
+        "reputation": 217622810430,
+        "rshares": 585335120,
+        "voter": "ryno"
+      },
+      {
+        "percent": "10000",
+        "reputation": 35209974404,
+        "rshares": 121757317,
+        "voter": "mysteem"
+      },
+      {
+        "percent": "10000",
+        "reputation": 5571312226030,
+        "rshares": 3819058551,
+        "voter": "beanz"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 3958064178,
+        "voter": "ullikume"
+      },
+      {
+        "percent": "10000",
+        "reputation": -642566206250,
+        "rshares": 6644329945,
+        "voter": "craigwilliamz"
+      },
+      {
+        "percent": "10000",
+        "reputation": 837791549130,
+        "rshares": 1522235238,
+        "voter": "sponge-bob"
+      }
+    ],
+    "author": "good-karma",
+    "author_reputation": 15603689614497,
+    "beneficiaries": [],
+    "body": "Just wanted to clarify few points about eSteem - Steem Mobile application project.\n\n**eSteem** is formerly known as _**Steem Mobile**_, [opensource application](https://github.com/feruzm/esteem) for mobile devices and tablets with support for iOS, Android, Windows Phones.\n\n# eSteem means two thing:\n\n* respect and admiration for the platform Steem\n* eSteem, electronic Steem ( just like email is being Electronic Mail )\n\nMore on development update is coming soon (1.1.2)\n<center>[![splash_cc9674.th.png](https://www.steemimg.com/images/2016/08/05/splash_cc9674.th.png)](https://www.steemimg.com/image/0kRwu)</center>\n# Have you missed previous development updates?\n* [eSteem - 1.1.1](https://steemit.com/steemit/@good-karma/esteem-update-profile-pictures-elegant-profile-pages-easy-access-many-more)\n* [eSteem - 1.0.1](https://steemit.com/steemit/@good-karma/steem-code-on-esteem-updates)\n* [Steem Mobile - eSteem 1.0.0](https://steemit.com/steemmobile/@good-karma/ios-android-first-opensource-steem-mobile-application-esteem-available-at-google-playstore-amazon-appstore-and-soon-apple)\n* [Steem Mobile - 0.0.4](https://steemit.com/steem/@good-karma/steem-mobile-beta-0-0-4-with-android-and-ios-new-features-voting-login-view-changes-and-a-lot-more-come-join-testing)\n* [Steem Mobile - 0.0.3](https://steemit.com/steem/@good-karma/steem-mobile-new-features-followers-following-comments-steemit-mobile-app-still-calling-for-beta-testers)\n* [Steem Mobile - 0.0.2](https://steemit.com/app/@good-karma/steem-mobile-first-steem-mobile-app-update-android-ios)\n* [Steem Mobile - 0.0.1](https://steemit.com/steemit/@good-karma/ann-steemit-mobile-app-android)\n<hr/>\n\n## Follow me to get updates\nClick on my name in post footer and **FOLLOW**\n\n### If you have design, feature suggestions please comment below and let me know.",
+    "body_length": 1817,
+    "cashout_time": "2016-08-25T12:59:15",
+    "category": "steemit",
+    "children": 8,
+    "created": "2016-08-18T12:59:15",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "json_metadata": "{\"tags\":[\"steemit\",\"steem\",\"steemmobile\",\"esteem\",\"apps\"],\"image\":[\"https://www.steemimg.com/images/2016/08/05/splash_cc9674.th.png\"],\"links\":[\"https://steemit.com/steemit/@good-karma/esteem-update-profile-pictures-elegant-profile-pages-easy-access-many-more\"]}",
+    "last_payout": "1969-12-31T23:59:59",
+    "last_update": "2016-08-18T12:59:15",
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 1201878450117,
+    "parent_author": "",
+    "parent_permlink": "steemit",
+    "pending_payout_value": "0.608 HBD",
+    "percent_hbd": 10000,
+    "permlink": "what-is-steem-mobile-esteem",
+    "post_id": 870085,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "root_title": "What is Steem Mobile - eSteem?",
+    "title": "What is Steem Mobile - eSteem?",
+    "total_payout_value": "0.000 HBD",
+    "url": "/steemit/@good-karma/what-is-steem-mobile-esteem"
   }
 ]

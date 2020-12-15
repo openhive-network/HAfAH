@@ -2,7 +2,7 @@
   test_name: Hivemind tags_api.get_discussions_by_author_before_date patterns test author and last permlink
 
   marks:
-    - patterntest
+    - patterntest # original produced overlapping pages
 
   includes:
     - !include ../../common.yaml
