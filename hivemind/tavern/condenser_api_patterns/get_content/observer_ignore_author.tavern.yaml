@@ -2,8 +2,7 @@
   test_name: Hivemind condenser_api.get_content observer ignore author
 
   marks:
-    - patterntest
-    - xfail # observer is not implemented - has no effect on the result (votes)
+    - patterntest # observer is not implemented - has no effect on the result (votes)
 
   includes:
     - !include ../../common.yaml

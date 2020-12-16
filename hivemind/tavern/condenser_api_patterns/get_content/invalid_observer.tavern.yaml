@@ -2,9 +2,8 @@
   test_name: Hivemind condenser_api.get_content invalid observer
 
   marks:
-    - patterntest
+    - patterntest # does no validate observer
    # - negative
-    - xfail # should validate observer
 
   includes:
     - !include ../../common.yaml

@@ -3,7 +3,7 @@
 
   marks:
     - patterntest # alice follows blacklisted of spaminator who blacklists ned (mock data)
-    - xfail # observer is not implemented - has no effect on the result (votes)
+                  # observer is not implemented - has no effect on the result (votes)
 
   includes:
     - !include ../../common.yaml
