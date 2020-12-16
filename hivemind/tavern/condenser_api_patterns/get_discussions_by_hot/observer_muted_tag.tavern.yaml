@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test
+  test_name: Hivemind condenser_api.get_discussions_by_hot patterns test observer ignoreall with tag
 
   marks:
-    - patterntest
+    - patterntest # ignoreall ignores ooak (mock data)
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_comment_discussions_by_payout
+    - name: get_discussions_by_hot observer ignoreall with tag
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_comment_discussions_by_payout"
-          params: {}
+          method: "condenser_api.get_discussions_by_hot"
+          params: {"tag":"steemit","observer":"ignoreall"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "no_tag"
-            directory: "condenser_api_patterns/get_comment_discussions_by_payout"
+            method: "observer_muted_tag"
+            directory: "condenser_api_patterns/get_discussions_by_hot"

@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test
+  test_name: Hivemind bridge_api.get_profile gtg with new observer patterns test
 
   marks:
-    - patterntest
+    - patterntest # new field followed (true/false) by observer (and muted if true)
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_comment_discussions_by_payout
+    - name: get_profile gtg observer
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_comment_discussions_by_payout"
-          params: {}
+          method: "bridge.get_profile"
+          params: {"account":"gtg", "observer":"roelandp"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "no_tag"
-            directory: "condenser_api_patterns/get_comment_discussions_by_payout"
+            method: "gtg_observer"
+            directory: "bridge_api_patterns/get_profile"

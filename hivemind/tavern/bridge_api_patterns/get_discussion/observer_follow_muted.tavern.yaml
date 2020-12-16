@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test
+  test_name: Hivemind bridge_api.get_discussion with observer follow muted author
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_comment_discussions_by_payout
+    - name: bridge_api.get_discussion observer muted author
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_comment_discussions_by_payout"
-          params: {}
+          method: "bridge.get_discussion"
+          params: {"author": "gtg", "permlink": "hello-world", "observer": "alice"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "no_tag"
-            directory: "condenser_api_patterns/get_comment_discussions_by_payout"
+            method: "observer_follow_muted"
+            directory: "bridge_api_patterns/get_discussion"

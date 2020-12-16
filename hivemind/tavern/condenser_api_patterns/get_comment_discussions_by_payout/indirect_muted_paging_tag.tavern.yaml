@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test
+  test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test observer alice with tag and paging mechanism
 
   marks:
-    - patterntest
+    - patterntest # alice follows mute list of ignoreall who ignores roland.haynes (mock data)
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_comment_discussions_by_payout
+    - name: get_comment_discussions_by_payout observer alice with tag and paging mechanism
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,11 +18,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_comment_discussions_by_payout"
-          params: {}
+          params: {"tag":"steemit","observer":"alice","limit":3,
+                   "start_author":"demotruk","start_permlink":"re-fyrstikken-re-vi1son-re-heiditravels-my-first-bad-experience-with-steemit-20160905t203611118z"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "no_tag"
+            method: "indirect_muted_paging_tag"
             directory: "condenser_api_patterns/get_comment_discussions_by_payout"
