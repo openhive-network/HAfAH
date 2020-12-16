@@ -1,0 +1,29 @@
+---
+  test_name: Hivemind condenser_api.get_content observer mutes voter
+
+  marks:
+    - patterntest # gtg upvote `luke-williams/buying-bitcoin-in-taiwan` and he is muted by ignoreall (mockdata)
+    - xfail # observer is not implemented - has no effect on the result (votes)
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_content observer mutes author
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_content"
+          params: {"author": "luke-williams", "permlink": "buying-bitcoin-in-taiwan", "observer": "ignoreall"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "observer_ignore_voter"
+            directory: "condenser_api_patterns/get_content"
