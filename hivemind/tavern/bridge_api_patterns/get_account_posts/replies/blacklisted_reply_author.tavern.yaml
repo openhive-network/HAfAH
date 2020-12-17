@@ -26,5 +26,5 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "muted_reply_author"
+            method: "blacklisted_reply_author"
             directory: "bridge_api_patterns/get_account_posts/replies"
