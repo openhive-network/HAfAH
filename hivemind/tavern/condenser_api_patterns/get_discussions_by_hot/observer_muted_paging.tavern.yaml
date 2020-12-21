@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_hot patterns test observer ignoreall with paging
 
   marks:
-    - patterntest # ignoreall ignores gavvet (mock data)
+    - patterntest # ignoreall ignores gavvet (mock data); see also paging
 
   includes:
     - !include ../../common.yaml

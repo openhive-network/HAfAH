@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_hot patterns test observer alice with tag
 
   marks:
-    - patterntest # alice follows muted of ignoreall who ignores ooak (mock data)
+    - patterntest # alice follows muted of ignoreall who ignores ooak (mock data); see also tag_steemit
 
   includes:
     - !include ../../common.yaml

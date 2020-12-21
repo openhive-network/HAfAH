@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_hot patterns test observer alice
 
   marks:
-    - patterntest # alice follows muted of ignoreall who ignores gavvet (mock data)
+    - patterntest # alice follows muted of ignoreall who ignores gavvet (mock data); see also no_params
 
   includes:
     - !include ../../common.yaml

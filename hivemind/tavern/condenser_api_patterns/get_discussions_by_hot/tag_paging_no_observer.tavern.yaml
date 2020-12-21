@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_hot patterns test observer ignoreall with tag and paging
+  test_name: Hivemind condenser_api.get_discussions_by_hot patterns test tag and paging
 
   marks:
-    - patterntest # ignoreall ignores ooak (mock data); see also tag_paging_no_observer
+    - patterntest
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_discussions_by_hot observer ignoreall with tag and paging
+    - name: get_discussions_by_hot tag and paging
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,12 +18,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_discussions_by_hot"
-          params: {"tag":"steemit","observer":"ignoreall","limit":3,
+          params: {"tag":"steemit", "limit":3,
                    "start_author":"steemsmart","start_permlink":"who-needs-steemit-etiquette-steem-smart-podcast-ep-11a"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "observer_muted_tag_paging"
+            method: "tag_paging_no_observer"
             directory: "condenser_api_patterns/get_discussions_by_hot"
