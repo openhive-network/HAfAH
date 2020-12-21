@@ -53,6 +53,15 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
   error = response_json.get("error", None)
   result = response_json.get("result", None)
 
+  # disable coparison with pattern on demand
+  # and save 
+  if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
+    if received_at is not None:
+      with open("benchmark.csv", 'a') as benchmark_file:
+        writer = csv.writer(benchmark_file)
+        writer.writerow([directory + "/" + method, perf() - float(received_at)])
+    return
+
   if error is not None and not error_response:
     msg = "Error detected in response: {}".format(error["message"])
     save_json(response_fname, response_json)
@@ -68,15 +77,6 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     msg = "Error detected in response: result is null, json object was expected"
     save_json(response_fname, response_json)
     raise PatternDiffException(msg)
-
-  # disable coparison with pattern on demand
-  # and save 
-  if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
-    if received_at is not None:
-      with open("benchmark.csv", 'a') as benchmark_file:
-        writer = csv.writer(benchmark_file)
-        writer.writerow([directory + "/" + method, perf() - float(received_at)])
-    return
 
   import deepdiff
   pattern = load_pattern(directory + "/" + method + PATTERN_FILE_EXT)
