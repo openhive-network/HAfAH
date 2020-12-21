@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_promoted patterns test observer ignoreall with paging mechanism
 
   marks:
-    - patterntest # ignoreall ignores fyrstikken (mock data)
+    - patterntest # ignoreall ignores fyrstikken (mock data); see also observer_muted
 
   includes:
     - !include ../../common.yaml

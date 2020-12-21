@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_promoted patterns test observer alice with paging mechanism
 
   marks:
-    - patterntest # alice follows muted of ignoreall who ignores fyrstikken (mock data)
+    - patterntest # alice follows muted of ignoreall who ignores fyrstikken (mock data); see also indirect_muted
 
   includes:
     - !include ../../common.yaml
