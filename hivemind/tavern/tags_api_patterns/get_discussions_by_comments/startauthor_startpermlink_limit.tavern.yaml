@@ -2,7 +2,7 @@
   test_name: Hivemind tags_api.get_discussions_by_comments patterns test
 
   marks:
-    - patterntest
+    - patterntest # original produced overlapping pages
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "tags_api.get_discussions_by_comments"
-          params: {"start_author":"admin","start_permlink":"firstpost","limit":1}
+          params: {"start_author":"roadscape","start_permlink":"re-pfunk-can-we-have-advanced-mode-stick-20160510t161229520z","limit":1}
       response:
         status_code: 200
         verify_response_with:

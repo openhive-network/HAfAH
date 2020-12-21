@@ -3,92 +3,6 @@
     "active_votes": [
       {
         "percent": "10000",
-        "reputation": 49136918266,
-        "rshares": 13788777902,
-        "voter": "cian.dafe"
-      },
-      {
-        "percent": "10000",
-        "reputation": 7255473848113,
-        "rshares": 84205690696,
-        "voter": "herzmeister"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1826252654620,
-        "rshares": 2996972431,
-        "voter": "sunshinecrypto"
-      },
-      {
-        "percent": "10000",
-        "reputation": 5451039980643,
-        "rshares": 166219347,
-        "voter": "steemswede"
-      },
-      {
-        "percent": "10000",
-        "reputation": 19497864738,
-        "rshares": 716293562,
-        "voter": "remlaps"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3962925392210,
-        "rshares": 3487432768,
-        "voter": "jed78"
-      },
-      {
-        "percent": "10000",
-        "reputation": 8749882391690,
-        "rshares": 38507230415,
-        "voter": "nonlinearone"
-      },
-      {
-        "percent": "10000",
-        "reputation": 398467602540,
-        "rshares": 147998231,
-        "voter": "naifaz"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2516108074649,
-        "rshares": 348368989,
-        "voter": "runridefly"
-      }
-    ],
-    "author": "nonlinearone",
-    "author_reputation": 8749882391690,
-    "beneficiaries": [],
-    "body": "https://www.youtube.com/watch?v=upqgGxxmjrM\n\nI created this video of Alex, my son, playing fetch in the pool with Ranger, my dog.",
-    "body_length": 129,
-    "cashout_time": "2016-08-29T16:15:27",
-    "category": "animals",
-    "children": 1,
-    "created": "2016-08-22T16:15:27",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "json_metadata": "{\"tags\":[\"animals\",\"dogs\",\"puppies\",\"video\",\"cute\"],\"links\":[\"https://www.youtube.com/watch?v=upqgGxxmjrM\"]}",
-    "last_payout": "1969-12-31T23:59:59",
-    "last_update": "2016-08-22T16:35:54",
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 144364984341,
-    "parent_author": "",
-    "parent_permlink": "animals",
-    "pending_payout_value": "0.075 HBD",
-    "percent_hbd": 10000,
-    "permlink": "in-which-alex-and-ranger-play-fetch-in-the-pool",
-    "post_id": 936565,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "root_title": "In Which Alex and Ranger Play Fetch in the Pool ~ Golden Retriever Puppies",
-    "title": "In Which Alex and Ranger Play Fetch in the Pool ~ Golden Retriever Puppies",
-    "total_payout_value": "0.000 HBD",
-    "url": "/animals/@nonlinearone/in-which-alex-and-ranger-play-fetch-in-the-pool"
-  },
-  {
-    "active_votes": [
-      {
-        "percent": "10000",
         "reputation": 2520096511491,
         "rshares": 19131593458,
         "voter": "daowisp"
@@ -3528,5 +3442,169 @@
     "title": "Lost Content Digest #4: all proceeds go to featured authors!",
     "total_payout_value": "0.000 HBD",
     "url": "/lostcontent-digest/@biophil/lost-content-digest-4-all-proceeds-go-to-featured-authors"
+  },
+  {
+    "active_votes": [
+      {
+        "percent": "8000",
+        "reputation": 20297981245452,
+        "rshares": 5128219242043,
+        "voter": "abit"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1701451058212,
+        "rshares": 3554552494,
+        "voter": "mazi"
+      },
+      {
+        "percent": "10000",
+        "reputation": 15755437221598,
+        "rshares": 15902898325,
+        "voter": "acidyo"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1228001853194,
+        "rshares": 13338462058,
+        "voter": "fact"
+      },
+      {
+        "percent": "3301",
+        "reputation": 2902053059801,
+        "rshares": 1441536259,
+        "voter": "murh"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4620523428308,
+        "rshares": 20183289021,
+        "voter": "minfon"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1933204465,
+        "rshares": 55741710031,
+        "voter": "sonzweil"
+      },
+      {
+        "percent": "10000",
+        "reputation": 138974533507,
+        "rshares": 824498327,
+        "voter": "mar1978co"
+      },
+      {
+        "percent": "10000",
+        "reputation": 15461414574,
+        "rshares": 77735313,
+        "voter": "infosounds"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1127978824162,
+        "rshares": 1451487188,
+        "voter": "feelapi"
+      },
+      {
+        "percent": "10000",
+        "reputation": 599908904317,
+        "rshares": 170912432,
+        "voter": "jennsky"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1736702154666,
+        "rshares": 2479278194,
+        "voter": "xanoxt"
+      },
+      {
+        "percent": "10000",
+        "reputation": 736149094898,
+        "rshares": 789593320,
+        "voter": "epiphany"
+      },
+      {
+        "percent": "10000",
+        "reputation": 22344336898,
+        "rshares": 78364282300,
+        "voter": "dan-bn"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 54871665,
+        "voter": "shadowmane"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3495795823022,
+        "rshares": 14703486966,
+        "voter": "cnfund"
+      },
+      {
+        "percent": "10000",
+        "reputation": 11330125745,
+        "rshares": 55191596,
+        "voter": "michal"
+      },
+      {
+        "percent": "10000",
+        "reputation": 5014250342169,
+        "rshares": 384286532,
+        "voter": "thornybastard"
+      },
+      {
+        "percent": "10000",
+        "reputation": 222519995,
+        "rshares": 50150447,
+        "voter": "salveterram"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 15385007964,
+        "voter": "mtaplits"
+      },
+      {
+        "percent": "10000",
+        "reputation": 894073046343,
+        "rshares": 54158697,
+        "voter": "magralex"
+      },
+      {
+        "percent": "10000",
+        "reputation": 523181827168,
+        "rshares": 52844089,
+        "voter": "jamonchina"
+      }
+    ],
+    "author": "thornybastard",
+    "author_reputation": 5014250342169,
+    "beneficiaries": [],
+    "body": "# 10,000 Years of Strangeness: A Paranormal Primer for Ancient and Modern China<h1>\n## Part I: The Author's Own True Tales<h2>\n### Chapter 3: A Shaman, a Scholar, and Synchronicity---\u7384\u4e4b\u53c8\u7384\u8846\u5999\u4e4b\u9580<h3>\n\nPrevious Chapters \u524d\u7ae0: [ Pt. 1 Chapter 1, ](https://steemit.com/cn/@thornybastard/chapter-1-the-haunted-college)  [Chapter 2](https://steemit.com/cn/@thornybastard/chapter-2-japanese-ghosts-at-the-hong-hu-walmart)\n\n<center>[![4d64568e47eba5465a8fec0f13fb5866.jpg](https://s19.postimg.org/eeihe17tv/4d64568e47eba5465a8fec0f13fb5866.jpg)](https://postimg.org/image/8qc6n53hb/)</center>\n<center>random photo from Baidu.com</center>\n\nOne of China's most renowned scholars, if not the most renowned, lives in Lijiang in Yunnan Province.  The man has had a remarkable life and has known some of the most remarkable people who have ever lived.  His father was a hunting guide for Theodore Roosevelt (the hero of D-day, son of the President) and for Joseph Rock, the internationally renowned botanist and ethnographer who was *National Geographic\u2019s* man in China.  He was imprisoned for over twenty years during the Cultural Revolution for being too Western.  Now he runs the Naxi Symphony Orchestra which is comprised almost entirely of original instruments. Most of them are hundreds of years old and were preserved by burying them before the Red Guards came to the remote mountain village to wipe out the culture.  I\u2019d seen the orchestra my second night in town.  Needless to say I was eager to meet this guy.\n\n<center>[![PDRM0041.jpg](https://s19.postimg.org/or9dduqqr/PDRM0041.jpg)](https://postimg.org/image/6ogammuvz/)</center>\n<center>The Naxi Symphony Orchestra</center>\n\nAs it turns out, everyone in Lijiang knows him but said he moved recently and no longer had his house in town but somewhere in the outskirts.  I was traveling with my girlfriend, Elva, who spoke wonderful English and acted as interpreter and guide. She could see how much I wanted to meet professor Xuen and convinced the lady who ran the hotel where we were staying to call him.  She actually lied to the woman and told her I was a Naxi music scholar from America and wanted to learn more about the music from him personally.  He was delighted to set up a time.\n\nElva and I took a taxi later that day to Professor Xuen's house where we met with him.  I had to explain that there must've been some misunderstanding due to language differences and that what I was really interested in was the culture and spiritual life of the Naxi people, not so much the music itself except insofar as it is a part of the culture and spiritual life, etc., etc. \n \nHe didn't care.  He was happy to talk about anything.  We talked about how languages started as man's communication with nature, the animals and plants around him.  How this language may well have been music, and we connected this with ancient Apache Indian teachings about bird language. These teachings eventually made their way to Tom Brown, Jr. in New Jersey by way of an old Lipan Apache he called Grandfather. Part of the Apache science of tracking included bird language and concentric rings.  I eventually learned about this from Tom at the Tracker School where he passes this knowledge onto his students.\n\nTracking is not simply just reading the footprints in the ground. It involves a highly cultivated and practiced level of awareness where animal movements, sounds, and even minute changes in the environmental baseline indicate to the acute observer what\u2019s happening. \n\nA big part of this is bird language. By noticing bird sounds and behavior, you can know what\u2019s going on miles away. These sounds and behaviors move through the environment like concentric rings on a pond. The trained and practiced observer can tell you what\u2019s going on around you with what appears to be supernatural ability. I have seen this done and have done it myself and know that it works. You know how many people are around in which directions and how far. You know exactly which predators are moving nearby\u2014foxes, weasels, house cats, hawks--or where the closest water supply is. You learn how to minimize your own concentric rings or even alter them to give the appearance of being something else. If you\u2019ve ever wondered why the United States Army with 5000 troops couldn\u2019t find Geronimo in the desert, this is the reason.\n\nWe talked about similarities between cultures in Asia and North America and he was thrilled and awed with some things about the American Indians, including how, at least in my opinion, the Naxi language sounded a bit like Navajo.  He talked about the shamanic religion of the Naxi called Dongba.\n\nThen at one point we left these deep things and went on to some small talk while Elva took pictures.  He showed me an old uncut first edition of *Trailing the Giant Panda* by Theodore and Kermit Roosevelt.  They wrote it after being the first westerners to hunt and kill the animal. He pointed out the references to his father. He also had original, almost mint condition *National Geographics* with Joseph Rock's articles going back to 1924.  The photos were amazing.  He also had a complete collection of Joseph Rock's books including his encyclopedic work on the Naxi culture and language.  Meanwhile Elva stared in awe and snapped pictures. \n\n<center>[![PDRM0121.jpg](https://s19.postimg.org/ofrx13aar/PDRM0121.jpg)](https://postimg.org/image/gn19944bj/)</center>\n<center>Prof. Xuen and I going over his original uncut *Trailing the Giant Panda*</center>\n\n\nFinally, Prof. Xuen realized he was late for something and had to call an end to our fruitful meeting.  His efforts at a hurried goodbye dragged on while he stopped to show us more pictures and Joseph Rock's furniture in his foyer, some made by Rock's own hand, others according to his design.\n\nFrom there we went to Black Pool Dragon Park which had the most stunning photo op in the world with Jade Dragon Snow Mountain in the background, or so the tour literature touts.  We never found the spot.  At a peaceful and dreamy lakeside though, Elva was impelled to stop and pose for pictures.  The kind of pictures I can't show you but was very happy to snap.   \n\nCalm water, willow trees, mountain air--it all has its effect on the human spirit and the fullness of that effect was before my camera lens! The Naxi gods of nature had been good to this girl and now she was being good to me.\n\n<center>[![the spot.jpg](https://s19.postimg.org/71ca6k2jn/the_spot.jpg)](https://postimg.org/image/8t591glwf/)</center>\n<center>This was the spot. Sorry, no boobs.</center>\n\nAfter this pause for fun and edification (advancing our photographic and modelling skills), we moved on, meandering on the trails and stopping to explore interesting things.  \n\nAt one point, we came across a back gate in the wall around the park. The gate was open, so we went in, or was it out?  That\u2019s what you do when you come across a gateway to discovery\u2014you go through it. For, as the Taoists say: \u201c\u7384\u4e4b\u53c8\u7384\u8846\u5999\u4e4b\u95e8\u201d (**The mystery of mysteries is the door of all essences**). \n\nIt led into a yard with an old, dilapidated cabin in a remote, seldom visited corner of the park. In fact, it was cut off from the rest of the park by the wall and the gate. There was a bicycle in front of it and a small vegetable garden outside.  Across the far side wall was a vacant lot separating the new city from the old.  It was full of rubble and shanties and dust.\n\nThere were two more cabins so that they were arranged on three sides of a square.  Two, including the one we were curious about, looked more American than Chinese. They didn't have Chinese style roofs but resembled instead the kind of old pioneer cabins you come across in the Smokey Mountains or the mountains of Idaho--horizontal log construction and cedar shingle roof, plank porch. I mean, it was uncanny. (Is anything ever canny?) I could've sworn I\u2019d just stepped back into old America.\n\nThere were voices inside and I was afraid to disturb whoever it was thinking they might be park employees and this was their home.  In retrospect, I think I sensed something immense within and was afraid. Elva insisted on pursuing our curiosity and rapped lightly on the door calling out in Chinese if anyone was home, \"Mei ren? Mei ren?\" This is the Chinese equivalent of \u201cAnyone home?\u201d\n\nFinally a youngish man came to the door and opened it.  He was profoundly tranquil and inquired what we wanted. She asked what this place was and he answered \"jia\" (a home).  He invited us in.\n\nThe place was dark and, at first glance, squalid. But there was a neatness and organization to it.  An old man squatted on a platform eating beans like lima beans, one at a time, and smiling by the fire, which was surrounded by bedrolls on two sides and a rail on the third.  The fourth side was the step up to the platform.  A single dim light bulb burned overhead.  On the wall behind the old man were two large drums and a feather headdress.  His eyes were closed and he looked up inquisitively as if he were blind, which it turns out he was.  But he received us with enthusiasm, smiles and warmth and invited us to sit down.  \n\nThe young man pulled up a low bench for us to sit on.  The young man explained that this man was a Dongba, a Naxi shaman.  Incredibly, the setting in the cabin, the complexion and facial features of the two men and their demeanor might just as well have been on the Big Rez with an old medicine man. In fact, the whole scene was eerily reminiscent of my stay with the Begays, a family of Dineh medicine men high in the mountains of the Navajo Nation. After a lot of small talk and later, prodding, we found out the younger guy was the Dongba\u2019s apprentice.  He never owned up to it, but the old man volunteered the information.\n\nI asked him what the stuff on the wall behind him was for and he said it was used in their ceremonies.  Then he leapt up and without any groping around, grabbed the drum stick and started beating.  Then he broke into a chant-like song that was like any you would hear from an Indian medicine man back home.  We clapped with excitement when he finished.  Then he moved to the end of the platform as if to get down and rejected Elva's hand for help.  He strode with childlike excitement into a dark, almost pitch-black backroom and emerged with a staff with a metal point at the bottom.  At the top was a \"two-storey\" square tower design and from it hung a small brass bell.  He shook the staff so the bell tinkled rhythmically and sang another song.  Again we applauded delightfully with spirits soaring, anticipating, hungry for what the next course of our spiritual feast would be.\n\nHe explained that the staff was hundreds of years old and that it had been given to him by his father and was in his family for many, many generations.  He went into the back room again and this time emerged with a Naxi flute the name of which I can't remember.  It was a gourd with a mouthpiece. Several pieces of bamboo stuck up from the top like organ pipes. He played it for us.  It sounded like a cross between a harmonica and an organ.  We talked about that for a while.  Then he went in again and this time came out with a big brass gong-like thing and explained how it is used for helping guide the spirit of a dying person into the afterlife and sang a song that\u2019s used for just such a purpose.\n\nThis went on with artifact after artifact.  He finally got around to asking where I was from.  I told him I was American.  \n\n\u201cOH!\u201d  This elated him.  \n\nHe told us that there was an ancient Naxi scripture about the Chinese and Americans and that we were brothers.  He went on to explain that we had the same mother but different fathers.  Then he sang from memory the passage from scripture that described this event.  Elva had a digital camera that also recorded sound and we made a recording of it. \n\nNow we mentioned earlier to him that we'd met Xuen Ke, the professor, and this old shaman told us to take the recording to Professor Xuen to get it translated.  He said not to pay any attention to these Dongbas you see around town because they are fakes and liars and wouldn\u2019t be able to translate it accurately even if they understood it. In fact, we'd become familiar with some of these \"Dongbas\" who do fortunetelling for the tourists and then ask for money, sometimes hundreds of RMB, to pray for them.  So we promised to take it to professor Xuen.  He included a personal message in the recording.\n\nIt had come out that he had several students he was passing the way onto to keep his culture alive.  I told him how grateful we were and in fact probably how grateful everyone on earth is that he is doing what he's doing especially in spite of his age and health.  \n\nHe and his apprentice/cousin chimed in, \"No!  We are grateful to you!  It was an American, Joseph Rock ( born in Austria, actually), who kept our culture alive through his writings and pictures! You kept our culture alive while the Red Guards swept through China destroying everything!  If it wasn't for you I wouldn't be here now, I wouldn\u2019t be able to do what I\u2019m doing.\"  And so on and so forth.  \n\nIt was truly humbling.  I had become embarrassed, ashamed even, to tell people I was American after the Iraq war broke out two years earlier and the subsequent news about torturing prisoners had come out, and this was much needed \u201cgood medicine\u201d as the Natives back home would say!  This was something good we had done, some healing we had provided, for this endangered people and their culture.\n\nHe insisted on putting on his ceremonial clothing for a few pictures.  I didn\u2019t want him to bother because of the sacredness of the attire and the trouble it would cause him, but he insisted. \n\n<center>[![dongba.jpg](https://s19.postimg.org/bqxmhf46b/dongba.jpg)](https://postimg.org/image/6fipwpi3j/)</center>\n<center>On the porch with the old Dongba</center>\n\nFinally after all this he asked us to write some words in a book to remember us by.  Elva had a lot of difficulty translating what I\u2019d written but it seemed to get the point across.  While we wrote, he sang sacred songs and folded square pieces of paper with mysterious Naxi pictographs into small triangles he gave to us for protection and health.\n\nBy now it was so late we were locked in the park.  We\u2019d missed our dinner appointment with some other Americans, and, **we had no idea what had just happened to us or why**.  There were some ladies who worked at the park nearby the gate we\u2019d used and let us out, or was it in?  We left wondering what would happen next and marveling at what a fantastic day it had been.  We cancelled plans to go to Shangri-La or Luguhu because getting this recording to Prof. Xuen seemed more important than taking in more scenery, and this adventure was of a whole different order than bus rides and high altitudes.\n\nBack at the hotel that evening was a spiritual union of another kind! We shared something spectacular and profound that we hadn\u2019t noticed before.\n\nIt was the next night that we finally hooked up with professor Xuen again at the Naxi Symphony Hall.  He remembered us and begged us to wait until his long line of fans were done collecting autographs and photo ops.\n\n<center>[![PDRM0173.jpg](https://s19.postimg.org/54fk1zbvn/PDRM0173.jpg)](https://postimg.org/image/t86bq9ucf/)</center>\n<center>Prof. Xuen posing with an admirer after the performance</center>\n\nHe came down from the stage, shed his musicians robe, got a cigarette from an assistant and offered me one as well. I accepted. Elva explained our adventure in the park the day before. Fortunately, we could all speak English. In fact, Prof. Xuen spoke perfect fluent English owing to his childhood education at a missionary school and all of his time spent with Joseph Rock, Theodore and Kermit Roosevelt, and other foreign visitors in Yunnan. \n\nProf. Xuen asked, \"Was this guy blind?\"\n\n\"Yes.\"\n\n\"Oh!  He is real Dongba!\" he exclaimed in hushed tones.  \"Oh yes, he is the real thing.  These other Dongbas, you know, they're just fakes. They\u2019ve learned a thing or two, but it\u2019s just for show.  But that old guy is the real Dongba.  The only one left in Lijiang.\"\n\nThen we played the song and he translated as it played. He confirmed through his translation that yes, the scripture is referring, \"most likely\", to Americans.  We chatted some more, until Prof. Xuen, all 76 years of him, looked exhausted and tired.  He told his assistant to bring a CD which he autographed and gave to me. He also autographed one more which I had bought myself.  He was so excited he kept stopping mid-signature to talk a little more about the old Dongba.  He told us a museum had tried to hire him to make money and that he refused, because he's the real thing.  So he's stuck living in that shack in the park.  Every so often some people show up from Europe or America or Chinese universities to visit him who are real Naxi scholars, and that is what really matters to him, not the tourists.\n\nI showed him the talisman the Dongba had made for me and he opened it up inquiring in detail what the old shaman did when he made it and under what circumstances.  What were the songs like? Etc. After revealing the contents, the greatest living authority on Naxi culture in in the world announced, \"I can't read it.\"\n\nHe pointed out that the Dongba had clearly made all these things by hand and painted all the pictographs themselves, but he could only recognize two of them.  The others must be really esoteric and known only to *real* Dongbas. He said very solemnly that this was a great charm.  \n\n\"And he gave one to you too?\" he asked Elva.\n\n\"Yes, but I don't have it with me.\"\n\n\"Oh I see.  Well you keep these things.\" He nodded sagaciously as he handed the charm back to me.\n\nThe next day we took the sleeper bus to Kunming on our way home and had another adventure--the denouement of this story.\n\nWe had a bout a day to kill in Kunming before our flights home, flights we could've taken from Lijiang, but as fate would have it, we didn't.\n\nTo pass the time we decided to visit the Yunnan Provincial Museum to see what was there.  Museums in China are notoriously poor compared to their flashy western equivalents, but what the hell.  Now the Lonely Planet guide said it opened at 9:00, but when we arrived at 9:15, the place was still closed and a huge crowd of people, journalists, and bigwigs had gathered outside the gates with palpable anticipation. We had no idea what was going on.  \n\nThen we saw it.\n\nOn the billboards outside the museum, just as you'd see on the outside walls of Western museums advertising some big exhibit, was one announcing the opening of a photographic exhibition of the work of Clinton Millet called *Kunming 1944 Old Pictures Exhibition*.  And who the hell was Clinton Millet?\n\n<center>[![7crowd.jpg](https://s19.postimg.org/7s50cc4wz/7crowd.jpg)](https://postimg.org/image/60c1hfljz/)[![6Museum.jpg](https://s19.postimg.org/vgbbg4moz/6_Museum.jpg)](https://postimg.org/image/my1vbsg67/)</center>\n<center> Crowd waiting to get in to Exhibit. (photos from greggmillett.com)<center/>\n\nFortunately, his son was on hand at the opening ceremony to explain that.  But first, some big important Chinese guy had to give a speech which a woman standing next to him, who was obviously a professional interpreter, translated.  These photographs were taken during Clinton Millet\u2019s stay in Kunming during World War II. This exhibit, he said, is long overdue, because it symbolizes the long and enduring friendship of the Chinese and American people from a time when we stood shoulder to shoulder fighting the Japanese.  It\u2019s about time we had some kind of event to commemorate this friendship and this was it.  It was remarkably short for a Chinese official\u2019s speech on a formal occasion.\n\nThen Gregg Millet, Clinton\u2019s son went on to say how his father ran an army hospital in Kunming during the Big One and how much he loved it here.  He brought the hospital into China over the Burma Road.  While here he took hundreds and hundreds of color, COLOR, photographs in 1944, all slides.  Now in his silver years, Gregg wanted to travel in his father's footsteps and visit the areas he had loved so much. While talking to his travel agent in China they got into why he was making the trip and he sent a few photos to the guy.  The tour guide said, \"Wait, this is too good.  You won't come here as a tourist, you will come as our guest.\"\n\nThe guy made a few phone calls and within 40 days the whole exhibit was put together.\n\nAs the only other foreigner there, I was besieged myself by photographers, cameramen and reporters.  I mean, this \"coincidence\" was just too much.  How could this possibly be? When the first reporter came up to me they asked why I was interested in the exhibit. Elva, recalling how I\u2019d told her about my uncle Tommy building the Burma Road and airstrips during the war, suggested I not mention the mindless coincidence by which we appeared there. So I told them about how my uncle Tommy was there fighting the Japanese and helped build the Burma Road, and now, in living color was this photographic exhibition which allowed me for the first and perhaps only time in my life I would get to see the area as he saw it.  This was written down assiduously and they had me write his full name just to make sure they got it right.\n\n<center>[![img015.jpg](https://s3.postimg.org/tq6krqkwj/img015.jpg)](https://postimg.org/image/fwi82osb3/)</center>\n<center>Uncle Tommy just back from the war with Aunt Dot</center>\n\nNow the entrance to the building itself was cordoned off by police, but as soon as they'd cleared the ceremonial things out of the way, the crowd, almost entirely old people, surged forward.  I mean, it was like an AARP demonstration.  That tide of silver hair and hunched postures rushed the police line either swallowing them whole or bulldozing them along to get to the exhibit.  Displays and decorations from the opening ceremony were cast aside with hurricane force or trampled underfoot. \n\nElva and I went upstairs to look at some other shit until things calmed down.  Then we went and saw the photographs.\n\nWOW!  It was hard to believe these were the works of an amateur.  Even accomplished photographers would be impressed with the breadth of subjects, the candidness of the pictures, the journalistic portrayals, and the sheer cultural and historical importance of the collection.  \n\nThere were photos of everyday life; of temples, inside and out, that had long since been destroyed by the Red Guards; of a woman, so poor and desperate she squatted naked in the street clutching her baby and begging; of GI's laughing and playing with children; of landscapes and structures that vanished a long time ago.  The signs accompanying the exhibit, including blow ups of newspaper articles from America, spoke frankly of the cultural treasures preserved in these photos that were destroyed during the Cultural Revolution.  The temple photos alone, all in color, could be used to accurately restore many of the temples right down to the detailed painting of alters in the original colors.\n\n<center>[![Exhibition 1 2.jpg](https://s19.postimg.org/iio1k9t5v/Exhibition_1_2.jpg)](https://postimg.org/image/xemkrv4kf/)</center>\n<center>The packed gallery (from greggmillett.com)</center>\n\nGregg Millet approached Elva and me for a little conversation.  He told us the slides were received only ten days before the exhibit opened and all were magnificently blown up.  I talked about Uncle Tommy and he talked about his dad.  He was really happy and thrilled with the whole thing.  He was really just a regular guy from Albany.  The whole time we talked, pencils scribbled, shutters snapped and cameras whirred.  I\u2019m lying. Modern video cameras don't whir.  Elva became embarrassed and had to step away.  She was scared of all the cameras. But she had a profound sense of the *synchronicity*.   \n\nI guess the most amazing thing about this whole exhibit was the excitement and enthusiasm of the old people as they pointed at things and talked about them.  Their sheer unabated and childlike excitement was irrepressible.  It felt like something that needed to happen very badly between two people and two nations was finally taking place, as if the animosities invented by governments was completely ignored, if not completely erased, and the love of people for one another had the day.  There aren\u2019t any words for what I experienced in that exhibit hall of that shoddy provincial museum.  And yet I think it wasn't my experience at all, but something else which gave it that magical, wordless quality.\n\nIt was a long goodbye at the airport.  But not at all maudlin.  In fact we laughed a lot and recalled a lot of stories from our trip.  Her favorite was our game with a fart machine in a bookstore.  I think she likes the fart machine even more than I do.  She was literally on the floor laughing while I moaned and groaned alternately with pleasure and pain while the salesgirls tried vehemently to repress their embarrassment and/or amusement with my ailing bowels, a fact I announced in Chinese: \"Ooohhhh.  \u5927\u80a0\u4e0d\u597d! \u4e0d\u597d! Da can bu hao!  Bu hao!\u201d which you might say in English is \u201cSomething wrong with my bowels!\u201d\n\nWhen it was time to leave we left separately into an uncertain future, yet eternally grateful to the past, only knowing that now is now, and that *the mysteries of mysteries is the door to all essences*. \u7384\u4e4b\u53c8\u7384\u8846\u5999\u4e4b\u9580.\n\nAmazingly [Gregg Millett's website](http://www.greggmillett.com/) is still around. I recommend a visit.",
+    "body_length": 25537,
+    "cashout_time": "2016-08-29T14:45:48",
+    "category": "cn",
+    "children": 7,
+    "created": "2016-08-22T14:45:48",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "json_metadata": "{\"tags\":[\"cn\",\"life\",\"travel\",\"photography\",\"writing\"],\"image\":[\"https://s19.postimg.org/eeihe17tv/4d64568e47eba5465a8fec0f13fb5866.jpg\",\"https://s19.postimg.org/or9dduqqr/PDRM0041.jpg\",\"https://s19.postimg.org/ofrx13aar/PDRM0121.jpg\",\"https://s19.postimg.org/71ca6k2jn/the_spot.jpg\",\"https://s19.postimg.org/bqxmhf46b/dongba.jpg\",\"https://s19.postimg.org/54fk1zbvn/PDRM0173.jpg\",\"https://s19.postimg.org/7s50cc4wz/7crowd.jpg\",\"https://s3.postimg.org/tq6krqkwj/img015.jpg\",\"https://s19.postimg.org/iio1k9t5v/Exhibition_1_2.jpg\"],\"links\":[\"https://steemit.com/cn/@thornybastard/chapter-1-the-haunted-college\",\"http://www.greggmillett.com/\"]}",
+    "last_payout": "1969-12-31T23:59:59",
+    "last_update": "2016-08-22T14:45:48",
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 5353279475261,
+    "parent_author": "",
+    "parent_permlink": "cn",
+    "pending_payout_value": "7.373 HBD",
+    "percent_hbd": 10000,
+    "permlink": "chapter-3-a-shaman-a-scholar-and-synchronicity",
+    "post_id": 935163,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "root_title": "Chapter 3: A Shaman, a Scholar, and Synchronicity---\u7384\u4e4b\u53c8\u7384\u8846\u5999\u4e4b\u9580",
+    "title": "Chapter 3: A Shaman, a Scholar, and Synchronicity---\u7384\u4e4b\u53c8\u7384\u8846\u5999\u4e4b\u9580",
+    "total_payout_value": "0.000 HBD",
+    "url": "/cn/@thornybastard/chapter-3-a-shaman-a-scholar-and-synchronicity"
   }
 ]

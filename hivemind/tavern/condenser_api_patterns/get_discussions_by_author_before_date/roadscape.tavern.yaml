@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_author_before_date patterns test
 
   marks:
-    - patterntest # should return empty set - no posts before 2009 (to be investigated but works like original)
+    - patterntest
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_discussions_by_author_before_date"
-          params: {"author":"roadscape","start_permlink":"","limit":10}
+          params: {"author":"roadscape"}
       response:
         status_code: 200
         verify_response_with:

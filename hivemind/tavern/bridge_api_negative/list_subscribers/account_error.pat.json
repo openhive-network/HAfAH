@@ -1,1 +1,5 @@
-[]
+{
+  "code": -32602,
+  "data": "Community 789 does not exist",
+  "message": "Invalid parameters"
+}

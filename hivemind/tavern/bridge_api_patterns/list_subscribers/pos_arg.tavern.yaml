@@ -1,7 +1,7 @@
 ---
   test_name: Hivemind bridge_api.list_subscribers patterns test # not documented
   marks:
-    - patterntest # no nonempty result possible for 5mln set
+    - patterntest # relies on mock data (so original is empty - left only to show that positional call was possible)
 
   includes:
     - !include ../../common.yaml
@@ -17,7 +17,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.list_subscribers"
-          params: ["hive-123456"]
+          params: ["hive-165317"]
       response:
         status_code: 200
         verify_response_with:

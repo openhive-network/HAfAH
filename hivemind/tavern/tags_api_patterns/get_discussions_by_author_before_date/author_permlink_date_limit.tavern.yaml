@@ -2,7 +2,7 @@
   test_name: Hivemind tags_api.get_discussions_by_author_before_date patterns test
 
   marks:
-    - patterntest
+    - patterntest # original produced overlapping pages, now starting post is never part of the page
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "tags_api.get_discussions_by_author_before_date"
-          params: {"author":"steemit","start_permlink":"firstpost","before_date":"2016-04-19T22:49:43","limit":1}
+          params: {"author":"gtg","start_permlink":"missing-rewards-while-mining","before_date":"2016-04-19T22:49:43","limit":1}
       response:
         status_code: 200
         verify_response_with:

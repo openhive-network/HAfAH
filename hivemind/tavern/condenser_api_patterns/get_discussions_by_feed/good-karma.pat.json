@@ -3,476 +3,6 @@
     "active_votes": [
       {
         "percent": "10000",
-        "reputation": 1250001478305,
-        "rshares": 106061096274,
-        "voter": "bonapartist"
-      },
-      {
-        "percent": "10000",
-        "reputation": 18678729398345,
-        "rshares": 166010805393,
-        "voter": "pairmike"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2802091583976,
-        "rshares": 9485614203,
-        "voter": "proctologic"
-      },
-      {
-        "percent": "10000",
-        "reputation": 19959120564829,
-        "rshares": 27990122052,
-        "voter": "alexgr"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1118904717803,
-        "rshares": 163253447509,
-        "voter": "noaommerrr"
-      },
-      {
-        "percent": "10000",
-        "reputation": 12382143533351,
-        "rshares": 684149825513,
-        "voter": "eeks"
-      },
-      {
-        "percent": "6000",
-        "reputation": 4931834878069,
-        "rshares": 15274739057,
-        "voter": "fkn"
-      },
-      {
-        "percent": "10000",
-        "reputation": 5045406568403,
-        "rshares": 29498433466,
-        "voter": "james-show"
-      },
-      {
-        "percent": "6000",
-        "reputation": 5414208804644,
-        "rshares": 20055953882,
-        "voter": "elishagh1"
-      },
-      {
-        "percent": "10000",
-        "reputation": 865896375178,
-        "rshares": 1132957449,
-        "voter": "nxtblg"
-      },
-      {
-        "percent": "10000",
-        "reputation": 609780550802,
-        "rshares": 144783423,
-        "voter": "irit"
-      },
-      {
-        "percent": "10000",
-        "reputation": 10395665548525,
-        "rshares": 217828581712,
-        "voter": "billbutler"
-      },
-      {
-        "percent": "10000",
-        "reputation": 16234753830016,
-        "rshares": 17599279705,
-        "voter": "thecryptofiend"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2130292884052,
-        "rshares": 184130071633,
-        "voter": "leon-fu"
-      },
-      {
-        "percent": "10000",
-        "reputation": 771738440035,
-        "rshares": 4090456474,
-        "voter": "andre-ager"
-      },
-      {
-        "percent": "10000",
-        "reputation": 11429090901893,
-        "rshares": 109458926183,
-        "voter": "kenny-crane"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2501760528867,
-        "rshares": 30346966772,
-        "voter": "wongshiying"
-      },
-      {
-        "percent": "10000",
-        "reputation": 212451198738,
-        "rshares": 427191549,
-        "voter": "magdalena"
-      },
-      {
-        "percent": "10000",
-        "reputation": 771767379417,
-        "rshares": 1143644721,
-        "voter": "stephen-somers"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3929147028870,
-        "rshares": 5535547342,
-        "voter": "magnebit"
-      },
-      {
-        "percent": "10000",
-        "reputation": 12656257002205,
-        "rshares": 40304396864,
-        "voter": "clement"
-      },
-      {
-        "percent": "10000",
-        "reputation": 15603689614497,
-        "rshares": 4717253581,
-        "voter": "good-karma"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1959446497877,
-        "rshares": 4133416168,
-        "voter": "dennygalindo"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1518920448581,
-        "rshares": 13063246426,
-        "voter": "zer0sum"
-      },
-      {
-        "percent": "10000",
-        "reputation": 13253460317058,
-        "rshares": 19903553893,
-        "voter": "brunopro"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 252872720,
-        "voter": "aleks1970"
-      },
-      {
-        "percent": "10000",
-        "reputation": 9824421122,
-        "rshares": 170512609,
-        "voter": "aidar88"
-      },
-      {
-        "percent": "10000",
-        "reputation": -2499740471746,
-        "rshares": 30740817313,
-        "voter": "r4fken"
-      },
-      {
-        "percent": "10000",
-        "reputation": 255334396905,
-        "rshares": 309595731,
-        "voter": "damono"
-      },
-      {
-        "percent": "10000",
-        "reputation": 18799092030582,
-        "rshares": 42435791167,
-        "voter": "derekareith"
-      },
-      {
-        "percent": "10000",
-        "reputation": 36017089082,
-        "rshares": 360838067,
-        "voter": "rxhector"
-      },
-      {
-        "percent": "6000",
-        "reputation": 19111656178138,
-        "rshares": 32463958972,
-        "voter": "furion"
-      },
-      {
-        "percent": "5000",
-        "reputation": 7018477845661,
-        "rshares": 218391117362,
-        "voter": "neoxian"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1057084315198,
-        "rshares": 107391287705,
-        "voter": "cdubendo"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3149488018622,
-        "rshares": 1626868455,
-        "voter": "owdy"
-      },
-      {
-        "percent": "6000",
-        "reputation": 3891722,
-        "rshares": 363575442,
-        "voter": "barbara2"
-      },
-      {
-        "percent": "6000",
-        "reputation": 9142611234,
-        "rshares": 406520049,
-        "voter": "ch0c0latechip"
-      },
-      {
-        "percent": "6000",
-        "reputation": 3871042,
-        "rshares": 372705186,
-        "voter": "doge4lyf"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3320684282022,
-        "rshares": 112375856480,
-        "voter": "knircky"
-      },
-      {
-        "percent": "10000",
-        "reputation": 877664820,
-        "rshares": 241998039,
-        "voter": "nosebridge"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1118581531020,
-        "rshares": 2125079655,
-        "voter": "dmacshady"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2839205289091,
-        "rshares": 12733058266,
-        "voter": "logicwins"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1537463763,
-        "rshares": 25832670325,
-        "voter": "creemej"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2078306772520,
-        "rshares": 4796893784,
-        "voter": "btcbtcbtc20155"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3167747223142,
-        "rshares": 11167087546,
-        "voter": "dudutaulois"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3941133391991,
-        "rshares": 8178840169,
-        "voter": "peacekeeper"
-      },
-      {
-        "percent": "10000",
-        "reputation": 26442156052,
-        "rshares": 5851340485,
-        "voter": "jcweiss"
-      },
-      {
-        "percent": "10000",
-        "reputation": 5883461278385,
-        "rshares": 70625456594,
-        "voter": "rea"
-      },
-      {
-        "percent": "10000",
-        "reputation": 14988694886527,
-        "rshares": 158842926685,
-        "voter": "jl777"
-      },
-      {
-        "percent": "10000",
-        "reputation": 918911822347,
-        "rshares": 541197011,
-        "voter": "aleco"
-      },
-      {
-        "percent": "6000",
-        "reputation": 10519849768972,
-        "rshares": 12301931000,
-        "voter": "positive"
-      },
-      {
-        "percent": "10000",
-        "reputation": 568560955800,
-        "rshares": 34759124599,
-        "voter": "fatboy"
-      },
-      {
-        "percent": "6000",
-        "reputation": 147425730,
-        "rshares": 383398824,
-        "voter": "fnait"
-      },
-      {
-        "percent": "6000",
-        "reputation": 3720753029,
-        "rshares": 376115747,
-        "voter": "keepcalmand"
-      },
-      {
-        "percent": "10000",
-        "reputation": 979379098872,
-        "rshares": 1515666958,
-        "voter": "spinner"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3731142865186,
-        "rshares": 2249310257,
-        "voter": "timcliff"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1751717743,
-        "rshares": 5368794253,
-        "voter": "gmurph"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 3699945589,
-        "voter": "ullikume"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3942069730400,
-        "rshares": 839582517,
-        "voter": "cjclaro"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 63453448,
-        "voter": "freskil"
-      },
-      {
-        "percent": "10000",
-        "reputation": 6755300029,
-        "rshares": 155882276,
-        "voter": "nonamer"
-      },
-      {
-        "percent": "10000",
-        "reputation": 849623403126,
-        "rshares": 137059139,
-        "voter": "vegascomic"
-      },
-      {
-        "percent": "10000",
-        "reputation": -138680661344,
-        "rshares": 60886073,
-        "voter": "tomeraddady"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 62025671,
-        "voter": "karry"
-      },
-      {
-        "percent": "10000",
-        "reputation": 5176671060650,
-        "rshares": 1366797076,
-        "voter": "rubenalexander"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1062400368532,
-        "rshares": 13976122455,
-        "voter": "helikopterben"
-      },
-      {
-        "percent": "10000",
-        "reputation": 517546794156,
-        "rshares": 107585463,
-        "voter": "steevc"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1802656474490,
-        "rshares": 1767217594,
-        "voter": "lantto"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 58587197,
-        "voter": "nick1989"
-      },
-      {
-        "percent": "10000",
-        "reputation": 364872562916,
-        "rshares": 395613479,
-        "voter": "funkywanderer"
-      },
-      {
-        "percent": "10000",
-        "reputation": 275001369,
-        "rshares": 1228156864,
-        "voter": "sile"
-      },
-      {
-        "percent": "10000",
-        "reputation": -2322743514,
-        "rshares": 55347505,
-        "voter": "kamal"
-      },
-      {
-        "percent": "10000",
-        "reputation": 142829147182,
-        "rshares": 319309377,
-        "voter": "rucoin"
-      }
-    ],
-    "author": "jl777",
-    "author_reputation": 14988694886527,
-    "beneficiaries": [],
-    "body": "A few days ago I made a post saying the week long decline was ended and we would likely go into a trading range with a ceiling of .004 that would be hard to get past.\n\nAfter the initial gains, when the price fell almost back to the recent lows, it looked like a silly prediction. Then just a couple hours ago, someone bought 300 BTC on poloniex, instantly spiking the price 40%. This looks to be an impatient buyer who bought his entire amount in one shot as following that the price is back down to .0027.\n\nWhat does this mean?\n\nWhen anything is in a prolonged downtrend, it creates a lot of resistance to going up, simply by people who set orders to get out at breakeven, or small loss, or simply want to move onto trading something else. What that does is make things really difficult for the price to go up any significant amount. The only way is if a big buy comes in and clear the orderbook before the market can adjust and adjust the prices.\n\n300BTC, thats over $150,000 USD and it is not any casual amount. The fact it was so impatient (in at best a sideways market) indicates there is some time sensitive event coming up. Or this BTC whale has so many BTC that 300 is like $300\n\nNow we have two things that both indicate the downtrend is coming to an end, if it hasnt already. I know a 50% gain from here seems like a long ways to go, but really it just takes one whale to buy 200 BTC in one shot. Another way to look at it is that with 400+ BTC of volumes per day, it is one day of buys exceeding sells 2:1.\n\nRemember trading short term is very risky and everything I write about is without any certainity, just my observations. Also, it usually takes three times to really confirm things, though that 300 BTC buy could well count as 2 events and sure makes the chart change from a pure downtrend.",
-    "body_length": 1807,
-    "cashout_time": "2016-08-24T12:11:12",
-    "category": "steemit",
-    "children": 22,
-    "created": "2016-08-17T12:11:12",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "json_metadata": "{\"tags\":[\"steemit\",\"steem\",\"trading\",\"market\",\"price\"]}",
-    "last_payout": "1969-12-31T23:59:59",
-    "last_update": "2016-08-17T12:11:12",
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 2805587090422,
-    "parent_author": "",
-    "parent_permlink": "steemit",
-    "pending_payout_value": "3.058 HBD",
-    "percent_hbd": 10000,
-    "permlink": "300-btc-open-market-purchase-of-steem-spikes-price-to-00324",
-    "post_id": 851332,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "root_title": "300 BTC open market purchase of STEEM, spikes price to .00324",
-    "title": "300 BTC open market purchase of STEEM, spikes price to .00324",
-    "total_payout_value": "0.000 HBD",
-    "url": "/steemit/@jl777/300-btc-open-market-purchase-of-steem-spikes-price-to-00324"
-  },
-  {
-    "active_votes": [
-      {
-        "percent": "10000",
         "reputation": 145171381514207,
         "rshares": 29076116285844,
         "voter": "dantheman"
@@ -10992,5 +10522,1597 @@
     "title": "The Steem Multiple Persona Conundrum - Part 1",
     "total_payout_value": "0.000 HBD",
     "url": "/life/@originate/the-steem-multiple-persona-conundrum-part-1"
+  },
+  {
+    "active_votes": [
+      {
+        "percent": "10000",
+        "reputation": 32455846463901,
+        "rshares": 30298699884179,
+        "voter": "smooth"
+      },
+      {
+        "percent": "4100",
+        "reputation": 16685610555705,
+        "rshares": 8654629173833,
+        "voter": "tombstone"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1214229078,
+        "rshares": 2469488785,
+        "voter": "boy"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4712949449,
+        "rshares": 2997178884,
+        "voter": "bue-witness"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1789951494550,
+        "rshares": 567457327,
+        "voter": "bunny"
+      },
+      {
+        "percent": "10000",
+        "reputation": 103443134841,
+        "rshares": 41888160054,
+        "voter": "bue"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 1323782877,
+        "voter": "mini"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 170682241,
+        "voter": "moon"
+      },
+      {
+        "percent": "10000",
+        "reputation": 330982605,
+        "rshares": 136064409295,
+        "voter": "alex90342fastn1"
+      },
+      {
+        "percent": "10000",
+        "reputation": 28971806962251,
+        "rshares": 1649881378604,
+        "voter": "joseph"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12928765689257,
+        "rshares": 32249380707,
+        "voter": "aizensou"
+      },
+      {
+        "percent": "10000",
+        "reputation": 100108166977919,
+        "rshares": 429528054428,
+        "voter": "masteryoda"
+      },
+      {
+        "percent": "10000",
+        "reputation": 83941319998,
+        "rshares": 5314220040650,
+        "voter": "smooth.witness"
+      },
+      {
+        "percent": "10000",
+        "reputation": 67589992585,
+        "rshares": 11946225183,
+        "voter": "idol"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 493912489,
+        "voter": "healthcare"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 719698685,
+        "voter": "daniel.pan"
+      },
+      {
+        "percent": "10000",
+        "reputation": 8442392793360,
+        "rshares": 56929566342,
+        "voter": "jchch"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 230101732,
+        "voter": "helen.tan"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2165622245848,
+        "rshares": 23740816143,
+        "voter": "yefet"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1118904717803,
+        "rshares": 144045286143,
+        "voter": "noaommerrr"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12188250813227,
+        "rshares": 89038761978,
+        "voter": "acidsun"
+      },
+      {
+        "percent": "10000",
+        "reputation": 54345938068170,
+        "rshares": 99863972983,
+        "voter": "craig-grant"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12712877967688,
+        "rshares": 82533896488,
+        "voter": "easteagle13"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1590661010140,
+        "rshares": 24171124073,
+        "voter": "mod-tamichh"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1009682267545,
+        "rshares": 88877374877,
+        "voter": "leesunmoo"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12382143533351,
+        "rshares": 656783832492,
+        "voter": "eeks"
+      },
+      {
+        "percent": "1000",
+        "reputation": 4931834878069,
+        "rshares": 3054447720,
+        "voter": "fkn"
+      },
+      {
+        "percent": "8500",
+        "reputation": 0,
+        "rshares": 410985525,
+        "voter": "paco-steem"
+      },
+      {
+        "percent": "8500",
+        "reputation": 376960001789,
+        "rshares": 4679286037,
+        "voter": "spaninv"
+      },
+      {
+        "percent": "10000",
+        "reputation": 26867938976163,
+        "rshares": 330594003268,
+        "voter": "teamsteem"
+      },
+      {
+        "percent": "1000",
+        "reputation": 5414208804644,
+        "rshares": 4010547495,
+        "voter": "elishagh1"
+      },
+      {
+        "percent": "10000",
+        "reputation": 855178912028,
+        "rshares": 7124492017,
+        "voter": "taoofsatoshi"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1111594060096,
+        "rshares": 3343022683,
+        "voter": "daycrypter"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4599317604,
+        "rshares": 1991566179,
+        "voter": "bladetrigger"
+      },
+      {
+        "percent": "10000",
+        "reputation": 15755437221598,
+        "rshares": 9942166983,
+        "voter": "acidyo"
+      },
+      {
+        "percent": "10000",
+        "reputation": 627954645291,
+        "rshares": 3771520314,
+        "voter": "jonno-katz"
+      },
+      {
+        "percent": "3301",
+        "reputation": 2902053059801,
+        "rshares": 1438050852,
+        "voter": "murh"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 355661033,
+        "voter": "viet-ngo"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 2685509845,
+        "voter": "error"
+      },
+      {
+        "percent": "10000",
+        "reputation": 757241932053,
+        "rshares": 197665282,
+        "voter": "edtorrez"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2185191285319,
+        "rshares": 5969375226,
+        "voter": "andu"
+      },
+      {
+        "percent": "10000",
+        "reputation": 824717099743,
+        "rshares": 537572795769,
+        "voter": "cyber"
+      },
+      {
+        "percent": "10000",
+        "reputation": 609780550802,
+        "rshares": 141944533,
+        "voter": "irit"
+      },
+      {
+        "percent": "10000",
+        "reputation": 11136252375006,
+        "rshares": 347793058926,
+        "voter": "taoteh1221"
+      },
+      {
+        "percent": "8500",
+        "reputation": 0,
+        "rshares": 321329157,
+        "voter": "stiletto"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1770894701977,
+        "rshares": 3777132939,
+        "voter": "arwani-wawan"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3804349938696,
+        "rshares": 57368734592,
+        "voter": "juanmiguelsalas"
+      },
+      {
+        "percent": "10000",
+        "reputation": 488865370830,
+        "rshares": 815639850,
+        "voter": "sunnyray"
+      },
+      {
+        "percent": "10000",
+        "reputation": 5888717170887,
+        "rshares": 65225548481,
+        "voter": "ratel"
+      },
+      {
+        "percent": "10000",
+        "reputation": 77590508815145,
+        "rshares": 126850562103,
+        "voter": "kaylinart"
+      },
+      {
+        "percent": "10000",
+        "reputation": 212451198738,
+        "rshares": 418647718,
+        "voter": "magdalena"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12494904871301,
+        "rshares": 217015010322,
+        "voter": "trogdor"
+      },
+      {
+        "percent": "10000",
+        "reputation": 22794273843250,
+        "rshares": 100409033777,
+        "voter": "thedashguy"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1960155455032,
+        "rshares": 4038729790,
+        "voter": "usefree"
+      },
+      {
+        "percent": "10000",
+        "reputation": 5886979119053,
+        "rshares": 44301990919,
+        "voter": "geoffrey"
+      },
+      {
+        "percent": "10000",
+        "reputation": 36884147263377,
+        "rshares": 213688997305,
+        "voter": "lukestokes"
+      },
+      {
+        "percent": "10000",
+        "reputation": 274656026130,
+        "rshares": 36566893890,
+        "voter": "honeythief"
+      },
+      {
+        "percent": "10000",
+        "reputation": 9434414518400,
+        "rshares": 18827860040,
+        "voter": "acassity"
+      },
+      {
+        "percent": "10000",
+        "reputation": 6813289592775,
+        "rshares": 5643589521,
+        "voter": "arcaneinfo"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4276659410889,
+        "rshares": 2343370053,
+        "voter": "michaellamden68"
+      },
+      {
+        "percent": "10000",
+        "reputation": 40255997582,
+        "rshares": 7705044517,
+        "voter": "cannav"
+      },
+      {
+        "percent": "10000",
+        "reputation": 15603689614497,
+        "rshares": 4717253581,
+        "voter": "good-karma"
+      },
+      {
+        "percent": "10000",
+        "reputation": 65540661343,
+        "rshares": 2043159217,
+        "voter": "orly"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3148690478580,
+        "rshares": 5987813508,
+        "voter": "kakradetome"
+      },
+      {
+        "percent": "10000",
+        "reputation": 7091975331308,
+        "rshares": 10842163210,
+        "voter": "konstantin"
+      },
+      {
+        "percent": "4100",
+        "reputation": 213668684615,
+        "rshares": 954274809,
+        "voter": "soupernerd"
+      },
+      {
+        "percent": "10000",
+        "reputation": 787678199102,
+        "rshares": 5644933315,
+        "voter": "cmtzco"
+      },
+      {
+        "percent": "10000",
+        "reputation": 10171002020923,
+        "rshares": 53795345158,
+        "voter": "krypto"
+      },
+      {
+        "percent": "10000",
+        "reputation": -2499740471746,
+        "rshares": 35863166588,
+        "voter": "r4fken"
+      },
+      {
+        "percent": "10000",
+        "reputation": 6244867547,
+        "rshares": 1099322989,
+        "voter": "anwar78"
+      },
+      {
+        "percent": "10000",
+        "reputation": -11110332240496,
+        "rshares": 1099066186,
+        "voter": "sergei"
+      },
+      {
+        "percent": "10000",
+        "reputation": 456375266764,
+        "rshares": 69221720273,
+        "voter": "mikemiziner"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1502465820159,
+        "rshares": 225094755219,
+        "voter": "domino"
+      },
+      {
+        "percent": "1000",
+        "reputation": 19111656178138,
+        "rshares": 5409461280,
+        "voter": "furion"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3149488018622,
+        "rshares": 1578702091,
+        "voter": "owdy"
+      },
+      {
+        "percent": "1000",
+        "reputation": 3891722,
+        "rshares": 72708675,
+        "voter": "barbara2"
+      },
+      {
+        "percent": "1000",
+        "reputation": 9142611234,
+        "rshares": 81295459,
+        "voter": "ch0c0latechip"
+      },
+      {
+        "percent": "1000",
+        "reputation": 3871042,
+        "rshares": 74534624,
+        "voter": "doge4lyf"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2770303185670,
+        "rshares": 1414442721,
+        "voter": "vi1son"
+      },
+      {
+        "percent": "10000",
+        "reputation": 54870619364044,
+        "rshares": 77281867826,
+        "voter": "jacor"
+      },
+      {
+        "percent": "10000",
+        "reputation": 67145833276,
+        "rshares": 40453801437,
+        "voter": "wesam"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1598540193144,
+        "rshares": 26907875496,
+        "voter": "gord0b"
+      },
+      {
+        "percent": "10000",
+        "reputation": 5463774640621,
+        "rshares": 18575116773,
+        "voter": "akareyon"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1648396897354,
+        "rshares": 6690487150,
+        "voter": "asim"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1563271634183,
+        "rshares": 73047874267,
+        "voter": "paco"
+      },
+      {
+        "percent": "10000",
+        "reputation": 431450051428,
+        "rshares": 11094081629,
+        "voter": "aaseb"
+      },
+      {
+        "percent": "10000",
+        "reputation": 10077167197115,
+        "rshares": 30827024902,
+        "voter": "biophil"
+      },
+      {
+        "percent": "10000",
+        "reputation": 786431662143,
+        "rshares": 2073705993,
+        "voter": "jvper"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2397831198773,
+        "rshares": 2840877145,
+        "voter": "karen13"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1489102259,
+        "rshares": 203840552,
+        "voter": "zoicneo"
+      },
+      {
+        "percent": "10000",
+        "reputation": 167437582424,
+        "rshares": 322673293,
+        "voter": "dr2073"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3979714886621,
+        "rshares": 10138487071,
+        "voter": "jaycobbell"
+      },
+      {
+        "percent": "10000",
+        "reputation": 669199844401,
+        "rshares": 8009298635,
+        "voter": "mun"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2629271154,
+        "rshares": 2608796036,
+        "voter": "screasey"
+      },
+      {
+        "percent": "10000",
+        "reputation": 658204768651,
+        "rshares": 55811738137,
+        "voter": "milestone"
+      },
+      {
+        "percent": "10000",
+        "reputation": 336756074227,
+        "rshares": 413343503,
+        "voter": "natalyt"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2173940256661,
+        "rshares": 6541225120,
+        "voter": "benjiberigan"
+      },
+      {
+        "percent": "10000",
+        "reputation": 76096938200261,
+        "rshares": 154517113512,
+        "voter": "calaber24p"
+      },
+      {
+        "percent": "10000",
+        "reputation": -124823359245,
+        "rshares": 9514232636,
+        "voter": "mustafaomar"
+      },
+      {
+        "percent": "10000",
+        "reputation": 974488972206,
+        "rshares": 2609468246,
+        "voter": "simon.braki.love"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1783202708175,
+        "rshares": 2478982342,
+        "voter": "desmonid"
+      },
+      {
+        "percent": "10000",
+        "reputation": 843226172873,
+        "rshares": 31150159456,
+        "voter": "thylbom"
+      },
+      {
+        "percent": "10000",
+        "reputation": -910520517353,
+        "rshares": 30998817641,
+        "voter": "ubg"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2339981102950,
+        "rshares": 467794757,
+        "voter": "fubar-bdhr"
+      },
+      {
+        "percent": "10000",
+        "reputation": 10900524985586,
+        "rshares": 21952682104,
+        "voter": "royaltiffany"
+      },
+      {
+        "percent": "10000",
+        "reputation": 116856214624,
+        "rshares": 2572534310,
+        "voter": "bones"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2619388406406,
+        "rshares": 485646625,
+        "voter": "vlad"
+      },
+      {
+        "percent": "10000",
+        "reputation": 477578742546,
+        "rshares": 5373542004,
+        "voter": "tarindel"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1830353392409,
+        "rshares": 2941402802,
+        "voter": "azurejasper"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2114306416334,
+        "rshares": 1833901948,
+        "voter": "cryptohustlin"
+      },
+      {
+        "percent": "10000",
+        "reputation": 160134373956,
+        "rshares": 7789484900,
+        "voter": "neroru"
+      },
+      {
+        "percent": "10000",
+        "reputation": 14988694886527,
+        "rshares": 137645465413,
+        "voter": "jl777"
+      },
+      {
+        "percent": "1000",
+        "reputation": 10519849768972,
+        "rshares": 2460007922,
+        "voter": "positive"
+      },
+      {
+        "percent": "10000",
+        "reputation": 194175308,
+        "rshares": 97173712,
+        "voter": "sergey22"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 1123401985,
+        "voter": "yarly"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 259272375,
+        "voter": "yarly2"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 259662513,
+        "voter": "yarly3"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 150554992,
+        "voter": "yarly4"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 151406737,
+        "voter": "yarly5"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 86412677,
+        "voter": "yarly7"
+      },
+      {
+        "percent": "10000",
+        "reputation": 855588904517,
+        "rshares": 156479334,
+        "voter": "arnob"
+      },
+      {
+        "percent": "10000",
+        "reputation": 35209974404,
+        "rshares": 124293928,
+        "voter": "mysteem"
+      },
+      {
+        "percent": "10000",
+        "reputation": 327313183062,
+        "rshares": 1183318721,
+        "voter": "politicasan2"
+      },
+      {
+        "percent": "10000",
+        "reputation": 6985921192853,
+        "rshares": 198723675886,
+        "voter": "johnsmith"
+      },
+      {
+        "percent": "10000",
+        "reputation": 5852927286506,
+        "rshares": 12306130569,
+        "voter": "cryptocameo"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2615896270,
+        "rshares": 4037318025,
+        "voter": "sacode"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1624945721527,
+        "rshares": 4354702977,
+        "voter": "bbrewer"
+      },
+      {
+        "percent": "10000",
+        "reputation": 58190631451,
+        "rshares": 12141179529,
+        "voter": "proto"
+      },
+      {
+        "percent": "10000",
+        "reputation": 153480676290,
+        "rshares": 613428464,
+        "voter": "curator"
+      },
+      {
+        "percent": "10000",
+        "reputation": 7172977970558,
+        "rshares": 663907413,
+        "voter": "ace108"
+      },
+      {
+        "percent": "10000",
+        "reputation": 17698439393799,
+        "rshares": 2300655477,
+        "voter": "sisterholics"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 252779962,
+        "voter": "yarly10"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 142201955,
+        "voter": "yarly11"
+      },
+      {
+        "percent": "10000",
+        "reputation": 10552456597779,
+        "rshares": 2015112656,
+        "voter": "royalmacro"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 78112836,
+        "voter": "yarly12"
+      },
+      {
+        "percent": "1000",
+        "reputation": 147425730,
+        "rshares": 76671214,
+        "voter": "fnait"
+      },
+      {
+        "percent": "1000",
+        "reputation": 3720753029,
+        "rshares": 75216736,
+        "voter": "keepcalmand"
+      },
+      {
+        "percent": "10000",
+        "reputation": 790840294542,
+        "rshares": 138756288,
+        "voter": "nadira"
+      },
+      {
+        "percent": "10000",
+        "reputation": 5095600502,
+        "rshares": 112996238,
+        "voter": "creatorgalaxy"
+      },
+      {
+        "percent": "10000",
+        "reputation": 17218558634066,
+        "rshares": 1478839714,
+        "voter": "smailer"
+      },
+      {
+        "percent": "10000",
+        "reputation": -1193908062262,
+        "rshares": 108632879,
+        "voter": "steemster1"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4063076365725,
+        "rshares": 780067126,
+        "voter": "bullionstackers"
+      },
+      {
+        "percent": "10000",
+        "reputation": 49215329,
+        "rshares": 3485414602,
+        "voter": "pigatron"
+      },
+      {
+        "percent": "10000",
+        "reputation": 791284980460,
+        "rshares": 135812442,
+        "voter": "sujoy1990"
+      },
+      {
+        "percent": "4100",
+        "reputation": -4779249072914,
+        "rshares": 881792535,
+        "voter": "weenis"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3962925392210,
+        "rshares": 3281365639,
+        "voter": "jed78"
+      },
+      {
+        "percent": "10000",
+        "reputation": 905757373511,
+        "rshares": 221149308,
+        "voter": "ragini00"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1275505236,
+        "rshares": 5945524533,
+        "voter": "taker"
+      },
+      {
+        "percent": "10000",
+        "reputation": 10137266406870,
+        "rshares": 3504425870,
+        "voter": "nekromarinist"
+      },
+      {
+        "percent": "10000",
+        "reputation": -833837861150,
+        "rshares": 51143991,
+        "voter": "sharon"
+      },
+      {
+        "percent": "10000",
+        "reputation": 790994268806,
+        "rshares": 91515511,
+        "voter": "atkins"
+      },
+      {
+        "percent": "10000",
+        "reputation": 769405947222,
+        "rshares": 90955060,
+        "voter": "ronald0"
+      },
+      {
+        "percent": "10000",
+        "reputation": 774287478546,
+        "rshares": 91943650,
+        "voter": "jerremie"
+      },
+      {
+        "percent": "10000",
+        "reputation": 774739223050,
+        "rshares": 93068712,
+        "voter": "steampty"
+      },
+      {
+        "percent": "10000",
+        "reputation": 770375578051,
+        "rshares": 96377999,
+        "voter": "rosamund"
+      },
+      {
+        "percent": "10000",
+        "reputation": -1130081321479,
+        "rshares": 50731326,
+        "voter": "lillianjones"
+      },
+      {
+        "percent": "10000",
+        "reputation": 90565359983,
+        "rshares": 6932943337,
+        "voter": "rawnetics"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 369729556,
+        "voter": "mariadianaelaine"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1751717743,
+        "rshares": 5209109141,
+        "voter": "gmurph"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2136142852031,
+        "rshares": 5125037275,
+        "voter": "aleksandraz"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3942069730400,
+        "rshares": 814208697,
+        "voter": "cjclaro"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2021353867281,
+        "rshares": 6668053220,
+        "voter": "kurtbeil"
+      },
+      {
+        "percent": "10000",
+        "reputation": 124828196272,
+        "rshares": 848109686,
+        "voter": "havok777"
+      },
+      {
+        "percent": "10000",
+        "reputation": 66791976065,
+        "rshares": 34600538337,
+        "voter": "joele"
+      },
+      {
+        "percent": "10000",
+        "reputation": 11122126920308,
+        "rshares": 2734583052,
+        "voter": "oflyhigh"
+      },
+      {
+        "percent": "10000",
+        "reputation": 73944659327428,
+        "rshares": 23145419484,
+        "voter": "sirwinchester"
+      },
+      {
+        "percent": "10000",
+        "reputation": -1468839175006,
+        "rshares": 51120963,
+        "voter": "msjennifer"
+      },
+      {
+        "percent": "10000",
+        "reputation": 661944466048,
+        "rshares": 348772064,
+        "voter": "alifton"
+      },
+      {
+        "percent": "10000",
+        "reputation": -1343370986030,
+        "rshares": 50828873,
+        "voter": "ciao"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3401416945201,
+        "rshares": 1243865593,
+        "voter": "villainblack"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3515726108234,
+        "rshares": 182816900,
+        "voter": "jrcornel"
+      },
+      {
+        "percent": "10000",
+        "reputation": 485540,
+        "rshares": 50521096,
+        "voter": "steemo"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4542627765008,
+        "rshares": 5388038354,
+        "voter": "hanshotfirst"
+      },
+      {
+        "percent": "10000",
+        "reputation": -79575494262,
+        "rshares": 50390768,
+        "voter": "steema"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 74180835,
+        "voter": "gamerate"
+      },
+      {
+        "percent": "10000",
+        "reputation": -894488087252,
+        "rshares": 51802213,
+        "voter": "confucius"
+      },
+      {
+        "percent": "10000",
+        "reputation": 593072231,
+        "rshares": 60462106,
+        "voter": "immortality"
+      },
+      {
+        "percent": "10000",
+        "reputation": 9332405310628,
+        "rshares": 6375625067,
+        "voter": "mrosenquist"
+      },
+      {
+        "percent": "10000",
+        "reputation": 43382167874,
+        "rshares": 2162784890,
+        "voter": "dcpaul"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2118792724924,
+        "rshares": 99663833989,
+        "voter": "miacats"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 112641010,
+        "voter": "future-shock"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 59927283,
+        "voter": "immortal"
+      },
+      {
+        "percent": "10000",
+        "reputation": -789959772758,
+        "rshares": 51153233,
+        "voter": "jarvis"
+      },
+      {
+        "percent": "10000",
+        "reputation": 497846177749,
+        "rshares": 265031596,
+        "voter": "ashwim"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50692212,
+        "voter": "fortuner"
+      },
+      {
+        "percent": "10000",
+        "reputation": 28535887165,
+        "rshares": 70003435,
+        "voter": "longevity"
+      },
+      {
+        "percent": "10000",
+        "reputation": 57513824,
+        "rshares": 59447794,
+        "voter": "rashka"
+      },
+      {
+        "percent": "10000",
+        "reputation": 34657029528,
+        "rshares": 62173731,
+        "voter": "filmaker"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4637390447698,
+        "rshares": 259582847,
+        "voter": "chinadaily"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50684643,
+        "voter": "johnbyrd"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50682252,
+        "voter": "thomasaustin"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50680459,
+        "voter": "thermor"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50677748,
+        "voter": "ficholl"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50673817,
+        "voter": "widell"
+      },
+      {
+        "percent": "10000",
+        "reputation": 951754559495,
+        "rshares": 1149998780,
+        "voter": "laconicflow"
+      },
+      {
+        "percent": "10000",
+        "reputation": 397516062,
+        "rshares": 57640568,
+        "voter": "longtech"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50311250,
+        "voter": "revelbrooks"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2140537429766,
+        "rshares": 14379078005,
+        "voter": "yef99"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1130219064888,
+        "rshares": 25130369662,
+        "voter": "andrewawerdna"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 58064982,
+        "voter": "zite"
+      },
+      {
+        "percent": "10000",
+        "reputation": 32644559975,
+        "rshares": 58984750,
+        "voter": "ajavajive"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1041384471,
+        "rshares": 2670745888,
+        "voter": "kovaiensko"
+      },
+      {
+        "percent": "10000",
+        "reputation": 684139314026,
+        "rshares": 64774768,
+        "voter": "shuvo"
+      },
+      {
+        "percent": "10000",
+        "reputation": 73481598898,
+        "rshares": 77146133,
+        "voter": "slorunner"
+      },
+      {
+        "percent": "10000",
+        "reputation": 896116963054,
+        "rshares": 200332810318,
+        "voter": "oldtimer"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50416427,
+        "voter": "curpose"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1614905430,
+        "rshares": 179671454,
+        "voter": "mfeu"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2587308443,
+        "rshares": 57212437,
+        "voter": "solielj"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1090727793166,
+        "rshares": 934745507,
+        "voter": "eileenbeach"
+      },
+      {
+        "percent": "10000",
+        "reputation": 716390377150,
+        "rshares": 63842186,
+        "voter": "rwgunderson"
+      },
+      {
+        "percent": "10000",
+        "reputation": 18006844018,
+        "rshares": 127326977,
+        "voter": "mrainp"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1063317981552,
+        "rshares": 7007754427,
+        "voter": "etcmike"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2516108074649,
+        "rshares": 92595506,
+        "voter": "runridefly"
+      },
+      {
+        "percent": "10000",
+        "reputation": 171590615597,
+        "rshares": 88280614,
+        "voter": "trendwizard"
+      },
+      {
+        "percent": "10000",
+        "reputation": 599908904317,
+        "rshares": 147775998,
+        "voter": "jennsky"
+      },
+      {
+        "percent": "10000",
+        "reputation": 34250890230,
+        "rshares": 57330113,
+        "voter": "aavkc"
+      },
+      {
+        "percent": "10000",
+        "reputation": 682893592,
+        "rshares": 702057609,
+        "voter": "gear66"
+      },
+      {
+        "percent": "10000",
+        "reputation": 28419215374,
+        "rshares": 726907869,
+        "voter": "mister-t"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1504301173829,
+        "rshares": 672040041,
+        "voter": "jeremyfromwi"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50588612,
+        "voter": "troich"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2721887929533,
+        "rshares": 2151529805,
+        "voter": "davidbrogan"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2083416845,
+        "rshares": 50593879,
+        "voter": "crion"
+      },
+      {
+        "percent": "10000",
+        "reputation": 25413691969,
+        "rshares": 167316916,
+        "voter": "greatness"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50271139,
+        "voter": "hitherise"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50262756,
+        "voter": "wiss"
+      },
+      {
+        "percent": "10000",
+        "reputation": 629095349859,
+        "rshares": 1235075414,
+        "voter": "victor-smirnoff"
+      },
+      {
+        "percent": "10000",
+        "reputation": 837791549130,
+        "rshares": 1224088353,
+        "voter": "sponge-bob"
+      },
+      {
+        "percent": "10000",
+        "reputation": 135537419,
+        "rshares": 51204810,
+        "voter": "dobermansden"
+      },
+      {
+        "percent": "10000",
+        "reputation": 8412926035,
+        "rshares": 3604800369,
+        "voter": "ericbotticelli"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 51033798,
+        "voter": "stroully"
+      },
+      {
+        "percent": "10000",
+        "reputation": 76761005092,
+        "rshares": 1001028968,
+        "voter": "seasi06"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12928378,
+        "rshares": 55359233,
+        "voter": "almiller"
+      },
+      {
+        "percent": "10000",
+        "reputation": 73376503650,
+        "rshares": 3584022615,
+        "voter": "cryptobiker"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50712038,
+        "voter": "thadm"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50710305,
+        "voter": "prof"
+      },
+      {
+        "percent": "10000",
+        "reputation": 16147984004,
+        "rshares": 51556603,
+        "voter": "lighter"
+      },
+      {
+        "percent": "10000",
+        "reputation": 228138838,
+        "rshares": 51533378,
+        "voter": "badman"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12174053,
+        "rshares": 51530053,
+        "voter": "boooya"
+      },
+      {
+        "percent": "10000",
+        "reputation": 24402009,
+        "rshares": 51679997,
+        "voter": "goodtime"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50356354,
+        "voter": "yorsens"
+      },
+      {
+        "percent": "10000",
+        "reputation": 273401338,
+        "rshares": 51374551,
+        "voter": "sunnyd"
+      },
+      {
+        "percent": "10000",
+        "reputation": 29278167,
+        "rshares": 52321394,
+        "voter": "jayc"
+      },
+      {
+        "percent": "10000",
+        "reputation": 10569233,
+        "rshares": 54452427,
+        "voter": "cibernatan"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50065875,
+        "voter": "bane"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50059754,
+        "voter": "vive"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50054445,
+        "voter": "coad"
+      },
+      {
+        "percent": "10000",
+        "reputation": 796030,
+        "rshares": 53113856,
+        "voter": "blackchyna"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50931848,
+        "voter": "analyzethis"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 53015939,
+        "voter": "snoopdog"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 53013240,
+        "voter": "tyga"
+      },
+      {
+        "percent": "10000",
+        "reputation": 5085810,
+        "rshares": 53010767,
+        "voter": "macklemore"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50825587,
+        "voter": "sofa"
+      },
+      {
+        "percent": "10000",
+        "reputation": 7805684953,
+        "rshares": 55078047,
+        "voter": "xomtux"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 52915392,
+        "voter": "warhammer"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50701511,
+        "voter": "roadhog"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 52777051,
+        "voter": "doggnostic"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 102413290,
+        "voter": "bones261"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 52504270,
+        "voter": "jenny-talls"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 50207083,
+        "voter": "mike2125"
+      },
+      {
+        "percent": "10000",
+        "reputation": 10247624955,
+        "rshares": 52093623,
+        "voter": "superhighpod"
+      }
+    ],
+    "author": "masteryoda",
+    "author_reputation": 100108166977919,
+    "beneficiaries": [],
+    "body": "![photo](http://i.imgsafe.org/cfdd6c2073.png)\n\n- - -\n\nThis report covers posts and comments made between:\n\n**August 16, 2016, 12:00 am UTC** and **August 16, 2016, 11:59 pm UTC**\n\nTotal SBD paid: **19 863.336 SBD**\n\nTotal VESTS paid: **64 302 098.663 VESTS**\n\n- - -\n\n### SBD and VESTS payouts chart:\n![photo](http://i.imgsafe.org/3d7f22d3a3.png)\n\n- - -\n\n### Top 50 overall SBD earners:\n|Rank | Account        | Posts         |SBD          | VESTS  |\n| :-----| ------------- |-------------:|-------------:| -----:|\n|1|[@gavvet](https://steemit.com/@gavvet)|2|2 011.268|5 247 544.801|\n|2|[@steemed](https://steemit.com/@steemed)|1|1 067.916|2 757 568.159|\n|3|[@andrarchy](https://steemit.com/@andrarchy)|2|1 024.344|2 451 662.288|\n|4|[@fairytalelife](https://steemit.com/@fairytalelife)|1|909.016|2 190 256.562|\n|5|[@ericvancewalton](https://steemit.com/@ericvancewalton)|1|740.350|1 768 137.199|\n|6|[@kaylinart](https://steemit.com/@kaylinart)|2|733.425|1 764 907.840|\n|7|[@fyrstikken](https://steemit.com/@fyrstikken)|1|727.475|1 731 626.931|\n|8|[@alexbeyman](https://steemit.com/@alexbeyman)|3|696.226|1 665 389.063|\n|9|[@ionescur](https://steemit.com/@ionescur)|1|590.602|1 405 988.666|\n|10|[@dantheman](https://steemit.com/@dantheman)|1|535.235|1 643 297.401|\n|11|[@jacor](https://steemit.com/@jacor)|1|471.603|1 114 609.078|\n|12|[@brianphobos](https://steemit.com/@brianphobos)|1|377.154|894 335.344|\n|13|[@federicopistono](https://steemit.com/@federicopistono)|1|354.117|846 293.613|\n|14|[@dragonslayer109](https://steemit.com/@dragonslayer109)|2|346.451|828 956.541|\n|15|[@lancem](https://steemit.com/@lancem)|2|243.292|570 443.398|\n|16|[@opheliafu](https://steemit.com/@opheliafu)|3|240.307|574 735.785|\n|17|[@sirwinchester](https://steemit.com/@sirwinchester)|1|232.683|547 009.769|\n|18|[@nekromarinist](https://steemit.com/@nekromarinist)|1|189.772|453 137.331|\n|19|[@in2itiveart](https://steemit.com/@in2itiveart)|1|188.817|446 225.136|\n|20|[@stellabelle](https://steemit.com/@stellabelle)|1|186.668|450 038.262|\n|21|[@hisnameisolllie](https://steemit.com/@hisnameisolllie)|1|180.107|431 864.971|\n|22|[@runaway-psyche](https://steemit.com/@runaway-psyche)|1|178.415|426 479.414|\n|23|[@bridgetbunchy](https://steemit.com/@bridgetbunchy)|1|175.400|411 345.238|\n|24|[@lemouth](https://steemit.com/@lemouth)|1|174.631|413 747.630|\n|25|[@roy.batty](https://steemit.com/@roy.batty)|1|165.469|393 512.842|\n|26|[@bitminter](https://steemit.com/@bitminter)|1|165.233|391 386.143|\n|27|[@heretickitten](https://steemit.com/@heretickitten)|2|164.713|389 301.008|\n|28|[@davidbrogan](https://steemit.com/@davidbrogan)|1|161.854|383 487.584|\n|29|[@chrisadventures](https://steemit.com/@chrisadventures)|2|160.883|380 274.634|\n|30|[@laonie](https://steemit.com/@laonie)|1|159.936|553 803.412|\n|31|[@dana-edwards](https://steemit.com/@dana-edwards)|1|157.786|377 390.066|\n|32|[@sterlinluxan](https://steemit.com/@sterlinluxan)|1|155.477|372 607.728|\n|33|[@stephthegeek](https://steemit.com/@stephthegeek)|1|152.725|364 953.840|\n|34|[@herverisson](https://steemit.com/@herverisson)|1|150.180|354 900.873|\n|35|[@tanata](https://steemit.com/@tanata)|1|149.359|355 624.354|\n|36|[@delphia16](https://steemit.com/@delphia16)|1|146.301|348 341.965|\n|37|[@kafkanarchy84](https://steemit.com/@kafkanarchy84)|2|146.083|347 057.277|\n|38|[@jamtaylor](https://steemit.com/@jamtaylor)|1|145.699|352 295.175|\n|39|[@adm](https://steemit.com/@adm)|0|145.525|349 097.630|\n|40|[@rhi-marie](https://steemit.com/@rhi-marie)|1|143.222|340 600.778|\n|41|[@acidyo](https://steemit.com/@acidyo)|1|141.197|339 526.719|\n|42|[@poeticsnake](https://steemit.com/@poeticsnake)|1|139.402|330 280.872|\n|43|[@spinner](https://steemit.com/@spinner)|1|135.600|321 155.002|\n|44|[@sean-king](https://steemit.com/@sean-king)|3|135.029|326 672.859|\n|45|[@lauralemons](https://steemit.com/@lauralemons)|1|133.873|319 830.226|\n|46|[@englishtchrivy](https://steemit.com/@englishtchrivy)|1|133.480|319 024.141|\n|47|[@les-peters](https://steemit.com/@les-peters)|2|128.176|306 368.033|\n|48|[@cristi](https://steemit.com/@cristi)|1|127.969|305 712.838|\n|49|[@cutie](https://steemit.com/@cutie)|1|127.143|303 621.071|\n|50|[@steemgenerator](https://steemit.com/@steemgenerator)|2|126.885|297 557.161|\n\n\n- - -\n\n### Top 50 overall VESTS earners:\n|Rank | Account        | SBD          | VESTS  |\n| :-----| ------------- |-------------:| -----:|\n|1|[@gavvet](https://steemit.com/@gavvet)|2 011.268|5 247 544.801|\n|2|[@steemed](https://steemit.com/@steemed)|1 067.916|2 757 568.159|\n|3|[@andrarchy](https://steemit.com/@andrarchy)|1 024.344|2 451 662.288|\n|4|[@blocktrades](https://steemit.com/@blocktrades)|0.000|2 302 781.107|\n|5|[@fairytalelife](https://steemit.com/@fairytalelife)|909.016|2 190 256.562|\n|6|[@berniesanders](https://steemit.com/@berniesanders)|0.019|2 010 068.507|\n|7|[@ericvancewalton](https://steemit.com/@ericvancewalton)|740.350|1 768 137.199|\n|8|[@kaylinart](https://steemit.com/@kaylinart)|733.425|1 764 907.840|\n|9|[@fyrstikken](https://steemit.com/@fyrstikken)|727.475|1 731 626.931|\n|10|[@alexbeyman](https://steemit.com/@alexbeyman)|696.226|1 665 389.063|\n|11|[@dantheman](https://steemit.com/@dantheman)|535.235|1 643 297.401|\n|12|[@ionescur](https://steemit.com/@ionescur)|590.602|1 405 988.666|\n|13|[@nextgencrypto](https://steemit.com/@nextgencrypto)|0.000|1 181 715.624|\n|14|[@jacor](https://steemit.com/@jacor)|471.603|1 114 609.078|\n|15|[@smooth](https://steemit.com/@smooth)|1.350|1 023 986.863|\n|16|[@wang](https://steemit.com/@wang)|0.000|1 021 206.147|\n|17|[@brianphobos](https://steemit.com/@brianphobos)|377.154|894 335.344|\n|18|[@donkeypong](https://steemit.com/@donkeypong)|0.000|869 584.599|\n|19|[@federicopistono](https://steemit.com/@federicopistono)|354.117|846 293.613|\n|20|[@dragonslayer109](https://steemit.com/@dragonslayer109)|346.451|828 956.541|\n|21|[@xeldal](https://steemit.com/@xeldal)|0.093|672 573.482|\n|22|[@complexring](https://steemit.com/@complexring)|7.544|597 742.849|\n|23|[@pharesim](https://steemit.com/@pharesim)|0.049|588 457.797|\n|24|[@opheliafu](https://steemit.com/@opheliafu)|240.307|574 735.785|\n|25|[@lancem](https://steemit.com/@lancem)|243.292|570 443.398|\n|26|[@laonie](https://steemit.com/@laonie)|159.936|553 803.412|\n|27|[@sirwinchester](https://steemit.com/@sirwinchester)|232.683|547 009.769|\n|28|[@summon](https://steemit.com/@summon)|0.000|532 036.483|\n|29|[@nekromarinist](https://steemit.com/@nekromarinist)|189.772|453 137.331|\n|30|[@stellabelle](https://steemit.com/@stellabelle)|186.668|450 038.262|\n|31|[@in2itiveart](https://steemit.com/@in2itiveart)|188.817|446 225.136|\n|32|[@hisnameisolllie](https://steemit.com/@hisnameisolllie)|180.107|431 864.971|\n|33|[@recursive](https://steemit.com/@recursive)|0.298|426 743.097|\n|34|[@runaway-psyche](https://steemit.com/@runaway-psyche)|178.415|426 479.414|\n|35|[@lemouth](https://steemit.com/@lemouth)|174.631|413 747.630|\n|36|[@bridgetbunchy](https://steemit.com/@bridgetbunchy)|175.400|411 345.238|\n|37|[@roy.batty](https://steemit.com/@roy.batty)|165.469|393 512.842|\n|38|[@bitminter](https://steemit.com/@bitminter)|165.233|391 386.143|\n|39|[@heretickitten](https://steemit.com/@heretickitten)|164.713|389 301.008|\n|40|[@davidbrogan](https://steemit.com/@davidbrogan)|161.854|383 487.584|\n|41|[@chrisadventures](https://steemit.com/@chrisadventures)|160.883|380 274.634|\n|42|[@dana-edwards](https://steemit.com/@dana-edwards)|157.786|377 390.066|\n|43|[@sterlinluxan](https://steemit.com/@sterlinluxan)|155.477|372 607.728|\n|44|[@stephthegeek](https://steemit.com/@stephthegeek)|152.725|364 953.840|\n|45|[@tanata](https://steemit.com/@tanata)|149.359|355 624.354|\n|46|[@herverisson](https://steemit.com/@herverisson)|150.180|354 900.873|\n|47|[@jamtaylor](https://steemit.com/@jamtaylor)|145.699|352 295.175|\n|48|[@adm](https://steemit.com/@adm)|145.525|349 097.630|\n|49|[@delphia16](https://steemit.com/@delphia16)|146.301|348 341.965|\n|50|[@kafkanarchy84](https://steemit.com/@kafkanarchy84)|146.083|347 057.277|\n\n\n- - -\n\n### Top 50 paying posts (author reward):\n|Rank | Account        | SBD          | VESTS  | POST|\n| :-----| ------------- |-------------:| -----:|:-----|\n|1|[@gavvet](https://steemit.com/@gavvet)|1192.992|2803806.890273|[how-i-end-up-as-a-good-teacher-with-my-own-good-teaching-ski](https://steemit.com/all/@gavvet/how-i-end-up-as-a-good-teacher-with-my-own-good-teaching-skills-paano-ako-naging-mabuting-guro-na-may-mabuting-kakayahan-sa)|\n|2|[@steemed](https://steemit.com/@steemed)|1067.916|2552162.962054|[steem-png-01-consensus](https://steemit.com/all/@steemed/steem-png-01-consensus)|\n|3|[@fairytalelife](https://steemit.com/@fairytalelife)|908.957|2172306.736539|[the-forgotten-child](https://steemit.com/all/@fairytalelife/the-forgotten-child)|\n|4|[@andrarchy](https://steemit.com/@andrarchy)|857.494|2048663.590342|[steem-focused-content-and-the-first-principles-of-steem](https://steemit.com/all/@andrarchy/steem-focused-content-and-the-first-principles-of-steem)|\n|5|[@gavvet](https://steemit.com/@gavvet)|818.276|1919119.827756|[chronicles-of-alan-how-to-wreck-a-romance-featuring-awgbibb-](https://steemit.com/all/@gavvet/chronicles-of-alan-how-to-wreck-a-romance-featuring-awgbibb-as-author)|\n|6|[@ericvancewalton](https://steemit.com/@ericvancewalton)|740.350|1767823.032519|[just-another-day-an-original-short-story-part-2-of-2](https://steemit.com/all/@ericvancewalton/just-another-day-an-original-short-story-part-2-of-2)|\n|7|[@fyrstikken](https://steemit.com/@fyrstikken)|726.511|1720839.824747|[crypto-land-a-comedy-by-fyrstikken](https://steemit.com/all/@fyrstikken/crypto-land-a-comedy-by-fyrstikken)|\n|8|[@ionescur](https://steemit.com/@ionescur)|590.602|1405988.666249|[why-good-people-have-bad-politics](https://steemit.com/all/@ionescur/why-good-people-have-bad-politics)|\n|9|[@dantheman](https://steemit.com/@dantheman)|534.760|1271890.783719|[curation-rewards-and-voting-incentive](https://steemit.com/all/@dantheman/curation-rewards-and-voting-incentive)|\n|10|[@jacor](https://steemit.com/@jacor)|471.551|1114118.656092|[from-minnow-to-baby-dolphin-in-only-a-few-weeks-why-can-t-yo](https://steemit.com/all/@jacor/from-minnow-to-baby-dolphin-in-only-a-few-weeks-why-can-t-you-do-this-as-well)|\n|11|[@kaylinart](https://steemit.com/@kaylinart)|409.346|977920.412393|[hacks-for-eggs](https://steemit.com/all/@kaylinart/hacks-for-eggs)|\n|12|[@brianphobos](https://steemit.com/@brianphobos)|376.681|892067.333340|[lasers-could-get-us-to-the-nearest-star-systems-20-years-and](https://steemit.com/all/@brianphobos/lasers-could-get-us-to-the-nearest-star-systems-20-years-and-mars-3-days)|\n|13|[@federicopistono](https://steemit.com/@federicopistono)|354.117|846293.613095|[chapter-5-intelligence-or-robots-will-steal-your-job-but-tha](https://steemit.com/all/@federicopistono/chapter-5-intelligence-or-robots-will-steal-your-job-but-that-s-ok)|\n|14|[@kaylinart](https://steemit.com/@kaylinart)|324.051|774516.839104|[how-addiction-starts](https://steemit.com/all/@kaylinart/how-addiction-starts)|\n|15|[@alexbeyman](https://steemit.com/@alexbeyman)|322.570|770909.181767|[short-story-the-ritual-a-children-s-counselor-organizes-a-ru](https://steemit.com/all/@alexbeyman/short-story-the-ritual-a-children-s-counselor-organizes-a-rustic-retreat-oblivious-to-what-hides-in-the-woods)|\n|16|[@sirwinchester](https://steemit.com/@sirwinchester)|232.650|546737.826599|[mindfulness-what-is-it-what-are-the-benefits-and-how-to-prac](https://steemit.com/all/@sirwinchester/mindfulness-what-is-it-what-are-the-benefits-and-how-to-practice-it)|\n|17|[@alexbeyman](https://steemit.com/@alexbeyman)|206.323|493008.271750|[nautilus-x-the-spaceship-that-will-take-us-beyond-mars](https://steemit.com/all/@alexbeyman/nautilus-x-the-spaceship-that-will-take-us-beyond-mars)|\n|18|[@nekromarinist](https://steemit.com/@nekromarinist)|189.755|453058.768768|[steemitartchallenge-entry](https://steemit.com/all/@nekromarinist/steemitartchallenge-entry)|\n|19|[@dragonslayer109](https://steemit.com/@dragonslayer109)|189.511|444434.944419|[daily-pick-of-hidden-gems-25](https://steemit.com/all/@dragonslayer109/daily-pick-of-hidden-gems-25)|\n|20|[@in2itiveart](https://steemit.com/@in2itiveart)|188.817|446225.135755|[in-order-for-there-to-be-any-real-change-we-must-change](https://steemit.com/all/@in2itiveart/in-order-for-there-to-be-any-real-change-we-must-change)|\n|21|[@hisnameisolllie](https://steemit.com/@hisnameisolllie)|180.107|425237.486119|[whales-should-use-their-powers-to-give-some-authors-notabili](https://steemit.com/all/@hisnameisolllie/whales-should-use-their-powers-to-give-some-authors-notability-but-not-rewards)|\n|22|[@stellabelle](https://steemit.com/@stellabelle)|178.293|425773.046030|[secret-writer-i-feel-like-an-alien-among-people-in-my-countr](https://steemit.com/all/@stellabelle/secret-writer-i-feel-like-an-alien-among-people-in-my-country)|\n|23|[@runaway-psyche](https://steemit.com/@runaway-psyche)|178.287|425608.760196|[10-tips-from-a-psychonaut-how-to-have-an-awesome-safe-psyche](https://steemit.com/all/@runaway-psyche/10-tips-from-a-psychonaut-how-to-have-an-awesome-safe-psychedelic-experience)|\n|24|[@bridgetbunchy](https://steemit.com/@bridgetbunchy)|175.400|411345.237777|[from-glazier-to-glass-artistry-fusing-passion-with-experienc](https://steemit.com/all/@bridgetbunchy/from-glazier-to-glass-artistry-fusing-passion-with-experience)|\n|25|[@lemouth](https://steemit.com/@lemouth)|174.596|413658.401326|[the-bestiary-of-particle-physics-this-is-how-i-introduced-pa](https://steemit.com/all/@lemouth/the-bestiary-of-particle-physics-this-is-how-i-introduced-particle-physics-to-cern-summer-students)|\n|26|[@alexbeyman](https://steemit.com/@alexbeyman)|167.290|399712.874881|[into-the-mind-virtual-reality-and-psychedelics](https://steemit.com/all/@alexbeyman/into-the-mind-virtual-reality-and-psychedelics)|\n|27|[@andrarchy](https://steemit.com/@andrarchy)|166.338|397412.474459|[the-first-principles-of-steem](https://steemit.com/all/@andrarchy/the-first-principles-of-steem)|\n|28|[@roy.batty](https://steemit.com/@roy.batty)|165.469|393512.842061|[steemitartchallenge-entry-ned-scott-pen-and-ink-portrait](https://steemit.com/all/@roy.batty/steemitartchallenge-entry-ned-scott-pen-and-ink-portrait)|\n|29|[@bitminter](https://steemit.com/@bitminter)|165.233|391382.568578|[recycle-diy-veritical-wall-garden](https://steemit.com/all/@bitminter/recycle-diy-veritical-wall-garden)|\n|30|[@heretickitten](https://steemit.com/@heretickitten)|163.779|387096.343282|[who-is-carl-sagan-and-what-was-cosmos](https://steemit.com/all/@heretickitten/who-is-carl-sagan-and-what-was-cosmos)|\n|31|[@davidbrogan](https://steemit.com/@davidbrogan)|161.841|383451.703565|[n-d-e-my-near-death-experience-never-shared-before-the-futur](https://steemit.com/all/@davidbrogan/n-d-e-my-near-death-experience-never-shared-before-the-future-of-medicine-and-healing)|\n|32|[@chrisadventures](https://steemit.com/@chrisadventures)|160.772|379996.248116|[money-inequality-matters-is-it-actually-good-or-bad-by-chris](https://steemit.com/all/@chrisadventures/money-inequality-matters-is-it-actually-good-or-bad-by-chrisadventures)|\n|33|[@laonie](https://steemit.com/@laonie)|159.936|375629.292823|[my-robot-experiment-distribute-my-voting-power-to-the-hands-](https://steemit.com/all/@laonie/my-robot-experiment-distribute-my-voting-power-to-the-hands-of-good-human-curators)|\n|34|[@dana-edwards](https://steemit.com/@dana-edwards)|157.786|375213.624172|[social-computers-human-based-computation-games](https://steemit.com/all/@dana-edwards/social-computers-human-based-computation-games)|\n|35|[@dragonslayer109](https://steemit.com/@dragonslayer109)|156.733|372767.739327|[how-to-ruin-an-empire-diary-of-a-sith-lord-part-iv-sensitivi](https://steemit.com/all/@dragonslayer109/how-to-ruin-an-empire-diary-of-a-sith-lord-part-iv-sensitivity-training)|\n|36|[@sterlinluxan](https://steemit.com/@sterlinluxan)|154.159|368068.310343|[a-little-something-for-the-delusional-sophists-of-steemit-a-](https://steemit.com/all/@sterlinluxan/a-little-something-for-the-delusional-sophists-of-steemit-a-rebuttal-to-an-article-written-by-kyriacos)|\n|37|[@stephthegeek](https://steemit.com/@stephthegeek)|152.715|364925.299600|[hi-i-m-stephanie-aka-stephthegeek-i-love-baths-lego-whisky-a](https://steemit.com/all/@stephthegeek/hi-i-m-stephanie-aka-stephthegeek-i-love-baths-lego-whisky-and-short-walks-on-the-beach)|\n|38|[@herverisson](https://steemit.com/@herverisson)|150.180|354900.873046|[among-the-emperors-pluribus](https://steemit.com/all/@herverisson/among-the-emperors-pluribus)|\n|39|[@tanata](https://steemit.com/@tanata)|149.359|355624.353681|[for-the-love-of-dried-apricots](https://steemit.com/all/@tanata/for-the-love-of-dried-apricots)|\n|40|[@delphia16](https://steemit.com/@delphia16)|146.301|348341.964788|[the-five-laws-of-gold-money-that-transformed-my-life](https://steemit.com/all/@delphia16/the-five-laws-of-gold-money-that-transformed-my-life)|\n|41|[@jamtaylor](https://steemit.com/@jamtaylor)|145.349|347222.924558|[steemit-photo-challenge-4-winners-announcement-guest-judge-c](https://steemit.com/all/@jamtaylor/steemit-photo-challenge-4-winners-announcement-guest-judge-condra)|\n|42|[@rhi-marie](https://steemit.com/@rhi-marie)|143.127|340351.118640|[the-characters-of-tioman-musings-from-the-couch](https://steemit.com/all/@rhi-marie/the-characters-of-tioman-musings-from-the-couch)|\n|43|[@acidyo](https://steemit.com/@acidyo)|141.086|336855.781618|[waking-up-with-coma-lag-chapter-1-sci-fi-thriller-original-c](https://steemit.com/all/@acidyo/waking-up-with-coma-lag-chapter-1-sci-fi-thriller-original-content)|\n|44|[@poeticsnake](https://steemit.com/@poeticsnake)|139.371|330205.906390|[trying-something-new-setting-a-fresh-goal](https://steemit.com/all/@poeticsnake/trying-something-new-setting-a-fresh-goal)|\n|45|[@spinner](https://steemit.com/@spinner)|135.600|321155.002352|[the-mt-info-swamp-schoolboy-takes-russian-internet-by-storm](https://steemit.com/all/@spinner/the-mt-info-swamp-schoolboy-takes-russian-internet-by-storm)|\n|46|[@lauralemons](https://steemit.com/@lauralemons)|133.851|319669.489617|[there-is-no-shortcut-to-success-here-s-the-truth-to-what-it-](https://steemit.com/all/@lauralemons/there-is-no-shortcut-to-success-here-s-the-truth-to-what-it-takes-to-excel)|\n|47|[@englishtchrivy](https://steemit.com/@englishtchrivy)|133.480|319024.140902|[tips-on-spicing-up-your-water](https://steemit.com/all/@englishtchrivy/tips-on-spicing-up-your-water)|\n|48|[@les-peters](https://steemit.com/@les-peters)|128.160|306310.723003|[mad-scientist-s-journal-day-47](https://steemit.com/all/@les-peters/mad-scientist-s-journal-day-47)|\n|49|[@cristi](https://steemit.com/@cristi)|127.969|305587.941086|[our-irrational-selves-the-priming-effect](https://steemit.com/all/@cristi/our-irrational-selves-the-priming-effect)|\n|50|[@opheliafu](https://steemit.com/@opheliafu)|127.266|304193.422081|[are-you-coming-out-of-your-shell](https://steemit.com/all/@opheliafu/are-you-coming-out-of-your-shell)|\n\n\n- - -\n\n###### \u00a9 masteryoda",
+    "body_length": 19065,
+    "cashout_time": "2016-08-24T03:21:18",
+    "category": "stats",
+    "children": 50,
+    "created": "2016-08-17T03:21:18",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "json_metadata": "{\"tags\":[\"stats\",\"steem-stats\",\"steemit\"],\"image\":[\"http://i.imgsafe.org/cfdd6c2073.png\"]}",
+    "last_payout": "1969-12-31T23:59:59",
+    "last_update": "2016-08-17T03:21:18",
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 51963259805885,
+    "parent_author": "",
+    "parent_permlink": "stats",
+    "pending_payout_value": "443.144 HBD",
+    "percent_hbd": 10000,
+    "permlink": "daily-payouts-leaderboards-august-16",
+    "post_id": 846339,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "root_title": "Daily payouts leaderboards, August 16",
+    "title": "Daily payouts leaderboards, August 16",
+    "total_payout_value": "0.000 HBD",
+    "url": "/stats/@masteryoda/daily-payouts-leaderboards-august-16"
   }
 ]
