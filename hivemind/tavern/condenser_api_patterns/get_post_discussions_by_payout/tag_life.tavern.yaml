@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_post_discussions_by_payout"
-          params: {"tag":"life", "start_author":  "kental", "start_permlink": "the-impressive-difference-between-bees-and-wasps-bees-vs-wasps"}
+          params: {"tag":"life"}
       response:
         status_code: 200
         verify_response_with:

@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_post_discussions_by_payout patterns test observer alice with tag and paging mechanism
 
   marks:
-    - patterntest # alice follows muted of ignoreall that ignores kental (mock data)
+    - patterntest # alice follows muted of ignoreall that ignores kental (mock data); see also tag_paging
 
   includes:
     - !include ../../common.yaml
@@ -19,7 +19,7 @@
           id: 1
           method: "condenser_api.get_post_discussions_by_payout"
           params: {"tag":"life","observer":"alice","limit":3,
-                   "start_author": "kental", "start_permlink": "the-impressive-difference-between-bees-and-wasps-bees-vs-wasps"}
+                   "start_author": "groovedigital", "start_permlink": "when-your-dad-works-in-hollywood"}
       response:
         status_code: 200
         verify_response_with:

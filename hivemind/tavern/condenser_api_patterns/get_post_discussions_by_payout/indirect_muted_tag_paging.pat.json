@@ -3,1122 +3,1050 @@
     "active_votes": [
       {
         "percent": "10000",
-        "reputation": 51047995307721,
-        "rshares": 8059867438216,
-        "voter": "pharesim"
-      },
-      {
-        "percent": "7500",
-        "reputation": 16685610555705,
-        "rshares": 14865220926855,
-        "voter": "tombstone"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1214229078,
-        "rshares": 2476115783,
-        "voter": "boy"
-      },
-      {
-        "percent": "10000",
-        "reputation": 4712949449,
-        "rshares": 3005683587,
-        "voter": "bue-witness"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1789951494550,
-        "rshares": 557353091,
-        "voter": "bunny"
-      },
-      {
-        "percent": "10000",
-        "reputation": 103443134841,
-        "rshares": 42721040553,
-        "voter": "bue"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 1327116729,
-        "voter": "mini"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 170849766,
-        "voter": "moon"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2802091583976,
-        "rshares": 9068811597,
-        "voter": "proctologic"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 497724578,
-        "voter": "healthcare"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 763593782,
-        "voter": "daniel.pan"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 230379526,
-        "voter": "helen.tan"
-      },
-      {
-        "percent": "10000",
-        "reputation": 12594877551576,
-        "rshares": 77960580617,
-        "voter": "nenad-ristic"
-      },
-      {
-        "percent": "10000",
-        "reputation": 82831371778953,
-        "rshares": 840292568329,
-        "voter": "cryptogee"
-      },
-      {
-        "percent": "10000",
-        "reputation": 436017530085,
-        "rshares": 24560579069,
-        "voter": "instructor2121"
-      },
-      {
-        "percent": "10000",
-        "reputation": 26867938976163,
-        "rshares": 312856990632,
-        "voter": "teamsteem"
-      },
-      {
-        "percent": "10000",
-        "reputation": 865896375178,
-        "rshares": 1788244695,
-        "voter": "nxtblg"
-      },
-      {
-        "percent": "10000",
-        "reputation": 503318537891,
-        "rshares": 2947010150,
-        "voter": "jerome-colley"
-      },
-      {
-        "percent": "10000",
-        "reputation": 42741727265739,
-        "rshares": 142022702704,
-        "voter": "steve-walschot"
-      },
-      {
-        "percent": "10000",
-        "reputation": 16025488740118,
-        "rshares": 13232331972,
-        "voter": "klye"
-      },
-      {
-        "percent": "10000",
-        "reputation": 14968641922913,
-        "rshares": 44912693986,
-        "voter": "oaldamster"
-      },
-      {
-        "percent": "10000",
-        "reputation": 161089556767,
-        "rshares": 27467897017,
-        "voter": "asch"
-      },
-      {
-        "percent": "3301",
-        "reputation": 2902053059801,
-        "rshares": 2524835106,
-        "voter": "murh"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2423086926842,
-        "rshares": 17570378449,
-        "voter": "b4bb4r-5h3r"
-      },
-      {
-        "percent": "10000",
-        "reputation": 824717099743,
-        "rshares": 346500590983,
-        "voter": "cyber"
-      },
-      {
-        "percent": "10000",
-        "reputation": 11765473490257,
-        "rshares": 36602588220,
-        "voter": "justtryme90"
-      },
-      {
-        "percent": "10000",
-        "reputation": 4338392818880,
-        "rshares": 27155889494,
-        "voter": "altoz"
-      },
-      {
-        "percent": "10000",
-        "reputation": 20763505296686,
-        "rshares": 232993141281,
-        "voter": "wingz"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3906896686802,
-        "rshares": 61307724491,
-        "voter": "thecryptodrive"
-      },
-      {
-        "percent": "10000",
-        "reputation": 7255473848113,
-        "rshares": 86110213373,
-        "voter": "herzmeister"
-      },
-      {
-        "percent": "10000",
-        "reputation": 60725834714442,
-        "rshares": 449399978464,
-        "voter": "infovore"
-      },
-      {
-        "percent": "3900",
-        "reputation": 598181152117,
-        "rshares": 86701090302,
-        "voter": "kimziv"
-      },
-      {
-        "percent": "10000",
-        "reputation": 28873518041457,
-        "rshares": 48961284916,
-        "voter": "razvanelulmarin"
-      },
-      {
-        "percent": "10000",
-        "reputation": 427801121477,
-        "rshares": 577482876,
-        "voter": "nadejde"
-      },
-      {
-        "percent": "10000",
-        "reputation": 67229955621,
-        "rshares": 336297746,
-        "voter": "gerber"
-      },
-      {
-        "percent": "10000",
-        "reputation": 8461965690396,
-        "rshares": 65287937920,
-        "voter": "norbu"
-      },
-      {
-        "percent": "10000",
-        "reputation": 15285243314,
-        "rshares": 123824117,
-        "voter": "ales"
-      },
-      {
-        "percent": "10000",
-        "reputation": 25984358555464,
-        "rshares": 54499194899,
-        "voter": "bacchist"
-      },
-      {
-        "percent": "10000",
-        "reputation": 454055212995,
-        "rshares": 815307222,
-        "voter": "gidlark"
-      },
-      {
-        "percent": "10000",
-        "reputation": 9956734090708,
-        "rshares": 25087563530,
-        "voter": "firepower"
-      },
-      {
-        "percent": "10000",
-        "reputation": 19462531467501,
-        "rshares": 27333283527,
-        "voter": "hitmeasap"
-      },
-      {
-        "percent": "10000",
-        "reputation": 11415305020986,
-        "rshares": 43462287006,
-        "voter": "menta"
-      },
-      {
-        "percent": "10000",
-        "reputation": 5754523667110,
-        "rshares": 12644400872,
-        "voter": "yogi.artist"
-      },
-      {
-        "percent": "10000",
-        "reputation": 19604328647,
-        "rshares": 15615069580,
-        "voter": "bitshares101"
-      },
-      {
-        "percent": "10000",
-        "reputation": 7547302,
-        "rshares": 53136807,
-        "voter": "ghozia"
-      },
-      {
-        "percent": "10000",
-        "reputation": 5463774640621,
-        "rshares": 17843055962,
-        "voter": "akareyon"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3740475854096,
-        "rshares": 3229343542,
-        "voter": "egjoshslim"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2696386723259,
-        "rshares": 13732911304,
-        "voter": "sitaru"
-      },
-      {
-        "percent": "10000",
-        "reputation": 11644551965460,
-        "rshares": 11361796459,
-        "voter": "senseiteekay"
-      },
-      {
-        "percent": "10000",
-        "reputation": 14826352016829,
-        "rshares": 32730915191,
-        "voter": "diana.catherine"
-      },
-      {
-        "percent": "10000",
-        "reputation": 5827115301697,
-        "rshares": 6227397846,
-        "voter": "deviedev"
-      },
-      {
-        "percent": "10000",
-        "reputation": 10445529851856,
-        "rshares": 9922059654,
-        "voter": "meesterboom"
-      },
-      {
-        "percent": "10000",
-        "reputation": 16743994030016,
-        "rshares": 31314008944,
-        "voter": "condra"
-      },
-      {
-        "percent": "10000",
-        "reputation": 688176613733,
-        "rshares": 477797236,
-        "voter": "karenmckersie"
-      },
-      {
-        "percent": "10000",
-        "reputation": 97417747806297,
-        "rshares": 236273075013,
-        "voter": "knozaki2015"
-      },
-      {
-        "percent": "10000",
-        "reputation": 777812727227,
-        "rshares": 17096116990,
-        "voter": "artific"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1874324340242,
-        "rshares": 9341130526,
-        "voter": "stevo"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2339981102950,
-        "rshares": 1087530326,
-        "voter": "fubar-bdhr"
-      },
-      {
-        "percent": "10000",
-        "reputation": 10900524985586,
-        "rshares": 29975055052,
-        "voter": "royaltiffany"
-      },
-      {
-        "percent": "10000",
-        "reputation": 11482318062844,
-        "rshares": 27674957917,
-        "voter": "sauravrungta"
-      },
-      {
-        "percent": "10000",
-        "reputation": 513380281140,
-        "rshares": 551048236,
-        "voter": "qonq99"
-      },
-      {
-        "percent": "10000",
-        "reputation": 897000392259,
-        "rshares": 460239430,
-        "voter": "foxxycat"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2791409844,
-        "rshares": 109399116,
-        "voter": "elmusic"
-      },
-      {
-        "percent": "10000",
-        "reputation": 11096186337460,
-        "rshares": 25363927598,
-        "voter": "anca3drandom"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2568808468562,
-        "rshares": 1095911775,
-        "voter": "sompitonov"
-      },
-      {
-        "percent": "3300",
-        "reputation": 17698439393799,
-        "rshares": 8411080310,
-        "voter": "sisterholics"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1409021868,
-        "rshares": 114927140,
-        "voter": "wan17"
-      },
-      {
-        "percent": "10000",
-        "reputation": 6545561317919,
-        "rshares": 8322719360,
-        "voter": "clevecross"
-      },
-      {
-        "percent": "10000",
-        "reputation": 17218558634066,
-        "rshares": 5326768711,
-        "voter": "smailer"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2926129985180,
-        "rshares": 72666417093,
-        "voter": "shaka"
-      },
-      {
-        "percent": "10000",
-        "reputation": 10137266406870,
-        "rshares": 5394354595,
-        "voter": "nekromarinist"
-      },
-      {
-        "percent": "1900",
-        "reputation": 10771708337101,
-        "rshares": 215150324881,
-        "voter": "laonie"
-      },
-      {
-        "percent": "10000",
-        "reputation": 97123078718,
-        "rshares": 20164140158,
-        "voter": "yng-entrepreneur"
-      },
-      {
-        "percent": "2200",
-        "reputation": 18027204457681,
-        "rshares": 6067004782,
-        "voter": "myfirst"
-      },
-      {
-        "percent": "3900",
-        "reputation": 5776723480371,
-        "rshares": 100327113541,
-        "voter": "somebody"
-      },
-      {
-        "percent": "3900",
-        "reputation": 206355094166,
-        "rshares": 3818534221,
-        "voter": "flysaga"
-      },
-      {
-        "percent": "3900",
-        "reputation": 97845484474,
-        "rshares": 19074679567,
-        "voter": "midnightoil"
-      },
-      {
-        "percent": "10000",
-        "reputation": 19964916752653,
-        "rshares": 88391723522,
-        "voter": "thisisbenbrick"
-      },
-      {
-        "percent": "2000",
-        "reputation": 3016325652890,
-        "rshares": 25444794131,
-        "voter": "xiaohui"
-      },
-      {
-        "percent": "3700",
-        "reputation": 1851205309677,
-        "rshares": 1418056411,
-        "voter": "xiaokongcom"
-      },
-      {
-        "percent": "10000",
-        "reputation": 7767180487460,
-        "rshares": 5966588575,
-        "voter": "gargon"
-      },
-      {
-        "percent": "10000",
-        "reputation": 10809787058917,
-        "rshares": 8538740835,
-        "voter": "cristi"
-      },
-      {
-        "percent": "3900",
-        "reputation": 4195733833721,
-        "rshares": 3481336329,
-        "voter": "xianjun"
-      },
-      {
-        "percent": "10000",
-        "reputation": 4542627765008,
-        "rshares": 19739278270,
-        "voter": "hanshotfirst"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1620633258672,
-        "rshares": 2864096620,
-        "voter": "lordvader"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 60920134,
-        "voter": "nano2nd"
-      },
-      {
-        "percent": "3900",
-        "reputation": 730408370151,
-        "rshares": 210526735,
-        "voter": "microluck"
-      },
-      {
-        "percent": "10000",
-        "reputation": 7162557281594,
-        "rshares": 19027681524,
-        "voter": "mihaiart"
-      },
-      {
-        "percent": "10000",
-        "reputation": 166185808108,
-        "rshares": 88923651,
-        "voter": "artsteemit"
-      },
-      {
-        "percent": "10000",
-        "reputation": -642566206250,
-        "rshares": 5837031030,
-        "voter": "craigwilliamz"
-      },
-      {
-        "percent": "10000",
-        "reputation": 8420918209808,
-        "rshares": 21637424501,
-        "voter": "daut44"
-      },
-      {
-        "percent": "10000",
-        "reputation": 4533929087960,
-        "rshares": 6863375185,
-        "voter": "rimann"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2146463020842,
-        "rshares": 598928875,
-        "voter": "cryptoeasy"
-      },
-      {
-        "percent": "10000",
-        "reputation": 3144994876819,
-        "rshares": 431636500,
-        "voter": "nulliusinverba"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2516108074649,
-        "rshares": 371034547,
-        "voter": "runridefly"
-      },
-      {
-        "percent": "10000",
-        "reputation": 651373865756,
-        "rshares": 59623208,
-        "voter": "team101"
-      },
-      {
-        "percent": "10000",
-        "reputation": 6710104374161,
-        "rshares": 3882129976,
-        "voter": "lukeofkondor"
-      },
-      {
-        "percent": "10000",
-        "reputation": 8442182311998,
-        "rshares": 8552884857,
-        "voter": "ionescur"
-      },
-      {
-        "percent": "10000",
-        "reputation": 7586670074,
-        "rshares": 56554451,
-        "voter": "knoble"
-      },
-      {
-        "percent": "10000",
-        "reputation": 50326964582800,
-        "rshares": 155693801968,
-        "voter": "charlieshrem"
-      },
-      {
-        "percent": "10000",
-        "reputation": 28411186,
-        "rshares": 53389583,
-        "voter": "ppan08162016"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1552458038,
-        "rshares": 52157708,
-        "voter": "rb3coins"
-      }
-    ],
-    "author": "razvanelulmarin",
-    "author_reputation": 28873518041457,
-    "beneficiaries": [],
-    "body": "\"Yes,\" I said.\n\" Yes is your name?\" asked the teacher as everyone around me laughed.\n\"..Uhm\"\n\"Is there something wrong with you?\"\nI think NO and YES but MAYBE. I closed my eyes and tried very hard to disappear into thin air.\n\n----\n\nThat's how my high-school started, first math hour and the master implementation of my plan to \"hear better\". Having had meningitis as a kid, my hearing was *royally fucked and utterly unfixable*. The left ear was basically dead and the right one with deep nerve damage, *I KNEW* that I couldn't hear better, at least physically. But I schemed and designed strategies to work around it, minimize, ignore and neglect this disadvantage. It was the only way.\n\nLike a magician, I tried to bring people into my world. I've created my own mirrors, I've brought my own smoke: I was paying more attention than everyone, I was reading the body language like a wizard studying arcane texts, I was guessing what people will say before they even started. I was a step ahead. At least in my world where the God was named **Raz**.\n<center> http://shirtigo.co/wp-content/uploads/2014/05/awesomenessarcher.jpg </center>\n<center> *There were times when I felt like that...*</center>\n<br>\nTo bring this world to be, I had to control the situation, the environment, the message. I had to monopolize the conversation while simultaneously make people enjoy the monopole. That's a lot harder than it seems.\nI always had to have a good story to tell, a funny thing to mention, a way to talk about nothing until time ended and a supernova ate us all. The less I had to listen, the less was not to hear, right?\n\nAnd so, I persevered. I did my homework and worked on my stories, my style, my delivery. I studied what missed and took it off the repertoire, added new stuff and continually testing and testing, furbishing each bit to perfection. I wasn't aware that this is what stand-up comedians do with every show.\nIt worked surprisingly well. It worked amazingly easy. **It worked until it didn't**.\n\n\n --- **at this point some of your might see where this is going, I'm sorry I didn't** ---\n\n\nThe fact of the matter was that my hearing did not work so whenever people did participate in this ongoing charade of mine, I was at risk. That was the second part of my plan. Usually, I was able to gather the essential and I tried to imagine the rest. I can't tell you how many imagined conversations I had, filling the silent blank with concoctions of my own mind. I danced around the specifics I invented and dove deep into the general until I knew - based on body language, or response - that I was on the subject. Then, I went back to specifics. The person left with the impression that we had a real conversation.\n**I was left exhausted.** \n\nWhile I was happy that this worked, I was also judging everyone for not seeing through my subterfuges. I wanted people to say \" Enough of this!\" and when they didn't, I felt victorious, *a joker*, a god, a fool, nothing at all.  Little did I know, my ways were slowly giving me the impostor syndrome.\n\nBut of course, whenever I felt too full of myself I was reminded that I am, always, **a handicapped**. No matter what I did, I could never be ready for spontaneity. A quick unexpected question. A witty remark. Anything that seemed to come out of nowhere, as spontaneity does and  boom, I was lost. Sucker punched by ingenuity and fun, I was trying to figure what to say next: admit defeat or risk saying something wise, maybe laugh, maybe a  chuckle?. I used to do that, laugh and say \"yeah\" until someone once said - i found out later - that their grandfather was in the hospital. Apparently, we were talking about something somewhat related. *My laughter was not forgiven.*\n\n<center> https://img1.steemit.com/0x0/http://i.imgur.com/ancNOQb.jpg </center>\n<center> *Me, right, in high school* </center>\n<br>\n\nAnd so, I was forced to face the thing I feared the most: **uncertainty**. This is the real cancer of being hearing impaired, you're always on your toes, always on guard and never ready. It slowly creeps into everything, every action(am i doing this right?), every answer(i hope this is ok) and eventually: yourself. It takes over your soul and fills it with unanswerable questions: *\"AM I OK?\"*, *\"DOES ANYONE CARES?\"**\nConfidence and self-esteem praised as foundation bricks of every successful individual, cower in a corner for me. I was left fighting with weapons without ammo and had to fake the confidence of Rambo. It wasn't ideal.\n\nPeople evolved with the tribe mentality, different wasn't good, different was dangerous and I believe we have an immense capability of sniffing out \"different\". No matter what, how, or how well is hidden, you detect something is askew. Even if you don't know what: does he talk too fast? Is that a bizarre accent? There's a certain weird fluidity about his movements? You hear people say \" My gut instinct told me something was wrong..\" and they were probably right.\nYes, today, the ads are yelling at us *\"BE DIFFERENT!\"* or *\"DARE TO BE DIFFERENT!!!\"* but the subtext is, be different in drinking Pepsi vs Coke, not give up soda altogether you weirdo! Be different but not **TOO** Different. \n\nWalking around the high-school, I felt the \"different\" sign burned in my DNA, my movements, my answers and even my word choices singled me out. I felt like I was signaling my anomaly everywhere. But I carried on, *what else was I to do?*\n\n\n\n***end of part 1.***",
-    "body_length": 5458,
-    "cashout_time": "2016-09-01T21:44:06",
-    "category": "life",
-    "children": 20,
-    "created": "2016-08-25T21:44:06",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "json_metadata": "{\"tags\":[\"life\",\"personal\",\"writing\",\"\"],\"image\":[\"http://shirtigo.co/wp-content/uploads/2014/05/awesomenessarcher.jpg\",\"https://img1.steemit.com/0x0/http://i.imgur.com/ancNOQb.jpg\"]}",
-    "last_payout": "1969-12-31T23:59:59",
-    "last_update": "2016-08-25T21:44:06",
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 27435640516017,
-    "parent_author": "",
-    "parent_permlink": "life",
-    "pending_payout_value": "111.816 HBD",
-    "percent_hbd": 10000,
-    "permlink": "i-can-t-hear-you-my-lousy-evil-plan-to-take-over-high-school",
-    "post_id": 988513,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "root_title": "I CAN'T hear you: My lousy EVIL Plan to take over High School",
-    "title": "I CAN'T hear you: My lousy EVIL Plan to take over High School",
-    "total_payout_value": "0.000 HBD",
-    "url": "/life/@razvanelulmarin/i-can-t-hear-you-my-lousy-evil-plan-to-take-over-high-school"
-  },
-  {
-    "active_votes": [
-      {
-        "percent": "10000",
         "reputation": 14765040488827,
-        "rshares": 26302376066136,
+        "rshares": 26304564221590,
         "voter": "berniesanders"
       },
       {
         "percent": "10000",
         "reputation": 8779714777561,
-        "rshares": 4117260843480,
+        "rshares": 3661625829868,
         "voter": "riverhead"
       },
       {
         "percent": "10000",
-        "reputation": 9326993992,
-        "rshares": 173882662689,
-        "voter": "nextgenwitness"
-      },
-      {
-        "percent": "10000",
-        "reputation": 608057298751,
-        "rshares": 610234653095,
-        "voter": "justin"
-      },
-      {
-        "percent": "10000",
-        "reputation": 138490649,
-        "rshares": 1715211461952,
-        "voter": "silver"
-      },
-      {
-        "percent": "10000",
-        "reputation": 4018307276106,
-        "rshares": 4063244550486,
-        "voter": "silversteem"
-      },
-      {
-        "percent": "10000",
-        "reputation": 27931460807554,
-        "rshares": 4624667232783,
-        "voter": "nextgencrypto"
-      },
-      {
-        "percent": "10000",
-        "reputation": 29449063355738,
-        "rshares": 403440078306,
-        "voter": "steemservices"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 26307402937,
-        "voter": "steemservices1"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1241362310762,
-        "rshares": 11629141014,
-        "voter": "bentley"
-      },
-      {
-        "percent": "106",
-        "reputation": 12382143533351,
-        "rshares": 14978993784,
-        "voter": "eeks"
-      },
-      {
-        "percent": "10000",
-        "reputation": 7019430473955,
-        "rshares": 31813217918,
-        "voter": "thedarkestplum"
-      },
-      {
-        "percent": "5555",
-        "reputation": 2902053059801,
-        "rshares": 1060849019,
-        "voter": "murh"
+        "reputation": 51047995307721,
+        "rshares": 9729737693055,
+        "voter": "pharesim"
       },
       {
         "percent": "10000",
         "reputation": 1089233647296,
-        "rshares": 4573926120,
+        "rshares": 3252879098,
         "voter": "crok"
       },
       {
         "percent": "10000",
-        "reputation": 28873518041457,
-        "rshares": 87044806371,
-        "voter": "razvanelulmarin"
+        "reputation": 3515726108234,
+        "rshares": 2834561924,
+        "voter": "jrcornel"
       },
       {
         "percent": "10000",
-        "reputation": 6029824012432,
-        "rshares": 17341335514,
-        "voter": "frankjones"
-      },
-      {
-        "percent": "10000",
-        "reputation": -2499740471746,
-        "rshares": 15227393872,
-        "voter": "r4fken"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1563271634183,
-        "rshares": 124083397384,
-        "voter": "paco"
-      },
-      {
-        "percent": "10000",
-        "reputation": 14826352016829,
-        "rshares": 37477086352,
-        "voter": "diana.catherine"
-      },
-      {
-        "percent": "10000",
-        "reputation": 82275088768,
-        "rshares": 33672248214,
-        "voter": "paquito"
-      },
-      {
-        "percent": "10000",
-        "reputation": 686738916191,
-        "rshares": 231522846,
-        "voter": "sergey44"
-      },
-      {
-        "percent": "400",
-        "reputation": 4063076365725,
-        "rshares": 238490507,
-        "voter": "bullionstackers"
-      },
-      {
-        "percent": "10000",
-        "reputation": -4429007921326,
-        "rshares": 984404651,
-        "voter": "jillstein2016"
-      },
-      {
-        "percent": "111",
-        "reputation": 1751717743,
-        "rshares": 416535519,
-        "voter": "gmurph"
-      },
-      {
-        "percent": "10000",
-        "reputation": 10809787058917,
-        "rshares": 12364481030,
-        "voter": "cristi"
-      },
-      {
-        "percent": "10000",
-        "reputation": 891327,
-        "rshares": 8446448806,
-        "voter": "theconnoisseur"
-      },
-      {
-        "percent": "10000",
-        "reputation": 1487684933351,
-        "rshares": 12292601283,
-        "voter": "borran"
-      },
-      {
-        "percent": "10000",
-        "reputation": 37279727062,
-        "rshares": 3359940512,
-        "voter": "bledarus"
-      },
-      {
-        "percent": "10000",
-        "reputation": 31215012571,
-        "rshares": 33826923666,
-        "voter": "thecurator"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 834451065,
-        "voter": "inferno"
+        "reputation": 1130219064888,
+        "rshares": 26025491692,
+        "voter": "andrewawerdna"
       },
       {
         "percent": "10000",
         "reputation": -642566206250,
-        "rshares": 8773804973,
+        "rshares": 9139417848,
         "voter": "craigwilliamz"
       },
       {
-        "percent": "3300",
-        "reputation": 3725920343994,
-        "rshares": 3803619846,
-        "voter": "booky"
+        "percent": "10000",
+        "reputation": 624996264644,
+        "rshares": 1656597991,
+        "voter": "curving"
       },
       {
         "percent": "10000",
-        "reputation": 2516108074649,
-        "rshares": 1699015883,
-        "voter": "runridefly"
+        "reputation": 47840531974,
+        "rshares": 64994479,
+        "voter": "mikeonfire"
       },
       {
         "percent": "10000",
-        "reputation": 8442182311998,
-        "rshares": 14429533530,
-        "voter": "ionescur"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 145187894625,
-        "voter": "thecyclist"
-      },
-      {
-        "percent": "10000",
-        "reputation": 6232933391430,
-        "rshares": 849853966,
-        "voter": "edgarsart"
-      },
-      {
-        "percent": "10000",
-        "reputation": 0,
-        "rshares": 53088730,
-        "voter": "xqcai"
+        "reputation": 294937368742,
+        "rshares": 18234219503,
+        "voter": "steemokto"
       },
       {
         "percent": "10000",
         "reputation": 1996672246136,
-        "rshares": 401507898,
+        "rshares": 292005744,
         "voter": "anomaly"
       },
       {
         "percent": "10000",
-        "reputation": 1502200909130,
-        "rshares": 239153978,
-        "voter": "ola1"
+        "reputation": 57152635891,
+        "rshares": 54834649,
+        "voter": "everittdmickey"
       },
       {
         "percent": "10000",
-        "reputation": 2536730663,
-        "rshares": 249967603,
-        "voter": "letstalkliberty"
+        "reputation": 0,
+        "rshares": 164770538,
+        "voter": "blimey"
       },
       {
-        "percent": "10000",
-        "reputation": 16791486869,
-        "rshares": 129914165,
-        "voter": "newsfeed"
+        "percent": "3300",
+        "reputation": 0,
+        "rshares": 114127036,
+        "voter": "comeup"
       }
     ],
-    "author": "ionescur",
-    "author_reputation": 8442182311998,
+    "author": "curving",
+    "author_reputation": 624996264644,
     "beneficiaries": [],
-    "body": "I am basically an urban guy and would not, at least at this point in life, think about living in the country. Though there are some advantages \u2013 *grow your own food, low cost of living* \u2013 the trade-offs are just not worth it for me. For now I like the city, even if it is crowded. I live in a decent apartment in a decent area, and I like the shops and restaurants, bars and theaters, cinemas, music venues and whatnot.  Anyway my job is not *work-from-home*, which would help, I assume, for someone to live in the country, where there are no engineering jobs. *So this is not a story about me.*\n\nThat being said I have, like many others, a strange interest in the so-called *pastoral way of life*, simple and closer to nature. The rhythms of life are different, the pace is slower, and things are more settled. Or, so it seems to the urban dweller, who probably does not understand the reality of country living. Like waking up at 6 in the morning during a hailstorm if you have livestock to feed. \n\n<center>http://epochtimes-romania.com/news_images/2015/05/2015_05_25_satulbiertan_rsz_crp.jpeg</center>\n<center> Most of the countryside is not like this</center>\n\n\nThe Romanian countryside is not like the British of French countryside. It is somewhat *more primitive and poorer,* and with a different feel. There are picturesque villages in Romania, where life goes on in almost timeless fashion and this is what tourists come to see, but more of it is definitely not like that. It is, like many rural areas poor, plagued with *bad infrastructure, alcoholism and other afflictions*. \n\nSo, moving to the country in Romania, Merry Olde England it is not. But some people still do it. Why? The change in pace, the change in rhythm, the longing for a different way of life. This is a powerful driving force for many.\n\nRomania was always behind the times compared to Western Europe, and more rural. There was rapid urbanization and industrialization during communism, but, like all things imposed by force by the communist government, *it was, in the long term, a disaster*. The inefficient industry collapsed, the people who moved to the cities often felt alienated. The cities were, for many, quite shitty.\n\n<center>http://scms.machteamsoft.ro/uploads/photos/652x450/652x450_016506-blocuri-comuniste.jpg</center>\n\nWhy do I say the cities were shitty? Crowded, with bad, hastily created infrastructure, and hideous brutalist architecture. They were not created for good living. Housing was usually in cramped, badly insulated apartment in endless concrete apartment blocks. Romania has many jokes about apartment living and bad neighbors, which you could hear through the thin walls. There was no feeling of community.\n\nBucharest has a *lot going for it*. Jobs, decent wages, culture, growth. It is fairly dynamic and alive. But it is also crowded, polluted and noisy. \n\nIn Bucharest, the apartment buildings are very close to each other, with few green areas. The streets are small and crowded; the parking is a big problem. And there are lots of cars. One reason would be the fairly inefficient public transportation, but another the fact that after communism where having a car was difficult and sort of a status symbol, everyone wanted a car, even if it is mostly parked. The jobs are not where the apartments are, so commuting is a nightmare, some of the worst traffic in the world in this city. The air quality is bad, the noise is bad.\n\n<center>http://media.hotnews.ro/media_server1/image-2015-11-18-20601721-0-masini-parcate-trotuar.jpg</center>\n\nOver all this came the fact that Romania had one of the most epic housing bubbles in the world, and a lot of people were convinced to \u201cbuy now, things will only get more expensive.\u201d Romanians are not renter at heart, the all want to own a home. So they bought. With 30 year credits, mostly denominated in foreign currency, without understanding credit risk and with variable interest rates to boot. Variable, as in whatever the bank felt like. It was a disaster in the making. \n\nAnd then, the market tanked, and the currency tanked, and the credits became unbearable. And this is where the appeal of a simpler, rural life comes strong from. You had a shitty little concrete box in a hideous apartment block, a credit and a 2 hour a day commute. This is when the country really seems attractive.\n\n<center>http://mediartv1.freenode.ro/image/201308/full/bucuresti-trafic_27331700.jpg</center>\n\nRomanians have a strange expression. *\u201cA little house on the ground\u201d* or maybe *on the land or on the dirt* would be better translations. Anyway. It means well \u2026 **not an apartment**, but a house with maybe a small yard, and no neighbors above and below. It is a dream for most, and an unachievable one at that, in the city.\n\nBut maybe in the country where this is cheaper, maybe a small vegetable garden to grow my own food. Maybe a bit of break from the constant honking of horns (and believe you me, Romanians love honking their goddamn car horns), maybe air that is a little more breathable. It is simply a wish to get rid of the bank, the commute.\n\nWill it work for most? No. Of course not. But it is something that I see more often around me\n\n*Note: Images sourced from - Romanian news websites*",
-    "body_length": 5245,
-    "cashout_time": "2016-09-21T15:28:00",
+    "body": "A friend and I met for lunch at a local taco shack near the city's greenbelt, where he planned to take his mountain bike out for a cruise along the trails. As it was a pleasant Autumn afternoon and there was nothing keeping me, I decided to take a walk through the beautiful sun-soaked woods myself.\n\nAfter tacos we made our way to the trail head together, at which point he asked in what direction I was headed. \n\n\"I don't know,\" was my reply. \n\nMounting his trusty carbon-fiber steed he took off and soon disappeared around a bend leaving me there alone. \n\nLooking down the trail to my left, then up the trail to my right \u2026 then back to the left again, as if awaiting some unseen force to propel me in either direction, but feeling no particular pull, I finally rested my gaze upon an opening in the trees just in front of where I stood, and so up the middle I went. \n\nStepping through the woods about forty or so feet, I came out onto a bone-dry creek bed which I then followed. Poking along haphazardly up the old creek bed for ten minutes or more, I looked up and was suddenly bewildered by what I saw. \n\nNot far off in the distance I could just begin to make out what seemed to resemble stalagmites \u2013 a group of twisted, spindling, rocky spires that reminded me of something I might have once seen in Southeastern Utah or the caverns of New Mexico. \n\nAs I drew closer it was impossible to suppress a smile. \n\nHere is what I found ....\n\n![image 1](https://s15.postimg.io/b2gnkfe63/img1.jpg)\n\n![image 2](https://s22.postimg.io/6142bastt/img2.jpg)\n\n![image 3](https://s11.postimg.io/qda6yn9oz/img3.jpg)\n\n![image 4](https://s18.postimg.io/rfx58pcg9/img4_6.jpg)\n\n![image 5](https://s13.postimg.io/b1llkt7nr/img5.jpg)\n\n![image 6](https://s22.postimg.io/o27tdn7cx/img8_9.jpg)\n\n![image 7](https://s3.postimg.io/6xel5spoj/img10_7.jpg)\n\n![image 8](https://s22.postimg.io/xfn5dopr5/img11_12.jpg)\n\nAfter some time I sat down to meditate among the stones. \n\nSitting there in the silence, I at some point found myself moved to envision in my mind's eye a sense of all humanity. This vision encompassed the many individual thoughts, feelings, attitudes and actions of mankind, including those that we tend to regard as undesirable: all of the deceitful, violent, selfish, cunning, calculating hurt and pain that we are capable of inflicting upon others as well as upon ourselves \u2013 those things that we wish to reform within ourselves but about which we often harbor some form of condemnation and contempt for in others.\n\nEventually entering into this vision of the totality of mankind was an opening up to a sense of love, understanding and acceptance for all of it, including our many so called 'detractions'.  \n\nJust as I was coming to this point, from the periphery, now drawing my attention away, was a growing awareness of one such member of humanity incarnate. Indeed, as I looked up, there was a trail runner breaking stride fifty feet or so away from where I sat on my haunches.\n\nHaving clearly run for some distance along the creek bed, he now stood hands on his knees drawing several heavy breaths, before continuing in my direction at a walk. \n\nI tracked him unflinchingly as he passed, anticipating a silent exchange of glances, if nothing else, but he did not so much as motion to look in my direction. \n\nAs he moved along, I let my eyes come to a close once more, attempting to re-calibrate with the vision. Yet, now conscious of his presence somewhere off in the near distance among the rocky spires, my focus waned. \n\nOpening my eyes again I spotted a leg through the cairns. Why him? Why now? Why had this stranger been allowed to intrude upon me at the seeming apex of my meditation? Was this some sort of malevolent ploy orchestrated by the devil himself to prevent me from attaining the enlightened state I was surely just about to reach had I not been interrupted? Damn you again, Universe, for not abetting my spiritual awakening! Though not explicit in such words, this was the essence of my mental reaction to the situation at hand.\n\nThen the following realization took hold of me: Here before me was a perfect, outward, real-world example, illustrating for me the very thing I had been trying to capture in my meditation. Whereas I had begun opening to embrace, accept, and feel compassion toward the 'negative' within my meditative mind-state, I was now all too readily rejecting and mentally discarding what I perceived to be a negative outcome unfolding for me in actual experiential reality. I was condemning rather then embracing my own experience. \n\nWith that, I again closed my eyes, intent on letting go of the idea that this runner's presence had somehow arrived as an inconvenience, and instead attempted to welcome it as a practical instantiation of the very thing I had been meditating on.\n\nWithin no time at all I was stirred again by the sound of footsteps. The same man having circled round, now walked by me again, heading back in the direction he had come, only this time he acknowledged me with a nod and a wave as he passed. I nodded back silently. As he opened up into a run back down the creek bed, I stood up and watched until he was just a trace in the distance.\n\nAfter a few minutes I started back down the creek myself, when another thought struck me, causing me to ponder the implications of what had just transpired still further. The trail runner had appeared to be around my age, roughly the same height, with a very similar build. We both had light hair with a scruffy unshaven face, and had both been shirtless. The more I considered it, our resemblance was uncanny. \n\nHad the Universe, rather than forsaking me, merely been presenting me with a mirror?\n\n*(The preceding account was first written in Autumn of 2013, shortly after it occurred. This is the first it has been published.)*\n\n***\n\nMichael Curving is a co-host of the [Return Of Gnosis](http://returnofgnosis.com) podcast, creator of [WhoWillBuildTheRoads.com](http://whowillbuildtheroads.com), and blogger at [Curving.org](http://curving.org). Follow him [here on SteemIt](https://steemit.com/@curving) and connect with him [on Twitter](https://twitter.com/mcurving), and it will fill his heart with gratitude.",
+    "body_length": 6218,
+    "cashout_time": "2016-09-21T18:08:36",
     "category": "life",
-    "children": 3,
-    "created": "2016-09-14T15:28:00",
+    "children": 9,
+    "created": "2016-09-14T18:08:36",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
-    "json_metadata": "{\"tags\":[\"life\",\"philosophy\",\"writing\",\"opinion\"],\"image\":[\"http://epochtimes-romania.com/news_images/2015/05/2015_05_25_satulbiertan_rsz_crp.jpeg\",\"http://scms.machteamsoft.ro/uploads/photos/652x450/652x450_016506-blocuri-comuniste.jpg\",\"http://media.hotnews.ro/media_server1/image-2015-11-18-20601721-0-masini-parcate-trotuar.jpg\",\"http://mediartv1.freenode.ro/image/201308/full/bucuresti-trafic_27331700.jpg\"]}",
+    "json_metadata": "{\"tags\":[\"photography\",\"meditation\",\"nature\",\"writing\",\"life\"],\"image\":[\"https://s15.postimg.io/b2gnkfe63/img1.jpg\",\"https://s22.postimg.io/6142bastt/img2.jpg\",\"https://s11.postimg.io/qda6yn9oz/img3.jpg\",\"https://s18.postimg.io/rfx58pcg9/img4_6.jpg\",\"https://s13.postimg.io/b1llkt7nr/img5.jpg\",\"https://s22.postimg.io/o27tdn7cx/img8_9.jpg\",\"https://s3.postimg.io/6xel5spoj/img10_7.jpg\",\"https://s22.postimg.io/xfn5dopr5/img11_12.jpg\"],\"links\":[\"http://returnofgnosis.com\",\"http://whowillbuildtheroads.com\",\"http://curving.org\",\"https://steemit.com/@curving\",\"https://twitter.com/mcurving\"]}",
     "last_payout": "1969-12-31T23:59:59",
-    "last_update": "2016-09-14T15:28:00",
+    "last_update": "2016-09-14T18:49:39",
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 42664340502508,
+    "net_rshares": 39757761645015,
     "parent_author": "",
     "parent_permlink": "life",
-    "pending_payout_value": "111.552 HBD",
+    "pending_payout_value": "98.817 HBD",
     "percent_hbd": 10000,
-    "permlink": "urban-dreams-of-freedom-back-to-the-countryside-back-to-the-land",
-    "post_id": 1244126,
+    "permlink": "the-ephemeral-cairn-gardens-of-the-austin-greenbelt-a-photo-journal-and-meditation",
+    "post_id": 1245530,
     "promoted": "0.000 HBD",
     "replies": [],
-    "root_title": "Urban dreams of freedom: back to the countryside, back to the land",
-    "title": "Urban dreams of freedom: back to the countryside, back to the land",
+    "root_title": "The Ephemeral Cairn Gardens Of the Austin Greenbelt - A Photo Journal and Meditation",
+    "title": "The Ephemeral Cairn Gardens Of the Austin Greenbelt - A Photo Journal and Meditation",
     "total_payout_value": "0.000 HBD",
-    "url": "/life/@ionescur/urban-dreams-of-freedom-back-to-the-countryside-back-to-the-land"
+    "url": "/life/@curving/the-ephemeral-cairn-gardens-of-the-austin-greenbelt-a-photo-journal-and-meditation"
   },
   {
     "active_votes": [
       {
         "percent": "10000",
-        "reputation": 145171381514207,
-        "rshares": 28097681129425,
-        "voter": "dantheman"
+        "reputation": 261787136527,
+        "rshares": 684391112245,
+        "voter": "barrie"
+      },
+      {
+        "percent": "67",
+        "reputation": 85602977273,
+        "rshares": 28861242637,
+        "voter": "anonymous"
+      },
+      {
+        "percent": "6700",
+        "reputation": 8151223409709,
+        "rshares": 11443166253803,
+        "voter": "rainman"
       },
       {
         "percent": "10000",
-        "reputation": 8272495818727,
-        "rshares": 7237610913905,
-        "voter": "xeldal"
+        "reputation": 0,
+        "rshares": 1799329410526,
+        "voter": "badassmother"
+      },
+      {
+        "percent": "6700",
+        "reputation": 18336382560162,
+        "rshares": 123265212225,
+        "voter": "svk"
       },
       {
         "percent": "10000",
-        "reputation": 1049211085828,
-        "rshares": 5880884992621,
-        "voter": "enki"
+        "reputation": -37765249963674,
+        "rshares": 3210145812518,
+        "voter": "wang"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1214229078,
+        "rshares": 2475555968,
+        "voter": "boy"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4712949449,
+        "rshares": 3004957033,
+        "voter": "bue-witness"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1789951494550,
+        "rshares": 562914017,
+        "voter": "bunny"
+      },
+      {
+        "percent": "10000",
+        "reputation": 103443134841,
+        "rshares": 42634187380,
+        "voter": "bue"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 1326832061,
+        "voter": "mini"
+      },
+      {
+        "percent": "6700",
+        "reputation": 8717425187,
+        "rshares": 3850806241533,
+        "voter": "witness.svk"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 170845704,
+        "voter": "moon"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 325123780094,
+        "voter": "recursive2"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 313057889235,
+        "voter": "recursive3"
       },
       {
         "percent": "10000",
         "reputation": -296615780418,
-        "rshares": 1172473837,
+        "rshares": 1778262868,
         "voter": "mineralwasser"
       },
       {
         "percent": "10000",
         "reputation": 854893586973,
-        "rshares": 644253462443,
+        "rshares": 998189986718,
         "voter": "boombastic"
       },
       {
         "percent": "10000",
         "reputation": 7520586390,
-        "rshares": 85737620883,
+        "rshares": 133286622056,
         "voter": "mrs.agsexplorer"
       },
       {
         "percent": "10000",
         "reputation": 0,
-        "rshares": 1620255991,
+        "rshares": 9401291654,
+        "voter": "bingo-0"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 2379607300,
         "voter": "bingo-1"
       },
       {
         "percent": "10000",
-        "reputation": 1228001853194,
-        "rshares": 12795523922,
-        "voter": "fact"
+        "reputation": 0,
+        "rshares": 497654080,
+        "voter": "healthcare"
       },
       {
-        "percent": "5555",
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 758048978,
+        "voter": "daniel.pan"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 230367336,
+        "voter": "helen.tan"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1118904717803,
+        "rshares": 86495059917,
+        "voter": "noaommerrr"
+      },
+      {
+        "percent": "10000",
+        "reputation": 6750806281574,
+        "rshares": 90328344359,
+        "voter": "juanlibertad"
+      },
+      {
+        "percent": "1000",
+        "reputation": 4931834878069,
+        "rshares": 3042780804,
+        "voter": "fkn"
+      },
+      {
+        "percent": "8500",
+        "reputation": 0,
+        "rshares": 413319392,
+        "voter": "paco-steem"
+      },
+      {
+        "percent": "8500",
+        "reputation": 376960001789,
+        "rshares": 4826695300,
+        "voter": "spaninv"
+      },
+      {
+        "percent": "10000",
+        "reputation": 436017530085,
+        "rshares": 23285121596,
+        "voter": "instructor2121"
+      },
+      {
+        "percent": "10000",
+        "reputation": 58571016273092,
+        "rshares": 721695329223,
+        "voter": "nanzo-scoop"
+      },
+      {
+        "percent": "10000",
+        "reputation": 503318537891,
+        "rshares": 6082992060,
+        "voter": "jerome-colley"
+      },
+      {
+        "percent": "3301",
         "reputation": 2902053059801,
-        "rshares": 1060925129,
+        "rshares": 2164048830,
         "voter": "murh"
       },
       {
         "percent": "10000",
-        "reputation": 5451039980643,
-        "rshares": 1366151321,
-        "voter": "steemswede"
+        "reputation": 818564943128,
+        "rshares": 6176350844,
+        "voter": "motivational"
       },
       {
         "percent": "10000",
-        "reputation": 1175982316919,
-        "rshares": 243711056606,
-        "voter": "nabilov"
+        "reputation": 609780550802,
+        "rshares": 141944533,
+        "voter": "irit"
+      },
+      {
+        "percent": "10000",
+        "reputation": 11136252375006,
+        "rshares": 346528660475,
+        "voter": "taoteh1221"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1376656930605,
+        "rshares": 5599875761,
+        "voter": "karbonxx"
+      },
+      {
+        "percent": "8500",
+        "reputation": 0,
+        "rshares": 322991662,
+        "voter": "stiletto"
+      },
+      {
+        "percent": "10000",
+        "reputation": 488865370830,
+        "rshares": 860993035,
+        "voter": "sunnyray"
+      },
+      {
+        "percent": "10000",
+        "reputation": 8397302485673,
+        "rshares": 168028017574,
+        "voter": "will-zewe"
+      },
+      {
+        "percent": "10000",
+        "reputation": 9131956116299,
+        "rshares": 117776558510,
+        "voter": "omarb"
+      },
+      {
+        "percent": "10000",
+        "reputation": 12494904871301,
+        "rshares": 269662314937,
+        "voter": "trogdor"
+      },
+      {
+        "percent": "10000",
+        "reputation": 217222224,
+        "rshares": 294114011,
+        "voter": "knopki"
+      },
+      {
+        "percent": "10000",
+        "reputation": 5886979119053,
+        "rshares": 88573416018,
+        "voter": "geoffrey"
+      },
+      {
+        "percent": "10000",
+        "reputation": 274656026130,
+        "rshares": 40338902771,
+        "voter": "honeythief"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3929147028870,
+        "rshares": 6369784385,
+        "voter": "magnebit"
+      },
+      {
+        "percent": "10000",
+        "reputation": 15285243314,
+        "rshares": 231088300,
+        "voter": "ales"
+      },
+      {
+        "percent": "10000",
+        "reputation": 336763673779,
+        "rshares": 153033041005,
+        "voter": "asmolokalo"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1700182089209,
+        "rshares": 96691334170,
+        "voter": "rubybian"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2880187298062,
+        "rshares": 2793666874,
+        "voter": "stranger27"
+      },
+      {
+        "percent": "1000",
+        "reputation": 19111656178138,
+        "rshares": 7653769287,
+        "voter": "furion"
+      },
+      {
+        "percent": "1000",
+        "reputation": 9142611234,
+        "rshares": 80021287,
+        "voter": "ch0c0latechip"
+      },
+      {
+        "percent": "1000",
+        "reputation": 3871042,
+        "rshares": 74058748,
+        "voter": "doge4lyf"
+      },
+      {
+        "percent": "10000",
+        "reputation": 7547302,
+        "rshares": 67628664,
+        "voter": "ghozia"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1440357780524,
+        "rshares": 663517540,
+        "voter": "dicov"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 1012952103,
+        "voter": "steem1653"
+      },
+      {
+        "percent": "10000",
+        "reputation": 210282477056,
+        "rshares": 274341484,
+        "voter": "johanniellano"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1648396897354,
+        "rshares": 10685115559,
+        "voter": "asim"
+      },
+      {
+        "percent": "10000",
+        "reputation": 7952828943,
+        "rshares": 4378702037,
+        "voter": "thegoodguy"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2397831198773,
+        "rshares": 3729428517,
+        "voter": "karen13"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2445998348172,
+        "rshares": 1628549215,
+        "voter": "pigatto"
       },
       {
         "percent": "10000",
         "reputation": 7803764965401,
-        "rshares": 12242258384,
+        "rshares": 8294069454,
         "voter": "allmonitors"
       },
       {
         "percent": "10000",
-        "reputation": 1715086369297,
-        "rshares": 1961499441,
-        "voter": "yoganarchista"
-      },
-      {
-        "percent": "2000",
-        "reputation": 988942038058,
-        "rshares": 10728422060,
-        "voter": "gomeravibz"
-      },
-      {
-        "percent": "7600",
-        "reputation": 10690204490232,
-        "rshares": 17108618560,
-        "voter": "mrs.steemit"
+        "reputation": 34932026701489,
+        "rshares": 152782302685,
+        "voter": "dragonho"
       },
       {
         "percent": "10000",
-        "reputation": 16426840706,
-        "rshares": 9825312082,
-        "voter": "gvargas123"
+        "reputation": 1532881687066,
+        "rshares": 8076886574,
+        "voter": "magz8716"
       },
       {
         "percent": "10000",
-        "reputation": 1916013022364,
-        "rshares": 476988879,
-        "voter": "wuyueling"
+        "reputation": 14988694886527,
+        "rshares": 170161819036,
+        "voter": "jl777"
       },
       {
-        "percent": "2000",
-        "reputation": 11490547563070,
-        "rshares": 6609038004,
-        "voter": "hilarski"
+        "percent": "1000",
+        "reputation": 10519849768972,
+        "rshares": 2450648677,
+        "voter": "positive"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4129649677200,
+        "rshares": 6200403614,
+        "voter": "summonerrk"
+      },
+      {
+        "percent": "10000",
+        "reputation": 58190631451,
+        "rshares": 14852645493,
+        "voter": "proto"
+      },
+      {
+        "percent": "10000",
+        "reputation": -2287580630,
+        "rshares": 1893100295,
+        "voter": "alex.chien"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1275505236,
+        "rshares": 7807128608,
+        "voter": "taker"
+      },
+      {
+        "percent": "10000",
+        "reputation": 11856501387697,
+        "rshares": 38819548773,
+        "voter": "allasyummyfood"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3194641726781,
+        "rshares": 19157224764,
+        "voter": "laoyao"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 2964127141,
+        "voter": "ullikume"
+      },
+      {
+        "percent": "10000",
+        "reputation": 282062767,
+        "rshares": 2555069369,
+        "voter": "darrenturetzky"
+      },
+      {
+        "percent": "10000",
+        "reputation": 117644956479,
+        "rshares": 9316713067,
+        "voter": "jphamer1"
+      },
+      {
+        "percent": "10000",
+        "reputation": 66791976065,
+        "rshares": 48633671492,
+        "voter": "joele"
+      },
+      {
+        "percent": "10000",
+        "reputation": 11122126920308,
+        "rshares": 2892607227,
+        "voter": "oflyhigh"
+      },
+      {
+        "percent": "10000",
+        "reputation": 7767180487460,
+        "rshares": 5825109832,
+        "voter": "gargon"
+      },
+      {
+        "percent": "10000",
+        "reputation": -138680661344,
+        "rshares": 59668352,
+        "voter": "tomeraddady"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4637390447698,
+        "rshares": 731528496,
+        "voter": "chinadaily"
+      },
+      {
+        "percent": "10000",
+        "reputation": 11448117997,
+        "rshares": 53401673,
+        "voter": "alfaman"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2140537429766,
+        "rshares": 16504052671,
+        "voter": "yef99"
+      },
+      {
+        "percent": "10000",
+        "reputation": 401217888,
+        "rshares": 211234843,
+        "voter": "mig641"
       },
       {
         "percent": "10000",
         "reputation": -642566206250,
-        "rshares": 8773812221,
+        "rshares": 4377598977,
         "voter": "craigwilliamz"
       },
       {
         "percent": "10000",
-        "reputation": 14686018058,
-        "rshares": 60635394,
-        "voter": "gduran"
+        "reputation": 0,
+        "rshares": 485180293,
+        "voter": "smisi"
       },
       {
         "percent": "10000",
-        "reputation": 2146463020842,
-        "rshares": 2076202607,
-        "voter": "cryptoeasy"
+        "reputation": 33766561987,
+        "rshares": 60480850,
+        "voter": "thechosenwhan"
+      }
+    ],
+    "author": "dragonho",
+    "author_reputation": 34932026701489,
+    "beneficiaries": [],
+    "body": "http://themindunleashed.org/wp-content/uploads/2015/03/emotional-intelligence.jpg\nOur n\u0430tur\u0430l state of being, \u0430\u0455 \u043en\u0435 w\u0456th Soul, is a h\u0430rm\u043en\u0456\u043eu\u0455 \u0455t\u0430t\u0435 \u043ef L\u043ev\u0435, \u0456n wh\u0456\u0441h th\u0435 only feelings \u0430r\u0435 \u043ef \u0441\u043ent\u0456nu\u043eu\u0455 peace \u0430nd bl\u0456\u0455\u0455. Th\u0435r\u0435f\u043er\u0435 \u0456f we are f\u0435\u0435l\u0456ng any f\u0435\u0435l\u0456ng other than \u0440\u0435\u0430\u0441\u0435 and bl\u0456\u0455\u0455, w\u0435 h\u0430v\u0435 got \u043eut \u043ef b\u0430l\u0430n\u0441\u0435 somewhere. Th\u0456\u0455 \u0456\u0455 du\u0435 t\u043e \u043eur \u0441\u043end\u0456t\u0456\u043en\u0435d and f\u0430ult\u0443 thinking, wh\u0456\u0441h \u0435m\u0435rg\u0435\u0455 as t\u043el\u0435r\u0430t\u0456\u043en\u0455, n\u0435\u0435d\u0455 and l\u0456m\u0456t\u0456ng beliefs. U\u0455\u0456ng \u043eur Em\u043et\u0456\u043en\u0430l Int\u0435ll\u0456g\u0435n\u0441\u0435 \u0435\u051bu\u0456\u0440\u0455 us to identify th\u0435 message th\u0430t Soul is \u0455\u0435nd\u0456ng u\u0455 thr\u043eugh th\u0435\u0455\u0435 f\u0435\u0435l\u0456ng\u0455, \u0455\u043e w\u0435 \u0441\u0430n r\u0435\u0441t\u0456f\u0443 our th\u0456nk\u0456ng \u0430nd thus m\u043ev\u0435 always towards Love. \n\nB\u0435\u0456ng Em\u043et\u0456\u043en\u0430ll\u0443 Int\u0435ll\u0456g\u0435nt is m\u0443 \u0430b\u0456l\u0456t\u0443 t\u043e consciously \u0441\u043em\u0440r\u0435h\u0435nd m\u0443 \u043ewn emotional St\u0430t\u0435\u0455 \u043ef B\u0435\u0456ng. B\u0435\u0456ng 'Emotional' m\u0435\u0430n\u0455 that I am aware \u043ef the f\u0435\u0435l\u0456ng th\u0430t is m\u0443 emotional \u0455t\u0430t\u0435 \u043ef b\u0435\u0456ng. Being 'Int\u0435ll\u0456g\u0435nt' m\u0435\u0430n\u0455 I h\u0430v\u0435 a r\u0430t\u0456\u043en\u0430l kn\u043ewl\u0435dg\u0435 or l\u043eg\u0456\u0441\u0430l und\u0435r\u0455t\u0430nd\u0456ng \u043ef the \u0455\u0456tu\u0430t\u0456\u043en, occurrence \u0430nd \u0441\u0456r\u0441um\u0455t\u0430n\u0441\u0435\u0455 th\u0430t I \u0430m \u0441urr\u0435ntl\u0443 experiencing. I am Intelligent wh\u0435n I can \u0441\u043en\u0455\u0441\u0456\u043eu\u0455l\u0443 r\u0430t\u0456\u043en\u0430l\u0456\u0455\u0435 wh\u0430t \u0456\u0455 h\u0430\u0440\u0440\u0435n\u0456ng in m\u0443 reality. I am Em\u043et\u0456\u043en\u0430l wh\u0435n I \u0441\u0430n feel the \u0430w\u0430r\u0435n\u0435\u0455\u0455 of m\u0443 energetic \u0455t\u0430t\u0435 \u043ef being - my \u0435m\u043et\u0456\u043en\u0430l energy. \n\nEmotional Intelligence l\u043e\u0455\u0435\u0455 clarity wh\u0435n I \u0441\u043enfu\u0455\u0435 'being emotional' with 'b\u0435\u0456ng \u0456rr\u0430t\u0456\u043en\u0430l'. Wh\u0435n I am studying negative \u0455t\u0430t\u0435\u0455 of b\u0435\u0456ng th\u0430t \u0441\u0430u\u0455\u0435 m\u0435 to sub-consciously r\u0435\u0430\u0441t, I \u0430m learning \u0430b\u043eut m\u0443 \u043ewn irrational b\u0435h\u0430v\u0456\u043eur th\u0430t \u0456\u0455 w\u0456th\u043eut \u0435m\u043et\u0456\u043en\u0430l \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435. I \u0430m studying 'irrational \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435'. \n\nB\u0435\u0456ng \u0435m\u043et\u0456\u043en\u0430l \u0456\u0455 n\u043et r\u0435\u0430\u0441t\u0456ng \u0456rr\u0430t\u0456\u043en\u0430ll\u0443; it \u0456\u0455 b\u0435\u0456ng \u0441\u043en\u0455\u0441\u0456\u043eu\u0455l\u0443-\u0430w\u0430r\u0435 of m\u0443 emotional \u0455t\u0430t\u0435 \u043ef being. I n\u0435v\u0435r r\u0435\u0430\u0441t \u0435m\u043et\u0456\u043en\u0430ll\u0443 because with emotional \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435 I \u0430m always \u0430bl\u0435 t\u043e r\u0435\u0455\u0440\u043end \u0456nt\u0435ll\u0456g\u0435ntl\u0443. Negative \u0435m\u043et\u0456\u043en\u0430l \u0455t\u0430t\u0435\u0455 \u043ef b\u0435\u0456ng are irrational because a r\u0430t\u0456\u043en\u0430ll\u0443 \u0456nt\u0435ll\u0456g\u0435nt person who \u0456\u0455 \u0435m\u043et\u0456\u043en\u0430ll\u0443 \u0430w\u0430r\u0435 (\u0456nt\u0435ll\u0456g\u0435nt) would n\u0435v\u0435r \u0441h\u043e\u043e\u0455\u0435 to \u0435x\u0440\u0435r\u0456\u0435n\u0441\u0435 them. Understanding irrational b\u0435h\u0430v\u0456\u043eur d\u043e\u0435\u0455 r\u0435\u051bu\u0456r\u0435 \u0435m\u043et\u0456\u043en\u0430l \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435 but \u0456t \u0456\u0455 n\u043et th\u0435 d\u0435f\u0456n\u0456t\u0456\u043en \u043ef Em\u043et\u0456\u043en\u0430l Int\u0435ll\u0456g\u0435n\u0441\u0435. \n**Em\u043et\u0456\u043en\u0430l States \u043ef B\u0435\u0456ng** \nEm\u043et\u0456\u043en\u0430l 'St\u0430t\u0435\u0455 \u043ef B\u0435\u0456ng' r\u0435\u051bu\u0456r\u0435 definition before I \u0441\u0430n und\u0435r\u0455t\u0430nd them intelligently. Wh\u0435n I define \u0430n emotional \u0455t\u0430t\u0435 \u043ef being, I g\u0456v\u0435 \u0456t definition, \u0456t b\u0435\u0441\u043em\u0435\u0455 a definite \u0435m\u043et\u0456\u043en, \u0430nd I b\u0435\u0441\u043em\u0435 \u0441\u043en\u0455\u0441\u0456\u043eu\u0455l\u0443-\u0430w\u0430r\u0435 \u043ef \u0456t\u0455 \u0435x\u0456\u0455t\u0435n\u0441\u0435. \nIt \u0456\u0455 my \u0441\u043en\u0455\u0441\u0456\u043eu\u0455-\u0430w\u0430r\u0435n\u0435\u0455\u0455 \u043ef th\u0435 d\u0435f\u0456n\u0456t\u0435 n\u0430tur\u0435 of m\u0443 \u0435m\u043et\u0456\u043en\u0455 that \u0430ll\u043ew\u0455 m\u0435 t\u043e be emotionally intelligent. \n\nAn 'Em\u043et\u0456\u043en\u0430l' person \u0456\u0455 \u0430w\u0430r\u0435 \u043ef th\u0435\u0456r f\u0435\u0435l\u0456ng\u0455 \u0430\u0455 different \u0435m\u043et\u0456\u043en\u0455. \n\nAn 'Emotionally Int\u0435ll\u0456g\u0435nt' \u0440\u0435r\u0455\u043en is able t\u043e \u0441\u043en\u0455\u0441\u0456\u043eu\u0455l\u0443 n\u0430m\u0435 (d\u0435f\u0456n\u0435) th\u0435\u0456r \u0435m\u043et\u0456\u043en\u0430l \u0455t\u0430t\u0435 \u043ef b\u0435\u0456ng and create \u0456t at w\u0456ll, \u0456f and wh\u0435n th\u0435\u0443 \u0455\u043e \u0441h\u043e\u043e\u0455\u0435.B\u0443 \u0456nt\u0435ll\u0456g\u0435ntl\u0443 d\u0435f\u0456n\u0456ng an \u0435m\u043et\u0456\u043en, I become b\u043eth \u0435m\u043et\u0456\u043en\u0430ll\u0443 \u0430w\u0430r\u0435 of the feeling \u0430nd rationally \u0441\u043en\u0455\u0441\u0456\u043eu\u0455 of \u0456t\u0455 d\u0435f\u0456n\u0456t\u0456\u043en. I \u0441\u0430nn\u043et \u0435x\u0440\u0435r\u0456\u0435n\u0441\u0435 a definite \u0435m\u043et\u0456\u043en unl\u0435\u0455\u0455 I \u0441\u0430n n\u0430m\u0435 it adjectively. In th\u0435 \u0430b\u0455\u0435n\u0441\u0435 \u043ef n\u0430m\u0456ng \u0430n \u0435m\u043et\u0456\u043en, \u0456t w\u0456ll r\u0435m\u0430\u0456n \u0435\u0456th\u0435r a \u0440\u043e\u0455\u0456t\u0456v\u0435 or a n\u0435g\u0430t\u0456v\u0435 experience, d\u0435\u0440\u0435nd\u0435nt \u043en the b\u0435l\u0456\u0435f\u0455 th\u0430t I h\u043eld \u0456n m\u0443 sub-conscious. \n\nI define an emotion (\u0435m\u043et\u0456\u043en\u0430l \u0455t\u0430t\u0435 of b\u0435\u0456ng) w\u0456th an \u0430dj\u0435\u0441t\u0456v\u0435, wh\u0456\u0441h \u0456\u0455 a d\u0435\u0455\u0441r\u0456b\u0456ng word. Any \u0430dj\u0435\u0441t\u0456v\u0435 th\u0430t d\u0435\u0455\u0441r\u0456b\u0435\u0455 my feelings \u043er m\u0443 emotional \u0455t\u0430t\u0435 \u043ef b\u0435\u0456ng is \u0430n emotion. Without \u0430n adjective t\u043e d\u0435\u0455\u0441r\u0456b\u0435 it, \u0430n emotion \u0456\u0455 ju\u0455t a f\u0435\u0435l\u0456ng th\u0430t I d\u043en't r\u0435\u0430ll\u0443 understand. \n\n**Th\u0435 P\u043et\u0435nt\u0456\u0430l of m\u0443 Em\u043et\u0456\u043en\u0430l En\u0435rg\u0443**\nEm\u043et\u0456\u043en \u0456\u0455 an energetic state of being th\u0430t I \u0430m \u0435x\u0440\u0435r\u0456\u0435n\u0441\u0456ng. All f\u043erm\u0455 of \u0435n\u0435rg\u0443 h\u0430v\u0435 a f\u043er\u0441\u0435, a m\u0430gn\u0456tud\u0435 and a \u0440\u043et\u0435nt\u0456\u0430l. Em\u043et\u0456\u043en\u0455 are no different. Th\u0435 \u0440\u043et\u0435nt\u0456\u0430l \u043ef any \u0435n\u0435rg\u0443 \u0456\u0455 r\u0435\u0430l\u0456\u0455\u0435d wh\u0435n the f\u043er\u0441\u0435 \u0430nd m\u0430gn\u0456tud\u0435 \u043ef th\u0430t energy un\u0456t\u0435. \n\nEl\u0435\u0441tr\u0456\u0441\u0430l energy h\u0430\u0455 a f\u043er\u0441\u0435 \u0441\u0430ll\u0435d 'v\u043elt\u0455', a magnitude called 'amps' \u0430nd a potential \u0441\u0430ll\u0435d 'w\u0430tt\u0455'. Th\u0435\u0443 \u0430r\u0435 \u0430ll named after th\u0435 \u0440\u0435r\u0455\u043en wh\u043e f\u0456r\u0455t defined th\u0435m. Emotional energy \u0456\u0455 m\u043er\u0435 \u0441\u043em\u0440l\u0456\u0441\u0430t\u0435d b\u0435\u0441\u0430u\u0455\u0435 not only is \u0456t\u0455 \u0440\u043et\u0435nt\u0456\u0430l d\u0456v\u0456d\u0435d b\u0443 force and magnitude but its force \u0456\u0455 divided b\u0443 polarity \u0430nd \u0456t\u0455 m\u0430gn\u0456tud\u0435 is divided b\u0443 g\u0435nd\u0435r. \nTh\u0435 polarity of my emotions \u0456\u0455 \u0435\u0456th\u0435r positive \u043er n\u0435g\u0430t\u0456v\u0435 \u0430nd the g\u0435nd\u0435r \u043ef m\u0443 \u0435n\u0435rg\u0443 is either male \u043er f\u0435m\u0430l\u0435. (Anger & \u0440r\u0456d\u0435 are m\u0430l\u0435 wh\u0435r\u0435\u0430\u0455 m\u0435\u0435kn\u0435\u0455\u0455 & hum\u0456l\u0456t\u0443 \u0430r\u0435 f\u0435m\u0430l\u0435. H\u043ew\u0435v\u0435r, Im\u0440\u0430t\u0456\u0435n\u0441\u0435 \u0430nd \u0456nt\u043el\u0435r\u0430n\u0441\u0435 are usually \u0455\u0435\u0435n as negative and patience \u0430nd t\u043el\u0435r\u0430n\u0441\u0435 as \u0440\u043e\u0455\u0456t\u0456v\u0435). \n\nTh\u0435 degree, to which my \u0435m\u043et\u0456\u043en\u0430l energy is unb\u0430l\u0430n\u0441\u0435d, b\u0443 b\u0435\u0456ng d\u0456v\u0456d\u0435d b\u0443 \u0435\u0456th\u0435r \u0440\u043el\u0430r\u0456t\u0443 or g\u0435nd\u0435r \u043er b\u043eth, determines th\u0435 intensity \u043ef the emotion that I \u0430m feeling. Th\u0435 greater is the \u0456mb\u0430l\u0430n\u0441\u0435 th\u0435 gr\u0435\u0430t\u0435r \u0456\u0455 th\u0435 intensity \u043ef th\u0435 \u0435m\u043et\u0456\u043en\u0430l feeling. Th\u0435 \u0456nt\u0435n\u0455\u0456t\u0443 of my emotional \u0455t\u0430t\u0435 \u043ef being \u0456\u0455 the product of both th\u0435 g\u0435nd\u0435r \u0430nd th\u0435 polarity of th\u0435 emotional \u0435n\u0435rg\u0443. \nEm\u043et\u0456\u043en\u0430l Int\u0435ll\u0456g\u0435n\u0441\u0435 r\u0435\u051bu\u0456r\u0435\u0455 n\u043et \u043enl\u0443 the definition of m\u0443 emotional \u0455t\u0430t\u0435 \u043ef b\u0435\u0456ng but the und\u0435r\u0455t\u0430nd\u0456ng \u043ef \u0456t\u0455 potential f\u043er my L\u0456f\u0435. \n \n**Understanding th\u0435 \u0440\u043et\u0435nt\u0456\u0430l \u043ef m\u0443 emotional \u0435n\u0435rg\u0443 requires m\u0435 to b\u0435 \u0441\u043en\u0455\u0441\u0456\u043eu\u0455l\u0443-\u0430w\u0430r\u0435 \u043ef:**\no Its force and magnitude \no Its gender, \u0440\u043el\u0430r\u0456t\u0443 \u0430nd intensity \no It\u0455 d\u0435f\u0456n\u0456t\u0456\u043en or Adj\u0435\u0441t\u0456v\u0456t\u0443 \no Th\u0435 \u0455\u0440\u043en\u0455\u043er\u0456ng th\u043eught \u043er th\u043eught\u0455 that \u0430r\u0435 \u0441r\u0435\u0430t\u0456ng th\u0435 emotion. \nTh\u0435 Ult\u0456m\u0430t\u0435 Potential of my Emotional Energy \u0456\u0455 th\u0435 Pur\u0435 F\u0435\u0435l\u0456ng \u043ef L\u043ev\u0435 th\u0430t emanates from m\u0443 S\u043eul. \n\n**L\u0456f\u0435 is \u0430n emotional \u0435x\u0440\u0435r\u0456\u0435n\u0441\u0435**\nM\u0443 Emotional Intelligence requires more than m\u0443 ability t\u043e m\u0430n\u0430g\u0435 my irrational b\u0435h\u0430v\u0456\u043eur. It r\u0435\u051bu\u0456r\u0435\u0455 th\u0435 \u0430b\u0456l\u0456t\u0443 t\u043e understand m\u0443 \u0435m\u043et\u0456\u043en\u0430l experiences intelligently.The \u0441\u0430u\u0455\u0435 \u043ef m\u0443 \u0456rr\u0430t\u0456\u043en\u0430l behaviour \u0456\u0455 m\u0443 lack of emotional \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435. I r\u0435\u0430\u0441t \u0456rr\u0430t\u0456\u043en\u0430ll\u0443 with wh\u0430t \u0456\u0455 sometimes \u0441\u043enfu\u0455\u0456ngl\u0443 \u0441\u0430ll\u0435d \u0430n \u0435m\u043et\u0456\u043en\u0430l reaction. \n\nI respond with positive emotion once I attain th\u0435 intelligence and understanding t\u043e d\u043e \u0455\u043e. M\u0443 symptoms \u043ef irrational b\u0435h\u0430v\u0456\u043eur \u0430r\u0435 \u0441r\u0435\u0430t\u0435d b\u0443 m\u0443 l\u0430\u0441k \u043ef rational \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435. Extreme \u0456rr\u0430t\u0456\u043en\u0430l b\u0435h\u0430v\u0456\u043eur \u0441\u0430u\u0455\u0435d by a lack \u043ef rational \u0430b\u0456l\u0456t\u0443 m\u0430\u0443 b\u0435 diagnosed \u0430\u0455 a m\u0435nt\u0430l \u0456lln\u0435\u0455\u0455 b\u0443 a r\u0430t\u0456\u043en\u0430l \u0440\u0435r\u0455\u043en wh\u043e h\u0430\u0455 no emotional intelligence. \nD\u0456\u0430gn\u043e\u0455\u0456ng emotional d\u0456\u0455\u043erd\u0435r \u043er d\u0456\u0455\u0435\u0430\u0455\u0435 r\u0435\u051bu\u0456r\u0435\u0455 \u0435m\u043et\u0456\u043en\u0430l \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435 not rational \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435, which \u0456\u0455 \u0440r\u043eb\u0430bl\u0443 wh\u0443 illness is u\u0455u\u0430ll\u0443 d\u0456\u0430gn\u043e\u0455\u0435d \u0430\u0455 \u0435\u0456th\u0435r \u0440h\u0443\u0455\u0456\u0441\u0430l \u043er mental and n\u043et \u0435m\u043et\u0456\u043en\u0430l. In th\u0435 \u0430b\u0455\u0435n\u0441\u0435 \u043ef \u0435m\u043et\u0456\u043en\u0430l \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435, my l\u0456f\u0435 became \u0430n un\u0435m\u043et\u0456\u043en\u0430l experience \u0430\u0455 a rationally \u0456nt\u0435ll\u0456g\u0435nt m\u0430n. \n\nIn a du\u0430l\u0456\u0455t\u0456\u0441 w\u043erld, the m\u043er\u0435 r\u0430t\u0456\u043en\u0430ll\u0443 \u0456nt\u0435ll\u0456g\u0435nt I b\u0435\u0441\u043em\u0435 th\u0435 more \u0441\u043ent\u0430\u0456n\u0435d, d\u0456\u0455\u0441\u043enn\u0435\u0441t\u0435d \u0430nd emotionally unintelligent I \u0430m. It \u0456\u0455 m\u0443 \u0435x\u0440\u0435r\u0456\u0435n\u0441\u0435 that th\u0435 m\u043er\u0435 I r\u0430t\u0456\u043en\u0430l\u0456\u0455\u0435 m\u0443 world w\u0456th t\u043el\u0435r\u0430n\u0441\u0435 and patience the less I react with th\u0435 frustration \u043ef m\u0443 anger \u0430nd \u0456nt\u043el\u0435r\u0430n\u0441\u0435. However, w\u0456th emotional \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435 I \u0441\u043en\u0455\u0441\u0456\u043eu\u0455l\u0443 \u0441h\u043e\u043e\u0455\u0435 t\u043e be 'Accepting' \u0456n\u0455t\u0435\u0430d \u043ef t\u043el\u0435r\u0430nt and 'All\u043ew\u0456ng' instead of \u0440\u0430t\u0456\u0435nt. I n\u043e longer \u0441h\u043e\u043e\u0455\u0435 t\u043e b\u0435 a tolerant patient wh\u043e \u0456\u0455 patiently tolerating L\u0456f\u0435. \n\n***I \u0430m n\u043ew \u0430\u0441\u0441\u0435\u0440t\u0456ng L\u0456f\u0435 \u0430\u0455 \u0430n \u0435m\u043et\u0456\u043en\u0430l \u0435x\u0440\u0435r\u0456\u0435n\u0441\u0435 b\u0435\u0441\u0430u\u0455\u0435 I \u0430m l\u0435\u0430rn\u0456ng t\u043e b\u0435 \u0435m\u043et\u0456\u043en\u0430ll\u0443 intelligent \u0435n\u043eugh to allow it to b\u0435 so.**\n \nThe True T\u0435\u0455t \u043ef Em\u043et\u0456\u043en\u0430l Int\u0435ll\u0456g\u0435n\u0441\u0435 \nTh\u0435 tru\u0435 t\u0435\u0455t \u043ef m\u0443 Emotional Int\u0435ll\u0456g\u0435n\u0441\u0435 is whether I can be H\u0430\u0440\u0440\u0443 & W\u0435ll as a r\u0435\u0455ult of m\u0443 \u0441\u043en\u0455\u0441\u0456\u043eu\u0455 \u0441h\u043e\u0456\u0441\u0435 t\u043e b\u0435 \u0455\u043e. It is \u043enl\u0443 m\u0443 emotional ignorance th\u0430t \u0456\u0455 d\u0435\u0440r\u0456v\u0456ng m\u0435 \u043ef th\u0435 happiness \u0430nd well-being th\u0430t \u0456\u0455 m\u0443 true n\u0430tur\u0435. \nHappiness \u0456\u0455 \u0430n \u0435m\u043et\u0456\u043en\u0430l feeling. H\u043ew \u0441\u0430n a r\u0430t\u0456\u043en\u0430l m\u0430n b\u0435 h\u0430\u0440\u0440\u0443 \u0456n a \u0455t\u0430t\u0435 \u043ef b\u0435\u0456ng d\u0456\u0455\u0441\u043enn\u0435\u0441t\u0435d \u0430nd unemotional? W\u0435ll-b\u0435\u0456ng \u0456\u0455 \u0430n emotional f\u0435\u0435l\u0456ng. How \u0441\u0430n I feel well \u0456n a society that medicates \u0440h\u0443\u0455\u0456\u0441\u0430l \u0430nd mental \u0456lln\u0435\u0455\u0455 w\u0456th\u043eut one iota of emotional \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435? \n\nH\u0430v\u0456ng compassion f\u043er \u043eth\u0435r \u0440\u0435\u043e\u0440l\u0435 doesn't m\u0435\u0430n \u0430n\u0443th\u0456ng unl\u0435\u0455\u0455 I have defined th\u0435 \u0441\u043em\u0440\u0430\u0455\u0455\u0456\u043en that I \u0430m feeling. D\u0435f\u0456n\u0456ng compassion \u0430\u0455: \"Wanting to \u0430ll\u0435v\u0456\u0430t\u0435 th\u0435 \u0455uff\u0435r\u0456ng \u043ef others\", \u0456\u0455 a r\u0430t\u0456\u043en\u0430ll\u0443 intelligent d\u0435f\u0456n\u0456t\u0456\u043en of a \u0440h\u0443\u0455\u0456\u0441\u0430l d\u0435\u0455\u0456r\u0435 not th\u0435 d\u0435f\u0456n\u0456t\u0456\u043en \u043ef \u0430n \u0435m\u043et\u0456\u043en\u0430l f\u0435\u0435l\u0456ng. \n\nIt \u0456\u0455 m\u0443 lack of \u0435m\u043et\u0456\u043en\u0430l \u0456nt\u0435ll\u0456g\u0435n\u0441\u0435 th\u0430t d\u0456\u0455\u0441\u043enn\u0435\u0441t\u0455 m\u0435 fr\u043em m\u0443 tru\u0435 emotional n\u0430tur\u0435. A l\u043eg\u0456\u0441\u0430l w\u043erld h\u0430\u0455 b\u0435\u0441\u043em\u0435 an un\u0435m\u043et\u0456\u043en\u0430l w\u043erld th\u0430t \u0456\u0455 d\u0435v\u043e\u0456d of tru\u0435 Happiness & Well-being \u0430nd is full \u043ef sadness \u0430nd \u0455\u0456\u0441kn\u0435\u0455\u0455. W\u0435 have l\u043e\u0455t \u043eur \u0441\u043enn\u0435\u0441t\u0456\u043en t\u043e \u043eur tru\u0435 W\u0435\u0430lth and \u043eur tru\u0435 H\u0435\u0430lth wh\u0435n, \u0430\u0455 a \u0455\u043e\u0441\u0456\u0435t\u0443, w\u0435 \u0430r\u0435 d\u0456\u0455\u0441\u043enn\u0435\u0441t\u0435d fr\u043em \u043eur Emotional Int\u0435ll\u0456g\u0435n\u0441\u0435.",
+    "body_length": 7886,
+    "cashout_time": "2016-08-31T22:20:27",
+    "category": "life",
+    "children": 2,
+    "created": "2016-08-24T22:20:27",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "json_metadata": "{\"tags\":[\"life\",\"howto\",\"philosophy\",\"health\",\"psychology\"],\"image\":[\"http://themindunleashed.org/wp-content/uploads/2015/03/emotional-intelligence.jpg\"]}",
+    "last_payout": "1969-12-31T23:59:59",
+    "last_update": "2016-08-24T22:20:27",
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 25772015141012,
+    "parent_author": "",
+    "parent_permlink": "life",
+    "pending_payout_value": "98.809 HBD",
+    "percent_hbd": 10000,
+    "permlink": "the-opposite-of-logisal-under-tanding-original-thoughts-in-1200-words",
+    "post_id": 973768,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "root_title": "The opposite of l\u043eg\u0456\u0441\u0430l und\u0435r\u0455t\u0430nd\u0456ng  (Original Thoughts in 1200 Words)",
+    "title": "The opposite of l\u043eg\u0456\u0441\u0430l und\u0435r\u0455t\u0430nd\u0456ng  (Original Thoughts in 1200 Words)",
+    "total_payout_value": "0.000 HBD",
+    "url": "/life/@dragonho/the-opposite-of-logisal-under-tanding-original-thoughts-in-1200-words"
+  },
+  {
+    "active_votes": [
+      {
+        "percent": "5000",
+        "reputation": 14765040488827,
+        "rshares": 14133818522088,
+        "voter": "berniesanders"
+      },
+      {
+        "percent": "5000",
+        "reputation": 608057298751,
+        "rshares": 334178037615,
+        "voter": "justin"
+      },
+      {
+        "percent": "5000",
+        "reputation": 138490649,
+        "rshares": 900450662599,
+        "voter": "silver"
+      },
+      {
+        "percent": "5000",
+        "reputation": 4018307276106,
+        "rshares": 2024469466439,
+        "voter": "silversteem"
+      },
+      {
+        "percent": "5000",
+        "reputation": 27931460807554,
+        "rshares": 2483610711364,
+        "voter": "nextgencrypto"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1214229078,
+        "rshares": 3709874879,
+        "voter": "boy"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4712949449,
+        "rshares": 4502998983,
+        "voter": "bue-witness"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1789951494550,
+        "rshares": 843766850,
+        "voter": "bunny"
+      },
+      {
+        "percent": "10000",
+        "reputation": 103443134841,
+        "rshares": 63477279799,
+        "voter": "bue"
+      },
+      {
+        "percent": "5000",
+        "reputation": 29449063355738,
+        "rshares": 232812776924,
+        "voter": "steemservices"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 1988551127,
+        "voter": "mini"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 256192213,
+        "voter": "moon"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 745990137,
+        "voter": "healthcare"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 1117697144,
+        "voter": "daniel.pan"
+      },
+      {
+        "percent": "10000",
+        "reputation": 8442392793360,
+        "rshares": 27501841555,
+        "voter": "jchch"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 345429236,
+        "voter": "helen.tan"
+      },
+      {
+        "percent": "10000",
+        "reputation": 82831371778953,
+        "rshares": 846344234921,
+        "voter": "cryptogee"
+      },
+      {
+        "percent": "10000",
+        "reputation": 15854806148148,
+        "rshares": 12723947268,
+        "voter": "richman"
+      },
+      {
+        "percent": "10000",
+        "reputation": 49136918266,
+        "rshares": 6883949206,
+        "voter": "cian.dafe"
+      },
+      {
+        "percent": "3301",
+        "reputation": 2902053059801,
+        "rshares": 1800829376,
+        "voter": "murh"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1095245594450,
+        "rshares": 48801442425,
+        "voter": "luke-crowley"
+      },
+      {
+        "percent": "10000",
+        "reputation": 824717099743,
+        "rshares": 388848127389,
+        "voter": "cyber"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1233698174511,
+        "rshares": 1669034099,
+        "voter": "spartanza"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2761596392902,
+        "rshares": 2056862496,
+        "voter": "tee-em"
+      },
+      {
+        "percent": "5000",
+        "reputation": 598181152117,
+        "rshares": 92654502765,
+        "voter": "kimziv"
+      },
+      {
+        "percent": "10000",
+        "reputation": 2738311095861,
+        "rshares": 11427008694,
+        "voter": "jparty"
+      },
+      {
+        "percent": "10000",
+        "reputation": 6244867547,
+        "rshares": 1010645354,
+        "voter": "anwar78"
+      },
+      {
+        "percent": "10000",
+        "reputation": 52317559376,
+        "rshares": 8179429956,
+        "voter": "killswitch"
+      },
+      {
+        "percent": "10000",
+        "reputation": 7547302,
+        "rshares": 57963280,
+        "voter": "ghozia"
+      },
+      {
+        "percent": "10000",
+        "reputation": 5827115301697,
+        "rshares": 4408034600,
+        "voter": "deviedev"
+      },
+      {
+        "percent": "10000",
+        "reputation": 93395785733,
+        "rshares": 1278770878,
+        "voter": "jrd8526"
+      },
+      {
+        "percent": "10000",
+        "reputation": 3167747223142,
+        "rshares": 12118244513,
+        "voter": "dudutaulois"
+      },
+      {
+        "percent": "10000",
+        "reputation": 743656664450,
+        "rshares": 1888274095,
+        "voter": "tokyodude"
+      },
+      {
+        "percent": "5000",
+        "reputation": 17698439393799,
+        "rshares": 6453345615,
+        "voter": "sisterholics"
+      },
+      {
+        "percent": "10000",
+        "reputation": 40594133409,
+        "rshares": 129659242,
+        "voter": "bookworm"
+      },
+      {
+        "percent": "10000",
+        "reputation": 283380527576,
+        "rshares": 5095723490,
+        "voter": "mahekg"
+      },
+      {
+        "percent": "10000",
+        "reputation": 49283901870,
+        "rshares": 943711557,
+        "voter": "metaflute"
+      },
+      {
+        "percent": "5000",
+        "reputation": 10771708337101,
+        "rshares": 559790915842,
+        "voter": "laonie"
+      },
+      {
+        "percent": "5000",
+        "reputation": 18027204457681,
+        "rshares": 12742217349,
+        "voter": "myfirst"
+      },
+      {
+        "percent": "5000",
+        "reputation": 5776723480371,
+        "rshares": 112352977468,
+        "voter": "somebody"
+      },
+      {
+        "percent": "5000",
+        "reputation": 3016325652890,
+        "rshares": 22350306394,
+        "voter": "xiaohui"
+      },
+      {
+        "percent": "10000",
+        "reputation": 6364644439603,
+        "rshares": 4006872165,
+        "voter": "aboundlessworld"
+      },
+      {
+        "percent": "5000",
+        "reputation": 1851205309677,
+        "rshares": 1816949935,
+        "voter": "xiaokongcom"
+      },
+      {
+        "percent": "5000",
+        "reputation": 891327,
+        "rshares": 408608321,
+        "voter": "theconnoisseur"
+      },
+      {
+        "percent": "5000",
+        "reputation": 4195733833721,
+        "rshares": 2442555465,
+        "voter": "xianjun"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1487684933351,
+        "rshares": 12445742652,
+        "voter": "borran"
+      },
+      {
+        "percent": "10000",
+        "reputation": 13895575208,
+        "rshares": 58704392,
+        "voter": "stevescriber"
+      },
+      {
+        "percent": "5000",
+        "reputation": 730408370151,
+        "rshares": 248051987,
+        "voter": "microluck"
+      },
+      {
+        "percent": "5000",
+        "reputation": 31215012571,
+        "rshares": 17585448277,
+        "voter": "thecurator"
+      },
+      {
+        "percent": "10000",
+        "reputation": 4088300066909,
+        "rshares": 19386984998,
+        "voter": "runaway-psyche"
+      },
+      {
+        "percent": "10000",
+        "reputation": 486947585501,
+        "rshares": 365509331,
+        "voter": "telos"
+      },
+      {
+        "percent": "10000",
+        "reputation": -642566206250,
+        "rshares": 2516122773,
+        "voter": "craigwilliamz"
+      },
+      {
+        "percent": "10000",
+        "reputation": 1876749044289,
+        "rshares": 1259875358,
+        "voter": "shadowspub"
+      },
+      {
+        "percent": "10000",
+        "reputation": 329317015182,
+        "rshares": 97969815,
+        "voter": "codymac40"
       },
       {
         "percent": "10000",
         "reputation": 2516108074649,
-        "rshares": 1933020393,
+        "rshares": 203466791,
         "voter": "runridefly"
       },
       {
         "percent": "10000",
-        "reputation": 2953997242466,
-        "rshares": 3608221543,
-        "voter": "newandold"
-      },
-      {
-        "percent": "10000",
-        "reputation": 2758545931183,
-        "rshares": 3726571207,
-        "voter": "timthevagabond"
-      },
-      {
-        "percent": "10000",
         "reputation": 1736702154666,
-        "rshares": 3410920542,
+        "rshares": 663717669,
         "voter": "xanoxt"
       },
       {
         "percent": "10000",
-        "reputation": 6309450092,
-        "rshares": 56270177,
-        "voter": "dadinova"
+        "reputation": 2134908321,
+        "rshares": 55397045,
+        "voter": "feedyourbank"
       },
       {
         "percent": "10000",
-        "reputation": 1996672246136,
-        "rshares": 255505026,
-        "voter": "anomaly"
+        "reputation": 2288762261504,
+        "rshares": 6842161236,
+        "voter": "goose"
       },
       {
         "percent": "10000",
-        "reputation": -588986492243,
-        "rshares": 133590030,
-        "voter": "thedevil"
+        "reputation": 1197776504,
+        "rshares": 52872854,
+        "voter": "recurvez"
+      },
+      {
+        "percent": "10000",
+        "reputation": 0,
+        "rshares": 53099519,
+        "voter": "bmadi"
       }
     ],
-    "author": "timthevagabond",
-    "author_reputation": 2758545931183,
+    "author": "aboundlessworld",
+    "author_reputation": 6364644439603,
     "beneficiaries": [],
-    "body": "<html>\n<p><img src=\"https://s10.postimg.org/r62l2hl6x/flat_1000x1000_075_f_u1.jpg\" width=\"1000\" height=\"639\"/></p>\n<p><em><strong>WHO AM I AS A SUBJECTIVE ENTITY AND WHAT IS THIS OBJECTIVE REALITY IN WHICH I OPERATE WITHIN? IS THERE A PURPOSE TO IT ALL?</strong></em></p>\n<p>People have longed and desired for millennia over the answers to these most fundamental of questions about human existence. Not only do people want concrete answers to their existential questions, but simple, neat explanations are sought after to define all the aspects of life. The very fact of not having an answer to a question can leave one with immense anxiety, stress, and emptiness. People fear that which they do not know, especially when it comes to one\u2019s self or environment. As a result, people, ideologies, and sciences of external origin always appear, claiming to fill the void and give concreteness to an otherwise confusing and unknown universe. We not only celebrate and accept these external explanations as facts of truth, but the people propagating them are often looked up to as idols and leaders in which the people can put faith.</p>\n<p>As they grow in popularity and acceptance, people find strength and security in numbers. Independent thinking is far too complicated and takes far too much time, especially when caught up in the&nbsp;non-stop rat race many of us call reality. Emotions and thoughts can run volatile while venturing down the rabbit hole and out into the wild west of the unknown, exposing one to <a href=\"http://www.thelastamericanvagabond.com/featured/false-flag-alert-realitys-been-hacked/\">mysterious realities</a> and <a href=\"http://www.thelastamericanvagabond.com/featured/conspiracy-conspiracy-theories/\">inverse truths </a>that often come away shattering paradigms. This is both scary and risky, especially at first, exposing one to heightened levels of vulnerability. Concreteness is a far more comfortable and secure way to navigate this complex world. Knowing is also seen as a sign of strength and confidence in society, while not knowing is perceived as weakness and uneducated. Yet, is this&nbsp;actually a trap, and nothing more than a deceptive spell on human perception?</p>\n<p><img src=\"https://s13.postimg.org/ij72koddj/Alice_04.jpg\" width=\"768\" height=\"498\"/></p>\n<p><strong>THE TRAP:</strong></p>\n<p>Knowing has an&nbsp;intrinsic relationship with words such as concreteness, filled, closed, fixed, action, controlled, positive, full, and physical. When the perception of an idea is known, it is essentially an ideology that is set in the mind, in that it is a strong neural pattern of connection in the brain that is fully perceived consciously as right and true. There is no need to question the reality of that idea because it is fully hardened and understood as a fixed truth. Effectively, one shapes a paradigm around that idea, always experiencing the consciousness of that idea through that particular lens or filter. It\u2019s as if one\u2019s mind gets placed in a box with clear parameters and edges to define the \u201ctrue\u201d shape of the idea. In a sense, the belief appears whole and fully understood.</p>\n<p>Once a box is placed around an idea, all new information is filtered through the lens and understanding of that \u201cconcrete\u201d truth, rendering one unable to see past their preconceived box of beliefs to contemplate the existence of an alternate reality. They don\u2019t know that they don\u2019t know the picture might be a flawed illusion. When an idea becomes so wholly concrete, new information about the idea that can\u2019t be easily explained through the current lens, is then either, distorted by the mind to fit inside the current box, or completely ignored as if it doesn\u2019t even exist. This is where the defense mechanism of fear and denial manifests from, often leading to the programmed responses of blind overconfidence or scared obedience. Ignorance is bliss right?</p>\n<p>This right here is the trap in its full form, and one that everyone falls into to some degree or another throughout life. The problem is, many fall all the way in, especially on such fundamental ideas, and never come out to question. Faith is confidently placed in an ideological belief, blinding one to the unknown possibility lying just beyond the perceived concreteness on reality. The mind, both logically and intuitively, is then completely shut off and full, stunting the possibility of any learning, growth and evolution from being added to the mix when it comes to the belief system of that idea. This is the fallacy of misplaced concreteness and is arguably one of the most dangerous spells upon human perception. This concreteness that isn\u2019t really there, is nothing more than a subtle and hidden form of mind control that\u2019s highly misunderstood by the public, leaving most subjectively unaware of its existence.</p>\n<p><img src=\"https://s13.postimg.org/ntc1byxmf/Modern_Day_Mind_Control_Overview.jpg\" width=\"600\" height=\"400\"/></p>\n<p><strong>MIND CONTROL:</strong></p>\n<p>When something is under control, it lacks the ability to authentically change or exercise free will. In fact, freedom and control are language opposites. Once one\u2019s mind is stuck in an ideological box, it becomes completely vulnerable and loyal to whatever controls and represents it, essentially a slave to its parameters. This control on the human mind can stem from two areas, one\u2019s own mind, or from the external environment. In a sense, one can mind control themselves or allow an external force to mind control them.</p>\n<p>At a certain point, everyone falls prey to the mind control of an external force. In society today, the amount of external ideological boxes runs extremely deep, branching into all of religion, science, philosophy, politics, history, social relationships, brands, entertainment, media, culture, and just information in general. All these different disciplines are the same in that they claim to give concrete answers to various ideas and phenomenon. They not only attempt to explain the outside world, but they also come to help define our own subjective experience, including one\u2019s personality and belief system.</p>\n<p>This is extremely concerning, in that one is giving up their sovereign ability to perceive reality to an external force in which they did not create or control. At that point they become nothing but sheep, herded into a box that\u2019s defined by some external entity. It\u2019s a widely growing&nbsp;opinion that <a href=\"http://www.thelastamericanvagabond.com/top-news/understanding-the-new-world-order/\">people in positions of power</a> have knowingly created ideological boxes to herd the masses into for centuries. Ideologies/mind control are the best way to indirectly control the masses in order for the powerful to keep in power and expand their influence.</p>\n<p><img src=\"https://s14.postimg.org/uy7cn5owx/7922e97de4a33bb5cecb689a223783e8.jpg\" width=\"564\" height=\"317\"/></p>\n<p>When the mainstream boxes don\u2019t work and people begin to escape the illusion, they only create new and more nuanced boxes&nbsp;in which to&nbsp;herd the masses, to keep up with the times. This can be described as controlled opposition, and a big part of the <a href=\"http://www.thelastamericanvagabond.com/top-news/we-have-the-same-enemy-yet-were-all-divided/\">Hegelian dialect</a>; a technique for social control, which involves one group controlling all the views of an idea and playing them off each other for a particular purpose. This can be even more hazardous, in that those that escaped often think they are making a free choice. The best example is the same group controlling both the left and right of politics as well as independent movements like the <a href=\"https://www.google.com/url?q=http://www.globalresearch.ca/why-are-corporate-groups-funding-the-tea-party/18677&amp;sa=U&amp;ved=0ahUKEwjomNmDp-TJAhXLOxoKHfCbAT8QFggKMAI&amp;client=internal-uds-cse&amp;usg=AFQjCNH6JpYH-BLTt67FaSfTmq-o6CkLzA\">Tea Party</a> and <a href=\"http://www.globalresearch.ca/here-s-the-risk-occupy-ends-up-doing-the-bidding-of-the-global-elite/27708\">Occupy Wall Street</a>, playing them as pawns against&nbsp;each other to fulfill an agenda, giving people the illusion of opposition and choice, while deterring people away from the real root problems.</p>\n<p>Similarly, people can just as easily fall victim to mind control of their own creation. Usually unintentionally, they create a concrete reality for which they won\u2019t let anything new break apart. This often happens when one has a subjective experience that they then take and perceive to be a concrete truth, since they did indeed experience it first-hand. For example, if someone has a bad experience learning math when they are in school, they will often go long periods of time thinking and believing that they don\u2019t like math and math sucks. This is done with all ideas, from political beliefs and historical facts to scientific understandings and personal beliefs of self.</p>\n<p>Are these subjective experiences really concrete truths, or just illusions of misplaced concreteness? Many people mistake their childhood and even later into their adult years as forms of concreteness, especially when it comes to defining their personalities and \u201cthe way things work.\u201d This is worrisome because many people are not even fully conscious in their younger years. If one never questions the concrete reality one perceives, then logically one is under a subtle form of mind control, stubbornly unable to see past their perceived concrete beliefs. They constantly distort the truth to fit their current lens and remain blind in order to maintain the status quo that is their paradigm on reality.</p>\n<p>However, what happens when one begins to wake-up and question, re-analyzing all the ideological boxes in which they thought were a fixed part of reality? What happens when one wanders out of the box into the great unknown?</p>\n<p><img src=\"https://s13.postimg.org/yrnau5m7r/Fallacy_of_concreteness.jpg\" width=\"400\" height=\"400\"/></p>\n<p><strong>INFINITE AWARENESS AND INFINITE POSSIBILITY:</strong></p>\n<p>Not knowing is intrinsically comparable to fluid, void, open, malleable, inaction, free, negative, empty, and non-physical. When someone doesn\u2019t know something, reality is not fixed or set, but instead open and free to take any and all forms. As stated earlier, not having an answer can be a very stressful and uncomfortable way to walk through life, especially when society equates intelligence and confidence with having concrete answers. Many people will also claim, \u201cWell there are facts in life and there isn\u2019t, so why be open to things that have been proven wrong?\u201d Again, this is all part of the trap and just a spell aimed to put human perception in a fixed box.</p>\n<p>The point and secret seems to be remaining open and operating always in a state of not knowing. In this regard, one is then able to see fully into the box and explore its contents without falling all the way in. The moment one falls into the trap of having concrete beliefs, is the moment one\u2019s mind stagnates. It\u2019s not to say that there are not patterns in the universe that appear frequently, because indeed there seem to be, but it\u2019s the idea of being able to see these patterns and adopt them without becoming a slave to any of them. When one&nbsp;chooses not to hold concrete truths, the possibility of growth and evolution of patterns is infinitely possible throughout one\u2019s life. The intention is to observe and study patterns, yet always still operating in a state of unknown and questioning. This allows dialectal thinking to take place, in which one can view all the angles of an idea, instead of just one or two, to come to a current theory. All the fields of human understanding would have never evolved had people not chose to leave the current box of understanding and think differently and independently outside of it. In fact, it is often the stubbornness of the mainstream culture and its current understandings which hold us back from further <a href=\"http://www.thelastamericanvagabond.com/health/enlightenment/\">Enlightenment</a>.</p>\n<p><img src=\"https://s11.postimg.org/czer57xar/bigstock_open_mind_key_locked_un_locked_11862878.jpg\" width=\"1280\" height=\"738\"/></p>\n<p>Although not a perfect analogy, taking in information and determining definition is like throwing spaghetti against the wall. Some stuff sticks for a long time, others stick for only a period of time before falling off, while others simply fall off right away. This is the best theory I can conceive of thus far of how consciousness grows. One will never know of this new information and reach a higher state of awareness until one is open and vulnerable to the idea of change; understanding&nbsp;that&nbsp;nothing in reality is actually concrete. It is only a pattern that is constantly flowing and changing. Once someone undergoes a complete ego death of all concreteness, one can experience a <a href=\"http://www.thelastamericanvagabond.com/featured/eight-signs-world-undergoing-paradigm-shift/\">paradigm shift</a>, finally allowing them access to the infinite awareness and enter the state of constant growth.</p>\n<p>The old saying goes, \u201cEnlightenment is knowing how much you don\u2019t know.\u201d Don\u2019t ever let your perception fall victim to the fallacy of misplaced concreteness. <a href=\"http://www.thelastamericanvagabond.com/featured/the-authentic-producer/\">Take back control of your mind</a> and never let anyone trap it, including the fear and denial of your own manifestation. The goal is not a destination, but instead an undefined path towards truth where there is always room for growth, re-evaluation, and evolution. Strangely enough, it is the intuition, for which cannot be explained in a 5 sense reality or scientific materialism, that guides us through the realm of the unknown and into infinite awareness and infinite possibility. The only question now is: <a href=\"http://www.thelastamericanvagabond.com/featured/its-now-or-never-for-freedom/\">Will you take your journey</a>?</p>\n<p><img src=\"https://s16.postimg.org/lviloz0v9/present.jpg\" width=\"1200\" height=\"838\"/></p>\n<p>Proof Of Verification: (So I don't get asked again)</p>\n<p>I verified this was my blog in my past post <a href=\"https://steemit.com/activism/@timthevagabond/activism-101-starve-the-beast-feed-the-light#comments\">https://steemit.com/activism/@timthevagabond/activism-101-starve-the-beast-feed-the-light#comments</a></p>\n<p>Here was my tweet: <a href=\"https://twitter.com/TheTimBryant/status/770699693479211008\">https://twitter.com/TheTimBryant/status/770699693479211008</a></p>\n<p>You can also find me here under my name for our website:<a href=\"http://www.thelastamericanvagabond.com/last-american-vagabonds/\">http://www.thelastamericanvagabond.com/last-american-vagabonds/</a></p>\n</html>",
-    "body_length": 14832,
-    "cashout_time": "2016-09-21T21:03:03",
+    "body": "<center> https://i.imgsafe.org/9b5c0609bd.jpg </center>\n\nNot seeing the results you want in your life? Struggling to turn that idea into reality? Can't lose those few extra pounds?\n\n**Need some more excuses to add to your list?**\n\nWithout further adieu, the **ULTIMATE** list of **VALID EXCUSES**. \n\nNo. Really.\n\nI have a full time job, three kids, two dogs, and a cat.. I don't have enough time to work on my idea.\n------------------------------------------------------------------------\n\nI have student debt to pay off, there is **no way** I can afford to work on my business on the side.\n\nI'm **not qualified** for the job that I know I'm perfect for... Might as well not even **try.**\n\nThe last guy I asked out **rejected me.**. At least Netflix **doesn't judge.**\n\nMy parents were **both overweight**, which means I'll always struggle with my own body issues.\n\nI didn't go to a great college, so there's no way I'll be hired to work at an awesome startup.\n------------------------------------------------------------------------\n\nI was born skinny, no workout plan will help me gain some muscle.\n\nI tried my last business idea and it **failed miserably..** now my parents won't even talk to me.\n\nAll my friends grew up never having to worry about money.. **they don't understand what it's like to be me.**\n\nMy family and friends are *so negative..* and there's nothing I can do about it.\n\nI'll work on my project at later this year. It will be better timing.\n\nI made a few huge mistakes early on in my career, and now I'm destined for mediocrity.\n------------------------------------------------------------------------\n\nI want to learn how to draw, but art supplies are **too expensive.**\n\nI really want to learn Spanish, but learning a new language **as an adult is impossible.**\n\nI would really like to start a podcast, but **I don't know how.**\n\nI bought a course on entrepreneurship, but it was a scam so I didn't follow through.\n\nI'm an introvert, so I can't go learn how to \"network.\"\n-------------------------------------------------------\n\nI don't have enough time! All the successful people I know have money to hire a virtual assistant.\n\nMy job sucks, so I'm super tired after work -- Madden is **my time to unwind.**\n\nI had a really bad childhood, **everyone is out to get me.**\n\nI have **really** bad anxiety.. I can't possibly ask for a raise.\n\nI did everything I could! I don't know why I didn't get promoted.\n-----------------------------------------------------------------\n\nEveryone seems to take advantage of me. Why should I even try?\n\nI hosted an event at college on how to manage personal finances. No one showed up.\n\nMy first few jobs **were all failures**. Will I ever find the job that is right for me?\n\nI want to work on my online business, but Twitter and FB keep sending me notifications.\n\nI can't afford to eat healthy, McDonalds is on my way home.\n\nMy mum, father, brother, sister, say I should be a lawyer... I guess that means that's my destiny.\n------------------------------------------------------------------------\n\nI wrote a blog post, but no one read it. I must be a terrible writer.\n\nNo one understands my situation... **I'm stuck and always will be.**\n\nI want to make money online, but everyone who does is a scammer!\n\nI've been wanting to change careers for years now, but I'm 40 and it's far too late for that.\n------------------------------------------------------------------------\n\nI read a few books in highschool and hated it. No book appeals to me.\n\nI'm so afraid of coming up short! **What will my family and friends think?**\n\nI raised money for my last startup and it failed... Now investors won't return my calls.\n\nI had to settle for a job that I hate, because my wife and children are depending on me.\n\nI am **TERRIBLE** at math! I'll never be able to learn calculus.\n\nAll my friends went to an amazing school. I'm destined to be a loser.\n\nThere's so much I want to learn! But I don't have the time or money to do so.\n------------------------------------------------------------------------\n\nMy last girlfriend broke up with me out of the blue... I'll **never** be able to find love like that again.\n\nMy entire family loves political party x.. but I disagree with them! We'll never be able to get along.\n\nMy friend said I was wasting my talents.. **I just want to give up.**\n\nI'm in a shitty relationship, and I don't know what to do.\n\nI was a jerk to my friend, and now they won't talk to me.\n\nMy super successful coworker has always been good with people! I'll never be able to be like him.\n------------------------------------------------------------------------\n\nI'm always shy in group situations.. no matter what I try.. I can never be good with people.\n\nMy friend has a fitbit! **I'm so jealous**! No wonder she is able to stay in such good shape.\n\nMy uncle lied to me when I was young! I can't trust anyone anymore!\n\nI don't understand FB. **My online business is doomed.**\n\nMy teacher said I would never be a good writer. I became a lawyer instead.\n\nI tried a new exercise routine for 3 days and it didn't work.\n\nEating healthy is so boring!\n----------------------------\n\nI don't **know how** to start a website!!\n\nMy significant other thinks my business idea is stupid. I guess I should stay at my job.\n\nI have **ADD..** there's no way I can ever focus long enough to succeed.\n\n.....\n.........\n.....\n.........\n\nValid? Yes.\n-----------\n\nWe've all listened to the abundance of excuses living inside our head.\n\nBut your health, happiness, and future success depends on your ability to ignore.\n\nWhat's your excuse? Good. \n\nYou're human.\n\nNow go and make things happen anyway.\n\n**P.S** Would love to hear what 'excuses' are holding you back? Share in the comments below!\n\n----\n\nIf you enjoy writing on self improvement, Steemit tips and tricks, and travel be sure to [follow me here](https://steemit.com/@aboundlessworld)\n\nIf you enjoyed this post you might also like\n\n[9 Life Lessons I Learned As A Waiter](https://steemit.com/life/@aboundlessworld/9-life-changing-lessons-i-learned-as-waiter)\n\n[Addiction, Depression, And How To Change The World](https://steemit.com/life/@aboundlessworld/addiction-depression-and-how-to-change-the-world-greater-than)\n\n[How To Build A Genuine Following On Steemit](https://steemit.com/steemit/@aboundlessworld/how-to-build-a-genuine-following-on-steemit)\n\n[The Psychology Behind Social Proof And Why It Matters](https://steemit.com/psychology/@aboundlessworld/the-psychology-behind-social-proof-and-why-it-matters) \n\n[How To Develop A Mindset of Growth](https://steemit.com/life/@aboundlessworld/how-to-develop-a-mindset-of-growth)\n\n[I Did 10K Pushups In ONe Month And This Is What Happened](https://steemit.com/life/@aboundlessworld/i-did-10k-pushups-in-one-month-and-this-is-what-happened)\n\nFirst published on [A Boundless World](http://www.aboundlessworld.com/the-ultimate-list-of-valid-excuses/)",
+    "body_length": 6898,
+    "cashout_time": "2016-08-28T14:08:30",
     "category": "life",
-    "children": 4,
-    "created": "2016-09-14T21:03:03",
+    "children": 7,
+    "created": "2016-08-21T14:08:30",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
-    "json_metadata": "{\"tags\":[\"life\",\"philosophy\",\"anarchy\",\"freedom\",\"society\"],\"image\":[\"https://s10.postimg.org/r62l2hl6x/flat_1000x1000_075_f_u1.jpg\",\"https://s13.postimg.org/ij72koddj/Alice_04.jpg\",\"https://s13.postimg.org/ntc1byxmf/Modern_Day_Mind_Control_Overview.jpg\",\"https://s14.postimg.org/uy7cn5owx/7922e97de4a33bb5cecb689a223783e8.jpg\",\"https://s13.postimg.org/yrnau5m7r/Fallacy_of_concreteness.jpg\",\"https://s11.postimg.org/czer57xar/bigstock_open_mind_key_locked_un_locked_11862878.jpg\",\"https://s16.postimg.org/lviloz0v9/present.jpg\"],\"links\":[\"http://www.thelastamericanvagabond.com/featured/false-flag-alert-realitys-been-hacked/\",\"http://www.thelastamericanvagabond.com/featured/conspiracy-conspiracy-theories/\",\"http://www.thelastamericanvagabond.com/top-news/understanding-the-new-world-order/\",\"http://www.thelastamericanvagabond.com/top-news/we-have-the-same-enemy-yet-were-all-divided/\",\"https://www.google.com/url?q=http://www.globalresearch.ca/why-are-corporate-groups-funding-the-tea-party/18677&sa=U&ved=0ahUKEwjomNmDp-TJAhXLOxoKHfCbAT8QFggKMAI&client=internal-uds-cse&usg=AFQjCNH6JpYH-BLTt67FaSfTmq-o6CkLzA\",\"http://www.globalresearch.ca/here-s-the-risk-occupy-ends-up-doing-the-bidding-of-the-global-elite/27708\",\"http://www.thelastamericanvagabond.com/health/enlightenment/\",\"http://www.thelastamericanvagabond.com/featured/eight-signs-world-undergoing-paradigm-shift/\",\"http://www.thelastamericanvagabond.com/featured/the-authentic-producer/\",\"http://www.thelastamericanvagabond.com/featured/its-now-or-never-for-freedom/\",\"https://steemit.com/activism/@timthevagabond/activism-101-starve-the-beast-feed-the-light#comments\",\"https://twitter.com/TheTimBryant/status/770699693479211008\",\"http://www.thelastamericanvagabond.com/last-american-vagabonds/\"]}",
+    "json_metadata": "{\"tags\":[\"life\",\"success\",\"happiness\",\"\"],\"image\":[\"https://i.imgsafe.org/9b5c0609bd.jpg\"],\"links\":[\"https://steemit.com/@aboundlessworld\"]}",
     "last_payout": "1969-12-31T23:59:59",
-    "last_update": "2016-09-14T21:03:03",
+    "last_update": "2016-08-21T14:08:30",
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 42290881392633,
+    "net_rshares": 22446350067807,
     "parent_author": "",
     "parent_permlink": "life",
-    "pending_payout_value": "109.877 HBD",
+    "pending_payout_value": "98.238 HBD",
     "percent_hbd": 10000,
-    "permlink": "enlightenment-is-often-hindered-by-the-fallacy-of-misplaced-concreteness",
-    "post_id": 1247235,
+    "permlink": "the-ultimate-list-of-valid-excuses",
+    "post_id": 920308,
     "promoted": "0.000 HBD",
     "replies": [],
-    "root_title": "Enlightenment Is Often Hindered By The Fallacy Of Misplaced Concreteness",
-    "title": "Enlightenment Is Often Hindered By The Fallacy Of Misplaced Concreteness",
+    "root_title": "The Ultimate List of Valid Excuses",
+    "title": "The Ultimate List of Valid Excuses",
     "total_payout_value": "0.000 HBD",
-    "url": "/life/@timthevagabond/enlightenment-is-often-hindered-by-the-fallacy-of-misplaced-concreteness"
+    "url": "/life/@aboundlessworld/the-ultimate-list-of-valid-excuses"
   }
 ]
