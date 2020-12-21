@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_created patterns test mock data muted indicated
 
   marks:
-    - patterntest # alice follows muted of ignoreall who ignores feline1991 (mock data)
+    - patterntest # alice follows muted of ignoreall who ignores feline1991 (mock data); see also tag_life
 
   includes:
     - !include ../../common.yaml

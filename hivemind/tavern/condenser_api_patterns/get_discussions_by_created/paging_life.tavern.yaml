@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_created patterns test paging mechanism
 
   marks:
-    - patterntest
+    - patterntest # see also tag_life
 
   includes:
     - !include ../../common.yaml

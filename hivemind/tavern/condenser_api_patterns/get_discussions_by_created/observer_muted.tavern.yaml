@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_created patterns test mock data muted
 
   marks:
-    - patterntest # ignoreall ignores agartha (mock data)
+    - patterntest # ignoreall ignores agartha (mock data); see also no_param
 
   includes:
     - !include ../../common.yaml

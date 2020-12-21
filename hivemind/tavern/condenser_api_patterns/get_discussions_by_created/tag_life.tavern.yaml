@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_created patterns test mock data indirect muted with paging mechanism
+  test_name: Hivemind condenser_api.get_discussions_by_created patterns test tag life
 
   marks:
-    - patterntest # alice follows muted of ignoreall who ignores feline1991 (mock data); see also paging_life
+    - patterntest
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_discussions_by_created mock data indirect muted with paging mechanism
+    - name: get_discussions_by_created tag life
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,12 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_discussions_by_created"
-          params: {"observer":"alice","limit":3,
-                   "start_author":"anton333","start_permlink":"origami-part-11-the-model-of-skeleton-hands"}
+          params: {"tag":"life"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "indirect_muted_paging"
+            method: "tag_life"
             directory: "condenser_api_patterns/get_discussions_by_created"
