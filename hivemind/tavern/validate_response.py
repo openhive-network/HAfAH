@@ -38,10 +38,17 @@ def remove_tag(data, tags_to_remove):
     return [remove_tag(v, tags_to_remove) for v in data]
   return {k: remove_tag(v, tags_to_remove) for k, v in data.items() if k not in tags_to_remove}
 
+def get_time(test_id):
+  with open("/tmp/test_ids.csv", "r") as f:
+    reader = csv.reader(f)
+    for row in reader:
+      print(row[0], "    ", test_id)
+      if row[0] == test_id:
+        return float(row[1])
+  return 0.
+
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
   """ This method will compare response with pattern file """
-  received_at = response.headers.get('Sent-At', None)
-
   response_fname = directory + "/" + method + RESPONSE_FILE_EXT
   if os.path.exists(response_fname):
     os.remove(response_fname)
@@ -56,10 +63,12 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
   # disable coparison with pattern on demand
   # and save 
   if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
-    if received_at is not None:
+    test_id = response_json.get("id", None)
+    print(test_id)
+    if test_id is not None:
       with open("benchmark.csv", 'a') as benchmark_file:
         writer = csv.writer(benchmark_file)
-        writer.writerow([directory + "/" + method, perf() - float(received_at)])
+        writer.writerow([directory + "/" + method, perf() - get_time(test_id)])
     return
 
   if error is not None and not error_response:
