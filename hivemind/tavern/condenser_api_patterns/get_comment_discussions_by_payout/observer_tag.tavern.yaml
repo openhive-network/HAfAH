@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test observer ignoreall with tag
 
   marks:
-    - patterntest # ignoreall ignores roland.haynes (mock data)
+    - patterntest # ignoreall ignores roland.haynes (mock data); see also tag_steemit
 
   includes:
     - !include ../../common.yaml
@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_comment_discussions_by_payout"
-          params: {"observer":"ignoreall","limit":3, "tag": "steemit"}
+          params: {"observer":"ignoreall", "tag": "steemit"}
       response:
         status_code: 200
         verify_response_with:

@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test observer alice with tag
 
   marks:
-    - patterntest # alice follows mute list of ignoreall who ignores roland.haynes (mock data)
+    - patterntest # alice follows mute list of ignoreall who ignores roland.haynes (mock data); see also tag_steemit
 
   includes:
     - !include ../../common.yaml

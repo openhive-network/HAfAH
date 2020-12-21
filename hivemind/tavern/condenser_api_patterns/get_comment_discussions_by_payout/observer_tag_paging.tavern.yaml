@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test observer ignoreall with tag and paging mechanism
 
   marks:
-    - patterntest # ignoreall ignores roland.haynes (mock data)
+    - patterntest # ignoreall ignores roland.haynes (mock data); no_observer_paging_tag
 
   includes:
     - !include ../../common.yaml

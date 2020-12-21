@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test observer ignoreall
 
   marks:
-    - patterntest # ignoreall who ignores r4fken (mock data)
+    - patterntest # ignoreall who ignores r4fken (mock data); see also no_tag
 
   includes:
     - !include ../../common.yaml
@@ -24,5 +24,5 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "observer_muted"
+            method: "observer"
             directory: "condenser_api_patterns/get_comment_discussions_by_payout"

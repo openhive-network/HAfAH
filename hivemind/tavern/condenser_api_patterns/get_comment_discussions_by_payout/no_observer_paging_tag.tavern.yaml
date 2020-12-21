@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test tag steemit
+  test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test tag and paging mechanism
 
   marks:
-    - patterntest # test to compare with observers alice and ignoreall
+    - patterntest # test to show differences about observer related tests
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_comment_discussions_by_payout ignoreall with tag and paging mechanism
+    - name: get_comment_discussions_by_payout tag and paging mechanism
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,11 +18,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_comment_discussions_by_payout"
-          params: {"tag":"steemit"}
+          params: {"tag":"steemit","limit":3,
+                   "start_author":"demotruk","start_permlink":"re-fyrstikken-re-vi1son-re-heiditravels-my-first-bad-experience-with-steemit-20160905t203611118z"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "steemit"
+            method: "no_observer_paging_tag"
             directory: "condenser_api_patterns/get_comment_discussions_by_payout"
