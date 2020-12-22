@@ -1,6 +1,5 @@
 import os
 import csv
-import logging
 from time import perf_counter as perf
 
 class PatternDiffException(Exception):
