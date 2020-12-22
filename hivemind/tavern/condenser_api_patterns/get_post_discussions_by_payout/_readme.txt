@@ -13,11 +13,15 @@ params:
 
      optional, 1..100, default = 20
 
-   "tag":"{tag}",
+  "tag":"{tag}",
 
      optional, actually means category, when given have to point to valid category; narrows down results to posts with given category
 
-   "truncate_body":{number}
+  "truncate_body":{number},
 
      optional, default = 0 (meaning no truncation); reduces maximal size of post body, cutting out all excess
+
+  "observer":"{account}"
+
+     optional, was not present in original, filters out posts of directly or indirectly muted authors
 }

@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_post_discussions_by_payout patterns test tag and paging mechanism
 
   marks:
-    - patterntest
+    - patterntest # original produced overlapping pages
 
   includes:
     - !include ../../common.yaml

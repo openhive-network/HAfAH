@@ -2,7 +2,8 @@
   test_name: Hivemind condenser_api.get_post_discussions_by_payout patterns test observer alice with tag and paging mechanism
 
   marks:
-    - patterntest # alice follows muted of ignoreall that ignores kental (mock data); see also tag_paging
+    - patterntest # alice follows muted of ignoreall that ignores kental (mock data); see also tag_paging;
+                  # original didn't accept observer (.orig made without it); original also produced overlapping pages
 
   includes:
     - !include ../../common.yaml
