@@ -1,0 +1,31 @@
+---
+  test_name: Hivemind bridge_api.get_community patterns test community_empty_string
+      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+
+  marks:
+    - patterntest
+    - negative
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_community community_empty_string
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_community"
+          params: {"name":""}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "community_empty_string"
+            directory: "bridge_api_negative/get_community"
+            error_response: true

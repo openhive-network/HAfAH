@@ -1,0 +1,5 @@
+{
+  "code": -32000,
+  "data": "TypeError: 'NoneType' object is not iterable",
+  "message": "Server error"
+}
