@@ -1,3 +1,7 @@
+import os
+import csv
+from time import perf_counter as perf
+
 class PatternDiffException(Exception):
   pass
 
@@ -33,10 +37,19 @@ def remove_tag(data, tags_to_remove):
     return [remove_tag(v, tags_to_remove) for v in data]
   return {k: remove_tag(v, tags_to_remove) for k, v in data.items() if k not in tags_to_remove}
 
+def get_time(test_id):
+  file_name = os.getenv("HIVEMIND_BENCHMARKS_IDS_FILE", None)
+  if file_name is not None:
+    with open(file_name, "r") as f:
+      reader = csv.reader(f)
+      for row in reader:
+        print(row[0], "    ", test_id)
+        if row[0] == test_id:
+          return float(row[1])
+  return 0.
+
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
   """ This method will compare response with pattern file """
-  import os
-
   response_fname = directory + "/" + method + RESPONSE_FILE_EXT
   if os.path.exists(response_fname):
     os.remove(response_fname)
@@ -47,6 +60,17 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     response_json = remove_tag(response_json, ignore_tags)
   error = response_json.get("error", None)
   result = response_json.get("result", None)
+
+  # disable coparison with pattern on demand
+  # and save 
+  if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
+    test_id = response_json.get("id", None)
+    print(test_id)
+    if test_id is not None:
+      with open("benchmark.csv", 'a') as benchmark_file:
+        writer = csv.writer(benchmark_file)
+        writer.writerow([directory + "/" + method, perf() - get_time(test_id)])
+    return
 
   if error is not None and not error_response:
     msg = "Error detected in response: {}".format(error["message"])
@@ -64,10 +88,6 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     save_json(response_fname, response_json)
     raise PatternDiffException(msg)
 
-  # disable coparison with pattern on demand
-  if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
-    return
-
   import deepdiff
   pattern = load_pattern(directory + "/" + method + PATTERN_FILE_EXT)
   if ignore_tags is not None:
@@ -77,4 +97,3 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     save_json(response_fname, result)
     msg = "Differences detected between response and pattern."
     raise PatternDiffException(msg)
-
