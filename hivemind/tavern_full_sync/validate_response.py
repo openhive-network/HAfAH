@@ -1,4 +1,5 @@
 import csv
+import os
 from time import perf_counter as perf
 
 class NoResultException(Exception):
@@ -17,12 +18,14 @@ def save_json(file_name, response_json):
 RESPONSE_FILE_EXT = ".out.json"
 
 def get_time(test_id):
-  with open("/tmp/test_ids.csv", "r") as f:
-    reader = csv.reader(f)
-    for row in reader:
-      print(row[0], "    ", test_id)
-      if row[0] == test_id:
-        return float(row[1])
+  file_name = os.getenv("HIVEMIND_BENCHMARKS_IDS_FILE", None)
+  if file_name is not None:
+    with open(file_name, "r") as f:
+      reader = csv.reader(f)
+      for row in reader:
+        print(row[0], "    ", test_id)
+        if row[0] == test_id:
+          return float(row[1])
   return 0.
 
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
