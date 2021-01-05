@@ -54,7 +54,7 @@ def has_valid_response(response, method=None, directory=None, error_response=Fal
     if test_id is not None:
       with open("benchmark.csv", 'a') as benchmark_file:
         writer = csv.writer(benchmark_file)
-        writer.writerow([directory + "/" + method, perf() - get_time(test_id)])
+        writer.writerow([directory + "/" + method, perf() - get_time(test_id), int(response.headers.get("Content-Length", 0))])
     return
 
   save_json(response_fname, response_json)

@@ -43,7 +43,6 @@ def get_time(test_id):
     with open(file_name, "r") as f:
       reader = csv.reader(f)
       for row in reader:
-        print(row[0], "    ", test_id)
         if row[0] == test_id:
           return float(row[1])
   return 0.
@@ -69,7 +68,7 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     if test_id is not None:
       with open("benchmark.csv", 'a') as benchmark_file:
         writer = csv.writer(benchmark_file)
-        writer.writerow([directory + "/" + method, perf() - get_time(test_id)])
+        writer.writerow([directory + "/" + method, perf() - get_time(test_id), int(response.headers.get("Content-Length", 0))])
     return
 
   if error is not None and not error_response:
