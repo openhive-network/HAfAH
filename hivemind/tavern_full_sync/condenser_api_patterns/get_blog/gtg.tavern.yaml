@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_blog most posts
 
   marks:
-    - patterntest # timeout
+    - fullsynctest # timeout
 
   includes:
     - !include ../../common.yaml
@@ -24,6 +24,6 @@
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "most_blog_posts"
+            method: "gtg"
             directory: "condenser_api_patterns/get_blog"
 
