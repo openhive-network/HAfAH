@@ -6,6 +6,7 @@
   "account_history_api.get_transaction",
   "block_api.get_block",
   "block_api.get_block_header",
+  "block_api.get_block_range",
   "condenser_api.broadcast_block",
   "condenser_api.broadcast_transaction",
   "condenser_api.broadcast_transaction_synchronous",

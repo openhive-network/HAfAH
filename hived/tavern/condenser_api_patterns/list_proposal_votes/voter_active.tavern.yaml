@@ -1,5 +1,5 @@
 ---
-  test_name: Hived get_post_discussions_by_payout
+  test_name: Hived condenser_api.list_proposal_votes
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_post_discussions_by_payout
+    - name: condenser_api.list_proposal_votes
       request:
         url: "{service.url:s}"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "condenser_api.get_post_discussions_by_payout"
-          params: ["smolalit", 'simple-fractal-prostoi-fraktal']
+          method: "condenser_api.list_proposal_votes"
+          params: [['gtg'], 10, "by_voter_proposal", "ascending", "active"]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "smolalit"
-            directory: "condenser_api_patterns/get_post_discussions_by_payout"
+            method: "voter_active"
+            directory: "condenser_api_patterns/list_proposal_votes"

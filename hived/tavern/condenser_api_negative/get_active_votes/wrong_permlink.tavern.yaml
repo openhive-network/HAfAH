@@ -1,14 +1,14 @@
 ---
-  test_name: Hived find_account_recovery_requests
+  test_name: Hived get_active_votes
 
   marks:
-    - patterntest # find nonempty requests
+    - patterntest
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: find_account_recovery_requests
+    - name: get_active_votes
       request:
         url: "{service.url:s}"
         method: POST
@@ -17,13 +17,14 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "database_api.find_account_recovery_requests"
-          params: {"accounts":["tulpa"]}
+          method: "condenser_api.get_active_votes"
+          params: ["gtg","wrong_permlink"]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "tulpa"
-            directory: "database_api_patterns/find_account_recovery_requests"
-            ignore_tags: ['requests']
+            method: "wrong_permlink"
+            directory: "condenser_api_negative/get_active_votes"
+            error_response: true
+            ignore_tags: ["timestamp"]
