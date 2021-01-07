@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_blog tag_mariannewest
 
   marks:
-    - patterntest
+    - fullsynctest
 
   includes:
     - !include ../../common.yaml

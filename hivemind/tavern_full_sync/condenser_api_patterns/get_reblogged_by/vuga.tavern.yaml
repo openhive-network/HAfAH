@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_reblogged_by vuga
 
   marks:
-    - patterntest
+    - fullsynctest
 
   includes:
     - !include ../../common.yaml

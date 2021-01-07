@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_blog tag_yetaras
 
   marks:
-    - patterntest
+    - fullsynctest
 
   includes:
     - !include ../../common.yaml

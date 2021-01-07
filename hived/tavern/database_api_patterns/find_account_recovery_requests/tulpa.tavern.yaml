@@ -26,4 +26,4 @@
           extra_kwargs:
             method: "tulpa"
             directory: "database_api_patterns/find_account_recovery_requests"
-            ignore_tags: ['id']
+            ignore_tags: ['requests']

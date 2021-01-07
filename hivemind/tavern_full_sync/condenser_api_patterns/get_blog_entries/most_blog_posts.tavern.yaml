@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_blog_entries most posts
 
   marks:
-    - patterntest
+    - fullsynctest
 
   includes:
     - !include ../../common.yaml
