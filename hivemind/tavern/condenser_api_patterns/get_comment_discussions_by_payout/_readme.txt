@@ -19,4 +19,9 @@ params:
    "truncate_body":{number}
 
      optional, default = 0 (meaning no truncation); reduces maximal size of post body, cutting out all excess
+
+  "observer":"{account}"
+
+     optional (can be skipped or passed empty), when passed has to point to valid account
+     used to filter out discussion branches starting at posts authored by accounts ignored directly or indirectly by the observer
 }
