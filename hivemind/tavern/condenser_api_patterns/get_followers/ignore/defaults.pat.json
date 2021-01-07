@@ -1,5 +1,12 @@
 [
   {
+    "follower": "followtest",
+    "following": "cheetah",
+    "what": [
+      "ignore"
+    ]
+  },
+  {
     "follower": "steembeast",
     "following": "cheetah",
     "what": [
