@@ -1,7 +1,7 @@
 [
   {
     "date": "2016-09-15T19:23:54",
-    "id": 2068513,
+    "id": 2068515,
     "msg": "@rusla followed you",
     "score": 50,
     "type": "follow",
@@ -9,7 +9,7 @@
   },
   {
     "date": "2016-09-14T19:11:48",
-    "id": 2067283,
+    "id": 2067285,
     "msg": "@dolphindigest mentioned you",
     "score": 50,
     "type": "mention",
@@ -17,7 +17,7 @@
   },
   {
     "date": "2016-09-14T18:43:30",
-    "id": 2067188,
+    "id": 2067190,
     "msg": "@dolphindigest mentioned you",
     "score": 50,
     "type": "mention",
@@ -25,7 +25,7 @@
   },
   {
     "date": "2016-09-15T18:18:54",
-    "id": 2066584,
+    "id": 2066586,
     "msg": "@linkback-bot-v0 mentioned you",
     "score": 50,
     "type": "mention",
@@ -33,7 +33,7 @@
   },
   {
     "date": "2016-09-15T18:18:54",
-    "id": 2066583,
+    "id": 2066585,
     "msg": "@linkback-bot-v0 replied to your post",
     "score": 50,
     "type": "reply",
@@ -41,7 +41,7 @@
   },
   {
     "date": "2016-09-15T17:09:24",
-    "id": 2064964,
+    "id": 2064966,
     "msg": "@dwinblood replied to your comment",
     "score": 70,
     "type": "reply_comment",
@@ -49,7 +49,7 @@
   },
   {
     "date": "2016-09-15T16:41:24",
-    "id": 2064392,
+    "id": 2064394,
     "msg": "@merej99 mentioned you",
     "score": 60,
     "type": "mention",
@@ -57,7 +57,7 @@
   },
   {
     "date": "2016-09-15T16:19:27",
-    "id": 2064191,
+    "id": 2064193,
     "msg": "@crok mentioned you",
     "score": 50,
     "type": "mention",
@@ -65,7 +65,7 @@
   },
   {
     "date": "2016-09-15T16:25:21",
-    "id": 2064009,
+    "id": 2064011,
     "msg": "@bacchist voted on your post ($0.03)",
     "score": 25,
     "type": "vote",
@@ -73,7 +73,7 @@
   },
   {
     "date": "2016-09-15T16:16:36",
-    "id": 2063813,
+    "id": 2063815,
     "msg": "@craig-grant replied to your comment",
     "score": 70,
     "type": "reply_comment",
@@ -81,7 +81,7 @@
   },
   {
     "date": "2016-09-15T15:40:15",
-    "id": 2062733,
+    "id": 2062735,
     "msg": "@stellabelle voted on your post ($0.98)",
     "score": 50,
     "type": "vote",
@@ -89,7 +89,7 @@
   },
   {
     "date": "2016-09-15T15:32:48",
-    "id": 2062670,
+    "id": 2062672,
     "msg": "@stellabelle replied to your comment",
     "score": 70,
     "type": "reply_comment",
@@ -97,7 +97,7 @@
   },
   {
     "date": "2016-09-15T14:40:03",
-    "id": 2061043,
+    "id": 2061044,
     "msg": "@argsolver mentioned you",
     "score": 50,
     "type": "mention",
@@ -105,7 +105,7 @@
   },
   {
     "date": "2016-09-15T14:44:15",
-    "id": 2061032,
+    "id": 2061033,
     "msg": "@schro voted on your post ($0.05)",
     "score": 25,
     "type": "vote",
@@ -113,7 +113,7 @@
   },
   {
     "date": "2016-09-15T14:40:12",
-    "id": 2060900,
+    "id": 2060901,
     "msg": "@firehorse followed you",
     "score": 40,
     "type": "follow",
@@ -121,7 +121,7 @@
   },
   {
     "date": "2016-09-15T14:17:30",
-    "id": 2060385,
+    "id": 2060386,
     "msg": "@halo replied to your comment",
     "score": 70,
     "type": "reply_comment",
@@ -129,7 +129,7 @@
   },
   {
     "date": "2016-09-15T14:15:09",
-    "id": 2060343,
+    "id": 2060344,
     "msg": "@pfunk voted on your post ($0.33)",
     "score": 50,
     "type": "vote",
@@ -137,7 +137,7 @@
   },
   {
     "date": "2016-09-15T12:43:12",
-    "id": 2060006,
+    "id": 2060007,
     "msg": "@beanz mentioned you",
     "score": 60,
     "type": "mention",
@@ -145,7 +145,7 @@
   },
   {
     "date": "2016-09-15T13:58:03",
-    "id": 2059939,
+    "id": 2059940,
     "msg": "@beanz mentioned you",
     "score": 60,
     "type": "mention",
@@ -153,7 +153,7 @@
   },
   {
     "date": "2016-09-15T13:58:03",
-    "id": 2059938,
+    "id": 2059939,
     "msg": "@beanz replied to your comment",
     "score": 60,
     "type": "reply_comment",
@@ -161,7 +161,7 @@
   },
   {
     "date": "2016-09-15T13:57:42",
-    "id": 2059934,
+    "id": 2059935,
     "msg": "@demotruk voted on your post ($0.05)",
     "score": 25,
     "type": "vote",
