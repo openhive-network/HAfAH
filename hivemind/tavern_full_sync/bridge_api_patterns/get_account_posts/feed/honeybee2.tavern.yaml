@@ -26,3 +26,4 @@
           extra_kwargs:
             method: "honeybee2"
             directory: "bridge_api_patterns/get_account_posts/feed"
+            error_response: true
