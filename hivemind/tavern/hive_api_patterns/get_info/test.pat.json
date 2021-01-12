@@ -1,5 +1,5 @@
 {
   "database_head_block": 5000015,
   "database_schema_version": 18,
-  "hivemind_version": "0.0.1"
+  "hivemind_version": "ci_implicit_tag"
 }
