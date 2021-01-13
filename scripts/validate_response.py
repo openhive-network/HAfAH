@@ -1,12 +1,19 @@
 import os
 import csv
+from difflib import SequenceMatcher
 from time import perf_counter as perf
+from typing import overload
 
 class PatternDiffException(Exception):
   pass
 
 class NoResultException(Exception):
   pass
+
+def get_overlap(s1, s2):
+    s = SequenceMatcher(None, s1, s2)
+    pos_a, pos_b, size = s.find_longest_match(0, len(s1), 0, len(s2)) 
+    return s1[pos_a:pos_a+size] if pos_b == 0 else ""
 
 def json_pretty_string(json_obj):
   from json import dumps
@@ -53,6 +60,10 @@ def get_time(test_id):
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
   """ This method will compare response with pattern file """
   response_fname = directory + "/" + method + RESPONSE_FILE_EXT
+  test_dir = os.getenv("TAVERN_DIR", "")
+  overlap = get_overlap(test_dir, response_fname)
+  response_fname = response_fname.replace(overlap, "")
+  
   if os.path.exists(response_fname):
     os.remove(response_fname)
 
@@ -66,6 +77,8 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
   # disable coparison with pattern on demand
   # and save 
   if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
+    if error is not None:
+      save_json(response_fname, result)
     test_id = response_json.get("id", None)
     print(test_id)
     if test_id is not None:
@@ -105,19 +118,28 @@ def has_valid_response(response, method=None, directory=None, error_response=Fal
   if not response_fname:
     response_fname = directory + "/" + method + RESPONSE_FILE_EXT
 
+  test_dir = os.getenv("TAVERN_DIR", "")
+  overlap = get_overlap(test_dir, response_fname)
+  response_fname = response_fname.replace(overlap, "")
+  
   if os.path.exists(response_fname):
     os.remove(response_fname)
 
   response_json = response.json()
+  error = response_json.get("error", None)
+  result = response_json.get("result", None)
+
   if error_response:
-    correct_response = response_json.get("error", None)
+    correct_response = error
   else:
-    correct_response = response_json.get("result", None)
+    correct_response = result
 
   # disable coparison with pattern on demand
   # and save 
   if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
     test_id = response_json.get("id", None)
+    if error is not None:
+      save_json(response_fname, response_json)
     print(test_id)
     if test_id is not None:
       with open("benchmark.csv", 'a') as benchmark_file:
