@@ -26,4 +26,4 @@
           extra_kwargs:
             method: "test"
             directory: "hive_api_patterns/get_info"
-            ignore_tags: ["hivemind_git_rev", "hivemind_git_date", "hivemind_version"]
+            ignore_tags: ["hivemind_git_rev", "hivemind_git_date", "hivemind_version", "database_patch_date"]
