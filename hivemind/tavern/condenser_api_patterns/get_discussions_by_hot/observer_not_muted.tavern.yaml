@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_hot patterns test observer
 
   marks:
-    - patterntest # test to compare with observers alice and ignoreall
+    - patterntest # test to compare with observers alice and ignoreall; see also no_params
 
   includes:
     - !include ../../common.yaml
