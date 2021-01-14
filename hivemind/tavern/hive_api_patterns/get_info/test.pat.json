@@ -4,6 +4,6 @@
   "database_patch_level": 29,
   "database_patched_to_revision": "d64c73792175b12684ec74691297782cf67a2093",
   "database_schema_version": 18,
-  "hivemind_git_date": "nogitdate",
-  "hivemind_version": "ci_implicit_tag"
+  "hivemind_git_date": "2021-01-14 15:01:17 +0100",
+  "hivemind_version": "1.24rc0"
 }
