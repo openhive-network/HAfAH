@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.get_account_posts sort blog minnowsupport long call
 
   marks:
-    - fullsynctest # slow_calls file - 3.476s
+    - fullsynctest
 
   includes:
     - !include ../../../common.yaml
@@ -18,12 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"account": "minnowsupport", "observer": "shirahosh", "sort": "blog", "limit": 21}
+          params: {"account": "minnowsupport", "observer": "markkujantunen", "sort": "blog", "limit": 21}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
             method: "minnowsupport"
-            directory: "bridge_api_patterns/get_account_posts/blog"
-
+            directory: "bridge_api_negative/get_account_posts/blog"

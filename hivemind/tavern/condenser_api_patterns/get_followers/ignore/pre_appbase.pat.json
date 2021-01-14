@@ -1,5 +1,12 @@
 [
   {
+    "follower": "followtest",
+    "following": "cheetah",
+    "what": [
+      "ignore"
+    ]
+  },
+  {
     "follower": "steembeast",
     "following": "cheetah",
     "what": [
@@ -57,13 +64,6 @@
   },
   {
     "follower": "onesunbeingnow",
-    "following": "cheetah",
-    "what": [
-      "ignore"
-    ]
-  },
-  {
-    "follower": "bvova",
     "following": "cheetah",
     "what": [
       "ignore"

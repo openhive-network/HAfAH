@@ -1,0 +1,30 @@
+---
+  test_name: Hivemind condenser_api.get_discussions_by_feed patterns test
+
+  marks:
+    - patterntest
+    - failing
+    - xfail # not filtering muted "nonlinearone"
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_discussions_by_feed followtest_muted
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "condenser_api.get_discussions_by_feed"
+          params: {"tag":"abit", "limit":9, "observer":"followtest"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "followtest_muted"
+            directory: "condenser_api_patterns/get_discussions_by_feed"

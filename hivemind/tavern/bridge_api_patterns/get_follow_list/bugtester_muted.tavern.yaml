@@ -1,0 +1,30 @@
+---
+  test_name: Hived bridge_api get_follow_list bugtester follow_type muted
+
+  marks:
+    - patterntest # mocked user
+    - failing
+    - xfail # ignore added in mock after reset_muted_list, resulted empty list instead of 2 elements
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: bridge_api get_follow_list bugtester muted
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_follow_list"
+          params: {"observer": "bugtester", "follow_type": "muted"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "bugtester_muted"
+            directory: "bridge_api_patterns/get_follow_list"

@@ -2,7 +2,7 @@
   test_name: Hivemind tags_api.get_discussion vaneaventuras
 
   marks:
-    - patterntest
+    - fullsynctest
 
   includes:
     - !include ../../common.yaml
