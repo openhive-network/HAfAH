@@ -18,7 +18,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_comment_discussions_by_payout"
-          params: {"observer":"ignoreall","limit":3,
+          params: {"observer":"alice","limit":3,
                    "start_author":"anyx","start_permlink":"re-dopezzz123-why-muscles-get-sore-20160815t225638685z"}
       response:
         status_code: 200

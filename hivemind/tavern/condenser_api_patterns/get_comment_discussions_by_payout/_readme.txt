@@ -4,19 +4,23 @@ Slightly different post format but otherwise gives the same posts as bridge.get_
 method: "condenser_api.get_comment_discussion_by_payout"
 params:
 {
-  "start_author":"{author}", "start_permlink":"{permlink}"
+  "start_author":"{author}", "start_permlink":"{permlink}",
 
      start_author + start_permlink : optional, when given have to point to valid start post; paging mechanism (cuts out this and more paying replies)
 
-  "limit":"{limit}"
+  "limit":{number},
 
      optional, 1..100, default = 20
 
-   "tag":"{tag}"
+   "tag":"{tag}",
 
      optional, actually means category, when given have to point to valid category; narrows down results to posts with given category
 
-   "truncate_body":{number}
+   "truncate_body":{number},
 
      optional, default = 0 (meaning no truncation); reduces maximal size of post body, cutting out all excess
+
+  "observer":"{account}"
+
+     optional, was not present in original, filters out posts of directly or indirectly muted authors
 }
