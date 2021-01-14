@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_reblogged_by opeyemioguns
 
   marks:
-    - patterntest
+    - fullsynctest
 
   includes:
     - !include ../../common.yaml

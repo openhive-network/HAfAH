@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_created tag_hive-101690
 
   marks:
-    - patterntest
+    - fullsynctest
 
   includes:
     - !include ../../common.yaml

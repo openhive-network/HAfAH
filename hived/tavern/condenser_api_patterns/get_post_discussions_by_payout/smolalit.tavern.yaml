@@ -3,7 +3,6 @@
 
   marks:
     - patterntest
-#    - xfail # _tags_api: tags_api_plugin not enabled.
 
   includes:
     - !include ../../common.yaml
@@ -23,7 +22,7 @@
       response:
         status_code: 200
         verify_response_with:
-          function: validate_response:compare_response_with_pattern
+          function: validate_response:has_valid_response
           extra_kwargs:
             method: "smolalit"
             directory: "condenser_api_patterns/get_post_discussions_by_payout"

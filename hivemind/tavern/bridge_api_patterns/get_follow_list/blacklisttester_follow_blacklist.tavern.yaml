@@ -1,0 +1,28 @@
+---
+  test_name: Hived bridge_api get_follow_list blacklisttester follow_type follow_blacklist
+
+  marks:
+    - patterntest # mocked user - empty as only created not fol
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: bridge_api get_follow_list blacklisttester follow_blacklist
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_follow_list"
+          params: {"observer": "blacklisttester", "follow_type": "follow_blacklist"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "blacklisttester_follow_blacklist"
+            directory: "bridge_api_patterns/get_follow_list"

@@ -22,5 +22,6 @@ params:
 
   "observer":"{account}"
 
-     optional, was not present in original, filters out posts of directly or indirectly muted authors
+     optional (can be skipped or passed empty), when passed has to point to valid account
+     used to filter out discussion branches starting at posts authored by accounts ignored directly or indirectly by the observer
 }

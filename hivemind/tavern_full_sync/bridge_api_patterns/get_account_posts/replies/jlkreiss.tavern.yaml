@@ -1,6 +1,6 @@
 ---
   test_name: Hivemind bridge_api.get_account_posts sort replies jlkreiss
-  
+
   marks:
     - fullsynctest
 
