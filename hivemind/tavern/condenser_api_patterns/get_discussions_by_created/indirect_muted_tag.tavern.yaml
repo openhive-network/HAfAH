@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_created patterns test mock data muted
+  test_name: Hivemind condenser_api.get_discussions_by_created patterns test mock data muted indicated
 
   marks:
-    - patterntest # alice follows muted of ignoreall who ignores agartha (mock data); see also no_param
+    - patterntest # alice follows muted of ignoreall who ignores feline1991 (mock data); see also tag_life
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_discussions_by_created mock data muted
+    - name: get_discussions_by_created mock data muted with indicated
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_discussions_by_created"
-          params: {"observer":"alice"}
+          params: {"tag":"life","observer":"alice"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "indirect_muted"
+            method: "indirect_muted_tag"
             directory: "condenser_api_patterns/get_discussions_by_created"

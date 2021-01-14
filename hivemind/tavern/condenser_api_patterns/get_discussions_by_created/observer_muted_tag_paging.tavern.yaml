@@ -25,5 +25,5 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "observer_paging"
+            method: "observer_muted_tag_paging"
             directory: "condenser_api_patterns/get_discussions_by_created"
