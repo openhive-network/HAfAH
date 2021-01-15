@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.get_ranked_posts created community patterns test
+  test_name: Hivemind bridge_api.get_account_posts hive-117600
 
   marks:
-    - patterntest # communities not implemented under 5 mln blocks
+    - patterntest
 
   includes:
     - !include ../../../common.yaml
 
   stages:
-    - name: bridge_api.get_ranked_posts created community patterns test
+    - name: get_account_posts
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,17 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.get_ranked_posts"
-          params: {"sort":"created","tag":"hive-117600", "limit":5}
+          method: "bridge.get_account_posts"
+          params: {
+            "sort":"comments",
+            "account":"hive-117600",
+            "limit":5
+          }
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "community"
-            directory: "bridge_api_patterns/get_ranked_posts/created"
+            method: "hive-117600"
+            directory: "bridge_api_patterns/get_account_posts/comments"
+

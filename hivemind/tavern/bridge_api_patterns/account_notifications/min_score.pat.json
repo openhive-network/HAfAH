@@ -1,7 +1,7 @@
 [
   {
     "date": "2016-09-15T19:41:33",
-    "id": 21474368329722698,
+    "id": 2068872,
     "msg": "@nippel66 voted on your post ($0.03)",
     "score": 25,
     "type": "vote",
@@ -9,7 +9,7 @@
   },
   {
     "date": "2016-09-15T18:57:51",
-    "id": 21470786326995708,
+    "id": 2067911,
     "msg": "@edgeland voted on your post ($0.28)",
     "score": 50,
     "type": "vote",
@@ -17,15 +17,15 @@
   },
   {
     "date": "2016-09-15T18:56:00",
-    "id": 21470709017227166,
+    "id": 2067884,
     "msg": "@kurtbeil replied to your post",
     "score": 50,
     "type": "reply",
-    "url": "wrong @richman/if-you-want-to-lose-a-friend-lend-him-money-my-life-story"
+    "url": "@kurtbeil/re-richman-if-you-want-to-lose-a-friend-lend-him-money-my-life-story-20160915t185552409z"
   },
   {
     "date": "2016-09-15T18:36:15",
-    "id": 21469051160098966,
+    "id": 2067137,
     "msg": "@pjheinz followed you",
     "score": 60,
     "type": "follow",
@@ -33,15 +33,15 @@
   },
   {
     "date": "2016-09-15T18:09:45",
-    "id": 21466920856137150,
+    "id": 2066409,
     "msg": "@honeyscribe replied to your comment",
     "score": 70,
     "type": "reply_comment",
-    "url": "wrong @richman/re-honeyscribe-persisting-in-the-face-of-adversity-20160915t173110225z"
+    "url": "@honeyscribe/re-richman-re-honeyscribe-persisting-in-the-face-of-adversity-20160915t180944939z"
   },
   {
     "date": "2016-09-15T17:53:48",
-    "id": 21465619481295589,
+    "id": 2065908,
     "msg": "@curie mentioned you",
     "score": 60,
     "type": "mention",
@@ -49,7 +49,7 @@
   },
   {
     "date": "2016-09-15T17:38:42",
-    "id": 21464382530753236,
+    "id": 2065552,
     "msg": "@danknugs voted on your post ($0.02)",
     "score": 25,
     "type": "vote",
@@ -57,15 +57,15 @@
   },
   {
     "date": "2016-09-15T17:26:21",
-    "id": 21463356033281025,
+    "id": 2065264,
     "msg": "@burmik123 replied to your comment",
     "score": 50,
     "type": "reply_comment",
-    "url": "wrong @richman/re-gavvet-title-steel-monsters-tank-destroyers-of-ww-ii-eng-ua-featuring-burmik123-as-author-20160915t172143359z"
+    "url": "@burmik123/re-richman-re-gavvet-title-steel-monsters-tank-destroyers-of-ww-ii-eng-ua-featuring-burmik123-as-author-20160915t172620045z"
   },
   {
     "date": "2016-09-15T17:07:33",
-    "id": 21461741125864794,
+    "id": 2064916,
     "msg": "@thecurator voted on your post ($0.03)",
     "score": 25,
     "type": "vote",
@@ -73,15 +73,15 @@
   },
   {
     "date": "2016-09-15T17:06:42",
-    "id": 21461668111067934,
+    "id": 2064891,
     "msg": "@honeyscribe replied to your post",
     "score": 70,
     "type": "reply",
-    "url": "wrong @richman/if-you-want-to-lose-a-friend-lend-him-money-my-life-story"
+    "url": "@honeyscribe/re-richman-if-you-want-to-lose-a-friend-lend-him-money-my-life-story-20160915t170643586z"
   },
   {
     "date": "2016-09-15T17:06:03",
-    "id": 21461612276845827,
+    "id": 2064866,
     "msg": "@honeyscribe voted on your post ($0.03)",
     "score": 25,
     "type": "vote",
@@ -89,7 +89,7 @@
   },
   {
     "date": "2016-09-15T16:45:03",
-    "id": 21459808390580530,
+    "id": 2064445,
     "msg": "@ozchartart voted on your post ($0.48)",
     "score": 50,
     "type": "vote",
@@ -97,7 +97,7 @@
   },
   {
     "date": "2016-09-15T16:44:36",
-    "id": 21459769735874848,
+    "id": 2064440,
     "msg": "@ozmaster voted on your post ($0.31)",
     "score": 50,
     "type": "vote",
@@ -105,7 +105,7 @@
   },
   {
     "date": "2016-09-15T16:22:12",
-    "id": 21457845590525256,
+    "id": 2063930,
     "msg": "@nextgenwitness voted on your post ($0.14)",
     "score": 50,
     "type": "vote",
@@ -113,7 +113,7 @@
   },
   {
     "date": "2016-09-15T16:22:09",
-    "id": 21457841295557957,
+    "id": 2063929,
     "msg": "@steemservices voted on your post ($0.32)",
     "score": 50,
     "type": "vote",
@@ -121,7 +121,7 @@
   },
   {
     "date": "2016-09-15T16:22:06",
-    "id": 21457837000590659,
+    "id": 2063927,
     "msg": "@justin voted on your post ($0.46)",
     "score": 50,
     "type": "vote",
@@ -129,7 +129,7 @@
   },
   {
     "date": "2016-09-15T16:22:03",
-    "id": 21457832705623360,
+    "id": 2063925,
     "msg": "@berniesanders voted on your post ($18.73)",
     "score": 100,
     "type": "vote",
@@ -137,7 +137,7 @@
   },
   {
     "date": "2016-09-15T16:22:00",
-    "id": 21457828410656061,
+    "id": 2063922,
     "msg": "@nextgencrypto voted on your post ($3.64)",
     "score": 75,
     "type": "vote",
@@ -145,7 +145,7 @@
   },
   {
     "date": "2016-09-15T16:21:57",
-    "id": 21457824115688763,
+    "id": 2063920,
     "msg": "@thedarkestplum voted on your post ($0.06)",
     "score": 25,
     "type": "vote",
@@ -153,7 +153,7 @@
   },
   {
     "date": "2016-09-15T16:21:57",
-    "id": 21457824115688762,
+    "id": 2063919,
     "msg": "@silversteem voted on your post ($3.09)",
     "score": 75,
     "type": "vote",
