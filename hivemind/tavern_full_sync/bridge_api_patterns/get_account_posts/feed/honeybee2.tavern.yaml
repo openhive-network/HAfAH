@@ -18,7 +18,8 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"account": "honeybee", "limit": 21, "sort": "feed", "start_author": "hufflepuff"}
+          params: {"account": "honeybee", "limit": 21, "sort": "feed", 
+                   "start_author": "doitvoluntarily", "start_permlink": "oakland-officers-have-phones-seized-over-internal-investigation"}
       response:
         status_code: 200
         verify_response_with:

@@ -18,7 +18,8 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"account": "felixxx", "observer": "ewkaw", "sort": "feed", "start_author": "poeticsnake"}
+          params: {"account": "felixxx", "observer": "ewkaw", "sort": "feed", 
+                   "start_author": "rivalzzz", "start_permlink": "neuer-summoner-16x-im-airdrop-or-splinterlands-io"}
       response:
         status_code: 200
         verify_response_with:
