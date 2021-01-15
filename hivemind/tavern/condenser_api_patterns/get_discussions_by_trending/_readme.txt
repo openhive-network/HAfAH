@@ -19,16 +19,16 @@ params:
     optional, turns on filtering for posts with given tag; when community tag is used it filters for community posts
     (compared to original version, posts that are only tagged with community tag, but don't belong to community, are no longer put in results)
 
-  "truncate_body":{number}
+  "truncate_body":{number},
 
     optional, default = 0 (meaning no truncation); reduces maximal size of post body, cutting out all excess
 
-  "filter_tags":[{list_of_tags}]
+  "filter_tags":[{list_of_tags}],
 
     has to be left empty, not supported
 
   "observer":"{account}"
 
      optional (can be skipped or passed empty), when passed has to point to valid account
-     used to filter out discussion branches starting at posts authored by accounts ignored directly or indirectly by the observer
+     used to filter out posts authored by accounts ignored directly or indirectly by the observer
 }

@@ -13,16 +13,16 @@ params:
 
      optional, 1..100, default = 20
 
-   "tag":"{tag}",
+  "tag":"{tag}",
 
      optional, actually means category, when given have to point to valid category; narrows down results to posts with given category
 
-   "truncate_body":{number}
+  "truncate_body":{number},
 
      optional, default = 0 (meaning no truncation); reduces maximal size of post body, cutting out all excess
 
   "observer":"{account}"
 
      optional (can be skipped or passed empty), when passed has to point to valid account
-     used to filter out discussion branches starting at posts authored by accounts ignored directly or indirectly by the observer
+     used to filter out posts authored by accounts ignored directly or indirectly by the observer
 }
