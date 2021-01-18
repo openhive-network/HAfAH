@@ -17,3 +17,6 @@
 /hived/tavern_run/version.py
 /hived/tavern_run/advanced_benchmark.json
 /hived/tavern_run/r_advanced_benchmark.json
+
+# benchmark info
+*benchmark.csv
