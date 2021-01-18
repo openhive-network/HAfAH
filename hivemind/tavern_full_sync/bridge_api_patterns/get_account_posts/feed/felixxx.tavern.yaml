@@ -27,3 +27,4 @@
           extra_kwargs:
             method: "felixxx"
             directory: "bridge_api_patterns/get_account_posts/feed"
+            error_response: true
