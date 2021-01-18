@@ -121,7 +121,7 @@ def has_valid_response(response, method=None, directory=None, error_response=Fal
   test_dir = os.getenv("TAVERN_DIR", "")
   overlap = get_overlap(test_dir, response_fname)
   response_fname = response_fname.replace(overlap, "")
-  response_fname = test_dir + response_fname
+  response_fname = test_dir + "/" + response_fname
   
   if os.path.exists(response_fname):
     os.remove(response_fname)
