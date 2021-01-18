@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.get_ranked_posts hot community patterns test
+  test_name: bridge_api.list_communities empty_last
 
   marks:
     - patterntest
 
   includes:
-    - !include ../../../common.yaml
+    - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.get_ranked_posts hot community patterns test
+    - name: bridge_api.list_communities community_empty_last
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,12 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.get_ranked_posts"
-          params: {"sort":"hot","tag":"hive-117600","limit":10}
+          method: "bridge.list_communities"
+          params: {"last":""}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "community"
-            directory: "bridge_api_patterns/get_ranked_posts/hot"
+            method: "empty_last"
+            directory: "bridge_api_patterns/list_communities"

@@ -1,15 +1,14 @@
 ---
-  test_name: bridge_api.list_communities wrong parameter # 8080
+  test_name: Hivemind bridge_api.list_community_roles patterns test
 
   marks:
     - patterntest
-    - negative
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.list_pop_communities wrong parameter
+    - name: list_community_roles
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,13 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.list_communities"
-          params: [100]
+          method: "bridge.list_community_roles"
+          params: {"community":"hive-117600", "last":"abit"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "wrong_parameter"
-            directory: "bridge_api_negative/list_communities"
-            error_response: true
+            method: "last_abit"
+            directory: "bridge_api_patterns/list_community_roles"
