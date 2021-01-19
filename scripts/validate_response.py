@@ -57,7 +57,7 @@ def get_time(test_id):
           return float(row[1])
   return 0.
 
-def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False):
+def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False, benchmark_time_threshold=None):
   """ This method will compare response with pattern file """
   response_fname = directory + "/" + method + RESPONSE_FILE_EXT
   test_dir = os.getenv("TAVERN_DIR", "")
@@ -84,7 +84,7 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     if test_id is not None:
       with open("benchmark.csv", 'a') as benchmark_file:
         writer = csv.writer(benchmark_file)
-        writer.writerow([directory + "/" + method, perf() - get_time(test_id), int(response.headers.get("Content-Length", 0))])
+        writer.writerow([directory + "/" + method, perf() - get_time(test_id), int(response.headers.get("Content-Length", 0)), benchmark_time_threshold])
     return
 
   if error is not None and not error_response:
@@ -113,7 +113,7 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     msg = "Differences detected between response and pattern."
     raise PatternDiffException(msg)
 
-def has_valid_response(response, method=None, directory=None, error_response=False, response_fname=None):
+def has_valid_response(response, method=None, directory=None, error_response=False, response_fname=None, benchmark_time_threshold=None):
   import os
   if not response_fname:
     response_fname = directory + "/" + method + RESPONSE_FILE_EXT
@@ -145,7 +145,7 @@ def has_valid_response(response, method=None, directory=None, error_response=Fal
     if test_id is not None:
       with open("benchmark.csv", 'a') as benchmark_file:
         writer = csv.writer(benchmark_file)
-        writer.writerow([directory + "/" + method, perf() - get_time(test_id), int(response.headers.get("Content-Length", 0))])
+        writer.writerow([directory + "/" + method, perf() - get_time(test_id), int(response.headers.get("Content-Length", 0)), benchmark_time_threshold])
     return
 
   save_json(response_fname, response_json)
