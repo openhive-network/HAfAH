@@ -1,0 +1,29 @@
+---
+  test_name: Hivemind bridge_api.get_relationship_between_accounts follows patterns test (1-2)
+
+  marks:
+    - patterntest # relies on mock data
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_relationship_between_accounts follows
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_relationship_between_accounts"
+          params: {"account1": "tester1", "account2": "tester2"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "tester1_tester2"
+            directory: "mock_tests/get_relationship_between_accounts"
+
