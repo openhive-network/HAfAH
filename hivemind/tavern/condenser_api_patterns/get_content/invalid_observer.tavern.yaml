@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_content invalid observer
 
   marks:
-    - patterntest # does no validate observer
+    - patterntest # does not validate observer in any way at the moment
    # - negative
 
   includes:

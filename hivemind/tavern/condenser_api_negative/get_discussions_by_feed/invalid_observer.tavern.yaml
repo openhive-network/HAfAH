@@ -3,7 +3,7 @@
 
   marks:
     - patterntest
-  # - negative
+    - negative
     - xfail # should validate observer
 
   includes:
@@ -27,5 +27,5 @@
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
             method: "invalid_observer"
-            directory: "condenser_api_patterns/get_discussions_by_feed"
-          # error_response: true
+            directory: "condenser_api_negative/get_discussions_by_feed"
+            error_response: true
