@@ -11,5 +11,5 @@ params:
 
   "observer": "{account}"
 
-    optional, used for muted votes and blacklists
+    optional, used for muted votes and blacklists (that functionality was removed and now observer is completely ignored - it will most likely stay that way)
 }
