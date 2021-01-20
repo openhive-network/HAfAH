@@ -48,14 +48,15 @@ def remove_tag(data, tags_to_remove):
   return {k: remove_tag(v, tags_to_remove) for k, v in data.items() if k not in tags_to_remove}
 
 def get_time(test_id):
+  from json import loads
   file_name = os.getenv("HIVEMIND_BENCHMARKS_IDS_FILE", None)
   if file_name is not None:
     with open(file_name, "r") as f:
       reader = csv.reader(f)
       for row in reader:
         if row[0] == test_id:
-          return float(row[1])
-  return 0.
+          return (float(row[1]), row[2])
+  return (0., "{}")
 
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False, benchmark_time_threshold=None):
   """ This method will compare response with pattern file """
@@ -84,7 +85,8 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     if test_id is not None:
       with open("benchmark.csv", 'a') as benchmark_file:
         writer = csv.writer(benchmark_file)
-        writer.writerow([directory + "/" + method, perf() - get_time(test_id), int(response.headers.get("Content-Length", 0)), benchmark_time_threshold])
+        test_time, test_params = get_time(test_id)
+        writer.writerow([directory + "/" + method, perf() - test_time, int(response.headers.get("Content-Length", 0)), benchmark_time_threshold], test_params)
     return
 
   if error is not None and not error_response:
@@ -145,7 +147,8 @@ def has_valid_response(response, method=None, directory=None, error_response=Fal
     if test_id is not None:
       with open("benchmark.csv", 'a') as benchmark_file:
         writer = csv.writer(benchmark_file)
-        writer.writerow([directory + "/" + method, perf() - get_time(test_id), int(response.headers.get("Content-Length", 0)), benchmark_time_threshold])
+        test_time, test_params = get_time(test_id)
+        writer.writerow([directory + "/" + method, perf() - test_time, int(response.headers.get("Content-Length", 0)), benchmark_time_threshold, test_params])
     return
 
   save_json(response_fname, response_json)
