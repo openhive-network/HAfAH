@@ -86,7 +86,7 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
       with open("benchmark.csv", 'a') as benchmark_file:
         writer = csv.writer(benchmark_file)
         test_time, test_params = get_time(test_id)
-        writer.writerow([directory + "/" + method, perf() - test_time, int(response.headers.get("Content-Length", 0)), benchmark_time_threshold], test_params)
+        writer.writerow([directory + "/" + method, perf() - test_time, int(response.headers.get("Content-Length", 0)), benchmark_time_threshold, test_params])
     return
 
   if error is not None and not error_response:
