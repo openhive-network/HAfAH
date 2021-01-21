@@ -2,7 +2,6 @@ import os
 import csv
 from difflib import SequenceMatcher
 from time import perf_counter as perf
-from typing import overload
 
 class PatternDiffException(Exception):
   pass
@@ -21,7 +20,7 @@ def json_pretty_string(json_obj):
 
 def save_json(file_name, response_json):
   """ Save response to file """
-  with open(file_name, 'w') as f:
+  with open(file_name, 'a') as f:
     f.write(json_pretty_string(response_json))
     f.write("\n")
 
@@ -32,6 +31,8 @@ def save_raw(file_name, msg):
 
 RESPONSE_FILE_EXT = ".out.json"
 PATTERN_FILE_EXT = ".pat.json"
+TEST_FILE_EXT = ".tavern.yaml"
+
 def load_pattern(name):
   """ Loads pattern from json file to python object """
   from json import load
@@ -60,12 +61,19 @@ def get_time(test_id):
 
 def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False, benchmark_time_threshold=None):
   """ This method will compare response with pattern file """
-  response_fname = directory + "/" + method + RESPONSE_FILE_EXT
-  test_dir = os.getenv("TAVERN_DIR", "")
-  overlap = get_overlap(test_dir, response_fname)
-  response_fname = response_fname.replace(overlap, "")
+  test_fname, _ = os.getenv('PYTEST_CURRENT_TEST').split("::")
   
-  if os.path.exists(response_fname):
+  test_dir = os.getenv("TAVERN_DIR", "")
+  overlap = get_overlap(test_dir, test_fname)
+  test_fname = test_dir + "/" + test_fname.replace(overlap, "")
+  test_fname = test_fname.replace(TEST_FILE_EXT, "")
+  
+  response_fname = test_fname + RESPONSE_FILE_EXT
+  pattern_fname = test_fname + PATTERN_FILE_EXT
+  
+  tavern_disable_comparator = bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False))
+
+  if os.path.exists(response_fname) and not tavern_disable_comparator:
     os.remove(response_fname)
 
   response_json = response.json()
@@ -77,16 +85,15 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
 
   # disable coparison with pattern on demand
   # and save 
-  if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
+  if tavern_disable_comparator:
     if error is not None:
-      save_json(response_fname, result)
+      save_json(response_fname, error)
     test_id = response_json.get("id", None)
-    print(test_id)
     if test_id is not None:
       with open("benchmark.csv", 'a') as benchmark_file:
         writer = csv.writer(benchmark_file)
         test_time, test_params = get_time(test_id)
-        writer.writerow([directory + "/" + method, perf() - test_time, int(response.headers.get("Content-Length", 0)), benchmark_time_threshold, test_params])
+        writer.writerow([test_fname, perf() - test_time, int(response.headers.get("Content-Length", 0)), benchmark_time_threshold, test_params])
     return
 
   if error is not None and not error_response:
@@ -106,7 +113,7 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     raise PatternDiffException(msg)
 
   import deepdiff
-  pattern = load_pattern(directory + "/" + method + PATTERN_FILE_EXT)
+  pattern = load_pattern(pattern_fname)
   if ignore_tags is not None:
     pattern = remove_tag(pattern, ignore_tags)
   pattern_resp_diff = deepdiff.DeepDiff(pattern, result)
@@ -116,16 +123,18 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     raise PatternDiffException(msg)
 
 def has_valid_response(response, method=None, directory=None, error_response=False, response_fname=None, benchmark_time_threshold=None):
-  import os
-  if not response_fname:
-    response_fname = directory + "/" + method + RESPONSE_FILE_EXT
-
-  test_dir = os.getenv("TAVERN_DIR", "")
-  overlap = get_overlap(test_dir, response_fname)
-  response_fname = response_fname.replace(overlap, "")
-  response_fname = test_dir + "/" + response_fname
+  test_fname, _ = os.getenv('PYTEST_CURRENT_TEST').split("::")
   
-  if os.path.exists(response_fname):
+  test_dir = os.getenv("TAVERN_DIR", "")
+  overlap = get_overlap(test_dir, test_fname)
+  test_fname = test_dir + "/" + test_fname.replace(overlap, "")
+  test_fname = test_fname.replace(TEST_FILE_EXT, "")
+  
+  response_fname = test_fname + RESPONSE_FILE_EXT
+
+  tavern_disable_comparator = bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False))
+  
+  if os.path.exists(response_fname) and not tavern_disable_comparator:
     os.remove(response_fname)
 
   response_json = response.json()
@@ -139,16 +148,15 @@ def has_valid_response(response, method=None, directory=None, error_response=Fal
 
   # disable coparison with pattern on demand
   # and save 
-  if bool(os.getenv('TAVERN_DISABLE_COMPARATOR', False)):
+  if tavern_disable_comparator:
     test_id = response_json.get("id", None)
     if error is not None:
-      save_json(response_fname, response_json)
-    print(test_id)
+      save_json(response_fname, error)
     if test_id is not None:
       with open("benchmark.csv", 'a') as benchmark_file:
         writer = csv.writer(benchmark_file)
         test_time, test_params = get_time(test_id)
-        writer.writerow([directory + "/" + method, perf() - test_time, int(response.headers.get("Content-Length", 0)), benchmark_time_threshold, test_params])
+        writer.writerow([test_fname, perf() - test_time, int(response.headers.get("Content-Length", 0)), benchmark_time_threshold, test_params])
     return
 
   save_json(response_fname, response_json)
