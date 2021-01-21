@@ -1,15 +1,17 @@
 ---
-  test_name: Hivemind bridge.get_account_posts sort comments with not existing start permlink test
+  test_name: Hivemind bridge.get_account_posts sort payout not existing account
 
   marks:
-    - patterntest # original did not validate post
+    - patterntest
     - negative
+    - failing
+    - xfail # observer is not used currently in this call
 
   includes:
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts sort comments with not existing start permlink
+    - name: get_account_posts sort payout not existing account
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -19,12 +21,12 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"comments", "account":"gtg", "start_author": "gtg","start_permlink": "non_existing_permlink"}
+          params: {"sort":"payout", "account":"gtg", "observer":"notexistingtest"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "not_existing_start_permlink"
-            directory: "bridge_api_negative/get_account_posts/comments"
+            method: "not_existing_observer"
+            directory: "bridge_api_negative/get_account_posts/payout"
             error_response: true

@@ -2,7 +2,7 @@
   test_name: Hivemind bridge.get_account_posts sort comments not existing account
 
   marks:
-    - patterntest
+    - patterntest # original did not fully validate account (gave empty results)
     - negative
 
   includes:

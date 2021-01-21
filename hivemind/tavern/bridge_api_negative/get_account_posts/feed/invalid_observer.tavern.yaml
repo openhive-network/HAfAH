@@ -2,7 +2,7 @@
   test_name: Hivemind bridge.get_account_posts order feed invalid observer
 
   marks:
-    - patterntest
+    - patterntest # original did not run observer through preliminary validation
     - negative
 
   includes:
