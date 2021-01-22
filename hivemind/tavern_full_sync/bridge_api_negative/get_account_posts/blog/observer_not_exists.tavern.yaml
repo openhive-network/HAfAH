@@ -26,4 +26,3 @@
           extra_kwargs:
             method: "observer_not_exists"
             directory: "bridge_api_negative/get_account_posts/blog"
-            error_response: true

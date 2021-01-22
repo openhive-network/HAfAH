@@ -26,3 +26,4 @@
           extra_kwargs:
             method: "max_limit"
             directory: "condenser_api_patterns/get_post_discussions_by_payout"
+            benchmark_time_threshold: 2.5
