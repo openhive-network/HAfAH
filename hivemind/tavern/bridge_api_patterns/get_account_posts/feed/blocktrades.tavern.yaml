@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts sort feed patterns test
+  test_name: Hivemind bridge.get_account_posts test # community test
 
   marks:
-    - patterntest # steemit is not following anyone, so results are empty
+    - patterntest #todo find or create user with community
 
   includes:
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts sort feed
+    - name: get_account_posts
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,12 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"feed", "account":"steemit"}
+          params: {"sort":"feed","account":"tester1"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "steemit"
+            method: "blocktrades"
             directory: "bridge_api_patterns/get_account_posts/feed"
-

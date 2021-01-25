@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts hive-117600
+  test_name: Hivemind bridge.get_account_posts test # community test
 
   marks:
     - patterntest
@@ -18,15 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {
-            "sort":"replies",
-            "account":"hive-117600"
-          }
+          params: {"sort":"posts","account":"test-safari"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "hive-117600"
-            directory: "bridge_api_patterns/get_account_posts/replies"
-
+            method: "test-safari"
+            directory: "bridge_api_patterns/get_account_posts/posts"

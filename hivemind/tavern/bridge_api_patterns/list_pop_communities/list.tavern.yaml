@@ -1,9 +1,8 @@
 ---
-  test_name: bridge_api.list_pop_communities invalid request error # 8080
+  test_name: bridge_api.list_pop_communities list
 
   marks:
-    - patterntest # original returns invalid request error here because the routine was apparently never used even once
-                  # it is supposed to return communities that gained most new subscribers in last month (therefore only empty result is possible in 5mln blocks)
+    - patterntest
 
   includes:
     - !include ../../common.yaml
@@ -19,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.list_pop_communities"
-          params: ["25"]
+          params: []
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "first"
+            method: "list"
             directory: "bridge_api_patterns/list_pop_communities"
