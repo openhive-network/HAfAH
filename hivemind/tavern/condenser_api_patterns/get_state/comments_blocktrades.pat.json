@@ -424,7 +424,7 @@
       "pending_payout_value": "0.000 HBD",
       "percent_hbd": 10000,
       "permlink": "re-cryptojoycom-help-steem-buy-steemit-apparel-day-2-20160915t193858376z",
-      "post_id": 1257853,
+      "post_id": 1257877,
       "promoted": "0.000 HBD",
       "replies": [],
       "root_title": "Help STEEM! Buy Steemit Apparel! Day #2",
@@ -935,9 +935,9 @@
   "props": {
     "hbd_interest_rate": 1000,
     "hbd_print_rate": 10000,
-    "head_block_number": 5000017,
+    "head_block_number": 5000024,
     "last_irreversible_block_num": 4999980,
-    "time": "2016-09-15T19:48:12",
+    "time": "2016-09-15T19:48:33",
     "total_vesting_fund_hive": "149190428.013 HIVE",
     "total_vesting_shares": "448144916705.468384 VESTS"
   },
