@@ -4,6 +4,6 @@
 
   variables:
     service:
-      proto: https
+      proto: http
       server: "{tavern.env_vars.HIVEMIND_ADDRESS}"
       port: "{tavern.env_vars.HIVEMIND_PORT}"
