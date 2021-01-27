@@ -5,7 +5,7 @@
     - fullsynctest
 
   includes:
-    - !include ../../../common.yaml
+    - !include ../../common.yaml
 
   stages:
     - name: get_discussions_by_blog
@@ -25,4 +25,4 @@
           function: validate_response:has_valid_response
           extra_kwargs:
             method: "et42k"
-            directory: "bridge_api_patterns/get_account_posts/feed"
+            directory: "condenser_api_patterns/get_discussions_by_blog"
