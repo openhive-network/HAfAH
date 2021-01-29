@@ -21,7 +21,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "secrets5",
-    "post_id": 1257944,
+    "post_id": 1257968,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -56,7 +56,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "secrets4",
-    "post_id": 1257943,
+    "post_id": 1257967,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -95,7 +95,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "secrets2",
-    "post_id": 1257941,
+    "post_id": 1257965,
     "promoted": "0.011 HBD",
     "replies": [],
     "stats": {
@@ -119,7 +119,7 @@
     "blacklists": [],
     "body": "tell me secret 01",
     "category": "hive-135485",
-    "children": 0,
+    "children": 2,
     "community": "hive-135485",
     "community_title": "World News",
     "created": "2016-09-15T19:47:15",
@@ -134,7 +134,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "secrets1",
-    "post_id": 1257940,
+    "post_id": 1257964,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {

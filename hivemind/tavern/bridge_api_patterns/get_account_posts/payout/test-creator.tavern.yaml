@@ -2,7 +2,7 @@
   test_name: Hivemind bridge.get_account_posts test # community test
 
   marks:
-    - patterntest #todo find or create user with community
+    - patterntest
 
   includes:
     - !include ../../../common.yaml
@@ -18,11 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {"sort":"feed","account":"tester1"}
+          params: {"sort":"payout","account":"test-creator"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "blocktrades"
-            directory: "bridge_api_patterns/get_account_posts/feed"
+            method: "test-creator"
+            directory: "bridge_api_patterns/get_account_posts/payout"
