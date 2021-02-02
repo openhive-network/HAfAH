@@ -24,6 +24,6 @@
         verify_response_with:
           function: validate_response:has_valid_response
           extra_kwargs:
-            method: "toushika2"
+            method: "toushik2"
             directory: "bridge_api_patterns/get_account_posts/blog"
 
