@@ -44,4 +44,4 @@ echo "Attempting to start tests on hived instance listening on: $HIVEMIND_URL"
 
 echo "Additional test options: ${@:2}"
 
-tox -- -W ignore::pytest.PytestDeprecationWarning -n auto --durations=0 -v -p no:logging ${@:2}
+tox -- -W ignore::pytest.PytestDeprecationWarning --workers auto --tests-per-worker auto -p no:logging ${@:2}
