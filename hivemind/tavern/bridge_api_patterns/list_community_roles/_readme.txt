@@ -13,6 +13,6 @@ params:
 
   "limit":{number}
 
-    optional, unspecified range, default = 50 (to be changed - needs to enforce positive integer within range that also needs to be defined)
+    optional, 1..1000; default = 50
 
 }
