@@ -25,6 +25,6 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "wrong_observer"
+            method: "invalid_type"
             directory: "bridge_api_negative/does_user_follow_any_lists"
             error_response: true
