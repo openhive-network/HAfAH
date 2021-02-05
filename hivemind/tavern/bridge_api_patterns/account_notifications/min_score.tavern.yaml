@@ -3,8 +3,6 @@
 
   marks:
     - patterntest
-    - failing
-    - xfail # reply/reply_comment should point to the reply, not to post being replied to
 
   includes:
     - !include ../../common.yaml
