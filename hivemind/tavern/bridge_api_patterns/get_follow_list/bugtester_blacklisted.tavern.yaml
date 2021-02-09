@@ -3,8 +3,6 @@
 
   marks:
     - patterntest # mocked user -
-    - failing
-    - xfail # blacklist added in mock after reset_blacklist, resulted empty list instead of 2 elements
 
   includes:
     - !include ../../common.yaml

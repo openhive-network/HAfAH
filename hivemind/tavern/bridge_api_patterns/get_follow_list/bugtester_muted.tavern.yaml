@@ -3,8 +3,6 @@
 
   marks:
     - patterntest # mocked user
-    - failing
-    - xfail # ignore added in mock after reset_muted_list, resulted empty list instead of 2 elements
 
   includes:
     - !include ../../common.yaml
