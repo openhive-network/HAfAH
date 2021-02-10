@@ -3,8 +3,6 @@
 
   marks:
     - patterntest # relies on mock data
-    - failing
-    - xfail # problem with follow overriding when two operations are in the same block
 
   includes:
     - !include ../../common.yaml
