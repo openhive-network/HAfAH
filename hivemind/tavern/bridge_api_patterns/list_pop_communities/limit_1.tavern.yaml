@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts hive-117600
+  test_name: bridge_api.list_pop_communities list limit 1
 
   marks:
     - patterntest
 
   includes:
-    - !include ../../../common.yaml
+    - !include ../../common.yaml
 
   stages:
-    - name: get_account_posts
+    - name: bridge_api.list_pop_communities
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -17,16 +17,12 @@
         json:
           jsonrpc: "2.0"
           id: 1
-          method: "bridge.get_account_posts"
-          params: {
-            "sort":"replies",
-            "account":"hive-117600"
-          }
+          method: "bridge.list_pop_communities"
+          params: ["1"]
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "hive-117600"
-            directory: "bridge_api_patterns/get_account_posts/replies"
-
+            method: "limit_1"
+            directory: "bridge_api_patterns/list_pop_communities"

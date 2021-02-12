@@ -19,7 +19,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.list_communities"
-          params: {"last": "hive-103459", "limit":100}
+          params: {"last": "hive-171488", "limit":100}
       response:
         status_code: 200
         verify_response_with:

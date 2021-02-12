@@ -1,8 +1,8 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts hive-117600
+  test_name: Hivemind bridge.get_account_posts test # community test
 
   marks:
-    - patterntest
+    - patterntest #todo find or create user with community
 
   includes:
     - !include ../../../common.yaml
@@ -18,16 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {
-            "sort":"feed",
-            "account":"hive-117600",
-            "limit":5
-          }
+          params: {"sort":"feed","account":"test-follower"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "hive-117600"
+            method: "test-follower"
             directory: "bridge_api_patterns/get_account_posts/feed"
-

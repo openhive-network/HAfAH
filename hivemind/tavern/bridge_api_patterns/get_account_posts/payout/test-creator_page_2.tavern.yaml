@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts hive-117600
+  test_name: Hivemind bridge.get_account_posts test # community test
 
   marks:
     - patterntest
@@ -18,16 +18,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_account_posts"
-          params: {
-            "sort":"blog",
-            "account":"hive-117600",
-            "limit":5
-          }
+          params: {"sort":"payout","account":"test-creator", "start_author":"test-creator", "start_permlink":"re-parrot-reblog-02"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "hive-117600"
-            directory: "bridge_api_patterns/get_account_posts/blog"
-
+            method: "test-creator_page_2"
+            directory: "bridge_api_patterns/get_account_posts/payout"
