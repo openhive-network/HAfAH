@@ -1,0 +1,30 @@
+---
+  test_name: Hivemind bridge_api.does_user_follow_any_lists patterns test wrong observer
+
+  marks:
+    - patterntest
+    - negative
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: does_user_follow_any_lists wrong observer
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.does_user_follow_any_lists"
+          params: {"observer": 1234}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "invalid_type"
+            directory: "bridge_api_negative/does_user_follow_any_lists"
+            error_response: true
