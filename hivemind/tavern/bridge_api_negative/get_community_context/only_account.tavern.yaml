@@ -1,0 +1,30 @@
+---
+  test_name: Hivemind bridge_api.get_community_context patterns test only account
+
+  marks:
+    - patterntest
+    - negative
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: get_community_context test only account
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_community_context"
+          params: {"account": "blocktrades"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "only_account"
+            directory: "bridge_api_negative/get_community_context"
+            error_response: true

@@ -1,14 +1,15 @@
 ---
-  test_name: Hivemind bridge_api.get_post gtg with observer patterns test
-      # 
+  test_name: Hivemind bridge_api.get_post gtg with observer patterns test post with the most votes
+
   marks:
-    - patterntest # normally observer would have no effect on 5 mln blocks because there were no users blacklisted, but mock data did the job
+    - patterntest # call lists no more than 1000 votes
+    # this post due to information from database - total_votes = 1565
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.get_post gtg with observer patterns test
+    - name: bridge_api.get_post post with the most votes patterns test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,11 +19,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_post"
-          params: {"author":"gtg", "permlink":"heavy-duty-witness-node-infrastructure","observer":"ignoreall"}
+          params: {"author":"xeroc", "permlink":"piston-web-first-open-source-steem-gui---searching-for-alpha-testers"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "gtg_observer"
+            method: "most_votes"
             directory: "bridge_api_patterns/get_post"

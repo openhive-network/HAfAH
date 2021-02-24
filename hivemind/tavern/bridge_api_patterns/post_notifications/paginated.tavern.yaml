@@ -1,0 +1,31 @@
+---
+  test_name: Hivemind bridge.post_notifications patterns test steve-walschot paging
+
+  marks:
+    - patterntest # see also steve-walschot (one before last id checked)
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: bridge.post_notifications steve-walschot paging
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.post_notifications"
+          params: {"author":"steve-walschot",
+                   "permlink": "steeming-around-the-clock-bye-bye-regular-job",
+                   "last_id": 1550415
+                   }
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "paginated"
+            directory: "bridge_api_patterns/post_notifications"

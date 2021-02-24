@@ -10,4 +10,5 @@ params:
   "observer": "{account}"
 
      optional (can be skipped or given empty), used to add blacklist information to given post
+(currently ignored)
 }
