@@ -1,0 +1,5 @@
+CMAKE_MINIMUM_REQUIRED( VERSION 3.2 )
+
+PROJECT( psql_tools )
+
+ADD_SUBDIRECTORY( fork_extension )
