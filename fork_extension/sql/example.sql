@@ -23,7 +23,7 @@ CREATE TABLE dst_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values F
 --2.a the trigger will serialize each row inserted to src_table to bytearraus and save it in tuples table 
 DROP FUNCTION IF EXISTS table_changed_service CASCADE;
 CREATE FUNCTION table_changed_service() RETURNS trigger
-AS '/home/syncad/src/psql_tools/cmake-build-release/fork_extension/libfork_extension.so' -- please chage here for correct .so path
+AS '/home/syncad/src/psql_tools/cmake-build-release/lib/libfork_extension.so' -- please chage here for correct .so path
 LANGUAGE C;
 
 CREATE TRIGGER extension_trigger AFTER INSERT ON src_table
@@ -33,7 +33,7 @@ CREATE TRIGGER extension_trigger AFTER INSERT ON src_table
 --2.b back_from_fork_function will deserialize tuples form tables table and insert them to dst_table
 DROP FUNCTION IF EXISTS back_from_fork CASCADE;
 CREATE FUNCTION back_from_fork() RETURNS void
-AS '/home/syncad/src/psql_tools/cmake-build-release/fork_extension/libfork_extension.so', 'back_from_fork' -- please chage here for correct .so path
+AS '/home/syncad/src/psql_tools/cmake-build-release/lib/libfork_extension.so', 'back_from_fork' -- please chage here for correct .so path
 LANGUAGE C;
 
 --3. Insert 10000 rows to src table, each of them will be copied to the tuples table
