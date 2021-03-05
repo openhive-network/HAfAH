@@ -30,14 +30,14 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
 
 
   // TODO: add structure which describe schema
-  auto copy_session = DbClient::get().startCopyTuplesSession( "blocks_copy" );
+  auto copy_session = DbClient::get().startCopyTuplesSession( "dst_table" );
 
   for ( uint64_t row =0; row < SPI_processed; ++row ) {
     HeapTuple tuple_row = *(SPI_tuptable->vals + row);
     bool is_null( false );
     auto binary_value = SPI_getbinval( tuple_row, SPI_tuptable->tupdesc, 1, &is_null );
     if ( is_null ) {
-      throw std::runtime_error( "Unexpect null column value in query" + get_stored_tuple );
+      throw std::runtime_error( "Unexpect null column value in query: " + get_stored_tuple );
     }
 
     copy_session->push_tuple( DatumGetByteaPP( binary_value ) );
