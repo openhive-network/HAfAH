@@ -14,7 +14,7 @@ static constexpr auto SIZE_OF_NUMBER_OF_COLUMNS = sizeof( uint16_t );
 static constexpr auto SIZE_OF_COLUMN_SIZE = sizeof( uint32_t );
 
 struct FieldSizeAndValue{
-    // By defualt the struct contains NULL value description
+    // By default the struct contains NULL value description
     uint32_t size = sizeof(uint32_t);
     char* value = nullptr;
 };

@@ -1,12 +1,10 @@
 #include "include/pq/copy_session.hpp"
 
+#include "include/postgres_includes.hpp"
+
 #include <cassert>
 #include <exception>
 #include <limits>
-
-extern "C" {
-#include <libpq-fe.h>
-}
 
 namespace SecondLayer::PostgresPQ {
 

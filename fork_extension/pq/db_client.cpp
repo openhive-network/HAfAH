@@ -14,7 +14,7 @@ DbClient::DbClient() {
     throw std::runtime_error( "Cannot get database name" );
   }
 
-  // Because we use PQ only form postgress triggers/function we don't have to pass user and password
+  // Because we use PQ only from postgress triggers/function we don't have to pass user and password
   std::string connection_string = "dbname=" + database_name;
   m_connection.reset( PQconnectdb( connection_string.c_str() ), PQfinish );
 
@@ -49,11 +49,18 @@ DbClient::~DbClient() {
 
 DbClient&
 DbClient::get(){
-  // Don't care for the lifetime, it will be freed with whole psql client connection process
-  std::call_once( ms_dbclient_create_once, [](){ ms_instance.reset( new DbClient() ); } );
-  assert( ms_instance );
+  // Don't care for the lifetime, it will be released together with whole psql client connection process
+  ms_instance.reset( new DbClient() );
 
-  // TODO: check if connection is still valid ?
+  /* If the PQclient has been disconected by the server, then we try to re-establish the connection once
+   * If the connection is still not valid then the client methods will fail and throw exceptions which become visible on postgres log and consele
+   * Each new trigger/function will try again to re-establish the connection
+   */
+  if ( PQstatus( ms_instance->m_connection.get() ) != CONNECTION_OK ) {
+    elog( WARNING, "PQclient was disconnected from the server and try to reconnect" );
+    ms_instance.reset( new DbClient() );
+  }
+
   return *ms_instance;
 }
 
@@ -63,7 +70,6 @@ DbClient::get_database_name() const {
   return DatumGetCString( db_name );
 }
 
-std::once_flag DbClient::ms_dbclient_create_once;
 std::unique_ptr< DbClient > DbClient::ms_instance;
 
 } // namespace SecondLayer::PostgresPQ
