@@ -20,6 +20,7 @@ namespace ForkExtension::PostgresPQ {
     private:
         void push_tuple_header();
         void push_id_field();
+        void push_table_name( const std::string& _table_name );
     private:
         class TupleHeader;
         static int32_t m_tuple_id; //TODO: only temporary solution, id may be a serilizer or must be initialized for each creation
