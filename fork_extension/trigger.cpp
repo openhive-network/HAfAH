@@ -29,8 +29,7 @@ Datum table_changed_service(PG_FUNCTION_ARGS) try {
   if ( TRIGGER_FIRED_BY_INSERT(trig_data->tg_event) ) {
     assert( trig_data );
     assert( trig_data->tg_trigtuple );
-    // only configuration can deliver db, check if we can use postgres config
-    // TODO: check if connection is still valid
+
     SecondLayer::PostgresPQ::DbClient::get();
 
     auto copy_session = DbClient::get().startCopyToReversibleTuplesSession();
