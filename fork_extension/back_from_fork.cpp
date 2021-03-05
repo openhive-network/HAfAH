@@ -1,6 +1,7 @@
 #include "include/back_from_fork.h"
 
 #include "include/postgres_common.hpp"
+#include "include/postgres_functions.hpp"
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 
@@ -10,16 +11,9 @@
 #include <mutex>
 #include <string>
 
-extern "C" {
-#include <executor/spi.h>
-#include <libpq-fe.h>
-#include <utils/rel.h>
-#include <utils/tuplestore.h>
-}
+#include "include/postgres_includes.hpp"
 
-
-Datum
-back_from_fork(PG_FUNCTION_ARGS) try {
+Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   elog(WARNING, "back_from_fork");
 
   SPI_connect();

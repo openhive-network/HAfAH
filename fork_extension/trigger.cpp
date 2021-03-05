@@ -1,19 +1,13 @@
 #include "include/trigger.h"
 
 #include "include/postgres_common.hpp"
+#include "include/postgres_includes.hpp"
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 
 #include <cassert>
 #include <mutex>
 #include <string>
-
-extern "C" {
-#include <executor/spi.h>
-#include <libpq-fe.h>
-#include <utils/rel.h>
-#include <utils/tuplestore.h>
-}
 
 Datum table_changed_service(PG_FUNCTION_ARGS) try {
 

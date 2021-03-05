@@ -1,20 +1,11 @@
 #include "include/pq/copy_tuples_session.hpp"
 
+#include "include/postgres_includes.hpp"
+
 #include <cassert>
 #include <numeric>
 #include <vector>
 #include <exception>
-
-#include <arpa/inet.h>
-
-extern "C" {
-#include <postgres.h>
-#include <fmgr.h>
-#include <commands/trigger.h>
-#include <executor/spi.h>
-#include <utils/lsyscache.h>
-#include <c.h>
-} // extern "C"
 
 typedef void (*func_ptr_t)(Oid,Oid*,bool*);
 

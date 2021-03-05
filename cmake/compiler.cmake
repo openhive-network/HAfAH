@@ -1,0 +1,3 @@
+MACRO( SETUP_COMPILER )
+    ADD_COMPILE_OPTIONS( -std=c++14 -Wall -Wextra -Werror )
+ENDMACRO()

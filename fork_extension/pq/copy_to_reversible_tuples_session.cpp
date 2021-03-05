@@ -1,16 +1,10 @@
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 
+#include "include/postgres_includes.hpp"
+
 #include <cassert>
 #include <exception>
 #include <vector>
-
-#include <arpa/inet.h>
-
-extern "C" {
-#include <postgres.h>
-#include <fmgr.h>
-#include <commands/trigger.h>
-} // extern "C"
 
 namespace SecondLayer::PostgresPQ {
     int32_t CopyToReversibleTuplesTable::m_tuple_id = 0;
@@ -24,6 +18,10 @@ namespace SecondLayer::PostgresPQ {
 
   void
   CopyToReversibleTuplesTable::push_insert( const std::string& _table_name, const HeapTupleData& _new_tuple, const TupleDesc& _tuple_desc ) {
+    //TODO remove
+    if ( _table_name.empty() )
+      throw std::invalid_argument( "Empty table name" );
+
     push_tuple_header();
     push_id_field(); // id
     push_null_field(); // table name

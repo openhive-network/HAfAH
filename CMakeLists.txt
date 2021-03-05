@@ -2,4 +2,11 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.2 )
 
 PROJECT( psql_tools )
 
+SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake )
+INCLUDE( compiler )
+INCLUDE( libraries )
+INCLUDE( targets )
+
+SETUP_COMPILER()
+
 ADD_SUBDIRECTORY( fork_extension )
