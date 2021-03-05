@@ -8,7 +8,7 @@ extern "C" {
 typedef struct pg_conn PGconn;
 }
 
-namespace SecondLayer::PostgresPQ {
+namespace ForkExtension::PostgresPQ {
 
   class CopyToReversibleTuplesTable;
   class CopyTuplesSession;
@@ -31,4 +31,4 @@ namespace SecondLayer::PostgresPQ {
       static std::unique_ptr< DbClient > ms_instance;
   };
 
-} // namespace SecondLayer::PostgresPQ
+} // namespace ForkExtension::PostgresPQ

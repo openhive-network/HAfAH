@@ -48,7 +48,7 @@ FieldSizeAndValue get_size_and_value( const HeapTupleData& _tuple, const TupleDe
 }
 
 
-namespace SecondLayer::PostgresPQ {
+namespace ForkExtension::PostgresPQ {
 #pragma pack(push, 1)
   struct BinaryFileFormatHeader {
       char header[11] = {'P', 'G','C','O','P','Y','\n','\377','\r','\n','\0'};
@@ -148,4 +148,4 @@ namespace SecondLayer::PostgresPQ {
       push_data( reinterpret_cast< const char* >( &m_trailing_mark ), sizeof( uint16_t ) );
   }
 
-} // namespace SecondLayer::PostgresPQ
+} // namespace ForkExtension::PostgresPQ

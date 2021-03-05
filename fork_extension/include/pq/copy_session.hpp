@@ -7,7 +7,7 @@ extern "C" {
   struct pg_conn;
 }
 
-namespace SecondLayer::PostgresPQ {
+namespace ForkExtension::PostgresPQ {
 
     class CopySession{
     public:
@@ -23,5 +23,5 @@ namespace SecondLayer::PostgresPQ {
         const std::string m_table_name;
     };
 
-} // namespace SecondLayer
+} // namespace ForkExtension
 

@@ -6,7 +6,7 @@
 #include <exception>
 #include <limits>
 
-namespace SecondLayer::PostgresPQ {
+namespace ForkExtension::PostgresPQ {
 
 CopySession::CopySession( std::shared_ptr< PGconn > _connection, const std::string& _table_name )
   : m_connection( std::move(_connection) )
@@ -54,5 +54,5 @@ CopySession::push_data( const char* _data, uint32_t _size ) const {
   }
 }
 
-} // namespace SecondLayer::PostgresPQ
+} // namespace ForkExtension::PostgresPQ
 

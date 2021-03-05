@@ -12,7 +12,7 @@
 
 #include "include/postgres_includes.hpp"
 
-using SecondLayer::PostgresPQ::DbClient;
+using ForkExtension::PostgresPQ::DbClient;
 
 Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   elog(WARNING, "back_from_fork");

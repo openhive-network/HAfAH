@@ -6,7 +6,7 @@
 #include <exception>
 #include <vector>
 
-namespace SecondLayer::PostgresPQ {
+namespace ForkExtension::PostgresPQ {
     int32_t CopyToReversibleTuplesTable::m_tuple_id = 0;
 
     CopyToReversibleTuplesTable::CopyToReversibleTuplesTable( std::shared_ptr< pg_conn > _connection )
@@ -44,4 +44,4 @@ namespace SecondLayer::PostgresPQ {
     push_data( reinterpret_cast< char* >( &tuple_id ), sizeof( uint32_t ) );
   }
 
-} // namespace SecondLayer::PostgresPQ
+} // namespace ForkExtension::PostgresPQ

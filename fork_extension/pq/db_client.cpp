@@ -6,7 +6,7 @@
 #include <exception>
 #include <cassert>
 
-namespace SecondLayer::PostgresPQ {
+namespace ForkExtension::PostgresPQ {
 
 DbClient::DbClient() {
   auto database_name = get_database_name();
@@ -72,6 +72,6 @@ DbClient::get_database_name() const {
 
 std::unique_ptr< DbClient > DbClient::ms_instance;
 
-} // namespace SecondLayer::PostgresPQ
+} // namespace ForkExtension::PostgresPQ
 
 

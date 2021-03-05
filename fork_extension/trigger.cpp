@@ -8,7 +8,7 @@
 #include <mutex>
 #include <string>
 
-using SecondLayer::PostgresPQ::DbClient;
+using ForkExtension::PostgresPQ::DbClient;
 
 Datum table_changed_service(PG_FUNCTION_ARGS) try {
 
@@ -30,7 +30,7 @@ Datum table_changed_service(PG_FUNCTION_ARGS) try {
     assert( trig_data );
     assert( trig_data->tg_trigtuple );
 
-    SecondLayer::PostgresPQ::DbClient::get();
+    ForkExtension::PostgresPQ::DbClient::get();
 
     auto copy_session = DbClient::get().startCopyToReversibleTuplesSession();
     TupleDesc tup_desc = trig_data->tg_relation->rd_att;

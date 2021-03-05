@@ -8,7 +8,7 @@ extern "C" {
   struct HeapTupleData;
 } // extern "C"
 
-namespace SecondLayer::PostgresPQ {
+namespace ForkExtension::PostgresPQ {
 
     class CopyToReversibleTuplesTable : public CopyTuplesSession {
     public:
@@ -25,4 +25,4 @@ namespace SecondLayer::PostgresPQ {
         static int32_t m_tuple_id; //TODO: only temporary solution, id may be a serilizer or must be initialized for each creation
     };
 
-} // namespace SecondLayer::PostgresPQ
+} // namespace ForkExtension::PostgresPQ
