@@ -1,6 +1,5 @@
 #include "include/trigger.h"
 
-#include "include/postgres_common.hpp"
 #include "include/postgres_includes.hpp"
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
@@ -8,6 +7,8 @@
 #include <cassert>
 #include <mutex>
 #include <string>
+
+using SecondLayer::PostgresPQ::DbClient;
 
 Datum table_changed_service(PG_FUNCTION_ARGS) try {
 
@@ -25,19 +26,14 @@ Datum table_changed_service(PG_FUNCTION_ARGS) try {
     return 0;
   }
 
-//  if ( !TRIGGER_FIRED_FOR_ROW(trig_data->tg_event) ) {
-//    elog(WARNING, "table_changed_service: not supported statement trigger");
-//    return 0;
-//  }
-
   if ( TRIGGER_FIRED_BY_INSERT(trig_data->tg_event) ) {
     assert( trig_data );
     assert( trig_data->tg_trigtuple );
     // only configuration can deliver db, check if we can use postgres config
     // TODO: check if connection is still valid
-    std::call_once( DB_CLIENT_ONCE_FLAG, [](){ DB_CLIENT.reset( new SecondLayer::PostgresPQ::DbClient( "test", "marcin", "marcin" ) ); } );
-    assert( DB_CLIENT );
-    auto copy_session = DB_CLIENT->startCopyToReversibleTuplesSession();
+    SecondLayer::PostgresPQ::DbClient::get();
+
+    auto copy_session = DbClient::get().startCopyToReversibleTuplesSession();
     TupleDesc tup_desc = trig_data->tg_relation->rd_att;
 
     if ( trig_data->tg_newtable == nullptr ) {

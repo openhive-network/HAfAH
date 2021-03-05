@@ -10,6 +10,8 @@ extern "C" {
 #include <utils/rel.h>
 #include <utils/tuplestore.h>
 #include <utils/lsyscache.h>
+#include <utils/fmgrprotos.h>
+#include <utils/fmgroids.h>
 #include <c.h>
 }
 #pragma GCC diagnostic pop

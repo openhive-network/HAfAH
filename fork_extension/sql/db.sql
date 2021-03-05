@@ -27,9 +27,12 @@ CREATE FUNCTION back_from_fork() RETURNS void
 AS '/home/syncad/src/psql_tools/cmake-build-release/fork_extension/libfork_extension.so', 'back_from_fork'
 LANGUAGE C;
 
+
 CREATE TRIGGER tbefore AFTER INSERT ON blocks
     REFERENCING NEW TABLE AS new_table
     FOR EACH STATEMENT EXECUTE PROCEDURE table_changed_service();
+
+
 
 
 -- WHEN something is inserted to blocks than tuples are inserted to tuples
@@ -137,4 +140,16 @@ LANGUAGE plpgsql;
 CREATE TRIGGER blocks_ins_row
     AFTER INSERT ON blocks
     FOR EACH ROW EXECUTE PROCEDURE sql_trigger_row();
+
+SELECT current_database();
+
+SELECT *
+FROM pg_settings
+WHERE name = 'port';
+
+SELECT *
+FROM pg_settings;
+
+
+
     
