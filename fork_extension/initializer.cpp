@@ -2,6 +2,7 @@
 
 #include "include/postgres_includes.hpp"
 #include "include/logger.hpp"
+#include "include/sql_commands.hpp"
 
 #include "gen/git_version.hpp"
 
@@ -9,6 +10,7 @@
 
 #include <string>
 
+using namespace std::string_literals;
 
 namespace ForkExtension {
   Initializer::Initializer() try {
@@ -25,16 +27,16 @@ namespace ForkExtension {
 
   void
   Initializer::initialize_tuples_table() const {
-  std::string table_sql = "CREATE TABLE IF NOT EXISTS tuples(id integer, table_name text, tuple_prev bytea, tuple_old bytea)";
-
     SPI_connect();
     BOOST_SCOPE_EXIT_ALL() {
       SPI_finish();
     };
 
-    if ( SPI_execute( table_sql.c_str(), false, 0 ) != SPI_OK_UTILITY ) {
-      throw std::runtime_error( "Cannot create tuples table: " + table_sql );
+    if ( SPI_execute( Sql::CREATE_TUPLES_TABLE, false, 0 ) != SPI_OK_UTILITY ) {
+      throw std::runtime_error( "Cannot create tuples table: "s + Sql::CREATE_TUPLES_TABLE );
     }
+
+    LOG_INFO( "The 'tuples' table is initialized" );
   }
 } // namespace ForkExtension
 

@@ -6,6 +6,8 @@
 #include <exception>
 #include <limits>
 
+using namespace std::string_literals;
+
 namespace ForkExtension::PostgresPQ {
 
 CopySession::CopySession( std::shared_ptr< PGconn > _connection, const std::string& _table_name )
@@ -24,12 +26,12 @@ CopySession::CopySession( std::shared_ptr< PGconn > _connection, const std::stri
 
   if ( open_session_result == nullptr ) {
     auto pg_error_msg = PQerrorMessage( m_connection.get() );
-    throw std::runtime_error( std::string("Cannot execute sql command: ") + binary_copy_cmd + " :" + pg_error_msg );
+    throw std::runtime_error( "Cannot execute sql command: "s + binary_copy_cmd + " :" + pg_error_msg );
   }
 
   if ( PQresultStatus( open_session_result.get() ) != PGRES_COPY_IN ) {
     auto pg_error_msg = PQerrorMessage( m_connection.get() );
-    throw std::runtime_error( std::string("Cannot start copy to table: ") + _table_name + " :" + pg_error_msg );
+    throw std::runtime_error( "Cannot start copy to table: "s + _table_name + " :" + pg_error_msg );
   }
 }
 
@@ -43,14 +45,14 @@ CopySession::push_data( const char* _data, uint32_t _size ) const {
   assert( m_connection );
 
   if ( _size > std::numeric_limits< int32_t >::max() ) {
-    throw std::invalid_argument( "To much bytes to copy into table " + m_table_name );
+    throw std::invalid_argument( "To much bytes to copy into table "s + m_table_name );
   }
 
   static constexpr auto COPY_SUCCESS = 1;
   const auto copy_result = PQputCopyData( m_connection.get(), const_cast< char* >( _data ), static_cast<int32_t>( _size ) );
 
   if ( copy_result != COPY_SUCCESS ) {
-    throw std::runtime_error( std::string("Cannot COPY data to table ") + m_table_name + " :" + PQerrorMessage( m_connection.get() ) );
+    throw std::runtime_error( "Cannot COPY data to table "s + m_table_name + " :" + PQerrorMessage( m_connection.get() ) );
   }
 }
 

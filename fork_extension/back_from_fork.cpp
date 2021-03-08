@@ -4,6 +4,7 @@
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 #include "include/postgres_includes.hpp"
+#include "include/sql_commands.hpp"
 
 #include <boost/scope_exit.hpp>
 
@@ -12,19 +13,20 @@
 #include <string>
 
 using ForkExtension::PostgresPQ::DbClient;
+using namespace std::string_literals;
 
 Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   LOG_INFO("back_from_fork");
 
+  // TODO: needs C++ abstraction for SPI, otherwise evrywhere we will copy this
   SPI_connect();
   BOOST_SCOPE_EXIT_ALL() {
         SPI_finish();
   };
 
   // TODO: change to prepared statements
-  std::string get_stored_tuple = "SELECT tuple_old FROM tuples ORDER BY id DESC";
-  if ( SPI_execute( get_stored_tuple.c_str(), true, 0/*all rows*/ ) != SPI_OK_SELECT ) {
-    throw std::runtime_error( "Cannot execute: " + get_stored_tuple );
+  if ( SPI_execute( ForkExtension::Sql::GET_STORED_TUPLE, true, 0/*all rows*/ ) != SPI_OK_SELECT ) {
+    throw std::runtime_error( "Cannot execute: "s + ForkExtension::Sql::GET_STORED_TUPLE );
   }
 
 
@@ -36,7 +38,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     bool is_null( false );
     auto binary_value = SPI_getbinval( tuple_row, SPI_tuptable->tupdesc, 1, &is_null );
     if ( is_null ) {
-      throw std::runtime_error( "Unexpect null column value in query: " + get_stored_tuple );
+      throw std::runtime_error( "Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLE );
     }
 
     copy_session->push_tuple( DatumGetByteaPP( binary_value ) );
