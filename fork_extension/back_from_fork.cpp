@@ -1,16 +1,14 @@
 #include "include/back_from_fork.h"
 
-#include "include/postgres_functions.hpp"
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
+#include "include/postgres_includes.hpp"
 
 #include <boost/scope_exit.hpp>
 
 #include <cassert>
 #include <mutex>
 #include <string>
-
-#include "include/postgres_includes.hpp"
 
 using ForkExtension::PostgresPQ::DbClient;
 
