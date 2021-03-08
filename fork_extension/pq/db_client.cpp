@@ -1,6 +1,7 @@
 #include "include/pq/db_client.hpp"
 
 #include "include/postgres_includes.hpp"
+#include "include/logger.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 
 #include <exception>
@@ -57,7 +58,7 @@ DbClient::get(){
    * Each new trigger/function will try again to re-establish the connection
    */
   if ( PQstatus( ms_instance->m_connection.get() ) != CONNECTION_OK ) {
-    elog( WARNING, "PQclient was disconnected from the server and try to reconnect" );
+    LOG_WARNING( "PQclient was disconnected from the server and try to reconnect" );
     ms_instance.reset( new DbClient() );
   }
 

@@ -1,5 +1,6 @@
 #include "include/back_from_fork.h"
 
+#include "include/logger.hpp"
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 #include "include/postgres_includes.hpp"
@@ -13,7 +14,7 @@
 using ForkExtension::PostgresPQ::DbClient;
 
 Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
-  elog(WARNING, "back_from_fork");
+  LOG_INFO("back_from_fork");
 
   SPI_connect();
   BOOST_SCOPE_EXIT_ALL() {
@@ -44,17 +45,11 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   PG_RETURN_VOID();
 } //TODO: catches repeated with trigger, fix it
 catch ( std::exception& _exception ) {
-  ereport(
-          ERROR,
-          (errcode(ERRCODE_TRIGGERED_ACTION_EXCEPTION), errmsg("Unhandled exception: %s", _exception.what()))
-  );
+  LOG_ERROR( "Unhandled exception: %s", _exception.what() );
   return 0;
 }
 catch( ... ) {
-  ereport(
-          ERROR,
-          (errcode(ERRCODE_TRIGGERED_ACTION_EXCEPTION), errmsg("Unhandled unknown exception"))
-  );
+  LOG_ERROR( "Unhandled unknown exception" );
   return 0;
 }
 

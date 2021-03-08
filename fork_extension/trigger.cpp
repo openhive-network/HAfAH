@@ -1,6 +1,7 @@
 #include "include/trigger.h"
 
 #include "include/postgres_includes.hpp"
+#include "include/logger.hpp"
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 
@@ -11,18 +12,17 @@
 using ForkExtension::PostgresPQ::DbClient;
 
 Datum table_changed_service(PG_FUNCTION_ARGS) try {
-
-  elog(WARNING, "trigger");
+  LOG_WARNING( "trigger" );
 
   if (!CALLED_AS_TRIGGER(fcinfo)) {
-    elog(ERROR, "table_changed_service: not called by trigger manager");
+    LOG_ERROR( "table_changed_service: not called by trigger manager" );
     return 0;
   }
 
   TriggerData* trig_data = reinterpret_cast<TriggerData*>( fcinfo->context );
 
   if ( !TRIGGER_FIRED_FOR_STATEMENT(trig_data->tg_event) ) {
-    elog(WARNING, "table_changed_service: not supported statement trigger");
+    LOG_WARNING("table_changed_service: not supported statement trigger");
     return 0;
   }
 
@@ -63,17 +63,11 @@ Datum table_changed_service(PG_FUNCTION_ARGS) try {
   return 0;
 }
 catch ( std::exception& _exception ) {
-  ereport(
-    ERROR,
-    (errcode(ERRCODE_TRIGGERED_ACTION_EXCEPTION), errmsg("Unhandled exception: %s", _exception.what()))
-  );
+  LOG_ERROR( "Unhandled exception: %s", _exception.what() );
   return 0;
 }
 catch( ... ) {
-  ereport(
-    ERROR,
-    (errcode(ERRCODE_TRIGGERED_ACTION_EXCEPTION), errmsg("Unhandled unknown exception"))
-  );
+  LOG_ERROR( "Unhandled unknown exception" );
   return 0;
 }
 
