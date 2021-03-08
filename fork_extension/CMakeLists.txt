@@ -4,8 +4,8 @@ SET( target_name fork_extension )
 
 SET( sources
         initialization.cpp
-        trigger.cpp
-        back_from_fork.cpp
+        endpoints/trigger.cpp
+        endpoints/back_from_fork.cpp
         initializer.cpp
         pq/db_client.cpp
         pq/copy_session.cpp
