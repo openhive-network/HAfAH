@@ -12,10 +12,7 @@ CREATE TYPE custom_type AS (
 --1.b a table with different kind of column types. It will be filled by the client
 DROP TABLE IF EXISTS src_table;
 CREATE TABLE src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) );
---1.c a table to save copy of tuples in a generic form (as byte arrays) inserted to src_table. The trigger implemented in the extension will make the copies. The goal is to create this table by the extension.
-DROP TABLE IF EXISTS tuples;
-CREATE TABLE tuples(id integer, table_name text, tuple_prev bytea, tuple_old bytea);
---1.d a table for rows taken from the tuples table - it proofs that deserialiation form byte arrays to rows works
+--1.c a table for rows taken from the tuples table - it proofs that deserialiation form byte arrays to rows works
 DROP TABLE IF EXISTS dst_table;
 CREATE TABLE dst_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) );
 

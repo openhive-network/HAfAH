@@ -5,6 +5,8 @@
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 
+#include "gen/git_version.hpp"
+
 #include <cassert>
 #include <mutex>
 #include <string>

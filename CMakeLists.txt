@@ -4,9 +4,12 @@ PROJECT( psql_tools )
 
 SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake )
 INCLUDE( compiler )
+INCLUDE( git )
 INCLUDE( libraries )
 INCLUDE( targets )
 
 SETUP_OUTPUT_DIRECTORIES()
+
+GENERATE_GIT_VERSION_FILE()
 
 ADD_SUBDIRECTORY( fork_extension )
