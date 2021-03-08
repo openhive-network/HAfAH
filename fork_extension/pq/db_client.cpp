@@ -1,5 +1,6 @@
 #include "include/pq/db_client.hpp"
 
+#include "include/exceptions.hpp"
 #include "include/postgres_includes.hpp"
 #include "include/logger.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
@@ -12,7 +13,7 @@ namespace ForkExtension::PostgresPQ {
 DbClient::DbClient() {
   auto database_name = get_database_name();
   if ( database_name.empty() ) {
-    throw std::runtime_error( "Cannot get database name" );
+    throw ObjectInitializationException( "Cannot get database name" );
   }
 
   // Because we use PQ only from postgress triggers/function we don't have to pass user and password
@@ -20,14 +21,14 @@ DbClient::DbClient() {
   m_connection.reset( PQconnectdb( connection_string.c_str() ), PQfinish );
 
   if ( m_connection == nullptr ) {
-    throw std::invalid_argument( "Cannot connect to databse '" + database_name + "'" );
+    throw ObjectInitializationException( "Cannot connect to databse '" + database_name + "'" );
   }
 
   if (PQstatus(m_connection.get()) != CONNECTION_OK)
   {
     std::string error = "Failed connection to database " + database_name + " : " + PQerrorMessage(m_connection.get());
     m_connection.reset();
-    throw std::runtime_error( error );
+    throw ObjectInitializationException( error );
   }
 }
 

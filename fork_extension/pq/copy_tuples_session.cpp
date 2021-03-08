@@ -1,5 +1,6 @@
 #include "include/pq/copy_tuples_session.hpp"
 
+#include "include/exceptions.hpp"
 #include "include/postgres_includes.hpp"
 
 #include <cassert>
@@ -67,7 +68,11 @@ namespace ForkExtension::PostgresPQ {
     static_assert( sizeof( char ) == 1 );
 
     static const BinaryFileFormatHeader header;
-    push_data( reinterpret_cast< const char* >( &header ), sizeof( BinaryFileFormatHeader ) );
+    try {
+      push_data(reinterpret_cast< const char * >( &header ), sizeof(BinaryFileFormatHeader));
+    } catch ( std::exception& _exception ) {
+      throw ObjectInitializationException( _exception.what() );
+    }
   }
 
   CopyTuplesSession::~CopyTuplesSession() {

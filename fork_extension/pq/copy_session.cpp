@@ -1,6 +1,8 @@
 #include "include/pq/copy_session.hpp"
 
 #include "include/postgres_includes.hpp"
+#include "include/exceptions.hpp"
+
 
 #include <cassert>
 #include <exception>
@@ -14,11 +16,11 @@ CopySession::CopySession( std::shared_ptr< PGconn > _connection, const std::stri
   : m_connection( std::move(_connection) )
   , m_table_name( _table_name ) {
   if ( m_connection  == nullptr ) {
-    throw std::invalid_argument( "No connection to postgres" );
+    throw ObjectInitializationException( "No connection to postgres" );
   }
 
   if ( _table_name.empty() ) {
-    throw std::invalid_argument( "Incorrect table name" );
+    throw ObjectInitializationException( "Incorrect table name "s + _table_name  );
   }
 
   std::string binary_copy_cmd = "COPY " + _table_name + " FROM STDIN binary";
@@ -26,12 +28,12 @@ CopySession::CopySession( std::shared_ptr< PGconn > _connection, const std::stri
 
   if ( open_session_result == nullptr ) {
     auto pg_error_msg = PQerrorMessage( m_connection.get() );
-    throw std::runtime_error( "Cannot execute sql command: "s + binary_copy_cmd + " :" + pg_error_msg );
+    throw ObjectInitializationException( "Cannot execute sql command: "s + binary_copy_cmd + " :" + pg_error_msg );
   }
 
   if ( PQresultStatus( open_session_result.get() ) != PGRES_COPY_IN ) {
     auto pg_error_msg = PQerrorMessage( m_connection.get() );
-    throw std::runtime_error( "Cannot start copy to table: "s + _table_name + " :" + pg_error_msg );
+    throw ObjectInitializationException( "Cannot start copy to table: "s + _table_name + " :" + pg_error_msg );
   }
 }
 
