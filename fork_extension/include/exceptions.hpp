@@ -1,6 +1,18 @@
 #pragma once
 
-#include <exception>
+#include "include/logger.hpp"
+
+#include <stdexcept>
+#include <string>
+
+#define THROW_RUNTIME_ERROR( _message )                                        \
+LOG_ERROR( "Throw exception: %s",  std::string( _message ).c_str() );          \
+throw std::runtime_error( _message )                                           \
+
+#define THROW_INITIALIZATION_ERROR( _message )                                      \
+LOG_ERROR( "Throw inialization exception: %s", std::string( _message ).c_str() );   \
+throw ObjectInitializationException( _message )                                     \
+
 
 namespace ForkExtension {
 

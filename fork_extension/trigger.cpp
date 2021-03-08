@@ -1,7 +1,7 @@
 #include "include/trigger.h"
 
+#include "include/exceptions.hpp"
 #include "include/postgres_includes.hpp"
-#include "include/logger.hpp"
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 
@@ -38,7 +38,7 @@ Datum table_changed_service(PG_FUNCTION_ARGS) try {
     TupleDesc tup_desc = trig_data->tg_relation->rd_att;
 
     if ( trig_data->tg_newtable == nullptr ) {
-      throw std::runtime_error( "No trigger tuple for insert" );
+      THROW_RUNTIME_ERROR( "No trigger tuple for insert" );
     }
 
     auto slot = MakeTupleTableSlot();
@@ -46,7 +46,7 @@ Datum table_changed_service(PG_FUNCTION_ARGS) try {
     tuplestore_rescan( trig_data->tg_newtable );
     while ( tuplestore_gettupleslot( trig_data->tg_newtable, true, false, slot ) ) {
       if ( !slot->tts_tuple ) {
-        throw std::runtime_error( "Virtual tuples are not supported" );
+        THROW_RUNTIME_ERROR( "Virtual tuples are not supported" );
       }
       copy_session->push_insert(SPI_getrelname(trig_data->tg_relation), *slot->tts_tuple, tup_desc);
     } // while next tuple

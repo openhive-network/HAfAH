@@ -1,6 +1,6 @@
 #include "include/back_from_fork.h"
 
-#include "include/logger.hpp"
+#include "include/exceptions.hpp"
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 #include "include/postgres_includes.hpp"
@@ -26,7 +26,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
 
   // TODO: change to prepared statements
   if ( SPI_execute( ForkExtension::Sql::GET_STORED_TUPLE, true, 0/*all rows*/ ) != SPI_OK_SELECT ) {
-    throw std::runtime_error( "Cannot execute: "s + ForkExtension::Sql::GET_STORED_TUPLE );
+    THROW_RUNTIME_ERROR( "Cannot execute: "s + ForkExtension::Sql::GET_STORED_TUPLE );
   }
 
 
@@ -38,7 +38,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     bool is_null( false );
     auto binary_value = SPI_getbinval( tuple_row, SPI_tuptable->tupdesc, 1, &is_null );
     if ( is_null ) {
-      throw std::runtime_error( "Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLE );
+      THROW_RUNTIME_ERROR( "Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLE );
     }
 
     copy_session->push_tuple( DatumGetByteaPP( binary_value ) );

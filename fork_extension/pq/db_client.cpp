@@ -13,7 +13,7 @@ namespace ForkExtension::PostgresPQ {
 DbClient::DbClient() {
   auto database_name = get_database_name();
   if ( database_name.empty() ) {
-    throw ObjectInitializationException( "Cannot get database name" );
+    THROW_INITIALIZATION_ERROR( "Cannot get database name" );
   }
 
   // Because we use PQ only from postgress triggers/function we don't have to pass user and password
@@ -21,14 +21,14 @@ DbClient::DbClient() {
   m_connection.reset( PQconnectdb( connection_string.c_str() ), PQfinish );
 
   if ( m_connection == nullptr ) {
-    throw ObjectInitializationException( "Cannot connect to databse '" + database_name + "'" );
+    THROW_INITIALIZATION_ERROR( "Cannot connect to databse '" + database_name + "'" );
   }
 
   if (PQstatus(m_connection.get()) != CONNECTION_OK)
   {
     std::string error = "Failed connection to database " + database_name + " : " + PQerrorMessage(m_connection.get());
     m_connection.reset();
-    throw ObjectInitializationException( error );
+    THROW_INITIALIZATION_ERROR( error );
   }
 }
 

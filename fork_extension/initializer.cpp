@@ -1,7 +1,7 @@
 #include "include/initializer.hpp"
 
+#include "include/exceptions.hpp"
 #include "include/postgres_includes.hpp"
-#include "include/logger.hpp"
 #include "include/sql_commands.hpp"
 
 #include "gen/git_version.hpp"
@@ -33,7 +33,7 @@ namespace ForkExtension {
     };
 
     if ( SPI_execute( Sql::CREATE_TUPLES_TABLE, false, 0 ) != SPI_OK_UTILITY ) {
-      throw std::runtime_error( "Cannot create tuples table: "s + Sql::CREATE_TUPLES_TABLE );
+      THROW_RUNTIME_ERROR( "Cannot create tuples table: "s + Sql::CREATE_TUPLES_TABLE );
     }
 
     LOG_INFO( "The 'tuples' table is initialized" );

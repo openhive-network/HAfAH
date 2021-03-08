@@ -27,7 +27,7 @@ FieldSizeAndValue get_size_and_value( const HeapTupleData& _tuple, const TupleDe
   Datum binary_value = SPI_getbinval( const_cast< HeapTuple >( &_tuple ), _tuple_desc, _column, &is_null );
 
   if ( SPI_result == SPI_ERROR_NOATTRIBUTE ) {
-    throw std::runtime_error( "Cannot get binary value from a tuple column " + std::to_string( _column ) );
+    THROW_RUNTIME_ERROR( "Cannot get binary value from a tuple column " + std::to_string( _column ) );
   }
 
   if ( is_null )
@@ -71,7 +71,7 @@ namespace ForkExtension::PostgresPQ {
     try {
       push_data(reinterpret_cast< const char * >( &header ), sizeof(BinaryFileFormatHeader));
     } catch ( std::exception& _exception ) {
-      throw ObjectInitializationException( _exception.what() );
+      THROW_INITIALIZATION_ERROR( _exception.what() );
     }
   }
 
@@ -79,7 +79,7 @@ namespace ForkExtension::PostgresPQ {
     try {
       push_trailing();
     } catch ( std::exception& _exception ) {
-      //TODO: cannot log to postgres here
+      LOG_ERROR( "Cannot push COPY trailing: %s", _exception.what() );
     }
   }
 
