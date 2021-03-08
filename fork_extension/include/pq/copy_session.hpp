@@ -16,12 +16,23 @@ namespace ForkExtension::PostgresPQ {
         CopySession(const CopySession&) = delete;
         CopySession& operator=(const CopySession&) = delete;
 
-        void push_data( const char* _data, uint32_t _size ) const;
+        template< typename _PushedType >
+        void push_data( const _PushedType* _data, uint32_t _size ) const;
+
+    private:
+        void push_data_internal( const char* _data, uint32_t _size ) const;
 
     private:
         std::shared_ptr< pg_conn > m_connection;
         const std::string m_table_name;
     };
 
-} // namespace ForkExtension
+    template< typename _PushedType >
+    inline void
+    CopySession::push_data( const _PushedType* _data, uint32_t _size  ) const {
+      push_data_internal( reinterpret_cast< const char* >( _data ), _size );
+    }
+
+
+    } // namespace ForkExtension
 

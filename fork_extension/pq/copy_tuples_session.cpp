@@ -69,7 +69,7 @@ namespace ForkExtension::PostgresPQ {
 
     static const BinaryFileFormatHeader header;
     try {
-      push_data(reinterpret_cast< const char * >( &header ), sizeof(BinaryFileFormatHeader));
+      push_data( &header, sizeof(BinaryFileFormatHeader));
     } catch ( std::exception& _exception ) {
       THROW_INITIALIZATION_ERROR( _exception.what() );
     }
@@ -97,7 +97,7 @@ namespace ForkExtension::PostgresPQ {
   void
   CopyTuplesSession::push_tuple_header( uint16_t _number_of_fields ) {
     uint16_t number_of_fields = htons( _number_of_fields );
-    push_data( reinterpret_cast< const char* >( &number_of_fields ), sizeof( uint16_t ) );
+    push_data( &number_of_fields, sizeof( uint16_t ) );
   }
 
   void
@@ -122,11 +122,11 @@ namespace ForkExtension::PostgresPQ {
     // [ tuple_size(32b) [ number_of_columns(16b), size_of_column1(32b), data_of_column1(size_of_column1)...] ]
     //0. push binary tuple size
     tuple_size = htonl( tuple_size );
-    push_data( reinterpret_cast< char* >( &tuple_size ), sizeof( uint32_t ) );
+    push_data( &tuple_size, sizeof( uint32_t ) );
 
     //1. number of columns
     uint16_t number_of_fields = htons( binary_values.size() );
-    push_data( reinterpret_cast< char* >( &number_of_fields ), sizeof(uint16_t) );
+    push_data( &number_of_fields, sizeof(uint16_t) );
 
     //2. push each field ( value of columns )
     for ( auto field_value_and_size : binary_values ) {
@@ -137,20 +137,20 @@ namespace ForkExtension::PostgresPQ {
 
       //2a push size of field
       uint32_t len = htonl( field_value_and_size.size );
-      push_data( reinterpret_cast< char* >( &len ), sizeof(uint32_t) );
+      push_data( &len, sizeof(uint32_t) );
       //2b push field's data
-      push_data( reinterpret_cast< char* >(field_value_and_size.value), field_value_and_size.size );
+      push_data( field_value_and_size.value, field_value_and_size.size );
     }
   }
 
   void
   CopyTuplesSession::push_null_field() const {
-    push_data( reinterpret_cast< const char* >(&m_null_field_size), sizeof( uint32_t ) );
+    push_data( &m_null_field_size, sizeof( uint32_t ) );
   }
 
   void
   CopyTuplesSession::push_trailing() const {
-      push_data( reinterpret_cast< const char* >( &m_trailing_mark ), sizeof( uint16_t ) );
+      push_data( &m_trailing_mark, sizeof( uint16_t ) );
   }
 
 } // namespace ForkExtension::PostgresPQ

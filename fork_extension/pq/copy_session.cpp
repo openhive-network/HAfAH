@@ -43,7 +43,7 @@ CopySession::~CopySession() {
 }
 
 void
-CopySession::push_data( const char* _data, uint32_t _size ) const {
+CopySession::push_data_internal( const char* _data, uint32_t _size ) const {
   assert( m_connection );
 
   if ( _size > std::numeric_limits< int32_t >::max() ) {

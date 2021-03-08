@@ -40,15 +40,15 @@ namespace ForkExtension::PostgresPQ {
   void
   CopyToReversibleTuplesTable::push_id_field() {
     static uint32_t id_size = htonl( sizeof( uint32_t ) );
-    push_data( reinterpret_cast< char* >( &id_size ), sizeof( uint32_t ) );
+    push_data( &id_size, sizeof( uint32_t ) );
     auto tuple_id = htonl( m_tuple_id );
-    push_data( reinterpret_cast< char* >( &tuple_id ), sizeof( uint32_t ) );
+    push_data( &tuple_id, sizeof( uint32_t ) );
   }
 
   void
   CopyToReversibleTuplesTable::push_table_name( const std::string& _table_name ) {
     uint32_t name_size = htonl( _table_name.size() );
-    push_data( reinterpret_cast< char* >( &name_size ), sizeof( uint32_t ) );
+    push_data( &name_size, sizeof( uint32_t ) );
     push_data( _table_name.c_str(), _table_name.size()  );
   }
 
