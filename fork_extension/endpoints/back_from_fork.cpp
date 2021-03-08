@@ -1,5 +1,3 @@
-#include "include/back_from_fork.h"
-
 #include "include/exceptions.hpp"
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
@@ -14,6 +12,10 @@
 
 using ForkExtension::PostgresPQ::DbClient;
 using namespace std::string_literals;
+
+extern "C" {
+PG_FUNCTION_INFO_V1(back_from_fork);
+}
 
 Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   LOG_INFO("back_from_fork");

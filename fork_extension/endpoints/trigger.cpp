@@ -1,5 +1,3 @@
-#include "include/trigger.h"
-
 #include "include/exceptions.hpp"
 #include "include/postgres_includes.hpp"
 #include "include/pq/db_client.hpp"
@@ -12,6 +10,10 @@
 #include <string>
 
 using ForkExtension::PostgresPQ::DbClient;
+
+extern "C" {
+PG_FUNCTION_INFO_V1(table_changed_service);
+}
 
 Datum table_changed_service(PG_FUNCTION_ARGS) try {
   LOG_WARNING( "trigger" );
