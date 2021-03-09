@@ -17,7 +17,8 @@ namespace ForkExtension {
     LOG_WARNING( "Initialize hive fork extension ver.: " GIT_REVISION );
 
     initialize_tuples_table();
-    initialize_back_from_fork_function();
+    initialize_function( BACK_FROM_FORK_FUNCTION, "void" );
+    initialize_function( ON_TABLE_CHANGE_FUNCTION, "trigger" );
   }
   catch ( std::exception& _exception ) {
     LOG_ERROR( "Unhandled exception: %s", _exception.what() );
@@ -41,23 +42,25 @@ namespace ForkExtension {
   }
 
   void
-  Initializer::initialize_back_from_fork_function() const {
-    if ( function_exists(BACK_FROM_FORK_FUNCTION) ) {
-      LOG_INFO( "The " BACK_FROM_FORK_FUNCTION "function already initialized" );
+  Initializer::initialize_function( const std::string& _function_name, const std::string& _sql_return_type ) const {
+    if ( function_exists( _function_name ) ) {
+      LOG_INFO( "The '%s' function already initialized", _function_name.c_str() );
       return;
     }
 
 
     SPI_connect();
     BOOST_SCOPE_EXIT_ALL() {
-      SPI_finish();
-    };
+                               SPI_finish();
+                           };
 
-    if ( SPI_execute( Sql::CREATE_BACK_FROM_FORK_FUNCTION, false, 0 ) != SPI_OK_UTILITY ) {
-      THROW_RUNTIME_ERROR( "Cannot create function: "s + BACK_FROM_FORK_FUNCTION );
+    const auto execute_cmd
+      = "CREATE FUNCTION "s + _function_name + "() RETURNS "s + _sql_return_type + " AS '$libdir/plugins/libfork_extension.so', '"s + _function_name + "' LANGUAGE C"s;
+    if ( SPI_execute( execute_cmd.c_str(), false, 0 ) != SPI_OK_UTILITY ) {
+      THROW_RUNTIME_ERROR( "Cannot create function: "s + _function_name );
     }
 
-    LOG_INFO( "The " BACK_FROM_FORK_FUNCTION " function is initialized" );
+    LOG_INFO( "The %s function is initialized", _function_name.c_str() );
   }
 
   bool
@@ -74,5 +77,3 @@ namespace ForkExtension {
     return SPI_processed == 1;
   }
 } // namespace ForkExtension
-
-

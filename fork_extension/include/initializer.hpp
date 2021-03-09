@@ -21,5 +21,6 @@ namespace ForkExtension {
       void initialize_back_from_fork_function() const;
 
       bool function_exists( const std::string& _function_name ) const;
+      void initialize_function( const std::string& _function_name, const std::string& _sql_return_type ) const;
   };
 } // namespace ForkExtension

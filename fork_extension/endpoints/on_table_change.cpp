@@ -12,10 +12,10 @@
 using ForkExtension::PostgresPQ::DbClient;
 
 extern "C" {
-PG_FUNCTION_INFO_V1(table_changed_service);
+PG_FUNCTION_INFO_V1(on_table_change);
 }
 
-Datum table_changed_service(PG_FUNCTION_ARGS) try {
+Datum on_table_change(PG_FUNCTION_ARGS) try {
   LOG_WARNING( "trigger" );
 
   if (!CALLED_AS_TRIGGER(fcinfo)) {
@@ -45,12 +45,13 @@ Datum table_changed_service(PG_FUNCTION_ARGS) try {
 
     auto slot = MakeTupleTableSlot();
 
+    const std::string trigg_table_name = SPI_getrelname(trig_data->tg_relation);
     tuplestore_rescan( trig_data->tg_newtable );
     while ( tuplestore_gettupleslot( trig_data->tg_newtable, true, false, slot ) ) {
       if ( !slot->tts_tuple ) {
         THROW_RUNTIME_ERROR( "Virtual tuples are not supported" );
       }
-      copy_session->push_insert(SPI_getrelname(trig_data->tg_relation), *slot->tts_tuple, tup_desc);
+      copy_session->push_insert(trigg_table_name, *slot->tts_tuple, tup_desc);
     } // while next tuple
     return 0;
   }
