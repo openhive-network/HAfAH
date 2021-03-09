@@ -10,11 +10,13 @@
 
 #include <string>
 
+#include <unistd.h>
+
 using namespace std::string_literals;
 
 namespace ForkExtension {
   Initializer::Initializer() try {
-    LOG_WARNING( "Initialize hive fork extension ver.: " GIT_REVISION );
+    LOG_WARNING( "Initialize hive fork extension ver.: %s pid: %d", GIT_REVISION, getpid() );
 
     initialize_tuples_table();
     initialize_function( BACK_FROM_FORK_FUNCTION, "void" );
