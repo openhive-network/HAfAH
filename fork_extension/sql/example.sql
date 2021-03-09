@@ -1,6 +1,9 @@
 ﻿--Example of fork_extention usage
 --The plugin has not been finished yet, and at the moment it can be only considered as a demo version to show its potential
 
+--0. Load the extension plugin
+LOAD '$libdir/plugins/libfork_extension.so'
+
 --1. Lets create some not trivial tables
 --1.a custom type to proof that they can be supported
 DROP TYPE IF EXISTS custom_type CASCADE;
@@ -26,12 +29,6 @@ LANGUAGE C;
 CREATE TRIGGER extension_trigger AFTER INSERT ON src_table
     REFERENCING NEW TABLE AS new_table
     FOR EACH STATEMENT EXECUTE PROCEDURE table_changed_service();
-
---2.b back_from_fork_function will deserialize tuples form tables table and insert them to dst_table
-DROP FUNCTION IF EXISTS back_from_fork CASCADE;
-CREATE FUNCTION back_from_fork() RETURNS void
-AS '/home/syncad/src/psql_tools/cmake-build-release/lib/libfork_extension.so', 'back_from_fork' -- please chage here for correct .so path
-LANGUAGE C;
 
 --3. Insert 10000 rows to src table, each of them will be copied to the tuples table
 INSERT INTO src_table ( smth, name, values, data, name2, num ) 

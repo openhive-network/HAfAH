@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace ForkExtension {
   /* The object of this type is a global variable in initialization.hpp
    * In its ctro db is initialized and prepared to work with fork extenstion
@@ -16,5 +18,8 @@ namespace ForkExtension {
 
   private:
       void initialize_tuples_table() const;
+      void initialize_back_from_fork_function() const;
+
+      bool function_exists( const std::string& _function_name ) const;
   };
 } // namespace ForkExtension

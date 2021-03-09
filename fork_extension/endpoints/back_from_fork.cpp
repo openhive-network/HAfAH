@@ -27,8 +27,8 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   };
 
   // TODO: change to prepared statements
-  if ( SPI_execute( ForkExtension::Sql::GET_STORED_TUPLE, true, 0/*all rows*/ ) != SPI_OK_SELECT ) {
-    THROW_RUNTIME_ERROR( "Cannot execute: "s + ForkExtension::Sql::GET_STORED_TUPLE );
+  if (SPI_execute(ForkExtension::Sql::GET_STORED_TUPLES, true, 0/*all rows*/ ) != SPI_OK_SELECT ) {
+    THROW_RUNTIME_ERROR( "Cannot execute: "s + ForkExtension::Sql::GET_STORED_TUPLES );
   }
 
 
@@ -40,7 +40,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     bool is_null( false );
     auto binary_value = SPI_getbinval( tuple_row, SPI_tuptable->tupdesc, 1, &is_null );
     if ( is_null ) {
-      THROW_RUNTIME_ERROR( "Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLE );
+      THROW_RUNTIME_ERROR( "Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLES );
     }
 
     copy_session->push_tuple( DatumGetByteaPP( binary_value ) );

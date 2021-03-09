@@ -14,3 +14,6 @@ SET( sources
         )
 
 ADD_RUNTIME_LOADED_LIB( ${target_name} "${sources}" )
+
+MESSAGE( STATUS "Postgres libdir: ${PostgreSQL_LIBRARY_DIRS}" )
+INSTALL( TARGETS ${target_name} DESTINATION ${POSTGRES_LIBDIR}/plugins )
