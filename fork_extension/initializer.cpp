@@ -35,7 +35,7 @@ namespace ForkExtension {
     };
 
     if ( SPI_execute( Sql::CREATE_TUPLES_TABLE, false, 0 ) != SPI_OK_UTILITY ) {
-      THROW_RUNTIME_ERROR( "Cannot create tuples table: "s + Sql::CREATE_TUPLES_TABLE );
+      THROW_RUNTIME_ERROR( "Cannot create tuples table : "s + Sql::CREATE_TUPLES_TABLE );
     }
 
     LOG_INFO( "The " TUPLES_TABLE_NAME "table is initialized" );
