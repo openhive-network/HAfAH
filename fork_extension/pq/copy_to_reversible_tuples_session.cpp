@@ -2,6 +2,7 @@
 
 #include "include/exceptions.hpp"
 #include "include/postgres_includes.hpp"
+#include "include/sql_commands.hpp"
 
 #include <cassert>
 #include <exception>
@@ -11,7 +12,7 @@ namespace ForkExtension::PostgresPQ {
     int32_t CopyToReversibleTuplesTable::m_tuple_id = 0;
 
     CopyToReversibleTuplesTable::CopyToReversibleTuplesTable( std::shared_ptr< pg_conn > _connection )
-  : CopyTuplesSession( _connection, "tuples" )
+  : CopyTuplesSession( _connection, TUPLES_TABLE_NAME )
   {
   }
 
@@ -19,7 +20,6 @@ namespace ForkExtension::PostgresPQ {
 
   void
   CopyToReversibleTuplesTable::push_insert( const std::string& _table_name, const HeapTupleData& _new_tuple, const TupleDesc& _tuple_desc ) {
-    //TODO remove
     if ( _table_name.empty() )
       THROW_RUNTIME_ERROR( "Empty table name" );
 
@@ -39,7 +39,7 @@ namespace ForkExtension::PostgresPQ {
 
   void
   CopyToReversibleTuplesTable::push_id_field() {
-    static uint32_t id_size = htonl( sizeof( uint32_t ) );
+    static const uint32_t id_size = htonl( sizeof( uint32_t ) );
     push_data( &id_size, sizeof( uint32_t ) );
     auto tuple_id = htonl( m_tuple_id );
     push_data( &tuple_id, sizeof( uint32_t ) );

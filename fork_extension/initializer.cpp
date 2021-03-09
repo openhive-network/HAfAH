@@ -36,7 +36,7 @@ namespace ForkExtension {
       THROW_RUNTIME_ERROR( "Cannot create tuples table: "s + Sql::CREATE_TUPLES_TABLE );
     }
 
-    LOG_INFO( "The 'tuples' table is initialized" );
+    LOG_INFO( "The " TUPLES_TABLE_NAME "table is initialized" );
   }
 } // namespace ForkExtension
 
