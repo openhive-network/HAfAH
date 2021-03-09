@@ -16,6 +16,8 @@ namespace ForkExtension::PostgresPQ {
         CopySession(const CopySession&) = delete;
         CopySession& operator=(const CopySession&) = delete;
 
+        std::string get_table_name() const;
+
         template< typename _PushedType >
         void push_data( const _PushedType* _data, uint32_t _size ) const;
 

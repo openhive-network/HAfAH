@@ -30,7 +30,7 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
     return 0;
   }
 
-  if ( TRIGGER_FIRED_BY_INSERT(trig_data->tg_event) ) {
+  if ( TRIGGER_FIRED_BY_DELETE(trig_data->tg_event) ) {
     assert( trig_data );
     assert( trig_data->tg_trigtuple );
 
@@ -39,28 +39,30 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
     auto copy_session = DbClient::get().startCopyToReversibleTuplesSession();
     TupleDesc tup_desc = trig_data->tg_relation->rd_att;
 
-    if ( trig_data->tg_newtable == nullptr ) {
-      THROW_RUNTIME_ERROR( "No trigger tuple for insert" );
+    if ( trig_data->tg_oldtable == nullptr ) {
+      THROW_RUNTIME_ERROR( "No trigger tuple for delete" );
     }
 
     auto slot = MakeTupleTableSlot();
 
     const std::string trigg_table_name = SPI_getrelname(trig_data->tg_relation);
-    tuplestore_rescan( trig_data->tg_newtable );
-    while ( tuplestore_gettupleslot( trig_data->tg_newtable, true, false, slot ) ) {
+    tuplestore_rescan( trig_data->tg_oldtable );
+    while ( tuplestore_gettupleslot( trig_data->tg_oldtable, true, false, slot ) ) {
       if ( !slot->tts_tuple ) {
         THROW_RUNTIME_ERROR( "Virtual tuples are not supported" );
       }
-      copy_session->push_insert(trigg_table_name, *slot->tts_tuple, tup_desc);
+      copy_session->push_delete(trigg_table_name, *slot->tts_tuple, tup_desc);
     } // while next tuple
     return 0;
   }
 
   if ( TRIGGER_FIRED_BY_UPDATE(trig_data->tg_event) ) {
+    LOG_WARNING("Table update not supported");
     return 0;
   }
 
-  if ( TRIGGER_FIRED_BY_DELETE(trig_data->tg_event) ) {
+  if ( TRIGGER_FIRED_BY_INSERT(trig_data->tg_event) ) {
+    LOG_WARNING("Insert not supported");
     return 0;
   }
 

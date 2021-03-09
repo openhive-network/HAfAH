@@ -42,6 +42,11 @@ CopySession::~CopySession() {
   PQputCopyEnd( m_connection.get(), nullptr );
 }
 
+std::string
+CopySession::get_table_name() const {
+  return m_table_name;
+}
+
 void
 CopySession::push_data_internal( const char* _data, uint32_t _size ) const {
   assert( m_connection );

@@ -15,7 +15,7 @@ namespace ForkExtension::PostgresPQ {
         explicit CopyToReversibleTuplesTable( std::shared_ptr< pg_conn > _connection );
         ~CopyToReversibleTuplesTable();
 
-        void push_insert( const std::string& _table_name, const HeapTupleData& _new_tuple, const TupleDesc& _tuple_desc );
+        void push_delete(const std::string& _table_name, const HeapTupleData& _deleted_tuple, const TupleDesc& _tuple_desc );
 
     private:
         void push_tuple_header();

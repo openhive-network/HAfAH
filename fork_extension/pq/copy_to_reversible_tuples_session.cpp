@@ -19,7 +19,7 @@ namespace ForkExtension::PostgresPQ {
   CopyToReversibleTuplesTable::~CopyToReversibleTuplesTable() {}
 
   void
-  CopyToReversibleTuplesTable::push_insert( const std::string& _table_name, const HeapTupleData& _new_tuple, const TupleDesc& _tuple_desc ) {
+  CopyToReversibleTuplesTable::push_delete(const std::string& _table_name, const HeapTupleData& _deleted_tuple, const TupleDesc& _tuple_desc ) {
     if ( _table_name.empty() ) {
       THROW_RUNTIME_ERROR("Empty table name");
     }
@@ -27,8 +27,8 @@ namespace ForkExtension::PostgresPQ {
     push_tuple_header();
     push_id_field(); // id
     push_table_name( _table_name ); // table name
-    push_null_field(); // prev tuple
-    push_tuple_as_next_column( _new_tuple, _tuple_desc );
+    push_tuple_as_next_column(_deleted_tuple, _tuple_desc ); // prev tuple
+    push_null_field(); // old tuple
     ++m_tuple_id;
   }
 

@@ -31,19 +31,25 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     THROW_RUNTIME_ERROR( "Cannot execute: "s + ForkExtension::Sql::GET_STORED_TUPLES );
   }
 
-
-  // TODO: add structure which describe schema
-  auto copy_session = DbClient::get().startCopyTuplesSession( "dst_table" );
-
+  std::unique_ptr< ForkExtension::PostgresPQ::CopyTuplesSession > current_session;
+  constexpr auto table_name_column = 1;
+  constexpr auto prev_tuple_column = 2;
   for ( uint64_t row =0; row < SPI_processed; ++row ) {
     HeapTuple tuple_row = *(SPI_tuptable->vals + row);
     bool is_null( false );
-    auto binary_value = SPI_getbinval( tuple_row, SPI_tuptable->tupdesc, 1, &is_null );
+    auto table_name = SPI_getvalue( tuple_row, SPI_tuptable->tupdesc, table_name_column );
+    if ( !table_name ) {
+      THROW_RUNTIME_ERROR( "Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLES );
+    }
+    if ( !current_session || current_session->get_table_name() != table_name ) {
+      current_session = DbClient::get().startCopyTuplesSession( table_name );
+    }
+    auto binary_value = SPI_getbinval( tuple_row, SPI_tuptable->tupdesc, prev_tuple_column, &is_null );
     if ( is_null ) {
       THROW_RUNTIME_ERROR( "Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLES );
     }
 
-    copy_session->push_tuple( DatumGetByteaPP( binary_value ) );
+    current_session->push_tuple( DatumGetByteaPP( binary_value ) );
   }
 
   PG_RETURN_VOID();
