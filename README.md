@@ -27,4 +27,14 @@ You can check postgres `$libdir` directory with: `pg_config --pkglibdir`
 The best option is to execute `make install` from build directory
 
 # Starting plugin
-To start plugin please execute as a postgres db client: `LOAD '$libdir/plugins/libfork_extension.so'` 
+1. To start plugin please execute as a postgres db client: `LOAD '$libdir/plugins/libfork_extension.so'` 
+2. create trigger on observed table for example:
+```
+CREATE TRIGGER on_table_change AFTER DELETE ON table_name
+    REFERENCING OLD TABLE AS old_table
+    FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+```
+
+# Known problem
+1. race condition during initialization process, initialization must be implemented in `PG_init` function
+2. only delete operation on observed table is supported

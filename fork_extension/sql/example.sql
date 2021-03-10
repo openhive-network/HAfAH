@@ -43,3 +43,5 @@ SELECT * FROM src_table  LIMIT 100;
 DROP FUNCTION IF EXISTS on_table_change CASCADE;
 DROP FUNCTION IF EXISTS back_from_fork;
 DROP TABLE IF EXISTS tuples;
+
+SELECT * FROM pg_proc WHERE proname = 'back_from_fork';
