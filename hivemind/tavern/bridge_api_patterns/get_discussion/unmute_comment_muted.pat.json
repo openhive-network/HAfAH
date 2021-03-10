@@ -1,14 +1,18 @@
 {
-  "alice/after-member-comment-to-please-comment-hive3-02": {
+  "alice/after-member-comment-to-please-comment-hive1": {
     "active_votes": [],
     "author": "alice",
     "author_payout_value": "0.000 HBD",
     "author_reputation": 25,
+    "author_role": "member",
+    "author_title": "",
     "beneficiaries": [],
     "blacklists": [],
     "body": "First comment after being member.01",
-    "category": "hive-198723",
+    "category": "hive-171487",
     "children": 0,
+    "community": "hive-171487",
+    "community_title": "Banana",
     "created": "2016-09-15T19:47:48",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
@@ -17,13 +21,13 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "parent_author": "test-safari",
-    "parent_permlink": "please-comment-hive3-02",
+    "parent_permlink": "please-comment-hive1",
     "payout": 0.0,
     "payout_at": "2016-09-22T19:47:48",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
-    "permlink": "after-member-comment-to-please-comment-hive3-02",
-    "post_id": 1258062,
+    "permlink": "after-member-comment-to-please-comment-hive1",
+    "post_id": 1258055,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -32,20 +36,24 @@
       "hide": false,
       "total_votes": 0
     },
-    "title": "RE: Comment my post02",
+    "title": "RE: Comment my post01",
     "updated": "2016-09-15T19:47:48",
-    "url": "/hive-198723/@test-safari/please-comment-hive3-02#@alice/after-member-comment-to-please-comment-hive3-02"
+    "url": "/hive-171487/@test-safari/please-comment-hive1#@alice/after-member-comment-to-please-comment-hive1"
   },
-  "alice/after-muted-comment-to-please-comment-hive3-02": {
+  "alice/after-muted-comment-to-please-comment-hive1": {
     "active_votes": [],
     "author": "alice",
     "author_payout_value": "0.000 HBD",
     "author_reputation": 25,
+    "author_role": "member",
+    "author_title": "",
     "beneficiaries": [],
     "blacklists": [],
     "body": "First comment after being muted.01",
-    "category": "hive-198723",
+    "category": "hive-171487",
     "children": 0,
+    "community": "hive-171487",
+    "community_title": "Banana",
     "created": "2016-09-15T19:47:36",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
@@ -54,13 +62,13 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "parent_author": "test-safari",
-    "parent_permlink": "please-comment-hive3-02",
+    "parent_permlink": "please-comment-hive1",
     "payout": 0.0,
     "payout_at": "2016-09-22T19:47:36",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
-    "permlink": "after-muted-comment-to-please-comment-hive3-02",
-    "post_id": 1258028,
+    "permlink": "after-muted-comment-to-please-comment-hive1",
+    "post_id": 1258021,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -69,20 +77,24 @@
       "hide": false,
       "total_votes": 0
     },
-    "title": "RE: Comment my post02",
+    "title": "RE: Comment my post01",
     "updated": "2016-09-15T19:47:36",
-    "url": "/hive-198723/@test-safari/please-comment-hive3-02#@alice/after-muted-comment-to-please-comment-hive3-02"
+    "url": "/hive-171487/@test-safari/please-comment-hive1#@alice/after-muted-comment-to-please-comment-hive1"
   },
-  "alice/comment-to-please-comment-hive3-02": {
+  "alice/comment-to-please-comment-hive1": {
     "active_votes": [],
     "author": "alice",
     "author_payout_value": "0.000 HBD",
     "author_reputation": 25,
+    "author_role": "member",
+    "author_title": "",
     "beneficiaries": [],
     "blacklists": [],
-    "body": "This is my second comment in this community.02",
-    "category": "hive-198723",
+    "body": "This is my first comment in this community.01",
+    "category": "hive-171487",
     "children": 0,
+    "community": "hive-171487",
+    "community_title": "Banana",
     "created": "2016-09-15T19:47:24",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
@@ -91,13 +103,13 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "parent_author": "test-safari",
-    "parent_permlink": "please-comment-hive3-02",
+    "parent_permlink": "please-comment-hive1",
     "payout": 0.0,
     "payout_at": "2016-09-22T19:47:24",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
-    "permlink": "comment-to-please-comment-hive3-02",
-    "post_id": 1257997,
+    "permlink": "comment-to-please-comment-hive1",
+    "post_id": 1257990,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -106,20 +118,24 @@
       "hide": false,
       "total_votes": 0
     },
-    "title": "RE: Comment my post02",
+    "title": "RE: Comment my post01",
     "updated": "2016-09-15T19:47:24",
-    "url": "/hive-198723/@test-safari/please-comment-hive3-02#@alice/comment-to-please-comment-hive3-02"
+    "url": "/hive-171487/@test-safari/please-comment-hive1#@alice/comment-to-please-comment-hive1"
   },
-  "test-safari/please-comment-hive3-02": {
+  "test-safari/please-comment-hive1": {
     "active_votes": [],
     "author": "test-safari",
     "author_payout_value": "0.000 HBD",
     "author_reputation": 25.0,
+    "author_role": "admin",
+    "author_title": "",
     "beneficiaries": [],
     "blacklists": [],
-    "body": "Comment my posts in this community.02",
-    "category": "hive-198723",
+    "body": "Comment my posts in this community.01",
+    "category": "hive-171487",
     "children": 3,
+    "community": "hive-171487",
+    "community_title": "Banana",
     "created": "2016-09-15T19:47:21",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
@@ -131,13 +147,13 @@
     "payout_at": "2016-09-22T19:47:21",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
-    "permlink": "please-comment-hive3-02",
-    "post_id": 1257983,
+    "permlink": "please-comment-hive1",
+    "post_id": 1257976,
     "promoted": "0.000 HBD",
     "replies": [
-      "alice/comment-to-please-comment-hive3-02",
-      "alice/after-muted-comment-to-please-comment-hive3-02",
-      "alice/after-member-comment-to-please-comment-hive3-02"
+      "alice/comment-to-please-comment-hive1",
+      "alice/after-muted-comment-to-please-comment-hive1",
+      "alice/after-member-comment-to-please-comment-hive1"
     ],
     "stats": {
       "flag_weight": 0.0,
@@ -145,8 +161,8 @@
       "hide": false,
       "total_votes": 0
     },
-    "title": "Comment my post02",
+    "title": "Comment my post01",
     "updated": "2016-09-15T19:47:21",
-    "url": "/hive-198723/@test-safari/please-comment-hive3-02"
+    "url": "/hive-171487/@test-safari/please-comment-hive1"
   }
 }

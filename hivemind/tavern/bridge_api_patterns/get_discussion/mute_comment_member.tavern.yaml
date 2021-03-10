@@ -2,7 +2,7 @@
   test_name: Hivemind bridge_api.get_discussion alice member of community patterns test
 
   marks:
-    - patterntest # alice is member before answering parent post in this community - mock_data
+    - patterntest # alice is member before answering parent post in this community - mock_data (hive-198723)
                   # muted all comments
 
   includes:
@@ -19,7 +19,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_discussion"
-          params: {"author":"test-safari", "permlink":"please-comment-hive3"}
+          params: {"author":"test-safari", "permlink":"please-comment-hive3-02"}
       response:
         status_code: 200
         verify_response_with:

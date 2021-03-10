@@ -3,7 +3,7 @@
 
   marks:
     - patterntest # alice is member before answering parent post in this community - mock_data (hive-198723)
-                  # unmuted all comments
+                  # never muted comments (test for comparison with muted and unmuted)
 
   includes:
     - !include ../../common.yaml
@@ -19,11 +19,11 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_discussion"
-          params: {"author":"test-safari", "permlink":"please-comment-hive3"}
+          params: {"author":"test-safari", "permlink":"please-comment-hive3-03"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "unmute_comment_member"
+            method: "comment_member"
             directory: "bridge_api_patterns/get_discussion"
