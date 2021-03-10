@@ -11,6 +11,7 @@ SET( sources
         pq/copy_session.cpp
         pq/copy_to_reversible_tuples_session.cpp
         pq/copy_tuples_session.cpp
+        spi/spis_session.cpp
         )
 
 ADD_RUNTIME_LOADED_LIB( ${target_name} "${sources}" )
