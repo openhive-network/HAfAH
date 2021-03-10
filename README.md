@@ -17,7 +17,7 @@ Contains implementations of Postgres specific tools providing functionalities re
 The project use ctest to start tests, just execute in build directory `make test`
 
 Test are grouped in three by names and `.` as branch separator where 'test' is the root. For example You can start
-all unit test with command `ctest -r test.unit.*` 
+all unit tests with command `ctest -r test.unit.*` 
 
 # Installation
 Postgres plugins has to be copied into postgres `$libdir/plugins directory`
@@ -34,7 +34,8 @@ CREATE TRIGGER on_table_change AFTER DELETE ON table_name
     REFERENCING OLD TABLE AS old_table
     FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
 ```
+3. execute `back_from_fork` function: `SELECT back_from_fork();` to revert delete operations on observed tables
 
-# Known problem
+# Known problems
 1. race condition during initialization process, initialization must be implemented in `PG_init` function
 2. only delete operation on observed table is supported
