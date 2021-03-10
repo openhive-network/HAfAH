@@ -6,7 +6,7 @@
 namespace ForkExtension::Spi {
   SpiSession::SpiSession() {
     if ( SPI_connect() != SPI_OK_CONNECT ) {
-      THROW_RUNTIME_ERROR( "Cannot connect to SPI" );
+      THROW_INITIALIZATION_ERROR( "Cannot connect to SPI" );
     }
   }
 

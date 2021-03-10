@@ -6,11 +6,11 @@
 #include <string>
 
 #define THROW_RUNTIME_ERROR( _message )                                        \
-LOG_ERROR( "Throw exception: %s",  std::string( _message ).c_str() );          \
+LOG_WARNING( "Throw exception: %s",  std::string( _message ).c_str() );          \
 throw std::runtime_error( _message )                                           \
 
 #define THROW_INITIALIZATION_ERROR( _message )                                      \
-LOG_ERROR( "Throw inialization exception: %s", std::string( _message ).c_str() );   \
+LOG_WARNING( "Throw inialization exception: %s", std::string( _message ).c_str() );   \
 throw ObjectInitializationException( _message )                                     \
 
 
