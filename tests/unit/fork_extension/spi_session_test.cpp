@@ -1,4 +1,3 @@
-#define BOOST_TEST_MODULE spi_session
 #include <boost/test/unit_test.hpp>
 
 #include "mock/spi_mock.hpp"

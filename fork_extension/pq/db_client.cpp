@@ -46,7 +46,6 @@ DbClient::startCopyTuplesSession( const std::string& _table_name ) {
 }
 
 DbClient::~DbClient() {
-
 }
 
 DbClient&
