@@ -8,6 +8,7 @@ Contains implementations of Postgres specific tools providing functionalities re
 2. postgresql server dev package: `sudo apt-get install postgresql-dev`
 
 ## CMake and make
+1. update submodules: 'git submodule update --init --recursive'
 1. create build directory, for exemple in sources root: `mkdir build`
 2. `cd build`
 3. `cmake ..`
@@ -16,8 +17,8 @@ Contains implementations of Postgres specific tools providing functionalities re
 # Tests
 The project use ctest to start tests, just execute in build directory `make test`
 
-Test are grouped in three by names and `.` as branch separator where 'test' is the root. For example You can start
-all unit tests with command `ctest -r test.unit.*` 
+Test are grouped in a three by names and `.` as a branch separator where 'test' is the root.
+For example You can start all unit tests with command `ctest -r test.unit.*` 
 
 # Installation
 Postgres plugins has to be copied into postgres `$libdir/plugins directory`

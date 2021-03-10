@@ -1,4 +1,4 @@
-#include "include/spi/spis_session.hpp"
+#include "include/spi/spi_session.hpp"
 
 #include "include/postgres_includes.hpp"
 #include "include/exceptions.hpp"

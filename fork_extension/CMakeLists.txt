@@ -1,20 +1,5 @@
-CMAKE_MINIMUM_REQUIRED( VERSION 3.2 )
-
 SET( target_name fork_extension )
 
-SET( sources
-        initialization.cpp
-        endpoints/on_table_change.cpp
-        endpoints/back_from_fork.cpp
-        initializer.cpp
-        pq/db_client.cpp
-        pq/copy_session.cpp
-        pq/copy_to_reversible_tuples_session.cpp
-        pq/copy_tuples_session.cpp
-        spi/spis_session.cpp
-        )
+ADD_RUNTIME_LOADED_LIB( ${target_name} )
 
-ADD_RUNTIME_LOADED_LIB( ${target_name} "${sources}" )
-
-MESSAGE( STATUS "Postgres libdir: ${PostgreSQL_LIBRARY_DIRS}" )
 INSTALL( TARGETS ${target_name} DESTINATION ${POSTGRES_LIBDIR}/plugins )
