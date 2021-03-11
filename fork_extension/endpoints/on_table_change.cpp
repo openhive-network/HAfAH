@@ -32,7 +32,7 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
 
   if ( TRIGGER_FIRED_BY_DELETE(trig_data->tg_event) ) {
     assert( trig_data );
-    assert( trig_data->tg_trigtuple );
+    assert( trig_data->tg_oldtable );
 
     ForkExtension::PostgresPQ::DbClient::get();
 

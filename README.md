@@ -38,5 +38,4 @@ CREATE TRIGGER on_table_change AFTER DELETE ON table_name
 3. execute `back_from_fork` function: `SELECT back_from_fork();` to revert delete operations on observed tables
 
 # Known problems
-1. race condition during initialization process, initialization must be implemented in `PG_init` function
-2. only delete operation on observed table is supported
+1. only delete operation on observed table is supported

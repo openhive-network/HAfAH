@@ -50,7 +50,6 @@ namespace ForkExtension {
       return;
     }
 
-
     SPI_connect();
     BOOST_SCOPE_EXIT_ALL() {
                                SPI_finish();

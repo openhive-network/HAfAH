@@ -1,7 +1,7 @@
 ﻿--Example of fork_extention usage
 --The plugin has not been finished yet, and at the moment it can be only considered as a demo version to show its potential
 
---0. Load the extension plugin (please execute it separatly form other line: known problem with race condition)
+--0. Load the extension plugin
 LOAD '$libdir/plugins/libfork_extension.so';
 
 --1. Lets create some not trivial tables
@@ -44,4 +44,3 @@ DROP FUNCTION IF EXISTS on_table_change CASCADE;
 DROP FUNCTION IF EXISTS back_from_fork;
 DROP TABLE IF EXISTS tuples;
 
-SELECT * FROM pg_proc WHERE proname = 'back_from_fork';
