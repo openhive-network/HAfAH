@@ -26,11 +26,6 @@ CopySession::CopySession( std::shared_ptr< PGconn > _connection, const std::stri
   std::string binary_copy_cmd = "COPY " + _table_name + " FROM STDIN binary";
   std::shared_ptr< PGresult > open_session_result( PQexec( m_connection.get(), binary_copy_cmd.c_str() ), PQclear );
 
-  if ( open_session_result == nullptr ) {
-    auto pg_error_msg = PQerrorMessage( m_connection.get() );
-    THROW_INITIALIZATION_ERROR( "Cannot execute sql command: "s + binary_copy_cmd.c_str() + " :"s  + pg_error_msg );
-  }
-
   if ( PQresultStatus( open_session_result.get() ) != PGRES_COPY_IN ) {
     auto pg_error_msg = PQerrorMessage( m_connection.get() );
     THROW_INITIALIZATION_ERROR( "Cannot start copy to table: " + _table_name + " :"s + pg_error_msg );

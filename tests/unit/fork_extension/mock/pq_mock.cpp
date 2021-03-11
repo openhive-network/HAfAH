@@ -39,7 +39,9 @@ void PQfinish(PGconn* _connection ) {
 
 char* PQerrorMessage(const PGconn* _connection) {
   assert(PQ_MOCK.lock() && "No mock created, plese execute first PqMock::create_and_get");
-  return PQ_MOCK.lock()->PQerrorMessage( _connection );
+  ::testing::DefaultValue<char*>::Set( const_cast< char* >( "test error" ) );
+  auto res = PQ_MOCK.lock()->PQerrorMessage( _connection );
+  return res;
 }
 
 PGresult* PQexec(PGconn* _connection, const char* _query) {

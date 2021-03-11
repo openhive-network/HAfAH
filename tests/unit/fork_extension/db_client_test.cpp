@@ -55,12 +55,6 @@ BOOST_AUTO_TEST_CASE( negative_client_cannot_connect )
           .WillRepeatedly( Return( CONNECTION_BAD ) )
           ;
 
-  // 3. return error message
-  EXPECT_CALL( *pq_mock, PQerrorMessage( connection_ptr ) )
-          .Times( 1 )
-          .WillOnce( Return<char *>( const_cast< char* >( "test error" ) ) )
-          ;
-
   BOOST_CHECK_THROW( {  ForkExtension::PostgresPQ::DbClient object_uder_test( db_name ); }, ForkExtension::ObjectInitializationException );
 }
 

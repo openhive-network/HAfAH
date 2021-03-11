@@ -25,7 +25,7 @@ public:
     MOCK_METHOD( PGconn*, PQconnectdb, (const char *) );
     MOCK_METHOD( ConnStatusType, PQstatus, (const PGconn *) );
     MOCK_METHOD( void, PQfinish, (PGconn*) );
-    MOCK_METHOD( char*, PQerrorMessage, (const PGconn*) );
+    MOCK_METHOD( char*, PQerrorMessage, (const PGconn*) ); //"test error" is retuned by default to do not bother with error texts in tests
     MOCK_METHOD( PGresult*, PQexec, (PGconn*, const char*) );
     MOCK_METHOD( void, PQclear, (PGresult*) );
     MOCK_METHOD( ExecStatusType, PQresultStatus, (const PGresult*) );
