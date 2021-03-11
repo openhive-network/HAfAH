@@ -39,3 +39,5 @@ CREATE TRIGGER on_table_change AFTER DELETE ON table_name
 
 # Known problems
 1. only delete operation on observed table is supported
+2. `back_from_fork` does not clean tuples table
+3. 'back_form_fork' does not block triggers for time of rewind

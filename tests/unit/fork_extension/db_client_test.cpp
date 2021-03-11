@@ -4,38 +4,77 @@
 #include "mock/postgres_mock.hpp"
 
 #include "include/pq/db_client.hpp"
+#include "include/exceptions.hpp"
 
 using ::testing::Return;
 
-BOOST_AUTO_TEST_CASE( positivie_client_connect, *boost::unit_test::disabled() )
+BOOST_AUTO_TEST_CASE( positivie_client_connect )
 {
   auto pq_mock = PqMock::create_and_get();
-  auto postgres_mock = PostgresMock::create_and_get();
 
-  // 1. get database name
-  auto db_name_datum = CStringGetDatum( "test_db" );
+  static constexpr auto db_name = "test_db";
   pg_conn* connection_ptr( reinterpret_cast< pg_conn* >( 0xFFFFFFFFFFFFFFFF ) );
-  EXPECT_CALL( *postgres_mock, OidFunctionCall0Coll( F_CURRENT_DATABASE, InvalidOid ) )
-    .Times(1)
-    .WillOnce( Return( db_name_datum ) )
-  ;
 
-  // 2. connect to database
+  // 1. connect to database
   EXPECT_CALL( *pq_mock, PQconnectdb( ::testing::StrEq( "dbname=test_db" ) ) )
           .Times(1)
           .WillOnce( Return( connection_ptr ) )
   ;
 
-  // 3. check status
+  // 2. check status
   EXPECT_CALL( *pq_mock, PQstatus( connection_ptr ) )
-          .WillRepeatedly( Return( CONNECTION_OK ) )
+          .WillOnce( Return( CONNECTION_OK ) ) //for c_tor
+          .WillOnce( Return( CONNECTION_OK ) ) //for positivie case of isConnected
+          .WillRepeatedly( Return( CONNECTION_BAD ) ) // //for negative case of isConnected
   ;
 
-  // 4. disconnect when the client is destroyed
+  // 3. disconnect when the client is destroyed
   EXPECT_CALL( *pq_mock, PQfinish( connection_ptr ) )
           .Times(1)
   ;
-  {
-    ForkExtension::PostgresPQ::DbClient::get();
-  }
+
+  ForkExtension::PostgresPQ::DbClient object_uder_test( db_name );
+  BOOST_CHECK( object_uder_test.isConnected() );
+  BOOST_CHECK( !object_uder_test.isConnected() );
+}
+
+BOOST_AUTO_TEST_CASE( negative_client_cannot_connect )
+{
+  auto pq_mock = PqMock::create_and_get_nice();
+
+  static constexpr auto db_name = "test_db";
+  pg_conn* connection_ptr( reinterpret_cast< pg_conn* >( 0xFFFFFFFFFFFFFFFF ) );
+
+  // 1. connect and return valid connection
+  EXPECT_CALL( *pq_mock, PQconnectdb( ::testing::StrEq( "dbname=test_db" ) ) )
+          .Times(1)
+          .WillOnce( Return( connection_ptr ) )
+          ;
+  // 2. return wrong connection status
+  EXPECT_CALL( *pq_mock, PQstatus( connection_ptr ) )
+          .WillRepeatedly( Return( CONNECTION_BAD ) )
+          ;
+
+  // 3. return error message
+  EXPECT_CALL( *pq_mock, PQerrorMessage( connection_ptr ) )
+          .Times( 1 )
+          .WillOnce( Return<char *>( const_cast< char* >( "test error" ) ) )
+          ;
+
+  BOOST_CHECK_THROW( {  ForkExtension::PostgresPQ::DbClient object_uder_test( db_name ); }, ForkExtension::ObjectInitializationException );
+}
+
+BOOST_AUTO_TEST_CASE( negative_client_cannot_connect_because_out_of_memory )
+{
+  auto pq_mock = PqMock::create_and_get_nice();
+
+  static constexpr auto db_name = "test_db";
+
+  // 1. connect and return nullptr as the connection
+  EXPECT_CALL( *pq_mock, PQconnectdb( ::testing::StrEq( "dbname=test_db" ) ) )
+          .Times(1)
+          .WillOnce( Return( nullptr ) )
+          ;
+
+  BOOST_CHECK_THROW( {  ForkExtension::PostgresPQ::DbClient object_uder_test( db_name ); }, ForkExtension::ObjectInitializationException );
 }

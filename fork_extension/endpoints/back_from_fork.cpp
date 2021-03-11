@@ -42,7 +42,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
       THROW_RUNTIME_ERROR( "Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLES );
     }
     if ( !current_session || current_session->get_table_name() != table_name ) {
-      current_session = DbClient::get().startCopyTuplesSession( table_name );
+      current_session = DbClient::currentDatabase().startCopyTuplesSession(table_name );
     }
     auto binary_value = SPI_getbinval( tuple_row, SPI_tuptable->tupdesc, prev_tuple_column, &is_null );
     if ( is_null ) {

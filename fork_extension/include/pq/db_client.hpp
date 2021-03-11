@@ -15,16 +15,21 @@ namespace ForkExtension::PostgresPQ {
 
   class DbClient final {
   public:
+      DbClient( const std::string& _db_name );
       ~DbClient();
+
+      bool isConnected() const;
 
       std::unique_ptr< CopyToReversibleTuplesTable > startCopyToReversibleTuplesSession();
       std::unique_ptr< CopyTuplesSession > startCopyTuplesSession( const std::string& _table_name );
 
-      static DbClient& get();
+      // Because connecting to db is very slow connection to current db is hold globaly
+      static DbClient& currentDatabase();
 
   private:
+      // Connects to current db
       DbClient();
-      std::string get_database_name() const;
+      std::string getCurrentDatabaseName() const;
 
   private:
       std::shared_ptr< PGconn > m_connection;

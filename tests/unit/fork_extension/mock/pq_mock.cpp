@@ -14,6 +14,13 @@ std::shared_ptr<PqMock> PqMock::create_and_get() {
   return instance;
 }
 
+std::shared_ptr<PqMock> PqMock::create_and_get_nice() {
+  assert( PQ_MOCK.lock() == nullptr && "Use only one mock instance" );
+  auto instance = std::shared_ptr< PqMock>( new ::testing::NiceMock<PqMock>() );
+  PQ_MOCK = instance;
+  return instance;
+}
+
 extern "C" {
 PGconn* PQconnectdb( const char* _conninfo ) {
   assert(PQ_MOCK.lock() && "No mock created, plese execute first PqMock::create_and_get");

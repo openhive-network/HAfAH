@@ -34,9 +34,9 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
     assert( trig_data );
     assert( trig_data->tg_oldtable );
 
-    ForkExtension::PostgresPQ::DbClient::get();
+    ForkExtension::PostgresPQ::DbClient::currentDatabase();
 
-    auto copy_session = DbClient::get().startCopyToReversibleTuplesSession();
+    auto copy_session = DbClient::currentDatabase().startCopyToReversibleTuplesSession();
     TupleDesc tup_desc = trig_data->tg_relation->rd_att;
 
     if ( trig_data->tg_oldtable == nullptr ) {

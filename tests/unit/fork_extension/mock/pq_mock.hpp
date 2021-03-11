@@ -21,6 +21,7 @@ public:
 
 class PqMock : public IPqMock {
 public:
+
     MOCK_METHOD( PGconn*, PQconnectdb, (const char *) );
     MOCK_METHOD( ConnStatusType, PQstatus, (const PGconn *) );
     MOCK_METHOD( void, PQfinish, (PGconn*) );
@@ -32,7 +33,9 @@ public:
     MOCK_METHOD( int, PQputCopyData, (PGconn*, const char*, int) );
 
     static std::shared_ptr<PqMock> create_and_get();
+    static std::shared_ptr<PqMock> create_and_get_nice();
 
 private:
     PqMock() = default;
+friend class ::testing::NiceMock< PqMock >;
 };

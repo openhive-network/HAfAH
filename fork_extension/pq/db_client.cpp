@@ -10,26 +10,27 @@
 
 namespace ForkExtension::PostgresPQ {
 
-DbClient::DbClient() {
-  auto database_name = get_database_name();
-  if ( database_name.empty() ) {
-    THROW_INITIALIZATION_ERROR( "Cannot get database name" );
+DbClient::DbClient( const std::string& _db_name ) {
+  if ( _db_name.empty() ) {
+    THROW_INITIALIZATION_ERROR( "Incorrect database name" );
   }
-
   // Because we use PQ only from postgress triggers/function we don't have to pass user and password
-  std::string connection_string = "dbname=" + database_name;
+  std::string connection_string = "dbname=" + _db_name;
   m_connection.reset( PQconnectdb( connection_string.c_str() ), PQfinish );
 
   if ( m_connection == nullptr ) {
-    THROW_INITIALIZATION_ERROR( "Cannot connect to databse '" + database_name + "'" );
+    THROW_INITIALIZATION_ERROR( "Cannot connect to databse '" + _db_name + "'" );
   }
 
-  if (PQstatus(m_connection.get()) != CONNECTION_OK)
+  if ( !isConnected() )
   {
-    std::string error = "Failed connection to database " + database_name + " : " + PQerrorMessage(m_connection.get());
+    std::string error = "Failed connection to database " + _db_name + " : " + PQerrorMessage(m_connection.get());
     m_connection.reset();
     THROW_INITIALIZATION_ERROR( error );
   }
+}
+
+DbClient::DbClient():DbClient(getCurrentDatabaseName() ) {
 }
 
 std::unique_ptr< CopyToReversibleTuplesTable >
@@ -48,16 +49,23 @@ DbClient::startCopyTuplesSession( const std::string& _table_name ) {
 DbClient::~DbClient() {
 }
 
+bool
+DbClient::isConnected() const {
+  return PQstatus( m_connection.get() ) == CONNECTION_OK;
+}
+
 DbClient&
-DbClient::get(){
+DbClient::currentDatabase(){
   // Don't care for the lifetime, it will be released together with whole psql client connection process
-  ms_instance.reset( new DbClient() );
+  if ( !ms_instance ) {
+    ms_instance.reset(new DbClient());
+  }
 
   /* If the PQclient has been disconected by the server, then we try to re-establish the connection once
    * If the connection is still not valid then the client methods will fail and throw exceptions which become visible on postgres log and consele
    * Each new trigger/function will try again to re-establish the connection
    */
-  if ( PQstatus( ms_instance->m_connection.get() ) != CONNECTION_OK ) {
+  if ( !ms_instance->isConnected() ) {
     LOG_WARNING( "PQclient was disconnected from the server and try to reconnect" );
     ms_instance.reset( new DbClient() );
   }
@@ -66,7 +74,7 @@ DbClient::get(){
 }
 
 std::string
-DbClient::get_database_name() const {
+DbClient::getCurrentDatabaseName() const {
   Datum db_name = OidFunctionCall0( F_CURRENT_DATABASE );
   return DatumGetCString( db_name );
 }
