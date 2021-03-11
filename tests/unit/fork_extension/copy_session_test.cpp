@@ -46,7 +46,6 @@ BOOST_AUTO_TEST_CASE( negative_copy_session_cannot_start )
   auto pq_mock = PqMock::create_and_get_nice();
 
   std::shared_ptr< pg_conn > connection_ptr( reinterpret_cast< pg_conn* >( 0xFFFFFFFFFFFFFFFF ), [](pg_conn*){} );
-  PGresult* copy_result_ptr( reinterpret_cast< PGresult* >( 0xAAAAAAAAAAAAAAAA ) );
 
   // 1. chceck COPY result
   EXPECT_CALL( *pq_mock, PQresultStatus( ::testing::_ ) )
@@ -55,7 +54,7 @@ BOOST_AUTO_TEST_CASE( negative_copy_session_cannot_start )
           ;
 
   // 2. don't forget to clear status
-  EXPECT_CALL( *pq_mock, PQclear( copy_result_ptr ) )
+  EXPECT_CALL( *pq_mock, PQclear( ::testing::_ ) )
           .Times(1);
 
   BOOST_CHECK_THROW( { ForkExtension::PostgresPQ::CopySession session_under_test( connection_ptr, "base" ); }, ForkExtension::ObjectInitializationException );
