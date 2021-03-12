@@ -8,6 +8,6 @@ MACRO( SETUP_OUTPUT_DIRECTORIES )
 ENDMACRO()
 
 MACRO( SETUP_COMPILER target_name )
-    TARGET_COMPILE_OPTIONS( ${target_name}  PRIVATE -std=c++14 -std=c++14 -Wall -Wextra -Werror )
+    TARGET_COMPILE_OPTIONS( ${target_name}  PRIVATE -std=c++14 -Wall -Wextra -Werror )
     TARGET_INCLUDE_DIRECTORIES( ${target_name} PRIVATE "." ${GENERATED_FILES_DIRECTORY_ROOT} )
 ENDMACRO()
