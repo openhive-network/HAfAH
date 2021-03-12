@@ -4,7 +4,10 @@
 #include "include/tuples_iterators.hpp"
 
 struct TupleExample {
-    uint16_t m_number_of_fields = htons( 5 );
+  TupleExample(){
+    m_number_of_fields = htons( 5 );
+  }
+    uint16_t m_number_of_fields;
 
     uint32_t m_field1_size = htonl( sizeof( uint32_t) );
     uint32_t m_field1_value = 0xABCDEFAB;
