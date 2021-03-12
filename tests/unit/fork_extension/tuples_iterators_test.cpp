@@ -11,7 +11,7 @@
 
 #pragma pack( push, 1)
 struct TupleExample {
-    uint16_t m_number_of_fields = htons( (uint16_t)5 );
+    uint16_t m_number_of_fields = 1280;//htons( (uint16_t)5 );
 
     uint32_t m_field1_size = htonl( sizeof( uint32_t ) );
     uint32_t m_field1_value = 0xABCDEFAB;
