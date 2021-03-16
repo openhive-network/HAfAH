@@ -1,5 +1,7 @@
 #pragma once
 
+#include "include/columns_iterator.hpp"
+
 #include <functional>
 #include <vector>
 
@@ -17,7 +19,7 @@ namespace ForkExtension {
       ~Relation() = default;
 
       PrimaryKeyColumns getPrimaryKeysColumns() const;
-
+      ColumnsIterator getColumns() const;
   private:
       std::reference_wrapper<RelationData> m_relation;
   };

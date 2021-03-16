@@ -28,4 +28,9 @@ Relation::getPrimaryKeysColumns() const {
   return result;
 }
 
+ColumnsIterator
+Relation::getColumns() const {
+  return ColumnsIterator( *m_relation.get().rd_att );
+}
+
 } // namespace ForkExtension
