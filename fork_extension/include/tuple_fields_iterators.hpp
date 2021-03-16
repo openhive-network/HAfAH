@@ -11,22 +11,26 @@ namespace ForkExtension {
   class TuplesFieldIterator {
   public:
     class Field {
-    public:
-      Field( uint8_t* _value, uint32_t _size ) : m_value( _value ), m_size( _size ) {}
-      Field() : m_value( nullptr ), m_size( 0 ) {}
+      public:
+        Field( uint8_t* _value, uint32_t _size ) : m_value( _value ), m_size( _size ) {}
+        Field() : m_value( nullptr ), m_size( 0 ) {}
 
-      uint8_t* getValue() const { return m_value;}
-      uint32_t getSize() const { return m_size; }
+        uint8_t* getValue() const { return m_value;}
+        uint32_t getSize() const { return m_size; }
 
-      operator bool() const { return m_value || m_size; }
-      bool isNullValue() const { return m_size == 0xFFFFFFFF; }
-    private:
-      uint8_t* m_value;
-      uint32_t m_size;
+        operator bool() const { return m_value || m_size; }
+        bool isNullValue() const { return m_size == 0xFFFFFFFF; }
+      private:
+        uint8_t* m_value;
+        uint32_t m_size;
     };
 
     TuplesFieldIterator( bytea* _tuple_in_copy_format );
     ~TuplesFieldIterator() = default;
+    TuplesFieldIterator( TuplesFieldIterator& ) = delete;
+    TuplesFieldIterator( TuplesFieldIterator&& ) = delete;
+    TuplesFieldIterator& operator=( TuplesFieldIterator& ) = delete;
+    TuplesFieldIterator& operator=( TuplesFieldIterator&& ) = delete;
 
     Field next();
 
@@ -43,5 +47,11 @@ namespace ForkExtension {
     uint16_t m_current_field_number;
     uint8_t* m_current_field;
   };
+
+class SelectiveTuplesFieldsIterator
+{
+
+};
+
 
 } // namespace ForkExtension

@@ -8,6 +8,8 @@
 
 using ::testing::Return;
 
+BOOST_AUTO_TEST_SUITE( db_client )
+
 BOOST_AUTO_TEST_CASE( positivie_client_connect )
 {
   auto pq_mock = PqMock::create_and_get();
@@ -72,3 +74,5 @@ BOOST_AUTO_TEST_CASE( negative_client_cannot_connect_because_out_of_memory )
 
   BOOST_CHECK_THROW( {  ForkExtension::PostgresPQ::DbClient object_uder_test( db_name ); }, ForkExtension::ObjectInitializationException );
 }
+
+BOOST_AUTO_TEST_SUITE_END()

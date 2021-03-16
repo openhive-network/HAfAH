@@ -43,4 +43,12 @@ bytea* SendFunctionCall(FmgrInfo* _flinfo, Datum _val) {
   return POSTGRES_MOCK.lock()->SendFunctionCall( _flinfo, _val );
 }
 
+Bitmapset* get_primary_key_attnos(Oid _relid, bool _deferrable, Oid* _constraint) {
+  return POSTGRES_MOCK.lock()->get_primary_key_attnos( _relid, _deferrable, _constraint );
+}
+
+int	bms_next_member(const Bitmapset* _a, int _prevbit) {
+  return POSTGRES_MOCK.lock()->bms_next_member( _a, _prevbit );
+}
+
 } // extern "C"

@@ -10,6 +10,8 @@ using namespace ForkExtension;
 using ::testing::Return;
 using ::testing::InSequence;
 
+BOOST_AUTO_TEST_SUITE( spi_session )
+
 BOOST_AUTO_TEST_CASE( positivie_session_create_and_destroy )
 {
   auto spi_mock = SpiMock::create_and_get();
@@ -50,4 +52,6 @@ BOOST_AUTO_TEST_CASE( negative_session_close )
 
   ForkExtension::Spi::SpiSession session;
 }
+
+BOOST_AUTO_TEST_SUITE_END()
 

@@ -7,6 +7,8 @@ extern "C" {
 #include <fmgr.h>
 #include <executor/spi.h>
 #include <libpq-fe.h>
+#include <access/sysattr.h>
+#include <catalog/pg_constraint_fn.h>
 #include <utils/rel.h>
 #include <utils/tuplestore.h>
 #include <utils/lsyscache.h>

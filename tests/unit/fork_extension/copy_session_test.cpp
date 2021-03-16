@@ -8,6 +8,8 @@
 
 using ::testing::Return;
 
+BOOST_AUTO_TEST_SUITE( copy_session )
+
 BOOST_AUTO_TEST_CASE( positivie_copy_session )
 {
   auto pq_mock = PqMock::create_and_get();
@@ -59,3 +61,5 @@ BOOST_AUTO_TEST_CASE( negative_copy_session_cannot_start )
 
   BOOST_CHECK_THROW( { ForkExtension::PostgresPQ::CopySession session_under_test( connection_ptr, "base" ); }, ForkExtension::ObjectInitializationException );
 }
+
+BOOST_AUTO_TEST_SUITE_END()
