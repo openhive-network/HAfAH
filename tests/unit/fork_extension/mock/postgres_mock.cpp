@@ -43,12 +43,37 @@ bytea* SendFunctionCall(FmgrInfo* _flinfo, Datum _val) {
   return POSTGRES_MOCK.lock()->SendFunctionCall( _flinfo, _val );
 }
 
+
 Bitmapset* get_primary_key_attnos(Oid _relid, bool _deferrable, Oid* _constraint) {
   return POSTGRES_MOCK.lock()->get_primary_key_attnos( _relid, _deferrable, _constraint );
 }
 
 int	bms_next_member(const Bitmapset* _a, int _prevbit) {
   return POSTGRES_MOCK.lock()->bms_next_member( _a, _prevbit );
+}
+
+void getTypeBinaryInputInfo(Oid _type, Oid* _typReceive, Oid* _typIOParam) {
+  return POSTGRES_MOCK.lock()->getTypeBinaryInputInfo( _type, _typReceive, _typIOParam );
+}
+
+StringInfo makeStringInfo() {
+  return POSTGRES_MOCK.lock()->makeStringInfo();
+}
+
+void appendBinaryStringInfo(StringInfo _str, const char* _data, int _datalen) {
+  return POSTGRES_MOCK.lock()->appendBinaryStringInfo(_str, _data, _datalen);
+}
+
+Datum ReceiveFunctionCall(FmgrInfo *flinfo, fmStringInfo buf, Oid typioparam, int32 typmod) {
+  return POSTGRES_MOCK.lock()->ReceiveFunctionCall(flinfo, buf, typioparam, typmod);
+}
+
+void getTypeOutputInfo(Oid type, Oid *typOutput, bool *typIsVarlena) {
+  return POSTGRES_MOCK.lock()->getTypeOutputInfo(type, typOutput, typIsVarlena);
+}
+
+char* OidOutputFunctionCall(Oid functionId, Datum val) {
+  return POSTGRES_MOCK.lock()->OidOutputFunctionCall(functionId, val);
 }
 
 } // extern "C"

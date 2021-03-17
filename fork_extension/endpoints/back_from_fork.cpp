@@ -2,6 +2,7 @@
 #include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 #include "include/postgres_includes.hpp"
+#include "include/relation.hpp"
 #include "include/sql_commands.hpp"
 
 #include <boost/scope_exit.hpp>
@@ -50,6 +51,16 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     }
 
     current_session->push_tuple( DatumGetByteaPP( binary_value ) );
+    Relation raw_rel;
+    raw_rel = heap_openrv(makeRangeVar(NULL, table_name, -1), AccessShareLock);
+    if ( raw_rel == nullptr ) {
+      THROW_RUNTIME_ERROR( "Cannot open relation "s + table_name );
+    }
+    ForkExtension::Relation rel( *raw_rel );
+    auto condition = rel.createPkeyCondition( DatumGetByteaPP( binary_value ) );
+    LOG_WARNING( "PKEY condition = %s", condition.c_str() );
+    heap_close(raw_rel, NoLock);
+
   }
 
   PG_RETURN_VOID();

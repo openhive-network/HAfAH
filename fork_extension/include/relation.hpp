@@ -7,6 +7,8 @@
 
 extern "C" {
   struct RelationData;
+  struct varlena;
+  typedef struct varlena bytea;
 }
 
 namespace ForkExtension {
@@ -18,9 +20,11 @@ namespace ForkExtension {
       Relation( RelationData& _relation ); // assumed that postgres controll the lifetime of _relation
       ~Relation() = default;
 
-      PrimaryKeyColumns getPrimaryKeysColumns() const;
+      PrimaryKeyColumns getPrimaryKeysColumns() const; //returns sorted list of pkey columns number
       ColumnsIterator getColumns() const;
-  private:
+      std::string createPkeyCondition( bytea* _relation_tuple_in_copy_format ) const;
+
+    private:
       std::reference_wrapper<RelationData> m_relation;
   };
 
