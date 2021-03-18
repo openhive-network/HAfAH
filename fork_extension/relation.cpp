@@ -93,7 +93,10 @@ Relation::createPkeyCondition( bytea* _relation_tuple_in_copy_format ) const {
     }
 
     auto value = binary_value_to_text(  field_value.getValue(), field_value.getSize(), m_relation.get().rd_att, pkey_column_id - 1 );
-    result.append( " "s + *column_name_value + "="s + value ); //TODO: change value to text
+    if ( !result.empty() ) {
+      result.append( " AND " );
+    }
+    result.append( *column_name_value + "="s + value );
 
     previous_column = pkey_column_id;
   }
