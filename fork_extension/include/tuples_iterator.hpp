@@ -1,0 +1,8 @@
+//
+// Created by syncad on 3/18/21.
+//
+
+#ifndef PSQL_TOOLS_TUPLES_ITERATOR_HPP
+#define PSQL_TOOLS_TUPLES_ITERATOR_HPP
+
+#endif //PSQL_TOOLS_TUPLES_ITERATOR_HPP
