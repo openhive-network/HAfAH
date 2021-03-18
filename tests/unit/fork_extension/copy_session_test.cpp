@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE( positivie_copy_session )
           .Times(1)
   ;
 
-  ForkExtension::PostgresPQ::CopySession session_under_test( connection_ptr, db_name );
+  BOOST_CHECK_NO_THROW( ForkExtension::PostgresPQ::CopySession session_under_test( connection_ptr, db_name ) );
 }
 
 BOOST_AUTO_TEST_CASE( negative_copy_session_cannot_start )

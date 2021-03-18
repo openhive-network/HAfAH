@@ -34,6 +34,14 @@ Transaction::~Transaction() {
   }
 }
 
+void
+Transaction::execute( const std::string& _sql ) const {
+  auto result = PQexec( m_connection.get(), _sql.c_str() );
+  if ( PQresultStatus( result ) != PGRES_COMMAND_OK ) {
+    THROW_RUNTIME_ERROR( "Cannot execute sql :"s + _sql + " :"s + PQresultErrorMessage( result ) );
+  }
+}
+
 std::unique_ptr< CopyToReversibleTuplesTable >
 Transaction::startCopyToReversibleTuplesSession() {
   assert( m_connection );

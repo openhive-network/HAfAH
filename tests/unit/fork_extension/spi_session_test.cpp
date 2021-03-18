@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE( positivie_session_create_and_destroy )
             .WillOnce(Return(SPI_OK_CONNECT));
   }
 
-  ForkExtension::Spi::SpiSession session_under_test;
+  BOOST_CHECK_NO_THROW( ForkExtension::Spi::SpiSession session_under_test );
 }
 
 BOOST_AUTO_TEST_CASE( negative_session_create )
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE( negative_session_close )
           .Times(1)
           .WillOnce(Return(SPI_ERROR_UNCONNECTED));
 
-  ForkExtension::Spi::SpiSession session;
+  BOOST_CHECK_NO_THROW( ForkExtension::Spi::SpiSession session ); // cannot throw from d_tor
 }
 
 BOOST_AUTO_TEST_SUITE_END()

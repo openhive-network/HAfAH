@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE( positivie_client_connect )
           .WillOnce( Return( result_ptr ) )
   ;
 
-  ForkExtension::PostgresPQ::Transaction object_uder_test( connection );
+  BOOST_CHECK_NO_THROW( ForkExtension::PostgresPQ::Transaction object_uder_test( connection ) );
 }
 
 BOOST_AUTO_TEST_CASE( negative_client_cannot_start_transaction )
@@ -72,6 +72,55 @@ BOOST_AUTO_TEST_CASE( negative_client_null_connection )
           ForkExtension::PostgresPQ::Transaction object_uder_test( nullptr )
   , ForkExtension::ObjectInitializationException
   );
+}
+
+BOOST_AUTO_TEST_CASE( sql_execute )
+{  auto pq_mock = PqMock::create_and_get_nice();
+
+  pg_conn* connection_ptr( reinterpret_cast< pg_conn* >( 0xFFFFFFFFFFFFFFFF ) );
+  std::shared_ptr< pg_conn > connection( connection_ptr, [](pg_conn*){} );
+
+  static constexpr auto sql = "SELECT * FROM table";
+
+  // 1. check status
+  EXPECT_CALL( *pq_mock, PQresultStatus( ::testing::_ ) )
+    .WillRepeatedly( Return( PGRES_COMMAND_OK ) ) // every execute will success
+  ;
+
+  // 2. executes
+  EXPECT_CALL( *pq_mock, PQexec( ::testing::_, ::testing::_ ) ).Times(2); //c_tor, d_tor
+  EXPECT_CALL( *pq_mock, PQexec( ::testing::_, ::testing::StrEq( sql ) ) ).Times(1);
+
+
+  ForkExtension::PostgresPQ::Transaction object_uder_test( connection );
+
+  BOOST_CHECK_NO_THROW( object_uder_test.execute( sql ) );
+}
+
+BOOST_AUTO_TEST_CASE( negative_sql_execute )
+{  auto pq_mock = PqMock::create_and_get_nice();
+
+  pg_conn* connection_ptr( reinterpret_cast< pg_conn* >( 0xFFFFFFFFFFFFFFFF ) );
+  std::shared_ptr< pg_conn > connection( connection_ptr, [](pg_conn*){} );
+
+  static constexpr auto sql = "SELECT * FROM table";
+
+  {
+    ::testing::InSequence seq;
+
+    EXPECT_CALL(*pq_mock, PQexec(::testing::_, ::testing::_)).Times(1); //c_tor
+    EXPECT_CALL(*pq_mock, PQresultStatus(::testing::_)).Times(1).WillOnce(Return(PGRES_COMMAND_OK)); // c_tor
+
+    EXPECT_CALL(*pq_mock, PQexec(::testing::_, ::testing::StrEq(sql))).Times(1); // TEST EXECUTE
+    EXPECT_CALL(*pq_mock, PQresultStatus(::testing::_)).Times(1).WillOnce(Return(PGRES_FATAL_ERROR)); // TEST EXECUTE
+
+    EXPECT_CALL(*pq_mock, PQexec(::testing::_, ::testing::_)).Times(1); //c_tor, d_tor
+    EXPECT_CALL(*pq_mock, PQresultStatus(::testing::_)).Times(1).WillOnce(Return(PGRES_COMMAND_OK)); // for d_tor
+  }
+
+  ForkExtension::PostgresPQ::Transaction object_uder_test( connection );
+
+  BOOST_CHECK_THROW( object_uder_test.execute( sql ), std::runtime_error );
 }
 
 

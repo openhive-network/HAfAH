@@ -68,17 +68,17 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
           THROW_RUNTIME_ERROR("Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLES);
         }
         current_session->push_tuple(DatumGetByteaPP(binary_value));
-
-        Relation raw_rel;
+      } // case OperationType::DELETE
+      case static_cast< uint16_t >( OperationType::INSERT ): {
+        /*Relation raw_rel;
         raw_rel = heap_openrv(makeRangeVar(NULL, table_name, -1), AccessShareLock);
         if (raw_rel == nullptr) {
           THROW_RUNTIME_ERROR("Cannot open relation "s + table_name);
         }
         ForkExtension::Relation rel(*raw_rel);
         auto condition = rel.createPkeyCondition(DatumGetByteaPP(binary_value));
-        heap_close(raw_rel, NoLock);
-      } // case OperationType::DELETE
-      case static_cast< uint16_t >( OperationType::INSERT ):
+        heap_close(raw_rel, NoLock);*/
+      }
       case static_cast< uint16_t >( OperationType::UPDATE ):
         break;
       default: {

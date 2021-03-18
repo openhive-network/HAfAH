@@ -16,6 +16,7 @@ namespace ForkExtension::PostgresPQ {
       explicit Transaction( std::shared_ptr< PGconn > _connection );
       virtual ~Transaction();
 
+      void execute( const std::string& _sql ) const;
       std::unique_ptr< CopyToReversibleTuplesTable > startCopyToReversibleTuplesSession();
       std::unique_ptr< CopyTuplesSession > startCopyTuplesSession( const std::string& _table_name );
   private:
