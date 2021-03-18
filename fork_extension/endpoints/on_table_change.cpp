@@ -1,8 +1,9 @@
 #include "include/exceptions.hpp"
 #include "include/relation.hpp"
 #include "include/postgres_includes.hpp"
-#include "include/pq/db_client.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
+#include "include/pq/db_client.hpp"
+#include "include/pq/transaction.hpp"
 
 #include "gen/git_version.hpp"
 
@@ -48,7 +49,8 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
     return 0;
   }
 
-  auto copy_session = DbClient::currentDatabase().startCopyToReversibleTuplesSession();
+  auto transaction = DbClient::currentDatabase().startTransaction();
+  auto copy_session = transaction->startCopyToReversibleTuplesSession();
   TupleDesc tup_desc = trig_data->tg_relation->rd_att;
   const std::string trigg_table_name = SPI_getrelname(trig_data->tg_relation);
 

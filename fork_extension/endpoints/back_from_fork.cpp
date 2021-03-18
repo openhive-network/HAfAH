@@ -1,6 +1,9 @@
 #include "include/exceptions.hpp"
-#include "include/pq/db_client.hpp"
+
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
+#include "include/pq/db_client.hpp"
+#include "include/pq/transaction.hpp"
+
 #include "include/operation_types.hpp"
 #include "include/postgres_includes.hpp"
 #include "include/relation.hpp"
@@ -35,6 +38,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     THROW_RUNTIME_ERROR( "Cannot execute: "s + ForkExtension::Sql::GET_STORED_TUPLES );
   }
 
+  auto transaction = ForkExtension::PostgresPQ::DbClient::currentDatabase().startTransaction();
   std::unique_ptr< ForkExtension::PostgresPQ::CopyTuplesSession > current_session;
 
   for ( uint64_t row =0; row < SPI_processed; ++row ) {
@@ -47,7 +51,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
       THROW_RUNTIME_ERROR("Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLES);
     }
     if (!current_session || current_session->get_table_name() != table_name) {
-      current_session = DbClient::currentDatabase().startCopyTuplesSession(table_name);
+      current_session = transaction->startCopyTuplesSession(table_name);
     }
 
     const auto operation_datum = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,

@@ -4,6 +4,7 @@
 #include "include/postgres_includes.hpp"
 #include "include/logger.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
+#include "include/pq/transaction.hpp"
 
 #include <exception>
 #include <cassert>
@@ -33,17 +34,9 @@ DbClient::DbClient( const std::string& _db_name ) {
 DbClient::DbClient():DbClient(getCurrentDatabaseName() ) {
 }
 
-std::unique_ptr< CopyToReversibleTuplesTable >
-DbClient::startCopyToReversibleTuplesSession() {
-  assert( m_connection );
-  return std::unique_ptr< CopyToReversibleTuplesTable >( new CopyToReversibleTuplesTable( m_connection ) );
-}
-
-std::unique_ptr< CopyTuplesSession >
-DbClient::startCopyTuplesSession( const std::string& _table_name ) {
-  assert( m_connection );
-
-  return std::unique_ptr< CopyTuplesSession >( new CopyTuplesSession( m_connection, _table_name ) );
+std::unique_ptr< Transaction >
+DbClient::startTransaction() {
+  return std::unique_ptr< Transaction >( new Transaction( m_connection ) );
 }
 
 DbClient::~DbClient() {

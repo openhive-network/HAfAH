@@ -10,8 +10,7 @@ typedef struct pg_conn PGconn;
 
 namespace ForkExtension::PostgresPQ {
 
-  class CopyToReversibleTuplesTable;
-  class CopyTuplesSession;
+  class Transaction;
 
   class DbClient final {
   public:
@@ -20,8 +19,7 @@ namespace ForkExtension::PostgresPQ {
 
       bool isConnected() const;
 
-      std::unique_ptr< CopyToReversibleTuplesTable > startCopyToReversibleTuplesSession();
-      std::unique_ptr< CopyTuplesSession > startCopyTuplesSession( const std::string& _table_name );
+      std::unique_ptr< Transaction > startTransaction();
 
       // Because connecting to db is very slow connection to current db is hold globaly
       static DbClient& currentDatabase();
