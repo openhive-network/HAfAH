@@ -39,7 +39,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   }
 
   auto transaction = ForkExtension::PostgresPQ::DbClient::currentDatabase().startTransaction();
-  std::unique_ptr< ForkExtension::PostgresPQ::CopyTuplesSession > current_session;
+  std::unique_ptr< ForkExtension::PostgresPQ::CopyTuplesSession > copy_session;
 
   for ( uint64_t row =0; row < SPI_processed; ++row ) {
     HeapTuple tuple_row = *(SPI_tuptable->vals + row);
@@ -50,9 +50,6 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     if (!table_name) {
       THROW_RUNTIME_ERROR("Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLES);
     }
-    if (!current_session || current_session->get_table_name() != table_name) {
-      current_session = transaction->startCopyTuplesSession(table_name);
-    }
 
     const auto operation_datum = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
                                                static_cast< int32_t >( TuplesTableColumns::Operation ), &is_null);
@@ -62,22 +59,40 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
 
     switch (DatumGetInt16(operation_datum)) {
       case static_cast< uint16_t >( OperationType::DELETE ): {
+        if (!copy_session || copy_session->get_table_name() != table_name) {
+          copy_session = transaction->startCopyTuplesSession(table_name);
+        }
+
         auto binary_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
                                           static_cast< int32_t >( TuplesTableColumns::OldTuple ), &is_null);
         if (is_null) {
-          THROW_RUNTIME_ERROR("Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLES);
+          THROW_RUNTIME_ERROR( "Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLES );
         }
-        current_session->push_tuple(DatumGetByteaPP(binary_value));
+        copy_session->push_tuple(DatumGetByteaPP(binary_value) );
+        break;
       } // case OperationType::DELETE
       case static_cast< uint16_t >( OperationType::INSERT ): {
-        /*Relation raw_rel;
+        if ( copy_session ) { // We need to break pending copy session
+          copy_session.reset();
+        }
+
+        auto binary_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
+                                          static_cast< int32_t >( TuplesTableColumns::NewTuple ), &is_null);
+        Relation raw_rel;
         raw_rel = heap_openrv(makeRangeVar(NULL, table_name, -1), AccessShareLock);
         if (raw_rel == nullptr) {
           THROW_RUNTIME_ERROR("Cannot open relation "s + table_name);
         }
         ForkExtension::Relation rel(*raw_rel);
         auto condition = rel.createPkeyCondition(DatumGetByteaPP(binary_value));
-        heap_close(raw_rel, NoLock);*/
+
+        if ( condition.empty() ) {
+          THROW_RUNTIME_ERROR( "No primary key condition for inserted tuple in " );
+        }
+        heap_close(raw_rel, NoLock);
+        auto remove_row_sql = "DELETE FROM "s + table_name + " WHERE "s + condition;
+        transaction->execute( remove_row_sql );
+        break;
       }
       case static_cast< uint16_t >( OperationType::UPDATE ):
         break;
