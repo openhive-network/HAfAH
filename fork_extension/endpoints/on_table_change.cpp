@@ -7,6 +7,7 @@
 #include "gen/git_version.hpp"
 
 #include <cassert>
+#include <functional>
 #include <mutex>
 #include <string>
 #include <include/relation.hpp>
@@ -15,6 +16,21 @@ using ForkExtension::PostgresPQ::DbClient;
 
 extern "C" {
 PG_FUNCTION_INFO_V1(on_table_change);
+}
+
+void executeOnEachTuple( Tuplestorestate* _tuples, std::function< void(const HeapTupleData& _tuple) > _operation ) {
+  if ( _tuples == nullptr) {
+    THROW_RUNTIME_ERROR( "No tuples to process" );
+  }
+
+  auto slot = MakeTupleTableSlot();
+  tuplestore_rescan( _tuples );
+  while ( tuplestore_gettupleslot( _tuples, true, false, slot ) ) {
+    if ( !slot->tts_tuple ) {
+      THROW_RUNTIME_ERROR( "Virtual tuples are not supported" );
+    }
+    _operation( *slot->tts_tuple );
+  }
 }
 
 Datum on_table_change(PG_FUNCTION_ARGS) try {
@@ -32,29 +48,20 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
     return 0;
   }
 
+  auto copy_session = DbClient::currentDatabase().startCopyToReversibleTuplesSession();
+  TupleDesc tup_desc = trig_data->tg_relation->rd_att;
+  const std::string trigg_table_name = SPI_getrelname(trig_data->tg_relation);
+
   if ( TRIGGER_FIRED_BY_DELETE(trig_data->tg_event) ) {
-    assert( trig_data );
-    assert( trig_data->tg_oldtable );
-
-    ForkExtension::PostgresPQ::DbClient::currentDatabase();
-
-    auto copy_session = DbClient::currentDatabase().startCopyToReversibleTuplesSession();
-    TupleDesc tup_desc = trig_data->tg_relation->rd_att;
-
     if ( trig_data->tg_oldtable == nullptr ) {
-      THROW_RUNTIME_ERROR( "No trigger tuple for delete" );
+      THROW_RUNTIME_ERROR( "No trigger tuples for delete" );
     }
 
-    auto slot = MakeTupleTableSlot();
+    auto save_delete_operation = [&tup_desc,&copy_session,&trigg_table_name]( const HeapTupleData& _tuple ) {
+        copy_session->push_delete(trigg_table_name, _tuple, tup_desc);
+    };
+    executeOnEachTuple( trig_data->tg_oldtable, save_delete_operation );
 
-    const std::string trigg_table_name = SPI_getrelname(trig_data->tg_relation);
-    tuplestore_rescan( trig_data->tg_oldtable );
-    while ( tuplestore_gettupleslot( trig_data->tg_oldtable, true, false, slot ) ) {
-      if ( !slot->tts_tuple ) {
-        THROW_RUNTIME_ERROR( "Virtual tuples are not supported" );
-      }
-      copy_session->push_delete(trigg_table_name, *slot->tts_tuple, tup_desc);
-    } // while next tuple
     return 0;
   }
 
@@ -64,7 +71,17 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
   }
 
   if ( TRIGGER_FIRED_BY_INSERT(trig_data->tg_event) ) {
-    LOG_WARNING("Insert not supported");
+    if ( trig_data->tg_newtable == nullptr ) {
+      THROW_RUNTIME_ERROR( "No trigger tuples for insert" );
+    }
+
+    const std::string trigg_table_name = SPI_getrelname(trig_data->tg_relation);
+    auto save_insert_operation = [&tup_desc,&copy_session,&trigg_table_name]( const HeapTupleData& _tuple ) {
+      copy_session->push_insert(trigg_table_name, _tuple, tup_desc);
+    };
+
+    executeOnEachTuple( trig_data->tg_newtable, save_insert_operation );
+
     return 0;
   }
 

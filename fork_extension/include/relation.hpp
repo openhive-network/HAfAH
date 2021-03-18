@@ -17,6 +17,7 @@ namespace ForkExtension {
     public:
       using PrimaryKeyColumns = std::vector< uint16_t >;
 
+      // TODO: create it with relation name
       Relation( RelationData& _relation ); // assumed that postgres controll the lifetime of _relation
       ~Relation() = default;
 
@@ -27,6 +28,7 @@ namespace ForkExtension {
     private:
       std::reference_wrapper<RelationData> m_relation;
   };
+
 
 } // namespace ForkExtension
 

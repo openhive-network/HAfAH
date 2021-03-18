@@ -58,7 +58,6 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     }
     ForkExtension::Relation rel( *raw_rel );
     auto condition = rel.createPkeyCondition( DatumGetByteaPP( binary_value ) );
-    LOG_WARNING( "PKEY condition = %s", condition.c_str() );
     heap_close(raw_rel, NoLock);
 
   }
