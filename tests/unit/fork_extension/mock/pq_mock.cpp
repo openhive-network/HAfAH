@@ -9,14 +9,14 @@ namespace {
 
 std::shared_ptr<PqMock> PqMock::create_and_get() {
   assert( PQ_MOCK.lock() == nullptr && "Use only one mock instance" );
-  auto instance = std::shared_ptr< PqMock >( new PqMock() );
+  auto instance = std::shared_ptr< PqMock >( new ::testing::StrictMock<PqMock>() );
   PQ_MOCK = instance;
   return instance;
 }
 
 std::shared_ptr<PqMock> PqMock::create_and_get_nice() {
   assert( PQ_MOCK.lock() == nullptr && "Use only one mock instance" );
-  auto instance = std::shared_ptr< PqMock>( new ::testing::NiceMock<PqMock>() );
+  auto instance = std::shared_ptr< PqMock >( new ::testing::NiceMock<PqMock>() );
   PQ_MOCK = instance;
   return instance;
 }
@@ -67,6 +67,11 @@ int	PQputCopyEnd(PGconn* _connection, const char* _errormsg) {
 int	PQputCopyData(PGconn* _conn, const char* _buffer, int _nbytes) {
   assert(PQ_MOCK.lock() && "No mock created, plese execute first PqMock::create_and_get");
   return PQ_MOCK.lock()->PQputCopyData( _conn, _buffer, _nbytes );
+}
+
+char* PQresultErrorMessage(const PGresult *res) {
+  assert(PQ_MOCK.lock() && "No mock created, plese execute first PqMock::create_and_get");
+  return PQ_MOCK.lock()->PQresultErrorMessage( res );
 }
 
 } // extern "C"
