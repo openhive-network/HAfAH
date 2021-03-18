@@ -1,8 +1,10 @@
 #pragma once
 
 #include "include/pq/copy_tuples_session.hpp"
+#include "include/operation_types.hpp"
 
 #include <memory>
+#include <include/operation_types.hpp>
 
 extern "C" {
   struct HeapTupleData;
@@ -22,6 +24,8 @@ namespace ForkExtension::PostgresPQ {
         void push_tuple_header();
         void push_id_field();
         void push_table_name( const std::string& _table_name );
+        void push_operation( OperationType _operation);
+
     private:
         class TupleHeader;
         static int32_t m_tuple_id; //TODO: only temporary solution, id may be a serilizer or must be initialized for each creation

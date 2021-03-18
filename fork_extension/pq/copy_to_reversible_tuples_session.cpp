@@ -27,6 +27,7 @@ namespace ForkExtension::PostgresPQ {
     push_tuple_header();
     push_id_field(); // id
     push_table_name( _table_name ); // table name
+    push_operation( OperationType::DELETE );
     push_tuple_as_next_column(_deleted_tuple, _tuple_desc ); // prev tuple
     push_null_field(); // new tuple
   }
@@ -40,13 +41,14 @@ namespace ForkExtension::PostgresPQ {
     push_tuple_header();
     push_id_field();
     push_table_name( _table_name );
+    push_operation( OperationType::INSERT );
     push_null_field(); // prev - before insert there was no tuple
     push_tuple_as_next_column( _inserted_tuple, _tuple_desc ); // new tuple
   }
 
   void
   CopyToReversibleTuplesTable::push_tuple_header() {
-    static constexpr uint16_t number_of_columns = 4; // id, table, prev, next
+    static constexpr uint16_t number_of_columns = 5; // id, table, operation, prev, next
     CopyTuplesSession::push_tuple_header( number_of_columns );
   }
 
@@ -64,6 +66,14 @@ namespace ForkExtension::PostgresPQ {
     uint32_t name_size = htonl( _table_name.size() );
     push_data( &name_size, sizeof( uint32_t ) );
     push_data( _table_name.c_str(), _table_name.size()  );
+  }
+
+  void
+  CopyToReversibleTuplesTable::push_operation( OperationType _operation) {
+      uint32_t operation_size = htonl( sizeof( uint16_t ) );
+      auto operation = htons( static_cast<uint16_t>( _operation ) );
+      push_data( &operation_size, sizeof( uint32_t ) );
+      push_data( &operation, sizeof( uint16_t )  );
   }
 
 } // namespace ForkExtension::PostgresPQ
