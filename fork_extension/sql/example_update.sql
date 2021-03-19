@@ -13,7 +13,7 @@ CREATE TYPE custom_type AS (
 	name TEXT
 );
 --1.b a table with different kind of column types. It will be filled by the client
-DROP TABLE IF EXISTS src_table;
+DROP TABLE IF EXISTS src_table CASCADE;
 CREATE TABLE src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) );
 
 --2. Create trigger ( function on_table_change()  was added by the plugin during loading )
@@ -31,13 +31,8 @@ JOIN ( VALUES( 'temp1', '{{0.25, 3.4, 6}}'::FLOAT[], ROW(1, 5.8, '123abc')::cust
 --3.b update rows
 UPDATE src_table SET name = 'changed name';
 
---3.c check that tuples is filled
-SELECT * FROM tuples LIMIT 100;
-
-
 --4 deserialize saved tuples to rows in src_table
 SELECT back_from_fork(); -- 51ms,41ms,41ms
-DELETE FROM tuples; -- cleans up tuples table, TODO: must be done in plugin
 
 --4.a check that tuples name='tmp1'
 SELECT * FROM src_table  LIMIT 100;

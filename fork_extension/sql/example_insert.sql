@@ -28,15 +28,9 @@ SELECT gen.id, val.name, val.arr, val.rec, val.name2, val.num
 FROM generate_series(1, 10000) AS gen(id)
 JOIN ( VALUES( 'temp1', '{{0.25, 3.4, 6}}'::FLOAT[], ROW(1, 5.8, '123abc')::custom_type, 'padu'::VARCHAR, 2.123::NUMERIC(3,2) ) ) as val(name,arr,rec, name2, num) ON True;
 --3.b remove all previously added rows, the removed rows will be saved in 'tuples' table
-DELETE FROM src_table; --NO TRIGGER(12ms,11ms,11ms), TRIGGER(62ms,71ms,61ms)
-
---3.a check that tuples is filled
-SELECT * FROM tuples LIMIT 100;
-
 
 --4 deserialize saved tuples to rows in src_table
 SELECT back_from_fork(); -- 51ms,41ms,41ms
-DELETE FROM tuples; -- cleans up tuples table, TODO: must be done in plugin
 
 --4.a check that tuples are deserialized
 SELECT * FROM src_table  LIMIT 100;

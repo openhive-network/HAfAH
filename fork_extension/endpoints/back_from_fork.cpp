@@ -132,6 +132,9 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     }
   } // for each tuple
 
+  copy_session.reset(); // if any copy in progress
+  transaction->execute( ForkExtension::Sql::EMPTY_TUPLES );
+
   PG_RETURN_VOID();
 } //TODO: catches repeated with trigger, fix it
 catch ( std::exception& _exception ) {

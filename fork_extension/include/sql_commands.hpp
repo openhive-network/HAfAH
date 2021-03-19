@@ -6,7 +6,7 @@
 
 namespace ForkExtension::Sql {
 
-    static constexpr auto CREATE_TUPLES_TABLE = "CREATE TABLE IF NOT EXISTS " TUPLES_TABLE_NAME "(id integer, table_name text, operation smallint, tuple_old bytea, tuple_new bytea)";
+    static constexpr auto CREATE_TUPLES_TABLE = "CREATE TABLE IF NOT EXISTS " TUPLES_TABLE_NAME "(id integer PRIMARY KEY, table_name text, operation smallint, tuple_old bytea, tuple_new bytea)";
     enum class TuplesTableColumns {
           Id = 0
         , TableName = 1
@@ -16,4 +16,6 @@ namespace ForkExtension::Sql {
     };
 
     static constexpr auto GET_STORED_TUPLES = "SELECT table_name, operation, tuple_old, tuple_new FROM tuples ORDER BY id ASC";
+
+    static constexpr auto EMPTY_TUPLES = "DELETE FROM tuples";
 } // namespace ForkExtension::Sql

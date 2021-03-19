@@ -23,6 +23,7 @@ CREATE TRIGGER on_src_table_change AFTER DELETE ON src_table
 
 --3. Make operations on src_table
 --3.a Insert 10000 rows to src table, each of them will be copied to the tuples table
+
 INSERT INTO src_table ( smth, name, values, data, name2, num ) 
 SELECT gen.id, val.name, val.arr, val.rec, val.name2, val.num
 FROM generate_series(1, 10000) AS gen(id)
@@ -30,19 +31,20 @@ JOIN ( VALUES( 'temp1', '{{0.25, 3.4, 6}}'::FLOAT[], ROW(1, 5.8, '123abc')::cust
 --3.b remove all previously added rows, the removed rows will be saved in 'tuples' table
 DELETE FROM src_table; --NO TRIGGER(12ms,11ms,11ms), TRIGGER(62ms,71ms,61ms)
 
+
 --3.a check that tuples is filled
 SELECT * FROM tuples LIMIT 100;
 
 
 --4 deserialize saved tuples to rows in src_table
 SELECT back_from_fork(); -- 51ms,41ms,41ms
-DELETE FROM tuples; -- cleans up tuples table, TODO: must be done in plugin
 
 --4.a check that tuples are deserialized
 SELECT * FROM src_table  LIMIT 100;
 
 -- Cleanup things added by plugin
---DROP FUNCTION IF EXISTS on_table_change CASCADE;
---DROP FUNCTION IF EXISTS back_from_fork CASCADE;
---DROP TABLE IF EXISTS tuples;
+-- DROP FUNCTION IF EXISTS on_table_change CASCADE;
+-- DROP FUNCTION IF EXISTS back_from_fork CASCADE;
+-- DROP TABLE IF EXISTS tuples;
+
 
