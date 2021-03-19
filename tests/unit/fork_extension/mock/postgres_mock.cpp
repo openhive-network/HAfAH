@@ -76,4 +76,16 @@ char* OidOutputFunctionCall(Oid functionId, Datum val) {
   return POSTGRES_MOCK.lock()->OidOutputFunctionCall(functionId, val);
 }
 
+TupleTableSlot* MakeTupleTableSlot() {
+  return POSTGRES_MOCK.lock()->MakeTupleTableSlot();
+}
+
+void tuplestore_rescan(Tuplestorestate *state) {
+  return POSTGRES_MOCK.lock()->tuplestore_rescan(state);
+}
+
+bool tuplestore_gettupleslot(Tuplestorestate *state, bool forward, bool copy, TupleTableSlot *slot) {
+  return POSTGRES_MOCK.lock()->tuplestore_gettupleslot(state, forward, copy, slot);
+}
+
 } // extern "C"

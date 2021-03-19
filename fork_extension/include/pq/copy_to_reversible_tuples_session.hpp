@@ -19,6 +19,7 @@ namespace ForkExtension::PostgresPQ {
 
         void push_delete(const std::string& _table_name, const HeapTupleData& _deleted_tuple, const TupleDesc& _tuple_desc );
         void push_insert(const std::string& _table_name, const HeapTupleData& _inserted_tuple, const TupleDesc& _tuple_desc );
+        void push_update(const std::string& _table_name, const HeapTupleData& _old_tuple, const HeapTupleData& _new_tuple, const TupleDesc& _tuple_desc );
 
     private:
         void push_tuple_header();

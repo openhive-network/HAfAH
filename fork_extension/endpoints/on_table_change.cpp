@@ -4,6 +4,7 @@
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 #include "include/pq/db_client.hpp"
 #include "include/pq/transaction.hpp"
+#include "include/tuples_iterator.hpp"
 
 #include "gen/git_version.hpp"
 
@@ -38,14 +39,14 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
   LOG_WARNING( "trigger" );
 
   if (!CALLED_AS_TRIGGER(fcinfo)) {
-    LOG_ERROR( "table_changed_service: not called by trigger manager" );
+    LOG_ERROR( "on_table_change not called by trigger manager" );
     return 0;
   }
 
   TriggerData* trig_data = reinterpret_cast<TriggerData*>( fcinfo->context );
 
   if ( !TRIGGER_FIRED_FOR_STATEMENT(trig_data->tg_event) ) {
-    LOG_WARNING("table_changed_service: not supported statement trigger");
+    LOG_WARNING("not supported statement trigger");
     return 0;
   }
 
@@ -68,7 +69,22 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
   }
 
   if ( TRIGGER_FIRED_BY_UPDATE(trig_data->tg_event) ) {
-    LOG_WARNING("Table update not supported");
+    if ( trig_data->tg_newtable == nullptr || trig_data->tg_oldtable == nullptr ) {
+      THROW_RUNTIME_ERROR( "No trigger tuples for update" );
+    }
+
+    ForkExtension::TuplesStoreIterator old_tuples( trig_data->tg_oldtable );
+    ForkExtension::TuplesStoreIterator new_tuples( trig_data->tg_newtable );
+
+    while( auto old_tuple = old_tuples.next() ) {
+      auto new_tuple = new_tuples.next();
+      if ( !new_tuple ) {
+        THROW_RUNTIME_ERROR( "Different number of new and old tuples during update operation" );
+      }
+
+      copy_session->push_update( trigg_table_name, old_tuple.get(), new_tuple.get(), tup_desc );
+    }
+
     return 0;
   }
 
@@ -77,7 +93,6 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
       THROW_RUNTIME_ERROR( "No trigger tuples for insert" );
     }
 
-    const std::string trigg_table_name = SPI_getrelname(trig_data->tg_relation);
     auto save_insert_operation = [&tup_desc,&copy_session,&trigg_table_name]( const HeapTupleData& _tuple ) {
       copy_session->push_insert(trigg_table_name, _tuple, tup_desc);
     };

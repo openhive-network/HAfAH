@@ -94,8 +94,38 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         transaction->execute( remove_row_sql );
         break;
       }
-      case static_cast< uint16_t >( OperationType::UPDATE ):
+      case static_cast< uint16_t >( OperationType::UPDATE ): {
+        if (copy_session) { // We need to break pending copy session
+          copy_session.reset();
+        }
+
+        auto new_tuple_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
+                                             static_cast< int32_t >( TuplesTableColumns::NewTuple ), &is_null);
+
+        auto old_tuple_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
+                                             static_cast< int32_t >( TuplesTableColumns::OldTuple ), &is_null);
+
+        Relation raw_rel;
+        raw_rel = heap_openrv(makeRangeVar(NULL, table_name, -1), AccessShareLock);
+        if (raw_rel == nullptr) {
+          THROW_RUNTIME_ERROR("Cannot open relation "s + table_name);
+        }
+        ForkExtension::Relation rel(*raw_rel);
+        auto condition = rel.createPkeyCondition(DatumGetByteaPP(new_tuple_value));
+
+        if (condition.empty()) {
+          THROW_RUNTIME_ERROR("No primary key condition for inserted tuple in ");
+        }
+        heap_close(raw_rel, NoLock);
+        auto remove_row_sql = "DELETE FROM "s + table_name + " WHERE "s + condition;
+        transaction->execute(remove_row_sql);
+
+        if (!copy_session || copy_session->get_table_name() != table_name) {
+          copy_session = transaction->startCopyTuplesSession(table_name);
+        }
+        copy_session->push_tuple(DatumGetByteaPP(old_tuple_value));
         break;
+      }
       default: {
         THROW_RUNTIME_ERROR("Unknow operation type in tuples table");
       }

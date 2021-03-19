@@ -29,7 +29,7 @@ struct TupleExample {
 };
 #pragma pack( pop )
 
-BOOST_AUTO_TEST_SUITE( tuples_iterators )
+BOOST_AUTO_TEST_SUITE( tuples_fileds_iterators )
 
 BOOST_AUTO_TEST_CASE( simple_iteration_by_fields )
 {

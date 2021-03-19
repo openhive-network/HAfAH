@@ -28,7 +28,7 @@ namespace ForkExtension::PostgresPQ {
     push_id_field(); // id
     push_table_name( _table_name ); // table name
     push_operation( OperationType::DELETE );
-    push_tuple_as_next_column(_deleted_tuple, _tuple_desc ); // prev tuple
+    push_tuple_as_next_column(_deleted_tuple, _tuple_desc ); // old tuple
     push_null_field(); // new tuple
   }
 
@@ -42,8 +42,22 @@ namespace ForkExtension::PostgresPQ {
     push_id_field();
     push_table_name( _table_name );
     push_operation( OperationType::INSERT );
-    push_null_field(); // prev - before insert there was no tuple
+    push_null_field(); // old tuple - before insert there was no tuple
     push_tuple_as_next_column( _inserted_tuple, _tuple_desc ); // new tuple
+  }
+
+  void
+  CopyToReversibleTuplesTable::push_update( const std::string& _table_name, const HeapTupleData& _old_tuple, const HeapTupleData& _new_tuple, const TupleDesc& _tuple_desc ) {
+    if ( _table_name.empty() ) {
+      THROW_RUNTIME_ERROR("Empty table name");
+    }
+
+    push_tuple_header();
+    push_id_field();
+    push_table_name( _table_name );
+    push_operation( OperationType::UPDATE );
+    push_tuple_as_next_column( _old_tuple, _tuple_desc ); // old tuple
+    push_tuple_as_next_column( _new_tuple, _tuple_desc ); // new tuple
   }
 
   void

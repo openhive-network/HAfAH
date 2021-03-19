@@ -1,8 +1,28 @@
-//
-// Created by syncad on 3/18/21.
-//
+#pragma once
 
-#ifndef PSQL_TOOLS_TUPLES_ITERATOR_HPP
-#define PSQL_TOOLS_TUPLES_ITERATOR_HPP
+#include <boost/optional.hpp>
 
-#endif //PSQL_TOOLS_TUPLES_ITERATOR_HPP
+extern "C" {
+  typedef struct Tuplestorestate Tuplestorestate;
+  struct HeapTupleData;
+  struct TupleTableSlot;
+}
+
+namespace ForkExtension {
+
+  class TuplesStoreIterator {
+  public:
+      explicit TuplesStoreIterator( Tuplestorestate* _tuples );
+      ~TuplesStoreIterator() = default;
+      TuplesStoreIterator( const TuplesStoreIterator& ) = delete;
+      TuplesStoreIterator& operator=( const TuplesStoreIterator& ) = delete;
+
+      boost::optional< HeapTupleData& > next();
+
+  private:
+      Tuplestorestate* m_tuples;
+      TupleTableSlot* m_slot;
+  };
+
+} // namespace ForkExtension
+

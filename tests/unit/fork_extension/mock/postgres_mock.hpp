@@ -1,8 +1,11 @@
 #pragma once
 
+#include "include/postgres_includes.hpp"
+
+#undef Max
+#undef Assert
 #include <gmock/gmock.h>
 
-#include "include/postgres_includes.hpp"
 
 
 class IPostgresMock {
@@ -20,6 +23,9 @@ public:
     virtual Datum ReceiveFunctionCall(FmgrInfo *flinfo, fmStringInfo buf, Oid typioparam, int32 typmod) = 0;
     virtual void getTypeOutputInfo(Oid type, Oid *typOutput, bool *typIsVarlena) = 0;
     virtual char *OidOutputFunctionCall(Oid functionId, Datum val) = 0;
+    virtual TupleTableSlot* MakeTupleTableSlot() = 0;
+    virtual void tuplestore_rescan(Tuplestorestate *state) = 0;
+    virtual bool tuplestore_gettupleslot(Tuplestorestate *state, bool forward, bool copy, TupleTableSlot *slot) = 0;
 
     //Bitmapset
     virtual int	bms_next_member(const Bitmapset* a, int prevbit) = 0;
@@ -39,6 +45,9 @@ public:
     MOCK_METHOD( Datum, ReceiveFunctionCall, (FmgrInfo*, fmStringInfo, Oid, int32 ) );
     MOCK_METHOD( void, getTypeOutputInfo, (Oid, Oid*, bool*) );
     MOCK_METHOD( char*, OidOutputFunctionCall, (Oid, Datum) );
+    MOCK_METHOD( TupleTableSlot*, MakeTupleTableSlot, () );
+    MOCK_METHOD( void, tuplestore_rescan, (Tuplestorestate*) );
+    MOCK_METHOD( bool, tuplestore_gettupleslot, (Tuplestorestate*, bool, bool, TupleTableSlot*) );
 
     //Bitmapset
     MOCK_METHOD( int, bms_next_member, (const Bitmapset*, int));
