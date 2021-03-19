@@ -15,7 +15,7 @@ namespace ForkExtension::Sql {
         , NewTuple = 4
     };
 
-    static constexpr auto GET_STORED_TUPLES = "SELECT table_name, operation, tuple_old, tuple_new FROM tuples ORDER BY id ASC";
+    static constexpr auto GET_STORED_TUPLES = "SELECT table_name, operation, tuple_old, tuple_new FROM tuples ORDER BY id DESC";
 
     static constexpr auto EMPTY_TUPLES = "DELETE FROM tuples";
 } // namespace ForkExtension::Sql

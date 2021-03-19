@@ -24,13 +24,27 @@ extern "C" {
 PG_FUNCTION_INFO_V1(back_from_fork);
 }
 
+namespace {
+    bool IS_BACK_FROM_FORK_IN_PROGRESS = false;
+}
+
+namespace ForkExtension {
+
+  bool isBackFromForkInProgress() {
+    return IS_BACK_FROM_FORK_IN_PROGRESS;
+  }
+
+} // namespace ForkExtension
+
 Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   LOG_INFO("back_from_fork");
 
+  IS_BACK_FROM_FORK_IN_PROGRESS = true;
   // TODO: needs C++ abstraction for SPI, otherwise evrywhere we will copy this
   SPI_connect();
   BOOST_SCOPE_EXIT_ALL() {
         SPI_finish();
+        IS_BACK_FROM_FORK_IN_PROGRESS = false;
   };
 
   // TODO: change to prepared statements

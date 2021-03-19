@@ -1,3 +1,4 @@
+#include "include/endpoints/global_synchronization.hpp"
 #include "include/exceptions.hpp"
 #include "include/relation.hpp"
 #include "include/postgres_includes.hpp"
@@ -36,6 +37,15 @@ void executeOnEachTuple( Tuplestorestate* _tuples, std::function< void(const Hea
 }
 
 Datum on_table_change(PG_FUNCTION_ARGS) try {
+  /* Postgres is a multiprocess arch db, so each client connection works in a separated process
+   * If the client starts 'back_from_fork', then restored tuples will immadiatly activate triggers
+   * - on the same call stack as back_form_fork is executed, so we can easly block unneeded triggers with
+   * a global variable.
+   */
+  if (ForkExtension::isBackFromForkInProgress() ) {
+    return 0;
+  }
+
   LOG_WARNING( "trigger" );
 
   if (!CALLED_AS_TRIGGER(fcinfo)) {

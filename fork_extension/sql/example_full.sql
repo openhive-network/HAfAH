@@ -34,14 +34,17 @@ INSERT INTO pattern_table SELECT * FROM src_table;
 SELECT * FROM src_table EXCEPT SELECT * FROM pattern_table; -- should return no rows
 
 --2. Create triggers ( function on_table_change()  was added by the plugin during its loading )
+DROP TRIGGER IF EXISTS on_src_table_change_insert on src_table;
 CREATE TRIGGER on_src_table_change_insert AFTER INSERT ON src_table
     REFERENCING NEW TABLE AS new_table
     FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
 
+DROP TRIGGER IF EXISTS on_src_table_change_delte on src_table;
 CREATE TRIGGER on_src_table_change_delte AFTER DELETE ON src_table
     REFERENCING OLD TABLE AS old_table
     FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
 
+DROP TRIGGER IF EXISTS on_src_table_change_update on src_table;
 CREATE TRIGGER on_src_table_change_update AFTER UPDATE ON src_table
     REFERENCING NEW TABLE AS new_table OLD TABLE AS old_table
     FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change(); 
@@ -49,7 +52,7 @@ CREATE TRIGGER on_src_table_change_update AFTER UPDATE ON src_table
 -- update some rows
 UPDATE src_table SET name = 'changed_name' WHERE id % 5 = 0;
 --delete some rows
---DELETE FROM src_table WHERE id % 15 = 0;
+DELETE FROM src_table WHERE id % 15 = 0;
 --insert
 INSERT INTO src_table ( smth, name, values, data, name2, num ) 
 SELECT gen.id, val.name, val.arr, val.rec, val.name2, val.num
@@ -65,15 +68,8 @@ SELECT * FROM src_table EXCEPT SELECT * FROM pattern_table; -- should return num
 --4 deserialize saved tuples to rows in src_table
 SELECT back_from_fork(); -- 51ms,41ms,41ms
 
-
-
-DELETE FROM tuples; -- cleans up tuples table, TODO: must be done in plugin
-
---4.a check that tuples are deserialized
-SELECT * FROM src_table  LIMIT 100;
-
-
-DELETE FROM src_table WHERE id=10001
+--5 check that table back to its previous state
+SELECT * FROM src_table EXCEPT SELECT * FROM pattern_table; -- should return number of rows
 
 
 -- Cleanup things added by plugin
