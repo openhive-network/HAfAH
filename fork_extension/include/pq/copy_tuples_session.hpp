@@ -15,7 +15,7 @@ namespace ForkExtension::PostgresPQ {
 
     class CopyTuplesSession : public CopySession {
     public:
-        CopyTuplesSession( std::shared_ptr< pg_conn > _connection, const std::string& _table );
+        CopyTuplesSession( std::shared_ptr< pg_conn > _connection, const std::string& _table, const std::vector< std::string >& _columns );
         ~CopyTuplesSession();
 
         void push_tuple( bytea* _encoded_with_copy_tuple );

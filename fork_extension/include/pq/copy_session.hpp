@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 extern "C" {
   struct pg_conn;
@@ -11,7 +12,7 @@ namespace ForkExtension::PostgresPQ {
 
     class CopySession{
     public:
-        CopySession( std::shared_ptr< pg_conn > _connection, const std::string& _table_name );
+        CopySession( std::shared_ptr< pg_conn > _connection, const std::string& _table_name, const std::vector< std::string >& _columns );
         ~CopySession();
         CopySession(const CopySession&) = delete;
         CopySession& operator=(const CopySession&) = delete;

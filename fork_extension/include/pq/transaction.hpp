@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 extern "C" {
 typedef struct pg_conn PGconn;
@@ -18,7 +19,7 @@ namespace ForkExtension::PostgresPQ {
 
       void execute( const std::string& _sql ) const;
       std::unique_ptr< CopyToReversibleTuplesTable > startCopyToReversibleTuplesSession();
-      std::unique_ptr< CopyTuplesSession > startCopyTuplesSession( const std::string& _table_name );
+      std::unique_ptr< CopyTuplesSession > startCopyTuplesSession( const std::string& _table_name, const std::vector< std::string >& _columns );
   private:
       std::shared_ptr< PGconn > m_connection;
   };

@@ -12,7 +12,7 @@ using namespace std::string_literals;
 
 namespace ForkExtension::PostgresPQ {
 
-CopySession::CopySession( std::shared_ptr< PGconn > _connection, const std::string& _table_name )
+CopySession::CopySession( std::shared_ptr< PGconn > _connection, const std::string& _table_name, const std::vector< std::string >& _columns )
   : m_connection( std::move(_connection) )
   , m_table_name( _table_name ) {
   if ( m_connection  == nullptr ) {
@@ -23,7 +23,18 @@ CopySession::CopySession( std::shared_ptr< PGconn > _connection, const std::stri
     THROW_INITIALIZATION_ERROR( "Incorrect table name "s + _table_name  );
   }
 
-  std::string binary_copy_cmd = "COPY " + _table_name + " FROM STDIN binary";
+  std::string binary_copy_cmd = "COPY " + _table_name;
+  if ( !_columns.empty() ) {
+    std::string columns_list;
+    for (auto &column : _columns) {
+      if ( !columns_list.empty() ) {
+        columns_list.push_back(',');
+      }
+      columns_list.append( column );
+    }
+    binary_copy_cmd.append( "("s + columns_list + ")"s );
+  }
+  binary_copy_cmd.append( " FROM STDIN binary" );
   std::shared_ptr< PGresult > open_session_result( PQexec( m_connection.get(), binary_copy_cmd.c_str() ), PQclear );
 
   if ( PQresultStatus( open_session_result.get() ) != PGRES_COPY_IN ) {

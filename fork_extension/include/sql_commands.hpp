@@ -6,7 +6,7 @@
 
 namespace ForkExtension::Sql {
 
-    static constexpr auto CREATE_TUPLES_TABLE = "CREATE TABLE IF NOT EXISTS " TUPLES_TABLE_NAME "(id integer PRIMARY KEY, table_name text, operation smallint, tuple_old bytea, tuple_new bytea)";
+    static constexpr auto CREATE_TUPLES_TABLE = "CREATE TABLE IF NOT EXISTS " TUPLES_TABLE_NAME "(table_name text, operation smallint, tuple_old bytea, tuple_new bytea, id SERIAL PRIMARY KEY )";
     enum class TuplesTableColumns {
           Id = 0
         , TableName = 1

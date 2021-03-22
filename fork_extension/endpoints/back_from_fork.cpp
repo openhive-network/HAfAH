@@ -38,7 +38,7 @@ namespace ForkExtension {
 } // namespace ForkExtension
 
 Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
-  LOG_INFO("back_from_fork");
+  LOG_WARNING("back_from_fork");
 
   IS_BACK_FROM_FORK_IN_PROGRESS = true;
   // TODO: needs C++ abstraction for SPI, otherwise evrywhere we will copy this
@@ -75,7 +75,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     switch (DatumGetInt16(operation_datum)) {
       case static_cast< uint16_t >( OperationType::DELETE ): {
         if (!copy_session || copy_session->get_table_name() != table_name) {
-          copy_session = transaction->startCopyTuplesSession(table_name);
+          copy_session = transaction->startCopyTuplesSession(table_name, {});
         }
 
         auto binary_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
@@ -127,7 +127,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         transaction->execute(remove_row_sql);
 
         if (!copy_session || copy_session->get_table_name() != table_name) {
-          copy_session = transaction->startCopyTuplesSession(table_name);
+          copy_session = transaction->startCopyTuplesSession(table_name, {});
         }
         copy_session->push_tuple(DatumGetByteaPP(old_tuple_value));
         break;

@@ -49,9 +49,9 @@ Transaction::startCopyToReversibleTuplesSession() {
 }
 
 std::unique_ptr< CopyTuplesSession >
-Transaction::startCopyTuplesSession( const std::string& _table_name ) {
+Transaction::startCopyTuplesSession( const std::string& _table_name, const std::vector< std::string >& _columns ) {
   assert( m_connection );
 
-  return std::unique_ptr< CopyTuplesSession >( new CopyTuplesSession( m_connection, _table_name ) );
+  return std::unique_ptr< CopyTuplesSession >( new CopyTuplesSession( m_connection, _table_name, _columns ) );
 }
 } // namespace ForkExtension::PostgresPQ

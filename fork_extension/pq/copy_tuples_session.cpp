@@ -60,8 +60,8 @@ namespace ForkExtension::PostgresPQ {
 
   static_assert( sizeof(BinaryFileFormatHeader) == 19 ); // 15 + extension
 
-  CopyTuplesSession::CopyTuplesSession( std::shared_ptr< pg_conn > _connection, const std::string& _table )
-  : CopySession( _connection, _table )
+  CopyTuplesSession::CopyTuplesSession( std::shared_ptr< pg_conn > _connection, const std::string& _table, const std::vector< std::string >& _columns )
+  : CopySession( _connection, _table, _columns )
   , m_null_field_size( htonl( -1 ) )
   , m_trailing_mark( htons( -1 ) )
   {

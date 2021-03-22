@@ -9,10 +9,9 @@
 #include <vector>
 
 namespace ForkExtension::PostgresPQ {
-    int32_t CopyToReversibleTuplesTable::m_tuple_id = 0;
 
-    CopyToReversibleTuplesTable::CopyToReversibleTuplesTable( std::shared_ptr< pg_conn > _connection )
-  : CopyTuplesSession( _connection, TUPLES_TABLE_NAME )
+  CopyToReversibleTuplesTable::CopyToReversibleTuplesTable( std::shared_ptr< pg_conn > _connection )
+  : CopyTuplesSession( _connection, TUPLES_TABLE_NAME, { "table_name", "operation", "tuple_old", "tuple_new" } )
   {
   }
 
@@ -25,11 +24,11 @@ namespace ForkExtension::PostgresPQ {
     }
 
     push_tuple_header();
-    push_id_field(); // id
     push_table_name( _table_name ); // table name
     push_operation( OperationType::DELETE );
     push_tuple_as_next_column(_deleted_tuple, _tuple_desc ); // old tuple
     push_null_field(); // new tuple
+    push_id_field(); // id
   }
 
   void
@@ -39,11 +38,11 @@ namespace ForkExtension::PostgresPQ {
     }
 
     push_tuple_header();
-    push_id_field();
     push_table_name( _table_name );
     push_operation( OperationType::INSERT );
     push_null_field(); // old tuple - before insert there was no tuple
     push_tuple_as_next_column( _inserted_tuple, _tuple_desc ); // new tuple
+    push_id_field();
   }
 
   void
@@ -53,26 +52,23 @@ namespace ForkExtension::PostgresPQ {
     }
 
     push_tuple_header();
-    push_id_field();
     push_table_name( _table_name );
     push_operation( OperationType::UPDATE );
     push_tuple_as_next_column( _old_tuple, _tuple_desc ); // old tuple
     push_tuple_as_next_column( _new_tuple, _tuple_desc ); // new tuple
+    push_id_field();
   }
 
   void
   CopyToReversibleTuplesTable::push_tuple_header() {
-    static constexpr uint16_t number_of_columns = 5; // id, table, operation, prev, next
+    static constexpr uint16_t number_of_columns = 4; // table, operation, prev, next (id is ommitted)
     CopyTuplesSession::push_tuple_header( number_of_columns );
   }
 
   void
   CopyToReversibleTuplesTable::push_id_field() {
-    static const uint32_t id_size = htonl( sizeof( uint32_t ) );
-    push_data( &id_size, sizeof( uint32_t ) );
-    auto tuple_id = htonl( m_tuple_id );
-    push_data( &tuple_id, sizeof( uint32_t ) );
-    ++m_tuple_id;
+    //let the postgres to insert next serial value
+    return;
   }
 
   void
