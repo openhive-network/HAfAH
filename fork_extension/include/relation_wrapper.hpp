@@ -13,13 +13,13 @@ extern "C" {
 
 namespace ForkExtension {
 
-  class Relation {
+  class RelationWrapper {
     public:
       using PrimaryKeyColumns = std::vector< uint16_t >;
 
       // TODO: create it with relation name
-      Relation( RelationData& _relation ); // assumed that postgres controll the lifetime of _relation
-      ~Relation() = default;
+      RelationWrapper(RelationData& _relation ); // assumed that postgres controll the lifetime of _relation
+      ~RelationWrapper() = default;
 
       PrimaryKeyColumns getPrimaryKeysColumns() const; //returns sorted list of pkey columns number
       ColumnsIterator getColumns() const;

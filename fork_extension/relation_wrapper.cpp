@@ -1,4 +1,4 @@
-#include "include/relation.hpp"
+#include "include/relation_wrapper.hpp"
 
 #include "include/exceptions.hpp"
 #include "include/postgres_includes.hpp"
@@ -10,7 +10,7 @@
 using namespace std::string_literals;
 
 namespace ForkExtension {
-Relation::Relation( RelationData& _relation )
+RelationWrapper::RelationWrapper(RelationData& _relation )
   : m_relation( _relation ) {
 }
 
@@ -41,8 +41,8 @@ std::string binary_value_to_text( uint8_t* _value, uint32_t _size, const TupleDe
 }
 
 
-Relation::PrimaryKeyColumns
-Relation::getPrimaryKeysColumns() const {
+RelationWrapper::PrimaryKeyColumns
+RelationWrapper::getPrimaryKeysColumns() const {
   PrimaryKeyColumns result;
 
   Oid pkey_oid;
@@ -60,7 +60,7 @@ Relation::getPrimaryKeysColumns() const {
 }
 
 ColumnsIterator
-Relation::getColumns() const {
+RelationWrapper::getColumns() const {
   return ColumnsIterator( *m_relation.get().rd_att );
 }
 
@@ -74,7 +74,7 @@ auto moveIteratorForward( _JavaLikeIterator& _it, uint32_t _number_of_steps ) {
 }
 
 std::string
-Relation::createPkeyCondition( bytea* _relation_tuple_in_copy_format ) const {
+RelationWrapper::createPkeyCondition(bytea* _relation_tuple_in_copy_format ) const {
   auto sorted_primary_keys_columns = getPrimaryKeysColumns();
   auto columns_it = getColumns();
   TuplesFieldIterator tuples_fields_it(_relation_tuple_in_copy_format );

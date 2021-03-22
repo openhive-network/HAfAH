@@ -1,6 +1,6 @@
 #include <boost/test/unit_test.hpp>
 
-#include "include/relation.hpp"
+#include "include/relation_wrapper.hpp"
 
 #include "mock/postgres_mock.hpp"
 
@@ -12,7 +12,7 @@ BOOST_AUTO_TEST_CASE( get_pkey_columns ) {
   raw_relation.rd_id = 123;
 
   Bitmapset* columns_bitmap = reinterpret_cast< Bitmapset* >(0xAABBCCDDEEFFAABB);
-  const ForkExtension::Relation::PrimaryKeyColumns expected_columns = { 1, 3, 8 };
+  const ForkExtension::RelationWrapper::PrimaryKeyColumns expected_columns = {1, 3, 8 };
   static constexpr auto END_OF_BITMAP = -1;
 
   EXPECT_CALL( *postgres_mock, get_primary_key_attnos( raw_relation.rd_id, true, ::testing::_ ) )
@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE( get_pkey_columns ) {
   EXPECT_CALL( *postgres_mock, bms_next_member( columns_bitmap, expected_columns[ 2 ] - FirstLowInvalidHeapAttributeNumber ) ).Times( 1 ).WillOnce( ::testing::Return( END_OF_BITMAP ) );
 
 
-  ForkExtension::Relation relation_under_test( raw_relation );
+  ForkExtension::RelationWrapper relation_under_test(raw_relation );
 
   auto pk_columns = relation_under_test.getPrimaryKeysColumns();
 
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE( get_pkey_columns_no_pk ) {
           .Times( 1 )
           .WillOnce( ::testing::Return(  nullptr ) );
 
-  ForkExtension::Relation relation_under_test( raw_relation );
+  ForkExtension::RelationWrapper relation_under_test(raw_relation );
 
   auto pk_columns = relation_under_test.getPrimaryKeysColumns();
 

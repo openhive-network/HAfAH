@@ -6,7 +6,7 @@
 
 #include "include/operation_types.hpp"
 #include "include/postgres_includes.hpp"
-#include "include/relation.hpp"
+#include "include/relation_wrapper.hpp"
 #include "include/sql_commands.hpp"
 
 #include <boost/scope_exit.hpp>
@@ -97,7 +97,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         if (raw_rel == nullptr) {
           THROW_RUNTIME_ERROR("Cannot open relation "s + table_name);
         }
-        ForkExtension::Relation rel(*raw_rel);
+        ForkExtension::RelationWrapper rel(*raw_rel);
         auto condition = rel.createPkeyCondition(DatumGetByteaPP(binary_value));
 
         if ( condition.empty() ) {
@@ -124,7 +124,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         if (raw_rel == nullptr) {
           THROW_RUNTIME_ERROR("Cannot open relation "s + table_name);
         }
-        ForkExtension::Relation rel(*raw_rel);
+        ForkExtension::RelationWrapper rel(*raw_rel);
         auto condition = rel.createPkeyCondition(DatumGetByteaPP(new_tuple_value));
 
         if (condition.empty()) {
