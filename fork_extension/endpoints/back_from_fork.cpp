@@ -6,7 +6,7 @@
 
 #include "include/operation_types.hpp"
 #include "include/postgres_includes.hpp"
-#include "include/relation_wrapper.hpp"
+#include "include/relation_from_name.hpp"
 #include "include/sql_commands.hpp"
 
 #include <boost/scope_exit.hpp>
@@ -17,6 +17,7 @@
 
 using ForkExtension::PostgresPQ::DbClient;
 using ForkExtension::OperationType;
+using ForkExtension::RelationFromName;
 using ForkExtension::Sql::TuplesTableColumns;
 using namespace std::string_literals;
 
@@ -92,18 +93,14 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
 
         auto binary_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
                                           static_cast< int32_t >( TuplesTableColumns::NewTuple ), &is_null);
-        Relation raw_rel;
-        raw_rel = heap_openrv(makeRangeVar(NULL, table_name, -1), AccessShareLock);
-        if (raw_rel == nullptr) {
-          THROW_RUNTIME_ERROR("Cannot open relation "s + table_name);
-        }
-        ForkExtension::RelationWrapper rel(*raw_rel);
-        auto condition = rel.createPkeyCondition(DatumGetByteaPP(binary_value));
+
+        RelationFromName relation( table_name );
+        auto condition = relation.createPkeyCondition(DatumGetByteaPP(binary_value));
 
         if ( condition.empty() ) {
           THROW_RUNTIME_ERROR( "No primary key condition for inserted tuple in " );
         }
-        heap_close(raw_rel, NoLock);
+
         auto remove_row_sql = "DELETE FROM "s + table_name + " WHERE "s + condition;
         transaction->execute( remove_row_sql );
         break;
@@ -119,18 +116,13 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         auto old_tuple_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
                                              static_cast< int32_t >( TuplesTableColumns::OldTuple ), &is_null);
 
-        Relation raw_rel;
-        raw_rel = heap_openrv(makeRangeVar(NULL, table_name, -1), AccessShareLock);
-        if (raw_rel == nullptr) {
-          THROW_RUNTIME_ERROR("Cannot open relation "s + table_name);
-        }
-        ForkExtension::RelationWrapper rel(*raw_rel);
-        auto condition = rel.createPkeyCondition(DatumGetByteaPP(new_tuple_value));
+        RelationFromName relation( table_name );
+        auto condition = relation.createPkeyCondition(DatumGetByteaPP(new_tuple_value));
 
         if (condition.empty()) {
           THROW_RUNTIME_ERROR("No primary key condition for inserted tuple in ");
         }
-        heap_close(raw_rel, NoLock);
+
         auto remove_row_sql = "DELETE FROM "s + table_name + " WHERE "s + condition;
         transaction->execute(remove_row_sql);
 

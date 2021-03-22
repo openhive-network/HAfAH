@@ -10,8 +10,12 @@
 using namespace std::string_literals;
 
 namespace ForkExtension {
-RelationWrapper::RelationWrapper(RelationData& _relation )
+RelationWrapper::RelationWrapper(RelationData* _relation )
   : m_relation( _relation ) {
+
+  if ( m_relation == nullptr ) {
+    THROW_INITIALIZATION_ERROR( "Relation is a Null pointer" );
+  }
 }
 
 std::string binary_value_to_text( uint8_t* _value, uint32_t _size, const TupleDesc& _tuple_desc, uint16_t _column_id ) {
@@ -46,7 +50,7 @@ RelationWrapper::getPrimaryKeysColumns() const {
   PrimaryKeyColumns result;
 
   Oid pkey_oid;
-  auto columns_bitmap = get_primary_key_attnos( m_relation.get().rd_id, true, &pkey_oid );
+  auto columns_bitmap = get_primary_key_attnos( m_relation->rd_id, true, &pkey_oid );
 
   if ( columns_bitmap == nullptr ) {
     return result;
@@ -61,7 +65,7 @@ RelationWrapper::getPrimaryKeysColumns() const {
 
 ColumnsIterator
 RelationWrapper::getColumns() const {
-  return ColumnsIterator( *m_relation.get().rd_att );
+  return ColumnsIterator( *m_relation->rd_att );
 }
 
 template< typename _JavaLikeIterator >
@@ -92,7 +96,7 @@ RelationWrapper::createPkeyCondition(bytea* _relation_tuple_in_copy_format ) con
       THROW_RUNTIME_ERROR( "Incorrect tuple format" );
     }
 
-    auto value = binary_value_to_text(  field_value.getValue(), field_value.getSize(), m_relation.get().rd_att, pkey_column_id - 1 );
+    auto value = binary_value_to_text(  field_value.getValue(), field_value.getSize(), m_relation->rd_att, pkey_column_id - 1 );
     if ( !result.empty() ) {
       result.append( " AND " );
     }

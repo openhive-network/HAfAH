@@ -88,4 +88,16 @@ bool tuplestore_gettupleslot(Tuplestorestate *state, bool forward, bool copy, Tu
   return POSTGRES_MOCK.lock()->tuplestore_gettupleslot(state, forward, copy, slot);
 }
 
+RangeVar* makeRangeVar(char *schemaname, char *relname, int location) {
+  return POSTGRES_MOCK.lock()->makeRangeVar(schemaname, relname, location);
+}
+
+Relation heap_openrv(const RangeVar *relation, LOCKMODE lockmode) {
+  return POSTGRES_MOCK.lock()->heap_openrv(relation, lockmode);
+}
+
+void relation_close(Relation relation, LOCKMODE lockmode) {
+  return POSTGRES_MOCK.lock()->relation_close(relation, lockmode);
+}
+
 } // extern "C"

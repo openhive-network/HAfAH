@@ -1,8 +1,7 @@
 #pragma once
 
-#include "include/columns_iterator.hpp"
+#include "include/relation.hpp"
 
-#include <functional>
 #include <vector>
 
 extern "C" {
@@ -13,20 +12,23 @@ extern "C" {
 
 namespace ForkExtension {
 
-  class RelationWrapper {
+  /* It implements IRelation with wrapping postgres RelationData structure.
+   * The lifetime of the RelationData is controlled outside the class (RelationWrapper is not a owner of RelationData
+   */
+  class RelationWrapper
+          : public IRelation {
     public:
       using PrimaryKeyColumns = std::vector< uint16_t >;
 
-      // TODO: create it with relation name
-      RelationWrapper(RelationData& _relation ); // assumed that postgres controll the lifetime of _relation
+      RelationWrapper(RelationData* _relation );
       ~RelationWrapper() = default;
 
-      PrimaryKeyColumns getPrimaryKeysColumns() const; //returns sorted list of pkey columns number
-      ColumnsIterator getColumns() const;
-      std::string createPkeyCondition( bytea* _relation_tuple_in_copy_format ) const;
+      PrimaryKeyColumns getPrimaryKeysColumns() const override;
+      ColumnsIterator getColumns() const override;
+      std::string createPkeyCondition( bytea* _relation_tuple_in_copy_format ) const override;
 
     private:
-      std::reference_wrapper<RelationData> m_relation;
+      RelationData* m_relation;
   };
 
 
