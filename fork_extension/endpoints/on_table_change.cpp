@@ -46,7 +46,7 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
     return 0;
   }
 
-  LOG_WARNING( "trigger" );
+  LOG_INFO( "Fired trigger 'on_table_change'" );
 
   if (!CALLED_AS_TRIGGER(fcinfo)) {
     LOG_ERROR( "on_table_change not called by trigger manager" );

@@ -38,7 +38,7 @@ namespace ForkExtension {
 } // namespace ForkExtension
 
 Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
-  LOG_WARNING("back_from_fork");
+  LOG_INFO("Called 'back_from_fork'");
 
   IS_BACK_FROM_FORK_IN_PROGRESS = true;
   // TODO: needs C++ abstraction for SPI, otherwise evrywhere we will copy this
