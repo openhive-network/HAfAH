@@ -43,21 +43,19 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
    * a global variable.
    */
   if (ForkExtension::isBackFromForkInProgress() ) {
-    return 0;
+    return PointerGetDatum(NULL);
   }
 
   LOG_INFO( "Fired trigger 'on_table_change'" );
 
   if (!CALLED_AS_TRIGGER(fcinfo)) {
-    LOG_ERROR( "on_table_change not called by trigger manager" );
-    return 0;
+    THROW_RUNTIME_ERROR( "on_table_change not called by trigger manager" );
   }
 
   TriggerData* trig_data = reinterpret_cast<TriggerData*>( fcinfo->context );
 
   if ( !TRIGGER_FIRED_FOR_STATEMENT(trig_data->tg_event) ) {
-    LOG_WARNING("not supported statement trigger");
-    return 0;
+    THROW_RUNTIME_ERROR("not supported statement trigger");
   }
 
   auto transaction = DbClient::currentDatabase().startTransaction();
@@ -74,8 +72,7 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
         copy_session->push_delete(trigg_table_name, _tuple, tup_desc);
     };
     executeOnEachTuple( trig_data->tg_oldtable, save_delete_operation );
-
-    return 0;
+    return PointerGetDatum(NULL);
   }
 
   if ( TRIGGER_FIRED_BY_UPDATE(trig_data->tg_event) ) {
@@ -95,7 +92,7 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
       copy_session->push_update( trigg_table_name, old_tuple.get(), new_tuple.get(), tup_desc );
     }
 
-    return 0;
+    return PointerGetDatum(NULL);
   }
 
   if ( TRIGGER_FIRED_BY_INSERT(trig_data->tg_event) ) {
@@ -109,18 +106,18 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
 
     executeOnEachTuple( trig_data->tg_newtable, save_insert_operation );
 
-    return 0;
+    return PointerGetDatum(NULL);
   }
 
-
-  return 0;
+  THROW_RUNTIME_ERROR( "Unexpected reason of trigger 'on_table_change'" );
+  return PointerGetDatum(NULL);
 }
 catch ( std::exception& _exception ) {
   LOG_ERROR( "Unhandled exception: %s", _exception.what() );
-  return 0;
+  return PointerGetDatum(NULL);
 }
 catch( ... ) {
   LOG_ERROR( "Unhandled unknown exception" );
-  return 0;
+  return PointerGetDatum(NULL);
 }
 
