@@ -42,8 +42,8 @@ FieldSizeAndValue get_size_and_value( const HeapTupleData& _tuple, const TupleDe
   fmgr_info( binary_out_func_id, &function );
 
   auto value = SendFunctionCall(&function, binary_value);
-  result.size = VARSIZE(value) - VARHDRSZ;
-  result.value = VARDATA(value);
+  result.size = VARSIZE_ANY_EXHDR(value);
+  result.value = VARDATA_ANY(value);
 
   return result;
 }
@@ -85,8 +85,8 @@ namespace ForkExtension::PostgresPQ {
 
   void
   CopyTuplesSession::push_tuple( bytea* _encoded_with_copy_tuple ) {
-    auto data_len = VARSIZE( _encoded_with_copy_tuple ) - VARHDRSZ;
-    push_data( VARDATA(_encoded_with_copy_tuple), data_len );
+    auto data_len = VARSIZE_ANY_EXHDR( _encoded_with_copy_tuple );
+    push_data( VARDATA_ANY(_encoded_with_copy_tuple), data_len );
   }
 
   void

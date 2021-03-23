@@ -120,15 +120,15 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         auto condition = relation.createPkeyCondition(DatumGetByteaPP(new_tuple_value));
 
         if (condition.empty()) {
-          THROW_RUNTIME_ERROR("No primary key condition for inserted tuple in ");
+          THROW_RUNTIME_ERROR("No primary key condition for inserted tuple in "s + table_name);
         }
 
         auto remove_row_sql = "DELETE FROM "s + table_name + " WHERE "s + condition;
         transaction->execute(remove_row_sql);
 
-        if (!copy_session || copy_session->get_table_name() != table_name) {
-          copy_session = transaction->startCopyTuplesSession(table_name, {});
-        }
+        copy_session = transaction->startCopyTuplesSession(table_name, {});
+
+        auto condition_old = relation.createPkeyCondition(DatumGetByteaPP(old_tuple_value));
         copy_session->push_tuple(DatumGetByteaPP(old_tuple_value));
         break;
       }
