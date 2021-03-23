@@ -93,7 +93,8 @@ RelationWrapper::createPkeyCondition(bytea* _relation_tuple_in_copy_format ) con
 
     auto field_value = moveIteratorForward( tuples_fields_it, pkey_column_id - previous_column );
     if ( !field_value ) {
-      THROW_RUNTIME_ERROR( "Incorrect tuple format" );
+      auto message = "Incorrect tuple format table:"s + getName();
+      THROW_RUNTIME_ERROR(  message );
     }
 
     auto value = binary_value_to_text(  field_value.getValue(), field_value.getSize(), m_relation->rd_att, pkey_column_id - 1 );
@@ -106,7 +107,11 @@ RelationWrapper::createPkeyCondition(bytea* _relation_tuple_in_copy_format ) con
   }
 
   return result;
+}
 
+std::string
+RelationWrapper::getName() const {
+  return SPI_getrelname(m_relation);
 }
 
 

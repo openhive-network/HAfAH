@@ -42,6 +42,23 @@ BOOST_AUTO_TEST_CASE( wrapper_get_pkey_columns ) {
   BOOST_REQUIRE( pk_columns == expected_columns );
 }
 
+BOOST_AUTO_TEST_CASE( wrapper_get_name ) {
+  auto postgres_mock = PostgresMock::create_and_get();
+  auto expected_table_name = "TEST_TABLE";
+  RelationData raw_relation;
+
+  EXPECT_CALL( *postgres_mock, SPI_getrelname( &raw_relation ) )
+    .Times(1)
+    .WillOnce( ::testing::Return( const_cast<char*>( expected_table_name ) ) )
+  ;
+
+  ForkExtension::RelationWrapper relation_under_test( &raw_relation );
+
+  auto table_name = relation_under_test.getName();
+
+  BOOST_REQUIRE_EQUAL( table_name, expected_table_name );
+}
+
 BOOST_AUTO_TEST_CASE( wrapper_get_pkey_columns_no_pk ) {
   auto postgres_mock = PostgresMock::create_and_get();
   RelationData raw_relation;

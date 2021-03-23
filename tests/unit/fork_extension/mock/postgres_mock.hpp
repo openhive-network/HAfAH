@@ -29,6 +29,7 @@ public:
     virtual RangeVar* makeRangeVar(char *schemaname, char *relname, int location) = 0;
     virtual Relation heap_openrv(const RangeVar *relation, LOCKMODE lockmode) = 0;
     virtual void relation_close(Relation relation, LOCKMODE lockmode) = 0;
+    virtual char *SPI_getrelname(Relation rel) = 0;
 
     //Bitmapset
     virtual int	bms_next_member(const Bitmapset* a, int prevbit) = 0;
@@ -54,6 +55,7 @@ public:
     MOCK_METHOD( RangeVar*, makeRangeVar, (char*, char*, int) );
     MOCK_METHOD( Relation, heap_openrv, (const RangeVar*, LOCKMODE) );
     MOCK_METHOD( void, relation_close, (Relation, LOCKMODE) );
+    MOCK_METHOD(  char*, SPI_getrelname, (Relation) );
 
     //Bitmapset
     MOCK_METHOD( int, bms_next_member, (const Bitmapset*, int));

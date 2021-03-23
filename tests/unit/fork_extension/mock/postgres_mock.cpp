@@ -100,4 +100,8 @@ void relation_close(Relation relation, LOCKMODE lockmode) {
   return POSTGRES_MOCK.lock()->relation_close(relation, lockmode);
 }
 
+char* SPI_getrelname(Relation rel) {
+  return POSTGRES_MOCK.lock()->SPI_getrelname( rel );
+}
+
 } // extern "C"

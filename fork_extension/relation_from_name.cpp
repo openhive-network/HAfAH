@@ -47,6 +47,12 @@ RelationFromName::createPkeyCondition( bytea* _relation_tuple_in_copy_format ) c
   assert( m_relation_wrapper );
   return m_relation_wrapper->createPkeyCondition( _relation_tuple_in_copy_format );
 }
+
+std::string
+RelationFromName::getName() const {
+  assert( m_relation_wrapper );
+  return m_relation_wrapper->getName();
+}
 } // namespace ForkExtension
 
 
