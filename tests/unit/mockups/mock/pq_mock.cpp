@@ -1,4 +1,4 @@
-#include "mock/pq_mock.hpp"
+#include "pq_mock.hpp"
 
 #include <cassert>
 #include <memory>

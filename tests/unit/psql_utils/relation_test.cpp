@@ -1,8 +1,9 @@
 #include <boost/test/unit_test.hpp>
-#include <include/exceptions.hpp>
 
-#include "include/relation_from_name.hpp"
-#include "include/relation_wrapper.hpp"
+#include "include/exceptions.hpp"
+
+#include "relation_from_name.hpp"
+#include "relation_wrapper.hpp"
 
 #include "mock/postgres_mock.hpp"
 

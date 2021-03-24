@@ -1,11 +1,13 @@
 #include "include/endpoints/global_synchronization.hpp"
 #include "include/exceptions.hpp"
-#include "include/relation_wrapper.hpp"
-#include "include/postgres_includes.hpp"
+#include "include/psql_utils/relation.hpp"
+#include "include/psql_utils/postgres_includes.hpp"
 #include "include/pq/copy_to_reversible_tuples_session.hpp"
 #include "include/pq/db_client.hpp"
 #include "include/pq/transaction.hpp"
-#include "include/tuples_iterator.hpp"
+
+#include "include/psql_utils/relation.hpp"
+#include "include/psql_utils/tuples_iterator.hpp"
 
 #include "gen/git_version.hpp"
 
@@ -13,7 +15,6 @@
 #include <functional>
 #include <mutex>
 #include <string>
-#include <include/relation_wrapper.hpp>
 
 using ForkExtension::PostgresPQ::DbClient;
 

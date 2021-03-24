@@ -1,13 +1,15 @@
 #pragma once
 
-#include "include/columns_iterator.hpp"
+#include "include/psql_utils/columns_iterator.hpp"
 
+#include <memory>
 #include <string>
 #include <vector>
 
 extern "C" {
   struct varlena;
   typedef struct varlena bytea;
+  struct RelationData;
 }
 
 namespace ForkExtension {
@@ -21,6 +23,9 @@ namespace ForkExtension {
       virtual ColumnsIterator getColumns() const = 0;
       virtual std::string createPkeyCondition( bytea* _relation_tuple_in_copy_format ) const = 0;
       virtual std::string getName() const = 0;
+
+      static std::unique_ptr< IRelation > create( const std::string& _relation_name );
+      static std::unique_ptr< IRelation > create( RelationData* _relation_data );
   };
 } // namespace ForkExtension
 

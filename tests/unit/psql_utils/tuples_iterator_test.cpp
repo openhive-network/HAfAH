@@ -1,7 +1,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "include/exceptions.hpp"
-#include "include/tuples_iterator.hpp"
+#include "include/psql_utils/tuples_iterator.hpp"
 
 #include "mock/postgres_mock.hpp"
 

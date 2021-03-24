@@ -1,4 +1,4 @@
-#include "mock/postgres_mock.hpp"
+#include "postgres_mock.hpp"
 
 #include <cassert>
 #include <memory>

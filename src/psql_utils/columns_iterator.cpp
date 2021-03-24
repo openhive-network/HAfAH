@@ -1,6 +1,6 @@
-#include "include/columns_iterator.hpp"
+#include "include/psql_utils/columns_iterator.hpp"
 
-#include "include/postgres_includes.hpp"
+#include "include/psql_utils/postgres_includes.hpp"
 
 namespace ForkExtension {
 

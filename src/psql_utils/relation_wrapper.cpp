@@ -1,8 +1,8 @@
-#include "include/relation_wrapper.hpp"
+#include "relation_wrapper.hpp"
 
 #include "include/exceptions.hpp"
-#include "include/postgres_includes.hpp"
-#include "include/tuple_fields_iterators.hpp"
+#include "include/psql_utils/postgres_includes.hpp"
+#include "include/psql_utils/tuple_fields_iterators.hpp"
 
 #include <cassert>
 

@@ -1,4 +1,4 @@
-#include "mock/spi_mock.hpp"
+#include "spi_mock.hpp"
 
 #include <cassert>
 #include <memory>

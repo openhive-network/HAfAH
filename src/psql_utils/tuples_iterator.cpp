@@ -1,7 +1,7 @@
-#include "include/tuples_iterator.hpp"
+#include "include/psql_utils/tuples_iterator.hpp"
 
 #include "include/exceptions.hpp"
-#include "include/postgres_includes.hpp"
+#include "include/psql_utils/postgres_includes.hpp"
 
 #include <cassert>
 

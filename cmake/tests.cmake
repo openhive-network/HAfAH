@@ -6,6 +6,7 @@ MACRO( ADD_UNIT_TESTS module_name)
 
     SETUP_COMPILER( ${test_target} )
     ADD_POSTGRES_INCLUDES( ${test_target} )
+    TARGET_INCLUDE_DIRECTORIES( ${test_target} PRIVATE ${CMAKE_SOURCE_DIR}/tests/unit/mockups )
 
     ADD_BOOST_LIBRARIES( ${test_target} )
 

@@ -5,8 +5,8 @@
 #include "include/pq/transaction.hpp"
 
 #include "include/operation_types.hpp"
-#include "include/postgres_includes.hpp"
-#include "include/relation_from_name.hpp"
+#include "include/psql_utils/postgres_includes.hpp"
+#include "include/psql_utils/relation.hpp"
 #include "include/sql_commands.hpp"
 
 #include <boost/scope_exit.hpp>
@@ -17,7 +17,6 @@
 
 using ForkExtension::PostgresPQ::DbClient;
 using ForkExtension::OperationType;
-using ForkExtension::RelationFromName;
 using ForkExtension::Sql::TuplesTableColumns;
 using namespace std::string_literals;
 
@@ -93,8 +92,8 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         auto binary_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
                                           static_cast< int32_t >( TuplesTableColumns::NewTuple ), &is_null);
 
-        RelationFromName relation( table_name );
-        auto condition = relation.createPkeyCondition(DatumGetByteaPP(binary_value));
+        auto relation = ForkExtension::IRelation::create( table_name );
+        auto condition = relation->createPkeyCondition(DatumGetByteaPP(binary_value));
 
         if ( condition.empty() ) {
           THROW_RUNTIME_ERROR( "No primary key condition for inserted tuple in " );
@@ -113,8 +112,8 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         auto old_tuple_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
                                              static_cast< int32_t >( TuplesTableColumns::OldTuple ), &is_null);
 
-        RelationFromName relation( table_name );
-        auto condition = relation.createPkeyCondition(DatumGetByteaPP(new_tuple_value));
+        auto relation = ForkExtension::IRelation::create( table_name );
+        auto condition = relation->createPkeyCondition(DatumGetByteaPP(new_tuple_value));
 
         if (condition.empty()) {
           THROW_RUNTIME_ERROR("No primary key condition for inserted tuple in "s + table_name);
@@ -125,7 +124,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
 
         copy_session = transaction->startCopyTuplesSession(table_name, {});
 
-        auto condition_old = relation.createPkeyCondition(DatumGetByteaPP(old_tuple_value));
+        auto condition_old = relation->createPkeyCondition(DatumGetByteaPP(old_tuple_value));
         copy_session->push_tuple(DatumGetByteaPP(old_tuple_value));
         break;
       }
