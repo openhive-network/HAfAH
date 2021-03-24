@@ -36,7 +36,7 @@ SELECT back_from_fork(); -- 51ms,41ms,41ms
 SELECT * FROM src_table  LIMIT 100;
 
 -- Cleanup things added by plugin
-DROP FUNCTION IF EXISTS on_table_change CASCADE;
-DROP FUNCTION IF EXISTS back_from_fork CASCADE;
-DROP TABLE IF EXISTS tuples;
+--DROP FUNCTION IF EXISTS on_table_change CASCADE;
+--DROP FUNCTION IF EXISTS back_from_fork CASCADE;
+--DROP TABLE IF EXISTS tuples;
 
