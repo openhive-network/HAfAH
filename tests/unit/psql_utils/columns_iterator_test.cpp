@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE( positive_iteration_threw_columns ) {
   FormData_pg_attribute* columns_attributes[] = { &attr0, &attr1, &attr2, &attr3 };
   desc.attrs = columns_attributes;
 
-  ForkExtension::ColumnsIterator iterator_under_test( desc );
+  PsqlTools::PsqlUtils::ColumnsIterator iterator_under_test( desc );
 
   BOOST_REQUIRE_EQUAL( *iterator_under_test.next(), "COLUMN_1" );
   BOOST_REQUIRE_EQUAL( *iterator_under_test.next(), "COLUMN_2" );
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE( no_columns ) {
   tupleDesc desc;
   desc.natts = 0;
 
-  ForkExtension::ColumnsIterator iterator_under_test( desc );
+  PsqlTools::PsqlUtils::ColumnsIterator iterator_under_test( desc );
 
   BOOST_REQUIRE( !iterator_under_test.next() );
 }

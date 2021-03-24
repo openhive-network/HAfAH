@@ -7,9 +7,7 @@ extern "C" {
 typedef struct pg_conn PGconn;
 }
 
-namespace ForkExtension::PostgresPQ {
-
-  class CopyToReversibleTuplesTable;
+namespace PsqlTools::PostgresPQ {
   class CopyTuplesSession;
 
   class Transaction {
@@ -23,4 +21,4 @@ namespace ForkExtension::PostgresPQ {
     std::shared_ptr< PGconn > m_connection;
   };
 
-} // namespace ForkExtension
+} // namespace PsqlTools

@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE( simple_iteration ){
     .WillOnce( ::testing::Return( false ) )
   ;
 
-  ForkExtension::TuplesStoreIterator iterator_under_test( tuples_store_ptr );
+  PsqlTools::PsqlUtils::TuplesStoreIterator iterator_under_test( tuples_store_ptr );
 
   auto first_it_result = iterator_under_test.next();
   BOOST_REQUIRE( first_it_result );
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE( no_tuples ){
           .WillOnce( ::testing::Return( false ) )
   ;
 
-  ForkExtension::TuplesStoreIterator iterator_under_test( tuples_store_ptr );
+  PsqlTools::PsqlUtils::TuplesStoreIterator iterator_under_test( tuples_store_ptr );
 
   BOOST_REQUIRE( !iterator_under_test.next() );
 }
@@ -77,8 +77,8 @@ BOOST_AUTO_TEST_CASE( negative_cannot_create_slot ){
   EXPECT_CALL( *postgres_mock, MakeTupleTableSlot() ).Times(1).WillOnce( ::testing::Return( nullptr ) );
 
   BOOST_CHECK_THROW(
-      ForkExtension::TuplesStoreIterator iterator_under_test( tuples_store_ptr )
-    , ForkExtension::ObjectInitializationException
+      PsqlTools::PsqlUtils::TuplesStoreIterator iterator_under_test( tuples_store_ptr )
+    , PsqlTools::ObjectInitializationException
   );
 }
 

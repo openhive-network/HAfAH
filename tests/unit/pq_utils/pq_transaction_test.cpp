@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE( positivie_client_connect )
           .WillOnce( Return( result_ptr ) )
   ;
 
-  BOOST_CHECK_NO_THROW( ForkExtension::PostgresPQ::Transaction object_uder_test( connection ) );
+  BOOST_CHECK_NO_THROW( PsqlTools::PostgresPQ::Transaction object_uder_test( connection ) );
 }
 
 BOOST_AUTO_TEST_CASE( negative_client_cannot_start_transaction )
@@ -61,16 +61,16 @@ BOOST_AUTO_TEST_CASE( negative_client_cannot_start_transaction )
           ;
 
   BOOST_CHECK_THROW(
-      ForkExtension::PostgresPQ::Transaction object_uder_test( connection )
-    , ForkExtension::ObjectInitializationException
+      PsqlTools::PostgresPQ::Transaction object_uder_test( connection )
+    , PsqlTools::ObjectInitializationException
   );
 }
 
 BOOST_AUTO_TEST_CASE( negative_client_null_connection )
 {
   BOOST_CHECK_THROW(
-          ForkExtension::PostgresPQ::Transaction object_uder_test( nullptr )
-  , ForkExtension::ObjectInitializationException
+    PsqlTools::PostgresPQ::Transaction object_uder_test( nullptr )
+  , PsqlTools::ObjectInitializationException
   );
 }
 
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE( sql_execute )
   EXPECT_CALL( *pq_mock, PQexec( ::testing::_, ::testing::StrEq( sql ) ) ).Times(1);
 
 
-  ForkExtension::PostgresPQ::Transaction object_uder_test( connection );
+  PsqlTools::PostgresPQ::Transaction object_uder_test( connection );
 
   BOOST_CHECK_NO_THROW( object_uder_test.execute( sql ) );
 }
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE( negative_sql_execute )
     EXPECT_CALL(*pq_mock, PQresultStatus(::testing::_)).Times(1).WillOnce(Return(PGRES_COMMAND_OK)); // for d_tor
   }
 
-  ForkExtension::PostgresPQ::Transaction object_uder_test( connection );
+  PsqlTools::PostgresPQ::Transaction object_uder_test( connection );
 
   BOOST_CHECK_THROW( object_uder_test.execute( sql ), std::runtime_error );
 }

@@ -8,7 +8,7 @@ extern "C" {
 typedef struct pg_conn PGconn;
 }
 
-namespace ForkExtension::PostgresPQ {
+namespace PsqlTools::PostgresPQ {
 
   class Transaction;
 
@@ -34,4 +34,4 @@ namespace ForkExtension::PostgresPQ {
       static std::unique_ptr< DbClient > ms_instance;
   };
 
-} // namespace ForkExtension::PostgresPQ
+} // namespace PsqlTools::PostgresPQ

@@ -49,7 +49,7 @@ FieldSizeAndValue get_size_and_value( const HeapTupleData& _tuple, const TupleDe
 }
 
 
-namespace ForkExtension::PostgresPQ {
+namespace PsqlTools::PostgresPQ {
 #pragma pack(push, 1)
   struct BinaryFileFormatHeader {
       char header[11] = {'P', 'G','C','O','P','Y','\n','\377','\r','\n','\0'};
@@ -153,4 +153,4 @@ namespace ForkExtension::PostgresPQ {
       push_data( &m_trailing_mark, sizeof( uint16_t ) );
   }
 
-} // namespace ForkExtension::PostgresPQ
+} // namespace PsqlTools::PostgresPQ

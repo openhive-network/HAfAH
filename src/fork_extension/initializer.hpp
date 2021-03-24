@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace ForkExtension {
+namespace PsqlTools::ForkExtension {
   /* The object of this type is a global variable in initialization.hpp
    * In its ctro db is initialized and prepared to work with fork extenstion
    * Please add all db initialization inside the ctor
@@ -23,4 +23,4 @@ namespace ForkExtension {
       bool function_exists( const std::string& _function_name ) const;
       void initialize_function( const std::string& _function_name, const std::string& _sql_return_type ) const;
   };
-} // namespace ForkExtension
+} // namespace PsqlTools::ForkExtension

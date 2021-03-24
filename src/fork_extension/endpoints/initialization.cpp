@@ -22,7 +22,7 @@ void _PG_init(void) {
   }
   is_initialized = true;
   // END WORKAROUND
-  ForkExtension::Initializer initializer;
+  PsqlTools::ForkExtension::Initializer initializer;
 }
 
 void _PG_fini(void) {

@@ -8,7 +8,7 @@ extern "C" {
   struct tupleDesc;
 }
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
     
   class ColumnsIterator {
   public:
@@ -21,6 +21,4 @@ namespace ForkExtension {
     std::reference_wrapper< const tupleDesc > m_tuple_desc;
     uint16_t m_current_column;
   };
-} // namespace ForkExtension
-
-
+} // namespace PsqlTools::PsqlUtils

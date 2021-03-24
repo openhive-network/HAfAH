@@ -12,7 +12,7 @@ extern "C" {
   struct RelationData;
 }
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
   class IRelation {
     public:
       using PrimaryKeyColumns = std::vector< uint16_t >;
@@ -27,5 +27,5 @@ namespace ForkExtension {
       static std::unique_ptr< IRelation > create( const std::string& _relation_name );
       static std::unique_ptr< IRelation > create( RelationData* _relation_data );
   };
-} // namespace ForkExtension
+} // namespace PsqlTools::PsqlUtils
 

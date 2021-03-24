@@ -11,7 +11,7 @@
 
 using namespace std::string_literals;
 
-namespace ForkExtension::PostgresPQ {
+namespace PsqlTools::PostgresPQ {
 
 Transaction::Transaction( std::shared_ptr< PGconn > _connection )
   : m_connection( _connection ) {
@@ -49,4 +49,4 @@ Transaction::startCopyTuplesSession( const std::string& _table_name, const std::
 
   return std::unique_ptr< CopyTuplesSession >( new CopyTuplesSession( m_connection, _table_name, _columns ) );
 }
-} // namespace ForkExtension::PostgresPQ
+} // namespace PsqlTools::PostgresPQ

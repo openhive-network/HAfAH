@@ -8,7 +8,7 @@ extern "C" {
   struct TupleTableSlot;
 }
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
 
   class TuplesStoreIterator {
   public:
@@ -24,5 +24,5 @@ namespace ForkExtension {
       TupleTableSlot* m_slot;
   };
 
-} // namespace ForkExtension
+} // namespace PsqlTools::PsqlUtils
 

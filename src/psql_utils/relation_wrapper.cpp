@@ -9,7 +9,7 @@
 
 using namespace std::string_literals;
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
 RelationWrapper::RelationWrapper(RelationData* _relation )
   : m_relation( _relation ) {
 
@@ -115,4 +115,4 @@ RelationWrapper::getName() const {
 }
 
 
-} // namespace ForkExtension
+} // namespace PsqlTools::PsqlUtils

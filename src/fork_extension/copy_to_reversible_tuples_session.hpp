@@ -9,12 +9,15 @@ extern "C" {
   struct HeapTupleData;
 } // extern "C"
 
-namespace ForkExtension::PostgresPQ {
+namespace PsqlTools::PostgresPQ {
     class Transaction;
+}
+
+namespace PsqlTools::ForkExtension {
 
     class CopyToReversibleTuplesTable {
     public:
-        explicit CopyToReversibleTuplesTable( Transaction& _transaction );
+        explicit CopyToReversibleTuplesTable( PostgresPQ::Transaction& _transaction );
         ~CopyToReversibleTuplesTable();
 
         void push_delete(const std::string& _table_name, const HeapTupleData& _deleted_tuple, const TupleDesc& _tuple_desc );
@@ -28,8 +31,8 @@ namespace ForkExtension::PostgresPQ {
         void push_operation( OperationType _operation);
 
     private:
-        std::shared_ptr< CopyTuplesSession > m_copy_session;
+        std::shared_ptr< PostgresPQ::CopyTuplesSession > m_copy_session;
         class TupleHeader;
     };
 
-} // namespace ForkExtension::PostgresPQ
+} // namespace PsqlTools::ForkExtension

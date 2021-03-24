@@ -11,9 +11,9 @@
 #include <exception>
 #include <vector>
 
-namespace ForkExtension::PostgresPQ {
+namespace PsqlTools::ForkExtension {
 
-  CopyToReversibleTuplesTable::CopyToReversibleTuplesTable( Transaction& _transaction )
+  CopyToReversibleTuplesTable::CopyToReversibleTuplesTable( PostgresPQ::Transaction& _transaction )
   {
     m_copy_session = _transaction.startCopyTuplesSession(  TUPLES_TABLE_NAME, { "table_name", "operation", "tuple_old", "tuple_new" }  );
 
@@ -93,4 +93,4 @@ namespace ForkExtension::PostgresPQ {
       m_copy_session->push_data( &operation, sizeof( uint16_t )  );
   }
 
-} // namespace ForkExtension::PostgresPQ
+} // namespace PsqlTools::ForkExtension

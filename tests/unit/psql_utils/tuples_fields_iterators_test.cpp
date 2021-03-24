@@ -34,9 +34,9 @@ BOOST_AUTO_TEST_SUITE( tuples_fileds_iterators )
 BOOST_AUTO_TEST_CASE( simple_iteration_by_fields )
 {
   TupleExample tuple_pattern;
-  auto tuple_bytea = ForkExtension::toBytea( &tuple_pattern );
+  auto tuple_bytea = PsqlTools::PsqlUtils::toBytea( &tuple_pattern );
 
-  ForkExtension::TuplesFieldIterator it_under_test( tuple_bytea.get() );
+  PsqlTools::PsqlUtils::TuplesFieldIterator it_under_test( tuple_bytea.get() );
 
   auto field1 = it_under_test.next();
   BOOST_REQUIRE( field1 );
@@ -71,8 +71,8 @@ BOOST_AUTO_TEST_CASE( negative_incorrect_tuple_format ) {
   TupleExample tuple_pattern;
   tuple_pattern.m_number_of_fields = htons( 20 ); // number of fields is greater than available memory
 
-  auto tuple_bytea = ForkExtension::toBytea( &tuple_pattern );
-  ForkExtension::TuplesFieldIterator it_under_test( tuple_bytea.get() );
+  auto tuple_bytea = PsqlTools::PsqlUtils::toBytea( &tuple_pattern );
+  PsqlTools::PsqlUtils::TuplesFieldIterator it_under_test( tuple_bytea.get() );
 
   it_under_test.next();
   it_under_test.next();
@@ -88,8 +88,8 @@ BOOST_AUTO_TEST_CASE( empty_tuple ) {
   TupleExample tuple_pattern;
   tuple_pattern.m_number_of_fields = 0;
 
-  auto tuple_bytea = ForkExtension::toBytea( &tuple_pattern );
-  ForkExtension::TuplesFieldIterator it_under_test( tuple_bytea.get() );
+  auto tuple_bytea = PsqlTools::PsqlUtils::toBytea( &tuple_pattern );
+  PsqlTools::PsqlUtils::TuplesFieldIterator it_under_test( tuple_bytea.get() );
 
   BOOST_REQUIRE( !it_under_test.next() );
 }
@@ -97,8 +97,8 @@ BOOST_AUTO_TEST_CASE( empty_tuple ) {
 BOOST_AUTO_TEST_CASE( negative_nullptr_as_param ) {
 
   BOOST_CHECK_THROW(
-      ForkExtension::TuplesFieldIterator it_under_test( nullptr )
-    , ForkExtension::ObjectInitializationException
+      PsqlTools::PsqlUtils::TuplesFieldIterator it_under_test( nullptr )
+    , PsqlTools::ObjectInitializationException
 
   );
 }

@@ -4,7 +4,7 @@
 
 #include <memory>
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
 
     template< typename _Data >
     std::unique_ptr< bytea > toBytea( _Data* _data ) {
@@ -14,4 +14,4 @@ namespace ForkExtension {
 
       return result;
     }
-} //namespace ForkExtension
+} //namespace PsqlTools::PsqUtils

@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE( positivie_client_connect )
           .Times(1)
   ;
 
-  ForkExtension::PostgresPQ::DbClient object_uder_test( db_name );
+  PsqlTools::PostgresPQ::DbClient object_uder_test( db_name );
   BOOST_CHECK( object_uder_test.isConnected() );
   BOOST_CHECK( !object_uder_test.isConnected() );
 }
@@ -57,7 +57,10 @@ BOOST_AUTO_TEST_CASE( negative_client_cannot_connect )
           .WillRepeatedly( Return( CONNECTION_BAD ) )
           ;
 
-  BOOST_CHECK_THROW( {  ForkExtension::PostgresPQ::DbClient object_uder_test( db_name ); }, ForkExtension::ObjectInitializationException );
+  BOOST_CHECK_THROW(
+      PsqlTools::PostgresPQ::DbClient object_uder_test( db_name )
+    , PsqlTools::ObjectInitializationException
+  );
 }
 
 BOOST_AUTO_TEST_CASE( negative_client_cannot_connect_because_out_of_memory )
@@ -72,7 +75,10 @@ BOOST_AUTO_TEST_CASE( negative_client_cannot_connect_because_out_of_memory )
           .WillOnce( Return( nullptr ) )
           ;
 
-  BOOST_CHECK_THROW( {  ForkExtension::PostgresPQ::DbClient object_uder_test( db_name ); }, ForkExtension::ObjectInitializationException );
+  BOOST_CHECK_THROW(
+    PsqlTools::PostgresPQ::DbClient object_uder_test( db_name ),
+    PsqlTools::ObjectInitializationException
+  );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

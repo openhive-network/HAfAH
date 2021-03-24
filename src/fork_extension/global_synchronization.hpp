@@ -1,5 +1,5 @@
 #pragma once
 
-namespace ForkExtension {
+namespace PsqlTools::ForkExtension {
   bool isBackFromForkInProgress();
-} // namespace ForkExtension
+} // namespace PsqlTools::ForkExtension

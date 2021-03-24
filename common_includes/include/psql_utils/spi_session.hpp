@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ForkExtension::Spi {
+namespace PsqlTools::PsqlUtils::Spi {
 
     class SpiSession {
     public:
@@ -10,4 +10,4 @@ namespace ForkExtension::Spi {
         void execute_read_select();
     };
 
-} // namespace ForkExtension::Spi
+} // namespace PsqlTools::PsqlUtilsSpi

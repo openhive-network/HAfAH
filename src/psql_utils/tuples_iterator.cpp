@@ -5,7 +5,7 @@
 
 #include <cassert>
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
 
 TuplesStoreIterator::TuplesStoreIterator( Tuplestorestate* _tuples ) : m_tuples( _tuples ) {
   m_slot = MakeTupleTableSlot();
@@ -23,4 +23,4 @@ TuplesStoreIterator::next() {
 
   return boost::optional< HeapTupleData& >( *m_slot->tts_tuple );
 }
-} // namespace ForkExtension
+} // namespace PsqlTools::PsqlUtils

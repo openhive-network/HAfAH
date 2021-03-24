@@ -8,7 +8,7 @@
 #include <exception>
 #include <cassert>
 
-namespace ForkExtension::PostgresPQ {
+namespace PsqlTools::PostgresPQ {
 
 DbClient::DbClient( const std::string& _db_name ) {
   if ( _db_name.empty() ) {
@@ -73,6 +73,6 @@ DbClient::getCurrentDatabaseName() const {
 
 std::unique_ptr< DbClient > DbClient::ms_instance;
 
-} // namespace ForkExtension::PostgresPQ
+} // namespace PsqlTools::PostgresPQ
 
 

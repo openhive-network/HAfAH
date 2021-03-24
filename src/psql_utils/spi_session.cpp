@@ -3,7 +3,7 @@
 #include "include/psql_utils/postgres_includes.hpp"
 #include "include/exceptions.hpp"
 
-namespace ForkExtension::Spi {
+namespace PsqlTools::PsqlUtils::Spi {
   SpiSession::SpiSession() {
     if ( SPI_connect() != SPI_OK_CONNECT ) {
       THROW_INITIALIZATION_ERROR( "Cannot connect to SPI" );
@@ -13,4 +13,4 @@ namespace ForkExtension::Spi {
   SpiSession::~SpiSession() {
     SPI_finish();
   }
-} // namespace ForkExtension::Spi
+} // namespace PsqlTools::PsqlUtils::Spi

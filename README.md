@@ -37,7 +37,23 @@ CREATE TRIGGER on_table_change AFTER DELETE ON table_name
 ```
 3. execute `back_from_fork` function: `SELECT back_from_fork();` to revert delete operations on observed tables
 
+# Architecture
+## Directory structure
+   ```
+   cmake            Contains common function used by cmake build
+   common_includes
+        include     Constains library interfaces header files, to share them among the project items
+   src              Contains libraries and executables to compile
+   tests            Contains test
+        unit        Contains unit tests and mocks
+            mockups Contains mocks 
+   ```
+   
+There is also a `generated` directory inside the build directory. It contains autmatically generated headers which can be included
+in the code whith ```#include "gen/header_file_name.hpp"```
+## Error handling
+- Exceptions are used as an error handling method
+- Each PostgreSQL 'C' entry points have to catch all unhandled exceptions and logs them as errors using LOG_ERROR macro
+- RAII is in use - each our object contructors may throw PsqlTools::ObjectInitializationException
+
 # Known problems
-1. only delete operation on observed table is supported
-2. `back_from_fork` does not clean tuples table
-3. 'back_form_fork' does not block triggers for time of rewind

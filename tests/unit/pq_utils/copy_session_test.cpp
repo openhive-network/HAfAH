@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE( positivie_copy_session )
           .Times(1)
   ;
 
-  BOOST_CHECK_NO_THROW( ForkExtension::PostgresPQ::CopySession session_under_test( connection_ptr, db_name, {} ) );
+  BOOST_CHECK_NO_THROW( PsqlTools::PostgresPQ::CopySession session_under_test( connection_ptr, db_name, {} ) );
 }
 
 BOOST_AUTO_TEST_CASE( positivie_copy_session_with_columns )
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE( positivie_copy_session_with_columns )
           ;
 
   BOOST_CHECK_NO_THROW(
-    ForkExtension::PostgresPQ::CopySession session_under_test( connection_ptr, db_name, columns )
+    PsqlTools::PostgresPQ::CopySession session_under_test( connection_ptr, db_name, columns )
   );
 }
 
@@ -95,7 +95,10 @@ BOOST_AUTO_TEST_CASE( negative_copy_session_cannot_start )
   EXPECT_CALL( *pq_mock, PQclear( ::testing::_ ) )
           .Times(1);
 
-  BOOST_CHECK_THROW( { ForkExtension::PostgresPQ::CopySession session_under_test( connection_ptr, "base", {} ); }, ForkExtension::ObjectInitializationException );
+  BOOST_CHECK_THROW(
+      PsqlTools::PostgresPQ::CopySession session_under_test( connection_ptr, "base", {} )
+    , PsqlTools::ObjectInitializationException
+  );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

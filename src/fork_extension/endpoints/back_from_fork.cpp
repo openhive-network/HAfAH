@@ -16,9 +16,9 @@
 #include <mutex>
 #include <string>
 
-using ForkExtension::PostgresPQ::DbClient;
-using ForkExtension::OperationType;
-using ForkExtension::Sql::TuplesTableColumns;
+using PsqlTools::PostgresPQ::DbClient;
+using PsqlTools::ForkExtension::OperationType;
+using PsqlTools::ForkExtension::Sql::TuplesTableColumns;
 using namespace std::string_literals;
 
 extern "C" {
@@ -29,13 +29,13 @@ namespace {
     bool IS_BACK_FROM_FORK_IN_PROGRESS = false;
 }
 
-namespace ForkExtension {
+namespace PsqlTools::ForkExtension {
 
   bool isBackFromForkInProgress() {
     return IS_BACK_FROM_FORK_IN_PROGRESS;
   }
 
-} // namespace ForkExtension
+} // namespace PsqlTools::ForkExtension
 
 Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   LOG_INFO("Called 'back_from_fork'");
@@ -49,12 +49,12 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   };
 
   // TODO: change to prepared statements
-  if (SPI_execute(ForkExtension::Sql::GET_STORED_TUPLES, true, 0/*all rows*/ ) != SPI_OK_SELECT ) {
-    THROW_RUNTIME_ERROR( "Cannot execute: "s + ForkExtension::Sql::GET_STORED_TUPLES );
+  if (SPI_execute(PsqlTools::ForkExtension::Sql::GET_STORED_TUPLES, true, 0/*all rows*/ ) != SPI_OK_SELECT ) {
+    THROW_RUNTIME_ERROR( "Cannot execute: "s + PsqlTools::ForkExtension::Sql::GET_STORED_TUPLES );
   }
 
-  auto transaction = ForkExtension::PostgresPQ::DbClient::currentDatabase().startTransaction();
-  std::unique_ptr< ForkExtension::PostgresPQ::CopyTuplesSession > copy_session;
+  auto transaction = PsqlTools::PostgresPQ::DbClient::currentDatabase().startTransaction();
+  std::unique_ptr< PsqlTools::PostgresPQ::CopyTuplesSession > copy_session;
 
   for ( uint64_t row =0; row < SPI_processed; ++row ) {
     HeapTuple tuple_row = *(SPI_tuptable->vals + row);
@@ -63,7 +63,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     auto table_name = SPI_getvalue(tuple_row, SPI_tuptable->tupdesc,
                                    static_cast< int32_t >( TuplesTableColumns::TableName ));
     if (!table_name) {
-      THROW_RUNTIME_ERROR("Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLES);
+      THROW_RUNTIME_ERROR("Unexpect null column value in query: "s + PsqlTools::ForkExtension::Sql::GET_STORED_TUPLES);
     }
 
     const auto operation_datum = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
@@ -82,7 +82,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         auto binary_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
                                           static_cast< int32_t >( TuplesTableColumns::OldTuple ), &is_null);
         if (is_null) {
-          THROW_RUNTIME_ERROR( "Unexpect null column value in query: "s + ForkExtension::Sql::GET_STORED_TUPLES );
+          THROW_RUNTIME_ERROR( "Unexpect null column value in query: "s + PsqlTools::ForkExtension::Sql::GET_STORED_TUPLES );
         }
         copy_session->push_tuple(DatumGetByteaPP(binary_value) );
         break;
@@ -93,7 +93,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         auto binary_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
                                           static_cast< int32_t >( TuplesTableColumns::NewTuple ), &is_null);
 
-        auto relation = ForkExtension::IRelation::create( table_name );
+        auto relation = PsqlTools::PsqlUtils::IRelation::create( table_name );
         auto condition = relation->createPkeyCondition(DatumGetByteaPP(binary_value));
 
         if ( condition.empty() ) {
@@ -113,7 +113,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         auto old_tuple_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
                                              static_cast< int32_t >( TuplesTableColumns::OldTuple ), &is_null);
 
-        auto relation = ForkExtension::IRelation::create( table_name );
+        auto relation = PsqlTools::PsqlUtils::IRelation::create( table_name );
         auto condition = relation->createPkeyCondition(DatumGetByteaPP(new_tuple_value));
 
         if (condition.empty()) {
@@ -136,7 +136,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   } // for each tuple
 
   copy_session.reset(); // if any copy in progress
-  transaction->execute( ForkExtension::Sql::EMPTY_TUPLES );
+  transaction->execute( PsqlTools::ForkExtension::Sql::EMPTY_TUPLES );
 
   PG_RETURN_VOID();
 } //TODO: catches repeated with trigger, fix it

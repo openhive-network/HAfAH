@@ -2,7 +2,7 @@
 
 #include "include/psql_utils/postgres_includes.hpp"
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
 
   /* Tuple in copy format
    * | number of fields | field 1 size(B) |  field 1 value  | field 2 size(B) | field 2 value   | ...
@@ -48,10 +48,4 @@ namespace ForkExtension {
     uint8_t* m_current_field;
   };
 
-class SelectiveTuplesFieldsIterator
-{
-
-};
-
-
-} // namespace ForkExtension
+} // namespace PsqlTools::PsqlUtils

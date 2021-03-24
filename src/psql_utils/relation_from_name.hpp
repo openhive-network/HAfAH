@@ -8,7 +8,7 @@ extern "C" {
 struct RelationData;
 }
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
   class RelationWrapper;
 
   class RelationFromName
@@ -27,4 +27,4 @@ namespace ForkExtension {
       std::unique_ptr< RelationWrapper > m_relation_wrapper;
   };
 
-} // namespace ForkExtension
+} // namespace PsqlTools::PsqlUtils

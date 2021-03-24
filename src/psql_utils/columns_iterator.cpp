@@ -2,7 +2,7 @@
 
 #include "include/psql_utils/postgres_includes.hpp"
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
 
 ColumnsIterator::ColumnsIterator( const tupleDesc& _desc )
   : m_tuple_desc( _desc )
@@ -21,5 +21,5 @@ ColumnsIterator::next() {
   return boost::optional<std::string>( NameStr( attribute->attname ) );
 }
 
-} // namespace ForkExtension
+} // namespace PsqlTools::PsqlUtils
 

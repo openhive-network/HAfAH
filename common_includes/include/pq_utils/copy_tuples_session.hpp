@@ -11,7 +11,7 @@ extern "C" {
   typedef struct varlena bytea;
 } // extern "C"
 
-namespace ForkExtension::PostgresPQ {
+namespace PsqlTools::PostgresPQ {
 
   class CopyTuplesSession : public CopySession {
   public:
@@ -35,4 +35,4 @@ namespace ForkExtension::PostgresPQ {
     const uint16_t m_trailing_mark;
   };
 
-} // namespace ForkExtension::PostgresPQ
+} // namespace PsqlTools::PostgresPQ

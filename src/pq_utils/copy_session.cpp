@@ -10,7 +10,7 @@
 
 using namespace std::string_literals;
 
-namespace ForkExtension::PostgresPQ {
+namespace PsqlTools::PostgresPQ {
 
 CopySession::CopySession( std::shared_ptr< PGconn > _connection, const std::string& _table_name, const std::vector< std::string >& _columns )
   : m_connection( std::move(_connection) )
@@ -69,5 +69,5 @@ CopySession::push_data_internal( const char* _data, uint32_t _size ) const {
   }
 }
 
-} // namespace ForkExtension::PostgresPQ
+} // namespace PsqlTools::PostgresPQ
 

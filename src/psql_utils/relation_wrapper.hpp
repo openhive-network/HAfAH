@@ -10,7 +10,7 @@ extern "C" {
   typedef struct varlena bytea;
 }
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
 
   /* It implements IRelation with wrapping postgres RelationData structure.
    * The lifetime of the RelationData is controlled outside the class (RelationWrapper is not a owner of RelationData
@@ -33,5 +33,5 @@ namespace ForkExtension {
   };
 
 
-} // namespace ForkExtension
+} // namespace PsqlTools::PsqlUtils
 

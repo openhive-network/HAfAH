@@ -18,8 +18,8 @@
 #include <mutex>
 #include <string>
 
-using ForkExtension::PostgresPQ::DbClient;
-using ForkExtension::PostgresPQ::CopyToReversibleTuplesTable;
+using PsqlTools::PostgresPQ::DbClient;
+using PsqlTools::ForkExtension::CopyToReversibleTuplesTable;
 
 extern "C" {
 PG_FUNCTION_INFO_V1(on_table_change);
@@ -46,7 +46,7 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
    * - on the same call stack as back_form_fork is executed, so we can easly block unneeded triggers with
    * a global variable.
    */
-  if (ForkExtension::isBackFromForkInProgress() ) {
+  if (PsqlTools::ForkExtension::isBackFromForkInProgress() ) {
     return PointerGetDatum(NULL);
   }
 
@@ -84,8 +84,8 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
       THROW_RUNTIME_ERROR( "No trigger tuples for update" );
     }
 
-    ForkExtension::TuplesStoreIterator old_tuples( trig_data->tg_oldtable );
-    ForkExtension::TuplesStoreIterator new_tuples( trig_data->tg_newtable );
+    PsqlTools::PsqlUtils::TuplesStoreIterator old_tuples( trig_data->tg_oldtable );
+    PsqlTools::PsqlUtils::TuplesStoreIterator new_tuples( trig_data->tg_newtable );
 
     while( auto old_tuple = old_tuples.next() ) {
       auto new_tuple = new_tuples.next();

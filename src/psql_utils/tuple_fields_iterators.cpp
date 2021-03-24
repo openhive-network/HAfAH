@@ -4,7 +4,7 @@
 
 #include <cassert>
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
 
 TuplesFieldIterator::TuplesFieldIterator( bytea* _tuple_in_copy_format ) {
   if ( _tuple_in_copy_format == nullptr ) {
@@ -67,5 +67,5 @@ TuplesFieldIterator::atEnd() const {
   return m_current_field_number == m_number_of_fields;
 }
 
-} // namespace ForkExtension
+} // namespace PsqlTools::PsqlUtils
 

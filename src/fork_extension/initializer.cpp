@@ -15,7 +15,7 @@
 
 using namespace std::string_literals;
 
-namespace ForkExtension {
+namespace PsqlTools::ForkExtension {
   Initializer::Initializer() try {
     LOG_WARNING( "Initialize hive fork extension ver.: %s pid: %d", GIT_REVISION, getpid() );
 
@@ -78,4 +78,4 @@ namespace ForkExtension {
 
     return SPI_processed == 1;
   }
-} // namespace ForkExtension
+} // namespace PsqlTools::ForkExtension

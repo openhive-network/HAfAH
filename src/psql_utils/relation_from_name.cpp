@@ -7,7 +7,7 @@
 
 using namespace std::string_literals;
 
-namespace ForkExtension {
+namespace PsqlTools::PsqlUtils {
 RelationFromName::RelationFromName( const std::string& _relation_name ) {
   auto range = makeRangeVar( NULL, const_cast< char* >( _relation_name.c_str() ), -1 );
 
@@ -53,7 +53,7 @@ RelationFromName::getName() const {
   assert( m_relation_wrapper );
   return m_relation_wrapper->getName();
 }
-} // namespace ForkExtension
+} // namespace PsqlTools::PsqlUtils
 
 
 
