@@ -110,19 +110,12 @@ INSERT INTO table3 ( smth1, smth2 ) SELECT gen.id, gen.id + 2 FROM generate_seri
 INSERT INTO table2 ( smth, name ) SELECT gen.id, val.name FROM generate_series( 6000, 6000 + 7) AS gen(id) JOIN ( VALUES( 'inserted2' ) ) as val(name) ON True;
 INSERT INTO table1 ( smth, name ) SELECT gen.id, val.name FROM generate_series(7000, 7000 + 11) AS gen(id) JOIN ( VALUES( 'inserted1' ) ) as val(name) ON True;
 --delete sme rows
---DELETE FROM table2 WHERE id % 35 = 0;
---DELETE FROM table1 WHERE id % 55 = 0;
---DELETE FROM table3 WHERE id % 10 = 0;
-
-
--- check that table is different that a pattern
--- SELECT * FROM table1 EXCEPT SELECT * FROM pattern_table1; -- should return number of rows
--- SELECT * FROM table2 EXCEPT SELECT * FROM pattern_table2; -- should return number of rows
--- SELECT * FROM table3 EXCEPT SELECT * FROM pattern_table3; -- should return number of rows
-
+DELETE FROM table2 WHERE id % 35 = 0;
+DELETE FROM table1 WHERE id % 55 = 0;
+DELETE FROM table3 WHERE id % 10 = 0;
 
 --4 deserialize saved tuples to rows in src_table
-SELECT back_from_fork(); -- 51ms,41ms,41ms
+SELECT back_from_fork();
 
 --5 check that table back to its previous state
 SELECT * FROM table1 EXCEPT SELECT * FROM pattern_table1; -- should not return number of rows

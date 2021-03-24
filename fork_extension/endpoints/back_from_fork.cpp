@@ -75,6 +75,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
     switch (DatumGetInt16(operation_datum)) {
       case static_cast< uint16_t >( OperationType::DELETE ): {
         if (!copy_session || copy_session->get_table_name() != table_name) {
+          copy_session.reset(); // ensure that previous session was closed
           copy_session = transaction->startCopyTuplesSession(table_name, {});
         }
 
@@ -87,9 +88,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         break;
       } // case OperationType::DELETE
       case static_cast< uint16_t >( OperationType::INSERT ): {
-        if ( copy_session ) { // We need to break pending copy session
-          copy_session.reset();
-        }
+        copy_session.reset(); // We need to break any pending copy session
 
         auto binary_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
                                           static_cast< int32_t >( TuplesTableColumns::NewTuple ), &is_null);
@@ -106,9 +105,7 @@ Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
         break;
       }
       case static_cast< uint16_t >( OperationType::UPDATE ): {
-        if (copy_session) { // We need to break pending copy session
-          copy_session.reset();
-        }
+        copy_session.reset(); // We need to break pending copy session
 
         auto new_tuple_value = SPI_getbinval(tuple_row, SPI_tuptable->tupdesc,
                                              static_cast< int32_t >( TuplesTableColumns::NewTuple ), &is_null);
