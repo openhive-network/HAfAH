@@ -87,10 +87,10 @@ namespace PsqlTools::ForkExtension {
 
   void
   CopyToReversibleTuplesTable::push_operation( OperationType _operation) {
-      uint32_t operation_size = htonl( sizeof( uint16_t ) );
-      auto operation = htons( static_cast<uint16_t>( _operation ) );
-      m_copy_session->push_data( &operation_size, sizeof( uint32_t ) );
-      m_copy_session->push_data( &operation, sizeof( uint16_t )  );
+    uint32_t operation_size = htonl( sizeof( uint16_t ) );
+    auto operation = htons( static_cast<uint16_t>( _operation ) );
+    m_copy_session->push_data( &operation_size, sizeof( uint32_t ) );
+    m_copy_session->push_data( &operation, sizeof( uint16_t )  );
   }
 
 } // namespace PsqlTools::ForkExtension
