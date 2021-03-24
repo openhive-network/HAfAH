@@ -1,8 +1,9 @@
-#include "include/initializer.hpp"
+#include "initializer.hpp"
+
+#include "sql_commands.hpp"
 
 #include "include/exceptions.hpp"
 #include "include/psql_utils/postgres_includes.hpp"
-#include "include/sql_commands.hpp"
 
 #include "gen/git_version.hpp"
 

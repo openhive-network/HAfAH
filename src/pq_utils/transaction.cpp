@@ -1,9 +1,10 @@
-#include "include/pq/transaction.hpp"
+#include "include/pq_utils/transaction.hpp"
+
+#include "include/pq_utils/copy_tuples_session.hpp"
 
 #include "include/exceptions.hpp"
 #include "include/psql_utils/logger.hpp"
 #include "include/psql_utils/postgres_includes.hpp"
-#include "include/pq/copy_to_reversible_tuples_session.hpp"
 
 #include <cassert>
 #include <string>
@@ -40,12 +41,6 @@ Transaction::execute( const std::string& _sql ) const {
   if ( PQresultStatus( result ) != PGRES_COMMAND_OK ) {
     THROW_RUNTIME_ERROR( "Cannot execute sql :"s + _sql + " :"s + PQresultErrorMessage( result ) );
   }
-}
-
-std::unique_ptr< CopyToReversibleTuplesTable >
-Transaction::startCopyToReversibleTuplesSession() {
-  assert( m_connection );
-  return std::unique_ptr< CopyToReversibleTuplesTable >( new CopyToReversibleTuplesTable( m_connection ) );
 }
 
 std::unique_ptr< CopyTuplesSession >

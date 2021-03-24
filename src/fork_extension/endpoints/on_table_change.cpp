@@ -1,10 +1,12 @@
-#include "include/endpoints/global_synchronization.hpp"
+#include "global_synchronization.hpp"
+
+#include "copy_to_reversible_tuples_session.hpp"
+
 #include "include/exceptions.hpp"
 #include "include/psql_utils/relation.hpp"
 #include "include/psql_utils/postgres_includes.hpp"
-#include "include/pq/copy_to_reversible_tuples_session.hpp"
-#include "include/pq/db_client.hpp"
-#include "include/pq/transaction.hpp"
+#include "include/pq_utils/db_client.hpp"
+#include "include/pq_utils/transaction.hpp"
 
 #include "include/psql_utils/relation.hpp"
 #include "include/psql_utils/tuples_iterator.hpp"
@@ -17,6 +19,7 @@
 #include <string>
 
 using ForkExtension::PostgresPQ::DbClient;
+using ForkExtension::PostgresPQ::CopyToReversibleTuplesTable;
 
 extern "C" {
 PG_FUNCTION_INFO_V1(on_table_change);
@@ -60,7 +63,7 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
   }
 
   auto transaction = DbClient::currentDatabase().startTransaction();
-  auto copy_session = transaction->startCopyToReversibleTuplesSession();
+  auto copy_session =  std::unique_ptr< CopyToReversibleTuplesTable >( new CopyToReversibleTuplesTable( *transaction ) );
   TupleDesc tup_desc = trig_data->tg_relation->rd_att;
   const std::string trigg_table_name = SPI_getrelname(trig_data->tg_relation);
 

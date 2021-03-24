@@ -1,6 +1,6 @@
 #include "include/psql_utils/postgres_includes.hpp"
 
-#include "include/initializer.hpp"
+#include "initializer.hpp"
 
 namespace {
     bool is_initialized = false;

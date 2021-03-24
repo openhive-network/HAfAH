@@ -1,13 +1,14 @@
 #include "include/exceptions.hpp"
 
-#include "include/pq/copy_to_reversible_tuples_session.hpp"
-#include "include/pq/db_client.hpp"
-#include "include/pq/transaction.hpp"
+#include "operation_types.hpp"
+#include "sql_commands.hpp"
 
-#include "include/operation_types.hpp"
+#include "include/pq_utils/copy_tuples_session.hpp"
+#include "include/pq_utils/db_client.hpp"
+#include "include/pq_utils/transaction.hpp"
+
 #include "include/psql_utils/postgres_includes.hpp"
 #include "include/psql_utils/relation.hpp"
-#include "include/sql_commands.hpp"
 
 #include <boost/scope_exit.hpp>
 

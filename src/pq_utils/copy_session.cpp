@@ -1,4 +1,4 @@
-#include "include/pq/copy_session.hpp"
+#include "include/pq_utils/copy_session.hpp"
 
 #include "include/psql_utils/postgres_includes.hpp"
 #include "include/exceptions.hpp"

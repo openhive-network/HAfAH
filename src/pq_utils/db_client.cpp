@@ -1,10 +1,9 @@
-#include "include/pq/db_client.hpp"
+#include "include/pq_utils/db_client.hpp"
 
 #include "include/exceptions.hpp"
 #include "include/psql_utils/postgres_includes.hpp"
 #include "include/psql_utils/logger.hpp"
-#include "include/pq/copy_to_reversible_tuples_session.hpp"
-#include "include/pq/transaction.hpp"
+#include "include/pq_utils/transaction.hpp"
 
 #include <exception>
 #include <cassert>

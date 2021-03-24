@@ -1,20 +1,20 @@
 #pragma once
 
-#include "include/pq/copy_tuples_session.hpp"
-#include "include/operation_types.hpp"
+#include "include/pq_utils/copy_tuples_session.hpp"
+#include "operation_types.hpp"
 
 #include <memory>
-#include <include/operation_types.hpp>
 
 extern "C" {
   struct HeapTupleData;
 } // extern "C"
 
 namespace ForkExtension::PostgresPQ {
+    class Transaction;
 
-    class CopyToReversibleTuplesTable : public CopyTuplesSession {
+    class CopyToReversibleTuplesTable {
     public:
-        explicit CopyToReversibleTuplesTable( std::shared_ptr< pg_conn > _connection );
+        explicit CopyToReversibleTuplesTable( Transaction& _transaction );
         ~CopyToReversibleTuplesTable();
 
         void push_delete(const std::string& _table_name, const HeapTupleData& _deleted_tuple, const TupleDesc& _tuple_desc );
@@ -28,6 +28,7 @@ namespace ForkExtension::PostgresPQ {
         void push_operation( OperationType _operation);
 
     private:
+        std::shared_ptr< CopyTuplesSession > m_copy_session;
         class TupleHeader;
     };
 
