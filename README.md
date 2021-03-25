@@ -43,6 +43,7 @@ CREATE TRIGGER on_table_change AFTER DELETE ON table_name
    cmake            Contains common function used by cmake build
    common_includes
         include     Constains library interfaces header files, to share them among the project items
+   doc              Contains documentation documents
    src              Contains libraries and executables to compile
    tests            Contains test
         unit        Contains unit tests and mocks
