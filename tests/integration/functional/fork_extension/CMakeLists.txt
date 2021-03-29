@@ -12,3 +12,4 @@ ADD_FUNCTIONAL_TESTS( back_from_fork_updates back_from_fork_update.sql )
 ADD_FUNCTIONAL_TESTS( back_from_fork_insert_updates_deletes back_from_fork_insert_update_delete.sql )
 ADD_FUNCTIONAL_TESTS( back_from_fork_3_tables back_from_fork_3_tables.sql )
 # ADD_FUNCTIONAL_TESTS( saved_tuples_rollback saved_tuples_rollback.sql ) # pq copy does not fall in current transaction
+# ADD_FUNCTIONAL_TESTS( back_from_fork_fkey back_from_fork_fkey.sql ) # defferable PK cannot be referenced as FK
