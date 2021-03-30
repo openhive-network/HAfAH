@@ -23,7 +23,7 @@ using PsqlTools::ForkExtension::Sql::TuplesTableColumns;
 using namespace std::string_literals;
 
 extern "C" {
-PG_FUNCTION_INFO_V1(back_from_fork);
+PG_FUNCTION_INFO_V1(hive_back_from_fork);
 }
 
 namespace {
@@ -38,7 +38,7 @@ namespace PsqlTools::ForkExtension {
 
 } // namespace PsqlTools::ForkExtension
 
-Datum back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
+Datum hive_back_from_fork([[maybe_unused]] PG_FUNCTION_ARGS) try {
   LOG_INFO("Called 'back_from_fork'");
 
   IS_BACK_FROM_FORK_IN_PROGRESS = true;

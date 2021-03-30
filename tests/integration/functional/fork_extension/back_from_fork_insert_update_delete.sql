@@ -130,7 +130,7 @@ AS
 $BODY$
 BEGIN
     -- back from fork - revert all the insersts above
-    PERFORM back_from_fork();
+    PERFORM hive_back_from_fork();
 END
 $BODY$
 ;

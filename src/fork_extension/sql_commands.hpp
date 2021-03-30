@@ -1,7 +1,7 @@
 #pragma once
 
 #define TUPLES_TABLE_NAME "hive_tuples"
-#define BACK_FROM_FORK_FUNCTION "back_from_fork"
+#define BACK_FROM_FORK_FUNCTION "hive_back_from_fork"
 #define ON_TABLE_CHANGE_FUNCTION "on_table_change"
 
 namespace PsqlTools::ForkExtension::Sql {
