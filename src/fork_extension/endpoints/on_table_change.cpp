@@ -10,6 +10,7 @@
 
 #include "include/psql_utils/relation.hpp"
 #include "include/psql_utils/tuples_iterator.hpp"
+#include "include/psql_utils/spi_session.hpp"
 
 #include "gen/git_version.hpp"
 
@@ -20,6 +21,8 @@
 
 using PsqlTools::PostgresPQ::DbClient;
 using PsqlTools::ForkExtension::CopyToReversibleTuplesTable;
+
+using namespace std::string_literals;
 
 extern "C" {
 PG_FUNCTION_INFO_V1(hive_on_table_change);
@@ -59,7 +62,7 @@ Datum hive_on_table_change(PG_FUNCTION_ARGS) try {
   TriggerData* trig_data = reinterpret_cast<TriggerData*>( fcinfo->context );
 
   if ( !TRIGGER_FIRED_FOR_STATEMENT(trig_data->tg_event) ) {
-    THROW_RUNTIME_ERROR("not supported statement trigger");
+    THROW_RUNTIME_ERROR("not supported row trigger");
   }
 
   auto transaction = DbClient::currentDatabase().startTransaction();
@@ -109,6 +112,20 @@ Datum hive_on_table_change(PG_FUNCTION_ARGS) try {
     };
 
     executeOnEachTuple( trig_data->tg_newtable, save_insert_operation );
+
+    return PointerGetDatum(NULL);
+  }
+
+  if ( TRIGGER_FIRED_BY_TRUNCATE(trig_data->tg_event) ) {
+    PsqlTools::PsqlUtils::Spi::SpiSession session;
+    if ( SPI_execute( ( "SELECT * FROM "s + trigg_table_name ).c_str(), false, 0 ) != SPI_OK_SELECT ) {
+      THROW_RUNTIME_ERROR( "Cannot get rows from table being truncated" );
+    }
+
+    for ( uint64_t row = 0u; row < SPI_processed; ++row ) {
+      HeapTuple tuple_row = *(SPI_tuptable->vals + row);
+      copy_session->push_delete(trigg_table_name, *tuple_row, tup_desc);
+    }
 
     return PointerGetDatum(NULL);
   }
