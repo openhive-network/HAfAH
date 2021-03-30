@@ -32,4 +32,9 @@ Datum SPI_getbinval(HeapTuple _tuple, TupleDesc _desc, int _field, bool* _is_nul
   return SPI_MOCK.lock()->SPI_getbinval( _tuple, _desc, _field, _is_null);
 }
 
+char* SPI_gettype(TupleDesc tupdesc, int fnumber) {
+  assert(SPI_MOCK.lock() && "No mock cretaed, plese execute first SpiMock::create_and_get");
+  return SPI_MOCK.lock()->SPI_gettype( tupdesc, fnumber );
+}
+
 } // extern "C"

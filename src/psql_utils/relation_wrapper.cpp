@@ -18,7 +18,7 @@ RelationWrapper::RelationWrapper(RelationData* _relation )
   }
 }
 
-std::string binary_value_to_text( uint8_t* _value, uint32_t _size, const TupleDesc& _tuple_desc, uint16_t _column_id ) {
+std::string binaryValueToText(uint8_t* _value, uint32_t _size, const TupleDesc& _tuple_desc, uint16_t _column_id ) {
   Oid binary_in_func_id;
   Oid params_id;
   Form_pg_attribute attr = TupleDescAttr(_tuple_desc, _column_id );
@@ -38,8 +38,9 @@ std::string binary_value_to_text( uint8_t* _value, uint32_t _size, const TupleDe
   getTypeOutputInfo( attr->atttypid, &out_function_id, &is_varlen );
   char* output_bytes = OidOutputFunctionCall( out_function_id, value );
 
-  //if ( output_bytes == nullptr )
-  //  THROW_RUNTIME_ERROR( "Null values in PKey columns is not supported" );
+  if ( output_bytes == nullptr ) {
+    THROW_RUNTIME_ERROR("Null values in PKey columns is not supported");
+  }
 
   return output_bytes;
 }
@@ -97,7 +98,8 @@ RelationWrapper::createPkeyCondition(bytea* _relation_tuple_in_copy_format ) con
       THROW_RUNTIME_ERROR(  message );
     }
 
-    auto value = binary_value_to_text(  field_value.getValue(), field_value.getSize(), m_relation->rd_att, pkey_column_id - 1 );
+    auto value = binaryValueToText(field_value.getValue(), field_value.getSize(), m_relation->rd_att,
+                                   pkey_column_id - 1);
     if ( !result.empty() ) {
       result.append( " AND " );
     }
@@ -108,6 +110,42 @@ RelationWrapper::createPkeyCondition(bytea* _relation_tuple_in_copy_format ) con
 
   return result;
 }
+
+std::string
+RelationWrapper::createRowValuesAssignment([[maybe_unused]] bytea* _relation_tuple_in_copy_format ) const {
+  assert( m_relation );
+
+  std::string result;
+  auto columns_it = getColumns();
+  TuplesFieldIterator tuples_fields_it( _relation_tuple_in_copy_format );
+
+  uint32_t column_id = 0;
+  while ( auto field_value = tuples_fields_it.next() ) {
+    auto column_name = columns_it.next();
+
+    if ( !column_name ) {
+      auto message = "Incorrect tuple format table:"s + getName();
+      THROW_RUNTIME_ERROR( message );
+    }
+
+    auto value = binaryValueToText(field_value.getValue(), field_value.getSize(), m_relation->rd_att, column_id);
+
+    if ( !result.empty() ) {
+      result.push_back( ',' );
+    }
+
+    auto type_name = SPI_gettype( m_relation->rd_att, column_id + 1 );
+    if ( type_name == nullptr ) {
+      auto message = "Cannot find a type name for column "s + std::to_string( column_id ) + " of table " + getName();
+      THROW_RUNTIME_ERROR( message );
+    }
+
+    result.append( *column_name + "='"s + value + "'::" + type_name );
+    ++column_id;
+  }
+  return result;
+}
+
 
 std::string
 RelationWrapper::getName() const {

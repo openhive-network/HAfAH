@@ -172,12 +172,14 @@ BackFromForkSession::revertUpdate( HeapTuple _tuple, TupleDesc _tupleDesc ) {
     THROW_RUNTIME_ERROR("No primary key condition for inserted tuple in "s + m_processed_relation->getName() );
   }
 
-  auto remove_row_sql = "DELETE FROM "s + m_processed_relation->getName() + " WHERE "s + condition;
-  m_transaction->execute( remove_row_sql );
+  auto set_values = m_processed_relation->createRowValuesAssignment(DatumGetByteaPP(old_tuple_value));
+  if ( set_values.empty() ) {
+    THROW_RUNTIME_ERROR( "No values to set "s + m_processed_relation->getName() );
+  }
 
-  setCurrentlyProcessedCopySession();
-  assert( m_copy_session );
-  m_copy_session->push_tuple(DatumGetByteaPP(old_tuple_value) );
+  auto update_row = "UPDATE "s + m_processed_relation->getName()
+    + " SET "s + set_values + " WHERE "s + condition;
+  m_transaction->execute( update_row );
 }
 
 void

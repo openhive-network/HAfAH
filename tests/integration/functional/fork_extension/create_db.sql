@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS psql_tools_test_db;
 CREATE DATABASE psql_tools_test_db
     WITH
     ENCODING = 'UTF8'

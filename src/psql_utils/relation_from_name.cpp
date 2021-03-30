@@ -49,6 +49,12 @@ RelationFromName::createPkeyCondition( bytea* _relation_tuple_in_copy_format ) c
 }
 
 std::string
+RelationFromName::createRowValuesAssignment(bytea* _relation_tuple_in_copy_format ) const {
+  assert( m_relation_wrapper );
+  return m_relation_wrapper->createRowValuesAssignment(_relation_tuple_in_copy_format);
+}
+
+std::string
 RelationFromName::getName() const {
   assert( m_relation_wrapper );
   return m_relation_wrapper->getName();

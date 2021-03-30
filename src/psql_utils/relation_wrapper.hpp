@@ -26,6 +26,7 @@ namespace PsqlTools::PsqlUtils {
       PrimaryKeyColumns getPrimaryKeysColumns() const override;
       ColumnsIterator getColumns() const override;
       std::string createPkeyCondition( bytea* _relation_tuple_in_copy_format ) const override;
+      std::string createRowValuesAssignment(bytea* _relation_tuple_in_copy_format ) const override;
       std::string getName() const override;
 
     private:
