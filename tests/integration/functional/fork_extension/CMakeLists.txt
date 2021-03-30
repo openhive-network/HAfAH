@@ -1,4 +1,6 @@
-MACRO( ADD_FUNCTIONAL_TESTS test_name sql_test_path)
+MACRO( ADD_FUNCTIONAL_TESTS sql_test_path)
+    STRING( REGEX MATCH "^(.*)\\.[^.]*$" dummy ${sql_test_path} ) # remove sql extension
+    SET( test_name ${CMAKE_MATCH_1})
     SET( test_target test.functional.fork_extension.${test_name} )
     ADD_TEST( NAME ${test_target}
             COMMAND test.sh ${sql_test_path}
@@ -7,10 +9,10 @@ MACRO( ADD_FUNCTIONAL_TESTS test_name sql_test_path)
     MESSAGE( STATUS "Added functional tests '${test_target}'" )
 ENDMACRO()
 
-ADD_FUNCTIONAL_TESTS( back_from_fork_inserts back_from_fork_inserts.sql )
-ADD_FUNCTIONAL_TESTS( back_from_fork_updates back_from_fork_update.sql )
-ADD_FUNCTIONAL_TESTS( back_from_fork_insert_updates_deletes back_from_fork_insert_update_delete.sql )
-ADD_FUNCTIONAL_TESTS( back_from_fork_3_tables back_from_fork_3_tables.sql )
-# ADD_FUNCTIONAL_TESTS( saved_tuples_rollback saved_tuples_rollback.sql ) # pq copy does not fall in current transaction
-# ADD_FUNCTIONAL_TESTS( back_from_fork_fkey back_from_fork_fkey.sql ) # defferable PK cannot be referenced as FK
-ADD_FUNCTIONAL_TESTS( back_from_fork_constraints back_from_fork_constraints.sql )
+ADD_FUNCTIONAL_TESTS( back_from_fork_inserts.sql )
+ADD_FUNCTIONAL_TESTS( back_from_fork_update.sql )
+ADD_FUNCTIONAL_TESTS( back_from_fork_insert_update_delete.sql )
+ADD_FUNCTIONAL_TESTS( back_from_fork_3_tables.sql )
+# ADD_FUNCTIONAL_TESTS( saved_tuples_rollback.sql ) # pq copy does not fall in current transaction
+# ADD_FUNCTIONAL_TESTS( back_from_fork_fkey.sql ) # defferable PK cannot be referenced as FK
+ADD_FUNCTIONAL_TESTS( back_from_fork_constraints.sql )
