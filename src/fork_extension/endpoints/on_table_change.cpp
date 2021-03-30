@@ -22,7 +22,7 @@ using PsqlTools::PostgresPQ::DbClient;
 using PsqlTools::ForkExtension::CopyToReversibleTuplesTable;
 
 extern "C" {
-PG_FUNCTION_INFO_V1(on_table_change);
+PG_FUNCTION_INFO_V1(hive_on_table_change);
 }
 
 void executeOnEachTuple( Tuplestorestate* _tuples, std::function< void(const HeapTupleData& _tuple) > _operation ) {
@@ -40,7 +40,7 @@ void executeOnEachTuple( Tuplestorestate* _tuples, std::function< void(const Hea
   }
 }
 
-Datum on_table_change(PG_FUNCTION_ARGS) try {
+Datum hive_on_table_change(PG_FUNCTION_ARGS) try {
   /* Postgres is a multiprocess arch db, so each client connection works in a separated process
    * If the client starts 'back_from_fork', then restored tuples will immadiatly activate triggers
    * - on the same call stack as back_form_fork is executed, so we can easly block unneeded triggers with
@@ -50,7 +50,7 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
     return PointerGetDatum(NULL);
   }
 
-  LOG_INFO( "Fired trigger 'on_table_change'" );
+  LOG_INFO( "Fired trigger 'hive_on_table_change'" );
 
   if (!CALLED_AS_TRIGGER(fcinfo)) {
     THROW_RUNTIME_ERROR( "on_table_change not called by trigger manager" );
@@ -113,7 +113,7 @@ Datum on_table_change(PG_FUNCTION_ARGS) try {
     return PointerGetDatum(NULL);
   }
 
-  THROW_RUNTIME_ERROR( "Unexpected reason of trigger 'on_table_change'" );
+  THROW_RUNTIME_ERROR( "Unexpected reason of trigger 'hive_on_table_change'" );
   return PointerGetDatum(NULL);
 }
 catch ( std::exception& _exception ) {

@@ -52,51 +52,51 @@ BEGIN
 
     INSERT INTO pattern_table3 SELECT * FROM table3;
 
-    --2. Create triggers ( function on_table_change()  was added by the plugin during its loading )
+    --2. Create triggers ( function hive_on_table_change()  was added by the plugin during its loading )
     DROP TRIGGER IF EXISTS on_src_table1_change_insert on table1;
     CREATE TRIGGER on_src_table_change_insert AFTER INSERT ON table1
         REFERENCING NEW TABLE AS new_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
 
     DROP TRIGGER IF EXISTS on_src_table1_change_delte on table1;
     CREATE TRIGGER on_src_table_change_delte AFTER DELETE ON table1
         REFERENCING OLD TABLE AS old_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
 
     DROP TRIGGER IF EXISTS on_src_table1_change_update on table1;
     CREATE TRIGGER on_src_table_change_update AFTER UPDATE ON table1
         REFERENCING NEW TABLE AS new_table OLD TABLE AS old_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
     ----------------------------------------------------------------------------------------
     DROP TRIGGER IF EXISTS on_src_table2_change_insert on table2;
     CREATE TRIGGER on_src_table_change_insert AFTER INSERT ON table2
         REFERENCING NEW TABLE AS new_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
 
     DROP TRIGGER IF EXISTS on_src_table2_change_delte on table2;
     CREATE TRIGGER on_src_table_change_delte AFTER DELETE ON table2
         REFERENCING OLD TABLE AS old_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
 
     DROP TRIGGER IF EXISTS on_src_table2_change_update on table2;
     CREATE TRIGGER on_src_table_change_update AFTER UPDATE ON table2
         REFERENCING NEW TABLE AS new_table OLD TABLE AS old_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
     --------------------------------------------------------------------------------------
     DROP TRIGGER IF EXISTS on_src_table3_change_insert on table3;
     CREATE TRIGGER on_src_table_change_insert AFTER INSERT ON table3
         REFERENCING NEW TABLE AS new_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
 
     DROP TRIGGER IF EXISTS on_src_table3_change_delte on table3;
     CREATE TRIGGER on_src_table_change_delte AFTER DELETE ON table3
         REFERENCING OLD TABLE AS old_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
 
     DROP TRIGGER IF EXISTS on_src_table3_change_update on table3;
     CREATE TRIGGER on_src_table_change_update AFTER UPDATE ON table3
         REFERENCING NEW TABLE AS new_table OLD TABLE AS old_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
 
 
     -- I)

@@ -33,10 +33,10 @@ BEGIN
 
     INSERT INTO src_table_pattern SELECT * FROM src_table;
 
-    -- Create trigger ( function on_table_change()  was added by the plugin during loading )
+    -- Create trigger ( function hive_on_table_change()  was added by the plugin during loading )
     CREATE TRIGGER on_src_table_change AFTER UPDATE ON src_table
         REFERENCING NEW TABLE AS new_table OLD TABLE AS old_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
 
     -- Make operations on src_table update rows
     UPDATE src_table SET name = 'changed name';

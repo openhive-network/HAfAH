@@ -2,7 +2,7 @@
 
 #define TUPLES_TABLE_NAME "hive_tuples"
 #define BACK_FROM_FORK_FUNCTION "hive_back_from_fork"
-#define ON_TABLE_CHANGE_FUNCTION "on_table_change"
+#define ON_TABLE_CHANGE_FUNCTION "hive_on_table_change"
 
 namespace PsqlTools::ForkExtension::Sql {
 

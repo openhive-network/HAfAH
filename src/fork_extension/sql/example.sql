@@ -16,10 +16,10 @@ CREATE TYPE custom_type AS (
 DROP TABLE IF EXISTS src_table;
 CREATE TABLE src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) );
 
---2. Create trigger ( function on_table_change()  was added by the plugin during loading )
+--2. Create trigger ( function hive_on_table_change()  was added by the plugin during loading )
 CREATE TRIGGER on_src_table_change AFTER DELETE ON src_table
     REFERENCING OLD TABLE AS old_table
-    FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+    FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
 
 --3. Make operations on src_table
 --3.a Insert 10000 rows to src table, each of them will be copied to the tuples table
@@ -43,7 +43,7 @@ SELECT back_from_fork(); -- 51ms,41ms,41ms
 SELECT * FROM src_table  LIMIT 100;
 
 -- Cleanup things added by plugin
--- DROP FUNCTION IF EXISTS on_table_change CASCADE;
+-- DROP FUNCTION IF EXISTS hive_on_table_change CASCADE;
 -- DROP FUNCTION IF EXISTS back_from_fork CASCADE;
 -- DROP TABLE IF EXISTS tuples;
 

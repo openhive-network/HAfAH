@@ -36,21 +36,21 @@ BEGIN
     --3.b save table content as a pattern
     INSERT INTO pattern_table SELECT * FROM src_table;
 
-    --2. Create triggers ( function on_table_change()  was added by the plugin during its loading )
+    --2. Create triggers ( function hive_on_table_change()  was added by the plugin during its loading )
     DROP TRIGGER IF EXISTS on_src_table_change_insert on src_table;
     CREATE TRIGGER on_src_table_change_insert AFTER INSERT ON src_table
         REFERENCING NEW TABLE AS new_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
 
     DROP TRIGGER IF EXISTS on_src_table_change_delte on src_table;
     CREATE TRIGGER on_src_table_change_delte AFTER DELETE ON src_table
         REFERENCING OLD TABLE AS old_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
 
     DROP TRIGGER IF EXISTS on_src_table_change_update on src_table;
     CREATE TRIGGER on_src_table_change_update AFTER UPDATE ON src_table
         REFERENCING NEW TABLE AS new_table OLD TABLE AS old_table
-        FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
+        FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_change();
     -- I)
     -- update some rows
     UPDATE src_table SET name = 'changed_name' WHERE id % 5 = 0;
