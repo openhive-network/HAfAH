@@ -57,4 +57,14 @@ in the code whith ```#include "gen/header_file_name.hpp"```
 - Each PostgreSQL 'C' entry points have to catch all unhandled exceptions and logs them as errors using LOG_ERROR macro
 - RAII is in use - each our object contructors may throw PsqlTools::ObjectInitializationException
 
+## C++ coding standard
+1. use C++14
+2. class names start with upper case and use CamelCase __ClassName__
+3. method names start with lower case and use CamelCase __camelCase__
+4. all instations (objects, variables, attributes, class membert) use snake_case
+5. functions attribute start with underscore ___funktion_attribute_name__
+6. class members starts with 'm_' __m_class_member_name__
+7. global and static variable are written in upper case without prefixes __GLOBAL_VARIABLE_NAME__
+8. templete attributes use CamelCase started with underscore and lower case  _templeteAttribute
+
 # Known problems

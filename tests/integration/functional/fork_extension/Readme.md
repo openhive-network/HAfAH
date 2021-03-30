@@ -1,5 +1,13 @@
 # Functional test
 The tests start sql scripts which checks fork_extension plugin functionalities.
+
+# Tests format
+Each tests contains three sql function:
+1. __test_given__ setup state before execution functionality uder test
+2. __test_when__ executes functionality under test
+3. __test_then__ validate results of executed functionality
+
 # Requirements
-The tests require to have configured locally (means on local host) configured postgres server with the current system user as postgres SUPERUSER with CREATEDB option
+- The tests require to have configured locally (means on local host) postgres server with the current system user as postgres SUPERUSER with CREATEDB option
 and authentication method peer(setting inside `pg_hba.conf`)
+- The 'fork_extension' plugin must be installed, the best option is to execute first `make install` from a build directory
