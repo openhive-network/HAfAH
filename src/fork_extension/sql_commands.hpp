@@ -1,6 +1,6 @@
 #pragma once
 
-#define TUPLES_TABLE_NAME "tuples"
+#define TUPLES_TABLE_NAME "hive_tuples"
 #define BACK_FROM_FORK_FUNCTION "back_from_fork"
 #define ON_TABLE_CHANGE_FUNCTION "on_table_change"
 
@@ -15,7 +15,7 @@ namespace PsqlTools::ForkExtension::Sql {
         , NewTuple = 4
     };
 
-    static constexpr auto GET_STORED_TUPLES = "SELECT table_name, operation, tuple_old, tuple_new FROM tuples ORDER BY id DESC";
+    static constexpr auto GET_STORED_TUPLES = "SELECT table_name, operation, tuple_old, tuple_new FROM " TUPLES_TABLE_NAME " ORDER BY id DESC";
 
-    static constexpr auto EMPTY_TUPLES = "DELETE FROM tuples";
+    static constexpr auto EMPTY_TUPLES = "DELETE FROM " TUPLES_TABLE_NAME;
 } // namespace PsqlTools::ForkExtension::Sql

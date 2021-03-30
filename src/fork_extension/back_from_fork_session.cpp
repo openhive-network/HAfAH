@@ -99,7 +99,7 @@ BackFromForkSession::getOperationType( HeapTuple _tuple, TupleDesc _tupleDesc ) 
   const auto operation_datum = SPI_getbinval(_tuple, _tupleDesc,
                                              static_cast< int32_t >( Sql::TuplesTableColumns::Operation ), &is_null);
   if (is_null) {
-    THROW_RUNTIME_ERROR("No operation specified in tuples table");
+    THROW_RUNTIME_ERROR("No operation specified in " TUPLES_TABLE_NAME " table");
   }
 
   switch (DatumGetInt16(operation_datum)) {
