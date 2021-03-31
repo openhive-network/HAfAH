@@ -1,0 +1,29 @@
+---
+  test_name: Hivemind bridge_api.get_ranked_posts alice guest of community patterns test
+
+  marks:
+    - patterntest # alice is guest before answering parent post in this community - mock_data (hive-157439)
+                  # never muted comments (test for comparison with muted and unmuted)
+
+  includes:
+    - !include ../../../common.yaml
+
+  stages:
+    - name: bridge_api.get_ranked_posts steemit as muted patterns test
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_ranked_posts"
+          params: {"sort": "promoted", "start_author":"test-safari", "start_permlink":"please-comment-hive2-03", "tag": "hive-157439"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "community_no_muted_quest"
+            directory: "bridge_api_patterns/get_ranked_posts/promoted"
