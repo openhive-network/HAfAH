@@ -1,13 +1,16 @@
 #pragma once
 
+#include <memory>
+
 namespace PsqlTools::PsqlUtils::Spi {
 
-    class SpiSession {
+  class SpiSession {
     public:
-        SpiSession();
-        ~SpiSession();
+      ~SpiSession();
 
-        void execute_read_select();
-    };
+      static std::shared_ptr< SpiSession > create();
+  private:
+    SpiSession();
+  };
 
 } // namespace PsqlTools::PsqlUtilsSpi

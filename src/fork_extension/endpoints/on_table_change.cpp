@@ -117,7 +117,7 @@ Datum hive_on_table_change(PG_FUNCTION_ARGS) try {
   }
 
   if ( TRIGGER_FIRED_BY_TRUNCATE(trig_data->tg_event) ) {
-    PsqlTools::PsqlUtils::Spi::SpiSession session;
+    auto spi_session = PsqlTools::PsqlUtils::Spi::SpiSession::create();
     if ( SPI_execute( ( "SELECT * FROM "s + trigg_table_name ).c_str(), false, 0 ) != SPI_OK_SELECT ) {
       THROW_RUNTIME_ERROR( "Cannot get rows from table being truncated" );
     }

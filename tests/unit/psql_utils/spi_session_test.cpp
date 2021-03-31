@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE( positivie_session_create_and_destroy )
             .WillOnce(Return(SPI_OK_CONNECT));
   }
 
-  BOOST_CHECK_NO_THROW( PsqlTools::PsqlUtils::Spi::SpiSession session_under_test );
+  BOOST_CHECK_NO_THROW( PsqlTools::PsqlUtils::Spi::SpiSession::create() );
 }
 
 BOOST_AUTO_TEST_CASE( negative_session_create )
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE( negative_session_create )
           .Times(1)
           .WillOnce(Return(SPI_ERROR_CONNECT));
 
-  BOOST_CHECK_THROW( { PsqlTools::PsqlUtils::Spi::SpiSession session; }, ObjectInitializationException );
+  BOOST_CHECK_THROW( PsqlTools::PsqlUtils::Spi::SpiSession::create(), ObjectInitializationException );
 }
 
 BOOST_AUTO_TEST_CASE( negative_session_close )
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE( negative_session_close )
           .Times(1)
           .WillOnce(Return(SPI_ERROR_UNCONNECTED));
 
-  BOOST_CHECK_NO_THROW( PsqlTools::PsqlUtils::Spi::SpiSession session ); // cannot throw from d_tor
+  BOOST_CHECK_NO_THROW( PsqlTools::PsqlUtils::Spi::SpiSession::create() ); // cannot throw from d_tor
 }
 
 BOOST_AUTO_TEST_SUITE_END()

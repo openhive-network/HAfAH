@@ -49,7 +49,7 @@ namespace PsqlTools::ForkExtension {
     void endCopySession();
 
   private:
-    PsqlUtils::Spi::SpiSession m_spi_session;
+    std::shared_ptr< PsqlUtils::Spi::SpiSession > m_spi_session;
     std::unique_ptr< PostgresPQ::Transaction > m_transaction;
     std::unique_ptr< PostgresPQ::CopyTuplesSession > m_copy_session;
     std::unique_ptr< PsqlUtils::IRelation > m_processed_relation;
