@@ -21,7 +21,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 838525,
+      "id": 838527,
       "json_metadata": "{\"tags\":[\"witness-category\",\"security\",\"steem\",\"steemit\"],\"links\":[\"https://steemit.com/witness-category/@gtg/witness-gtg\"]}",
       "last_payout": "2016-08-17T20:13:00",
       "last_update": "2016-08-16T18:11:03",
@@ -119,7 +119,7 @@
         "precision": 3
       },
       "depth": 0,
-      "id": 919309,
+      "id": 919311,
       "json_metadata": "{\"tags\":[\"mining\",\"steem\",\"steem-mining\"],\"users\":[\"artakan\"],\"links\":[\"https://steemit.com/mining/@artakan/important-info-for-steem-miner-do-not-use-your-steemit-com-account\"]}",
       "last_payout": "2016-08-22T13:01:45",
       "last_update": "2016-08-21T13:02:30",
@@ -168,7 +168,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 1076078,
+      "id": 1076080,
       "json_metadata": "{\"tags\":[\"introduceyourself\"]}",
       "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-31T20:57:24",
@@ -217,7 +217,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 1002047,
+      "id": 1002049,
       "json_metadata": "{\"tags\":[\"introduceyourself\"]}",
       "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-26T18:53:09",
@@ -266,7 +266,7 @@
         "precision": 3
       },
       "depth": 5,
-      "id": 1254284,
+      "id": 1254286,
       "json_metadata": "{\"tags\":[\"stats\"]}",
       "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-09-15T14:11:09",
@@ -315,7 +315,7 @@
         "precision": 3
       },
       "depth": 3,
-      "id": 1253717,
+      "id": 1253719,
       "json_metadata": "{\"tags\":[\"stats\"]}",
       "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-09-15T13:19:24",
@@ -364,7 +364,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 1253583,
+      "id": 1253585,
       "json_metadata": "{\"tags\":[\"stats\"],\"users\":[\"arcange\"],\"links\":[\"https://steemit.com/@gtg\"]}",
       "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-09-15T13:08:12",
@@ -413,7 +413,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 919361,
+      "id": 919363,
       "json_metadata": "{\"tags\":[\"mining\"],\"links\":[\"https://steemit.com/mining/@gtg/missing-rewards-while-mining\"]}",
       "last_payout": "2016-08-22T10:51:00",
       "last_update": "2016-08-21T12:33:57",
@@ -462,7 +462,7 @@
         "precision": 3
       },
       "depth": 1,
-      "id": 1045369,
+      "id": 1045371,
       "json_metadata": "{\"tags\":[\"introduceyourself\"],\"users\":[\"artywah\"]}",
       "last_payout": "1970-01-01T00:00:00",
       "last_update": "2016-08-29T19:19:18",
