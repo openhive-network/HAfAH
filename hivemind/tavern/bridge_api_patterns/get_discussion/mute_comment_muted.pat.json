@@ -150,7 +150,11 @@
     "permlink": "please-comment-hive1-02",
     "post_id": 1257977,
     "promoted": "0.000 HBD",
-    "replies": [],
+    "replies": [
+      "alice/comment-to-please-comment-hive1-02",
+      "alice/after-muted-comment-to-please-comment-hive1-02",
+      "alice/after-member-comment-to-please-comment-hive1-02"
+    ],
     "stats": {
       "flag_weight": 0.0,
       "gray": false,
