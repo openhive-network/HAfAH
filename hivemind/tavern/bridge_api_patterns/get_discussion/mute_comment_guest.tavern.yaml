@@ -3,7 +3,7 @@
 
   marks:
     - patterntest # alice is guest before answering parent post in this community - mock_data (hive-157439)
-                  # muted all comments
+                  # muted all comments (not unmuted later)
 
   includes:
     - !include ../../common.yaml
