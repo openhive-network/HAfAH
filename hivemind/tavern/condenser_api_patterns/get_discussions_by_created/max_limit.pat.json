@@ -1676,12 +1676,7 @@
   {
     "active_votes": [],
     "author": "test-safari",
-    "author_reputation": 999316,
-    "beneficiaries": [],
-    "body": "tell me secret 04",
-    "body_length": 17,
-    "cashout_time": "2016-09-22T19:47:15",
-    "category": "hive-117600",
+    "author_reputation": 999316, 
     "children": 0,
     "created": "2016-09-15T19:47:15",
     "curator_payout_value": "0.000 HBD",
