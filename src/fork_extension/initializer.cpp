@@ -4,13 +4,12 @@
 
 #include "include/exceptions.hpp"
 #include "include/psql_utils/postgres_includes.hpp"
+#include "include/psql_utils/spi_session.hpp"
+#include "include/psql_utils/spi_query_result_iterator.hpp"
 
 #include "gen/git_version.hpp"
 
-#include <boost/scope_exit.hpp>
-
 #include <string>
-
 #include <unistd.h>
 
 using namespace std::string_literals;
@@ -19,6 +18,7 @@ namespace PsqlTools::ForkExtension {
   Initializer::Initializer() try {
     LOG_WARNING( "Initialize hive fork extension ver.: %s pid: %d", GIT_REVISION, getpid() );
 
+    m_spi_session = PsqlTools::PsqlUtils::Spi::SpiSession::create();
     initialize_tuples_table();
     initialize_function( BACK_FROM_FORK_FUNCTION, "void" );
     initialize_function( ON_TABLE_CHANGE_FUNCTION, "trigger" );
@@ -32,11 +32,6 @@ namespace PsqlTools::ForkExtension {
 
   void
   Initializer::initialize_tuples_table() const {
-    SPI_connect();
-    BOOST_SCOPE_EXIT_ALL() {
-      SPI_finish();
-    };
-
     if ( SPI_execute( Sql::CREATE_TUPLES_TABLE, false, 0 ) != SPI_OK_UTILITY ) {
       THROW_RUNTIME_ERROR( "Cannot create tuples table : "s + Sql::CREATE_TUPLES_TABLE );
     }
@@ -51,11 +46,6 @@ namespace PsqlTools::ForkExtension {
       return;
     }
 
-    SPI_connect();
-    BOOST_SCOPE_EXIT_ALL() {
-                               SPI_finish();
-                           };
-
     const auto execute_cmd
       = "CREATE FUNCTION "s + _function_name + "() RETURNS "s + _sql_return_type + " AS '$libdir/plugins/libfork_extension.so', '"s + _function_name + "' LANGUAGE C"s;
     if ( SPI_execute( execute_cmd.c_str(), false, 0 ) != SPI_OK_UTILITY ) {
@@ -67,15 +57,8 @@ namespace PsqlTools::ForkExtension {
 
   bool
   Initializer::function_exists( const std::string& _function_name ) const {
-    SPI_connect();
-    BOOST_SCOPE_EXIT_ALL() {
-      SPI_finish();
-    };
+    auto tuples_it = PsqlUtils::Spi::QueryResultIterator::create( "SELECT * FROM pg_proc WHERE proname = '" + _function_name + "'" );
 
-    if ( SPI_execute( ( "SELECT * FROM pg_proc WHERE proname = '" + _function_name + "'" ).c_str(), true, 1 ) != SPI_OK_SELECT ) {
-      THROW_RUNTIME_ERROR( "Cannot check if function "s + _function_name + " exists" );
-    }
-
-    return SPI_processed == 1;
+    return bool( tuples_it->next() );
   }
 } // namespace PsqlTools::ForkExtension

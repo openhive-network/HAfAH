@@ -1,4 +1,4 @@
-#include "spi_query_result_iterator.hpp"
+#include "include/psql_utils/spi_query_result_iterator.hpp"
 
 #include "include/exceptions.hpp"
 
@@ -13,6 +13,10 @@ namespace {
 }
 
 namespace PsqlTools::PsqlUtils::Spi {
+
+QueryResultIterator::~QueryResultIterator() {
+  SPI_freetuptable( SPI_tuptable );
+}
 
 std::shared_ptr<QueryResultIterator>
 QueryResultIterator::create( std::string _query ) {
@@ -37,6 +41,20 @@ QueryResultIterator::QueryResultIterator( std::string _query ): m_query( std::mo
 const std::string&
 QueryResultIterator::getQuery() {
   return m_query;
+}
+
+TupleDesc
+QueryResultIterator::getTupleDesc() {
+  return SPI_tuptable->tupdesc;
+}
+
+boost::optional< HeapTuple >
+QueryResultIterator::next() {
+  if ( m_current_row_id >= SPI_processed ) {
+    return boost::optional< HeapTuple >();
+  }
+
+  return boost::optional< HeapTuple >( *(SPI_tuptable->vals + m_current_row_id++) );
 }
 
 } // namespace PsqlTools::PsqlUtils::Spi

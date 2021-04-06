@@ -1,6 +1,11 @@
 #pragma once
 
+#include <memory>
 #include <string>
+
+namespace PsqlTools::PsqlUtils::Spi {
+  class SpiSession;
+} // PsqlTools::PsqlUtils::Spi
 
 namespace PsqlTools::ForkExtension {
   /* The object of this type is a global variable in initialization.hpp
@@ -22,5 +27,8 @@ namespace PsqlTools::ForkExtension {
 
       bool function_exists( const std::string& _function_name ) const;
       void initialize_function( const std::string& _function_name, const std::string& _sql_return_type ) const;
+
+  private:
+    std::shared_ptr< PsqlTools::PsqlUtils::Spi::SpiSession > m_spi_session;
   };
 } // namespace PsqlTools::ForkExtension

@@ -7,6 +7,8 @@
 #include "include/pq_utils/transaction.hpp"
 #include "include/psql_utils/postgres_includes.hpp"
 #include "include/psql_utils/relation.hpp"
+#include "include/psql_utils/spi_session.hpp"
+#include "include/psql_utils/spi_query_result_iterator.hpp"
 
 #include "include/exceptions.hpp"
 
@@ -37,33 +39,24 @@ void
 BackFromForkSession::backFromFork() {
   assert( m_transaction );
 
-  fetchStoredTuples();
+  auto tuples_it = PsqlUtils::Spi::QueryResultIterator::create( PsqlTools::ForkExtension::Sql::GET_STORED_TUPLES );
 
-  for ( uint64_t row = 0u; row < SPI_processed; ++row ) {
-    HeapTuple tuple_row = *(SPI_tuptable->vals + row);
+  while( auto tuple = tuples_it->next() ) {
+    setCurrentlyProcessedRelation( *tuple, tuples_it->getTupleDesc() );
 
-    setCurrentlyProcessedRelation( tuple_row, SPI_tuptable->tupdesc );
-
-    switch ( getOperationType( tuple_row, SPI_tuptable->tupdesc ) ) {
+    switch ( getOperationType( *tuple, tuples_it->getTupleDesc() ) ) {
       case OperationType::INSERT:
-        revertInsert( tuple_row, SPI_tuptable->tupdesc );
+        revertInsert(*tuple, tuples_it->getTupleDesc());
         break;
       case OperationType::DELETE:
-        revertDelete( tuple_row, SPI_tuptable->tupdesc );
+        revertDelete(*tuple, tuples_it->getTupleDesc());
         break;
       case OperationType::UPDATE:
-        revertUpdate( tuple_row, SPI_tuptable->tupdesc );
+        revertUpdate(*tuple, tuples_it->getTupleDesc());
         break;
       default:
-        assert( "Unsuported operation type" );
+        assert("Unsuported operation type");
     }
-  } // for each row
-}
-
-void
-BackFromForkSession::fetchStoredTuples() {
-  if (SPI_execute(PsqlTools::ForkExtension::Sql::GET_STORED_TUPLES, true, 0/*all rows*/ ) != SPI_OK_SELECT ) {
-    THROW_RUNTIME_ERROR( "Cannot execute: "s + PsqlTools::ForkExtension::Sql::GET_STORED_TUPLES );
   }
 }
 

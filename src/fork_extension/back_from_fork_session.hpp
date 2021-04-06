@@ -38,7 +38,6 @@ namespace PsqlTools::ForkExtension {
 
     void backFromFork();
   private:
-    void fetchStoredTuples();
     void setCurrentlyProcessedRelation( HeapTuple _tuple, TupleDesc _tupleDesc );
     void setCurrentlyProcessedCopySession();
     std::string getTableName( HeapTuple _tuple, TupleDesc _tupleDesc ) const;

@@ -11,6 +11,7 @@
 #include "include/psql_utils/relation.hpp"
 #include "include/psql_utils/tuples_iterator.hpp"
 #include "include/psql_utils/spi_session.hpp"
+#include "include/psql_utils/spi_query_result_iterator.hpp"
 
 #include "gen/git_version.hpp"
 
@@ -118,13 +119,10 @@ Datum hive_on_table_change(PG_FUNCTION_ARGS) try {
 
   if ( TRIGGER_FIRED_BY_TRUNCATE(trig_data->tg_event) ) {
     auto spi_session = PsqlTools::PsqlUtils::Spi::SpiSession::create();
-    if ( SPI_execute( ( "SELECT * FROM "s + trigg_table_name ).c_str(), false, 0 ) != SPI_OK_SELECT ) {
-      THROW_RUNTIME_ERROR( "Cannot get rows from table being truncated" );
-    }
+    auto tuples_it = PsqlTools::PsqlUtils::Spi::QueryResultIterator::create( "SELECT * FROM "s + trigg_table_name );
 
-    for ( uint64_t row = 0u; row < SPI_processed; ++row ) {
-      HeapTuple tuple_row = *(SPI_tuptable->vals + row);
-      copy_session->push_delete(trigg_table_name, *tuple_row, tup_desc);
+    while( auto tuple = tuples_it->next() ) {
+      copy_session->push_delete( trigg_table_name, **tuple, tuples_it->getTupleDesc() );
     }
 
     return PointerGetDatum(NULL);

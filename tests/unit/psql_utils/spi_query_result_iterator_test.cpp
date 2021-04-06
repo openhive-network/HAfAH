@@ -1,4 +1,4 @@
-#include "spi_query_result_iterator.hpp"
+#include "include/psql_utils/spi_query_result_iterator.hpp"
 
 #include <boost/test/unit_test.hpp>
 
@@ -17,6 +17,9 @@ BOOST_AUTO_TEST_CASE( positive_creation ) {
     .Times( 1 )
     .WillOnce( ::testing::Return( SPI_OK_SELECT ) );
 
+  EXPECT_CALL( *spi_mock, SPI_freetuptable( ::testing::_ ) )
+    .Times( 1 );
+
   auto it_under_test = PsqlTools::PsqlUtils::Spi::QueryResultIterator::create( query );
 
   BOOST_CHECK( it_under_test );
@@ -29,6 +32,8 @@ BOOST_AUTO_TEST_CASE( negative_creation_results_not_released ) {
   EXPECT_CALL( *spi_mock, SPI_execute( ::testing::StrEq( query ), ::testing::_, ::testing::_ ) )
     .Times( 1 )
     .WillOnce( ::testing::Return( SPI_OK_SELECT ) );
+
+  EXPECT_CALL( *spi_mock, SPI_freetuptable( ::testing::_ ) ).Times(1);
 
   auto hold_result_it = PsqlTools::PsqlUtils::Spi::QueryResultIterator::create( query );
 
