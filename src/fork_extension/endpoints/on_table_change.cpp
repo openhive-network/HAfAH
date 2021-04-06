@@ -118,7 +118,7 @@ Datum hive_on_table_change(PG_FUNCTION_ARGS) try {
 
   if ( TRIGGER_FIRED_BY_TRUNCATE(trig_data->tg_event) ) {
     auto spi_session = PsqlTools::PsqlUtils::Spi::SpiSession::create();
-    auto tuples_it = spi_session->select( "SELECT * FROM "s + trigg_table_name );
+    auto tuples_it = spi_session->executeSelect( "SELECT * FROM "s + trigg_table_name );
 
     while( auto tuple = tuples_it->next() ) {
       copy_session->push_delete( trigg_table_name, **tuple, tuples_it->getTupleDesc() );

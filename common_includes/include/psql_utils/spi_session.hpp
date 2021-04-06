@@ -26,9 +26,12 @@ namespace PsqlTools::PsqlUtils::Spi {
       ~SpiSession();
 
       static std::shared_ptr< SpiSession > create();
-      std::shared_ptr< ISelectResult > select( std::string _select_query ) const;
-  private:
-    SpiSession();
+      // read only queries - SELECT ...
+      std::shared_ptr< ISelectResult > executeSelect( std::string _select_query ) const;
+      // utils queries like CREATE TABLE
+      void executeUtil(const std::string& _query ) const;
+    private:
+      SpiSession();
   };
 
 } // namespace PsqlTools::PsqlUtilsSpi

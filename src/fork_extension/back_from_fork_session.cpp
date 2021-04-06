@@ -38,7 +38,7 @@ void
 BackFromForkSession::backFromFork() {
   assert( m_transaction );
 
-  auto tuples_it = m_spi_session->select( PsqlTools::ForkExtension::Sql::GET_STORED_TUPLES );
+  auto tuples_it = m_spi_session->executeSelect( PsqlTools::ForkExtension::Sql::GET_STORED_TUPLES );
 
   while( auto tuple = tuples_it->next() ) {
     setCurrentlyProcessedRelation( *tuple, tuples_it->getTupleDesc() );

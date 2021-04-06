@@ -31,9 +31,7 @@ namespace PsqlTools::ForkExtension {
 
   void
   Initializer::initialize_tuples_table() const {
-    if ( SPI_execute( Sql::CREATE_TUPLES_TABLE, false, 0 ) != SPI_OK_UTILITY ) {
-      THROW_RUNTIME_ERROR( "Cannot create tuples table : "s + Sql::CREATE_TUPLES_TABLE );
-    }
+    m_spi_session->executeUtil(Sql::CREATE_TUPLES_TABLE);
 
     LOG_INFO( "The " TUPLES_TABLE_NAME " table is initialized" );
   }
@@ -47,16 +45,15 @@ namespace PsqlTools::ForkExtension {
 
     const auto execute_cmd
       = "CREATE FUNCTION "s + _function_name + "() RETURNS "s + _sql_return_type + " AS '$libdir/plugins/libfork_extension.so', '"s + _function_name + "' LANGUAGE C"s;
-    if ( SPI_execute( execute_cmd.c_str(), false, 0 ) != SPI_OK_UTILITY ) {
-      THROW_RUNTIME_ERROR( "Cannot create function: "s + _function_name );
-    }
+
+    m_spi_session->executeUtil(execute_cmd);
 
     LOG_INFO( "The %s function is initialized", _function_name.c_str() );
   }
 
   bool
   Initializer::function_exists( const std::string& _function_name ) const {
-    auto tuples_it = m_spi_session->select( "SELECT * FROM pg_proc WHERE proname = '" + _function_name + "'" );
+    auto tuples_it = m_spi_session->executeSelect( "SELECT * FROM pg_proc WHERE proname = '" + _function_name + "'" );
 
     return bool( tuples_it->next() );
   }

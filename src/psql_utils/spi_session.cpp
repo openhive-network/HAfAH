@@ -8,6 +8,8 @@ namespace {
   std::weak_ptr< PsqlTools::PsqlUtils::Spi::SpiSession > SPI_SESSION;
 }
 
+using namespace std::string_literals;
+
 namespace PsqlTools::PsqlUtils::Spi {
   SpiSession::SpiSession() {
     if ( SPI_connect() != SPI_OK_CONNECT ) {
@@ -33,10 +35,17 @@ namespace PsqlTools::PsqlUtils::Spi {
   }
 
   std::shared_ptr< ISelectResult >
-  SpiSession::select( std::string _select_query ) const {
+  SpiSession::executeSelect( std::string _select_query ) const {
     auto instance = SPI_SESSION.lock();
     assert( instance );
 
     return SelectResultIterator::create( instance, _select_query );
+  }
+
+  void
+  SpiSession::executeUtil(const std::string& _query ) const {
+    if ( SPI_execute( _query.c_str(), false, 0 ) != SPI_OK_UTILITY ) {
+      THROW_RUNTIME_ERROR( "Cannot execute query : "s + _query );
+    }
   }
 } // namespace PsqlTools::PsqlUtils::Spi
