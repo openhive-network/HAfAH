@@ -24,7 +24,7 @@
       "pending_payout_value": "0.000 HBD",
       "percent_hbd": 10000,
       "permlink": "please-comment-hive3-03",
-      "post_id": 1257984,
+      "post_id": 1257988,
       "promoted": "0.000 HBD",
       "replies": [],
       "root_title": "Comment my post03",
@@ -32,7 +32,7 @@
       "total_payout_value": "0.000 HBD",
       "url": "/hive-198723/@test-safari/please-comment-hive3-03"
     },
-    "entry_id": 20,
+    "entry_id": 21,
     "reblogged_on": "1970-01-01T00:00:00"
   },
   {
@@ -60,7 +60,7 @@
       "pending_payout_value": "0.000 HBD",
       "percent_hbd": 10000,
       "permlink": "please-comment-hive3-02",
-      "post_id": 1257983,
+      "post_id": 1257987,
       "promoted": "0.000 HBD",
       "replies": [],
       "root_title": "Comment my post02",
@@ -68,7 +68,7 @@
       "total_payout_value": "0.000 HBD",
       "url": "/hive-198723/@test-safari/please-comment-hive3-02"
     },
-    "entry_id": 19,
+    "entry_id": 20,
     "reblogged_on": "1970-01-01T00:00:00"
   },
   {
@@ -96,7 +96,7 @@
       "pending_payout_value": "0.000 HBD",
       "percent_hbd": 10000,
       "permlink": "please-comment-hive3",
-      "post_id": 1257982,
+      "post_id": 1257986,
       "promoted": "0.000 HBD",
       "replies": [],
       "root_title": "Comment my post01",
@@ -104,7 +104,7 @@
       "total_payout_value": "0.000 HBD",
       "url": "/hive-198723/@test-safari/please-comment-hive3"
     },
-    "entry_id": 18,
+    "entry_id": 19,
     "reblogged_on": "1970-01-01T00:00:00"
   },
   {
@@ -132,7 +132,7 @@
       "pending_payout_value": "0.000 HBD",
       "percent_hbd": 10000,
       "permlink": "please-comment-hive2-03",
-      "post_id": 1257981,
+      "post_id": 1257985,
       "promoted": "0.000 HBD",
       "replies": [],
       "root_title": "Comment my post03",
@@ -140,7 +140,7 @@
       "total_payout_value": "0.000 HBD",
       "url": "/hive-157439/@test-safari/please-comment-hive2-03"
     },
-    "entry_id": 17,
+    "entry_id": 18,
     "reblogged_on": "1970-01-01T00:00:00"
   },
   {
@@ -168,7 +168,7 @@
       "pending_payout_value": "0.000 HBD",
       "percent_hbd": 10000,
       "permlink": "please-comment-hive2-02",
-      "post_id": 1257980,
+      "post_id": 1257984,
       "promoted": "0.000 HBD",
       "replies": [],
       "root_title": "Comment my post02",
@@ -176,7 +176,7 @@
       "total_payout_value": "0.000 HBD",
       "url": "/hive-157439/@test-safari/please-comment-hive2-02"
     },
-    "entry_id": 16,
+    "entry_id": 17,
     "reblogged_on": "1970-01-01T00:00:00"
   },
   {
@@ -204,7 +204,7 @@
       "pending_payout_value": "0.000 HBD",
       "percent_hbd": 10000,
       "permlink": "please-comment-hive2",
-      "post_id": 1257979,
+      "post_id": 1257983,
       "promoted": "0.000 HBD",
       "replies": [],
       "root_title": "Comment my post01",
@@ -212,7 +212,7 @@
       "total_payout_value": "0.000 HBD",
       "url": "/hive-157439/@test-safari/please-comment-hive2"
     },
-    "entry_id": 15,
+    "entry_id": 16,
     "reblogged_on": "1970-01-01T00:00:00"
   },
   {
@@ -240,13 +240,49 @@
       "pending_payout_value": "0.000 HBD",
       "percent_hbd": 10000,
       "permlink": "please-comment-hive1-03",
-      "post_id": 1257978,
+      "post_id": 1257982,
       "promoted": "0.000 HBD",
       "replies": [],
       "root_title": "Comment my post03",
       "title": "Comment my post03",
       "total_payout_value": "0.000 HBD",
       "url": "/hive-171487/@test-safari/please-comment-hive1-03"
+    },
+    "entry_id": 15,
+    "reblogged_on": "1970-01-01T00:00:00"
+  },
+  {
+    "blog": "test-safari",
+    "comment": {
+      "active_votes": [],
+      "author": "test-safari",
+      "author_reputation": 999316,
+      "beneficiaries": [],
+      "body": "testing muted people in community",
+      "body_length": 33,
+      "cashout_time": "2016-09-22T19:47:21",
+      "category": "hive-198723",
+      "children": 1,
+      "created": "2016-09-15T19:47:21",
+      "curator_payout_value": "0.000 HBD",
+      "depth": 0,
+      "json_metadata": "{}",
+      "last_payout": "1969-12-31T23:59:59",
+      "last_update": "2016-09-15T19:47:21",
+      "max_accepted_payout": "1000000.000 HBD",
+      "net_rshares": 0,
+      "parent_author": "",
+      "parent_permlink": "hive-198723",
+      "pending_payout_value": "0.000 HBD",
+      "percent_hbd": 10000,
+      "permlink": "parent-post-for-muted-steemit",
+      "post_id": 1257981,
+      "promoted": "0.000 HBD",
+      "replies": [],
+      "root_title": "steemit-will-comment-this-post",
+      "title": "steemit-will-comment-this-post",
+      "total_payout_value": "0.000 HBD",
+      "url": "/hive-198723/@test-safari/parent-post-for-muted-steemit"
     },
     "entry_id": 14,
     "reblogged_on": "1970-01-01T00:00:00"
@@ -258,7 +294,7 @@
       "author": "test-safari",
       "author_reputation": 999316,
       "beneficiaries": [],
-      "body": "Comment my posts in this community.02",
+      "body": "Comment my posts in this community.01",
       "body_length": 37,
       "cashout_time": "2016-09-22T19:47:21",
       "category": "hive-171487",
@@ -276,11 +312,11 @@
       "pending_payout_value": "0.000 HBD",
       "percent_hbd": 10000,
       "permlink": "please-comment-hive1-02",
-      "post_id": 1257977,
+      "post_id": 1257979,
       "promoted": "0.000 HBD",
       "replies": [],
-      "root_title": "Comment my post02",
-      "title": "Comment my post02",
+      "root_title": "Comment my post01",
+      "title": "Comment my post01",
       "total_payout_value": "0.000 HBD",
       "url": "/hive-171487/@test-safari/please-comment-hive1-02"
     },
@@ -312,7 +348,7 @@
       "pending_payout_value": "0.000 HBD",
       "percent_hbd": 10000,
       "permlink": "please-comment-hive1",
-      "post_id": 1257976,
+      "post_id": 1257978,
       "promoted": "0.000 HBD",
       "replies": [],
       "root_title": "Comment my post01",
