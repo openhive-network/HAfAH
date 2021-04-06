@@ -8,7 +8,7 @@
 
 BOOST_AUTO_TEST_SUITE( tuples_iterator )
 
-BOOST_AUTO_TEST_CASE( simple_iteration ){
+BOOST_AUTO_TEST_CASE( simple_iteration ) {
   auto postgres_mock = PostgresMock::create_and_get();
 
   Tuplestorestate* tuples_store_ptr = reinterpret_cast< Tuplestorestate* >(0xAABBCCDDEEFFAABB);

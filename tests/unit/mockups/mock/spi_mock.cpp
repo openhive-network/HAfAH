@@ -37,4 +37,9 @@ char* SPI_gettype(TupleDesc tupdesc, int fnumber) {
   return SPI_MOCK.lock()->SPI_gettype( tupdesc, fnumber );
 }
 
+int	SPI_execute(const char *src, bool read_only, long tcount) {
+  assert(SPI_MOCK.lock() && "No mock cretaed, plese execute first SpiMock::create_and_get");
+  return SPI_MOCK.lock()->SPI_execute( src, read_only, tcount );
+}
+
 } // extern "C"
