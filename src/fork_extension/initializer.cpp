@@ -5,7 +5,6 @@
 #include "include/exceptions.hpp"
 #include "include/psql_utils/postgres_includes.hpp"
 #include "include/psql_utils/spi_session.hpp"
-#include "include/psql_utils/spi_select_result_iterator.hpp"
 
 #include "gen/git_version.hpp"
 
@@ -57,7 +56,7 @@ namespace PsqlTools::ForkExtension {
 
   bool
   Initializer::function_exists( const std::string& _function_name ) const {
-    auto tuples_it = PsqlUtils::Spi::SelectResultIterator::create("SELECT * FROM pg_proc WHERE proname = '" + _function_name + "'" );
+    auto tuples_it = m_spi_session->select( "SELECT * FROM pg_proc WHERE proname = '" + _function_name + "'" );
 
     return bool( tuples_it->next() );
   }

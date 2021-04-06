@@ -1,6 +1,7 @@
 #include "include/psql_utils/spi_session.hpp"
 
 #include "include/psql_utils/postgres_includes.hpp"
+#include "spi_select_result_iterator.hpp"
 #include "include/exceptions.hpp"
 
 namespace {
@@ -29,5 +30,13 @@ namespace PsqlTools::PsqlUtils::Spi {
     std::shared_ptr< SpiSession > new_session( new SpiSession() );
     SPI_SESSION = new_session;
     return new_session;
+  }
+
+  std::shared_ptr< ISelectResult >
+  SpiSession::select( std::string _select_query ) const {
+    auto instance = SPI_SESSION.lock();
+    assert( instance );
+
+    return SelectResultIterator::create( instance, _select_query );
   }
 } // namespace PsqlTools::PsqlUtils::Spi

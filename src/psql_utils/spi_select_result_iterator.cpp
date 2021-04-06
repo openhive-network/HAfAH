@@ -1,4 +1,4 @@
-#include "include/psql_utils/spi_select_result_iterator.hpp"
+#include "spi_select_result_iterator.hpp"
 
 #include "include/exceptions.hpp"
 
@@ -19,18 +19,22 @@ SelectResultIterator::~SelectResultIterator() {
 }
 
 std::shared_ptr<SelectResultIterator>
-SelectResultIterator::create(std::string _query ) {
+SelectResultIterator::create( std::shared_ptr< SpiSession > _session, std::string _query ) {
   auto previous_result_it = ITERATOR_INSTANCE.lock();
   if ( ITERATOR_INSTANCE.lock() ) {
     THROW_RUNTIME_ERROR( "Cannot execute two queries with SPI. Result of query "s + previous_result_it->getQuery() + " is still in use"s );
   }
 
-  std::shared_ptr< SelectResultIterator > new_iterator(new SelectResultIterator(std::move(_query ) ) );
+  std::shared_ptr< SelectResultIterator > new_iterator(new SelectResultIterator( _session, std::move(_query ) ) );
   ITERATOR_INSTANCE = new_iterator;
   return new_iterator;
 }
 
-SelectResultIterator::SelectResultIterator(std::string _query ): m_query(std::move(_query ) )  {
+SelectResultIterator::SelectResultIterator(std::shared_ptr< SpiSession > _session, std::string _query ): m_query(std::move(_query ) )  {
+  if ( _session == nullptr ) {
+    THROW_INITIALIZATION_ERROR( "No SpiSession in progress" );
+  }
+
   constexpr auto all_rows = 0l;
   auto result = SPI_execute( m_query.c_str(), true, all_rows );
   if ( result != SPI_OK_SELECT ) {
@@ -39,7 +43,7 @@ SelectResultIterator::SelectResultIterator(std::string _query ): m_query(std::mo
 }
 
 const std::string&
-SelectResultIterator::getQuery() {
+SelectResultIterator::getQuery() const {
   return m_query;
 }
 

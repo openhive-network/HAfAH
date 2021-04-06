@@ -1,5 +1,7 @@
 #pragma once
 
+#include "include/psql_utils/spi_session.hpp"
+
 #include <boost/optional.hpp>
 
 #include <memory>
@@ -13,8 +15,10 @@ typedef HeapTupleData *HeapTuple;
 } // extern "C"
 
 namespace PsqlTools::PsqlUtils::Spi {
+  class SpiSession;
 
-  class SelectResultIterator {
+  class SelectResultIterator
+    : public ISelectResult {
   public:
     ~SelectResultIterator();
     SelectResultIterator(const SelectResultIterator& ) = delete;
@@ -22,17 +26,18 @@ namespace PsqlTools::PsqlUtils::Spi {
     SelectResultIterator& operator=(const SelectResultIterator& ) = delete;
     SelectResultIterator& operator=(SelectResultIterator&& ) = delete;
 
-    static std::shared_ptr<SelectResultIterator> create(std::string _query );
+    static std::shared_ptr<SelectResultIterator> create( std::shared_ptr< SpiSession > _session, std::string _query);
 
-    const std::string& getQuery();
-    TupleDesc getTupleDesc();
-    boost::optional< HeapTuple > next();
+    const std::string& getQuery() const override;
+    TupleDesc getTupleDesc() override;
+    boost::optional< HeapTuple > next() override;
 
   private:
-    SelectResultIterator(std::string _query );
+    SelectResultIterator( std::shared_ptr< SpiSession > _session, std::string _query );
 
   private:
     const std::string m_query;
+    std::shared_ptr< SpiSession > m_session;
     uint32_t m_current_row_id = 0u;
   };
 
