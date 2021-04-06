@@ -1,4 +1,4 @@
-#include "include/psql_utils/spi_query_result_iterator.hpp"
+#include "include/psql_utils/spi_select_result_iterator.hpp"
 
 #include "include/exceptions.hpp"
 
@@ -9,28 +9,28 @@
 using namespace std::string_literals;
 
 namespace {
-  std::weak_ptr< PsqlTools::PsqlUtils::Spi::QueryResultIterator > ITERATOR_INSTANCE;
+  std::weak_ptr< PsqlTools::PsqlUtils::Spi::SelectResultIterator > ITERATOR_INSTANCE;
 }
 
 namespace PsqlTools::PsqlUtils::Spi {
 
-QueryResultIterator::~QueryResultIterator() {
+SelectResultIterator::~SelectResultIterator() {
   SPI_freetuptable( SPI_tuptable );
 }
 
-std::shared_ptr<QueryResultIterator>
-QueryResultIterator::create( std::string _query ) {
+std::shared_ptr<SelectResultIterator>
+SelectResultIterator::create(std::string _query ) {
   auto previous_result_it = ITERATOR_INSTANCE.lock();
   if ( ITERATOR_INSTANCE.lock() ) {
     THROW_RUNTIME_ERROR( "Cannot execute two queries with SPI. Result of query "s + previous_result_it->getQuery() + " is still in use"s );
   }
 
-  std::shared_ptr< QueryResultIterator > new_iterator( new QueryResultIterator( std::move( _query ) ) );
+  std::shared_ptr< SelectResultIterator > new_iterator(new SelectResultIterator(std::move(_query ) ) );
   ITERATOR_INSTANCE = new_iterator;
   return new_iterator;
 }
 
-QueryResultIterator::QueryResultIterator( std::string _query ): m_query( std::move( _query ) )  {
+SelectResultIterator::SelectResultIterator(std::string _query ): m_query(std::move(_query ) )  {
   constexpr auto all_rows = 0l;
   auto result = SPI_execute( m_query.c_str(), true, all_rows );
   if ( result != SPI_OK_SELECT ) {
@@ -39,17 +39,17 @@ QueryResultIterator::QueryResultIterator( std::string _query ): m_query( std::mo
 }
 
 const std::string&
-QueryResultIterator::getQuery() {
+SelectResultIterator::getQuery() {
   return m_query;
 }
 
 TupleDesc
-QueryResultIterator::getTupleDesc() {
+SelectResultIterator::getTupleDesc() {
   return SPI_tuptable->tupdesc;
 }
 
 boost::optional< HeapTuple >
-QueryResultIterator::next() {
+SelectResultIterator::next() {
   if ( m_current_row_id >= SPI_processed ) {
     return boost::optional< HeapTuple >();
   }

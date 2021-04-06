@@ -8,7 +8,7 @@
 #include "include/psql_utils/postgres_includes.hpp"
 #include "include/psql_utils/relation.hpp"
 #include "include/psql_utils/spi_session.hpp"
-#include "include/psql_utils/spi_query_result_iterator.hpp"
+#include "include/psql_utils/spi_select_result_iterator.hpp"
 
 #include "include/exceptions.hpp"
 
@@ -39,7 +39,7 @@ void
 BackFromForkSession::backFromFork() {
   assert( m_transaction );
 
-  auto tuples_it = PsqlUtils::Spi::QueryResultIterator::create( PsqlTools::ForkExtension::Sql::GET_STORED_TUPLES );
+  auto tuples_it = PsqlUtils::Spi::SelectResultIterator::create(PsqlTools::ForkExtension::Sql::GET_STORED_TUPLES );
 
   while( auto tuple = tuples_it->next() ) {
     setCurrentlyProcessedRelation( *tuple, tuples_it->getTupleDesc() );

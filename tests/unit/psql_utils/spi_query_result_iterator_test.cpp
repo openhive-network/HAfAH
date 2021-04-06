@@ -1,4 +1,4 @@
-#include "include/psql_utils/spi_query_result_iterator.hpp"
+#include "include/psql_utils/spi_select_result_iterator.hpp"
 
 #include <boost/test/unit_test.hpp>
 
@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE( positive_creation ) {
   EXPECT_CALL( *spi_mock, SPI_freetuptable( ::testing::_ ) )
     .Times( 1 );
 
-  auto it_under_test = PsqlTools::PsqlUtils::Spi::QueryResultIterator::create( query );
+  auto it_under_test = PsqlTools::PsqlUtils::Spi::SelectResultIterator::create(query );
 
   BOOST_CHECK( it_under_test );
 }
@@ -35,10 +35,10 @@ BOOST_AUTO_TEST_CASE( negative_creation_results_not_released ) {
 
   EXPECT_CALL( *spi_mock, SPI_freetuptable( ::testing::_ ) ).Times(1);
 
-  auto hold_result_it = PsqlTools::PsqlUtils::Spi::QueryResultIterator::create( query );
+  auto hold_result_it = PsqlTools::PsqlUtils::Spi::SelectResultIterator::create(query );
 
   BOOST_REQUIRE( hold_result_it );
-  BOOST_CHECK_THROW( PsqlTools::PsqlUtils::Spi::QueryResultIterator::create( query ), std::runtime_error );
+  BOOST_CHECK_THROW(PsqlTools::PsqlUtils::Spi::SelectResultIterator::create(query ), std::runtime_error );
 }
 
 BOOST_AUTO_TEST_CASE( negative_creation_sql_error ) {
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE( negative_creation_sql_error ) {
     .Times( 1 )
     .WillOnce( ::testing::Return( SPI_ERROR_UNCONNECTED ) );
 
-  BOOST_CHECK_THROW( PsqlTools::PsqlUtils::Spi::QueryResultIterator::create( query ), PsqlTools::ObjectInitializationException );
+  BOOST_CHECK_THROW(PsqlTools::PsqlUtils::Spi::SelectResultIterator::create(query ), PsqlTools::ObjectInitializationException );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
