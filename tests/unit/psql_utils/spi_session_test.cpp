@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE( positivie_session_create_and_destroy )
             .WillOnce(Return(SPI_OK_CONNECT));
   }
 
-  BOOST_CHECK_NO_THROW( PsqlTools::PsqlUtils::Spi::SpiSession::create() );
+  BOOST_CHECK_NO_THROW( PsqlTools::PsqlUtils::SpiSession::create() );
 }
 
 BOOST_AUTO_TEST_CASE( positivie_singleton_check )
@@ -45,8 +45,8 @@ BOOST_AUTO_TEST_CASE( positivie_singleton_check )
       .WillOnce(Return(SPI_OK_CONNECT));
   }
 
-  auto session1 = PsqlTools::PsqlUtils::Spi::SpiSession::create();
-  auto session2 = PsqlTools::PsqlUtils::Spi::SpiSession::create();
+  auto session1 = PsqlTools::PsqlUtils::SpiSession::create();
+  auto session2 = PsqlTools::PsqlUtils::SpiSession::create();
   BOOST_CHECK_EQUAL( session1, session2 );
 }
 
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE( negative_session_create )
           .Times(1)
           .WillOnce(Return(SPI_ERROR_CONNECT));
 
-  BOOST_CHECK_THROW( PsqlTools::PsqlUtils::Spi::SpiSession::create(), ObjectInitializationException );
+  BOOST_CHECK_THROW( PsqlTools::PsqlUtils::SpiSession::create(), ObjectInitializationException );
 }
 
 BOOST_AUTO_TEST_CASE( negative_session_close )
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE( negative_session_close )
           .Times(1)
           .WillOnce(Return(SPI_ERROR_UNCONNECTED));
 
-  BOOST_CHECK_NO_THROW( PsqlTools::PsqlUtils::Spi::SpiSession::create() ); // cannot throw from d_tor
+  BOOST_CHECK_NO_THROW( PsqlTools::PsqlUtils::SpiSession::create() ); // cannot throw from d_tor
 }
 
 BOOST_AUTO_TEST_CASE( positive_execute_util )
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE( positive_execute_util )
     .Times(1)
     .WillOnce(Return(SPI_OK_UTILITY));
 
-  auto session = PsqlTools::PsqlUtils::Spi::SpiSession::create();
+  auto session = PsqlTools::PsqlUtils::SpiSession::create();
   BOOST_CHECK_NO_THROW( session->executeUtil( query ) );
 }
 
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE( negative_execute_util )
     .Times(1)
     .WillOnce(Return(SPI_ERROR_UNCONNECTED));
 
-  auto session = PsqlTools::PsqlUtils::Spi::SpiSession::create();
+  auto session = PsqlTools::PsqlUtils::SpiSession::create();
   BOOST_CHECK_THROW( session->executeUtil( query ), std::runtime_error );
 }
 

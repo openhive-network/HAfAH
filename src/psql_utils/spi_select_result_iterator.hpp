@@ -14,7 +14,7 @@ struct HeapTupleData;
 typedef HeapTupleData *HeapTuple;
 } // extern "C"
 
-namespace PsqlTools::PsqlUtils::Spi {
+namespace PsqlTools::PsqlUtils {
   class SpiSession;
 
   class SelectResultIterator
@@ -41,4 +41,4 @@ namespace PsqlTools::PsqlUtils::Spi {
     uint32_t m_current_row_id = 0u;
   };
 
-} // namespace PsqlTools::PsqlUtils::Spi
+} // namespace PsqlTools::PsqlUtils

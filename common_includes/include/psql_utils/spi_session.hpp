@@ -11,7 +11,7 @@ struct HeapTupleData;
 typedef HeapTupleData *HeapTuple;
 } // extern "C"
 
-namespace PsqlTools::PsqlUtils::Spi {
+namespace PsqlTools::PsqlUtils {
   class SelectResultIterator;
 
   class ISelectResult {

@@ -9,10 +9,10 @@
 using namespace std::string_literals;
 
 namespace {
-  std::weak_ptr< PsqlTools::PsqlUtils::Spi::SelectResultIterator > ITERATOR_INSTANCE;
+  std::weak_ptr< PsqlTools::PsqlUtils::SelectResultIterator > ITERATOR_INSTANCE;
 }
 
-namespace PsqlTools::PsqlUtils::Spi {
+namespace PsqlTools::PsqlUtils {
 
 SelectResultIterator::~SelectResultIterator() {
   SPI_freetuptable( SPI_tuptable );
@@ -61,5 +61,5 @@ SelectResultIterator::next() {
   return boost::optional< HeapTuple >( *(SPI_tuptable->vals + m_current_row_id++) );
 }
 
-} // namespace PsqlTools::PsqlUtils::Spi
+} // namespace PsqlTools::PsqlUtils
 

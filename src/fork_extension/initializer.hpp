@@ -3,9 +3,9 @@
 #include <memory>
 #include <string>
 
-namespace PsqlTools::PsqlUtils::Spi {
+namespace PsqlTools::PsqlUtils {
   class SpiSession;
-} // PsqlTools::PsqlUtils::Spi
+} // PsqlTools::PsqlUtils
 
 namespace PsqlTools::ForkExtension {
   /* The object of this type is a global variable in initialization.hpp
@@ -29,6 +29,6 @@ namespace PsqlTools::ForkExtension {
       void initialize_function( const std::string& _function_name, const std::string& _sql_return_type ) const;
 
   private:
-    std::shared_ptr< PsqlTools::PsqlUtils::Spi::SpiSession > m_spi_session;
+    std::shared_ptr< PsqlTools::PsqlUtils::SpiSession > m_spi_session;
   };
 } // namespace PsqlTools::ForkExtension

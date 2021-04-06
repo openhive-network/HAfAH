@@ -5,12 +5,12 @@
 #include "include/exceptions.hpp"
 
 namespace {
-  std::weak_ptr< PsqlTools::PsqlUtils::Spi::SpiSession > SPI_SESSION;
+  std::weak_ptr< PsqlTools::PsqlUtils::SpiSession > SPI_SESSION;
 }
 
 using namespace std::string_literals;
 
-namespace PsqlTools::PsqlUtils::Spi {
+namespace PsqlTools::PsqlUtils {
   SpiSession::SpiSession() {
     if ( SPI_connect() != SPI_OK_CONNECT ) {
       THROW_INITIALIZATION_ERROR( "Cannot connect to SPI" );
@@ -48,4 +48,4 @@ namespace PsqlTools::PsqlUtils::Spi {
       THROW_RUNTIME_ERROR( "Cannot execute query : "s + _query );
     }
   }
-} // namespace PsqlTools::PsqlUtils::Spi
+} // namespace PsqlTools::PsqlUtils

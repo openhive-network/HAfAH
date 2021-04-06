@@ -17,7 +17,7 @@ namespace PsqlTools::ForkExtension {
   Initializer::Initializer() try {
     LOG_WARNING( "Initialize hive fork extension ver.: %s pid: %d", GIT_REVISION, getpid() );
 
-    m_spi_session = PsqlTools::PsqlUtils::Spi::SpiSession::create();
+    m_spi_session = PsqlTools::PsqlUtils::SpiSession::create();
     initialize_tuples_table();
     initialize_function( BACK_FROM_FORK_FUNCTION, "void" );
     initialize_function( ON_TABLE_CHANGE_FUNCTION, "trigger" );

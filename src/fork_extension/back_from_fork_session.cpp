@@ -18,7 +18,7 @@ using namespace std::string_literals;
 namespace PsqlTools::ForkExtension {
 
 BackFromForkSession::BackFromForkSession() try {
-  m_spi_session = PsqlUtils::Spi::SpiSession::create();
+  m_spi_session = PsqlUtils::SpiSession::create();
   m_transaction = PostgresPQ::DbClient::currentDatabase().startTransaction();
 }
 catch( std::exception& _exception ) {
