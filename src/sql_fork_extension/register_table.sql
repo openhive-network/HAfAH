@@ -2,7 +2,7 @@ DROP FUNCTION IF EXISTS hive_register_table;
 CREATE FUNCTION hive_register_table( _table_name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
-VOLATILE
+    VOLATILE
 AS
 $BODY$
 DECLARE
