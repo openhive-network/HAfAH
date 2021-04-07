@@ -6,7 +6,7 @@ CREATE FUNCTION hive_create_context( _name TEXT )
 AS
 $BODY$
 BEGIN
-    INSERT INTO hive_contexts( name ) VALUES( _name );
+    INSERT INTO hive_contexts( name, current_block_num ) VALUES( _name, -1 );
 END;
 $BODY$
 ;
@@ -19,7 +19,7 @@ CREATE FUNCTION hive_context_next_block( _name TEXT )
 AS
 $BODY$
     UPDATE hive_contexts
-    SET current_block_num = CASE WHEN current_block_num IS NULL THEN 0 ELSE  current_block_num + 1 END
+    SET current_block_num = current_block_num + 1
     WHERE name = _name
     RETURNING current_block_num
 $BODY$
