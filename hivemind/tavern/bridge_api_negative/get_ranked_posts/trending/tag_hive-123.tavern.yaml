@@ -26,3 +26,4 @@
           extra_kwargs:
             method: "tag_hive-123"
             directory: "bridge_api_patterns/get_ranked_posts/trending"
+            error_response: true
