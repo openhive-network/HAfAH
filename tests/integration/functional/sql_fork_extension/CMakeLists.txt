@@ -10,4 +10,5 @@ MACRO( ADD_SQL_FUNCTIONAL_TESTS sql_test_path)
     MESSAGE( STATUS "Added functional tests '${test_target}'" )
 ENDMACRO()
 
-ADD_SQL_FUNCTIONAL_TESTS( register_table.sql )
+ADD_SQL_FUNCTIONAL_TESTS( schema_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( register_table_test.sql )
