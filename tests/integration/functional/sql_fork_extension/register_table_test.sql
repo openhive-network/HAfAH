@@ -8,6 +8,7 @@ $BODY$
 BEGIN
     DROP TABLE IF EXISTS table1;
     CREATE TABLE table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT);
+    PERFORM hive_create_context( 'my_context' );
 END;
 $BODY$
 ;
@@ -20,7 +21,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive_register_table( 'table1'::TEXT );
+    PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
 END
 $BODY$
 ;
@@ -36,6 +37,7 @@ BEGIN
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_shadow_table1' );
     ASSERT EXISTS ( SELECT FROM information_schema.columns WHERE table_name='hive_shadow_table1' AND column_name='hive_block_num' AND data_type='integer' );
     ASSERT EXISTS ( SELECT FROM information_schema.columns WHERE table_name='hive_shadow_table1' AND column_name='hive_operation_type' AND data_type='smallint' );
+    ASSERT EXISTS ( SELECT FROM hive_registered_tables WHERE origin_table_name='table1' AND shadow_table_name='hive_shadow_table1' );
 END
 $BODY$
 ;
