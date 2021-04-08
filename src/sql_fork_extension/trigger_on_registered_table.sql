@@ -6,7 +6,7 @@ AS
 $BODY$
 DECLARE
     __shadow_table_name TEXT := NULL;
-    __new_values TEXT := NULL;
+    __values TEXT := NULL;
     __block_num INTEGER := NULL;
 BEGIN
     SELECT hrt.shadow_table_name
@@ -26,11 +26,20 @@ BEGIN
     END IF;
 
     IF ( TG_OP = 'INSERT' ) THEN
-        SELECT NEW.* INTO __new_values;
+        SELECT NEW.* INTO __values;
 
-        ASSERT __new_values IS NOT NULL;
+        ASSERT __values IS NOT NULL;
 
-        EXECUTE format( 'INSERT INTO %I VALUES( %s, 0, %s )', __shadow_table_name, __new_values, __block_num );
+        EXECUTE format( 'INSERT INTO %I VALUES( %s, %s, 0 )', __shadow_table_name, __values, __block_num );
+        RETURN NEW;
+    END IF;
+
+    IF ( TG_OP = 'DELETE' ) THEN
+        SELECT OLD.* INTO __values;
+
+        ASSERT __values IS NOT NULL;
+
+        EXECUTE format( 'INSERT INTO %I VALUES( %s, %s, 1 )', __shadow_table_name, __values, __block_num );
         RETURN NEW;
     END IF;
 

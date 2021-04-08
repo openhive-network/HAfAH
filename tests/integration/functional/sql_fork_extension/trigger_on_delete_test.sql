@@ -8,9 +8,9 @@ $BODY$
 BEGIN
     DROP TABLE IF EXISTS table1;
     CREATE TABLE table1( id INTEGER NOT NULL );
+    INSERT INTO table1( id ) VALUES( 123 );
     PERFORM hive_create_context( 'my_context' );
     PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
-    PERFORM hive_context_next_block( 'my_context' );
     PERFORM hive_context_next_block( 'my_context' );
 END;
 $BODY$
@@ -24,7 +24,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    INSERT INTO table1( id ) VALUES( 123 );
+    DELETE FROM table1;
 END
 $BODY$
 ;
@@ -38,8 +38,8 @@ AS
 $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM hive_shadow_table1 hs WHERE hs.id = 123  ) = 1, 'No expected id value in shadow table';
-    ASSERT EXISTS ( SELECT FROM hive_shadow_table1 hs WHERE hs.id = 123 AND hive_block_num = 1 ), 'Wrong block num';
-    ASSERT EXISTS ( SELECT FROM hive_shadow_table1 hs WHERE hs.id = 123 AND hive_operation_type = 0 ), 'Wrong operation type';
+    ASSERT EXISTS ( SELECT FROM hive_shadow_table1 hs WHERE hs.id = 123 AND hive_block_num = 0 ), 'Wrong block num';
+    ASSERT EXISTS ( SELECT FROM hive_shadow_table1 hs WHERE hs.id = 123 AND hive_operation_type = 1 ), 'Wrong operation type';
 END
 $BODY$
 ;

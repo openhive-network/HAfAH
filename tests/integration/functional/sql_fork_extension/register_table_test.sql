@@ -40,8 +40,11 @@ BEGIN
     ASSERT EXISTS ( SELECT FROM hive_registered_tables WHERE origin_table_name='table1' AND shadow_table_name='hive_shadow_table1' );
 
     -- triggers
-    ASSERT EXISTS ( SELECT FROM hive_triggers WHERE name='hive_trigger_table1' );
-    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive_trigger_table1' );
+    ASSERT EXISTS ( SELECT FROM hive_triggers WHERE name='hive_insert_trigger_table1' );
+    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive_insert_trigger_table1' );
+
+    ASSERT EXISTS ( SELECT FROM hive_triggers WHERE name='hive_delete_trigger_table1' );
+    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive_delete_trigger_table1' );
 END
 $BODY$
 ;
