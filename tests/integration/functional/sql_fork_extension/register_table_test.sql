@@ -38,6 +38,10 @@ BEGIN
     ASSERT EXISTS ( SELECT FROM information_schema.columns WHERE table_name='hive_shadow_table1' AND column_name='hive_block_num' AND data_type='integer' );
     ASSERT EXISTS ( SELECT FROM information_schema.columns WHERE table_name='hive_shadow_table1' AND column_name='hive_operation_type' AND data_type='smallint' );
     ASSERT EXISTS ( SELECT FROM hive_registered_tables WHERE origin_table_name='table1' AND shadow_table_name='hive_shadow_table1' );
+
+    -- triggers
+    ASSERT EXISTS ( SELECT FROM hive_triggers WHERE name='insert_trigger_table1' );
+    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='insert_trigger_table1' );
 END
 $BODY$
 ;

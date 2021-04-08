@@ -9,6 +9,9 @@ DECLARE
     __shadow_table_name TEXT := 'hive_shadow_' || _table_name;
     __block_num_column_name TEXT := 'hive_block_num';
     __operation_column_name TEXT := 'hive_operation_type';
+    __insert_trigger_name TEXT := 'insert_trigger_' || _table_name;
+    __context_id INTEGER := NULL;
+    __registered_table_id INTEGER := NULL;
 BEGIN
     EXECUTE format('CREATE TABLE %I AS TABLE %I', __shadow_table_name, _table_name );
     EXECUTE format('ALTER TABLE %I ADD COLUMN %I INTEGER NOT NULL', __shadow_table_name, __block_num_column_name );
@@ -18,6 +21,21 @@ BEGIN
     SELECT hc.id, tables.origin, tables.shadow
     FROM ( SELECT hc.id FROM hive_contexts hc WHERE hc.name =  _context_name ) as hc
     JOIN ( VALUES( _table_name, __shadow_table_name  )  ) as tables( origin, shadow ) ON TRUE
+    RETURNING context_id, id INTO __context_id, __registered_table_id
+    ;
+
+    ASSERT __context_id IS NOT NULL;
+    ASSERT __registered_table_id IS NOT NULL;
+
+    EXECUTE format(
+            'CREATE TRIGGER %I AFTER INSERT ON %I FOR EACH ROW EXECUTE PROCEDURE hive_on_insert( %I )'
+        , __insert_trigger_name
+        , _table_name
+        , __context_id
+    );
+
+    INSERT INTO hive_triggers( registered_table_id, name, operation_id )
+    VALUES( __registered_table_id, __insert_trigger_name, 0 )
     ;
 END;
 $BODY$

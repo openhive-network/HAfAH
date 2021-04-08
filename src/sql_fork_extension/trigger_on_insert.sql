@@ -17,7 +17,7 @@ BEGIN
 
     INSERT INTO __shadow_table_name
     SELECT  NEW.*, --inserted row
-           ( SELECT current_block_num FROM hive_contexts WHERE id = TG_ARGV[ 0 ] ) --block num
+           ( SELECT current_block_num FROM hive_contexts WHERE id = TG_ARGV[ 0 ] ), --block num
            0 -- INSERT
     ;
 
