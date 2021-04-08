@@ -22,3 +22,12 @@ CREATE TABLE IF NOT EXISTS hive_triggers_operations(
 INSERT INTO hive_triggers_operations( id, name )
 VALUES ( 0, 'INSERT' ), ( 1, 'DELETE' ), (2, 'UPDATE' )
 ON CONFLICT DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS hive_triggers(
+   id SERIAL PRIMARY KEY,
+   registered_table_id INTEGER NOT NULL,
+   name TEXT NOT NULL,
+   operation_id INTEGER NOT NULL,
+   CONSTRAINT fk_hive_triggers_registered_table FOREIGN KEY( registered_table_id ) REFERENCES hive_registered_tables( id ),
+   CONSTRAINT fk_hive_triggers_operations FOREIGN KEY( operation_id ) REFERENCES hive_triggers_operations( id )
+);

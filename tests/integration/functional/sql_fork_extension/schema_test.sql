@@ -35,6 +35,7 @@ BEGIN
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_contexts' );
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_registered_tables' );
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_triggers_operations' );
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_triggers' );
 
     ASSERT EXISTS ( SELECT FROM hive_triggers_operations WHERE id = 0 AND name = 'INSERT' );
     ASSERT EXISTS ( SELECT FROM hive_triggers_operations WHERE id = 1 AND name = 'DELETE' );
