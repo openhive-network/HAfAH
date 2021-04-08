@@ -1,5 +1,5 @@
-DROP FUNCTION IF EXISTS hive_on_insert;
-CREATE FUNCTION hive_on_insert()
+DROP FUNCTION IF EXISTS hive_on_table_trigger;
+CREATE FUNCTION hive_on_table_trigger()
     RETURNS trigger
     LANGUAGE plpgsql
 AS
