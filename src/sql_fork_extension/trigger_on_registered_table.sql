@@ -5,22 +5,35 @@ CREATE FUNCTION hive_on_table_trigger()
 AS
 $BODY$
 DECLARE
-    __shadow_table_name TEXT;
+    __shadow_table_name TEXT := NULL;
+    __new_values TEXT := NULL;
+    __block_num INTEGER := NULL;
 BEGIN
     SELECT hrt.shadow_table_name
     FROM hive_registered_tables hrt
     WHERE hrt.origin_table_name = TG_TABLE_NAME
     INTO __shadow_table_name;
 
-    ASSERT __shadow_table_name IS NOT NULL;
     ASSERT TG_NARGS = 1; --context id
 
-    INSERT INTO __shadow_table_name
-    SELECT  NEW.*, --inserted row
-           ( SELECT current_block_num FROM hive_contexts WHERE id = TG_ARGV[ 0 ] ), --block num
-           0 -- INSERT
-    ;
+    SELECT hc.current_block_num FROM hive_contexts hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
-    RETURN NEW;
+    ASSERT __shadow_table_name IS NOT NULL;
+    ASSERT __block_num IS NOT NULL;
+
+    IF ( __block_num < 0 ) THEN
+        RAISE EXCEPTION 'Did not execute hive_context_next_block before table edition';
+    END IF;
+
+    IF ( TG_OP = 'INSERT' ) THEN
+        SELECT NEW.* INTO __new_values;
+
+        ASSERT __new_values IS NOT NULL;
+
+        EXECUTE format( 'INSERT INTO %I VALUES( %s, 0, %s )', __shadow_table_name, __new_values, __block_num );
+        RETURN NEW;
+    END IF;
+
+    ASSERT FALSE, 'Unsuported trigger operation';
 END;
 $BODY$

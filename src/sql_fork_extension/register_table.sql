@@ -1,3 +1,5 @@
+-- creates a shadow table of registered table:
+-- | [ table column1, table column2,.... ] | hive_block_num | hive_operation_type |
 DROP FUNCTION IF EXISTS hive_register_table;
 CREATE FUNCTION hive_register_table( _table_name TEXT, _context_name TEXT )
     RETURNS void
