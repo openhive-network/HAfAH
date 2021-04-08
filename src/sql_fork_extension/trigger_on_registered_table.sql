@@ -6,7 +6,6 @@ AS
 $BODY$
 DECLARE
     __shadow_table_name TEXT := NULL;
-    __values TEXT := NULL;
     __block_num INTEGER := NULL;
 BEGIN
     SELECT hrt.shadow_table_name
@@ -26,20 +25,26 @@ BEGIN
     END IF;
 
     IF ( TG_OP = 'INSERT' ) THEN
-        SELECT NEW.* INTO __values;
-
-        ASSERT __values IS NOT NULL;
-
-        EXECUTE format( 'INSERT INTO %I VALUES( %s, %s, 0 )', __shadow_table_name, __values, __block_num );
+        EXECUTE format( 'INSERT INTO %I SELECT val.*, val2.* FROM ( VALUES %s  ) as val JOIN ( VALUES( %s, 0 ) ) as val2 ON TRUE'
+            , __shadow_table_name
+            , NEW.*
+            , __block_num );
         RETURN NEW;
     END IF;
 
     IF ( TG_OP = 'DELETE' ) THEN
-        SELECT OLD.* INTO __values;
+        EXECUTE format( 'INSERT INTO %I SELECT val.*, val2.* FROM ( VALUES %s  ) as val JOIN ( VALUES( %s, 1 ) ) as val2 ON TRUE'
+            , __shadow_table_name
+            , OLD.*
+            , __block_num );
+        RETURN NEW;
+    END IF;
 
-        ASSERT __values IS NOT NULL;
-
-        EXECUTE format( 'INSERT INTO %I VALUES( %s, %s, 1 )', __shadow_table_name, __values, __block_num );
+    IF ( TG_OP = 'UPDATE' ) THEN
+        EXECUTE format( 'INSERT INTO %I SELECT val.*, val2.* FROM ( VALUES %s  ) as val JOIN ( VALUES( %s, 2 ) ) as val2 ON TRUE'
+            , __shadow_table_name
+            , OLD.*
+            , __block_num );
         RETURN NEW;
     END IF;
 

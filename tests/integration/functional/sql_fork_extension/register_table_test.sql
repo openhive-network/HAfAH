@@ -34,6 +34,8 @@ STABLE
 AS
 $BODY$
 BEGIN
+    ASSERT EXISTS ( SELECT FROM information_schema.columns WHERE table_name='table1' AND column_name='hive_rowid' );
+
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_shadow_table1' );
     ASSERT EXISTS ( SELECT FROM information_schema.columns WHERE table_name='hive_shadow_table1' AND column_name='hive_block_num' AND data_type='integer' );
     ASSERT EXISTS ( SELECT FROM information_schema.columns WHERE table_name='hive_shadow_table1' AND column_name='hive_operation_type' AND data_type='smallint' );
@@ -45,6 +47,9 @@ BEGIN
 
     ASSERT EXISTS ( SELECT FROM hive_triggers WHERE name='hive_delete_trigger_table1' );
     ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive_delete_trigger_table1' );
+
+    ASSERT EXISTS ( SELECT FROM hive_triggers WHERE name='hive_update_trigger_table1' );
+    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive_update_trigger_table1' );
 END
 $BODY$
 ;
