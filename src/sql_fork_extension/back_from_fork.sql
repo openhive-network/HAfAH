@@ -64,6 +64,8 @@ BEGIN
         , array_to_string( _columns, ',' )
         , _shadow_table_name
     );
+
+    EXECUTE format( 'TRUNCATE %I', _shadow_table_name );
 END;
 $BODY$
 ;
