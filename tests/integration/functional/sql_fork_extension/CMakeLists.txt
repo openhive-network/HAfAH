@@ -24,3 +24,4 @@ ADD_SQL_FUNCTIONAL_TESTS( trigger_on_update_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_insert_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_delete_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_update_test.sql )

@@ -23,11 +23,41 @@ BEGIN
 
     -- revert deleted rows
     EXECUTE format(
-            'INSERT INTO %I
+        'INSERT INTO %I
         (
             SELECT DISTINCT ON ( hive_rowid ) %s
             FROM %I
             WHERE hive_operation_type = 1
+            ORDER BY hive_rowid, hive_block_num
+        )'
+        , _table_name
+        , array_to_string( _columns, ',' )
+        , _shadow_table_name
+    );
+
+    -- update deleted rows
+    -- first remove rows
+    EXECUTE format(
+            'DELETE FROM %I
+            WHERE %I.hive_rowid IN
+            (
+                SELECT DISTINCT ON ( st.hive_rowid ) st.hive_rowid
+                FROM %I st
+                WHERE st.hive_operation_type = 2
+                ORDER BY st.hive_rowid, st.hive_block_num
+            )'
+        , _table_name
+        , _table_name
+        , _shadow_table_name
+        );
+
+    -- now insert old rows
+    EXECUTE format(
+        'INSERT INTO %I
+        (
+            SELECT DISTINCT ON ( hive_rowid ) %s
+            FROM %I
+            WHERE hive_operation_type = 2
             ORDER BY hive_rowid, hive_block_num
         )'
         , _table_name
