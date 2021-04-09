@@ -6,15 +6,19 @@ CREATE FUNCTION back_from_fork_one_table( _table_name TEXT, _shadow_table_name T
 AS
 $BODY$
 BEGIN
+    -- First we find rows ids with lowest block num, then delete, insert or update these rows with rows ids
     -- revert inserted rows
     EXECUTE format(
         'DELETE FROM %I
         WHERE %I.hive_rowid IN
         (
-            SELECT DISTINCT ON ( st.hive_rowid ) st.hive_rowid
-            FROM %I st
-            WHERE st.hive_operation_type = 0
-            ORDER BY st.hive_rowid, st.hive_block_num
+        SELECT st.hive_rowid FROM
+            (
+                SELECT DISTINCT ON ( st.hive_rowid ) st.hive_rowid, st.hive_operation_type
+                FROM %I st
+                ORDER BY st.hive_rowid, st.hive_block_num
+            ) as st
+        WHERE st.hive_operation_type = 0
         )'
         , _table_name
         , _table_name
@@ -25,10 +29,13 @@ BEGIN
     EXECUTE format(
         'INSERT INTO %I
         (
-            SELECT DISTINCT ON ( hive_rowid ) %s
-            FROM %I
-            WHERE hive_operation_type = 1
-            ORDER BY hive_rowid, hive_block_num
+        SELECT %s FROM
+            (
+                SELECT DISTINCT ON ( hive_rowid ) *
+                FROM %I
+                ORDER BY hive_rowid, hive_block_num
+            ) as st
+         WHERE st.hive_operation_type = 1
         )'
         , _table_name
         , array_to_string( _columns, ',' )
@@ -38,28 +45,34 @@ BEGIN
     -- update deleted rows
     -- first remove rows
     EXECUTE format(
-            'DELETE FROM %I
-            WHERE %I.hive_rowid IN
+        'DELETE FROM %I
+        WHERE %I.hive_rowid IN
+        (
+        SELECT st.hive_rowid FROM
             (
-                SELECT DISTINCT ON ( st.hive_rowid ) st.hive_rowid
+                SELECT DISTINCT ON ( st.hive_rowid ) st.hive_rowid, st.hive_operation_type
                 FROM %I st
-                WHERE st.hive_operation_type = 2
                 ORDER BY st.hive_rowid, st.hive_block_num
-            )'
+            ) as st
+        WHERE st.hive_operation_type = 2
+        )'
         , _table_name
         , _table_name
         , _shadow_table_name
-        );
+    );
 
     -- now insert old rows
     EXECUTE format(
-        'INSERT INTO %I
-        (
-            SELECT DISTINCT ON ( hive_rowid ) %s
-            FROM %I
-            WHERE hive_operation_type = 2
-            ORDER BY hive_rowid, hive_block_num
-        )'
+            'INSERT INTO %I
+            (
+            SELECT %s FROM
+                (
+                    SELECT DISTINCT ON ( hive_rowid ) *
+                    FROM %I
+                    ORDER BY hive_rowid, hive_block_num
+                ) as st
+             WHERE st.hive_operation_type = 2
+            )'
         , _table_name
         , array_to_string( _columns, ',' )
         , _shadow_table_name
