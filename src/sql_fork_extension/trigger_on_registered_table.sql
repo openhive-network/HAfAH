@@ -7,7 +7,14 @@ $BODY$
 DECLARE
     __block_num INTEGER := NULL;
     __values TEXT;
+    __is_back_from_fork_in_progress BOOL := FALSE;
 BEGIN
+    SELECT back_from_fork FROM hive_control_status INTO __is_back_from_fork_in_progress;
+
+    IF ( __is_back_from_fork_in_progress = TRUE ) THEN
+        RETURN NEW;
+    END IF;
+
     ASSERT TG_NARGS = 2; --context id, shadow_table name
 
     SELECT hc.current_block_num FROM hive_contexts hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;

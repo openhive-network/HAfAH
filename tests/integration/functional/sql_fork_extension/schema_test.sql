@@ -36,10 +36,13 @@ BEGIN
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_registered_tables' );
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_triggers_operations' );
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_triggers' );
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_control_status' );
 
     ASSERT EXISTS ( SELECT FROM hive_triggers_operations WHERE id = 0 AND name = 'INSERT' );
     ASSERT EXISTS ( SELECT FROM hive_triggers_operations WHERE id = 1 AND name = 'DELETE' );
     ASSERT EXISTS ( SELECT FROM hive_triggers_operations WHERE id = 2 AND name = 'UPDATE' );
+
+    ASSERT EXISTS ( SELECT FROM hive_control_status WHERE back_from_fork=FALSE ), 'No control row';
 END
 $BODY$
 ;

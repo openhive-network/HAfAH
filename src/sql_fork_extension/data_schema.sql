@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS hive_registered_tables(
    context_id INTEGER NOT NULL,
    origin_table_name TEXT NOT NULL,
    shadow_table_name TEXT NOT NULL,
+   origin_table_columns TEXT[] NOT NULL,
    CONSTRAINT fk_hive_registered_tables_context FOREIGN KEY(context_id) REFERENCES hive_contexts( id )
 );
 
@@ -29,3 +30,11 @@ CREATE TABLE IF NOT EXISTS hive_triggers(
    name TEXT NOT NULL,
    CONSTRAINT fk_hive_triggers_registered_table FOREIGN KEY( registered_table_id ) REFERENCES hive_registered_tables( id )
 );
+
+CREATE TABLE IF NOT EXISTS hive_control_status(
+      id BOOL PRIMARY KEY DEFAULT TRUE
+    , back_from_fork BOOL NOT NULL
+    , CONSTRAINT uq_hive_control_status CHECK( id )
+);
+
+INSERT INTO hive_control_status( id, back_from_fork ) VALUES( TRUE, FALSE ) ON CONFLICT DO NOTHING;

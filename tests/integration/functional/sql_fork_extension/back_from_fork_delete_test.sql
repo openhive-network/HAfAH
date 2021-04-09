@@ -8,12 +8,12 @@ $BODY$
 BEGIN
     DROP TABLE IF EXISTS table1;
     CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
+    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla' );
     PERFORM hive_create_context( 'my_context' );
     PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
     PERFORM hive_context_next_block( 'my_context' );
 
-    -- one row inserted, ready to back from fork
-    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla' );
+    DELETE FROM table1;
 END;
 $BODY$
 ;
@@ -39,11 +39,10 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM table1 ) = 0, 'Inserted row was not removed';
+    ASSERT ( SELECT COUNT(*) FROM table1 WHERE id=123 ) = 1, 'Deleted row was not reinserted';
 END
 $BODY$
 ;
-
 
 SELECT test_given();
 SELECT test_when();

@@ -1,12 +1,11 @@
 DROP FUNCTION IF EXISTS back_from_fork_one_table;
-CREATE FUNCTION back_from_fork_one_table( _table_name TEXT, _shadow_table_name TEXT)
+CREATE FUNCTION back_from_fork_one_table( _table_name TEXT, _shadow_table_name TEXT, _columns TEXT[])
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE
 AS
 $BODY$
 BEGIN
-    RAISE NOTICE 'INSIDE REMOVE %, %',  _table_name, _shadow_table_name;
     -- revert inserted rows
     EXECUTE format(
         'DELETE FROM %I
@@ -21,6 +20,20 @@ BEGIN
         , _table_name
         , _shadow_table_name
     );
+
+    -- revert deleted rows
+    EXECUTE format(
+            'INSERT INTO %I
+        (
+            SELECT DISTINCT ON ( hive_rowid ) %s
+            FROM %I
+            WHERE hive_operation_type = 1
+            ORDER BY hive_rowid, hive_block_num
+        )'
+        , _table_name
+        , array_to_string( _columns, ',' )
+        , _shadow_table_name
+    );
 END;
 $BODY$
 ;
@@ -33,9 +46,13 @@ CREATE FUNCTION hive_back_from_fork()
 AS
 $BODY$
 BEGIN
+    UPDATE hive_control_status SET back_from_fork = TRUE;
+
     PERFORM
-        back_from_fork_one_table( hrt.origin_table_name, hrt.shadow_table_name )
+        back_from_fork_one_table( hrt.origin_table_name, hrt.shadow_table_name, hrt.origin_table_columns )
     FROM hive_registered_tables hrt;
+
+    UPDATE hive_control_status SET back_from_fork = FALSE;
 END;
 $BODY$
 ;

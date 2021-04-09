@@ -17,18 +17,20 @@ DECLARE
     __hive_update_trigger_name TEXT := 'hive_update_trigger_' || _table_name;
     __context_id INTEGER := NULL;
     __registered_table_id INTEGER := NULL;
+    __columns_names TEXT[];
 BEGIN
     EXECUTE format('ALTER TABLE %I ADD COLUMN %I BIGSERIAL', _table_name, __hive_rowid_column_name );
 
+    SELECT array_agg( iss.column_name::TEXT ) FROM information_schema.columns iss WHERE iss.table_name=_table_name INTO __columns_names;
     EXECUTE format('CREATE TABLE %I AS TABLE %I', __shadow_table_name, _table_name );
     EXECUTE format('DELETE FROM %I', __shadow_table_name ); --empty shadow table if origin table is not empty
     EXECUTE format('ALTER TABLE %I ADD COLUMN %I INTEGER NOT NULL', __shadow_table_name, __block_num_column_name );
     EXECUTE format('ALTER TABLE %I ADD COLUMN %I SMALLINT NOT NULL', __shadow_table_name, __operation_column_name );
 
-    INSERT INTO hive_registered_tables( context_id, origin_table_name, shadow_table_name )
-    SELECT hc.id, tables.origin, tables.shadow
+    INSERT INTO hive_registered_tables( context_id, origin_table_name, shadow_table_name, origin_table_columns )
+    SELECT hc.id, tables.origin, tables.shadow, columns
     FROM ( SELECT hc.id FROM hive_contexts hc WHERE hc.name =  _context_name ) as hc
-    JOIN ( VALUES( _table_name, __shadow_table_name  )  ) as tables( origin, shadow ) ON TRUE
+    JOIN ( VALUES( _table_name, __shadow_table_name, __columns_names  )  ) as tables( origin, shadow, columns ) ON TRUE
     RETURNING context_id, id INTO __context_id, __registered_table_id
     ;
 
