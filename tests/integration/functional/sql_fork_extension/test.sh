@@ -10,6 +10,7 @@ psql -d psql_tools_test_db -a -f  ${extension_path}/data_schema.sql
 psql -d psql_tools_test_db -a -f  ${extension_path}/context.sql
 psql -d psql_tools_test_db -a -f  ${extension_path}/trigger_on_registered_table.sql
 psql -d psql_tools_test_db -a -f  ${extension_path}/register_table.sql
+psql -d psql_tools_test_db -a -f  ${extension_path}/back_from_fork.sql
 
 psql -d psql_tools_test_db -a -v ON_ERROR_STOP=on -f  ${test_path};
 result=$?;

@@ -11,10 +11,15 @@ MACRO( ADD_SQL_FUNCTIONAL_TESTS sql_test_path)
 ENDMACRO()
 
 ADD_SQL_FUNCTIONAL_TESTS( schema_test.sql )
+
 ADD_SQL_FUNCTIONAL_TESTS( register_table_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( register_not_empty_table_test.sql )
+
 ADD_SQL_FUNCTIONAL_TESTS( create_context_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_next_block_test.sql )
+
 ADD_SQL_FUNCTIONAL_TESTS( trigger_on_insert_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( trigger_on_delete_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( trigger_on_update_test.sql )
+
+ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_insert_test.sql )
