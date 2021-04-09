@@ -7,6 +7,7 @@ $BODY$
 DECLARE
     __shadow_table_name TEXT := NULL;
     __block_num INTEGER := NULL;
+    __values TEXT;
 BEGIN
     SELECT hrt.shadow_table_name
     FROM hive_registered_tables hrt
@@ -25,26 +26,26 @@ BEGIN
     END IF;
 
     IF ( TG_OP = 'INSERT' ) THEN
-        EXECUTE format( 'INSERT INTO %I SELECT val.*, val2.* FROM ( VALUES %s  ) as val JOIN ( VALUES( %s, 0 ) ) as val2 ON TRUE'
+        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 0'
             , __shadow_table_name
-            , NEW.*
-            , __block_num );
+            , __block_num )
+            USING NEW;
         RETURN NEW;
     END IF;
 
     IF ( TG_OP = 'DELETE' ) THEN
-        EXECUTE format( 'INSERT INTO %I SELECT val.*, val2.* FROM ( VALUES %s  ) as val JOIN ( VALUES( %s, 1 ) ) as val2 ON TRUE'
+        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 1'
             , __shadow_table_name
-            , OLD.*
-            , __block_num );
+            , __block_num )
+            USING OLD;
         RETURN NEW;
     END IF;
 
     IF ( TG_OP = 'UPDATE' ) THEN
-        EXECUTE format( 'INSERT INTO %I SELECT val.*, val2.* FROM ( VALUES %s  ) as val JOIN ( VALUES( %s, 2 ) ) as val2 ON TRUE'
+        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 2'
             , __shadow_table_name
-            , OLD.*
-            , __block_num );
+            , __block_num )
+            USING OLD;
         RETURN NEW;
     END IF;
 

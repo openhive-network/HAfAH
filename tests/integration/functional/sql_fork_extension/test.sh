@@ -14,7 +14,7 @@ psql -d psql_tools_test_db -a -f  ${extension_path}/register_table.sql
 psql -d psql_tools_test_db -a -v ON_ERROR_STOP=on -f  ${test_path};
 result=$?;
 
-# psql -d postgres -a -f ./drop_db.sql;
+psql -d postgres -a -f ./drop_db.sql;
 
 if [ ${result} -eq 0 ]
 then
