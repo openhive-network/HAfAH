@@ -25,7 +25,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile03",
-    "post_id": 1258001,
+    "post_id": 1258013,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -65,7 +65,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile02",
-    "post_id": 1258000,
+    "post_id": 1258012,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -105,7 +105,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile01",
-    "post_id": 1257999,
+    "post_id": 1258011,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -140,7 +140,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "spider02",
-    "post_id": 1257998,
+    "post_id": 1258010,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -176,7 +176,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "spider01",
-    "post_id": 1257997,
+    "post_id": 1258009,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -212,7 +212,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "anaconda02",
-    "post_id": 1257996,
+    "post_id": 1258008,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -248,7 +248,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "anaconda01",
-    "post_id": 1257995,
+    "post_id": 1258007,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -261,6 +261,486 @@
     "title": "powerful snake 01",
     "updated": "2016-09-15T19:47:39",
     "url": "/hive-117600/@abit/anaconda01"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 12",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost12",
+    "post_id": 1258004,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 12",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost12"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 11",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost11",
+    "post_id": 1258003,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 11",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost11"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 10",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost10",
+    "post_id": 1258002,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 10",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost10"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 9",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost9",
+    "post_id": 1258001,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 9",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost9"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 8",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost8",
+    "post_id": 1258000,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 8",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost8"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 7",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost7",
+    "post_id": 1257999,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 7",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost7"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 6",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost6",
+    "post_id": 1257998,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 6",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost6"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 5",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost5",
+    "post_id": 1257997,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 5",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost5"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 4",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost4",
+    "post_id": 1257996,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 4",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost4"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 3",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost3",
+    "post_id": 1257995,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 3",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost3"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 2",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost2",
+    "post_id": 1257994,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 2",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost2"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 1",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost1",
+    "post_id": 1257993,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 1",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost1"
   },
   {
     "active_votes": [],
@@ -6959,1605 +7439,5 @@
     "title": "Snowden Live - Quote from Ed Snowden",
     "updated": "2016-09-15T19:05:30",
     "url": "/opinion/@imjustsayintho/snowden-live-quote-from-ed-snowden"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 77132612396,
-        "voter": "jpiper20"
-      },
-      {
-        "rshares": 2968616397,
-        "voter": "mikkolyytinen"
-      },
-      {
-        "rshares": 171200715,
-        "voter": "robyneggs"
-      }
-    ],
-    "author": "robyneggs",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 43.32,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "# A new focus\nby @robyneggs, business strategist and artist in PDX\n___\n### The inward focus shift\nThe equilibrium of the global economy is in the not-too-distant future. The population is increasing substantially, and the largest segment of the U.S. population will retire soon. According to PricewaterhouseCoopers (PWC) an economic slow-down will occur around 2020, or less than five years from now, and continue on into 2050, at which time the global economy is predicted to also triple in size (2015)! With that knowledge it must be addressed that the GDP growth of the nation will hence slow, causing businesses to look towards \u201cdeepening\u201d capital within this growth measurement (MIT, 2009). It is important to note what kind of growth is occurring, whether it be in capital, hours, or Total Factors of Production (TFP) (MIT, 2009). For, labor growth alone won\u2019t guarantee a healthy nation (Chien, 2015). To stay on top, therefore, we must \"deepen\" our nation's human capital. And steemit can help.\n### Maximizing focus\nIn order to fully maximize, or deepen output, the nation must first invest in sustainable infrastructure, human capital, and technological advances, for only long term economic strategy will increase the GDP healthfully. Steemit could cover all those bases. Steemit houses a sustainable infrastructure within its free-market governing principles; its focus is the user (or human capital in this example); and it is technologically advanced. Apparently continual growth has more to it than just increasing output. It's not about just posting *any* content, it's about posting content that adds to, or \"deepens\" the worth of steemit, as a whole. Our human capital output (in the form of posts) must sustain itself in the long run. At what point does steemit house all possible how-to articles? At what point does every household in the nation have the products it needs to live? What needs to happen to continue to grow a nation\u2019s GDP value after that? What does steemit need to do to continue to create value after the hard fork?\n### Are businesses (and you) prepared?\nConsidering the economy will soon reach equilibrium, how prepared are we for such an event? Consider that the free market of businesses might only be concerned with the short term effects of economic growth and shock, but what controls will be instituted to carry on efforts when said businesses mature or no longer exist? What about when steemit matures? Continual increased output will simply not be enough, considering the explosion in population growth by 2050. According to Peter Diamandis, a speaker at TED2012, this explosion brings with it an age of abundance; one in which we can expect to see 3 billion new minds (minute 12:07) coming online in the near future. Capital deepening must become the new focus of growth measurement, to guarantee that output per worker increases; that we increase our value as the individual. It is up to us to deepen ourselves and our investments, steemit being the possible infrastructure of deliverance.\n![safe4a451.png](https://www.steemimg.com/images/2016/08/17/safe4a451.png)\n### Adapting and policy\nNew economic policy must therefore become endogenous. \n> What is the 'Endogenous Growth Theory'\nThe endogenous growth theory is an economic theory which argues that economic growth is generated from within a system as a direct result of internal processes. More specifically, the theory notes that the enhancement of a nation's human capital will lead to economic growth by means of the development of new forms of technology and efficient and effective means of production. -Investopedia\n\nNew, long term evidence has shed light on the effects of internal and external shocks to this nation, and globally over many decades. And while exogenous growth models can be applied to technological shocks, endogenous growth explains why those shocks inevitably deepen the capital of the labor force. \n\nTechnology allows for more output per worker than ever before; labor increases using the same amount of hours. Not just technology can grow the economy but the TFP (total factors of production) can as well, like the skills and abilities of trained and talented human capital. Labor deepening exists within steemit as people's abilities and skills heighten. This is because we continuously improve, to stay at the top of the free-market demand apex.\n### An investment\nInvesting in human resources, new technology, and sustainable infrastructure (that said transactions occur over), is the new focus of growth measurement in the economy. Focusing on endogenous measurements of growth rather than exogenous is what is necessary in the long-term. And steemit can accommodate that. How will government policy solve the economic problem of capital per worker decrease due to the large amount of population that will turn 60 between 2020 and 2050 (Kim & Hewings, 2013)? How will it address the new market of 3 billion new internet users? How will it deal with a long term economic slow-down as a result? Much less, how will it transcend the predicted financial crash of the U.S. dollar (as [outlined](https://steemit.com/steem/@thelord/steemit-and-the-us-economic-collapse-of-september-27-2016) by @thelord)? The separation between government policy and private sector economic business strategy lies in the training and investment of human capital, aka the education system, aka steemit.\n### No government control and the resulting education\nWithout government control, the private sector would need to establish their own education systems, to prepare children to enter the workforce. How would businesses even begin to do that? What types of people would a business choose? What business would the parents choose to educate their children? And would having non-standardized education increase the GDP, or would it weaken it? Steemit, through its free-market allocation of wealth, would drive children and parents to educate themselves, in the most needed fields. The focus would become bent on finding a need and filling it.\n### Deepening brings salvation\nThese situations can only be measured in endogenous growth. Government economic policy aka steemit can serve to motivate or enhance this growth in human capital, in a way that businesses may fail at - by providing a free-market demand for education across the globe, by maintaining the infrastructure already in use to house this education, and by employing retirees that wish to continue to contribute to the workforce. Breaking down current government policy, however, is still a must. It needs to be rebuilt efficiently, utilizing new technology, to maximize its effect on the GDP. It needs to question what will be done in regards to the slow-down. Surely, if it adapted steemit, it would lose control in planning for and protecting the future health of the economy. But this control would simply be replaced with free-market principles, as opposed to the current capitalist structure. A free-market application to long-term economic strategy is the steemit solution, and the one that could save us all.\n![steemlifelogo83c22.png](https://www.steemimg.com/images/2016/09/13/steemlifelogo83c22.png)\n### References:\n1. Chien, YiLi. (2015) What drives long-run economic growth? [Article] Retrieved from https://www.stlouisfed.org/on-the-economy/2015/june/what-drives-long-run-economic-growth \n2. Diamandis, P. (2012) Abundance is our future. [Video] Retrieved from https://www.ted.com/talks/peter_diamandis_abundance_is_our_future?language=en?utm_source=tedcomshare&utm_medium=referral&utm_campaign=tedspread \n3. Investopedia (2016) Endogenous Growth Theory. [Definition] Retrieved from http://www.investopedia.com/terms/e/endogenousgrowththeory.asp#ixzz4KLiH50Qd \n4. Kim, T., Hewings, G.J.D., (2013). Endogenous growth in an aging economy: Evidence and policy measures. The Annals of Regional Science, 50(3), 705-730. [Ebook] doi:http://dx.doi.org/10.1007/s00168-012-0527-z\n5. MIT OpenCourseWare (2009) Table 14.02 Principles of macroeconomics [PDF] Retrieved from http://ocw.mit.edu \n6. PricewaterhouseCoopers (2015) The world in 2050: will the shift in global economic power continue? [PDF] Retrieved from https://www.pwc.com/gx/en/issues/the-economy/assets/world-in-2050-february-2015.pdf \n___\n# Follow me @robyneggs\n![Imgur](http://i.imgur.com/hhvyZxm.jpg)\n___\n@robyneggs is foremost an artist, but she likes to try to make $ on steemit by posting about what people might actually be interested in. ;-) I hope you find my article intriguing. Let us not forget, none of us are going to make it out alive (joke). :D Please, make any and all comments and/or corrections below the eggs and toast:\n![RobynEggs Logo](http://i.imgur.com/Vya1h75.jpg)",
-    "category": "steemit",
-    "children": 0,
-    "created": "2016-09-15T19:05:24",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://www.steemimg.com/images/2016/08/17/safe4a451.png",
-        "https://www.steemimg.com/images/2016/09/13/steemlifelogo83c22.png",
-        "http://i.imgur.com/hhvyZxm.jpg",
-        "http://i.imgur.com/Vya1h75.jpg"
-      ],
-      "links": [
-        "https://steemit.com/steem/@thelord/steemit-and-the-us-economic-collapse-of-september-27-2016",
-        "https://www.stlouisfed.org/on-the-economy/2015/june/what-drives-long-run-economic-growth",
-        "https://www.ted.com/talks/peter_diamandis_abundance_is_our_future?language=en?utm_source=tedcomshare&amp;utm_medium=referral&amp;utm_campaign=tedspread",
-        "http://www.investopedia.com/terms/e/endogenousgrowththeory.asp#ixzz4KLiH50Qd",
-        "http://dx.doi.org/10.1007/s00168-012-0527-z",
-        "http://ocw.mit.edu",
-        "https://www.pwc.com/gx/en/issues/the-economy/assets/world-in-2050-february-2015.pdf"
-      ],
-      "tags": [
-        "steemit",
-        "life",
-        "macro-economics",
-        "business"
-      ],
-      "users": [
-        "robyneggs",
-        "thelord"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 80272429508,
-    "payout": 0.017,
-    "payout_at": "2016-09-22T19:05:24",
-    "pending_payout_value": "0.017 HBD",
-    "percent_hbd": 10000,
-    "permlink": "an-economic-slowdown-and-the-deepening-of-our-human-capital-how-steemit-can-be-our-salvation",
-    "post_id": 1257512,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 3
-    },
-    "title": "An economic slowdown and the \"deepening\" of our human capital; how steemit can be our salvation",
-    "updated": "2016-09-15T19:05:24",
-    "url": "/steemit/@robyneggs/an-economic-slowdown-and-the-deepening-of-our-human-capital-how-steemit-can-be-our-salvation"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 231813239369,
-        "voter": "anonymous"
-      },
-      {
-        "rshares": 2059078537865,
-        "voter": "wang"
-      },
-      {
-        "rshares": 10884777244,
-        "voter": "yefet"
-      },
-      {
-        "rshares": 468281676,
-        "voter": "paco-steem"
-      },
-      {
-        "rshares": 5641725632,
-        "voter": "spaninv"
-      },
-      {
-        "rshares": 313710480,
-        "voter": "coar"
-      },
-      {
-        "rshares": 1061302586,
-        "voter": "murh"
-      },
-      {
-        "rshares": 365370465,
-        "voter": "stiletto"
-      },
-      {
-        "rshares": 5047527838,
-        "voter": "tee-em"
-      },
-      {
-        "rshares": 59061302314,
-        "voter": "lehard"
-      },
-      {
-        "rshares": 11709563991,
-        "voter": "anasya"
-      },
-      {
-        "rshares": 2531219186,
-        "voter": "steem1653"
-      },
-      {
-        "rshares": 80777327,
-        "voter": "snowden"
-      },
-      {
-        "rshares": 1005566128,
-        "voter": "danielkt"
-      },
-      {
-        "rshares": 4209545151,
-        "voter": "karen13"
-      },
-      {
-        "rshares": 7946872448,
-        "voter": "smolalit"
-      },
-      {
-        "rshares": 204619400604,
-        "voter": "jl777"
-      },
-      {
-        "rshares": 50626015,
-        "voter": "steemchain"
-      },
-      {
-        "rshares": 17267415955,
-        "voter": "proto"
-      },
-      {
-        "rshares": 2960764853,
-        "voter": "dmilash"
-      },
-      {
-        "rshares": 8734213651,
-        "voter": "taker"
-      },
-      {
-        "rshares": 63847571,
-        "voter": "rpo"
-      },
-      {
-        "rshares": 3157847929,
-        "voter": "kurtbeil"
-      },
-      {
-        "rshares": 2118152083,
-        "voter": "natalymaty"
-      },
-      {
-        "rshares": 83629253317,
-        "voter": "serejandmyself"
-      },
-      {
-        "rshares": 101627835,
-        "voter": "pollina"
-      },
-      {
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 1317649856,
-        "voter": "bitcoinparadise"
-      },
-      {
-        "rshares": 61292139,
-        "voter": "inarix03"
-      },
-      {
-        "rshares": 73937406,
-        "voter": "ola1"
-      },
-      {
-        "rshares": 1773444711,
-        "voter": "bapparabi"
-      },
-      {
-        "rshares": 71727340,
-        "voter": "dealzgal"
-      },
-      {
-        "rshares": 64921864,
-        "voter": "storage"
-      },
-      {
-        "rshares": 55388665,
-        "voter": "blackmarket"
-      },
-      {
-        "rshares": 58454327,
-        "voter": "gifts"
-      },
-      {
-        "rshares": 93882016,
-        "voter": "expat"
-      },
-      {
-        "rshares": 126595034,
-        "voter": "toddemaher1"
-      }
-    ],
-    "author": "lehard",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 63.6,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<html>\n<p>http://i.imgur.com/jeelDxs.jpg</p>\n<p>This summer I spent a city bicycle race. I do not work professionally with video. But when mounting the video I was able to achieve a significant improvement in quality.</p>\n<p>For work I use Sony Vegas software. I am surprised by the possibilities of modern software and I want to share with you the results.</p>\n<p>https://www.youtube.com/watch?v=prqaZ97DX9k</p>\n</html>",
-    "category": "video",
-    "children": 0,
-    "created": "2016-09-15T19:05:24",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "http://i.imgur.com/jeelDxs.jpg",
-        "https://img.youtube.com/vi/prqaZ97DX9k/0.jpg"
-      ],
-      "links": [
-        "https://www.youtube.com/watch?v=prqaZ97DX9k"
-      ],
-      "tags": [
-        "video"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 2727719889737,
-    "payout": 1.006,
-    "payout_at": "2016-09-22T19:05:24",
-    "pending_payout_value": "1.006 HBD",
-    "percent_hbd": 10000,
-    "permlink": "amazing-color-correction-video-before-and-after-the-my-original-work",
-    "post_id": 1257511,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 37
-    },
-    "title": "Amazing Color Correction video. Before and after [My original work]",
-    "updated": "2016-09-15T19:07:27",
-    "url": "/video/@lehard/amazing-color-correction-video-before-and-after-the-my-original-work"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 11584833708,
-        "voter": "andu"
-      },
-      {
-        "rshares": 29174698761,
-        "voter": "dwinblood"
-      },
-      {
-        "rshares": 119924160,
-        "voter": "timendainum"
-      },
-      {
-        "rshares": 1223969387,
-        "voter": "future24"
-      },
-      {
-        "rshares": 4366979846,
-        "voter": "chaospoet"
-      },
-      {
-        "rshares": 9868091435,
-        "voter": "aggroed"
-      },
-      {
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 73937406,
-        "voter": "ola1"
-      },
-      {
-        "rshares": 849594350,
-        "voter": "jbaker585"
-      },
-      {
-        "rshares": 3983913956,
-        "voter": "michelle.gent"
-      }
-    ],
-    "author": "dwinblood",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 63.54,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<img src=\"http://i.imgur.com/VuVQsID.jpg\"/>\nI like talking about hijacked words.   Usually the hijacking occurs due to actions of some alphabet agency of the government, or a large corporate agenda.    Today is slightly different.    The word I am going to focus on today is ***Organic***.      By focusing on this word I am not endorsing GMO vs Organic debate that occurs, though I was on the side lines of a very amusing debate of that type today.   All of my friends bickering back and forth in our Politics, Religion, and BS channel.  :)    The idea of Organic as a label being misused came up.    I realized \"*Hey, there is another great example of a hijacked word*.\"\n\n<h1>What do I mean by hijacking?</h1>\nBefore we tackle today's word I want to first explain what I mean by hijacking.    This is my description of when there is a concerted effort to use a word that can illicit an emotional response in some way that is not actually accurate based upon it's definition.     Past words I have discussed are <a href=\"https://steemit.com/philosophy/@dwinblood/word-hijacking-the-study-based-battle-for-control-of-our-minds\">[Terrorist, Piracy]</a>, <a href=\"https://steemit.com/politics/@dwinblood/word-hijacking-2-0-just-who-is-a-traitor-what-is-treason\">[Traitor]</a>, <a href=\"https://steemit.com/philosophy/@dwinblood/word-hijacking-3-0-anarchy-climate-change-occult-conspiracy-theory\">[Anarchy, Climate Change, Occult, and Conspiracy Theory]</a>.   In those cases I explained some possible motives for the hijacking in the <a href=\"https://steemit.com/philosophy/@dwinblood/word-hijacking-the-study-based-battle-for-control-of-our-minds\">first word hijacking</a> post.    Those motives don't seem to apply completely in the case of the words today.   If they do I may simply have not identified how yet.\n\n<img src=\"https://media.giphy.com/media/DJHLI7Bfi1Vpm/giphy.gif\"/>\n*Source: giphy.com*\n<h1>Organic</h1>\nThe first thing I like to do generally when going over the hijacking of words is to find a definition for the word from before it was hijacked.   This is important for eventually the dictionaries do update and include new definitions for the words.   This is partially due to lingual drift.\n\n<img src=\"http://i.imgur.com/iS0xCfP.png\"/>\nThat is closest to the original definition I can find.   The Meriam/Webster Dictionaries have already incorporated all the new definitions as tied to the organic vs GMO food movements.   I will show those here for completeness.\n<img src=\"http://i.imgur.com/ySHBg1c.png\"/>\n\nI have friends that are not opposed to healthy living, but are rightly opposed to the term organic, and often to the term GMO.    They do have good reasons for being opposed to it.   The things they are used to back up or strengthen often would result in the statement being naive, or hypocritical.   I will explain that fully here in just a moment.\n\n***Organic*** technically is defined as \"*of, relating to, or derived from living matter*\" as an adjective.    That is pretty simple.\n\nShort of a few minerals like salt, and water that defines pretty much EVERYTHING we ingest.    It also defines viruses, parasites, symbiotes, you, and I.\n\nIn fact, if our food is not organic then we cannot subsist on it.   We will die very quickly without ingesting organic materials that our body can break down.   Technically, this means that all FOOD is organic.\n\n*Again in case you missed it.   This blog post is not to side with anyone on the GMO vs Organic food debate.   It is purely to illustrate that these are in fact hijacked words/terms*.\n\nSo how is this word hijacked?   We require organic sustenance.   By implying something is organic and something else is not we immediately setup a state where one should not be eaten.    Yet the truth of the matter is that HOW something is acquired does not change whether it is organic or not.    It either is organic or it is not.    If it is not then other than a few minerals and water we can't survive or ingest such things.    So it has been hijacked to extend meaning and paint a picture in our minds that is in fact false in intention.\n\nIf the argument were Natural Foods vs Manufactured Foods then there might be a little bit more sincerity there and it would be closer to actual meaning.    The term organic when used in these arguments is a very \"loaded\" word.\n\n<img src=\"https://media.giphy.com/media/xTiTnK80JHV0fgDZzG/giphy.gif\"/>\n*Source: giphy.com*\n<h1>GMO</h1>\nThis acronym stands for Genetically Modified Organism.    The use of it is usually derogatory and is used to indicate something was modified by careful manipulation in a lab.   It happened by chemical manipulation, injection, cell splicing, etc.     Yet in reality we have been doing this throughout human history.   The difference today is we've created methods where we can do this very rapidly rather than the long tedious process of the past.   So when people use the term GMO they technically are using it for the fast lab created method.    Oh and it is important that the word ORGANISM is a noun version of Organic.    So GMOs are organic, it is part of their name.\n\nIn history we have bred animals.\n\nWe have bred plants.\n\nThese are all genetic modification with us giving evolution a push by setting up certain environmental conditions and opportunities.    They still are occurring due to human intervention.\n\nFor plants it is likely we wouldn't have CORN as a crop without such activities.    We also might not have any bananas left without such activities.\n\n<b>Popped Secret: The Mysterious Origin of Corn</b>\nhttps://www.youtube.com/watch?v=mBuYUb_mFXA\n\n<b>The surprising history of bananas in under 2 minutes</b>\nhttps://www.youtube.com/watch?v=SpAHPXNhAwk\n\n<b>And Man Created Dog</b>\nhttps://www.youtube.com/watch?v=GFzbBVMR8zA\n\n<img src=\"https://media.giphy.com/media/98pZs1ZVaWb1C/giphy.gif\"/>\n*Source: giphy.com*\n<h1>Troll</h1>\nI am not actually sure why we settled on the word Troll to describe people that intentionally seek to antagonize others and gain pleasure from it.    In the early days of the internet we called them **Flamers** and the actions they were involved in **flame wars**.    Troll and trolling replaced these terms.\n\nWe also came up with phrases such as \"*Don't feed the troll*.\"\n\nSo this word was repurposed from its original meaning.   It was hijacked.    Yet this does not match what I normally would write about in terms of hijacking.     At least yet.\n\nWhen people are not intentionally antagonizing and are instead arguing and perhaps in the throes of cognitive dissonance they are NOT trolling.     A troll is not someone who disagrees with you and gets passionate about the subject.\n\nSo how it is hijacked is when someone chooses to use the term ***Troll***  to describe someone who disagrees with them.\n\n<img src=\"https://media0.giphy.com/media/3oEduGzkdvam26MrXG/200w.gif\"/>\n*Source: giphy.com*\n<h1>Hijacking</h1>\nNo one has called me out on it yet, so I thought I would call myself out.   I have hijacked the word hijacked for the emotional imagery I hope it places in people's mind.   I want them to be outraged at groups seeking to emotionally manipulate you into making a larger emotional relation to an action than you would normally have.\n\nI am a hypocrite here.   I acknowledge that I am doing this intentionally.   I want people to care about people altering their words for political and economic agendas.    I want people to start thinking people using words to define something that they actually are not.    It is essentially taking a metaphor and instead of treating it like a metaphor we now instead use it as the actual definition.\n\nA definition for this that would not use the word hijacking would be, redefining, repurposing, or changing.    Yet I do not think those have quite the FUN and emotional impact of hijacking.   Hijacking is seen as something hostile and aggressive.    Much like the word Piracy for copying something digital is nothing like what piracy actually meant.\n\nI hope you got something out of this edition of the word hijacking series.   At the very least maybe something to think about or enjoyment.   Thank you for your time.",
-    "category": "philosophy",
-    "children": 1,
-    "created": "2016-09-15T19:05:09",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "http://i.imgur.com/VuVQsID.jpg",
-        "https://media.giphy.com/media/DJHLI7Bfi1Vpm/giphy.gif",
-        "http://i.imgur.com/iS0xCfP.png",
-        "http://i.imgur.com/ySHBg1c.png",
-        "https://media.giphy.com/media/xTiTnK80JHV0fgDZzG/giphy.gif",
-        "https://img.youtube.com/vi/mBuYUb_mFXA/0.jpg",
-        "https://img.youtube.com/vi/SpAHPXNhAwk/0.jpg",
-        "https://img.youtube.com/vi/GFzbBVMR8zA/0.jpg",
-        "https://media.giphy.com/media/98pZs1ZVaWb1C/giphy.gif",
-        "https://media0.giphy.com/media/3oEduGzkdvam26MrXG/200w.gif"
-      ],
-      "links": [
-        "https://steemit.com/philosophy/@dwinblood/word-hijacking-the-study-based-battle-for-control-of-our-minds",
-        "https://steemit.com/politics/@dwinblood/word-hijacking-2-0-just-who-is-a-traitor-what-is-treason",
-        "https://steemit.com/philosophy/@dwinblood/word-hijacking-3-0-anarchy-climate-change-occult-conspiracy-theory",
-        "https://www.youtube.com/watch?v=mBuYUb_mFXA",
-        "https://www.youtube.com/watch?v=SpAHPXNhAwk",
-        "https://www.youtube.com/watch?v=GFzbBVMR8zA"
-      ],
-      "tags": [
-        "philosophy",
-        "politics",
-        "organic",
-        "gmo",
-        "life"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 61346069875,
-    "payout": 0.013,
-    "payout_at": "2016-09-22T19:05:09",
-    "pending_payout_value": "0.013 HBD",
-    "percent_hbd": 10000,
-    "permlink": "word-hijacking-4-0-thanks-to-my-friends-in-slack-the-words-today-are-organic-gmo-troll-and-hijacking",
-    "post_id": 1257507,
-    "promoted": "0.001 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 10
-    },
-    "title": "Word Hijacking 4.0: - Thanks to my friends in slack the words today are ORGANIC, GMO, TROLL and HIJACKING",
-    "updated": "2016-09-15T19:12:15",
-    "url": "/philosophy/@dwinblood/word-hijacking-4-0-thanks-to-my-friends-in-slack-the-words-today-are-organic-gmo-troll-and-hijacking"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 3337701573126,
-        "voter": "dantheman"
-      },
-      {
-        "rshares": 313710480,
-        "voter": "coar"
-      },
-      {
-        "rshares": 1061303487,
-        "voter": "murh"
-      },
-      {
-        "rshares": 16825894924,
-        "voter": "jamesbrown"
-      },
-      {
-        "rshares": 64167195,
-        "voter": "statman"
-      },
-      {
-        "rshares": 60326971,
-        "voter": "bitcoingiveaway"
-      },
-      {
-        "rshares": 1701524453,
-        "voter": "linzo"
-      },
-      {
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 73937406,
-        "voter": "ola1"
-      },
-      {
-        "rshares": 1773444711,
-        "voter": "bapparabi"
-      },
-      {
-        "rshares": 139337929,
-        "voter": "feelinggood"
-      },
-      {
-        "rshares": 136316357,
-        "voter": "thedevil"
-      },
-      {
-        "rshares": 138233639,
-        "voter": "thetruthhurts"
-      },
-      {
-        "rshares": 138227134,
-        "voter": "tupacisback"
-      }
-    ],
-    "author": "feelinggood",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 40.48,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "# Why, Hello There, World\n\nHi, my name is James Brown and I'm what some like to call a \"health-nut\".  \n\n# Here's My Typical Day\n\n* I get 9 to 10 hours of sleep every night.  \n* I stretch and give myself messages with various self-massage tools for 45 minutes to an hour.\n* I drink at least 2 gallons of purified water.\n* I jump rope for 30 minutes on an anti-fatigue mat, 6 days a week.\n* I follow-up skipping rope with 5 to 10 minutes of push-ups, followed by another 5 to 10 minutes of bent-over underhand rows.  I do these together in order to give my body a balance of \"push\" and \"pull\" on my muscles, seeing to it that adding muscle doesn't pull my posture forward or backward.\n* I jog outside, in beautiful nature trails, for anywhere from 30 minutes to 4 hours, 3 to 6 times per week.\n* I do a heavy-lifting routine with barbells and dumbbells for 1 to 1.5 hours, 2 to 3 days per week.\n* I do a Pilates, core workout, routine for 45 minutes to an hour, 3 to 4 days per week.\n* I eat A LOT of greens, fruits, beans, nuts and seeds.\n* I especially eat lots of hemp seed (hearts), oatmeal, and organic peanut butter (heavy protein) - usually all mixed together.  It tastes heavenly :)\n* I meditate for 20 to 30 minutes in the morning and sometimes for another 15 to 20 minutes before I go to sleep at night.\n\nI do these things routinely and I LOVE doing it.  I feel great!  I feel healthy, vital, strong, flexible, calm and relaxed.  My mind is clear and focused on my goals and the people whom I love.  I'm happy and healthy physically, psychologically, and socially.  Everything is good :)\n \n# My Goal Here On Steemit..\n\n...is to share some of my health-tips and personal techniques that I've used to make it easy and painless to develop healthier habits.  I plan to share some of the tools I use to loosen up my body, making it feel wonderful and bringing all the \"life\" to the muscles that they need in order to get the most out of stretching and exercising them.  I'll go through how I approach exercise and weight-lifting.  I'll share my secrets on how to build a strong and flexible body in a way that's fun and effective.  I'll touch base on my diet approach and even share some delicious and nutritious recipes.\n\n# Keep Your Eyes Peeled\n\nI'll be around @feelinggood.  Throw me an up-vote and a follow if you like where I'm going with this.\n\nI'm so excited to share my secrets to healthy and happy living :)\n\n# Peace.\n\n<center><img src=\"http://quotes.greet2k.com/image-code/health-3.jpg\"></center><br>\n<center><([source image](http://quotes.greet2k.com/image-code/health-3.jpg))></center>",
-    "category": "health",
-    "children": 1,
-    "created": "2016-09-15T19:04:18",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "http://quotes.greet2k.com/image-code/health-3.jpg"
-      ],
-      "links": [
-        "http://quotes.greet2k.com/image-code/health-3.jpg"
-      ],
-      "tags": [
-        "health",
-        "life",
-        "healthy",
-        "eating",
-        "living"
-      ],
-      "users": [
-        "feelinggood"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 3360228124678,
-    "payout": 1.353,
-    "payout_at": "2016-09-22T19:04:18",
-    "pending_payout_value": "1.353 HBD",
-    "percent_hbd": 10000,
-    "permlink": "life-is-all-about-being-healthy-feeling-good-and-spreading-happiness-and-well-being",
-    "post_id": 1257495,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 14
-    },
-    "title": "Life is All About Being Healthy, Feeling Good, and Spreading Happiness and Well-Being!",
-    "updated": "2016-09-15T19:08:00",
-    "url": "/health/@feelinggood/life-is-all-about-being-healthy-feeling-good-and-spreading-happiness-and-well-being"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 503970587,
-        "voter": "fkn"
-      },
-      {
-        "rshares": 662437860,
-        "voter": "elishagh1"
-      },
-      {
-        "rshares": 1061303487,
-        "voter": "murh"
-      },
-      {
-        "rshares": 5342866379,
-        "voter": "kimziv"
-      },
-      {
-        "rshares": 2460297505,
-        "voter": "furion"
-      },
-      {
-        "rshares": 116544591,
-        "voter": "poseidon"
-      },
-      {
-        "rshares": 408706835,
-        "voter": "positive"
-      },
-      {
-        "rshares": 902920974,
-        "voter": "sisterholics"
-      },
-      {
-        "rshares": 3276506793,
-        "voter": "sulev"
-      },
-      {
-        "rshares": 31930537676,
-        "voter": "laonie"
-      },
-      {
-        "rshares": 1332539475,
-        "voter": "myfirst"
-      },
-      {
-        "rshares": 6481343102,
-        "voter": "somebody"
-      },
-      {
-        "rshares": 63847571,
-        "voter": "rpo"
-      },
-      {
-        "rshares": 242331170,
-        "voter": "flysaga"
-      },
-      {
-        "rshares": 1431774250,
-        "voter": "midnightoil"
-      },
-      {
-        "rshares": 3581211307,
-        "voter": "xiaohui"
-      },
-      {
-        "rshares": 161721174,
-        "voter": "elfkitchen"
-      },
-      {
-        "rshares": 111957361,
-        "voter": "xiaokongcom"
-      },
-      {
-        "rshares": 1223969387,
-        "voter": "future24"
-      },
-      {
-        "rshares": 225687011,
-        "voter": "xianjun"
-      },
-      {
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 53389583,
-        "voter": "ppan08162016"
-      },
-      {
-        "rshares": 73937406,
-        "voter": "ola1"
-      }
-    ],
-    "author": "anduweb",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 59.97,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "As some of you know recently DECENT had their ICO.\n\n# BEWARE of the Twitter scams that use SurveyMonkey to request BTC for a discounted cryptocoin price\n\nSomeone just reported this in the DECENT communication channel\n<center>http://i.imgur.com/p8Jufok.jpg</center>",
-    "category": "decent",
-    "children": 0,
-    "created": "2016-09-15T19:03:30",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "http://i.imgur.com/p8Jufok.jpg"
-      ],
-      "tags": [
-        "decent",
-        "twitter",
-        "scam",
-        ""
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 61749928350,
-    "payout": 0.013,
-    "payout_at": "2016-09-22T19:03:30",
-    "pending_payout_value": "0.013 HBD",
-    "percent_hbd": 0,
-    "permlink": "the-surveymonkey-scammer-is-back-now-for-decent",
-    "post_id": 1257486,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 23
-    },
-    "title": "The SurveyMonkey scammer is back on Twitter - now for DECENT",
-    "updated": "2016-09-15T19:03:54",
-    "url": "/decent/@anduweb/the-surveymonkey-scammer-is-back-now-for-decent"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 1061309796,
-        "voter": "murh"
-      },
-      {
-        "rshares": 12064022115,
-        "voter": "primus"
-      },
-      {
-        "rshares": -102855934,
-        "voter": "cheetah20"
-      },
-      {
-        "rshares": -171631587,
-        "voter": "cheetah15"
-      },
-      {
-        "rshares": -101859018,
-        "voter": "cheetah16"
-      },
-      {
-        "rshares": -101857729,
-        "voter": "cheetah17"
-      },
-      {
-        "rshares": -101760456,
-        "voter": "cheetah18"
-      },
-      {
-        "rshares": -123906339,
-        "voter": "cheetah19"
-      },
-      {
-        "rshares": -101135204,
-        "voter": "cheetah21"
-      },
-      {
-        "rshares": 53146733,
-        "voter": "vsmith08162016"
-      }
-    ],
-    "author": "machinelearning",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 52.87,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "Please do not upvote.",
-    "category": "test",
-    "children": 1,
-    "created": "2016-09-15T19:02:18",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "tags": [
-        "test"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 12373472377,
-    "payout": 0.002,
-    "payout_at": "2016-09-22T19:02:18",
-    "pending_payout_value": "0.002 HBD",
-    "percent_hbd": 10000,
-    "permlink": "test",
-    "post_id": 1257473,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 10
-    },
-    "title": "Test",
-    "updated": "2016-09-15T19:02:18",
-    "url": "/test/@machinelearning/test"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 66885815,
-        "voter": "missmishel623"
-      },
-      {
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 73937406,
-        "voter": "ola1"
-      },
-      {
-        "rshares": 453506109,
-        "voter": "witchcraftblog"
-      }
-    ],
-    "author": "witchcraftblog",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 50.48,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<html>\n<p>&nbsp;Sorry guys, but I`m a little crazy I think 8D &nbsp;Today I`ve decided to plant basil, and of course decided to share this news with you, my lovely Steemians :).</p>\n<p>&nbsp;While I was busy with all that stuff, like pots, seeds and so on, I was struck by a steem idea, as I called it. I warn you, I'm not an artist and my creation do not pretend to be an art. just something came over me.</p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src=\"https://pp.vk.me/c836531/v836531195/9b/OCNpU4gQRx0.jpg\" width=\"602\" height=\"389\"/></p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src=\"https://pp.vk.me/c836531/v836531195/94/EzJAJcbbqcE.jpg\" width=\"384\" height=\"414\"/></p>\n<p>So what do you think?</p>\n<p>Now, lets return to my basilicum. I decided to plant purple basil at home because:</p>\n<p>&nbsp;1. I love to see how plants are growing;&nbsp;</p>\n<p>2. I like the taste and flawour of basil;</p>\n<p>3. basil is not only a delicious condiment, it has so many more useful properties;&nbsp;</p>\n<p>4. growing basil at home is cheaper than buying it in a supermarket in winter;&nbsp;</p>\n<p>5. basil just looks beautiful.</p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src=\"https://pp.vk.me/c836531/v836531195/ac/26h6wvaCyKE.jpg\" width=\"320\" height=\"240\"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src=\"https://pp.vk.me/c836531/v836531195/b3/9PkkuC3hnNE.jpg\" width=\"320\" height=\"240\"/></p>\n<p>this photos were made by me 2 years ago in my garden.</p>\n<p>I want to note that basil &nbsp;leaves contains a large number of the important minerals and vitamins (A, B, P, C, etc.), various amino acids, essential oils. &nbsp;It`s a wonderful immune system stimulator, improves memory, lowers cholesterol in the blood, if you are suffering from insomnia, then there will help basil, as it has a calming effect on the nervous system.</p>\n<p>And specialy for girls, basil is an excellent antioxidant. Eat basil regularly, and your skin will always stay beautiful and healthy, the same thing will be with your hair.</p>\n<p>If you want to stay beautiful and healthy as long as possible, then eat as much basil as possible, it will slow down the aging process and prolong youth.&nbsp;</p>\n<p><br></p>\n<p>Now, a simple plan, how to plant basil:</p>\n<p>you'll need: soil, flower pot, spoon (or something like that), water, seeds.</p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src=\"https://pp.vk.me/c836531/v836531195/ba/uFpyFu5zp0I.jpg\" width=\"400\" height=\"259\"/>&nbsp; <img src=\"https://pp.vk.me/c836531/v836531195/c1/PzwWU0v31HI.jpg\" width=\"320\" height=\"259\"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src=\"https://pp.vk.me/c836531/v836531195/c8/7fKXPqtl0Mc.jpg\" width=\"325\" height=\"259\"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src=\"https://pp.vk.me/c836531/v836531195/32/mhEkv77lnO8.jpg\" width=\"272\" height=\"259\"/></p>\n<p><br></p>\n<p>put soil in to the flower pot</p>\n<p><img src=\"https://pp.vk.me/c836531/v836531195/47/xLfbxm1Uo5w.jpg\" width=\"366\" height=\"259\"/></p>\n<p>&nbsp;tamp the soil with spoon&nbsp;</p>\n<p><img src=\"https://pp.vk.me/c836531/v836531195/4e/KUGmIripXzs.jpg\" width=\"461\" height=\"259\"/></p>\n<p>&nbsp;pour the ground and make holes of 1.5-2 cm deep in it&nbsp;</p>\n<p><img src=\"https://pp.vk.me/c836531/v836531195/55/GBsJg9nsoTY.jpg\" width=\"461\" height=\"259\"/></p>\n<p>I did it with the spoon</p>\n<p><img src=\"https://pp.vk.me/c836531/v836531195/5c/VOOIptBr2aQ.jpg\" width=\"461\" height=\"259\"/></p>\n<p>put the seeds in to the soil</p>\n<p><img src=\"https://pp.vk.me/c836531/v836531195/63/MgcHM4ifZ8I.jpg\" width=\"413\" height=\"259\"/></p>\n<p><img src=\"https://pp.vk.me/c836531/v836531195/71/LCC4d_P_PuM.jpg\" width=\"385\" height=\"372\"/></p>\n<p>&nbsp;close the holes with the soil</p>\n<p><img src=\"https://pp.vk.me/c836531/v836531195/78/dsBEWxUSKGM.jpg\" width=\"414\" height=\"259\"/></p>\n<p>put the flowerpot on the sunny window</p>\n<p><img src=\"https://pp.vk.me/c836531/v836531195/86/G8xTEIi0Y3I.jpg\" width=\"461\" height=\"259\"/></p>\n<p>&nbsp;Now let's see what will happen with my magical flower pot. I`ll make photos once in 2-3 days, to see all the process of growth and then I`ll make a post-report.</p>\n<p><br></p>\n<p>&nbsp;If you like my post don`t forget to follow and upvote ;)&nbsp; &nbsp;&nbsp;</p>\n<p><img src=\"https://pp.vk.me/c836531/v836531195/8d/H5D-WzJEIQc.jpg\" width=\"392\" height=\"233\"/></p>\n<p>Sincerely yours <a href=\"https://steemit.com/@witchcraftblog\">@witchcraftblog</a> &nbsp;&nbsp;</p>\n<p><br></p>\n</html>",
-    "category": "gardening",
-    "children": 0,
-    "created": "2016-09-15T19:01:21",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://pp.vk.me/c836531/v836531195/9b/OCNpU4gQRx0.jpg",
-        "https://pp.vk.me/c836531/v836531195/94/EzJAJcbbqcE.jpg",
-        "https://pp.vk.me/c836531/v836531195/ac/26h6wvaCyKE.jpg",
-        "https://pp.vk.me/c836531/v836531195/b3/9PkkuC3hnNE.jpg",
-        "https://pp.vk.me/c836531/v836531195/ba/uFpyFu5zp0I.jpg",
-        "https://pp.vk.me/c836531/v836531195/c1/PzwWU0v31HI.jpg",
-        "https://pp.vk.me/c836531/v836531195/c8/7fKXPqtl0Mc.jpg",
-        "https://pp.vk.me/c836531/v836531195/32/mhEkv77lnO8.jpg",
-        "https://pp.vk.me/c836531/v836531195/47/xLfbxm1Uo5w.jpg",
-        "https://pp.vk.me/c836531/v836531195/4e/KUGmIripXzs.jpg",
-        "https://pp.vk.me/c836531/v836531195/55/GBsJg9nsoTY.jpg",
-        "https://pp.vk.me/c836531/v836531195/5c/VOOIptBr2aQ.jpg",
-        "https://pp.vk.me/c836531/v836531195/63/MgcHM4ifZ8I.jpg",
-        "https://pp.vk.me/c836531/v836531195/71/LCC4d_P_PuM.jpg",
-        "https://pp.vk.me/c836531/v836531195/78/dsBEWxUSKGM.jpg",
-        "https://pp.vk.me/c836531/v836531195/86/G8xTEIi0Y3I.jpg",
-        "https://pp.vk.me/c836531/v836531195/8d/H5D-WzJEIQc.jpg"
-      ],
-      "links": [
-        "https://steemit.com/@witchcraftblog"
-      ],
-      "tags": [
-        "gardening",
-        "steemart",
-        "health",
-        "life",
-        "herbs"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 694456196,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:01:21",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "basil-planting-and-my-spontaneous-steemart-full-moon-is-watching-me",
-    "post_id": 1257464,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 4
-    },
-    "title": "Basil planting and my spontaneous STEEMART. Full moon is watching me :)",
-    "updated": "2016-09-15T19:01:21",
-    "url": "/gardening/@witchcraftblog/basil-planting-and-my-spontaneous-steemart-full-moon-is-watching-me"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 231813191302,
-        "voter": "anonymous"
-      },
-      {
-        "rshares": 4287714457313,
-        "voter": "riverhead"
-      },
-      {
-        "rshares": 1856068812916,
-        "voter": "badassmother"
-      },
-      {
-        "rshares": 2006601418874,
-        "voter": "hr1"
-      },
-      {
-        "rshares": 1239194317889,
-        "voter": "rossco99"
-      },
-      {
-        "rshares": 2059078537865,
-        "voter": "wang"
-      },
-      {
-        "rshares": 22391933607,
-        "voter": "jaewoocho"
-      },
-      {
-        "rshares": 1491294220946,
-        "voter": "joseph"
-      },
-      {
-        "rshares": 452882692801,
-        "voter": "recursive3"
-      },
-      {
-        "rshares": 621040278295,
-        "voter": "masteryoda"
-      },
-      {
-        "rshares": 3120621212590,
-        "voter": "recursive"
-      },
-      {
-        "rshares": 448236514656,
-        "voter": "boatymcboatface"
-      },
-      {
-        "rshares": 8927535677,
-        "voter": "idol"
-      },
-      {
-        "rshares": 4839155280,
-        "voter": "sakr"
-      },
-      {
-        "rshares": 10884745702,
-        "voter": "yefet"
-      },
-      {
-        "rshares": 481790356914,
-        "voter": "noaommerrr"
-      },
-      {
-        "rshares": 1536625837,
-        "voter": "jocelyn"
-      },
-      {
-        "rshares": 14818418390,
-        "voter": "gregory-f"
-      },
-      {
-        "rshares": 59932650184,
-        "voter": "eeks"
-      },
-      {
-        "rshares": 17134999985,
-        "voter": "fkn"
-      },
-      {
-        "rshares": 22522887261,
-        "voter": "elishagh1"
-      },
-      {
-        "rshares": 7803257741,
-        "voter": "richman"
-      },
-      {
-        "rshares": 313710480,
-        "voter": "coar"
-      },
-      {
-        "rshares": 106636079470,
-        "voter": "asch"
-      },
-      {
-        "rshares": 1061302586,
-        "voter": "murh"
-      },
-      {
-        "rshares": 6086022456,
-        "voter": "cryptofunk"
-      },
-      {
-        "rshares": 2003404389,
-        "voter": "error"
-      },
-      {
-        "rshares": 58190613755,
-        "voter": "theshell"
-      },
-      {
-        "rshares": 3848697023555,
-        "voter": "satoshifund"
-      },
-      {
-        "rshares": 87300558689,
-        "voter": "herzmeister"
-      },
-      {
-        "rshares": 19598687179,
-        "voter": "ziv"
-      },
-      {
-        "rshares": 15787747831,
-        "voter": "zakharya"
-      },
-      {
-        "rshares": 5047527838,
-        "voter": "tee-em"
-      },
-      {
-        "rshares": 118358806572,
-        "voter": "geoffrey"
-      },
-      {
-        "rshares": 144257392248,
-        "voter": "kimziv"
-      },
-      {
-        "rshares": 45359587433,
-        "voter": "honeythief"
-      },
-      {
-        "rshares": 2187607792,
-        "voter": "superfreek"
-      },
-      {
-        "rshares": 81189817686,
-        "voter": "furion"
-      },
-      {
-        "rshares": 401329727,
-        "voter": "barbara2"
-      },
-      {
-        "rshares": 446072819,
-        "voter": "ch0c0latechip"
-      },
-      {
-        "rshares": 412844681,
-        "voter": "doge4lyf"
-      },
-      {
-        "rshares": 245479785,
-        "voter": "tasman"
-      },
-      {
-        "rshares": 2632467953,
-        "voter": "steem1653"
-      },
-      {
-        "rshares": 80777327,
-        "voter": "snowden"
-      },
-      {
-        "rshares": 13847065167,
-        "voter": "aaseb"
-      },
-      {
-        "rshares": 4209545151,
-        "voter": "karen13"
-      },
-      {
-        "rshares": 46859749971,
-        "voter": "milestone"
-      },
-      {
-        "rshares": 3146703967,
-        "voter": "poseidon"
-      },
-      {
-        "rshares": 204618886920,
-        "voter": "jl777"
-      },
-      {
-        "rshares": 13896032408,
-        "voter": "positive"
-      },
-      {
-        "rshares": 17267376002,
-        "voter": "proto"
-      },
-      {
-        "rshares": 23475945343,
-        "voter": "sisterholics"
-      },
-      {
-        "rshares": 467869290,
-        "voter": "fnait"
-      },
-      {
-        "rshares": 415655812,
-        "voter": "keepcalmand"
-      },
-      {
-        "rshares": 69137816305,
-        "voter": "healthyrecipes"
-      },
-      {
-        "rshares": 3354060704,
-        "voter": "glitterpig"
-      },
-      {
-        "rshares": 8734213651,
-        "voter": "taker"
-      },
-      {
-        "rshares": 830193979600,
-        "voter": "laonie"
-      },
-      {
-        "rshares": 29315868452,
-        "voter": "myfirst"
-      },
-      {
-        "rshares": 168514920676,
-        "voter": "somebody"
-      },
-      {
-        "rshares": 6542941609,
-        "voter": "flysaga"
-      },
-      {
-        "rshares": 1667777098,
-        "voter": "gmurph"
-      },
-      {
-        "rshares": 37226130506,
-        "voter": "midnightoil"
-      },
-      {
-        "rshares": 3157847929,
-        "voter": "kurtbeil"
-      },
-      {
-        "rshares": 93111494000,
-        "voter": "xiaohui"
-      },
-      {
-        "rshares": 20690393698,
-        "voter": "jphamer1"
-      },
-      {
-        "rshares": 4689914056,
-        "voter": "elfkitchen"
-      },
-      {
-        "rshares": 99935909954,
-        "voter": "joele"
-      },
-      {
-        "rshares": 3022848762,
-        "voter": "xiaokongcom"
-      },
-      {
-        "rshares": 2076619689,
-        "voter": "natalymaty"
-      },
-      {
-        "rshares": 6093549297,
-        "voter": "xianjun"
-      },
-      {
-        "rshares": 91520297334,
-        "voter": "miacats"
-      },
-      {
-        "rshares": 399007122,
-        "voter": "microluck"
-      },
-      {
-        "rshares": 2923096249,
-        "voter": "netaterra"
-      },
-      {
-        "rshares": 4441060568,
-        "voter": "richardcrill"
-      },
-      {
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 53146015442,
-        "voter": "sponge-bob"
-      },
-      {
-        "rshares": 52794249,
-        "voter": "doggnostic"
-      },
-      {
-        "rshares": 52521499,
-        "voter": "jenny-talls"
-      },
-      {
-        "rshares": 53134467783,
-        "voter": "brains"
-      },
-      {
-        "rshares": 1317649856,
-        "voter": "bitcoinparadise"
-      },
-      {
-        "rshares": 5753585781,
-        "voter": "chick1"
-      },
-      {
-        "rshares": 50584036,
-        "voter": "aoki"
-      },
-      {
-        "rshares": 50516543,
-        "voter": "typingagent"
-      },
-      {
-        "rshares": 50528809,
-        "voter": "cwb"
-      },
-      {
-        "rshares": 73937406,
-        "voter": "ola1"
-      },
-      {
-        "rshares": 51240567,
-        "voter": "billkappa442"
-      },
-      {
-        "rshares": 51235131,
-        "voter": "glassheart"
-      },
-      {
-        "rshares": 1233715718,
-        "voter": "anns"
-      },
-      {
-        "rshares": 50871059,
-        "voter": "motion"
-      },
-      {
-        "rshares": 50570250,
-        "voter": "ziggo"
-      },
-      {
-        "rshares": 50565798,
-        "voter": "penthouse"
-      },
-      {
-        "rshares": 50349676,
-        "voter": "albertheijn"
-      },
-      {
-        "rshares": 2291193388,
-        "voter": "ayim"
-      },
-      {
-        "rshares": 160973134,
-        "voter": "gravity"
-      },
-      {
-        "rshares": 160900665,
-        "voter": "digitalillusions"
-      },
-      {
-        "rshares": 156837244,
-        "voter": "capcom"
-      },
-      {
-        "rshares": 156814579,
-        "voter": "haribo"
-      },
-      {
-        "rshares": 159531007,
-        "voter": "benetton"
-      },
-      {
-        "rshares": 159506164,
-        "voter": "greenpeace"
-      },
-      {
-        "rshares": 159425365,
-        "voter": "tipsandtricks"
-      },
-      {
-        "rshares": 159352476,
-        "voter": "panic"
-      },
-      {
-        "rshares": 159164412,
-        "voter": "disneypixar"
-      },
-      {
-        "rshares": 155433319,
-        "voter": "citigroup"
-      },
-      {
-        "rshares": 158486055,
-        "voter": "zendesk"
-      },
-      {
-        "rshares": 71727340,
-        "voter": "dealzgal"
-      },
-      {
-        "rshares": 64921864,
-        "voter": "storage"
-      },
-      {
-        "rshares": 55388665,
-        "voter": "blackmarket"
-      },
-      {
-        "rshares": 58454327,
-        "voter": "gifts"
-      },
-      {
-        "rshares": 153804957,
-        "voter": "alexandrapop"
-      }
-    ],
-    "author": "healthyrecipes",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 65.0,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<html>\n<p>&nbsp;&nbsp;Good afternoon Steemit, I am officially done breast feeding and am ready to get rid of the last few pounds that are still hanging on from my pregnancy so I have been trying out different ways to cut calories from my diet without loosing flavor. Spaghetti squash is a great substitute for pasta or in this case rice. Spaghetti squash has about 40 calories per cup while rice has upwards of 200. It also has fiber, potassium and vitamins A and C. &nbsp;</p>\n<p>For chicken:</p>\n<ul>\n  <li>1lb chicken breast</li>\n  <li>1 tsp ancho chili</li>\n  <li>1 tbs olive oil</li>\n  <li>1 lime (juice and zest)</li>\n  <li>1 tsp minced garlic</li>\n</ul>\n<p>For squash:</p>\n<ul>\n  <li>1 spaghetti squash (cut in half length wise and seeds removed)</li>\n  <li>1 tsp olive oil</li>\n  <li>salt and pepper to taste</li>\n</ul>\n<p>Preheat oven to 425F. &nbsp;In a baking dish, sprinkle chicken with ancho chili. &nbsp;Mix together oil, lime zest and juice and garlic. &nbsp;Pour mixture over chicken. &nbsp;Drizzle olive oil over squash and season with salt and pepper. &nbsp;Place cut side down on baking sheet. &nbsp;Bake a together for 30 min. &nbsp;Shred squash with a fork and put in the bottom of bowls. &nbsp;Shred chicken with forks and put on top of squash. &nbsp;I added cheese, salsa and guacamole to ours but you can top with anything you like. &nbsp;Enjoy!</p>\n<p>https://puu.sh/rcmnK/c059def2e0.png</p>\n</html>",
-    "category": "healthyliving",
-    "children": 3,
-    "created": "2016-09-15T19:01:15",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://puu.sh/rcmnK/c059def2e0.png"
-      ],
-      "tags": [
-        "healthyliving",
-        "dinner",
-        "squash",
-        "recipes"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 24948140852996,
-    "payout": 39.722,
-    "payout_at": "2016-09-22T19:01:15",
-    "pending_payout_value": "39.722 HBD",
-    "percent_hbd": 10000,
-    "permlink": "spaghetti-squash-burrito-bowl",
-    "post_id": 1257460,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 110
-    },
-    "title": "Spaghetti Squash 'Burrito' Bowl",
-    "updated": "2016-09-15T19:01:15",
-    "url": "/healthyliving/@healthyrecipes/spaghetti-squash-burrito-bowl"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 153995877,
-        "voter": "steefranci"
-      },
-      {
-        "rshares": 153224110,
-        "voter": "sasharaven"
-      }
-    ],
-    "author": "sasharaven",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "Life is killing you.\nYou wish never to be born.\nYou don't remember,\nwaiting somewhere,\nhaving wished to be born at all.\nYou tried in vain to warn them,\nbut you were conceived with passion.\nDo not condemn them!\nThey couldn't hear you -\nthey, too, were conceived involuntarily -\nby those who couldn't hear them.\nAs soon as you entered the world -\nyou cried out in pain and disappointment!\nYet you were given anything but consolation.\nSelfish joy attended your birth.\nAnother baby born, helpless and wretched,\nto be sacrificed to the grim reaper.",
-    "category": "poetry",
-    "children": 0,
-    "created": "2016-09-15T19:00:45",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "tags": [
-        "poetry",
-        "sasharaven",
-        "sasharavenmusic"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 307219987,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:00:45",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 0,
-    "permlink": "x-y-z-4th-dimension",
-    "post_id": 1257454,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 2
-    },
-    "title": "X - Y - Z - 4TH DIMENSION",
-    "updated": "2016-09-15T19:00:45",
-    "url": "/poetry/@sasharaven/x-y-z-4th-dimension"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 4134606131320,
-        "voter": "riverhead"
-      },
-      {
-        "rshares": 7803257741,
-        "voter": "richman"
-      },
-      {
-        "rshares": 14763294144,
-        "voter": "nippel66"
-      },
-      {
-        "rshares": 10729009089,
-        "voter": "gomeravibz"
-      },
-      {
-        "rshares": 369718962,
-        "voter": "riosparada"
-      },
-      {
-        "rshares": 1223969387,
-        "voter": "future24"
-      },
-      {
-        "rshares": 6655075357,
-        "voter": "hilarski"
-      },
-      {
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 83487539,
-        "voter": "zodiac"
-      },
-      {
-        "rshares": 73937406,
-        "voter": "ola1"
-      }
-    ],
-    "author": "nippel66",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 56.34,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "## This feature can be useful.\nhttps://s15.postimg.org/4n75f6bcr/paymeesteempower.png \n\nI have not noticed this until now, so this must have come today.\nIs there anyone who has used it?\nI'm testing it from now.\n\nFollow @nippel66",
-    "category": "steemit",
-    "children": 4,
-    "created": "2016-09-15T18:59:24",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://s15.postimg.org/4n75f6bcr/paymeesteempower.png"
-      ],
-      "tags": [
-        "steemit"
-      ],
-      "users": [
-        "nippel66"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 4176408007811,
-    "payout": 1.871,
-    "payout_at": "2016-09-22T18:59:24",
-    "pending_payout_value": "1.871 HBD",
-    "percent_hbd": 10000,
-    "permlink": "pay-me-100-in-steem-power-when-submit-a-story",
-    "post_id": 1257442,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 10
-    },
-    "title": "Pay me 100% in Steem Power. When submit a story!",
-    "updated": "2016-09-15T19:00:21",
-    "url": "/steemit/@nippel66/pay-me-100-in-steem-power-when-submit-a-story"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 92097237828,
-        "voter": "trevonjb"
-      },
-      {
-        "rshares": 150351784,
-        "voter": "jdenismusic"
-      },
-      {
-        "rshares": 377113341,
-        "voter": "riosparada"
-      },
-      {
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 81850529,
-        "voter": "zodiac"
-      },
-      {
-        "rshares": 73937406,
-        "voter": "ola1"
-      }
-    ],
-    "author": "trevonjb",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 64.38,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "Today I found some frozen Cinnabun rolls in the freezer. Went to cook them and then noticed they were 7 MONTHS OLD! Here is the outcome! Enjoy!\n\nhttps://www.youtube.com/watch?v=9yqH7iGSdic",
-    "category": "trevonjb",
-    "children": 0,
-    "created": "2016-09-15T18:59:06",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://img.youtube.com/vi/9yqH7iGSdic/0.jpg"
-      ],
-      "links": [
-        "https://www.youtube.com/watch?v=9yqH7iGSdic"
-      ],
-      "tags": [
-        "trevonjb"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 92880617754,
-    "payout": 0.02,
-    "payout_at": "2016-09-22T18:59:06",
-    "pending_payout_value": "0.020 HBD",
-    "percent_hbd": 10000,
-    "permlink": "eating-a-7-month-old-cinnabun",
-    "post_id": 1257437,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 6
-    },
-    "title": "Eating a 7 Month Old Cinnabun!",
-    "updated": "2016-09-15T18:59:24",
-    "url": "/trevonjb/@trevonjb/eating-a-7-month-old-cinnabun"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 4134627828281,
-        "voter": "riverhead"
-      },
-      {
-        "rshares": 5047527838,
-        "voter": "tee-em"
-      },
-      {
-        "rshares": 122162400756,
-        "voter": "joshbreslauer"
-      },
-      {
-        "rshares": 2531219186,
-        "voter": "steem1653"
-      },
-      {
-        "rshares": 80777327,
-        "voter": "snowden"
-      },
-      {
-        "rshares": 258619590,
-        "voter": "sergey44"
-      },
-      {
-        "rshares": 3157847929,
-        "voter": "kurtbeil"
-      },
-      {
-        "rshares": 1899047308,
-        "voter": "jackgallenhall"
-      },
-      {
-        "rshares": 100126866,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 1282974860,
-        "voter": "bitcoinparadise"
-      },
-      {
-        "rshares": 81850529,
-        "voter": "zodiac"
-      },
-      {
-        "rshares": 61292139,
-        "voter": "inarix03"
-      },
-      {
-        "rshares": 98577200,
-        "voter": "ola1"
-      },
-      {
-        "rshares": 68608760,
-        "voter": "dealzgal"
-      },
-      {
-        "rshares": 124085673,
-        "voter": "bleujay"
-      },
-      {
-        "rshares": 64921864,
-        "voter": "storage"
-      },
-      {
-        "rshares": 55388665,
-        "voter": "blackmarket"
-      },
-      {
-        "rshares": 58454327,
-        "voter": "gifts"
-      },
-      {
-        "rshares": 93882016,
-        "voter": "expat"
-      },
-      {
-        "rshares": 126595034,
-        "voter": "toddemaher1"
-      }
-    ],
-    "author": "jackgallenhall",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 55.03,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<html>\n<p>https://youtu.be/Sg2TbYabhqQ</p>\n</html>",
-    "category": "steemit",
-    "children": 0,
-    "created": "2016-09-15T18:58:12",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://img.youtube.com/vi/Sg2TbYabhqQ/0.jpg"
-      ],
-      "links": [
-        "https://youtu.be/Sg2TbYabhqQ"
-      ],
-      "tags": [
-        "steemit"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 4271982026148,
-    "payout": 1.937,
-    "payout_at": "2016-09-22T18:58:12",
-    "pending_payout_value": "1.937 HBD",
-    "percent_hbd": 10000,
-    "permlink": "how-does-steemit-work-steemit-blogging-basics-and-advanced-training-video",
-    "post_id": 1257430,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 20
-    },
-    "title": "How Does Steemit Work Steemit Blogging Basics and Advanced Training  Video",
-    "updated": "2016-09-15T18:58:12",
-    "url": "/steemit/@jackgallenhall/how-does-steemit-work-steemit-blogging-basics-and-advanced-training-video"
   }
 ]
