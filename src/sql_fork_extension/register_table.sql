@@ -37,25 +37,28 @@ BEGIN
 
     -- register insert trigger
     EXECUTE format(
-            'CREATE TRIGGER %I AFTER INSERT ON %I FOR EACH ROW EXECUTE PROCEDURE hive_on_table_trigger( %L )'
+            'CREATE TRIGGER %I AFTER INSERT ON %I FOR EACH ROW EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
         , __hive_insert_trigger_name
         , _table_name
         , __context_id
+        , __shadow_table_name
     );
 
     -- register delete trigger
     EXECUTE format(
-            'CREATE TRIGGER %I AFTER DELETE ON %I FOR EACH ROW EXECUTE PROCEDURE hive_on_table_trigger( %L )'
+            'CREATE TRIGGER %I AFTER DELETE ON %I FOR EACH ROW EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
         , __hive_delete_trigger_name
         , _table_name
         , __context_id
+        , __shadow_table_name
     );
 
     EXECUTE format(
-            'CREATE TRIGGER %I AFTER UPDATE ON %I FOR EACH ROW EXECUTE PROCEDURE hive_on_table_trigger( %L )'
+            'CREATE TRIGGER %I AFTER UPDATE ON %I FOR EACH ROW EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
         , __hive_update_trigger_name
         , _table_name
         , __context_id
+        , __shadow_table_name
     );
 
     INSERT INTO hive_triggers( registered_table_id, name )
