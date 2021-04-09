@@ -26,7 +26,7 @@ BEGIN
     END IF;
 
     IF ( TG_OP = 'INSERT' ) THEN
-        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 0'
+        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 0 ON CONFLICT DO NOTHING'
             , TG_ARGV[ 1 ] -- shadow table name
             , __block_num )
             USING NEW;
@@ -34,7 +34,7 @@ BEGIN
     END IF;
 
     IF ( TG_OP = 'DELETE' ) THEN
-        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 1'
+        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 1 ON CONFLICT DO NOTHING'
             , TG_ARGV[ 1 ] -- shadow table name
             , __block_num )
             USING OLD;
@@ -42,7 +42,7 @@ BEGIN
     END IF;
 
     IF ( TG_OP = 'UPDATE' ) THEN
-        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 2'
+        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 2 ON CONFLICT DO NOTHING'
             , TG_ARGV[ 1 ] -- shadow table name
             , __block_num )
             USING OLD;

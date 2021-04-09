@@ -26,6 +26,7 @@ BEGIN
     EXECUTE format('DELETE FROM %I', __shadow_table_name ); --empty shadow table if origin table is not empty
     EXECUTE format('ALTER TABLE %I ADD COLUMN %I INTEGER NOT NULL', __shadow_table_name, __block_num_column_name );
     EXECUTE format('ALTER TABLE %I ADD COLUMN %I SMALLINT NOT NULL', __shadow_table_name, __operation_column_name );
+    EXECUTE format('ALTER TABLE %I ADD CONSTRAINT uk_%s UNIQUE( %I, %I )', __shadow_table_name, __shadow_table_name, __block_num_column_name, __hive_rowid_column_name );
 
     INSERT INTO hive_registered_tables( context_id, origin_table_name, shadow_table_name, origin_table_columns )
     SELECT hc.id, tables.origin, tables.shadow, columns
