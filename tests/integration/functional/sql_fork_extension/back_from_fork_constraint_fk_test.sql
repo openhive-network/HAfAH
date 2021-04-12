@@ -12,7 +12,7 @@ BEGIN
           id INTEGER NOT NULL
         , smth TEXT NOT NULL
         , table1_id INTEGER NOT NULL
-        , CONSTRAINT fk_table2_table1_id FOREIGN KEY( table1_id ) REFERENCES table1(id) DEFERRABLE INITIALLY IMMEDIATE
+        , CONSTRAINT fk_table2_table1_id FOREIGN KEY( table1_id ) REFERENCES table1(id) DEFERRABLE
     );
 
     PERFORM hive_create_context( 'my_context' );
