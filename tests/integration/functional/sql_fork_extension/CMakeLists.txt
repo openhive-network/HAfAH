@@ -50,3 +50,4 @@ ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_complex_type_insert_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_complex_type_delete_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( performance_insert_rows_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( performance_back_from_insert_rows_test.sql )
