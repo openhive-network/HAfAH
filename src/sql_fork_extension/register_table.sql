@@ -40,7 +40,7 @@ BEGIN
 
     -- register insert trigger
     EXECUTE format(
-            'CREATE TRIGGER %I AFTER INSERT ON %I FOR EACH ROW EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
+        'CREATE TRIGGER %I AFTER INSERT ON %I REFERENCING NEW TABLE AS NEW_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
         , __hive_insert_trigger_name
         , _table_name
         , __context_id
@@ -49,7 +49,7 @@ BEGIN
 
     -- register delete trigger
     EXECUTE format(
-            'CREATE TRIGGER %I AFTER DELETE ON %I FOR EACH ROW EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
+        'CREATE TRIGGER %I AFTER DELETE ON %I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
         , __hive_delete_trigger_name
         , _table_name
         , __context_id
@@ -57,7 +57,7 @@ BEGIN
     );
 
     EXECUTE format(
-            'CREATE TRIGGER %I AFTER UPDATE ON %I FOR EACH ROW EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
+            'CREATE TRIGGER %I AFTER UPDATE ON %I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
         , __hive_update_trigger_name
         , _table_name
         , __context_id

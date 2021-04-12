@@ -26,26 +26,23 @@ BEGIN
     END IF;
 
     IF ( TG_OP = 'INSERT' ) THEN
-        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 0 ON CONFLICT DO NOTHING'
+        EXECUTE format( 'INSERT INTO %I SELECT n.*, %s, 0 FROM new_table n ON CONFLICT DO NOTHING'
             , TG_ARGV[ 1 ] -- shadow table name
-            , __block_num )
-            USING NEW;
+            , __block_num );
         RETURN NEW;
     END IF;
 
     IF ( TG_OP = 'DELETE' ) THEN
-        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 1 ON CONFLICT DO NOTHING'
+        EXECUTE format( 'INSERT INTO %I SELECT o.*, %s, 1 FROM old_table o ON CONFLICT DO NOTHING'
             , TG_ARGV[ 1 ] -- shadow table name
-            , __block_num )
-            USING OLD;
+            , __block_num );
         RETURN NEW;
     END IF;
 
     IF ( TG_OP = 'UPDATE' ) THEN
-        EXECUTE format( 'INSERT INTO %I SELECT ($1).*, %s, 2 ON CONFLICT DO NOTHING'
+        EXECUTE format( 'INSERT INTO %I SELECT o.*, %s, 2 FROM old_table o ON CONFLICT DO NOTHING'
             , TG_ARGV[ 1 ] -- shadow table name
-            , __block_num )
-            USING OLD;
+            , __block_num );
         RETURN NEW;
     END IF;
 
