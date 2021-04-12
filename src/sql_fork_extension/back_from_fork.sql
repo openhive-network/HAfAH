@@ -92,10 +92,11 @@ AS
 $BODY$
 BEGIN
     UPDATE hive_control_status SET back_from_fork = TRUE;
+    SET CONSTRAINTS ALL DEFERRED;
 
     PERFORM
         back_from_fork_one_table( hrt.origin_table_name, hrt.shadow_table_name, hrt.origin_table_columns )
-    FROM hive_registered_tables hrt;
+    FROM hive_registered_tables hrt ORDER BY hrt.id;
 
     UPDATE hive_control_status SET back_from_fork = FALSE;
 END;
