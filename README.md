@@ -30,17 +30,21 @@ The best option is to execute `make install` from build directory
 # Architecture
 ## Directory structure
    ```
-   cmake            Contains common function used by cmake build
+   cmake                      Contains common function used by cmake build
    common_includes
-        include     Constains library interfaces header files, to share them among the project items
-   doc              Contains documentation documents
-   src              Contains libraries and executables to compile
-   tests            Contains test
-        functional  Contains functional tests
-        unit        Contains unit tests and mocks
-            mockups Contains mocks 
+        include               Constains library interfaces header files, to share them among the project items
+   doc                        Contains documentation documents
+   src                        Contains sources
+        fork_extension        Contains C language extension which implements solution for hive forks
+        pq_utils              C++ interface for PostgreSQL PQ interface
+        psql_utils            C++ utilities to PostgreSQL C interfaces
+        sql_fork_extension    Contains SQL extension which implements solution for hive forks 
+   tests                  Contains test
+        functional        Contains functional tests
+        unit              Contains unit tests and mocks
+            mockups       Contains mocks 
    ```
-   
+
 There is also a `generated` directory inside the build directory. It contains autmatically generated headers which can be included
 in the code whith ```#include "gen/header_file_name.hpp"```
 ## Error handling
