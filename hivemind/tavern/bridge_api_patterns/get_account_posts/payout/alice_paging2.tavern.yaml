@@ -3,13 +3,7 @@
 
   marks:
     - patterntest # mock_data - second and -02 posts muted
-    # permlinks 'comment-to-please-comment-hive2-02'
-    #           'comment-to-please-comment-hive3-02'
-    #           'My-second-post-hive1'
-    #           'My-second-post-hive2'
-    # are muted but have false in 'gray'
-    # flag 'gray' as true in 'comment-to-please-comment-hive1-02'
-    # flag works properly in community where alice had first role set as muted
+
 
   includes:
     - !include ../../../common.yaml

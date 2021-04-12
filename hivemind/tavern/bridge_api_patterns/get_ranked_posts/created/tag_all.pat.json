@@ -135,7 +135,7 @@
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
-      "gray": false,
+      "gray": true,
       "hide": false,
       "total_votes": 0
     },
@@ -170,7 +170,7 @@
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
-      "gray": false,
+      "gray": true,
       "hide": false,
       "total_votes": 0
     },
@@ -424,16 +424,7 @@
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
-    "json_metadata": {
-      "app": "peakd/2021.01.3",
-      "image": [],
-      "original_author": "test-creator",
-      "original_permlink": "introduce",
-      "tags": [
-        "cross-post",
-        "hive-engine"
-      ]
-    },
+    "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,

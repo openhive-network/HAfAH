@@ -3,8 +3,6 @@
 
   marks:
     - patterntest # mock_data - second and -02 posts muted
-    # permlink 'comment-to-please-comment-hive2-02' is muted but has 'gray' as false
-    # flag 'gray' as true like 'comment-to-please-comment-hive1-02'
 
   includes:
     - !include ../../../common.yaml
