@@ -44,3 +44,7 @@ ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_3_tables_update_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_constraint_fk_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_constraint_unique_test.sql )
+
+ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_complex_type_update_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_complex_type_insert_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_complex_type_delete_test.sql )

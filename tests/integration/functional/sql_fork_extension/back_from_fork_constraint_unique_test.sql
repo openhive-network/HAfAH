@@ -20,7 +20,7 @@ BEGIN
     PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
     PERFORM hive_context_next_block( 'my_context' );
 
-    -- it is tricky, because DELETE operations are reverted before updates, then row with breake the unique role will be inserted
+    -- it is tricky, because DELETE operations are reverted before updates, then row wich violates the unique role will be inserted
     -- before the update which change the 'smth' to old name will solve the constraint violation
     DELETE FROM table1 WHERE id=123;
     UPDATE table1 SET smth='blabla1' WHERE id=124;
