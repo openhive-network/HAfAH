@@ -27,16 +27,6 @@ You can check postgres `$libdir` directory with: `pg_config --pkglibdir`
 
 The best option is to execute `make install` from build directory
 
-# Starting plugin
-1. To start plugin please execute as a postgres db client: `LOAD '$libdir/plugins/libfork_extension.so'` 
-2. create trigger on observed table for example:
-```
-CREATE TRIGGER on_table_change AFTER DELETE ON table_name
-    REFERENCING OLD TABLE AS old_table
-    FOR EACH STATEMENT EXECUTE PROCEDURE on_table_change();
-```
-3. execute `back_from_fork` function: `SELECT back_from_fork();` to revert delete operations on observed tables
-
 # Architecture
 ## Directory structure
    ```
@@ -46,6 +36,7 @@ CREATE TRIGGER on_table_change AFTER DELETE ON table_name
    doc              Contains documentation documents
    src              Contains libraries and executables to compile
    tests            Contains test
+        functional  Contains functional tests
         unit        Contains unit tests and mocks
             mockups Contains mocks 
    ```
@@ -67,5 +58,6 @@ in the code whith ```#include "gen/header_file_name.hpp"```
 6. class members starts with 'm_' __m_class_member_name__
 7. global and static variable are written in upper case without prefixes __GLOBAL_VARIABLE_NAME__
 8. templete attributes use CamelCase started with underscore and lower case  _templeteAttribute
+9. file and directory names with snake_case: my_file.cpp
 
 # Known problems
