@@ -424,7 +424,16 @@
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
-    "json_metadata": {},
+    "json_metadata": {
+      "app": "peakd/2021.01.3",
+      "image": [],
+      "original_author": "test-creator",
+      "original_permlink": "introduce",
+      "tags": [
+        "cross-post",
+        "hive-engine"
+      ]
+    },
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
