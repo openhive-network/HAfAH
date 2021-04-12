@@ -1,0 +1,35 @@
+---
+  test_name: Hivemind bridge_api.get_account_posts sort payout alice with paging2 test
+
+  marks:
+    - patterntest # mock_data - second and -02 posts muted
+    # permlinks 'comment-to-please-comment-hive2-02'
+    #           'comment-to-please-comment-hive3-02'
+    #           'My-second-post-hive1'
+    #           'My-second-post-hive2'
+    # are muted but have false in 'gray'
+    # flag 'gray' as true in 'comment-to-please-comment-hive1-02'
+    # flag works properly in community where alice had first role set as muted
+
+  includes:
+    - !include ../../../common.yaml
+
+  stages:
+    - name: get_account_posts sort payout alice with paging2
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.get_account_posts"
+          params: {"sort":"payout", "account":"alice", "start_author": "alice", "start_permlink": "My-second-post-hive3"}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "alice_paging2"
+            directory: "bridge_api_patterns/get_account_posts/payout"
