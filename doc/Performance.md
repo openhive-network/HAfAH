@@ -1,7 +1,7 @@
 # Performance `C FORK_EXTENSION` vs `SQL FORK EXTENSION`
-To compare results test test.funcional.fork_extension.performance_.* vs test.funcional.sql_fork_extension.performance_.*
+To make a comparison tests test.funcional.fork_extension.performance_.* vs test.funcional.sql_fork_extension.performance_.*
 
-Additionally experiments for updating tables without theirs registration into 'fork system' were made
+Additionally experiments for updating tables without theirs registration into 'fork system' were made ( Raw SQL )
 
 ## Results
 | Test                        | Raw SQL [ms]               | C Fork Extension [ms]      | SQL  Fork Extension [ms] | C Fork/Raw [-] | SQL Fork/Raw [-] | C Fork/Sql Fork [-] |
