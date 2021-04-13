@@ -33,7 +33,6 @@ Rewind register tables
 1. Validation of the registered tables
 2. Tables unregistration ( may be need by the user to service action on the tables without triggering hive fork mechanism)
 3. Validation of structure
-4. Truncate is  not supported
 
 ## Known Problems
 1. Constraints like FK, UNIQUE, EXCLUDE, PK must be DEFFERABLE, otherwise we cannot guarnteen success or rewinding changes
