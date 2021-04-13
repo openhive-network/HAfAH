@@ -23,9 +23,9 @@ BEGIN
 
     PERFORM hive_context_next_block( 'my_context' );
 
-    DELETE FROM table1;
-    DELETE FROM table2;
-    DELETE FROM table3;
+    TRUNCATE table1;
+    TRUNCATE table2;
+    TRUNCATE table3;
 END;
 $BODY$
 ;
