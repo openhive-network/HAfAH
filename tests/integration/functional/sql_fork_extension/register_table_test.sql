@@ -50,6 +50,9 @@ BEGIN
 
     ASSERT EXISTS ( SELECT FROM hive_triggers WHERE name='hive_update_trigger_table1' );
     ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive_update_trigger_table1' );
+
+    ASSERT EXISTS ( SELECT FROM hive_triggers WHERE name='hive_truncate_trigger_table1' );
+    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive_truncate_trigger_table1' );
 END
 $BODY$
 ;

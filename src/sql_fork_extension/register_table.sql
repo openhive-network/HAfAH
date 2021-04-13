@@ -15,6 +15,7 @@ DECLARE
     __hive_insert_trigger_name TEXT := 'hive_insert_trigger_' || _table_name;
     __hive_delete_trigger_name TEXT := 'hive_delete_trigger_' || _table_name;
     __hive_update_trigger_name TEXT := 'hive_update_trigger_' || _table_name;
+    __hive_truncate_trigger_name TEXT := 'hive_truncate_trigger_' || _table_name;
     __context_id INTEGER := NULL;
     __registered_table_id INTEGER := NULL;
     __columns_names TEXT[];
@@ -57,8 +58,16 @@ BEGIN
     );
 
     EXECUTE format(
-            'CREATE TRIGGER %I AFTER UPDATE ON %I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
+        'CREATE TRIGGER %I AFTER UPDATE ON %I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
         , __hive_update_trigger_name
+        , _table_name
+        , __context_id
+        , __shadow_table_name
+    );
+
+    EXECUTE format(
+        'CREATE TRIGGER %I BEFORE TRUNCATE ON %I FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
+        , __hive_truncate_trigger_name
         , _table_name
         , __context_id
         , __shadow_table_name
@@ -69,6 +78,7 @@ BEGIN
          ( __registered_table_id, __hive_insert_trigger_name )
        , ( __registered_table_id, __hive_delete_trigger_name )
        , ( __registered_table_id, __hive_update_trigger_name )
+       , ( __registered_table_id, __hive_truncate_trigger_name )
     ;
 END;
 $BODY$

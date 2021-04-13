@@ -46,6 +46,15 @@ BEGIN
         RETURN NEW;
     END IF;
 
+    IF ( TG_OP = 'TRUNCATE' ) THEN
+        EXECUTE format( 'INSERT INTO %I SELECT o.*, %s, 1 FROM %I o ON CONFLICT DO NOTHING'
+            , TG_ARGV[ 1 ] -- shadow table name
+            , __block_num
+            , TG_RELNAME
+        );
+        RETURN NEW;
+    END IF;
+
     ASSERT FALSE, 'Unsuported trigger operation';
 END;
 $BODY$
