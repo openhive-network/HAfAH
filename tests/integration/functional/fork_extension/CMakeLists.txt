@@ -23,3 +23,5 @@ ADD_FUNCTIONAL_TESTS( on_table_changed_truncate.sql )
 
 ADD_FUNCTIONAL_TESTS( performance_insert_rows_test.sql )
 ADD_FUNCTIONAL_TESTS( performance_back_from_insert_rows_test.sql )
+ADD_FUNCTIONAL_TESTS( performance_delete_rows_test.sql )
+ADD_FUNCTIONAL_TESTS( performance_back_from_delete_rows_test.sql )
