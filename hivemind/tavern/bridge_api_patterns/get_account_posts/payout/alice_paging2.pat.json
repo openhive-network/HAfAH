@@ -425,9 +425,9 @@
     "author_reputation": 25,
     "beneficiaries": [],
     "blacklists": [],
-    "body": "This is my first post in this community !",
+    "body": "EDITED. This is my first post in this community !",
     "category": "hive-198723",
-    "children": 0,
+    "children": 1,
     "created": "2016-09-15T19:47:21",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
@@ -450,7 +450,7 @@
       "total_votes": 0
     },
     "title": "Hello",
-    "updated": "2016-09-15T19:47:21",
+    "updated": "2016-09-15T19:47:33",
     "url": "/hive-198723/@alice/My-first-post-hive-3"
   },
   {
@@ -460,9 +460,9 @@
     "author_reputation": 25,
     "beneficiaries": [],
     "blacklists": [],
-    "body": "This is my first post in this community !",
+    "body": "EDITED. This is my first post in this community !",
     "category": "hive-157439",
-    "children": 0,
+    "children": 1,
     "created": "2016-09-15T19:47:21",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
@@ -485,7 +485,7 @@
       "total_votes": 0
     },
     "title": "Hello",
-    "updated": "2016-09-15T19:47:21",
+    "updated": "2016-09-15T19:47:33",
     "url": "/hive-157439/@alice/My-first-post-hive-2"
   },
   {
@@ -497,9 +497,9 @@
     "author_title": "",
     "beneficiaries": [],
     "blacklists": [],
-    "body": "This is my first post in this community !",
+    "body": "EDITED. This is my first post in this community !",
     "category": "hive-171487",
-    "children": 0,
+    "children": 1,
     "community": "hive-171487",
     "community_title": "Banana",
     "created": "2016-09-15T19:47:21",
@@ -524,7 +524,7 @@
       "total_votes": 0
     },
     "title": "Hello",
-    "updated": "2016-09-15T19:47:21",
+    "updated": "2016-09-15T19:47:33",
     "url": "/hive-171487/@alice/My-first-post-hive-1"
   },
   {
