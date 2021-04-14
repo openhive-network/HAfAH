@@ -53,8 +53,6 @@ Datum hive_on_table_change(PG_FUNCTION_ARGS) try {
     return PointerGetDatum(NULL);
   }
 
-  LOG_INFO( "Fired trigger 'hive_on_table_change'" );
-
   if (!CALLED_AS_TRIGGER(fcinfo)) {
     THROW_RUNTIME_ERROR( "on_table_change not called by trigger manager" );
   }

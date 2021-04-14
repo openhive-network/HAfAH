@@ -1,0 +1,63 @@
+﻿DROP FUNCTION IF EXISTS test_given;
+CREATE FUNCTION test_given()
+    RETURNS void
+    LANGUAGE 'plpgsql'
+VOLATILE
+AS
+$BODY$
+BEGIN
+    CREATE TYPE custom_type AS (
+        id INTEGER,
+        val FLOAT,
+        name TEXT
+        );
+
+    CREATE TABLE src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) );
+
+    PERFORM hive_create_context( 'my_context' );
+    PERFORM hive_register_table( 'src_table'::TEXT, 'my_context'::TEXT );
+    PERFORM hive_context_next_block( 'my_context' );
+END;
+$BODY$
+;
+
+DROP FUNCTION IF EXISTS test_when;
+CREATE FUNCTION test_when()
+    RETURNS void
+    LANGUAGE 'plpgsql'
+VOLATILE
+AS
+$BODY$
+DECLARE
+  StartTime timestamptz;
+  EndTime timestamptz;
+  Delta double precision;
+BEGIN
+    StartTime := clock_timestamp();
+    FOR id IN 1..10000 LOOP
+        INSERT INTO src_table ( smth, name, values, data, name2, num ) VALUES( id, 'temp1', '{{0.25, 3.4, 6}}'::FLOAT[], ROW(1, 5.8, '123abc')::custom_type, 'padu'::VARCHAR, 2.123::NUMERIC(3,2)  );
+    END LOOP;
+    EndTime := clock_timestamp();
+    Delta := 1000 * ( extract(epoch from EndTime) - extract(epoch from StartTime) );
+    RAISE NOTICE 'Duration in millisecs=%', Delta;
+END;
+$BODY$
+;
+
+DROP FUNCTION IF EXISTS test_then;
+CREATE FUNCTION test_then()
+    RETURNS void
+    LANGUAGE 'plpgsql'
+STABLE
+AS
+$BODY$
+BEGIN
+    ASSERT ( SELECT COUNT(*) FROM src_table ) = 10000, 'Not all rows were inserted';
+END
+$BODY$
+;
+
+
+SELECT test_given();
+SELECT test_when();
+SELECT test_then();
