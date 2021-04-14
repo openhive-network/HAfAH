@@ -16,6 +16,7 @@ DECLARE
     __hive_delete_trigger_name TEXT := 'hive_delete_trigger_' || _table_name;
     __hive_update_trigger_name TEXT := 'hive_update_trigger_' || _table_name;
     __hive_truncate_trigger_name TEXT := 'hive_truncate_trigger_' || _table_name;
+    __hive_triggerfunction_name TEXT := 'hive_on_table_trigger_' || _table_name;
     __context_id INTEGER := NULL;
     __registered_table_id INTEGER := NULL;
     __columns_names TEXT[];
@@ -39,36 +40,98 @@ BEGIN
     ASSERT __context_id IS NOT NULL;
     ASSERT __registered_table_id IS NOT NULL;
 
+    EXECUTE format(
+         'CREATE OR REPLACE FUNCTION %s()
+             RETURNS trigger
+             LANGUAGE plpgsql
+         AS
+         $$
+         DECLARE
+            __block_num INTEGER := NULL;
+            __values TEXT;
+            __is_back_from_fork_in_progress BOOL := FALSE;
+         BEGIN
+         SELECT back_from_fork FROM hive_control_status INTO __is_back_from_fork_in_progress;
+
+             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
+                 RETURN NEW;
+             END IF;
+
+             ASSERT TG_NARGS = 2; --context id, shadow_table name
+
+             SELECT hc.current_block_num FROM hive_contexts hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
+
+             ASSERT __block_num IS NOT NULL;
+
+             IF ( __block_num < 0 ) THEN
+                 RAISE EXCEPTION ''Did not execute hive_context_next_block before table edition'';
+             END IF;
+
+             IF ( TG_OP = ''INSERT'' ) THEN
+                 INSERT INTO %I SELECT n.*,  __block_num, 0 FROM new_table n ON CONFLICT DO NOTHING;
+                 RETURN NEW;
+             END IF;
+
+             IF ( TG_OP = ''DELETE'' ) THEN
+                 INSERT INTO %I SELECT o.*, __block_num, 1 FROM old_table o ON CONFLICT DO NOTHING;
+             RETURN NEW;
+             END IF;
+
+             IF ( TG_OP = ''UPDATE'' ) THEN
+                 INSERT INTO %I SELECT o.*, __block_num, 2 FROM old_table o ON CONFLICT DO NOTHING;
+             RETURN NEW;
+             END IF;
+
+             IF ( TG_OP = ''TRUNCATE'' ) THEN
+                 INSERT INTO %I SELECT o.*, __block_num, 1 FROM %I o ON CONFLICT DO NOTHING;
+             RETURN NEW;
+             END IF;
+
+             ASSERT FALSE, ''Unsuported trigger operation'';
+         END;
+         $$'
+        , __hive_triggerfunction_name
+        , __shadow_table_name
+        , __shadow_table_name
+        , __shadow_table_name
+        , __shadow_table_name
+        , _table_name
+    );
+
     -- register insert trigger
     EXECUTE format(
-        'CREATE TRIGGER %I AFTER INSERT ON %I REFERENCING NEW TABLE AS NEW_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
+        'CREATE TRIGGER %I AFTER INSERT ON %I REFERENCING NEW TABLE AS NEW_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
         , __hive_insert_trigger_name
         , _table_name
+        , __hive_triggerfunction_name
         , __context_id
         , __shadow_table_name
     );
 
     -- register delete trigger
     EXECUTE format(
-        'CREATE TRIGGER %I AFTER DELETE ON %I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
+        'CREATE TRIGGER %I AFTER DELETE ON %I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
         , __hive_delete_trigger_name
         , _table_name
+        , __hive_triggerfunction_name
         , __context_id
         , __shadow_table_name
     );
 
     EXECUTE format(
-        'CREATE TRIGGER %I AFTER UPDATE ON %I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
+        'CREATE TRIGGER %I AFTER UPDATE ON %I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
         , __hive_update_trigger_name
         , _table_name
+        , __hive_triggerfunction_name
         , __context_id
         , __shadow_table_name
     );
 
     EXECUTE format(
-        'CREATE TRIGGER %I BEFORE TRUNCATE ON %I FOR EACH STATEMENT EXECUTE PROCEDURE hive_on_table_trigger( %L, %L )'
+        'CREATE TRIGGER %I BEFORE TRUNCATE ON %I FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
         , __hive_truncate_trigger_name
         , _table_name
+        , __hive_triggerfunction_name
         , __context_id
         , __shadow_table_name
     );
@@ -83,3 +146,5 @@ BEGIN
 END;
 $BODY$
 ;
+
+
