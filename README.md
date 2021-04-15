@@ -18,7 +18,7 @@ Contains implementations of Postgres specific tools providing functionalities re
 The project use ctest to start tests, just execute in build directory `make test`
 
 Test are grouped in a three by names and `.` as a branch separator where 'test' is the root.
-For example You can start all unit tests with command `ctest -r test.unit.*` 
+For example You can start all unit tests with command `ctest -R test.unit.*` 
 
 # Installation
 Postgres plugins has to be copied into postgres `$libdir/plugins directory`

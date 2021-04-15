@@ -16,10 +16,10 @@ DECLARE
     __hive_delete_trigger_name TEXT := 'hive_delete_trigger_' || _table_name;
     __hive_update_trigger_name TEXT := 'hive_update_trigger_' || _table_name;
     __hive_truncate_trigger_name TEXT := 'hive_truncate_trigger_' || _table_name;
-    __hive_triggerfunction_name_insert TEXT := 'hive_on_table_trigger_insert' || _table_name;
-    __hive_triggerfunction_name_delete TEXT := 'hive_on_table_trigger_delete' || _table_name;
-    __hive_triggerfunction_name_update TEXT := 'hive_on_table_trigger_update' || _table_name;
-    __hive_triggerfunction_name_truncate TEXT := 'hive_on_table_trigger_truncate' || _table_name;
+    __hive_triggerfunction_name_insert TEXT := 'hive_on_table_trigger_insert_' || _table_name;
+    __hive_triggerfunction_name_delete TEXT := 'hive_on_table_trigger_delete_' || _table_name;
+    __hive_triggerfunction_name_update TEXT := 'hive_on_table_trigger_update_' || _table_name;
+    __hive_triggerfunction_name_truncate TEXT := 'hive_on_table_trigger_truncate_' || _table_name;
     __context_id INTEGER := NULL;
     __registered_table_id INTEGER := NULL;
     __columns_names TEXT[];
@@ -206,12 +206,12 @@ BEGIN
         , __shadow_table_name
     );
 
-    INSERT INTO hive_triggers( registered_table_id, name )
+    INSERT INTO hive_triggers( registered_table_id, trigger_name, function_name )
     VALUES
-         ( __registered_table_id, __hive_insert_trigger_name )
-       , ( __registered_table_id, __hive_delete_trigger_name )
-       , ( __registered_table_id, __hive_update_trigger_name )
-       , ( __registered_table_id, __hive_truncate_trigger_name )
+         ( __registered_table_id, __hive_insert_trigger_name, __hive_triggerfunction_name_insert )
+       , ( __registered_table_id, __hive_delete_trigger_name, __hive_triggerfunction_name_delete )
+       , ( __registered_table_id, __hive_update_trigger_name, __hive_triggerfunction_name_update )
+       , ( __registered_table_id, __hive_truncate_trigger_name, __hive_triggerfunction_name_truncate )
     ;
 END;
 $BODY$

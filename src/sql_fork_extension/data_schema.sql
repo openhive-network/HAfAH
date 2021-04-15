@@ -27,7 +27,8 @@ ON CONFLICT DO NOTHING;
 CREATE TABLE IF NOT EXISTS hive_triggers(
    id SERIAL PRIMARY KEY,
    registered_table_id INTEGER NOT NULL,
-   name TEXT NOT NULL,
+   trigger_name TEXT NOT NULL,
+   function_name TEXT NOT NULL,
    CONSTRAINT fk_hive_triggers_registered_table FOREIGN KEY( registered_table_id ) REFERENCES hive_registered_tables( id )
 );
 
