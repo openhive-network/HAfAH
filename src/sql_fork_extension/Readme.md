@@ -12,7 +12,6 @@ registered tables. It is possible to rewind all operation registered in shadow t
 Execute sql scripts on Your database in given order:
 1. data_schema.sql
 1. context.sql
-1. trigger_on_registered_table.sql
 1. register_table.sql
 1. back_from_fork.sql
 
