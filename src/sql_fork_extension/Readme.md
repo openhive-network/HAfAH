@@ -29,6 +29,7 @@ Moves a context to the next available block
 Rewind register tables
 
 ## TODO
+1. schemas support
 1. Validation of the registered tables
 2. Tables unregistration ( may be need by the user to service action on the tables without triggering hive fork mechanism)
 3. Validation of structure

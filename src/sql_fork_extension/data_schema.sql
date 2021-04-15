@@ -39,3 +39,31 @@ CREATE TABLE IF NOT EXISTS hive_control_status(
 );
 
 INSERT INTO hive_control_status( id, back_from_fork ) VALUES( TRUE, FALSE ) ON CONFLICT DO NOTHING;
+
+-- blocke registerd tables trigger
+CREATE OR REPLACE FUNCTION hive_on_edit_registered_tables()
+    RETURNS event_trigger
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    __result BOOL;
+    __r RECORD;
+BEGIN
+    IF EXISTS (
+        SELECT * FROM
+        ( SELECT * FROM pg_event_trigger_ddl_commands() ) as tr
+        JOIN hive_registered_tables hrt ON ( 'public.' || hrt.origin_table_name ) = tr.object_identity
+        ) THEN
+        RAISE EXCEPTION 'Cannot edit structure of register tables';
+    END IF;
+END;
+$$
+;
+
+DROP EVENT TRIGGER IF EXISTS hive_block_registered_tables_trigger;
+CREATE EVENT TRIGGER hive_block_registered_tables_trigger ON ddl_command_end
+WHEN TAG IN ( 'ALTER TABLE' )
+EXECUTE PROCEDURE hive_on_edit_registered_tables();
+
+
