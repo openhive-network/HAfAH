@@ -53,7 +53,7 @@ BEGIN
     ASSERT ( SELECT COUNT(*) FROM table1 ) = 2, 'Deleted row was not reinserted';
     ASSERT EXISTS ( SELECT FROM table1 WHERE id=123 AND smth='blabla1' ), 'First row was not restored';
     ASSERT EXISTS ( SELECT FROM table1 WHERE id=124 AND smth='blabla2' ), 'Second row was not restored';
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table1 ) = 0, 'Shadow table is not empty';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty';
 END
 $BODY$
 ;

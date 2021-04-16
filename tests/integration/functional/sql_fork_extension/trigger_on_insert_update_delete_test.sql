@@ -40,10 +40,10 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM hive.hive_shadow_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 0 AND hs.hive_operation_type = 0 ), 'Lack of insert operation';
-    ASSERT EXISTS ( SELECT FROM hive.hive_shadow_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 1 AND hs.hive_operation_type = 2 ), 'Lack of update operation';
-    ASSERT EXISTS ( SELECT FROM hive.hive_shadow_table1 hs WHERE hs.id = 321 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 2 AND hs.hive_operation_type = 1 ), 'Lack of delete';
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table1 ) = 3;
+    ASSERT EXISTS ( SELECT FROM hive.shadow_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 0 AND hs.hive_operation_type = 0 ), 'Lack of insert operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 1 AND hs.hive_operation_type = 2 ), 'Lack of update operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_table1 hs WHERE hs.id = 321 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 2 AND hs.hive_operation_type = 1 ), 'Lack of delete';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 3;
 END
 $BODY$
 ;

@@ -49,7 +49,7 @@ $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM src_table WHERE name2='padu' AND smth=1 ) = 1, 'Updated row was not reverted';
     ASSERT ( SELECT COUNT(*) FROM src_table ) = 1, 'Inserted row was not removed';
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_src_table ) = 0, 'Shadow table is not empty';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_src_table ) = 0, 'Shadow table is not empty';
 END
 $BODY$
 ;

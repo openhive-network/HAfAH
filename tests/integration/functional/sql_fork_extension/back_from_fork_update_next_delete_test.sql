@@ -42,7 +42,7 @@ AS
 $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM table1 WHERE id=123 ) = 1, 'Updated row was not reverted';
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table1 ) = 0, 'Shadow table is not empty';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty';
 END
 $BODY$
 ;

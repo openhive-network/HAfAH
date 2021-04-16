@@ -8,7 +8,7 @@ CREATE FUNCTION hive_register_table( _table_name TEXT, _context_name TEXT )
 AS
 $BODY$
 DECLARE
-    __shadow_table_name TEXT := 'hive_shadow_' || _table_name;
+    __shadow_table_name TEXT := 'shadow_' || _table_name;
     __block_num_column_name TEXT := 'hive_block_num';
     __operation_column_name TEXT := 'hive_operation_type';
     __hive_rowid_column_name TEXT := 'hive_rowid';

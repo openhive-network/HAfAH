@@ -43,7 +43,7 @@ $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM table1 ) = 1;
     ASSERT ( SELECT COUNT(*) FROM table1 WHERE id=123 AND smth='blabla' ) = 1, 'Deleted row was not reinserted';
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table1 ) = 0, 'Shadow table is not empty';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty';
 END
 $BODY$
 ;

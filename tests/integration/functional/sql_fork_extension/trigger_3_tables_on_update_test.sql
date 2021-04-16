@@ -49,14 +49,14 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla1' AND hs.hive_rowid=1 ) = 1, 'No expected id value in shadow table1';
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table1 ) = 1, 'Too many rows in shadow table1';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla1' AND hs.hive_rowid=1 ) = 1, 'No expected id value in shadow table1';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 1, 'Too many rows in shadow table1';
 
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table2 hs WHERE hs.id = 223 AND hs.smth = 'blabla2' AND hs.hive_rowid=1 ) = 1, 'No expected id value in shadow table2';
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table2 ) = 1, 'Too many rows in shadow table2';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table2 hs WHERE hs.id = 223 AND hs.smth = 'blabla2' AND hs.hive_rowid=1 ) = 1, 'No expected id value in shadow table2';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table2 ) = 1, 'Too many rows in shadow table2';
 
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table3 hs WHERE hs.id = 323 AND hs.smth = 'blabla3' AND hs.hive_rowid=1 ) = 1, 'No expected id value in shadow table2';
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table3 ) = 1, 'Too many rows in shadow table3';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table3 hs WHERE hs.id = 323 AND hs.smth = 'blabla3' AND hs.hive_rowid=1 ) = 1, 'No expected id value in shadow table2';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table3 ) = 1, 'Too many rows in shadow table3';
 END
 $BODY$
 ;

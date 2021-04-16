@@ -53,13 +53,13 @@ AS
 $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM table1 WHERE id=123 AND smth='blabla1' AND hive_rowid=1 ) = 1, 'Updated row was not reverted table1';
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table1 ) = 0, 'Shadow table is not empty table2';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty table2';
 
     ASSERT ( SELECT COUNT(*) FROM table2 WHERE id=223 AND smth='blabla2' AND hive_rowid=1 ) = 1, 'Updated row was not reverted table2';
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table2 ) = 0, 'Shadow table is not empty table2';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table2 ) = 0, 'Shadow table is not empty table2';
 
     ASSERT ( SELECT COUNT(*) FROM table3 WHERE id=323 AND smth='blabla3' AND hive_rowid=1 ) = 1, 'Updated row was not reverted table3';
-    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table3 ) = 0, 'Shadow table is not empty table3';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table3 ) = 0, 'Shadow table is not empty table3';
 END
 $BODY$
 ;
