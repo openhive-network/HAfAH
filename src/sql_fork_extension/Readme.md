@@ -17,6 +17,50 @@ Execute sql scripts on Your database in given order:
 
 An example of script execution: `psql -d my_db_name -a -f  data_schema.sql`
 
+## Database structure
+The script `data_schema.sql` creates all necessary tables in `hive` schema.
+
+### hive.context
+Used to control currently processed blocks for application's tables registered together in th eone context. 
+
+Columns
+1. id - id of the context
+2. name - human redable name of the context, thathts for better readability of the application code
+3. current_block_num - current hive block num processed by the tables registered in the context
+
+### hive.registered_tables
+Contains information about registered application tables and their contexts
+
+Columns
+1. id - id of the registered table
+2. context_id - id of the context in which the table is registered
+3. origin_table_name - name of the registered table
+4. shadow_table_name - name of the shadow table name for a registered table
+5. origin_table_columns - names of origin table's columns
+
+### hive.triggers_operations
+Names of operation on origin tables which we can revert
+
+Columns
+1. id - id of the operation
+2. name - name of operation
+
+### hive.triggers
+Contains informations about triggers created by the extension
+
+Columns
+1. id - id of the trigger
+2. registered_table_id - id ot the rgeistered table which triggers the trigger
+3. trigger_name - trigger name
+4. function_name - function name called by the trigger
+
+### hive.control_status
+Global information required by the extension functions and trigger
+
+Columns
+1. id - technical trick to do not allow to have more than one row
+2. back_from_fork - flag which indicated that back_from_fork is in progress
+
 ## SQL API
 The set of scripts implements an API for the applications:
 ### hive_registered_table
@@ -29,7 +73,8 @@ Moves a context to the next available block
 Rewind register tables
 
 ## TODO
-1. schemas support
+1. schemas support (move shadow tables into hive schema) 
+2. hive.registered_tables( origin_table_columns ) is not needed now, the columns may be generated now by the executes which creates trigger functions
 1. Validation of the registered tables
 2. Tables unregistration ( may be need by the user to service action on the tables without triggering hive fork mechanism)
 3. Validation of structure

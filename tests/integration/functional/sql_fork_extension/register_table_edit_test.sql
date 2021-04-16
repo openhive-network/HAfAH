@@ -7,7 +7,6 @@ AS
 $BODY$
 BEGIN
     CREATE TABLE public.table1( id SERIAL PRIMARY KEY, smth INTEGER, name TEXT );
-    ALTER TABLE public.table1 ADD COLUMN enything INTEGER;
     PERFORM hive_create_context( 'my_context' );
     PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
 END;

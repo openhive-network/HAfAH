@@ -32,17 +32,17 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_contexts' );
-    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_registered_tables' );
-    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_triggers_operations' );
-    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_triggers' );
-    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_control_status' );
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name = 'context' ), 'No contexts table';
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name = 'registered_tables' ), 'No registered_tables table';
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'triggers_operations' ), 'No triggers_operations table';
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'triggers' ), 'No triggers table';
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'control_status' ), 'No control_status table';
 
-    ASSERT EXISTS ( SELECT FROM hive_triggers_operations WHERE id = 0 AND name = 'INSERT' );
-    ASSERT EXISTS ( SELECT FROM hive_triggers_operations WHERE id = 1 AND name = 'DELETE' );
-    ASSERT EXISTS ( SELECT FROM hive_triggers_operations WHERE id = 2 AND name = 'UPDATE' );
+    ASSERT EXISTS ( SELECT FROM hive.triggers_operations WHERE id = 0 AND name = 'INSERT' );
+    ASSERT EXISTS ( SELECT FROM hive.triggers_operations WHERE id = 1 AND name = 'DELETE' );
+    ASSERT EXISTS ( SELECT FROM hive.triggers_operations WHERE id = 2 AND name = 'UPDATE' );
 
-    ASSERT EXISTS ( SELECT FROM hive_control_status WHERE back_from_fork=FALSE ), 'No control row';
+    ASSERT EXISTS ( SELECT FROM hive.control_status WHERE back_from_fork=FALSE ), 'No control row';
 END
 $BODY$
 ;

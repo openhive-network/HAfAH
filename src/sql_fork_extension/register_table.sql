@@ -33,9 +33,9 @@ BEGIN
     EXECUTE format('ALTER TABLE %I ADD COLUMN %I SMALLINT NOT NULL', __shadow_table_name, __operation_column_name );
     EXECUTE format('ALTER TABLE %I ADD CONSTRAINT uk_%s UNIQUE( %I, %I )', __shadow_table_name, __shadow_table_name, __block_num_column_name, __hive_rowid_column_name );
 
-    INSERT INTO hive_registered_tables( context_id, origin_table_name, shadow_table_name, origin_table_columns )
+    INSERT INTO hive.registered_tables( context_id, origin_table_name, shadow_table_name, origin_table_columns )
     SELECT hc.id, tables.origin, tables.shadow, columns
-    FROM ( SELECT hc.id FROM hive_contexts hc WHERE hc.name =  _context_name ) as hc
+    FROM ( SELECT hc.id FROM hive.context hc WHERE hc.name =  _context_name ) as hc
     JOIN ( VALUES( _table_name, __shadow_table_name, __columns_names  )  ) as tables( origin, shadow, columns ) ON TRUE
     RETURNING context_id, id INTO __context_id, __registered_table_id
     ;
@@ -54,13 +54,13 @@ BEGIN
            __values TEXT;
            __is_back_from_fork_in_progress BOOL := FALSE;
         BEGIN
-            SELECT back_from_fork FROM hive_control_status INTO __is_back_from_fork_in_progress;
+            SELECT back_from_fork FROM hive.control_status INTO __is_back_from_fork_in_progress;
 
             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                 RETURN NEW;
             END IF;
 
-            SELECT hc.current_block_num FROM hive_contexts hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
+            SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
             IF ( __block_num < 0 ) THEN
                  RAISE EXCEPTION ''Did not execute hive_context_next_block before table edition'';
@@ -85,13 +85,13 @@ BEGIN
            __values TEXT;
            __is_back_from_fork_in_progress BOOL := FALSE;
         BEGIN
-        SELECT back_from_fork FROM hive_control_status INTO __is_back_from_fork_in_progress;
+        SELECT back_from_fork FROM hive.control_status INTO __is_back_from_fork_in_progress;
 
             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                 RETURN NEW;
             END IF;
 
-            SELECT hc.current_block_num FROM hive_contexts hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
+            SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
             IF ( __block_num < 0 ) THEN
                 RAISE EXCEPTION ''Did not execute hive_context_next_block before table edition'';
@@ -116,13 +116,13 @@ BEGIN
            __values TEXT;
            __is_back_from_fork_in_progress BOOL := FALSE;
         BEGIN
-        SELECT back_from_fork FROM hive_control_status INTO __is_back_from_fork_in_progress;
+        SELECT back_from_fork FROM hive.control_status INTO __is_back_from_fork_in_progress;
 
             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                 RETURN NEW;
             END IF;
 
-            SELECT hc.current_block_num FROM hive_contexts hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
+            SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
             IF ( __block_num < 0 ) THEN
                 RAISE EXCEPTION ''Did not execute hive_context_next_block before table edition'';
@@ -147,13 +147,13 @@ BEGIN
             __values TEXT;
             __is_back_from_fork_in_progress BOOL := FALSE;
          BEGIN
-         SELECT back_from_fork FROM hive_control_status INTO __is_back_from_fork_in_progress;
+         SELECT back_from_fork FROM hive.control_status INTO __is_back_from_fork_in_progress;
 
              IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                  RETURN NEW;
              END IF;
 
-             SELECT hc.current_block_num FROM hive_contexts hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
+             SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
              IF ( __block_num < 0 ) THEN
                  RAISE EXCEPTION ''Did not execute hive_context_next_block before table edition'';
@@ -206,7 +206,7 @@ BEGIN
         , __shadow_table_name
     );
 
-    INSERT INTO hive_triggers( registered_table_id, trigger_name, function_name )
+    INSERT INTO hive.triggers( registered_table_id, trigger_name, function_name )
     VALUES
          ( __registered_table_id, __hive_insert_trigger_name, __hive_triggerfunction_name_insert )
        , ( __registered_table_id, __hive_delete_trigger_name, __hive_triggerfunction_name_delete )

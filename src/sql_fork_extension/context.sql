@@ -6,7 +6,7 @@ CREATE FUNCTION hive_create_context( _name TEXT )
 AS
 $BODY$
 BEGIN
-    INSERT INTO hive_contexts( name, current_block_num ) VALUES( _name, -1 );
+    INSERT INTO hive.context( name, current_block_num ) VALUES( _name, -1 );
 END;
 $BODY$
 ;
@@ -18,7 +18,7 @@ CREATE FUNCTION hive_context_next_block( _name TEXT )
     VOLATILE
 AS
 $BODY$
-    UPDATE hive_contexts
+    UPDATE hive.context
     SET current_block_num = current_block_num + 1
     WHERE name = _name
     RETURNING current_block_num
