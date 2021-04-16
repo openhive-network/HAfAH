@@ -37,9 +37,9 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM hive_shadow_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' ) = 1, 'No expected id value in shadow table';
-    ASSERT EXISTS ( SELECT FROM hive_shadow_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' AND hive_block_num = 0 ), 'Wrong block num';
-    ASSERT EXISTS ( SELECT FROM hive_shadow_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' AND hive_operation_type = 2 ), 'Wrong operation type';
+    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' ) = 1, 'No expected id value in shadow table';
+    ASSERT EXISTS ( SELECT FROM hive.hive_shadow_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' AND hive_block_num = 0 ), 'Wrong block num';
+    ASSERT EXISTS ( SELECT FROM hive.hive_shadow_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' AND hive_operation_type = 2 ), 'Wrong operation type';
 END
 $BODY$
 ;

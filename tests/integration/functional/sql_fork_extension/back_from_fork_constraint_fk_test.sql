@@ -53,10 +53,10 @@ AS
 $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM table1 ) = 0, 'Inserted row was not removed table1';
-    ASSERT ( SELECT COUNT(*) FROM hive_shadow_table1 ) = 0, 'Shadow table is not empty table1';
+    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table1 ) = 0, 'Shadow table is not empty table1';
 
     ASSERT ( SELECT COUNT(*) FROM table2 ) = 0, 'Inserted row was not removed table2';
-    ASSERT ( SELECT COUNT(*) FROM hive_shadow_table2 ) = 0, 'Shadow table is not empty table2';
+    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table2 ) = 0, 'Shadow table is not empty table2';
 END
 $BODY$
 ;

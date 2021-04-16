@@ -15,7 +15,7 @@ BEGIN
         SELECT st.hive_rowid FROM
             (
                 SELECT DISTINCT ON ( st.hive_rowid ) st.hive_rowid, st.hive_operation_type
-                FROM %I st
+                FROM hive.%I st
                 ORDER BY st.hive_rowid, st.hive_block_num
             ) as st
         WHERE st.hive_operation_type = 0
@@ -32,7 +32,7 @@ BEGIN
         SELECT %s FROM
             (
                 SELECT DISTINCT ON ( hive_rowid ) *
-                FROM %I
+                FROM hive.%I
                 ORDER BY hive_rowid, hive_block_num
             ) as st
          WHERE st.hive_operation_type = 1
@@ -51,7 +51,7 @@ BEGIN
         SELECT st.hive_rowid FROM
             (
                 SELECT DISTINCT ON ( st.hive_rowid ) st.hive_rowid, st.hive_operation_type
-                FROM %I st
+                FROM hive.%I st
                 ORDER BY st.hive_rowid, st.hive_block_num
             ) as st
         WHERE st.hive_operation_type = 2
@@ -68,7 +68,7 @@ BEGIN
             SELECT %s FROM
                 (
                     SELECT DISTINCT ON ( hive_rowid ) *
-                    FROM %I
+                    FROM hive.%I
                     ORDER BY hive_rowid, hive_block_num
                 ) as st
              WHERE st.hive_operation_type = 2
@@ -78,7 +78,7 @@ BEGIN
         , _shadow_table_name
     );
 
-    EXECUTE format( 'TRUNCATE %I', _shadow_table_name );
+    EXECUTE format( 'TRUNCATE hive.%I', _shadow_table_name );
 END;
 $BODY$
 ;

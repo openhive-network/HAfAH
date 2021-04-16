@@ -35,8 +35,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_name  = 'hive_shadow_table1' );
-    ASSERT ( SELECT COUNT(*) FROM hive_shadow_table1 ) = 0, 'The shadow table must be empty';
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'hive_shadow_table1' );
+    ASSERT ( SELECT COUNT(*) FROM hive.hive_shadow_table1 ) = 0, 'The shadow table must be empty';
 END
 $BODY$
 ;

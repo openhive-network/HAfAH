@@ -73,7 +73,6 @@ Moves a context to the next available block
 Rewind register tables
 
 ## TODO
-1. schemas support (move shadow tables into hive schema) 
 2. hive.registered_tables( origin_table_columns ) is not needed now, the columns may be generated now by the executes which creates trigger functions
 1. Validation of the registered tables
 2. Tables unregistration ( may be need by the user to service action on the tables without triggering hive fork mechanism)
