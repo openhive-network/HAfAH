@@ -11,8 +11,10 @@ registered tables. It is possible to rewind all operation registered in shadow t
 ## Installation
 Execute sql scripts on Your database in given order:
 1. data_schema.sql
+1. event_triggers.sql
 1. context.sql
-1. register_table.sql
+1. register_table.sql 
+1. unregister_table.sql
 1. back_from_fork.sql
 
 An example of script execution: `psql -d my_db_name -a -f  data_schema.sql`
