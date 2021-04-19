@@ -1,6 +1,6 @@
 -- Whe a table is deteted their triggers are removet automatically
 -- and there is no need to remove hive_rowid column
-DROP FUNCTION IF EXISTS hive_unregister_table;
+DROP FUNCTION IF EXISTS hive.unregister_table;
 CREATE FUNCTION hive_clean_after_uregister_table( _table_name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
@@ -40,8 +40,8 @@ $BODY$
 ;
 
 
-DROP FUNCTION IF EXISTS hive_unregister_table;
-CREATE FUNCTION hive_unregister_table( _table_name TEXT )
+DROP FUNCTION IF EXISTS hive.unregister_table;
+CREATE FUNCTION hive.unregister_table( _table_name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE

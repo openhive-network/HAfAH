@@ -15,11 +15,11 @@ BEGIN
     INSERT INTO table2( id, smth ) VALUES( 223, 'blabla2' );
     INSERT INTO table3( id, smth ) VALUES( 323, 'blabla3' );
 
-    PERFORM hive_create_context( 'my_context' );
+    PERFORM hive.create_context( 'my_context' );
 
-    PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
-    PERFORM hive_register_table( 'table2'::TEXT, 'my_context'::TEXT );
-    PERFORM hive_register_table( 'table3'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.register_table( 'table2'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.register_table( 'table3'::TEXT, 'my_context'::TEXT );
 
     PERFORM hive_context_next_block( 'my_context' );
 
@@ -38,7 +38,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive_back_from_fork();
+    PERFORM hive.back_from_fork();
 END
 $BODY$
 ;

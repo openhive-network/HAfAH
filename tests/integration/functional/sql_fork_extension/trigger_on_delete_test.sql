@@ -9,8 +9,8 @@ BEGIN
     DROP TABLE IF EXISTS table1;
     CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
     INSERT INTO table1( id, smth ) VALUES( 123, 'balbla' );
-    PERFORM hive_create_context( 'my_context' );
-    PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.create_context( 'my_context' );
+    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
     PERFORM hive_context_next_block( 'my_context' );
 END;
 $BODY$

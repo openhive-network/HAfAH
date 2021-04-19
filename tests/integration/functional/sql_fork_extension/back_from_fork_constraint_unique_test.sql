@@ -16,8 +16,8 @@ BEGIN
     INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
     INSERT INTO table1( id, smth ) VALUES( 124, 'blabla2' );
 
-    PERFORM hive_create_context( 'my_context' );
-    PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.create_context( 'my_context' );
+    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
     PERFORM hive_context_next_block( 'my_context' );
 
     -- it is tricky, because DELETE operations are reverted before updates, then row wich violates the unique role will be inserted
@@ -37,7 +37,7 @@ AS
 $BODY$
 BEGIN
     -- because table1 will be first rewinded table2 will stay with incorrect FK for tabe1(id)
-    PERFORM hive_back_from_fork();
+    PERFORM hive.back_from_fork();
 END
 $BODY$
 ;

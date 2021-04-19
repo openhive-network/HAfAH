@@ -8,8 +8,8 @@ $BODY$
 BEGIN
     DROP TABLE IF EXISTS table1;
     CREATE TABLE table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT);
-    PERFORM hive_create_context( 'my_context' );
-    PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.create_context( 'my_context' );
+    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
 
 END;
 $BODY$
@@ -24,7 +24,7 @@ AS
 $BODY$
 BEGIN
     BEGIN
-        PERFORM hive_unregister_table( 'notregisteredtable'::TEXT );
+        PERFORM hive.unregister_table( 'notregisteredtable'::TEXT );
     EXCEPTION WHEN OTHERS THEN
         RETURN;
     END;

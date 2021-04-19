@@ -19,8 +19,8 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive_create_context( 'my_context' );
-    PERFORM hive_create_context( 'my_context2' );
+    PERFORM hive.create_context( 'my_context' );
+    PERFORM hive.create_context( 'my_context2' );
 END
 $BODY$
 ;

@@ -16,8 +16,8 @@ BEGIN
     INSERT INTO src_table ( smth, name, values, data, name2, num )
     VALUES( 1, 'temp1', '{{0.25, 3.4, 6}}'::FLOAT[], ROW(1, 5.8, '123abc')::custom_type, 'padu'::VARCHAR, 2.123::NUMERIC(3,2) );
 
-    PERFORM hive_create_context( 'my_context' );
-    PERFORM hive_register_table( 'src_table'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.create_context( 'my_context' );
+    PERFORM hive.register_table( 'src_table'::TEXT, 'my_context'::TEXT );
     PERFORM hive_context_next_block( 'my_context' );
 
     INSERT INTO src_table ( smth, name, values, data, name2, num )
@@ -34,7 +34,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive_back_from_fork();
+    PERFORM hive.back_from_fork();
 END
 $BODY$
 ;

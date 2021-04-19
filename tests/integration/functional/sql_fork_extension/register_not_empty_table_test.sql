@@ -9,7 +9,7 @@ BEGIN
     DROP TABLE IF EXISTS table1;
     CREATE TABLE table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT);
     INSERT INTO table1(smth, name) VALUES( 123, 'NAME' );
-    PERFORM hive_create_context( 'my_context' );
+    PERFORM hive.create_context( 'my_context' );
 END;
 $BODY$
 ;
@@ -22,7 +22,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
 END
 $BODY$
 ;

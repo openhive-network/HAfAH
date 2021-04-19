@@ -15,11 +15,11 @@ BEGIN
         , CONSTRAINT fk_table2_table1_id FOREIGN KEY( table1_id ) REFERENCES table1(id) DEFERRABLE
     );
 
-    PERFORM hive_create_context( 'my_context' );
+    PERFORM hive.create_context( 'my_context' );
 
     -- registration order is important for the test because first registered table is first rewinded
-    PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
-    PERFORM hive_register_table( 'table2'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.register_table( 'table2'::TEXT, 'my_context'::TEXT );
 
     PERFORM hive_context_next_block( 'my_context' );
 
@@ -39,7 +39,7 @@ AS
 $BODY$
 BEGIN
     -- because table1 will be first rewinded table2 will stay with incorrect FK for tabe1(id)
-    PERFORM hive_back_from_fork();
+    PERFORM hive.back_from_fork();
 END
 $BODY$
 ;

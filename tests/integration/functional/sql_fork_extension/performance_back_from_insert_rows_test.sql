@@ -14,8 +14,8 @@ BEGIN
 
     CREATE TABLE src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) );
 
-    PERFORM hive_create_context( 'my_context' );
-    PERFORM hive_register_table( 'src_table'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.create_context( 'my_context' );
+    PERFORM hive.register_table( 'src_table'::TEXT, 'my_context'::TEXT );
     PERFORM hive_context_next_block( 'my_context' );
 
     INSERT INTO src_table ( smth, name, values, data, name2, num )
@@ -39,7 +39,7 @@ DECLARE
   Delta double precision;
 BEGIN
     StartTime := clock_timestamp();
-    PERFORM hive_back_from_fork();
+    PERFORM hive.back_from_fork();
     EndTime := clock_timestamp();
     Delta := 1000 * ( extract(epoch from EndTime) - extract(epoch from StartTime) );
     RAISE NOTICE 'Duration in millisecs=%', Delta;

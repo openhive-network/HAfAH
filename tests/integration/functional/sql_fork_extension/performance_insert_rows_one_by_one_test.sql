@@ -14,8 +14,8 @@ BEGIN
 
     CREATE TABLE src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) );
 
-    PERFORM hive_create_context( 'my_context' );
-    PERFORM hive_register_table( 'src_table'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.create_context( 'my_context' );
+    PERFORM hive.register_table( 'src_table'::TEXT, 'my_context'::TEXT );
     PERFORM hive_context_next_block( 'my_context' );
 END;
 $BODY$

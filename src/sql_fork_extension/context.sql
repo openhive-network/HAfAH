@@ -1,5 +1,5 @@
-DROP FUNCTION IF EXISTS hive_create_context;
-CREATE FUNCTION hive_create_context( _name TEXT )
+DROP FUNCTION IF EXISTS hive.create_context;
+CREATE FUNCTION hive.create_context( _name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE

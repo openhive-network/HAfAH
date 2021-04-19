@@ -1,5 +1,5 @@
-DROP FUNCTION IF EXISTS back_from_fork_one_table;
-CREATE FUNCTION back_from_fork_one_table( _table_name TEXT, _shadow_table_name TEXT, _columns TEXT[])
+DROP FUNCTION IF EXISTS hive.back_from_fork_one_table;
+CREATE FUNCTION hive.back_from_fork_one_table( _table_name TEXT, _shadow_table_name TEXT, _columns TEXT[])
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE
@@ -83,8 +83,8 @@ END;
 $BODY$
 ;
 
-DROP FUNCTION IF EXISTS hive_back_from_fork;
-CREATE FUNCTION hive_back_from_fork()
+DROP FUNCTION IF EXISTS hive.back_from_fork;
+CREATE FUNCTION hive.back_from_fork()
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE
@@ -95,7 +95,7 @@ BEGIN
     SET CONSTRAINTS ALL DEFERRED;
 
     PERFORM
-        back_from_fork_one_table( hrt.origin_table_name, hrt.shadow_table_name, hrt.origin_table_columns )
+        hive.back_from_fork_one_table( hrt.origin_table_name, hrt.shadow_table_name, hrt.origin_table_columns )
     FROM hive.registered_tables hrt ORDER BY hrt.id;
 
     UPDATE hive.control_status SET back_from_fork = FALSE;

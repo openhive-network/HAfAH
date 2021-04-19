@@ -10,10 +10,10 @@ BEGIN
     CREATE TABLE table2( id INTEGER NOT NULL, smth TEXT NOT NULL );
     CREATE TABLE table3( id INTEGER NOT NULL, smth TEXT NOT NULL );
 
-    PERFORM hive_create_context( 'my_context' );
-    PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
-    PERFORM hive_register_table( 'table2'::TEXT, 'my_context'::TEXT );
-    PERFORM hive_register_table( 'table3'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.create_context( 'my_context' );
+    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.register_table( 'table2'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.register_table( 'table3'::TEXT, 'my_context'::TEXT );
 
     PERFORM hive_context_next_block( 'my_context' );
     PERFORM hive_context_next_block( 'my_context' );

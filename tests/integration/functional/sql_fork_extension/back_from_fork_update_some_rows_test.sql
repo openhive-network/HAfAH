@@ -11,8 +11,8 @@ BEGIN
     INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
     INSERT INTO table1( id, smth ) VALUES( 223, 'blabla2' );
     INSERT INTO table1( id, smth ) VALUES( 323, 'blabla3' );
-    PERFORM hive_create_context( 'my_context' );
-    PERFORM hive_register_table( 'table1'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.create_context( 'my_context' );
+    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
     PERFORM hive_context_next_block( 'my_context' );
 
     UPDATE table1 SET smth='a1' WHERE id=123;
@@ -30,7 +30,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive_back_from_fork();
+    PERFORM hive.back_from_fork();
 END
 $BODY$
 ;
