@@ -29,16 +29,12 @@ __dropped_tables TEXT[];
 __r RECORD;
 __table TEXT;
 BEGIN
-    RAISE NOTICE 'DROP table';
     SELECT ARRAY_AGG( DISTINCT(tr.object_name) )  FROM
     ( SELECT * FROM pg_event_trigger_dropped_objects() ) as tr
         JOIN hive.registered_tables hrt ON hrt.origin_table_name  = tr.object_name
     INTO __dropped_tables;
 
-    RAISE NOTICE 'Array length %', ARRAY_LENGTH( __dropped_tables, 1 );
-
     IF ARRAY_LENGTH( __dropped_tables, 1 ) > 0 THEN
-        RAISE NOTICE 'are tables';
         FOREACH __table IN ARRAY __dropped_tables
         LOOP
         PERFORM hive_clean_after_uregister_table( __table );
@@ -46,6 +42,19 @@ END LOOP;
 
         RAISE WARNING 'Registered table(S) were dropped: %', ARRAY_TO_STRING( __dropped_tables, ',' );
 END IF;
+END;
+$$
+;
+
+CREATE OR REPLACE FUNCTION hive.on_create_tables()
+    RETURNS event_trigger
+    LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    PERFORM hive.register_table( replace( lower(tr.object_identity), 'hive.', '' ), 'context' )
+    FROM pg_event_trigger_ddl_commands() as tr
+    WHERE lower( tr.schema_name )='hive';
 END;
 $$
 ;
@@ -59,3 +68,8 @@ DROP EVENT TRIGGER IF EXISTS hive_block_drop_registered_tables_trigger;
 CREATE EVENT TRIGGER hive_block_drop_registered_tables_trigger ON sql_drop
 WHEN TAG IN ( 'DROP TABLE' )
 EXECUTE PROCEDURE hive.on_drop_registered_tables();
+
+DROP EVENT TRIGGER IF EXISTS hive_create_registered_tables_trigger;
+CREATE EVENT TRIGGER hive_create_registered_tables_trigger ON ddl_command_end
+WHEN TAG IN ( 'CREATE TABLE' )
+EXECUTE PROCEDURE hive.on_create_tables();
