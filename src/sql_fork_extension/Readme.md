@@ -65,6 +65,8 @@ Columns
 The set of scripts implements an API for the applications:
 ### hive_registered_table
 Registers an user table in the fork system
+### hive_unregistered_table
+Unregisters an user table from the fork system
 ### hive_create_context
 Creates the context - controll block number on which the registered tables are working
 ### hive_context_next_block
@@ -74,6 +76,7 @@ Rewind register tables
 
 ## TODO
 2. unregister table with DROP table
+2. move function to hive schema
 1. Validation of the registered tables
 2. Tables unregistration ( may be need by the user to service action on the tables without triggering hive fork mechanism)
 3. Validation of structure
