@@ -26,8 +26,8 @@ DECLARE
 BEGIN
     EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I BIGSERIAL', _table_name, __hive_rowid_column_name );
 
-    SELECT array_agg( iss.column_name::TEXT ) FROM information_schema.columns iss WHERE iss.schema='hive' AND iss.table_name=_table_name INTO __columns_names;
-    EXECUTE format('CREATE TABLE hive.%I AS TABLE %I', __shadow_table_name, _table_name );
+    SELECT array_agg( iss.column_name::TEXT ) FROM information_schema.columns iss WHERE iss.table_schema='hive' AND iss.table_name=_table_name INTO __columns_names;
+    EXECUTE format('CREATE TABLE hive.%I AS TABLE hive.%I', __shadow_table_name, _table_name );
     EXECUTE format('DELETE FROM hive.%I', __shadow_table_name ); --empty shadow table if origin table is not empty
     EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I INTEGER NOT NULL', __shadow_table_name, __block_num_column_name );
     EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I SMALLINT NOT NULL', __shadow_table_name, __operation_column_name );
@@ -40,7 +40,7 @@ BEGIN
     RETURNING context_id, id INTO __context_id, __registered_table_id
     ;
 
-    ASSERT __context_id IS NOT NULL;
+    ASSERT __context_id IS NOT NULL, 'There is no context %', _context_name;
     ASSERT __registered_table_id IS NOT NULL;
 
     EXECUTE format(
