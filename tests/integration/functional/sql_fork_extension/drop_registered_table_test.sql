@@ -6,11 +6,8 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    DROP TABLE IF EXISTS table1;
-    CREATE TABLE table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT);
-    PERFORM hive.create_context( 'my_context' );
-    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
-
+    PERFORM hive.create_context( 'context' );
+    CREATE TABLE hive.table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT);
 END;
 $BODY$
 ;
@@ -23,7 +20,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    DROP TABLE table1;
+    DROP TABLE hive.table1;
 END
 $BODY$
 ;

@@ -13,7 +13,6 @@ ENDMACRO()
 ADD_SQL_FUNCTIONAL_TESTS( schema_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( register_table_test.sql )
-ADD_SQL_FUNCTIONAL_TESTS( register_not_empty_table_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( register_table_edit_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( register_table_drop_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( create_register_table_test.sql )

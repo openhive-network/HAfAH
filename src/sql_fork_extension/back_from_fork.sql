@@ -9,7 +9,7 @@ BEGIN
     -- First we find rows ids with lowest block num, then delete, insert or update these rows with rows ids
     -- revert inserted rows
     EXECUTE format(
-        'DELETE FROM %I
+        'DELETE FROM hive.%I
         WHERE %I.hive_rowid IN
         (
         SELECT st.hive_rowid FROM
@@ -27,7 +27,7 @@ BEGIN
 
     -- revert deleted rows
     EXECUTE format(
-        'INSERT INTO %I
+        'INSERT INTO hive.%I
         (
         SELECT %s FROM
             (
@@ -45,7 +45,7 @@ BEGIN
     -- update deleted rows
     -- first remove rows
     EXECUTE format(
-        'DELETE FROM %I
+        'DELETE FROM hive.%I
         WHERE %I.hive_rowid IN
         (
         SELECT st.hive_rowid FROM
@@ -63,7 +63,7 @@ BEGIN
 
     -- now insert old rows
     EXECUTE format(
-            'INSERT INTO %I
+            'INSERT INTO hive.%I
             (
             SELECT %s FROM
                 (

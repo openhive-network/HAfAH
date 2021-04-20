@@ -52,9 +52,13 @@ CREATE OR REPLACE FUNCTION hive.on_create_tables()
 AS
 $$
 BEGIN
-    PERFORM hive.register_table( replace( lower( tr.object_identity ), 'hive.', ''), 'context' )
-    FROM pg_event_trigger_ddl_commands() as tr
-    WHERE tr.schema_name='hive' AND tr.object_type = 'table';
+    PERFORM hive.register_table( replace( lower( tables.object_identity ), 'hive.', ''), 'context' )
+    FROM (
+        SELECT DISTINCT( tr.object_identity )
+        FROM pg_event_trigger_ddl_commands() as tr
+        WHERE tr.schema_name='hive' AND tr.object_type = 'table'
+    ) as tables;
+
 END;
 $$
 ;

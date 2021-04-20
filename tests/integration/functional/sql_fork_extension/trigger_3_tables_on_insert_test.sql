@@ -6,17 +6,14 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
-    CREATE TABLE table2( id INTEGER NOT NULL, smth TEXT NOT NULL );
-    CREATE TABLE table3( id INTEGER NOT NULL, smth TEXT NOT NULL );
+    PERFORM hive.create_context( 'context' );
 
-    PERFORM hive.create_context( 'my_context' );
-    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
-    PERFORM hive.register_table( 'table2'::TEXT, 'my_context'::TEXT );
-    PERFORM hive.register_table( 'table3'::TEXT, 'my_context'::TEXT );
+    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
+    CREATE TABLE hive.table2( id INTEGER NOT NULL, smth TEXT NOT NULL );
+    CREATE TABLE hive.table3( id INTEGER NOT NULL, smth TEXT NOT NULL );
 
-    PERFORM hive_context_next_block( 'my_context' );
-    PERFORM hive_context_next_block( 'my_context' );
+    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive_context_next_block( 'context' );
 END;
 $BODY$
 ;
@@ -29,9 +26,9 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
-    INSERT INTO table2( id, smth ) VALUES( 223, 'blabla2' );
-    INSERT INTO table3( id, smth ) VALUES( 323, 'blabla3' );
+    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla1' );
+    INSERT INTO hive.table2( id, smth ) VALUES( 223, 'blabla2' );
+    INSERT INTO hive.table3( id, smth ) VALUES( 323, 'blabla3' );
 END
 $BODY$
 ;

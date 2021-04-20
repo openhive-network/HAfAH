@@ -6,14 +6,13 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    DROP TABLE IF EXISTS table1;
-    CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
-    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla' );
-    PERFORM hive.create_context( 'my_context' );
-    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
-    PERFORM hive_context_next_block( 'my_context' );
-
-    UPDATE table1 SET id=321;
+    PERFORM hive.create_context( 'context' );
+    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
+    PERFORM hive_context_next_block( 'context' );
+    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla' );
+    PERFORM hive_context_next_block( 'context' );
+    TRUNCATE hive.shadow_table1; --to do not revert inserts
+    UPDATE hive.table1 SET id=321;
 END;
 $BODY$
 ;
@@ -39,7 +38,7 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM table1 WHERE id=123 ) = 1, 'Updated row was not reverted';
+    ASSERT ( SELECT COUNT(*) FROM hive.table1 WHERE id=123 ) = 1, 'Updated row was not reverted';
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty';
 END
 $BODY$

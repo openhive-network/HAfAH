@@ -12,15 +12,15 @@ BEGIN
         name TEXT
         );
 
-    CREATE TABLE src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) );
-    INSERT INTO src_table ( smth, name, values, data, name2, num )
+    PERFORM hive.create_context( 'context' );
+    CREATE TABLE hive.src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) );
+    PERFORM hive_context_next_block( 'context' );
+    INSERT INTO hive.src_table ( smth, name, values, data, name2, num )
     VALUES( 1, 'temp1', '{{0.25, 3.4, 6}}'::FLOAT[], ROW(1, 5.8, '123abc')::custom_type, 'padu'::VARCHAR, 2.123::NUMERIC(3,2) );
 
-    PERFORM hive.create_context( 'my_context' );
-    PERFORM hive.register_table( 'src_table'::TEXT, 'my_context'::TEXT );
-    PERFORM hive_context_next_block( 'my_context' );
-
-    UPDATE src_table SET name2='a';
+    PERFORM hive_context_next_block( 'context' );
+    TRUNCATE hive.shadow_src_table; --to do not revert inserts
+    UPDATE hive.src_table SET name2='a';
 END;
 $BODY$
 ;
@@ -46,7 +46,7 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM src_table WHERE name2='padu' ) = 1, 'Updated row was not reverted';
+    ASSERT ( SELECT COUNT(*) FROM hive.src_table WHERE name2='padu' ) = 1, 'Updated row was not reverted';
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_src_table ) = 0, 'Shadow table is not empty';
 END
 $BODY$

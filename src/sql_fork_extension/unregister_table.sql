@@ -65,12 +65,12 @@ BEGIN
     FOR  __trigger_name IN SELECT ht.trigger_name FROM hive.triggers ht
     WHERE ht.registered_table_id = __table_id
     LOOP
-        EXECUTE format( 'DROP TRIGGER %I ON %I', __trigger_name, _table_name );
+        EXECUTE format( 'DROP TRIGGER %I ON hive.%I', __trigger_name, _table_name );
     END LOOP;
 
     PERFORM hive_clean_after_uregister_table( _table_name );
 
-    EXECUTE format( 'ALTER TABLE %I DROP COLUMN hive_rowid', _table_name );
+    EXECUTE format( 'ALTER TABLE hive.%I DROP COLUMN hive_rowid', _table_name );
     RETURN;
 END;
 $BODY$

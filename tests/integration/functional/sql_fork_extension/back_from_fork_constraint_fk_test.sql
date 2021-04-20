@@ -6,26 +6,20 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    DROP TABLE IF EXISTS table1;
-    CREATE TABLE table1( id INTEGER PRIMARY KEY, smth TEXT NOT NULL );
-    CREATE TABLE table2(
+    PERFORM hive.create_context( 'context' );
+    CREATE TABLE hive.table1( id INTEGER PRIMARY KEY, smth TEXT NOT NULL );
+    CREATE TABLE hive.table2(
           id INTEGER NOT NULL
         , smth TEXT NOT NULL
         , table1_id INTEGER NOT NULL
-        , CONSTRAINT fk_table2_table1_id FOREIGN KEY( table1_id ) REFERENCES table1(id) DEFERRABLE
+        , CONSTRAINT fk_table2_table1_id FOREIGN KEY( table1_id ) REFERENCES hive.table1(id) DEFERRABLE
     );
 
-    PERFORM hive.create_context( 'my_context' );
-
-    -- registration order is important for the test because first registered table is first rewinded
-    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
-    PERFORM hive.register_table( 'table2'::TEXT, 'my_context'::TEXT );
-
-    PERFORM hive_context_next_block( 'my_context' );
+    PERFORM hive_context_next_block( 'context' );
 
     -- one row inserted, ready to back from fork
-    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
-    INSERT INTO table2( id, smth, table1_id ) VALUES( 223, 'blabla2', 123 );
+    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla1' );
+    INSERT INTO hive.table2( id, smth, table1_id ) VALUES( 223, 'blabla2', 123 );
 END;
 $BODY$
 ;
@@ -52,10 +46,10 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM table1 ) = 0, 'Inserted row was not removed table1';
+    ASSERT ( SELECT COUNT(*) FROM hive.table1 ) = 0, 'Inserted row was not removed table1';
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty table1';
 
-    ASSERT ( SELECT COUNT(*) FROM table2 ) = 0, 'Inserted row was not removed table2';
+    ASSERT ( SELECT COUNT(*) FROM hive.table2 ) = 0, 'Inserted row was not removed table2';
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_table2 ) = 0, 'Shadow table is not empty table2';
 END
 $BODY$

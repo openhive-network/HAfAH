@@ -7,9 +7,8 @@ AS
 $BODY$
 BEGIN
     DROP TABLE IF EXISTS table1;
-    CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
-    PERFORM hive.create_context( 'my_context' );
-    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
+    PERFORM hive.create_context( 'context' );
+    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
 END;
 $BODY$
 ;
@@ -22,18 +21,18 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive_context_next_block( 'my_context' );
-    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
-    INSERT INTO table1( id, smth ) VALUES( 223, 'blabla2' );
-    INSERT INTO table1( id, smth ) VALUES( 323, 'blabla3' );
-    PERFORM hive_context_next_block( 'my_context' );
-    UPDATE table1 SET id=423 WHERE id=123;
-    UPDATE table1 SET id=523 WHERE id=223;
-    UPDATE table1 SET id=623 WHERE id=323;
-    PERFORM hive_context_next_block( 'my_context' );
-    DELETE FROM table1 WHERE id=423;
-    DELETE FROM table1 WHERE id=523;
-    DELETE FROM table1 WHERE id=623;
+    PERFORM hive_context_next_block( 'context' );
+    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla1' );
+    INSERT INTO hive.table1( id, smth ) VALUES( 223, 'blabla2' );
+    INSERT INTO hive.table1( id, smth ) VALUES( 323, 'blabla3' );
+    PERFORM hive_context_next_block( 'context' );
+    UPDATE hive.table1 SET id=423 WHERE id=123;
+    UPDATE hive.table1 SET id=523 WHERE id=223;
+    UPDATE hive.table1 SET id=623 WHERE id=323;
+    PERFORM hive_context_next_block( 'context' );
+    DELETE FROM hive.table1 WHERE id=423;
+    DELETE FROM hive.table1 WHERE id=523;
+    DELETE FROM hive.table1 WHERE id=623;
 END
 $BODY$
 ;

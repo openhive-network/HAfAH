@@ -6,12 +6,10 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    DROP TABLE IF EXISTS table1;
-    CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
-    PERFORM hive.create_context( 'my_context' );
-    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
-    PERFORM hive_context_next_block( 'my_context' );
-    PERFORM hive_context_next_block( 'my_context' );
+    PERFORM hive.create_context( 'context' );
+    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
+    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive_context_next_block( 'context' );
 END;
 $BODY$
 ;
@@ -24,7 +22,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla' );
+    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla' );
 END
 $BODY$
 ;

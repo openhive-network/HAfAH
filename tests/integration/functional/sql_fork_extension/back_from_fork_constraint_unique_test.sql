@@ -6,24 +6,22 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    DROP TABLE IF EXISTS table1;
-    CREATE TABLE table1(
+    PERFORM hive.create_context( 'context' );
+    CREATE TABLE hive.table1(
           id INTEGER NOT NULL
         , smth TEXT NOT NULL
         , CONSTRAINT uq_table1 UNIQUE ( smth ) DEFERRABLE
     );
 
-    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
-    INSERT INTO table1( id, smth ) VALUES( 124, 'blabla2' );
+    PERFORM hive_context_next_block( 'context' );
+    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla1' );
+    INSERT INTO hive.table1( id, smth ) VALUES( 124, 'blabla2' );
 
-    PERFORM hive.create_context( 'my_context' );
-    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
-    PERFORM hive_context_next_block( 'my_context' );
-
+    TRUNCATE hive.shadow_table1; --to do not revert inserts
     -- it is tricky, because DELETE operations are reverted before updates, then row wich violates the unique role will be inserted
     -- before the update which change the 'smth' to old name will solve the constraint violation
-    DELETE FROM table1 WHERE id=123;
-    UPDATE table1 SET smth='blabla1' WHERE id=124;
+    DELETE FROM hive.table1 WHERE id=123;
+    UPDATE hive.table1 SET smth='blabla1' WHERE id=124;
 END;
 $BODY$
 ;
@@ -50,9 +48,9 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM table1 ) = 2, 'Deleted row was not reinserted';
-    ASSERT EXISTS ( SELECT FROM table1 WHERE id=123 AND smth='blabla1' ), 'First row was not restored';
-    ASSERT EXISTS ( SELECT FROM table1 WHERE id=124 AND smth='blabla2' ), 'Second row was not restored';
+    ASSERT ( SELECT COUNT(*) FROM hive.table1 ) = 2, 'Deleted row was not reinserted';
+    ASSERT EXISTS ( SELECT FROM hive.table1 WHERE id=123 AND smth='blabla1' ), 'First row was not restored';
+    ASSERT EXISTS ( SELECT FROM hive.table1 WHERE id=124 AND smth='blabla2' ), 'Second row was not restored';
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty';
 END
 $BODY$

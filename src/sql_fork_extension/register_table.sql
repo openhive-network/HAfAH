@@ -159,7 +159,7 @@ BEGIN
                  RAISE EXCEPTION ''Did not execute hive_context_next_block before table edition'';
              END IF;
 
-             INSERT INTO hive.%I SELECT o.*, __block_num, 1 FROM %I o ON CONFLICT DO NOTHING;
+             INSERT INTO hive.%I SELECT o.*, __block_num, 1 FROM hive.%I o ON CONFLICT DO NOTHING;
              RETURN NEW;
          END;
          $$'

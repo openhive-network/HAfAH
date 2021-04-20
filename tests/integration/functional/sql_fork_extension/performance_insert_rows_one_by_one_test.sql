@@ -12,11 +12,9 @@ BEGIN
         name TEXT
         );
 
-    CREATE TABLE src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) );
-
-    PERFORM hive.create_context( 'my_context' );
-    PERFORM hive.register_table( 'src_table'::TEXT, 'my_context'::TEXT );
-    PERFORM hive_context_next_block( 'my_context' );
+    PERFORM hive.create_context( 'context' );
+    CREATE TABLE hive.src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) );
+    PERFORM hive_context_next_block( 'context' );
 END;
 $BODY$
 ;
@@ -35,7 +33,7 @@ DECLARE
 BEGIN
     StartTime := clock_timestamp();
     FOR id IN 1..10000 LOOP
-        INSERT INTO src_table ( smth, name, values, data, name2, num ) VALUES( id, 'temp1', '{{0.25, 3.4, 6}}'::FLOAT[], ROW(1, 5.8, '123abc')::custom_type, 'padu'::VARCHAR, 2.123::NUMERIC(3,2)  );
+        INSERT INTO hive.src_table ( smth, name, values, data, name2, num ) VALUES( id, 'temp1', '{{0.25, 3.4, 6}}'::FLOAT[], ROW(1, 5.8, '123abc')::custom_type, 'padu'::VARCHAR, 2.123::NUMERIC(3,2)  );
     END LOOP;
     EndTime := clock_timestamp();
     Delta := 1000 * ( extract(epoch from EndTime) - extract(epoch from StartTime) );
@@ -52,7 +50,7 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM src_table ) = 10000, 'Not all rows were inserted';
+    ASSERT ( SELECT COUNT(*) FROM hive.src_table ) = 10000, 'Not all rows were inserted';
 END
 $BODY$
 ;

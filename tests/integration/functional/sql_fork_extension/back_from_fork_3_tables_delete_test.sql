@@ -6,26 +6,25 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    DROP TABLE IF EXISTS table1;
-    CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
-    CREATE TABLE table2( id INTEGER NOT NULL, smth TEXT NOT NULL );
-    CREATE TABLE table3( id INTEGER NOT NULL, smth TEXT NOT NULL );
+    PERFORM hive.create_context( 'context' );
 
-    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
-    INSERT INTO table2( id, smth ) VALUES( 223, 'blabla2' );
-    INSERT INTO table3( id, smth ) VALUES( 323, 'blabla3' );
+    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
+    CREATE TABLE hive.table2( id INTEGER NOT NULL, smth TEXT NOT NULL );
+    CREATE TABLE hive.table3( id INTEGER NOT NULL, smth TEXT NOT NULL );
 
-    PERFORM hive.create_context( 'my_context' );
+    PERFORM hive_context_next_block( 'context' );
 
-    PERFORM hive.register_table( 'table1'::TEXT, 'my_context'::TEXT );
-    PERFORM hive.register_table( 'table2'::TEXT, 'my_context'::TEXT );
-    PERFORM hive.register_table( 'table3'::TEXT, 'my_context'::TEXT );
+    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla1' );
+    INSERT INTO hive.table2( id, smth ) VALUES( 223, 'blabla2' );
+    INSERT INTO hive.table3( id, smth ) VALUES( 323, 'blabla3' );
 
-    PERFORM hive_context_next_block( 'my_context' );
 
-    DELETE FROM table1;
-    DELETE FROM table2;
-    DELETE FROM table3;
+    TRUNCATE hive.shadow_table1; --to do not revert inserts
+    TRUNCATE hive.shadow_table2; --to do not revert inserts
+    TRUNCATE hive.shadow_table3; --to do not revert inserts
+    DELETE FROM hive.table1;
+    DELETE FROM hive.table2;
+    DELETE FROM hive.table3;
 END;
 $BODY$
 ;
@@ -51,16 +50,16 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM table1 WHERE id=123 AND smth='blabla1' ) = 1, 'Deleted row was not reinserted table1';
-    ASSERT ( SELECT COUNT(*) FROM table1 ) = 1, 'Incorretc number of rows table1';
+    ASSERT ( SELECT COUNT(*) FROM hive.table1 WHERE id=123 AND smth='blabla1' ) = 1, 'Deleted row was not reinserted table1';
+    ASSERT ( SELECT COUNT(*) FROM hive.table1 ) = 1, 'Incorretc number of rows table1';
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty table1';
 
-    ASSERT ( SELECT COUNT(*) FROM table2 WHERE id=223 AND smth='blabla2' ) = 1, 'Deleted row was not reinserted table2';
-    ASSERT ( SELECT COUNT(*) FROM table2 ) = 1, 'Incorretc number of rows table2';
+    ASSERT ( SELECT COUNT(*) FROM hive.table2 WHERE id=223 AND smth='blabla2' ) = 1, 'Deleted row was not reinserted table2';
+    ASSERT ( SELECT COUNT(*) FROM hive.table2 ) = 1, 'Incorretc number of rows table2';
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_table2 ) = 0, 'Shadow table is not empty table2';
 
-    ASSERT ( SELECT COUNT(*) FROM table3 WHERE id=323 AND smth='blabla3' ) = 1, 'Deleted row was not reinserted table3';
-    ASSERT ( SELECT COUNT(*) FROM table3 ) = 1, 'Incorretc number of rows table3';
+    ASSERT ( SELECT COUNT(*) FROM hive.table3 WHERE id=323 AND smth='blabla3' ) = 1, 'Deleted row was not reinserted table3';
+    ASSERT ( SELECT COUNT(*) FROM hive.table3 ) = 1, 'Incorretc number of rows table3';
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_table3 ) = 0, 'Shadow table is not empty table3';
 END
 $BODY$
