@@ -51,8 +51,12 @@ CREATE OR REPLACE FUNCTION hive.on_create_tables()
     LANGUAGE plpgsql
 AS
 $$
+DECLARE
+    __newest_context TEXT :=  NULL;
 BEGIN
-    PERFORM hive.register_table( replace( lower( tables.object_identity ), 'hive.', ''), 'context' )
+    SELECT hc.name FROM hive.context hc ORDER BY hc.id DESC LIMIT 1 INTO __newest_context;
+
+    PERFORM hive.register_table( replace( lower( tables.object_identity ), 'hive.', ''),  __newest_context )
     FROM (
         SELECT DISTINCT( tr.object_identity )
         FROM pg_event_trigger_ddl_commands() as tr

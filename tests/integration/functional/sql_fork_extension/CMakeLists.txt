@@ -19,6 +19,7 @@ ADD_SQL_FUNCTIONAL_TESTS( create_register_table_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( unregister_table_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( unregister_negative_table_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( drop_registered_table_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( register_table_no_context_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( create_context_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_next_block_test.sql )
