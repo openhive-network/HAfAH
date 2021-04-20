@@ -7,13 +7,13 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.create_context( 'context' );
-    CREATE TABLE hive.table1( id INTEGER PRIMARY KEY, smth TEXT NOT NULL );
+    CREATE TABLE hive.table1( id INTEGER PRIMARY KEY, smth TEXT NOT NULL ) INHERITS( hive.base );
     CREATE TABLE hive.table2(
           id INTEGER NOT NULL
         , smth TEXT NOT NULL
         , table1_id INTEGER NOT NULL
         , CONSTRAINT fk_table2_table1_id FOREIGN KEY( table1_id ) REFERENCES hive.table1(id) DEFERRABLE
-    );
+    ) INHERITS( hive.base );
 
     PERFORM hive_context_next_block( 'context' );
 

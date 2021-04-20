@@ -8,9 +8,9 @@ $BODY$
 BEGIN
     PERFORM hive.create_context( 'context' );
 
-    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL );
-    CREATE TABLE hive.table2( id INTEGER NOT NULL, smth TEXT NOT NULL );
-    CREATE TABLE hive.table3( id INTEGER NOT NULL, smth TEXT NOT NULL );
+    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE hive.table2( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE hive.table3( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
 
     PERFORM hive_context_next_block( 'context' );
     PERFORM hive_context_next_block( 'context' );

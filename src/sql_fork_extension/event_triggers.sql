@@ -56,11 +56,13 @@ DECLARE
 BEGIN
     SELECT hc.name FROM hive.context hc ORDER BY hc.id DESC LIMIT 1 INTO __newest_context;
 
-    PERFORM hive.register_table( replace( lower( tables.object_identity ), 'hive.', ''),  __newest_context )
+    PERFORM hive.register_table( tables.schema_name, tables.relname,  __newest_context )
     FROM (
-        SELECT DISTINCT( tr.object_identity )
+        SELECT DISTINCT( pgc.relname ), tr.schema_name
         FROM pg_event_trigger_ddl_commands() as tr
-        WHERE tr.schema_name='hive' AND tr.object_type = 'table'
+        JOIN pg_catalog.pg_inherits pgi ON tr.objid = pgi.inhrelid
+        JOIN pg_class pgc ON pgc.oid = tr.objid
+        WHERE tr.object_type = 'table'
     ) as tables;
 
 END;

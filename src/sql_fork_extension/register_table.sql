@@ -1,7 +1,7 @@
 -- creates a shadow table of registered table:
 -- | [ table column1, table column2,.... ] | hive_block_num | hive_operation_type |
 DROP FUNCTION IF EXISTS hive.register_table;
-CREATE FUNCTION hive.register_table( _table_name TEXT, _context_name TEXT )
+CREATE FUNCTION hive.register_table( _table_schema TEXT,  _table_name TEXT, _context_name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
@@ -24,19 +24,17 @@ DECLARE
     __registered_table_id INTEGER := NULL;
     __columns_names TEXT[];
 BEGIN
-    EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I BIGSERIAL', _table_name, __hive_rowid_column_name );
-
     SELECT array_agg( iss.column_name::TEXT ) FROM information_schema.columns iss WHERE iss.table_schema='hive' AND iss.table_name=_table_name INTO __columns_names;
-    EXECUTE format('CREATE TABLE hive.%I AS TABLE hive.%I', __shadow_table_name, _table_name );
+    EXECUTE format('CREATE TABLE hive.%I AS TABLE %I.%I', __shadow_table_name, _table_schema, _table_name );
     EXECUTE format('DELETE FROM hive.%I', __shadow_table_name ); --empty shadow table if origin table is not empty
     EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I INTEGER NOT NULL', __shadow_table_name, __block_num_column_name );
     EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I SMALLINT NOT NULL', __shadow_table_name, __operation_column_name );
     EXECUTE format('ALTER TABLE hive.%I ADD CONSTRAINT uk_%s UNIQUE( %I, %I )', __shadow_table_name, __shadow_table_name, __block_num_column_name, __hive_rowid_column_name );
 
-    INSERT INTO hive.registered_tables( context_id, origin_table_name, shadow_table_name, origin_table_columns )
-    SELECT hc.id, tables.origin, tables.shadow, columns
+    INSERT INTO hive.registered_tables( context_id, origin_table_schema, origin_table_name, shadow_table_name, origin_table_columns )
+    SELECT hc.id, tables.table_schema, tables.origin, tables.shadow, columns
     FROM ( SELECT hc.id FROM hive.context hc WHERE hc.name =  _context_name ) as hc
-    JOIN ( VALUES( _table_name, __shadow_table_name, __columns_names  )  ) as tables( origin, shadow, columns ) ON TRUE
+    JOIN ( VALUES( _table_schema, _table_name, __shadow_table_name, __columns_names  )  ) as tables( table_schema, origin, shadow, columns ) ON TRUE
     RETURNING context_id, id INTO __context_id, __registered_table_id
     ;
 
@@ -85,7 +83,7 @@ BEGIN
            __values TEXT;
            __is_back_from_fork_in_progress BOOL := FALSE;
         BEGIN
-        SELECT back_from_fork FROM hive.control_status INTO __is_back_from_fork_in_progress;
+            SELECT back_from_fork FROM hive.control_status INTO __is_back_from_fork_in_progress;
 
             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                 RETURN NEW;
@@ -170,8 +168,9 @@ BEGIN
 
     -- register insert trigger
     EXECUTE format(
-        'CREATE TRIGGER %I AFTER INSERT ON hive.%I REFERENCING NEW TABLE AS NEW_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
+        'CREATE TRIGGER %I AFTER INSERT ON %I.%I REFERENCING NEW TABLE AS NEW_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
         , __hive_insert_trigger_name
+        , _table_schema
         , _table_name
         , __hive_triggerfunction_name_insert
         , __context_id
@@ -180,8 +179,9 @@ BEGIN
 
     -- register delete trigger
     EXECUTE format(
-        'CREATE TRIGGER %I AFTER DELETE ON hive.%I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
+        'CREATE TRIGGER %I AFTER DELETE ON %I.%I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
         , __hive_delete_trigger_name
+        , _table_schema
         , _table_name
         , __hive_triggerfunction_name_delete
         , __context_id
@@ -189,8 +189,9 @@ BEGIN
     );
 
     EXECUTE format(
-        'CREATE TRIGGER %I AFTER UPDATE ON hive.%I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
+        'CREATE TRIGGER %I AFTER UPDATE ON %I.%I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
         , __hive_update_trigger_name
+        , _table_schema
         , _table_name
         , __hive_triggerfunction_name_update
         , __context_id
@@ -198,8 +199,9 @@ BEGIN
     );
 
     EXECUTE format(
-        'CREATE TRIGGER %I BEFORE TRUNCATE ON hive.%I FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
+        'CREATE TRIGGER %I BEFORE TRUNCATE ON %I.%I FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
         , __hive_truncate_trigger_name
+        , _table_schema
         , _table_name
         , __hive_triggerfunction_name_truncate
         , __context_id

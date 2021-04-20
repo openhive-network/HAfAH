@@ -1,5 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS hive;
 
+CREATE TABLE hive.base( hive_rowid BIGSERIAL );
 
 CREATE TABLE IF NOT EXISTS hive.context(
     id SERIAL PRIMARY KEY,
@@ -11,6 +12,7 @@ CREATE TABLE IF NOT EXISTS hive.context(
 CREATE TABLE IF NOT EXISTS hive.registered_tables(
    id SERIAL PRIMARY KEY,
    context_id INTEGER NOT NULL,
+   origin_table_schema TEXT NOT NULL,
    origin_table_name TEXT NOT NULL,
    shadow_table_name TEXT NOT NULL,
    origin_table_columns TEXT[] NOT NULL,

@@ -7,7 +7,7 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.create_context( 'context' );
-    CREATE TABLE hive.table1( id SERIAL PRIMARY KEY, smth INTEGER, name TEXT );
+    CREATE TABLE hive.table1( id SERIAL PRIMARY KEY, smth INTEGER, name TEXT ) INHERITS( hive.base );
 END;
 $BODY$
 ;

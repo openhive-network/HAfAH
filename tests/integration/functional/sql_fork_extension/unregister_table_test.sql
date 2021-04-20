@@ -8,7 +8,7 @@ $BODY$
 BEGIN
     DROP TABLE IF EXISTS table1;
     PERFORM hive.create_context( 'context' );
-    CREATE TABLE hive.table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT);
+    CREATE TABLE hive.table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
 END;
 $BODY$
 ;
@@ -53,8 +53,6 @@ BEGIN
     ASSERT NOT EXISTS ( SELECT * FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'shadow_table1' ), 'Shadow table was not dropped';
 
     ASSERT NOT EXISTS ( SELECT * FROM hive.registered_tables WHERE origin_table_name='table1' ), 'Entry in registered_tables was not deleted';
-
-    ASSERT NOT EXISTS ( SELECT FROM information_schema.columns WHERE table_name='table1' AND column_name='hive_rowid' ), 'hive_rowid column was not removed';
 END
 $BODY$
 ;

@@ -70,7 +70,6 @@ BEGIN
 
     PERFORM hive_clean_after_uregister_table( _table_name );
 
-    EXECUTE format( 'ALTER TABLE hive.%I DROP COLUMN hive_rowid', _table_name );
     RETURN;
 END;
 $BODY$

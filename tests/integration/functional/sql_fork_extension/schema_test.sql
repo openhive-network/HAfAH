@@ -37,6 +37,7 @@ BEGIN
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'triggers_operations' ), 'No triggers_operations table';
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'triggers' ), 'No triggers table';
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'control_status' ), 'No control_status table';
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'base' ), 'No control_status table';
 
     ASSERT EXISTS ( SELECT FROM hive.triggers_operations WHERE id = 0 AND name = 'INSERT' );
     ASSERT EXISTS ( SELECT FROM hive.triggers_operations WHERE id = 1 AND name = 'DELETE' );

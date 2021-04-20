@@ -11,7 +11,7 @@ BEGIN
           id INTEGER NOT NULL
         , smth TEXT NOT NULL
         , CONSTRAINT uq_table1 UNIQUE ( smth ) DEFERRABLE
-    );
+    ) INHERITS( hive.base );
 
     PERFORM hive_context_next_block( 'context' );
     INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla1' );
