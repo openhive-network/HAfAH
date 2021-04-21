@@ -5,16 +5,24 @@ CREATE OR REPLACE FUNCTION hive.on_edit_registered_tables()
 AS
 $$
 DECLARE
-__result BOOL;
+__result BOOL := NULL;
 __r RECORD;
+__shadow_table_name TEXT := NULL;
 BEGIN
-    IF EXISTS (
-        SELECT * FROM
+    SELECT hrt.shadow_table_name FROM
         ( SELECT * FROM pg_event_trigger_ddl_commands() ) as tr
-        JOIN hive.registered_tables hrt ON ( 'public.' || hrt.origin_table_name ) = tr.object_identity
-        ) THEN
+        JOIN hive.registered_tables hrt ON ( hrt.origin_table_schema || '.' || hrt.origin_table_name ) = tr.object_identity
+    INTO __shadow_table_name;
+
+    IF __shadow_table_name IS NULL THEN
+        RETURN;
+    END IF;
+
+    EXECUTE format( 'SELECT EXISTS( SELECT * FROM hive.%I LIMIT 1 )', __shadow_table_name ) INTO __result;
+
+    IF __result = TRUE THEN
         RAISE EXCEPTION 'Cannot edit structure of registered tables';
-END IF;
+    END IF;
 END;
 $$
 ;

@@ -8,6 +8,8 @@ $BODY$
 BEGIN
     PERFORM hive.create_context( 'context' );
     CREATE TABLE table1( id SERIAL PRIMARY KEY, smth INTEGER, name TEXT ) INHERITS( hive.base );
+    PERFORM hive_context_next_block( 'context' );
+    INSERT INTO table1( smth, name ) VALUES( 1, 'abc' );
 END;
 $BODY$
 ;
@@ -20,7 +22,13 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    ALTER TABLE table1 ADD COLUMN test_column INTEGER;
+    BEGIN
+        ALTER TABLE table1 ADD COLUMN test_column INTEGER;
+    EXCEPTION WHEN OTHERS THEN
+        RETURN;
+    END;
+
+    ASSERT FALSE, 'Did not catch expected exception';
 END;
 $BODY$
 ;
@@ -33,7 +41,7 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS(
+    ASSERT NOT EXISTS(
         SELECT * FROM information_schema.columns iss WHERE iss.table_name='table1' AND iss.column_name='test_column'
         )
         , 'Column was inserted'

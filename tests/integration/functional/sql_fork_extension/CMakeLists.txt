@@ -14,6 +14,7 @@ ADD_SQL_FUNCTIONAL_TESTS( schema_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( register_table_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( register_table_edit_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( register_table_edit_negative_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( register_table_drop_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( unregister_table_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( unregister_negative_table_test.sql )
