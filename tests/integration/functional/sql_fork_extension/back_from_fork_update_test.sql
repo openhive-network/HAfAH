@@ -7,12 +7,12 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.create_context( 'context' );
-    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     PERFORM hive_context_next_block( 'context' );
-    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla' );
+    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla' );
     PERFORM hive_context_next_block( 'context' );
-    TRUNCATE hive.shadow_table1; --to do not revert inserts
-    UPDATE hive.table1 SET id=321;
+    TRUNCATE hive.shadow_public_table1; --to do not revert inserts
+    UPDATE table1 SET id=321;
 END;
 $BODY$
 ;
@@ -38,8 +38,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM hive.table1 WHERE id=123 ) = 1, 'Updated row was not reverted';
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty';
+    ASSERT ( SELECT COUNT(*) FROM table1 WHERE id=123 ) = 1, 'Updated row was not reverted';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 ) = 0, 'Shadow table is not empty';
 END
 $BODY$
 ;

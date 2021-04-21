@@ -6,18 +6,20 @@ VOLATILE
 AS
 $BODY$
 BEGIN
+    CREATE SCHEMA A;
+    CREATE SCHEMA B;
     PERFORM hive.create_context( 'context' );
 
-    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
-    CREATE TABLE hive.table2( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
-    CREATE TABLE hive.table3( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE A.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE B.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
 
     PERFORM hive_context_next_block( 'context' );
 
     -- one row inserted, ready to back from fork
-    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla1' );
-    INSERT INTO hive.table2( id, smth ) VALUES( 223, 'blabla2' );
-    INSERT INTO hive.table3( id, smth ) VALUES( 323, 'blabla3' );
+    INSERT INTO A.table1( id, smth ) VALUES( 123, 'blabla1' );
+    INSERT INTO B.table1( id, smth ) VALUES( 223, 'blabla2' );
+    INSERT INTO table1( id, smth ) VALUES( 323, 'blabla3' );
 END;
 $BODY$
 ;
@@ -43,14 +45,14 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM hive.table1 ) = 0, 'Inserted row was not removed table1';
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty table1';
+    ASSERT ( SELECT COUNT(*) FROM A.table1 ) = 0, 'Inserted row was not removed table1';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 ) = 0, 'Shadow table is not empty table1';
 
-    ASSERT ( SELECT COUNT(*) FROM hive.table2 ) = 0, 'Inserted row was not removed table2';
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table2 ) = 0, 'Shadow table is not empty table2';
+    ASSERT ( SELECT COUNT(*) FROM B.table1 ) = 0, 'Inserted row was not removed table2';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_b_table1 ) = 0, 'Shadow table is not empty table2';
 
-    ASSERT ( SELECT COUNT(*) FROM hive.table3 ) = 0, 'Inserted row was not removed table3';
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table3 ) = 0, 'Shadow table is not empty table3';
+    ASSERT ( SELECT COUNT(*) FROM table1 ) = 0, 'Inserted row was not removed table3';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 ) = 0, 'Shadow table is not empty table3';
 END
 $BODY$
 ;

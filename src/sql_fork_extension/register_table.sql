@@ -8,23 +8,23 @@ CREATE FUNCTION hive.register_table( _table_schema TEXT,  _table_name TEXT, _con
 AS
 $BODY$
 DECLARE
-    __shadow_table_name TEXT := 'shadow_' || _table_name;
+    __shadow_table_name TEXT := 'shadow_' || lower(_table_schema) || '_' || lower(_table_name);
     __block_num_column_name TEXT := 'hive_block_num';
     __operation_column_name TEXT := 'hive_operation_type';
     __hive_rowid_column_name TEXT := 'hive_rowid';
-    __hive_insert_trigger_name TEXT := 'hive_insert_trigger_' || _table_name;
-    __hive_delete_trigger_name TEXT := 'hive_delete_trigger_' || _table_name;
-    __hive_update_trigger_name TEXT := 'hive_update_trigger_' || _table_name;
-    __hive_truncate_trigger_name TEXT := 'hive_truncate_trigger_' || _table_name;
-    __hive_triggerfunction_name_insert TEXT := 'hive_on_table_trigger_insert_' || _table_name;
-    __hive_triggerfunction_name_delete TEXT := 'hive_on_table_trigger_delete_' || _table_name;
-    __hive_triggerfunction_name_update TEXT := 'hive_on_table_trigger_update_' || _table_name;
-    __hive_triggerfunction_name_truncate TEXT := 'hive_on_table_trigger_truncate_' || _table_name;
+    __hive_insert_trigger_name TEXT := 'hive_insert_trigger_' || lower(_table_schema) || '_' || _table_name;
+    __hive_delete_trigger_name TEXT := 'hive_delete_trigger_' || lower(_table_schema) || '_' || _table_name;
+    __hive_update_trigger_name TEXT := 'hive_update_trigger_' || lower(_table_schema) || '_' || _table_name;
+    __hive_truncate_trigger_name TEXT := 'hive_truncate_trigger_' || lower(_table_schema) || '_' || _table_name;
+    __hive_triggerfunction_name_insert TEXT := 'hive_on_table_trigger_insert_' || lower(_table_schema) || '_' || _table_name;
+    __hive_triggerfunction_name_delete TEXT := 'hive_on_table_trigger_delete_' || lower(_table_schema) || '_' || _table_name;
+    __hive_triggerfunction_name_update TEXT := 'hive_on_table_trigger_update_' || lower(_table_schema) || '_' || _table_name;
+    __hive_triggerfunction_name_truncate TEXT := 'hive_on_table_trigger_truncate_' || lower(_table_schema) || '_' || _table_name;
     __context_id INTEGER := NULL;
     __registered_table_id INTEGER := NULL;
     __columns_names TEXT[];
 BEGIN
-    SELECT array_agg( iss.column_name::TEXT ) FROM information_schema.columns iss WHERE iss.table_schema='hive' AND iss.table_name=_table_name INTO __columns_names;
+    SELECT array_agg( iss.column_name::TEXT ) FROM information_schema.columns iss WHERE iss.table_schema=_table_schema AND iss.table_name=_table_name INTO __columns_names;
     EXECUTE format('CREATE TABLE hive.%I AS TABLE %I.%I', __shadow_table_name, _table_schema, _table_name );
     EXECUTE format('DELETE FROM hive.%I', __shadow_table_name ); --empty shadow table if origin table is not empty
     EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I INTEGER NOT NULL', __shadow_table_name, __block_num_column_name );
@@ -157,12 +157,13 @@ BEGIN
                  RAISE EXCEPTION ''Did not execute hive_context_next_block before table edition'';
              END IF;
 
-             INSERT INTO hive.%I SELECT o.*, __block_num, 1 FROM hive.%I o ON CONFLICT DO NOTHING;
+             INSERT INTO hive.%I SELECT o.*, __block_num, 1 FROM %I.%I o ON CONFLICT DO NOTHING;
              RETURN NEW;
          END;
          $$'
         , __hive_triggerfunction_name_truncate
         , __shadow_table_name
+        , _table_schema
         , _table_name
     );
 

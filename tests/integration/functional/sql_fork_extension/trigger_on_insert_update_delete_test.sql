@@ -6,8 +6,9 @@ VOLATILE
 AS
 $BODY$
 BEGIN
+    CREATE SCHEMA A;
     PERFORM hive.create_context( 'context' );
-    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE a.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
 END;
 $BODY$
 ;
@@ -21,11 +22,11 @@ AS
 $BODY$
 BEGIN
     PERFORM hive_context_next_block( 'context' );
-    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla' );
+    INSERT INTO A.table1( id, smth ) VALUES( 123, 'blabla' );
     PERFORM hive_context_next_block( 'context' );
-    UPDATE hive.table1 SET id=321;
+    UPDATE A.table1 SET id=321;
     PERFORM hive_context_next_block( 'context' );
-    DELETE FROM hive.table1 WHERE id=321;
+    DELETE FROM A.table1 WHERE id=321;
 END
 $BODY$
 ;
@@ -38,10 +39,10 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM hive.shadow_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 0 AND hs.hive_operation_type = 0 ), 'Lack of insert operation';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 1 AND hs.hive_operation_type = 2 ), 'Lack of update operation';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_table1 hs WHERE hs.id = 321 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 2 AND hs.hive_operation_type = 1 ), 'Lack of delete';
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 3;
+    ASSERT EXISTS ( SELECT FROM hive.shadow_a_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 0 AND hs.hive_operation_type = 0 ), 'Lack of insert operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_a_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 1 AND hs.hive_operation_type = 2 ), 'Lack of update operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_a_table1 hs WHERE hs.id = 321 AND hs.hive_rowid = 1 AND hs.smth = 'blabla' AND hs.hive_block_num = 2 AND hs.hive_operation_type = 1 ), 'Lack of delete';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 ) = 3;
 END
 $BODY$
 ;

@@ -6,14 +6,15 @@ VOLATILE
 AS
 $BODY$
 BEGIN
+    CREATE SCHEMA A;
     PERFORM hive.create_context( 'context' );
-    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE A.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     PERFORM hive_context_next_block( 'context' );
-    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla' );
+    INSERT INTO A.table1( id, smth ) VALUES( 123, 'blabla' );
 
-    TRUNCATE hive.shadow_table1; --to do not revert inserts
+    TRUNCATE hive.shadow_a_table1; --to do not revert inserts
     PERFORM hive_context_next_block( 'context' );
-    DELETE FROM hive.table1;
+    DELETE FROM A.table1;
 END;
 $BODY$
 ;
@@ -39,8 +40,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM hive.table1 WHERE id=123 ) = 1, 'Deleted row was not reinserted';
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty';
+    ASSERT ( SELECT COUNT(*) FROM A.table1 WHERE id=123 ) = 1, 'Deleted row was not reinserted';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 ) = 0, 'Shadow table is not empty';
 END
 $BODY$
 ;

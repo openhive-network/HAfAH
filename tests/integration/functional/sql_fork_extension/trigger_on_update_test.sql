@@ -6,11 +6,11 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    DROP TABLE IF EXISTS table1;
+    CREATE SCHEMA A;
     PERFORM hive.create_context( 'context' );
-    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE A.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     PERFORM hive_context_next_block( 'context' );
-    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla' );
+    INSERT INTO A.table1( id, smth ) VALUES( 123, 'blabla' );
 END;
 $BODY$
 ;
@@ -24,7 +24,7 @@ AS
 $BODY$
 BEGIN
     PERFORM hive_context_next_block( 'context' );
-    UPDATE hive.table1 SET id=321;
+    UPDATE A.table1 SET id=321;
 END
 $BODY$
 ;
@@ -37,8 +37,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' ) = 2, 'No expected id value in shadow table';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' AND hive_block_num = 1 AND hive_operation_type = 2 ), 'No expected row';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' ) = 2, 'No expected id value in shadow table';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_a_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' AND hive_block_num = 1 AND hive_operation_type = 2 ), 'No expected row';
 END
 $BODY$
 ;

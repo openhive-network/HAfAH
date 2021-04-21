@@ -6,10 +6,11 @@ VOLATILE
 AS
 $BODY$
 BEGIN
+    CREATE SCHEMA A;
     PERFORM hive.create_context( 'context' );
-    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE A.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     PERFORM hive_context_next_block( 'context' );
-    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'balbla' );
+    INSERT INTO A.table1( id, smth ) VALUES( 123, 'balbla' );
 END;
 $BODY$
 ;
@@ -23,7 +24,7 @@ AS
 $BODY$
 BEGIN
     PERFORM hive_context_next_block( 'context' );
-    DELETE FROM hive.table1;
+    DELETE FROM A.table1;
 END
 $BODY$
 ;
@@ -36,8 +37,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 hs WHERE hs.id = 123 AND hs.smth='balbla' ) = 2, 'No expected id value in shadow table';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_table1 hs WHERE hs.id = 123 AND hs.smth='balbla' AND hs.hive_block_num = 1 AND hs.hive_operation_type = 1 ), 'Wrong block num';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 hs WHERE hs.id = 123 AND hs.smth='balbla' ) = 2, 'No expected id value in shadow table';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_a_table1 hs WHERE hs.id = 123 AND hs.smth='balbla' AND hs.hive_block_num = 1 AND hs.hive_operation_type = 1 ), 'Wrong block num';
 END
 $BODY$
 ;

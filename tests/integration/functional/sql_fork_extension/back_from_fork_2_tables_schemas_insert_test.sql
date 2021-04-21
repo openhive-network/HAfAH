@@ -6,14 +6,19 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    CREATE SCHEMA A;
     PERFORM hive.create_context( 'context' );
+    CREATE SCHEMA A;
+    CREATE SCHEMA B;
+
     CREATE TABLE A.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE B.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+
+
     PERFORM hive_context_next_block( 'context' );
 
-    -- one row inserted then deleted
-    INSERT INTO A.table1( id, smth ) VALUES( 123, 'blabla' );
-    DELETE FROM A.table1 WHERE id = 123;
+    -- one row inserted, ready to back from fork
+    INSERT INTO A.table1( id, smth ) VALUES( 123, 'blabla1' );
+    INSERT INTO B.table1( id, smth ) VALUES( 223, 'blabla2' );
 END;
 $BODY$
 ;
@@ -39,8 +44,11 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM A.table1 ) = 0, 'Inserted row was not removed';
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 ) = 0, 'Shadow table is not empty';
+    ASSERT ( SELECT COUNT(*) FROM A.table1 ) = 0, 'Inserted row was not removed a.table1';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 ) = 0, 'Shadow table is not empty table1';
+
+    ASSERT ( SELECT COUNT(*) FROM B.table1 ) = 0, 'Inserted row was not removed b.table1';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_b_table1 ) = 0, 'Shadow table is not empty table2';
 END
 $BODY$
 ;

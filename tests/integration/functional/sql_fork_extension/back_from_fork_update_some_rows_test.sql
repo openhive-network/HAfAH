@@ -7,18 +7,18 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.create_context( 'context' );
-    CREATE TABLE hive.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
 
     PERFORM hive_context_next_block( 'context' );
-    INSERT INTO hive.table1( id, smth ) VALUES( 123, 'blabla1' );
-    INSERT INTO hive.table1( id, smth ) VALUES( 223, 'blabla2' );
-    INSERT INTO hive.table1( id, smth ) VALUES( 323, 'blabla3' );
+    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
+    INSERT INTO table1( id, smth ) VALUES( 223, 'blabla2' );
+    INSERT INTO table1( id, smth ) VALUES( 323, 'blabla3' );
     PERFORM hive_context_next_block( 'context' );
 
-    TRUNCATE hive.shadow_table1; --to do not revert inserts
-    UPDATE hive.table1 SET smth='a1' WHERE id=123;
-    UPDATE hive.table1 SET smth='a2' WHERE id=223;
-    UPDATE hive.table1 SET smth='a3' WHERE id=323;
+    TRUNCATE hive.shadow_public_table1; --to do not revert inserts
+    UPDATE table1 SET smth='a1' WHERE id=123;
+    UPDATE table1 SET smth='a2' WHERE id=223;
+    UPDATE table1 SET smth='a3' WHERE id=323;
 END;
 $BODY$
 ;
@@ -44,11 +44,11 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT COUNT(*) FROM hive.table1 WHERE id=123 AND smth='blabla1' ) = 1, 'Updated row was not reverted';
-    ASSERT ( SELECT COUNT(*) FROM hive.table1 WHERE id=223 AND smth='blabla2' ) = 1, 'Updated row was not reverted';
-    ASSERT ( SELECT COUNT(*) FROM hive.table1 WHERE id=323 AND smth='blabla3' ) = 1, 'Updated row was not reverted';
+    ASSERT ( SELECT COUNT(*) FROM table1 WHERE id=123 AND smth='blabla1' ) = 1, 'Updated row was not reverted';
+    ASSERT ( SELECT COUNT(*) FROM table1 WHERE id=223 AND smth='blabla2' ) = 1, 'Updated row was not reverted';
+    ASSERT ( SELECT COUNT(*) FROM table1 WHERE id=323 AND smth='blabla3' ) = 1, 'Updated row was not reverted';
 
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_table1 ) = 0, 'Shadow table is not empty';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 ) = 0, 'Shadow table is not empty';
 END
 $BODY$
 ;

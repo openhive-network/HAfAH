@@ -1,5 +1,5 @@
 DROP FUNCTION IF EXISTS hive.back_from_fork_one_table;
-CREATE FUNCTION hive.back_from_fork_one_table( _table_name TEXT, _shadow_table_name TEXT, _columns TEXT[])
+CREATE FUNCTION hive.back_from_fork_one_table( _table_schema TEXT, _table_name TEXT, _shadow_table_name TEXT, _columns TEXT[])
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE
@@ -9,7 +9,7 @@ BEGIN
     -- First we find rows ids with lowest block num, then delete, insert or update these rows with rows ids
     -- revert inserted rows
     EXECUTE format(
-        'DELETE FROM hive.%I
+        'DELETE FROM %I.%I
         WHERE %I.hive_rowid IN
         (
         SELECT st.hive_rowid FROM
@@ -20,6 +20,7 @@ BEGIN
             ) as st
         WHERE st.hive_operation_type = 0
         )'
+        , _table_schema
         , _table_name
         , _table_name
         , _shadow_table_name
@@ -27,7 +28,7 @@ BEGIN
 
     -- revert deleted rows
     EXECUTE format(
-        'INSERT INTO hive.%I
+        'INSERT INTO %I.%I
         (
         SELECT %s FROM
             (
@@ -37,6 +38,7 @@ BEGIN
             ) as st
          WHERE st.hive_operation_type = 1
         )'
+        , _table_schema
         , _table_name
         , array_to_string( _columns, ',' )
         , _shadow_table_name
@@ -45,7 +47,7 @@ BEGIN
     -- update deleted rows
     -- first remove rows
     EXECUTE format(
-        'DELETE FROM hive.%I
+        'DELETE FROM %I.%I
         WHERE %I.hive_rowid IN
         (
         SELECT st.hive_rowid FROM
@@ -56,6 +58,7 @@ BEGIN
             ) as st
         WHERE st.hive_operation_type = 2
         )'
+        , _table_schema
         , _table_name
         , _table_name
         , _shadow_table_name
@@ -63,7 +66,7 @@ BEGIN
 
     -- now insert old rows
     EXECUTE format(
-            'INSERT INTO hive.%I
+            'INSERT INTO %I.%I
             (
             SELECT %s FROM
                 (
@@ -73,6 +76,7 @@ BEGIN
                 ) as st
              WHERE st.hive_operation_type = 2
             )'
+        , _table_schema
         , _table_name
         , array_to_string( _columns, ',' )
         , _shadow_table_name
@@ -95,7 +99,7 @@ BEGIN
     SET CONSTRAINTS ALL DEFERRED;
 
     PERFORM
-        hive.back_from_fork_one_table( hrt.origin_table_name, hrt.shadow_table_name, hrt.origin_table_columns )
+        hive.back_from_fork_one_table( hrt.origin_table_schema, hrt.origin_table_name, hrt.shadow_table_name, hrt.origin_table_columns )
     FROM hive.registered_tables hrt ORDER BY hrt.id;
 
     UPDATE hive.control_status SET back_from_fork = FALSE;
