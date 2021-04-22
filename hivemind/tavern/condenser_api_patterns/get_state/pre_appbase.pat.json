@@ -2,6 +2,7 @@
   "accounts": {
     "steemit": {
       "blog": [
+        "steemit/muted-in-this-community",
         "steemit/firstpost"
       ],
       "comments": [],
@@ -10,7 +11,7 @@
       "json_metadata": "{\"profile\":{\"name\":\"\",\"about\":\"\",\"website\":\"\",\"location\":\"\",\"cover_image\":\"\",\"profile_image\":\"\"}}",
       "name": "steemit",
       "net_vesting_shares": 0,
-      "post_count": 1,
+      "post_count": 3,
       "recent_replies": [],
       "reputation": 12944616889,
       "transfer_history": []
@@ -654,6 +655,37 @@
       "title": "Welcome to Steem!",
       "total_payout_value": "0.942 HBD",
       "url": "/meta/@steemit/firstpost"
+    },
+    "steemit/muted-in-this-community": {
+      "active_votes": [],
+      "author": "steemit",
+      "author_reputation": 12944616889,
+      "beneficiaries": [],
+      "body": "My role do not change",
+      "body_length": 21,
+      "cashout_time": "2016-09-22T19:47:21",
+      "category": "hive-198723",
+      "children": 0,
+      "created": "2016-09-15T19:47:21",
+      "curator_payout_value": "0.000 HBD",
+      "depth": 0,
+      "json_metadata": "{}",
+      "last_payout": "1969-12-31T23:59:59",
+      "last_update": "2016-09-15T19:47:21",
+      "max_accepted_payout": "1000000.000 HBD",
+      "net_rshares": 0,
+      "parent_author": "",
+      "parent_permlink": "hive-198723",
+      "pending_payout_value": "0.000 HBD",
+      "percent_hbd": 10000,
+      "permlink": "muted-in-this-community",
+      "post_id": 1257980,
+      "promoted": "0.000 HBD",
+      "replies": [],
+      "root_title": "i am muted in this community",
+      "title": "i am muted in this community",
+      "total_payout_value": "0.000 HBD",
+      "url": "/hive-198723/@steemit/muted-in-this-community"
     }
   },
   "discussion_idx": {
