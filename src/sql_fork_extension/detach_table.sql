@@ -130,3 +130,25 @@ BEGIN
 END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.attach_all( _context TEXT )
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+DECLARE
+__context_id INTEGER := NULL;
+BEGIN
+SELECT ct.id FROM hive.context ct WHERE ct.name=_context INTO __context_id;
+
+    IF __context_id IS NULL THEN
+            RAISE EXCEPTION 'Unknown context %', _context;
+    END IF;
+
+    PERFORM hive.attach_table( hrt.origin_table_schema, hrt.origin_table_name )
+    FROM hive.registered_tables hrt
+    WHERE hrt.context_id = __context_id;
+END;
+$BODY$
+;
