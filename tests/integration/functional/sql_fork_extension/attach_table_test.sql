@@ -23,7 +23,7 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.attach_table( 'A'::TEXT, 'table1'::TEXT );
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     INSERT INTO A.table1( smth, name ) VALUES (1, 'abc' );
 END
 $BODY$

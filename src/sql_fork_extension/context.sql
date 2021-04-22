@@ -11,8 +11,8 @@ END;
 $BODY$
 ;
 
-DROP FUNCTION IF EXISTS hive_context_next_block;
-CREATE FUNCTION hive_context_next_block( _name TEXT )
+DROP FUNCTION IF EXISTS hive.context_next_block;
+CREATE FUNCTION hive.context_next_block( _name TEXT )
     RETURNS INTEGER
     LANGUAGE 'sql'
     VOLATILE

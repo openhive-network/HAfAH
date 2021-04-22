@@ -15,13 +15,13 @@ BEGIN
     CREATE TABLE B.table2( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     CREATE TABLE table3( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
 
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
 
     INSERT INTO A.table1( id, smth ) VALUES( 123, 'blabla1' );
     INSERT INTO B.table2( id, smth ) VALUES( 223, 'blabla2' );
     INSERT INTO table3( id, smth ) VALUES( 323, 'blabla3' );
 
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
 END;
 $BODY$
 ;

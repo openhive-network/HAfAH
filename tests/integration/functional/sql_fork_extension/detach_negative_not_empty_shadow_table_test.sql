@@ -8,7 +8,7 @@ $BODY$
 BEGIN
     PERFORM hive.create_context( 'context' );
     CREATE TABLE table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     INSERT INTO table1( smth, name ) VALUES ( 1, 'abc' );
 END;
 $BODY$

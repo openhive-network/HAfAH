@@ -26,8 +26,8 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.detach_all( 'context' );
-    PERFORM hive_context_next_block( 'context' );
-    PERFORM hive_context_next_block( 'context2' );
+    PERFORM hive.context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context2' );
     INSERT INTO A.table1( smth, name ) VALUES (1, 'abc' );
     INSERT INTO B.table2( smth, name ) VALUES (1, 'abc' );
     INSERT INTO A.table3( smth, name ) VALUES (1, 'abc' );

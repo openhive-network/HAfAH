@@ -8,7 +8,7 @@ $BODY$
 BEGIN
     PERFORM hive.create_context( 'context' );
     CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
 
     -- one row inserted, ready to back from fork
     INSERT INTO table1( id, smth ) VALUES( 123, 'blabla' );

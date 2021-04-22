@@ -15,7 +15,7 @@ BEGIN
     PERFORM hive.create_context( 'context' );
     CREATE TABLE src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) ) INHERITS( hive.base );
 
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     INSERT INTO src_table ( smth, name, values, data, name2, num )
     SELECT gen.id, val.name, val.arr, val.rec, val.name2, val.num
     FROM generate_series(1, 10000) AS gen(id)
@@ -23,7 +23,7 @@ BEGIN
 
 
     TRUNCATE hive.shadow_public_src_table; --to do not revert inserts
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     DELETE FROM src_table;
 END;
 $BODY$

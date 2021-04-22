@@ -8,8 +8,8 @@ $BODY$
 BEGIN
     PERFORM hive.create_context( 'context' );
     CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
-    PERFORM hive_context_next_block( 'context' );
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
 END;
 $BODY$
 ;

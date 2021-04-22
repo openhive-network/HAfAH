@@ -9,11 +9,11 @@ BEGIN
     PERFORM hive.create_context( 'context' );
     CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
 
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
     INSERT INTO table1( id, smth ) VALUES( 223, 'blabla2' );
     INSERT INTO table1( id, smth ) VALUES( 323, 'blabla3' );
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
 
     TRUNCATE hive.shadow_public_table1; --to do not revert inserts
     UPDATE table1 SET smth='a1' WHERE id=123;

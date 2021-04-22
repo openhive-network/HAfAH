@@ -11,13 +11,13 @@ BEGIN
     CREATE TABLE table2( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     CREATE TABLE table3( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
 
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
     INSERT INTO table2( id, smth ) VALUES( 223, 'blabla2' );
     INSERT INTO table3( id, smth ) VALUES( 323, 'blabla3' );
 
 
-    PERFORM hive_context_next_block( 'my_context' );
+    PERFORM hive.context_next_block( 'my_context' );
 
     TRUNCATE hive.shadow_public_table1; --to do not revert inserts
     TRUNCATE hive.shadow_public_table2; --to do not revert inserts

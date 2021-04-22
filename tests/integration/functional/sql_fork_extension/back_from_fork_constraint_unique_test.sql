@@ -13,7 +13,7 @@ BEGIN
         , CONSTRAINT uq_table1 UNIQUE ( smth ) DEFERRABLE
     ) INHERITS( hive.base );
 
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
     INSERT INTO table1( id, smth ) VALUES( 124, 'blabla2' );
 

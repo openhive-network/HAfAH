@@ -23,9 +23,9 @@ DECLARE
     __block1 INTEGER := -1;
     __block2 INTEGER := -1;
 BEGIN
-    SELECT  hive_context_next_block( 'my_context' ) INTO __block1;
-    PERFORM hive_context_next_block( 'my_context2' );
-    SELECT hive_context_next_block( 'my_context2' ) INTO __block2;
+    SELECT  hive.context_next_block( 'my_context' ) INTO __block1;
+    PERFORM hive.context_next_block( 'my_context2' );
+    SELECT hive.context_next_block( 'my_context2' ) INTO __block2;
 
     ASSERT __block1 = 0;
     ASSERT __block2 = 1;

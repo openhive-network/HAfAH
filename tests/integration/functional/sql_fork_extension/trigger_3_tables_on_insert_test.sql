@@ -13,8 +13,8 @@ BEGIN
     CREATE TABLE A.table2( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     CREATE TABLE table3( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
 
-    PERFORM hive_context_next_block( 'context' );
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
 END;
 $BODY$
 ;

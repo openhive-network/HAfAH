@@ -61,7 +61,7 @@ BEGIN
             SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
             IF ( __block_num < 0 ) THEN
-                 RAISE EXCEPTION ''Did not execute hive_context_next_block before table edition'';
+                 RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
             END IF;
 
             INSERT INTO hive.%I SELECT n.*,  __block_num, 0 FROM new_table n ON CONFLICT DO NOTHING;
@@ -92,7 +92,7 @@ BEGIN
             SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
             IF ( __block_num < 0 ) THEN
-                RAISE EXCEPTION ''Did not execute hive_context_next_block before table edition'';
+                RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
             END IF;
 
             INSERT INTO hive.%I SELECT o.*, __block_num, 1 FROM old_table o ON CONFLICT DO NOTHING;
@@ -123,7 +123,7 @@ BEGIN
             SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
             IF ( __block_num < 0 ) THEN
-                RAISE EXCEPTION ''Did not execute hive_context_next_block before table edition'';
+                RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
             END IF;
 
             INSERT INTO hive.%I SELECT o.*, __block_num, 2 FROM old_table o ON CONFLICT DO NOTHING;
@@ -154,7 +154,7 @@ BEGIN
              SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
              IF ( __block_num < 0 ) THEN
-                 RAISE EXCEPTION ''Did not execute hive_context_next_block before table edition'';
+                 RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
              END IF;
 
              INSERT INTO hive.%I SELECT o.*, __block_num, 1 FROM %I.%I o ON CONFLICT DO NOTHING;

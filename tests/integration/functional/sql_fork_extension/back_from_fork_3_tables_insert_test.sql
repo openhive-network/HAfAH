@@ -14,7 +14,7 @@ BEGIN
     CREATE TABLE B.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
 
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
 
     -- one row inserted, ready to back from fork
     INSERT INTO A.table1( id, smth ) VALUES( 123, 'blabla1' );

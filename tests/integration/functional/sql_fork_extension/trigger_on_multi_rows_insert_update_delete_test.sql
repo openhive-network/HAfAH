@@ -20,15 +20,15 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
     INSERT INTO table1( id, smth ) VALUES( 223, 'blabla2' );
     INSERT INTO table1( id, smth ) VALUES( 323, 'blabla3' );
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     UPDATE table1 SET id=423 WHERE id=123;
     UPDATE table1 SET id=523 WHERE id=223;
     UPDATE table1 SET id=623 WHERE id=323;
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     DELETE FROM table1 WHERE id=423;
     DELETE FROM table1 WHERE id=523;
     DELETE FROM table1 WHERE id=623;

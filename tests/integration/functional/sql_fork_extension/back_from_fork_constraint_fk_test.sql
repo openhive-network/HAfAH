@@ -15,7 +15,7 @@ BEGIN
         , CONSTRAINT fk_table2_table1_id FOREIGN KEY( table1_id ) REFERENCES table1(id) DEFERRABLE
     ) INHERITS( hive.base );
 
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
 
     -- one row inserted, ready to back from fork
     INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );

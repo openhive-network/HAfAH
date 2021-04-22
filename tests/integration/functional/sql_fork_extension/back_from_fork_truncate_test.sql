@@ -9,10 +9,10 @@ BEGIN
     CREATE SCHEMA B;
     PERFORM hive.create_context( 'context' );
     CREATE TABLE B.table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     INSERT INTO B.table1( id, smth ) VALUES( 123, 'blabla' );
     TRUNCATE hive.shadow_b_table1; --to do not revert inserts
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     TRUNCATE B.table1;
 END;
 $BODY$

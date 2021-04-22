@@ -15,13 +15,13 @@ BEGIN
     PERFORM hive.create_context( 'context' );
     CREATE TABLE src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) ) INHERITS( hive.base );
 
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     INSERT INTO src_table ( smth, name, values, data, name2, num )
     SELECT gen.id, val.name, val.arr, val.rec, val.name2, val.num
     FROM generate_series(1, 10000) AS gen(id)
              JOIN ( VALUES( 'temp1', '{{0.25, 3.4, 6}}'::FLOAT[], ROW(1, 5.8, '123abc')::custom_type, 'padu'::VARCHAR, 2.123::NUMERIC(3,2) ) ) as val(name,arr,rec, name2, num) ON True;
 
-    PERFORM hive_context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context' );
     TRUNCATE hive.shadow_public_src_table; --to do not revert inserts
     TRUNCATE src_table;
 END;
