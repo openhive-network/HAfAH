@@ -10,7 +10,7 @@ psql -d psql_tools_test_db -a -f  ${extension_path}/data_schema.sql
 psql -d psql_tools_test_db -a -f  ${extension_path}/event_triggers.sql
 psql -d psql_tools_test_db -a -f  ${extension_path}/context.sql
 psql -d psql_tools_test_db -a -f  ${extension_path}/register_table.sql
-psql -d psql_tools_test_db -a -f  ${extension_path}/unregister_table.sql
+psql -d psql_tools_test_db -a -f  ${extension_path}/detach_table.sql
 psql -d psql_tools_test_db -a -f  ${extension_path}/back_from_fork.sql
 
 psql -d psql_tools_test_db -a -v ON_ERROR_STOP=on -f  ${test_path};

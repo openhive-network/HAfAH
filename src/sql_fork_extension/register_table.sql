@@ -31,8 +31,8 @@ BEGIN
     EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I SMALLINT NOT NULL', __shadow_table_name, __operation_column_name );
     EXECUTE format('ALTER TABLE hive.%I ADD CONSTRAINT uk_%s UNIQUE( %I, %I )', __shadow_table_name, __shadow_table_name, __block_num_column_name, __hive_rowid_column_name );
 
-    INSERT INTO hive.registered_tables( context_id, origin_table_schema, origin_table_name, shadow_table_name, origin_table_columns )
-    SELECT hc.id, tables.table_schema, tables.origin, tables.shadow, columns
+    INSERT INTO hive.registered_tables( context_id, origin_table_schema, origin_table_name, shadow_table_name, origin_table_columns, is_attached )
+    SELECT hc.id, tables.table_schema, tables.origin, tables.shadow, columns, TRUE
     FROM ( SELECT hc.id FROM hive.context hc WHERE hc.name =  _context_name ) as hc
     JOIN ( VALUES( _table_schema, _table_name, __shadow_table_name, __columns_names  )  ) as tables( table_schema, origin, shadow, columns ) ON TRUE
     RETURNING context_id, id INTO __context_id, __registered_table_id

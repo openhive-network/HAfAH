@@ -33,23 +33,20 @@ CREATE OR REPLACE FUNCTION hive.on_drop_registered_tables()
 AS
 $$
 DECLARE
-__dropped_tables TEXT[];
 __r RECORD;
-__table TEXT;
+__table TEXT := NULL;
+__schema TEXT := NULL;
 BEGIN
-    SELECT ARRAY_AGG( DISTINCT(tr.object_name) )  FROM
+    SELECT tr.object_name, tr.schema_name  FROM
     ( SELECT * FROM pg_event_trigger_dropped_objects() ) as tr
-        JOIN hive.registered_tables hrt ON hrt.origin_table_name  = tr.object_name
-    INTO __dropped_tables;
+        JOIN hive.registered_tables hrt ON hrt.origin_table_name  = tr.object_name AND hrt.origin_table_schema = tr.schema_name
+    WHERE tr.object_type ='table'
+    INTO __table, __schema;
 
-    IF ARRAY_LENGTH( __dropped_tables, 1 ) > 0 THEN
-        FOREACH __table IN ARRAY __dropped_tables
-        LOOP
-        PERFORM hive_clean_after_uregister_table( __table );
-END LOOP;
-
-        RAISE WARNING 'Registered table(S) were dropped: %', ARRAY_TO_STRING( __dropped_tables, ',' );
-END IF;
+    IF __table IS NOT NULL THEN
+        PERFORM hive_clean_after_uregister_table( __schema, __table );
+        RAISE WARNING 'Registered table were dropped: %.%', __schema, __table;
+    END IF;
 END;
 $$
 ;

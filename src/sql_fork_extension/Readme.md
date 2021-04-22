@@ -14,7 +14,7 @@ Execute sql scripts on Your database in given order:
 1. event_triggers.sql
 1. context.sql
 1. register_table.sql 
-1. unregister_table.sql
+1. detach_table.sql
 1. back_from_fork.sql
 
 An example of script execution: `psql -d my_db_name -a -f  data_schema.sql`
@@ -65,15 +65,16 @@ Columns
 
 ## SQL API
 The set of scripts implements an API for the applications:
-### hive_registered_table
+### hive.registered_table
 Registers an user table in the fork system
-### hive_unregistered_table
-Unregisters an user table from the fork system
-### hive_create_context
+### hive.detach_table
+Drop triggers atatched to a register table. It is usefull for operation below irreversible block
+when fork is impossible, then we don't want have trigger overhead for each edition of a table.
+### hive.create_context
 Creates the context - controll block number on which the registered tables are working
-### hive_context_next_block
+### hive.context_next_block
 Moves a context to the next available block
-### hive_back_from_fork
+### hive.back_from_fork
 Rewind register tables
 
 ## TODO

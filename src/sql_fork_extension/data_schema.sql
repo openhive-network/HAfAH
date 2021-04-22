@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS hive.registered_tables(
    origin_table_name TEXT NOT NULL,
    shadow_table_name TEXT NOT NULL,
    origin_table_columns TEXT[] NOT NULL,
+   is_attached BOOL,
    CONSTRAINT fk_hive_registered_tables_context FOREIGN KEY(context_id) REFERENCES hive.context( id )
 );
 
@@ -34,7 +35,8 @@ CREATE TABLE IF NOT EXISTS hive.triggers(
    registered_table_id INTEGER NOT NULL,
    trigger_name TEXT NOT NULL,
    function_name TEXT NOT NULL,
-   CONSTRAINT fk_hive_triggers_registered_table FOREIGN KEY( registered_table_id ) REFERENCES hive.registered_tables( id )
+   CONSTRAINT fk_hive_triggers_registered_table FOREIGN KEY( registered_table_id ) REFERENCES hive.registered_tables( id ),
+   CONSTRAINT uq_hive_triggers_registered_table UNIQUE( trigger_name )
 );
 
 CREATE TABLE IF NOT EXISTS hive.control_status(

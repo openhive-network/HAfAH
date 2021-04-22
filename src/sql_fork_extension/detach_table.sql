@@ -1,7 +1,7 @@
 -- Whe a table is deteted their triggers are removet automatically
 -- and there is no need to remove hive_rowid column
-DROP FUNCTION IF EXISTS hive.unregister_table;
-CREATE FUNCTION hive_clean_after_uregister_table( _table_name TEXT )
+DROP FUNCTION IF EXISTS hive.hive_clean_after_uregister_table;
+CREATE FUNCTION hive_clean_after_uregister_table( _schema_name TEXT, _table_name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
@@ -14,7 +14,7 @@ DECLARE
 BEGIN
     SELECT hrt.id, hrt.shadow_table_name
     FROM hive.registered_tables hrt
-    WHERE hrt.origin_table_name = _table_name INTO __table_id, __shadow_table_name;
+    WHERE hrt.origin_table_schema = _schema_name AND  hrt.origin_table_name = _table_name INTO __table_id, __shadow_table_name;
 
     IF __table_id IS NULL THEN
         RAISE EXCEPTION 'Table is not registered';
@@ -34,14 +34,14 @@ BEGIN
     --drop shadow table
     EXECUTE format( 'DROP TABLE hive.%I', __shadow_table_name );
 
-    DELETE FROM hive.registered_tables hrt WHERE hrt.origin_table_name = _table_name;
+    DELETE FROM hive.registered_tables hrt WHERE  hrt.origin_table_schema = _schema_name AND hrt.origin_table_name = _table_name;
 END;
 $BODY$
 ;
 
 
-DROP FUNCTION IF EXISTS hive.unregister_table;
-CREATE FUNCTION hive.unregister_table( _table_name TEXT )
+DROP FUNCTION IF EXISTS hive.detach_table;
+CREATE FUNCTION hive.detach_table( _table_schema TEXT, _table_name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
@@ -52,24 +52,30 @@ DECLARE
     __shadow_table_name TEXT;
     __trigger_name TEXT;
     __trigger_funtion_name TEXT;
+    __shadow_table_is_not_empty BOOL := FALSE;
 BEGIN
     SELECT hrt.id, hrt.shadow_table_name
     FROM hive.registered_tables hrt
-    WHERE hrt.origin_table_name = _table_name INTO __table_id, __shadow_table_name;
+    WHERE  hrt.origin_table_schema = lower( _table_schema ) AND hrt.origin_table_name = _table_name INTO __table_id, __shadow_table_name;
 
     IF __table_id IS NULL THEN
-            RAISE EXCEPTION 'Table is not registered';
+        RAISE EXCEPTION 'Table %.% is not registered', _table_schema, _table_name;
+    END IF;
+
+    EXECUTE format( 'SELECT EXISTS( SELECT * FROM hive.%I LIMIT 1 )', __shadow_table_name ) INTO __shadow_table_is_not_empty;
+
+    IF __shadow_table_is_not_empty = TRUE THEN
+        RAISE EXCEPTION 'Cannot detach a table %.%. Shadow table hive.% is not empty', _table_schema, _table_name, __shadow_table_name;
     END IF;
 
     -- remove triggers
     FOR  __trigger_name IN SELECT ht.trigger_name FROM hive.triggers ht
     WHERE ht.registered_table_id = __table_id
     LOOP
-        EXECUTE format( 'DROP TRIGGER %I ON hive.%I', __trigger_name, _table_name );
+        EXECUTE format( 'DROP TRIGGER %I ON %s.%s', __trigger_name, _table_schema, _table_name );
     END LOOP;
 
-    PERFORM hive_clean_after_uregister_table( _table_name );
-
+    UPDATE hive.registered_tables SET is_attached = FALSE WHERE id = __table_id;
     RETURN;
 END;
 $BODY$

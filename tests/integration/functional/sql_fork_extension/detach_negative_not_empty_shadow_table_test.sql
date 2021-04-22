@@ -6,9 +6,10 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    DROP TABLE IF EXISTS table1;
     PERFORM hive.create_context( 'context' );
-    CREATE TABLE hive.table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
+    CREATE TABLE table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
+    PERFORM hive_context_next_block( 'context' );
+    INSERT INTO table1( smth, name ) VALUES ( 1, 'abc' );
 END;
 $BODY$
 ;
@@ -22,7 +23,7 @@ AS
 $BODY$
 BEGIN
     BEGIN
-        PERFORM hive.unregister_table( 'notregisteredtable'::TEXT );
+        PERFORM hive.detach_table( 'public', 'table1' );
     EXCEPTION WHEN OTHERS THEN
         RETURN;
     END;
