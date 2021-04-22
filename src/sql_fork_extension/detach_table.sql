@@ -51,7 +51,6 @@ DECLARE
     __table_id INTEGER := NULL;
     __shadow_table_name TEXT;
     __trigger_name TEXT;
-    __trigger_funtion_name TEXT;
     __shadow_table_is_not_empty BOOL := FALSE;
 BEGIN
     SELECT hrt.id, hrt.shadow_table_name
@@ -68,14 +67,45 @@ BEGIN
         RAISE EXCEPTION 'Cannot detach a table %.%. Shadow table hive.% is not empty', _table_schema, _table_name, __shadow_table_name;
     END IF;
 
-    -- remove triggers
-    FOR  __trigger_name IN SELECT ht.trigger_name FROM hive.triggers ht
-    WHERE ht.registered_table_id = __table_id
+    FOR __trigger_name IN SELECT ht.trigger_name FROM hive.triggers ht WHERE ht.registered_table_id = __table_id
     LOOP
-        EXECUTE format( 'DROP TRIGGER %I ON %s.%s', __trigger_name, _table_schema, _table_name );
+        EXECUTE format( 'ALTER TABLE %I.%I DISABLE TRIGGER %I', lower(_table_schema), _table_name, __trigger_name  );
     END LOOP;
 
+
     UPDATE hive.registered_tables SET is_attached = FALSE WHERE id = __table_id;
+    RETURN;
+END;
+$BODY$
+;
+
+DROP FUNCTION IF EXISTS hive.attach_table;
+CREATE FUNCTION hive.attach_table( _table_schema TEXT, _table_name TEXT )
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __table_id INTEGER := NULL;
+    __shadow_table_name TEXT;
+    __trigger_name TEXT;
+BEGIN
+    SELECT hrt.id, hrt.shadow_table_name
+    FROM hive.registered_tables hrt
+    WHERE  hrt.origin_table_schema = lower( _table_schema ) AND hrt.origin_table_name = _table_name INTO __table_id, __shadow_table_name;
+
+    IF __table_id IS NULL THEN
+            RAISE EXCEPTION 'Table %.% is not registered', _table_schema, _table_name;
+    END IF;
+
+    FOR __trigger_name IN SELECT ht.trigger_name FROM hive.triggers ht WHERE ht.registered_table_id = __table_id
+        LOOP
+        EXECUTE format( 'ALTER TABLE %I.%I ENABLE TRIGGER %I', lower(_table_schema), _table_name, __trigger_name  );
+    END LOOP;
+
+
+    UPDATE hive.registered_tables SET is_attached = TRUE WHERE id = __table_id;
     RETURN;
 END;
 $BODY$
