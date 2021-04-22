@@ -21,7 +21,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Third-after-member-post-hive3",
-    "post_id": 1258068,
+    "post_id": 1258080,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -56,7 +56,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Third-after-member-post-hive2",
-    "post_id": 1258067,
+    "post_id": 1258079,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -95,7 +95,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Third-after-member-post-hive1",
-    "post_id": 1258066,
+    "post_id": 1258078,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -130,7 +130,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Second-after-member-post-hive3",
-    "post_id": 1258065,
+    "post_id": 1258077,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -165,7 +165,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Second-after-member-post-hive2",
-    "post_id": 1258064,
+    "post_id": 1258076,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -204,7 +204,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Second-after-member-post-hive1",
-    "post_id": 1258063,
+    "post_id": 1258075,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -239,7 +239,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "First-after-member-post-hive3",
-    "post_id": 1258062,
+    "post_id": 1258074,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -274,7 +274,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "First-after-member-post-hive2",
-    "post_id": 1258061,
+    "post_id": 1258073,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -313,7 +313,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "First-after-member-post-hive1",
-    "post_id": 1258060,
+    "post_id": 1258072,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -352,7 +352,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile03",
-    "post_id": 1258058,
+    "post_id": 1258070,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -392,7 +392,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile02",
-    "post_id": 1258057,
+    "post_id": 1258069,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -432,7 +432,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile01",
-    "post_id": 1258056,
+    "post_id": 1258068,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -467,7 +467,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "spider02",
-    "post_id": 1258055,
+    "post_id": 1258067,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -503,7 +503,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "spider01",
-    "post_id": 1258054,
+    "post_id": 1258066,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -539,7 +539,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "anaconda02",
-    "post_id": 1258053,
+    "post_id": 1258065,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -575,7 +575,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "anaconda01",
-    "post_id": 1258052,
+    "post_id": 1258064,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -588,6 +588,484 @@
     "title": "powerful snake 01",
     "updated": "2016-09-15T19:47:39",
     "url": "/hive-117600/@abit/anaconda01"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 12",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost12",
+    "post_id": 1258061,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 12",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost12"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 11",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost11",
+    "post_id": 1258060,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 11",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost11"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 10",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost10",
+    "post_id": 1258059,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 10",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost10"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 9",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost9",
+    "post_id": 1258058,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 9",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost9"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 8",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost8",
+    "post_id": 1258057,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 8",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost8"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 7",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost7",
+    "post_id": 1258056,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 7",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost7"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 6",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost6",
+    "post_id": 1258055,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 6",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost6"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 5",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost5",
+    "post_id": 1258054,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 5",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost5"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 4",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost4",
+    "post_id": 1258053,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 4",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost4"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 3",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost3",
+    "post_id": 1258052,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": true,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 3",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost3"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 2",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost2",
+    "post_id": 1258051,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 0
+    },
+    "title": "Pinpost 2",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost2"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 1",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost1",
+    "post_id": 1258050,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 0
+    },
+    "title": "Pinpost 1",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost1"
   },
   {
     "active_votes": [],
@@ -660,7 +1138,7 @@
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
-      "gray": true,
+      "gray": false,
       "hide": false,
       "total_votes": 0
     },
@@ -1249,7 +1727,7 @@
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
-      "gray": false,
+      "gray": true,
       "hide": false,
       "total_votes": 0
     },
@@ -1432,7 +1910,7 @@
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
-      "gray": false,
+      "gray": true,
       "hide": false,
       "total_votes": 0
     },
@@ -1506,7 +1984,7 @@
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
-      "gray": false,
+      "gray": true,
       "hide": false,
       "total_votes": 0
     },
@@ -1623,7 +2101,7 @@
     "active_votes": [],
     "author": "test-safari",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": 36.03,
     "beneficiaries": [],
     "blacklists": [],
     "body": "Comment my posts in this community.03",
@@ -1693,7 +2171,7 @@
     "active_votes": [],
     "author": "test-safari",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": 50.73,
     "beneficiaries": [],
     "blacklists": [],
     "body": "Comment my posts in this community.01",
@@ -1767,7 +2245,7 @@
     "active_votes": [],
     "author": "test-safari",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
+    "author_reputation": 52.99,
     "beneficiaries": [],
     "blacklists": [],
     "body": "testing muted people in community",
@@ -3654,21 +4132,69 @@
         "voter": "dealzgal"
       },
       {
-        "rshares": 64921864,
-        "voter": "storage"
+        "rshares": 3146097649,
+        "voter": "pgarcgo"
       },
       {
-        "rshares": 55388665,
-        "voter": "blackmarket"
+        "rshares": 1112699443,
+        "voter": "future24"
       },
       {
-        "rshares": 58454327,
-        "voter": "gifts"
+        "rshares": 172646222,
+        "voter": "sammie"
       },
       {
-        "rshares": 93882016,
-        "voter": "expat"
-      },
+        "rshares": 53389583,
+        "voter": "ppan08162016"
+      }
+    ],
+    "author": "betamusic",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 56.92,
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "<html><img src=\"https://www.steemimg.com/images/2016/09/15/IMG_20160815_183305b7ce3.jpg\" alt=\"IMG_20160815_183305b7ce3.jpg\" border=\"0\">\n<p>Hello dear steemians, as they have been, on this occasion I'm going to present to each of the dogs, which thanks to our Steemit community, I'm feeding in Venezuela. I will begin with the story of a dog that has moved me, and in my next post, I'll be telling the story of each one of the 24 dogs that we are protecting and feeding thanks to steemit.</p><img src=\"https://www.steemimg.com/images/2016/09/15/animalrescue34001a.jpg\" alt=\"animalrescue34001a.jpg\" border=\"0\">\n<p>She is Dana, one of the dogs, who lives in the Street 3 of my neighborhood, I've been feeding it for more than 2 months, I have no exact date of when I started, but she was the first dog that I an incentive to start this work in my neighborhood, their State of malnutrition was worrying.</p>\n<p>I do not understand as there are people who are unable to leave unless the excess food to the dog who lives on the street, there is street dogs in my neighborhood and among all the neighbors we feed them, with the remains or even let them a full plate of food, it was not necessary to include them to the campaign because we keep them in good shape even sleep on the porch of a House you could say that they adopted them.</p>\n\n<p>With Dana, things have been different, I know the neighbor who took her out the street, told me that they took it from the House of to neighbor in January because she could no longer have it, and adopted it, as it grew became ill apparently of parasitosis since he vomited all what ate, apart gave scabies. The dog already more big came out of the House and my neighbour had that go it to search 4 times, until is was to another city to live by to time and not could return be pending of she.</p>\n<img src=\"https://www.steemimg.com/images/2016/09/15/IMG_20160816_1803333cf0d.jpg\" alt=\"IMG_20160816_1803333cf0d.jpg\" border=\"0\">\n<p>Dana was on the street and not brought it over to his house. The neighbor says \"the dog was getting sick at my house, there is a disease on the walls all dog that dies, gives you diarrhea three days and dies, my mom not could take care of it more, we leave on the street there is better and healthier at home\" I have checked that my neighbor is right every dog that arrives at your House becomes ill and dies if it is puppy , hypothesize that in your House inhabits the bacterium Parvovirus, is sad this situation but equal not so justify.</p>\n<p>This dog is you calculates just a year has a personality cheerful and grateful whenever me sees me salutes with much sweetheart moves its tail and its love is incomparable, can accompany me by all the urban when go, is a faithful companion, is a dog very charismatic and tender. Makes 3 days entered in zeal by them calculations this would be its first zeal, it worrying is that there are several dogs that it have mounted and of have a delivery would be very risky, by the situation of disease and malnutrition of which is leaving, apart that would be other litter more than puppies that would enter to the situation of street.</p>\n<img src=\"https://www.steemimg.com/images/2016/09/15/IMG_20160912_173902731c2.jpg\" alt=\"IMG_20160912_173902731c2.jpg\" border=\"0\">\n<p>All the funds raised in this post will be dedicated to their sterilization and to their treatment. Support us with your UPVOTE will be Save life to Dana. Dona, vote, disseminates, help as can, this dog you it will thank, adopt and know his godfather.</p>\n<p><br></p>\n</html>\nVERSI\u00d3N EN ESPA\u00d1OL\n\n<img src=\"https://www.steemimg.com/images/2016/09/15/IMG_20160815_183305b7ce3.jpg\" alt=\"IMG_20160815_183305b7ce3.jpg\" border=\"0\">\n\nHola estimados steemians, como  han estado, en esta ocasi\u00f3n voy a presentar a cada uno de los perros, que gracias a nuestra comunidad de Steemit, estoy alimentando en Venezuela. Voy a comenzar con la historia de una perrita que me ha conmovido, y en mis pr\u00f3ximos post, les voy contando la historia de cada uno de los 24 perros que estamos protegiendo y alimentando gracias a steemit\n\n<img src=\"https://www.steemimg.com/images/2016/09/15/animalrescue34001a.jpg\" alt=\"animalrescue34001a.jpg\" border=\"0\">\n\nElla es Dana una de las perras que habita en la carrera 3 de mi vecindario la he estado alimentando desde hace m\u00e1s de 2 meses, no tengo fecha exacta de cuando comenc\u00e9 pero ella fue la primera perra que me incentivo a comenzar esta labor en mi vecindario, su estado de desnutrici\u00f3n me estaba afectando.\n\nNo entiendo como hay gente que es incapaz de dejarle al menos los sobros de la comida al perro que vive en la calle, en mi cuadra hay perros de la calle y entre todos los vecinos los alimentamos con comida de sal, con los restos o incluso les dejamos un plato completo de comida, no fue necesario incluirlos a la campa\u00f1a de alimentaci\u00f3n porque los mantenemos en buena forma incluso duermen en el porche de alguna casas, se podr\u00eda decir que los adoptaron.\n\nCon Dana las cosas han sido distintas, conozco incluso al vecino que la sac\u00f3 a la calle, me cont\u00f3 que la sacaron de la casa  de una vecina en enero porque ella ya no pod\u00eda tenerla y la adoptaron, a medida que fue creciendo se enferm\u00f3 al parecer de parasitosis ya que vomitaba todo lo que com\u00eda, aparte le dio sarna. La perrita ya m\u00e1s crecidita sal\u00eda de la casa y se iba a la de los vecinos y mi vecino tuvo que irla a buscar 4 veces, hasta que se fue a otra ciudad a vivir por un tiempo y no pudo volver estar pendiente de ella.\n\n<img src=\"https://www.steemimg.com/images/2016/09/15/IMG_20160816_1803333cf0d.jpg\" alt=\"IMG_20160816_1803333cf0d.jpg\" border=\"0\">\n\nDana qued\u00f3 en la calle y no la trajeron m\u00e1s a su casa. El vecino dice \u201cLa perra se estaba enfermando en mi casa, hay una enfermedad en las paredes que todo perro que llega se muere, le da diarrea tres d\u00edas y muere, mi mam\u00e1 no pod\u00eda cuidarla m\u00e1s, la dejamos en la calle ah\u00ed est\u00e1 mejor y m\u00e1s sana que en mi casa\u201d he comprobado que mi vecino tiene raz\u00f3n todo perro que llega a su casa se enferma y muere si es cachorro, presumimos que en su casa habita la bacteria Parvovirus, es triste esta situaci\u00f3n pero igual no lo justifico.\n\nEsta perrita se le calcula apenas un a\u00f1o tiene una personalidad alegre y agradecida siempre que me ve me saluda con mucho cari\u00f1o mueve su cola y su amor es incomparable, puede acompa\u00f1arme por toda la urbanizaci\u00f3n cuando salgo, es una fiel compa\u00f1era, de lo que se perdieron sus due\u00f1os, es una perra muy carism\u00e1tica y tierna.. Hace 3 d\u00edas entr\u00f3 en celo por los c\u00e1lculos, este ser\u00eda su primer celo, lo preocupante es que hay varios perros que la  han montado y de tener un parto ser\u00eda muy arriesgado, por la situaci\u00f3n de enfermedad y desnutrici\u00f3n en la que est\u00e1, aparte que ser\u00eda otra camada m\u00e1s cachorros que entrar\u00edan a la situaci\u00f3n de calle.\n\n<img src=\"https://www.steemimg.com/images/2016/09/15/IMG_20160912_173902731c2.jpg\" alt=\"IMG_20160912_173902731c2.jpg\" border=\"0\">\n\nTodos los fondos recaudados en este post se dedicar\u00e1n a su esterilizaci\u00f3n y su tratamiento. Ayude con tu UPVOTE salvandole la vida a Dana. Dona, vota, difunde, ayuda como puedas, Dana te lo agradecer\u00e1, adoptala y s\u00e9 su padrino.",
+    "category": "animalrescue",
+    "children": 0,
+    "created": "2016-09-15T19:25:06",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {
+      "image": [
+        "https://www.steemimg.com/images/2016/09/15/IMG_20160815_183305b7ce3.jpg",
+        "https://www.steemimg.com/images/2016/09/15/animalrescue34001a.jpg",
+        "https://www.steemimg.com/images/2016/09/15/IMG_20160816_1803333cf0d.jpg",
+        "https://www.steemimg.com/images/2016/09/15/IMG_20160912_173902731c2.jpg"
+      ],
+      "tags": [
+        "animalrescue",
+        "spanish",
+        ""
+      ]
+    },
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 46225814915,
+    "payout": 0.01,
+    "payout_at": "2016-09-22T19:25:06",
+    "pending_payout_value": "0.010 HBD",
+    "percent_hbd": 10000,
+    "permlink": "the-history-of-danna-a-dog-abandoned-saved-by-steemit",
+    "post_id": 1257723,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "total_votes": 7
+    },
+    "title": "The history of Danna a dog abandoned saved by Steemit",
+    "updated": "2016-09-15T19:25:06",
+    "url": "/animalrescue/@betamusic/the-history-of-danna-a-dog-abandoned-saved-by-steemit"
+  },
+  {
+    "active_votes": [
       {
         "rshares": 188217107,
         "voter": "techslut"
@@ -3955,6 +4481,7 @@
         "http://imgur.com/FU1u3Aa.jpg",
         "http://imgur.com/UIw3ArK.jpg"
       ],
+      "links": [],
       "tags": [
         "avatar",
         "signature",
@@ -5066,939 +5593,5 @@
     "title": "The history of Danna a dog abandoned saved by Steemit",
     "updated": "2016-09-15T19:25:06",
     "url": "/animalrescue/@betamusic/the-history-of-danna-a-dog-abandoned-saved-by-steemit"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 150215761,
-        "voter": "nbofill"
-      }
-    ],
-    "author": "nbofill",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<html>\n<p>Don\u2019t cry because it\u2019s over. Smile because it happened.&nbsp;</p>\n</html>",
-    "category": "frase",
-    "children": 0,
-    "created": "2016-09-15T19:23:48",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "tags": [
-        "frase",
-        "life",
-        "positive",
-        "news",
-        "good"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 150215761,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:23:48",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "3tfbln",
-    "post_id": 1257711,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 1
-    },
-    "title": ":)",
-    "updated": "2016-09-15T19:23:48",
-    "url": "/frase/@nbofill/3tfbln"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 6450217562,
-        "voter": "feline1991"
-      },
-      {
-        "rshares": 1112699443,
-        "voter": "future24"
-      },
-      {
-        "rshares": 3994865163,
-        "voter": "zaitsevalesyaa"
-      }
-    ],
-    "author": "feline1991",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 55.63,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<html>\n<p><strong>Memoir of a runaway girl - A true story!</strong></p>\n<p><img src=\"https://s16.postimg.org/und8f4oet/stock_illustration_2013520_hitchhiker_girl.jpg\" width=\"190\" height=\"146\"/></p>\n<p>&nbsp;There, on the floor, was Ann naked and on her knees. I will not get into details of what they did to her because it was horrifying to say the least. I closed my eyes and tears were just streaming down my cheeks. They kept saying \u201c<strong>Open your eyes and watch, because you\u2019re next</strong>\u201d. &nbsp;</p>\n<p><img src=\"https://s9.postimg.org/bw4vrm7tr/bound_and_gagged.jpg\" width=\"289\" height=\"320\"/></p>\n<p>After about twenty minutes or so, which felt like a full day to me, they threw me back into the room and I panicked. I worked feverishly on that window trying to open it. I was aware that the only way I was going to escape this horror was to jump out of that window but it had to be done without breaking it. &nbsp;If I broke the window, they\u2019d surely hear me. &nbsp;&nbsp;&nbsp;</p>\n<p>On the dresser was an old metal comb that I used to pry the nails up. This method worked, it allowed me to loosen the nails and wiggle them back and forth until they could be pulled out by hand. Luckily there were only three nails or I would have never been able to get that window open. &nbsp;&nbsp;&nbsp;</p>\n<p>I jumped out of the window and ran bare foot without looking back once. I ran through ditches along the highway, knowing that if they were out looking for me I needed to stay low. This was no easy task since I had no shoes on, but my life depended on my getting away as quickly as I could. Eventually I made my way to the road, stuck my thumb out, luckily I was picked up pretty fast. &nbsp;&nbsp;&nbsp;</p>\n<p>When we got into town I asked them to take me to my friend Theresa\u2019s house, I knew she would have a change of clothes and shoes for me. After changing and getting cleaned up I had no idea what I was going to do, because I knew they would be out looking for me. They obviously found Ann, and it was a matter of time before they found me again. &nbsp;&nbsp;</p>\n<p>I ended up calling an old boyfriend, Frank, and asked if he could take me to Edmonton and he agreed. &nbsp;&nbsp;&nbsp;A valuable lesson was learned, when parents tell you something is bad, or should be avoided, it is usually for good reason. I should have listened. When you are young, you think you know everything and will do what you want without thinking about the possible consequences.&nbsp;</p>\n<p><img src=\"https://s17.postimg.org/7c73d0mbz/overflowing_suitcase.jpg\" width=\"300\" height=\"220\"/>&nbsp;&nbsp;&nbsp;</p>\n<p>I had only one small suitcase with some clothes my girlfriend gave me. Frank came and got me and we drove five hours to Edmonton. Once there I went back to the area where I knew people. &nbsp;&nbsp;</p>\n<p>This was when I met Miguel. &nbsp;&nbsp;&nbsp;</p>\n<p>Miguel was Portuguese and tanned and seemed like such a nice guy. I liked him instantly, I thought we would end up as great friends, but as it turned out, he ended up being my boyfriend. &nbsp;&nbsp;&nbsp;</p>\n<p>Miguel introduced his sister in law Doris to me. Quickly I ended up moving in with her as a roommate. Now this was already a disturbing time in my life and it wasn't about to get any better. &nbsp;&nbsp;A friendship from hell was born, and I will explain why. &nbsp;Doris was married with a child, living separate from her husband and daughter, because she could not control her hormones and had many affairs. &nbsp;She wore mostly mens clothing that were all too baggy for her. Her hair was long and blond and she stood maybe four inches taller then me. &nbsp;&nbsp;&nbsp;&nbsp;</p>\n<p>She told me the story as to why she was living away from her child. She and Miguel were at Doris\u2019s home one day, while her husband was at work. One thing led to another and the two of them ended up in bed together. Her husband, Terry, came home, and found the front door was double locked and he could not get into the apartment. She refused to let him in. Her daughter was in the crib crying with all of the commotion.&nbsp;</p>\n<p><img src=\"https://s18.postimg.org/6egwz52ih/cryingbaby.jpg\" width=\"170\" height=\"136\"/></p>\n<p>Her husband went back to his car and waited in the parking lot before trying again. &nbsp;In a hurry to get out before &nbsp;Terry came back, Doris and Miguel packed up a bag, and both of them had left the apartment leaving the crying toddler behind, unattended. &nbsp;Several hours passed, and Terry figured he\u2019d try again. As soon as he reached the apartment door, he could hear his daughter wailing. He was luckily able to get into the apartment this time and he ran to pick up his sobbing daughter and carried her around looking for his wife. She was nowhere to be found.&nbsp;</p>\n<p>Thank &nbsp;you for your support and continued reading.</p>\n<p>If you missed the beginning of my book you can find it here:</p>\n<p><a href=\"https://steemit.com/writing/@feline1991/a-steemit-original-a-lifetime-of-seeking-happiness-part-1\">https://steemit.com/writing/@feline1991/a-steemit-original-a-lifetime-of-seeking-happiness-part-1</a> &nbsp;</p>\n</html>",
-    "category": "writing",
-    "children": 0,
-    "created": "2016-09-15T19:22:27",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://s16.postimg.org/und8f4oet/stock_illustration_2013520_hitchhiker_girl.jpg",
-        "https://s9.postimg.org/bw4vrm7tr/bound_and_gagged.jpg",
-        "https://s17.postimg.org/7c73d0mbz/overflowing_suitcase.jpg",
-        "https://s18.postimg.org/6egwz52ih/cryingbaby.jpg"
-      ],
-      "links": [
-        "https://steemit.com/writing/@feline1991/a-steemit-original-a-lifetime-of-seeking-happiness-part-1"
-      ],
-      "tags": [
-        "writing",
-        "story",
-        "life",
-        "seekinghappiness"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 11557782168,
-    "payout": 0.002,
-    "payout_at": "2016-09-22T19:22:27",
-    "pending_payout_value": "0.002 HBD",
-    "percent_hbd": 10000,
-    "permlink": "a-steemit-original-a-lifetime-of-seeking-happiness-chapter-2-part-3",
-    "post_id": 1257692,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 3
-    },
-    "title": "A Steemit Original - A Lifetime of Seeking Happiness - Chapter 2 - Part 3",
-    "updated": "2016-09-15T19:22:27",
-    "url": "/writing/@feline1991/a-steemit-original-a-lifetime-of-seeking-happiness-chapter-2-part-3"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 150216797,
-        "voter": "helazocrack"
-      }
-    ],
-    "author": "helazocrack",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": " ![image](https://res.cloudinary.com/esteem/image/upload/v1473967237/image_mbzhso.jpg)",
-    "category": "dog",
-    "children": 0,
-    "created": "2016-09-15T19:20:48",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://res.cloudinary.com/esteem/image/upload/v1473967237/image_mbzhso.jpg"
-      ],
-      "links": [],
-      "tags": [
-        "dog"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 150216797,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:20:48",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "nothing-more-beautiful-than-the-eyes-of-a-dog-in-looking-for-family-2016915t145045881z",
-    "post_id": 1257679,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 1
-    },
-    "title": "Nothing more beautiful than the eyes of a dog. #In Looking for Family",
-    "updated": "2016-09-15T19:20:48",
-    "url": "/dog/@helazocrack/nothing-more-beautiful-than-the-eyes-of-a-dog-in-looking-for-family-2016915t145045881z"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 1517204931,
-        "voter": "anwar78"
-      },
-      {
-        "rshares": 239669638,
-        "voter": "valeri"
-      }
-    ],
-    "author": "anwar78",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 32.16,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "https://youtu.be/ibO_fxeBltQ",
-    "category": "steemit",
-    "children": 0,
-    "created": "2016-09-15T19:18:51",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://img.youtube.com/vi/ibO_fxeBltQ/0.jpg"
-      ],
-      "links": [
-        "https://youtu.be/ibO_fxeBltQ"
-      ],
-      "tags": [
-        "steemit",
-        "nwo",
-        "politics",
-        "illuminati",
-        "life"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 1756874569,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:18:51",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "the-protocols-of-the-learned-elders-of-zion",
-    "post_id": 1257665,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 2
-    },
-    "title": "The protocols of the learned elders of Zion",
-    "updated": "2016-09-15T19:18:51",
-    "url": "/steemit/@anwar78/the-protocols-of-the-learned-elders-of-zion"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 832935638,
-        "voter": "jbaker585"
-      },
-      {
-        "rshares": 153397644,
-        "voter": "milank"
-      }
-    ],
-    "author": "milank",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "Project Ara is pronounced dead by Google's ATAP division earlyer this month.\nThat's sad news but it also makes room for a product that is like the Ara project but then not a phone, but accessoire for your phone, so every phone.\n\n![Nexpaq](https://nexpaq.com/wp-content/uploads/2015/09/baner_v4.jpg)\n\n\n*[Nexpaq](http://nexpaq.com)* is a modular phone case that is currently available for Iphone 5 and 6(plus), Samsung galaxy S6, S6 Edge series and more phones to come.\nIf your phone is not (yet) compattible but you really wat the product, then they have made an \"external battery\" type of product with the same capabilities *Batpaq*.\nboth the phonecase and the Batpaq gives your phone the ability to adapt to your lifestyle with extra hardware.\n\n*Nexpaq* is a phone case with 6 module slots and you can put any combination of modules on the case to extend the usability of your smartphone.\nWe all know the struggle of to little storage for example, or even too little battery power to last the entire day.\nThan brace yourself for *Nexpaq*, it standard packs a 1000 mAh external battery in the case. But if that still isnt enough you can allwasy add 2 extra battery modules, or 1  and 3 other modules *depending on what module you want to add*.\n\nThere are 12 modules available at this moment but there are more to come, there is word that there is going to be a module to communicate without the need of a GSM connection.\n\nI could go on and on about this amazing product but sadly enough we have to wait until Q1 of 2017 before it will actually ship and until that time I will keep watching the news about *Nexpaq*\n\nFor more information go to *Nexpaq* and see what you would like them to add as a module, the're looking for some input!\n**[Nexpaq.com](http://nexpaq.com)**",
-    "category": "nexpaq",
-    "children": 0,
-    "created": "2016-09-15T19:18:42",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://nexpaq.com/wp-content/uploads/2015/09/baner_v4.jpg"
-      ],
-      "links": [
-        "http://nexpaq.com"
-      ],
-      "tags": [
-        "nexpaq",
-        "ara",
-        "google",
-        "phone",
-        "modular"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 986333282,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:18:42",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 0,
-    "permlink": "nexpaq-the-new-project-ara-for-every-phone",
-    "post_id": 1257664,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 2
-    },
-    "title": "Nexpaq the new Project Ara for every phone",
-    "updated": "2016-09-15T19:18:42",
-    "url": "/nexpaq/@milank/nexpaq-the-new-project-ara-for-every-phone"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 7946872448,
-        "voter": "smolalit"
-      },
-      {
-        "rshares": 1855374869,
-        "voter": "alex2016"
-      },
-      {
-        "rshares": 118331751,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 832935638,
-        "voter": "jbaker585"
-      }
-    ],
-    "author": "alex2016",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 54.62,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<b>I want to tell as we have held another photoshoot where we have tried to sustain black-and-white style of photos.</b>\n<hr color>\n\nYesterday the girl has called me and has asked whether I can finish shooting a photoshoot in some style? What has come to my mind, it to take pictures in black-and-white option as it was in early 70-80 years when the photo has only arisen.\n\nThe place for shootings have chosen the central park. Weather was cool. Have agreed about a meeting. At first the girl hesitated, and it has turned out on a shot here so\n<center>\nhttps://pp.vk.me/c836320/v836320641/185/NYRpq9qzo9w.jpg\n</center>\n<center>\nhttps://pp.vk.me/c836320/v836320641/169/iPi41rP501o.jpg\n</center>\nAfter we have spent more than 30 minutes of shootings, the girl was liberated, and has begun to work actively.\n<center>\nhttps://pp.vk.me/c836320/v836320641/17e/eU5naYLtgEw.jpg\n<br>\nhttps://pp.vk.me/c836320/v836320641/177/XNZ-jrBAvOA.jpg\n</center>\n\nGood impressions remained with me and my model. She has received photos, I have got experience. The camera I used Nikon D3100 with a lens of 55-200 mm.\n<center>\nhttps://pp.vk.me/c836320/v836320641/170/hM7NQWYiPYQ.jpg\n<center>\nhttps://pp.vk.me/c836320/v836320641/162/Qy1iCE7yhWs.jpg\n</center>\n</center>\nEstimate my article, all thanks!\n<center>https://pp.vk.me/c836320/v836320641/143/qUzy2zppzaQ.jpg\nhttps://pp.vk.me/c836320/v836320641/13c/9wEdFLSFETs.jpg\n</center>\n<hr no shade>",
-    "category": "photography",
-    "children": 3,
-    "created": "2016-09-15T19:18:21",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://pp.vk.me/c836320/v836320641/185/NYRpq9qzo9w.jpg",
-        "https://pp.vk.me/c836320/v836320641/169/iPi41rP501o.jpg",
-        "https://pp.vk.me/c836320/v836320641/17e/eU5naYLtgEw.jpg",
-        "https://pp.vk.me/c836320/v836320641/177/XNZ-jrBAvOA.jpg",
-        "https://pp.vk.me/c836320/v836320641/170/hM7NQWYiPYQ.jpg",
-        "https://pp.vk.me/c836320/v836320641/162/Qy1iCE7yhWs.jpg",
-        "https://pp.vk.me/c836320/v836320641/143/qUzy2zppzaQ.jpg"
-      ],
-      "tags": [
-        "photography",
-        "art",
-        "photo",
-        "blog",
-        "life"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 10753514706,
-    "payout": 0.002,
-    "payout_at": "2016-09-22T19:18:21",
-    "pending_payout_value": "0.002 HBD",
-    "percent_hbd": 10000,
-    "permlink": "as-we-have-held-photoshoots-in-black-and-white-colors",
-    "post_id": 1257661,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 4
-    },
-    "title": "As we have held photoshoots in black-and-white colors",
-    "updated": "2016-09-15T19:18:21",
-    "url": "/photography/@alex2016/as-we-have-held-photoshoots-in-black-and-white-colors"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 234970233,
-        "voter": "valeri"
-      },
-      {
-        "rshares": 56527396,
-        "voter": "blahblahblah"
-      },
-      {
-        "rshares": 153220076,
-        "voter": "nbofill"
-      }
-    ],
-    "author": "nbofill",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 25.0,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<html>\n<p><img src=\"https://s12.postimg.org/ry5ny36vh/image.jpg\" width=\"1191\" height=\"800\"/></p>\n</html>",
-    "category": "life",
-    "children": 0,
-    "created": "2016-09-15T19:18:18",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://s12.postimg.org/ry5ny36vh/image.jpg"
-      ],
-      "tags": [
-        "life",
-        "steemit",
-        "art",
-        "food",
-        "photography"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 444717705,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:18:18",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 0,
-    "permlink": "girl",
-    "post_id": 1257659,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 3
-    },
-    "title": "girl",
-    "updated": "2016-09-15T19:18:18",
-    "url": "/life/@nbofill/girl"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 138002890,
-        "voter": "charlie.wilson"
-      },
-      {
-        "rshares": 133590030,
-        "voter": "thedevil"
-      }
-    ],
-    "author": "charlie.wilson",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 26.53,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "Is this who you are voting for? Please re-think your life if you still want to vote for Hillary Clinton this election after this video... A man got himself killed to bring you this information. Please do your research before blindly voting on a candidate. There used to be a time when no one would even consider a person for president if there was this much evidence (or PROOF) of  FELONY! Now we live in a time where she can get away without any charges?? The FBI already admitted what she has done was illegal. Courtesy of David Seaman. \n\nhttps://www.youtube.com/watch?v=qD7Q5sa_xHo",
-    "category": "hillary",
-    "children": 1,
-    "created": "2016-09-15T19:18:18",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://img.youtube.com/vi/qD7Q5sa_xHo/0.jpg"
-      ],
-      "links": [
-        "https://www.youtube.com/watch?v=qD7Q5sa_xHo"
-      ],
-      "tags": [
-        "hillary",
-        "clinton",
-        "clintonforprison",
-        "elections",
-        "davidseaman"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 271592920,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:18:18",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "hillary-clinton-s-schemes-leaked-man-is-killed-for-leaking-incriminating-proof-to-the-public",
-    "post_id": 1257658,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 2
-    },
-    "title": "Hillary Clinton's SCHEMES leaked-- man is KILLED for leaking incriminating proof to the public.",
-    "updated": "2016-09-15T19:18:18",
-    "url": "/hillary/@charlie.wilson/hillary-clinton-s-schemes-leaked-man-is-killed-for-leaking-incriminating-proof-to-the-public"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 13342307926,
-        "voter": "valtr"
-      },
-      {
-        "rshares": 503970587,
-        "voter": "fkn"
-      },
-      {
-        "rshares": 662437860,
-        "voter": "elishagh1"
-      },
-      {
-        "rshares": 313710480,
-        "voter": "coar"
-      },
-      {
-        "rshares": 1061309796,
-        "voter": "murh"
-      },
-      {
-        "rshares": 87300558689,
-        "voter": "herzmeister"
-      },
-      {
-        "rshares": 5342866379,
-        "voter": "kimziv"
-      },
-      {
-        "rshares": 2460297505,
-        "voter": "furion"
-      },
-      {
-        "rshares": 116544591,
-        "voter": "poseidon"
-      },
-      {
-        "rshares": 408706835,
-        "voter": "positive"
-      },
-      {
-        "rshares": 902920974,
-        "voter": "sisterholics"
-      },
-      {
-        "rshares": 10419645487,
-        "voter": "dumar022"
-      },
-      {
-        "rshares": 31930537676,
-        "voter": "laonie"
-      },
-      {
-        "rshares": 1332539475,
-        "voter": "myfirst"
-      },
-      {
-        "rshares": 6481343102,
-        "voter": "somebody"
-      },
-      {
-        "rshares": 242331170,
-        "voter": "flysaga"
-      },
-      {
-        "rshares": 1431774250,
-        "voter": "midnightoil"
-      },
-      {
-        "rshares": 3581211307,
-        "voter": "xiaohui"
-      },
-      {
-        "rshares": 161721174,
-        "voter": "elfkitchen"
-      },
-      {
-        "rshares": 111957361,
-        "voter": "xiaokongcom"
-      },
-      {
-        "rshares": 1112699443,
-        "voter": "future24"
-      },
-      {
-        "rshares": 225687011,
-        "voter": "xianjun"
-      },
-      {
-        "rshares": 4633082667,
-        "voter": "steemitpatina"
-      },
-      {
-        "rshares": 11479766873,
-        "voter": "daveks"
-      },
-      {
-        "rshares": 118331751,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 832935638,
-        "voter": "jbaker585"
-      },
-      {
-        "rshares": 3994865163,
-        "voter": "zaitsevalesyaa"
-      }
-    ],
-    "author": "herzmeister",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 59.75,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "Even when you don't feel like swimming you can take a hike up a little mountain through a forest towards a Kloster Andechs, a popular monastery and Biergarten.    \n    \n[![ammersee-forest-a1e9a4.md.jpg](https://www.steemimg.com/images/2016/09/15/ammersee-forest-a1e9a4.md.jpg)](https://www.steemimg.com/images/2016/09/15/ammersee-forest-a1e9a4.jpg)\n\n[![ammersee-forest-b0c3ce.md.jpg](https://www.steemimg.com/images/2016/09/15/ammersee-forest-b0c3ce.md.jpg)](https://www.steemimg.com/images/2016/09/15/ammersee-forest-b0c3ce.jpg)\n\n[![ammersee-forest-cf546d.md.jpg](https://www.steemimg.com/images/2016/09/15/ammersee-forest-cf546d.md.jpg)](https://www.steemimg.com/images/2016/09/15/ammersee-forest-cf546d.jpg)\n\n[![ammersee-forest-dd2d5d.md.jpg](https://www.steemimg.com/images/2016/09/15/ammersee-forest-dd2d5d.md.jpg)](https://www.steemimg.com/images/2016/09/15/ammersee-forest-dd2d5d.jpg)\n\n[![ammersee-forest-ef71cc.md.jpg](https://www.steemimg.com/images/2016/09/15/ammersee-forest-ef71cc.md.jpg)](https://www.steemimg.com/images/2016/09/15/ammersee-forest-ef71cc.jpg)\n\n(For full size, right-click a photo and choose to open the link(!) in a new tab or window.)\n\nAll photos shot by me with a simple phone cam (LG-G4). No special equipment. CC-BY-SA.",
-    "category": "photography",
-    "children": 1,
-    "created": "2016-09-15T19:17:51",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://www.steemimg.com/images/2016/09/15/ammersee-forest-a1e9a4.md.jpg",
-        "https://www.steemimg.com/images/2016/09/15/ammersee-forest-b0c3ce.md.jpg",
-        "https://www.steemimg.com/images/2016/09/15/ammersee-forest-cf546d.md.jpg",
-        "https://www.steemimg.com/images/2016/09/15/ammersee-forest-dd2d5d.md.jpg",
-        "https://www.steemimg.com/images/2016/09/15/ammersee-forest-ef71cc.md.jpg"
-      ],
-      "links": [
-        "https://www.steemimg.com/images/2016/09/15/ammersee-forest-a1e9a4.jpg",
-        "https://www.steemimg.com/images/2016/09/15/ammersee-forest-b0c3ce.jpg",
-        "https://www.steemimg.com/images/2016/09/15/ammersee-forest-cf546d.jpg",
-        "https://www.steemimg.com/images/2016/09/15/ammersee-forest-dd2d5d.jpg",
-        "https://www.steemimg.com/images/2016/09/15/ammersee-forest-ef71cc.jpg"
-      ],
-      "tags": [
-        "photography",
-        "nature",
-        "forest",
-        "trees",
-        "sun"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 190506061170,
-    "payout": 0.043,
-    "payout_at": "2016-09-22T19:17:51",
-    "pending_payout_value": "0.043 HBD",
-    "percent_hbd": 10000,
-    "permlink": "forest-at-the-ammersee",
-    "post_id": 1257656,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 27
-    },
-    "title": "Forest at the Ammersee",
-    "updated": "2016-09-15T19:17:51",
-    "url": "/photography/@herzmeister/forest-at-the-ammersee"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 9575441168,
-        "voter": "fkn"
-      },
-      {
-        "rshares": 12586319352,
-        "voter": "elishagh1"
-      },
-      {
-        "rshares": 313710480,
-        "voter": "coar"
-      },
-      {
-        "rshares": 1061309796,
-        "voter": "murh"
-      },
-      {
-        "rshares": 80142995693,
-        "voter": "kimziv"
-      },
-      {
-        "rshares": 46745652607,
-        "voter": "furion"
-      },
-      {
-        "rshares": 224272494,
-        "voter": "barbara2"
-      },
-      {
-        "rshares": 249275987,
-        "voter": "ch0c0latechip"
-      },
-      {
-        "rshares": 230707321,
-        "voter": "doge4lyf"
-      },
-      {
-        "rshares": 1748168870,
-        "voter": "poseidon"
-      },
-      {
-        "rshares": 7765429875,
-        "voter": "positive"
-      },
-      {
-        "rshares": 13543814621,
-        "voter": "sisterholics"
-      },
-      {
-        "rshares": 261456368,
-        "voter": "fnait"
-      },
-      {
-        "rshares": 232278247,
-        "voter": "keepcalmand"
-      },
-      {
-        "rshares": 478958065154,
-        "voter": "laonie"
-      },
-      {
-        "rshares": 15990473701,
-        "voter": "myfirst"
-      },
-      {
-        "rshares": 97220146544,
-        "voter": "somebody"
-      },
-      {
-        "rshares": 3634967560,
-        "voter": "flysaga"
-      },
-      {
-        "rshares": 21476613753,
-        "voter": "midnightoil"
-      },
-      {
-        "rshares": 53718169615,
-        "voter": "xiaohui"
-      },
-      {
-        "rshares": 2587538789,
-        "voter": "elfkitchen"
-      },
-      {
-        "rshares": 1679360423,
-        "voter": "xiaokongcom"
-      },
-      {
-        "rshares": 1112699443,
-        "voter": "future24"
-      },
-      {
-        "rshares": 3385305165,
-        "voter": "xianjun"
-      },
-      {
-        "rshares": 221670623,
-        "voter": "microluck"
-      },
-      {
-        "rshares": 7989270301,
-        "voter": "karisa"
-      },
-      {
-        "rshares": 61478828,
-        "voter": "bonapetit"
-      },
-      {
-        "rshares": 109229309,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 136316357,
-        "voter": "thedevil"
-      }
-    ],
-    "author": "karisa",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 58.57,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "Hello Steemit)) for a long time it was night)\nAnd I want to teach you today how to cook chicken fillet with breadcrumbs.\nI hope you will enjoy)\n\n> \u041f\u0440\u0438\u0432\u0435\u0442 \u0421\u0442\u0438\u0438\u043c\u0438\u0442)) \u0423 \u043c\u0435\u043d\u044f \u0443\u0436\u0435 \u0434\u0430\u0432\u043d\u043e \u043d\u0430\u0441\u0442\u0443\u043f\u0438\u043b\u0430 \u043d\u043e\u0447\u044c) \n\u0418 \u044f \u0445\u043e\u0447\u0443 \u0432\u0430\u0441 \u0441\u0435\u0433\u043e\u0434\u043d\u044f \u043d\u0430\u0443\u0447\u0438\u0442\u044c , \u043a\u0430\u043a \u0433\u043e\u0442\u043e\u0432\u0438\u0442\u044c \u043a\u0443\u0440\u0438\u043d\u043e\u0435 \u0444\u0438\u043b\u0435 \u0432 \u0441\u0443\u0445\u0430\u0440\u044f\u0445.\n\u041d\u0430\u0434\u0435\u044e\u0441\u044c \u0432\u0430\u043c \u043f\u043e\u043d\u0440\u0430\u0432\u0438\u0442\u0441\u044f)\n\nhttp://s017.radikal.ru/i401/1609/a8/701d5400daa7.jpg\n\n## Step 1: Take Ingredients.\nChicken fillet - 300 grams\nEgg - 1 piece\nBreadcrumbs - 100g\nCorn Flour - 60 grams\nSalt and pepper to taste\n\n>## \u0428\u0430\u0433 1: \u0411\u0435\u0440\u0435\u043c \u0418\u043d\u0433\u0440\u0438\u0434\u0438\u0435\u043d\u0442\u044b.\n> \u041a\u0443\u0440\u0438\u043d\u043d\u043e\u0435 \u0444\u0438\u043b\u0435 - 300 \u0433\u0440\u0430\u043c\u043c\n\u042f\u0439\u0446\u043e - 1 \u0448\u0442\u0443\u043a\u0430\n\u0421\u0443\u0445\u0430\u0440\u0438 - 100 \u0433\u0440\u0430\u043c\u043c\n\u041c\u0443\u043a\u0430 \u043a\u0443\u043a\u0443\u0440\u0443\u0437\u043d\u0430\u044f - 60 \u0433\u0440\u0430\u043c\u043c\n\u0421\u043e\u043b\u044c, \u043f\u0435\u0440\u0435\u0446 \u043f\u043e \u0432\u043a\u0443\u0441\u0443\n\nhttp://s018.radikal.ru/i501/1609/64/9731bfb796d4.jpg\n\n## Step 2: \nPrepare the ingredients.\nEggs break into a big bowl, and cut into chicken.\n\n>## \u0428\u0430\u0433 2:\n> \u041f\u043e\u0434\u0433\u043e\u0442\u0430\u0432\u043b\u0438\u0432\u0430\u0435\u043c \u0438\u043d\u0433\u0440\u0438\u0434\u0438\u0435\u043d\u0442\u044b. \n\u042f\u0439\u0446\u043e \u0440\u0430\u0437\u0431\u0438\u0432\u0430\u0435\u043c \u0432 \u0431\u043e\u043b\u044c\u0448\u0443\u044e \u0442\u0430\u0440\u0435\u043b\u043a\u0443, \u043d\u0430\u0440\u0435\u0437\u0430\u0435\u043c \u043a\u0443\u0440\u0438\u043d\u043d\u043e\u0435 \u0444\u0438\u043b\u0435.\n\nhttp://s020.radikal.ru/i706/1609/cd/5cbef4082a18.jpg\n\nNow dip each piece first in the flour, as in the photo.\n\n> \u0422\u0435\u043f\u0435\u0440\u044c \u043a\u0430\u0436\u0434\u044b\u0439 \u043a\u0443\u0441\u043e\u0447\u0435\u043a \u043c\u043e\u043a\u0430\u0435\u043c \u0432\u043d\u0430\u0447\u0430\u043b\u0435 \u0432 \u043c\u0443\u043a\u0443, \u043a\u0430\u043a \u043d\u0430 \u0444\u043e\u0442\u043e.\n\nhttp://s019.radikal.ru/i637/1609/cc/a1fafd8db0a9.jpg\n\nThen dipped in egg.\n\n> \u0417\u0430\u0442\u0435\u043c \u043c\u043e\u043a\u0430\u0435\u043c \u0432 \u044f\u0439\u0446\u043e.\n\nhttp://s46.radikal.ru/i111/1609/ae/2bbdb507a016.jpg\n\nThen we dipped in breadcrumbs\n\n> \u0418 \u0434\u0430\u043b\u0435\u0435 \u043c\u043e\u043a\u0430\u0435\u043c \u0432 \u0441\u0443\u0445\u0430\u0440\u0438.\n\nhttp://s018.radikal.ru/i505/1609/32/cd41cbfbe4d7.jpg\n\n## Step 3:\nIt remains only to fry our chicken fillet)\nPut it in the pan and fry for 7-8 minutes))\nEverything is ready) Bon appetit.\n\n>## \u0428\u0430\u0433 3:\n> \u041e\u0441\u0442\u0430\u0435\u0442\u0441\u044f \u0442\u043e\u043b\u044c\u043a\u043e \u043f\u043e\u0436\u0430\u0440\u0438\u0442\u044c \u043d\u0430\u0448\u0435 \u043a\u0443\u0440\u0438\u043d\u043d\u043e\u0435 \u0444\u0438\u043b\u0435) \n\u041a\u043b\u0430\u0434\u0435\u043c \u0435\u0433\u043e \u043d\u0430 \u0441\u043a\u043e\u0432\u043e\u0440\u043e\u0434\u043a\u0443 \u0438 \u0436\u0430\u0440\u0438\u043c \u0432 \u0442\u0435\u0447\u0435\u043d\u0438\u0438 7-8 \u043c\u0438\u043d\u0443\u0442))\n\u0412\u0441\u0435 \u0433\u043e\u0442\u043e\u0432\u043e) \u041f\u0440\u0438\u044f\u0442\u043d\u043e\u0433\u043e \u0430\u043f\u043f\u0435\u0442\u0438\u0442\u0430.\n\nhttp://s09.radikal.ru/i182/1609/6a/ad5522e514fa.jpg",
-    "category": "food",
-    "children": 1,
-    "created": "2016-09-15T19:17:33",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "http://s017.radikal.ru/i401/1609/a8/701d5400daa7.jpg",
-        "http://s018.radikal.ru/i501/1609/64/9731bfb796d4.jpg",
-        "http://s020.radikal.ru/i706/1609/cd/5cbef4082a18.jpg",
-        "http://s019.radikal.ru/i637/1609/cc/a1fafd8db0a9.jpg",
-        "http://s46.radikal.ru/i111/1609/ae/2bbdb507a016.jpg",
-        "http://s018.radikal.ru/i505/1609/32/cd41cbfbe4d7.jpg",
-        "http://s09.radikal.ru/i182/1609/6a/ad5522e514fa.jpg"
-      ],
-      "tags": [
-        "food",
-        "recipes",
-        "life",
-        "cooking"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 862962138444,
-    "payout": 0.23,
-    "payout_at": "2016-09-22T19:17:33",
-    "pending_payout_value": "0.230 HBD",
-    "percent_hbd": 10000,
-    "permlink": "dr1uk-vegetable-soup-puree-recipe-specially-for-steemit",
-    "post_id": 1257651,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 29
-    },
-    "title": "Chicken fillet with breadcrumbs) recipe specially for Steemit",
-    "updated": "2016-09-15T19:34:42",
-    "url": "/food/@karisa/dr1uk-vegetable-soup-puree-recipe-specially-for-steemit"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 70956487,
-        "voter": "dudu-hoffman"
-      },
-      {
-        "rshares": 109229309,
-        "voter": "rusla"
-      }
-    ],
-    "author": "dudu-hoffman",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 35.14,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "<html>\n<p><img src=\"https://s16.postimg.org/l7dh41yad/Dudu_Hoffman_Livin_la_Zuada_Loca.jpg\" width=\"827\" height=\"800\"/></p>\n<p><br></p>\n<p>https://www.youtube.com/watch?v=tLBVeyYp7N0</p>\n<p><br></p>\n<p><em>Electronica / Dub / Funk</em><br>\n&nbsp;</p>\n<p>- Feche os Olhos&nbsp;</p>\n<p>- Dudu Hoffman&nbsp;</p>\n<p>- Livin' la Zuada Loca (2007)</p>\n<p>- Brazil<br>\n</p>\n<p><br></p>\n<p><br></p>\n<p><a href=\"https://steemit.com/@dudu-hoffman\">@dudu-hoffman &nbsp; </a><a href=\"https://duduhoffman.bandcamp.com/album/livin-la-zuada-loca\">Bandcamp</a><a href=\"https://duduhoffman.bandcamp.com/album/ru-do-primal-maquinar-ep\"> &nbsp;&nbsp;</a><a href=\"https://soundcloud.com/dudu-hoffman\">SoundCloud</a></p>\n</html>",
-    "category": "music",
-    "children": 0,
-    "created": "2016-09-15T19:17:15",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://s16.postimg.org/l7dh41yad/Dudu_Hoffman_Livin_la_Zuada_Loca.jpg",
-        "https://img.youtube.com/vi/tLBVeyYp7N0/0.jpg"
-      ],
-      "links": [
-        "https://www.youtube.com/watch?v=tLBVeyYp7N0",
-        "https://steemit.com/@dudu-hoffman",
-        "https://duduhoffman.bandcamp.com/album/livin-la-zuada-loca",
-        "https://duduhoffman.bandcamp.com/album/ru-do-primal-maquinar-ep",
-        "https://soundcloud.com/dudu-hoffman"
-      ],
-      "tags": [
-        "music",
-        "electronica",
-        "dub",
-        "funk",
-        "dudu-hoffman"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 180185796,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:17:15",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "dudu-hoffman-feche-os-olhos",
-    "post_id": 1257647,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 2
-    },
-    "title": "Dudu Hoffman - Feche os Olhos",
-    "updated": "2016-09-15T19:17:15",
-    "url": "/music/@dudu-hoffman/dudu-hoffman-feche-os-olhos"
-  },
-  {
-    "active_votes": [
-      {
-        "rshares": 22687919345,
-        "voter": "prufarchy"
-      },
-      {
-        "rshares": 7697824638,
-        "voter": "lgm-1"
-      },
-      {
-        "rshares": 83629307390,
-        "voter": "serejandmyself"
-      },
-      {
-        "rshares": 6036784485,
-        "voter": "anarcho-andrei"
-      },
-      {
-        "rshares": 109229309,
-        "voter": "rusla"
-      },
-      {
-        "rshares": 125198095,
-        "voter": "emeline"
-      },
-      {
-        "rshares": 3983913956,
-        "voter": "michelle.gent"
-      }
-    ],
-    "author": "prufarchy",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 59.92,
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "I am the watcher \nof history and time.\nEternal observer\nand witness, I.\n\nWho silently sees \nthe unfolding of life,\nan audience member \nand witness, I. \n\nWho sits and who waits\nwithout looking to find,\nlife archaeologist \nand witness, I. \n\nWho asks for nothing \nand with nothing is fine,\nan earth minimalist\nand witness, I. \n\nI just keep watching\nand try counting the cries.\nHeart bleeding reporter\nand witness, I. \n\nWhen my shift is done\nI can avert my eyes,\nonce again a human\nand witness, I. \n\n<center>https://www.steemimg.com/images/2016/09/15/image56bc9.jpg</center>",
-    "category": "story",
-    "children": 1,
-    "created": "2016-09-15T19:16:39",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {
-      "image": [
-        "https://www.steemimg.com/images/2016/09/15/image56bc9.jpg"
-      ],
-      "tags": [
-        "story",
-        "art",
-        "poetry",
-        "life",
-        "writing"
-      ]
-    },
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 124270177218,
-    "payout": 0.028,
-    "payout_at": "2016-09-22T19:16:39",
-    "pending_payout_value": "0.028 HBD",
-    "percent_hbd": 10000,
-    "permlink": "i-witness-original",
-    "post_id": 1257641,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": false,
-      "hide": false,
-      "total_votes": 7
-    },
-    "title": "I, Witness (Original)",
-    "updated": "2016-09-15T19:16:39",
-    "url": "/story/@prufarchy/i-witness-original"
   }
 ]

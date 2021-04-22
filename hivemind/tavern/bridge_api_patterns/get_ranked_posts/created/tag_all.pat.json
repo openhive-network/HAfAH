@@ -21,7 +21,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Third-after-member-post-hive3",
-    "post_id": 1258068,
+    "post_id": 1258080,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -56,7 +56,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Third-after-member-post-hive2",
-    "post_id": 1258067,
+    "post_id": 1258079,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -95,7 +95,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Third-after-member-post-hive1",
-    "post_id": 1258066,
+    "post_id": 1258078,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -130,7 +130,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Second-after-member-post-hive3",
-    "post_id": 1258065,
+    "post_id": 1258077,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -165,7 +165,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Second-after-member-post-hive2",
-    "post_id": 1258064,
+    "post_id": 1258076,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -204,7 +204,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Second-after-member-post-hive1",
-    "post_id": 1258063,
+    "post_id": 1258075,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -239,7 +239,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "First-after-member-post-hive3",
-    "post_id": 1258062,
+    "post_id": 1258074,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -274,7 +274,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "First-after-member-post-hive2",
-    "post_id": 1258061,
+    "post_id": 1258073,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -313,7 +313,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "First-after-member-post-hive1",
-    "post_id": 1258060,
+    "post_id": 1258072,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -352,7 +352,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile03",
-    "post_id": 1258058,
+    "post_id": 1258070,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -392,7 +392,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile02",
-    "post_id": 1258057,
+    "post_id": 1258069,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -432,7 +432,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile01",
-    "post_id": 1258056,
+    "post_id": 1258068,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -467,7 +467,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "spider02",
-    "post_id": 1258055,
+    "post_id": 1258067,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -503,7 +503,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "spider01",
-    "post_id": 1258054,
+    "post_id": 1258066,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -539,7 +539,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "anaconda02",
-    "post_id": 1258053,
+    "post_id": 1258065,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -575,7 +575,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "anaconda01",
-    "post_id": 1258052,
+    "post_id": 1258064,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -598,7 +598,7 @@
     "author_title": "",
     "beneficiaries": [],
     "blacklists": [],
-    "body": "This is my pinned post in hive-135485 community",
+    "body": "hello from pinned post 12",
     "category": "hive-135485",
     "children": 0,
     "community": "hive-135485",
@@ -614,8 +614,8 @@
     "payout_at": "2016-09-22T19:47:36",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
-    "permlink": "pinned-post",
-    "post_id": 1258049,
+    "permlink": "pinpost12",
+    "post_id": 1258061,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -625,9 +625,9 @@
       "is_pinned": true,
       "total_votes": 0
     },
-    "title": "My pinned post",
+    "title": "Pinpost 12",
     "updated": "2016-09-15T19:47:36",
-    "url": "/hive-135485/@test-creator/pinned-post"
+    "url": "/hive-135485/@test-creator/pinpost12"
   },
   {
     "active_votes": [],
@@ -638,7 +638,7 @@
     "author_title": "",
     "beneficiaries": [],
     "blacklists": [],
-    "body": "This is my muted post in hive-135485 community",
+    "body": "hello from pinned post 11",
     "category": "hive-135485",
     "children": 0,
     "community": "hive-135485",
@@ -654,47 +654,8 @@
     "payout_at": "2016-09-22T19:47:36",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
-    "permlink": "muted-post",
-    "post_id": 1258048,
-    "promoted": "0.000 HBD",
-    "replies": [],
-    "stats": {
-      "flag_weight": 0.0,
-      "gray": true,
-      "hide": false,
-      "total_votes": 0
-    },
-    "title": "My muted post",
-    "updated": "2016-09-15T19:47:36",
-    "url": "/hive-135485/@test-creator/muted-post"
-  },
-  {
-    "active_votes": [],
-    "author": "test-creator",
-    "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
-    "author_role": "guest",
-    "author_title": "",
-    "beneficiaries": [],
-    "blacklists": [],
-    "body": "This is my post in hive-135485 community reblogged by test-reblog-03",
-    "category": "hive-135485",
-    "children": 0,
-    "community": "hive-135485",
-    "community_title": "World News",
-    "created": "2016-09-15T19:47:36",
-    "curator_payout_value": "0.000 HBD",
-    "depth": 0,
-    "is_paidout": false,
-    "json_metadata": {},
-    "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
-    "pending_payout_value": "0.000 HBD",
-    "percent_hbd": 10000,
-    "permlink": "reblogged-post",
-    "post_id": 1258047,
+    "permlink": "pinpost11",
+    "post_id": 1258060,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -703,9 +664,9 @@
       "hide": false,
       "total_votes": 0
     },
-    "title": "My first post",
+    "title": "Pinpost 11",
     "updated": "2016-09-15T19:47:36",
-    "url": "/hive-135485/@test-creator/reblogged-post"
+    "url": "/hive-135485/@test-creator/pinpost11"
   },
   {
     "active_votes": [],
@@ -716,7 +677,7 @@
     "author_title": "",
     "beneficiaries": [],
     "blacklists": [],
-    "body": "This is my first post in hive-135485 community",
+    "body": "hello from pinned post 10",
     "category": "hive-135485",
     "children": 0,
     "community": "hive-135485",
@@ -732,8 +693,8 @@
     "payout_at": "2016-09-22T19:47:36",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
-    "permlink": "first-post",
-    "post_id": 1258046,
+    "permlink": "pinpost10",
+    "post_id": 1258059,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -742,8 +703,48 @@
       "hide": false,
       "total_votes": 0
     },
-    "title": "My first post",
+    "title": "Pinpost 10",
     "updated": "2016-09-15T19:47:36",
-    "url": "/hive-135485/@test-creator/first-post"
+    "url": "/hive-135485/@test-creator/pinpost10"
+  },
+  {
+    "active_votes": [],
+    "author": "test-creator",
+    "author_payout_value": "0.000 HBD",
+    "author_reputation": 25,
+    "author_role": "guest",
+    "author_title": "",
+    "beneficiaries": [],
+    "blacklists": [],
+    "body": "hello from pinned post 9",
+    "category": "hive-135485",
+    "children": 0,
+    "community": "hive-135485",
+    "community_title": "World News",
+    "created": "2016-09-15T19:47:36",
+    "curator_payout_value": "0.000 HBD",
+    "depth": 0,
+    "is_paidout": false,
+    "json_metadata": {},
+    "max_accepted_payout": "1000000.000 HBD",
+    "net_rshares": 0,
+    "payout": 0.0,
+    "payout_at": "2016-09-22T19:47:36",
+    "pending_payout_value": "0.000 HBD",
+    "percent_hbd": 10000,
+    "permlink": "pinpost9",
+    "post_id": 1258058,
+    "promoted": "0.000 HBD",
+    "replies": [],
+    "stats": {
+      "flag_weight": 0.0,
+      "gray": false,
+      "hide": false,
+      "is_pinned": true,
+      "total_votes": 0
+    },
+    "title": "Pinpost 9",
+    "updated": "2016-09-15T19:47:36",
+    "url": "/hive-135485/@test-creator/pinpost9"
   }
 ]
