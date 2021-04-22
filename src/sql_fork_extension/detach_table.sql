@@ -1,7 +1,6 @@
--- Whe a table is deteted their triggers are removet automatically
+-- Whe a table is deteted their triggers are removed automatically
 -- and there is no need to remove hive_rowid column
-DROP FUNCTION IF EXISTS hive.hive_clean_after_uregister_table;
-CREATE FUNCTION hive_clean_after_uregister_table( _schema_name TEXT, _table_name TEXT )
+CREATE OR REPLACE FUNCTION hive_clean_after_uregister_table( _schema_name TEXT, _table_name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
@@ -39,9 +38,7 @@ END;
 $BODY$
 ;
 
-
-DROP FUNCTION IF EXISTS hive.detach_table;
-CREATE FUNCTION hive.detach_table( _table_schema TEXT, _table_name TEXT )
+CREATE OR REPLACE FUNCTION hive.detach_table( _table_schema TEXT, _table_name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
@@ -79,8 +76,31 @@ END;
 $BODY$
 ;
 
-DROP FUNCTION IF EXISTS hive.attach_table;
-CREATE FUNCTION hive.attach_table( _table_schema TEXT, _table_name TEXT )
+CREATE OR REPLACE FUNCTION hive.detach_all( _context TEXT )
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __context_id INTEGER := NULL;
+BEGIN
+    SELECT ct.id FROM hive.context ct WHERE ct.name=_context INTO __context_id;
+
+    IF __context_id IS NULL THEN
+        RAISE EXCEPTION 'Unknown context %', _context;
+    END IF;
+
+    PERFORM hive.detach_table( hrt.origin_table_schema, hrt.origin_table_name )
+    FROM hive.registered_tables hrt
+    WHERE hrt.context_id = __context_id;
+END;
+$BODY$
+;
+
+
+
+CREATE OR REPLACE FUNCTION hive.attach_table( _table_schema TEXT, _table_name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
