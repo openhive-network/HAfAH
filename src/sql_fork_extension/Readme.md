@@ -59,7 +59,8 @@ Columns
 2. context_id - id of the context in which the table is registered
 3. origin_table_name - name of the registered table
 4. shadow_table_name - name of the shadow table name for a registered table
-5. origin_table_columns - names of origin table's columns
+5. origin_table_columns - names of origin table's columns 
+6. is_attached - True if triggers are enabled ( a table is attached ), False when are disbaled ( a table is detached )
 
 ### hive.triggers_operations
 Names of operation on origin tables which we can revert
