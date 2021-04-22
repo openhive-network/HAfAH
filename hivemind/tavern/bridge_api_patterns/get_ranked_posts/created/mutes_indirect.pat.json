@@ -695,6 +695,7 @@
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
+      "is_pinned": true,
       "total_votes": 0
     },
     "title": "Pinpost 2",
@@ -734,6 +735,7 @@
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
+      "is_pinned": true,
       "total_votes": 0
     },
     "title": "Pinpost 1",

@@ -886,7 +886,7 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "parent_author": "",
-    "parent_permlink": "hive-157439",
+    "parent_permlink": "hive-135485",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "pinned-post",
@@ -917,7 +917,7 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "parent_author": "",
-    "parent_permlink": "hive-171487",
+    "parent_permlink": "hive-135485",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "muted-post",
@@ -3915,27 +3915,27 @@
       },
       {
         "percent": "10000",
-        "reputation": 19449097565894,
-        "rshares": 59061355186,
-        "voter": "lehard"
+        "reputation": 0,
+        "rshares": 64921864,
+        "voter": "storage"
       },
       {
         "percent": "10000",
-        "reputation": 2090799841362,
-        "rshares": 1708336843,
-        "voter": "dimon14"
+        "reputation": 0,
+        "rshares": 55388665,
+        "voter": "blackmarket"
       },
       {
         "percent": "10000",
-        "reputation": 158672055554,
-        "rshares": 101627835,
-        "voter": "pollina"
+        "reputation": 0,
+        "rshares": 58454327,
+        "voter": "gifts"
       },
       {
         "percent": "10000",
-        "reputation": 128799717225,
-        "rshares": 159631404,
-        "voter": "kamil5"
+        "reputation": 0,
+        "rshares": 93882016,
+        "voter": "expat"
       },
       {
         "percent": "10000",
