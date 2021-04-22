@@ -2,12 +2,33 @@
 SQL Scripts which all together creates an extension to support Hive Forks
 
 ## Architecture
-An application must register its tables dependent on hive blocks. During a table registration it is extendend
-for a new column `hive_rowid` which is required by the system to distinguish between edited rows. Next
-a new table is created - a shadow table which structure is the copy of a registered tables + columns for operation
-type and block num. Further triggers are created, which will fill the shadow tables with any edition of
-registered tables. It is possible to rewind all operation registered in shadow tables with `hive_back_from_fork`
+All elements of the extension are placed in 'hive' schema
 
+An application must register its tables dependent on hive blocks.
+Any table is automaticly registerd during its creation only when inherits form hive.base. 
+. A table is resgistered into recently created context If there is no context an exception is thrown.
+
+```
+CREATE TABLE table1( id INTEGER ) INHERITS( hive.base )
+```
+
+Data from 'hive.base' is used by the fork system to rewind operations. Especcially column 'hive_rowid'
+is used by the system to distinguish between edited rows. During registartion a set of triggers are
+enabled on a table, they will record any changes.
+Moreover a new table is created - a shadow table which structure is the copy of a registered tables + columns for operation
+registered tables. A shadow table is the place where triggers records changes. A shadow table is created in 'hive' schema
+an is name is created with the rule below:
+```
+hive.shadow_<table_schema>_<table_name>
+```
+It is possible to rewind all operation registered in shadow tables with `hive_back_from_fork`
+type and block num. Further triggers are created, which will fill the shadow tables with any edition of
+
+
+Because triggers itself add some significant overhead for operations, in some situation it may be necessary
+to temporary disable them for sake of better performance. To do this  there are functions: `hive.detach_table` - to disable
+triggers and 'hive.attach_table' to enable triggers. WHen triggers are disabled no support for hive fork is enabled for a table,
+so the application should solve the situation (in most cases is should happen when blocks below irreversible are processed, so no forks happen there)
 ## Installation
 Execute sql scripts on Your database in given order:
 1. data_schema.sql
@@ -65,25 +86,38 @@ Columns
 
 ## SQL API
 The set of scripts implements an API for the applications:
-### hive.registered_table
-Registers an user table in the fork system
-### hive.detach_table
-Drop triggers atatched to a register table. It is usefull for operation below irreversible block
+### Public - for the user
+#### hive.detach_table( schema, table )
+Disables triggers atatched to a register table. It is usefull for operation below irreversible block
 when fork is impossible, then we don't want have trigger overhead for each edition of a table.
-### hive.create_context
+
+#### hive.detach_all( context_name )
+Detaches triggers atatched to register tables in a given context
+
+#### hive.attach_table( schema, table )
+Enables triggers atatched to a register table.
+
+#### hive.attach_all( context_name )
+Enables triggers atatched to register tables in a given context 
+
+#### hive.create_context( context_name )
 Creates the context - controll block number on which the registered tables are working
-### hive.context_next_block
+
+#### hive.context_next_block( context_name )
 Moves a context to the next available block
-### hive.back_from_fork
-Rewind register tables
+
+#### hive.back_from_fork()
+Rewind register tables, empty the sahdow tables
+
+### Private - shall not be called by the user
+#### hive.registered_table
+Registers an user table in the fork system, is used by the trigger for CREATE TABLE
 
 ## TODO
-2. unregister table with DROP table
-2. move function to hive schema
 1. Validation of the registered tables
-2. Tables unregistration ( may be need by the user to service action on the tables without triggering hive fork mechanism)
 3. Validation of structure
 
 ## Known Problems
 1. Constraints like FK, UNIQUE, EXCLUDE, PK must be DEFFERABLE, otherwise we cannot guarnteen success or rewinding changes
+2. Because all registered tables inherit from hive.base they share a coomon hive_rowid SERIAL, so there is a 64bits limit for all rows in all register tables.
 
