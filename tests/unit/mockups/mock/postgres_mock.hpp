@@ -4,6 +4,7 @@
 
 #undef Max
 #undef Assert
+
 #include <gmock/gmock.h>
 
 
