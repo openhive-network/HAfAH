@@ -120,5 +120,4 @@ Registers an user table in the fork system, is used by the trigger for CREATE TA
 
 ## Known Problems
 1. Constraints like FK, UNIQUE, EXCLUDE, PK must be DEFFERABLE, otherwise we cannot guarnteen success or rewinding changes
-2. Because all registered tables inherit from hive.base they share a coomon hive_rowid SERIAL, so there is a 64bits limit for all rows in all register tables.
 

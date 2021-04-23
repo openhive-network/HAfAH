@@ -20,10 +20,12 @@ DECLARE
     __hive_triggerfunction_name_delete TEXT := 'hive_on_table_trigger_delete_' || lower(_table_schema) || '_' || _table_name;
     __hive_triggerfunction_name_update TEXT := 'hive_on_table_trigger_update_' || lower(_table_schema) || '_' || _table_name;
     __hive_triggerfunction_name_truncate TEXT := 'hive_on_table_trigger_truncate_' || lower(_table_schema) || '_' || _table_name;
+    __new_sequence_name TEXT := 'seq_' || lower(_table_schema) || '_' || lower(_table_name);
     __context_id INTEGER := NULL;
     __registered_table_id INTEGER := NULL;
     __columns_names TEXT[];
 BEGIN
+    -- create a shadow table
     SELECT array_agg( iss.column_name::TEXT ) FROM information_schema.columns iss WHERE iss.table_schema=_table_schema AND iss.table_name=_table_name INTO __columns_names;
     EXECUTE format('CREATE TABLE hive.%I AS TABLE %I.%I', __shadow_table_name, _table_schema, _table_name );
     EXECUTE format('DELETE FROM hive.%I', __shadow_table_name ); --empty shadow table if origin table is not empty
@@ -31,6 +33,21 @@ BEGIN
     EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I SMALLINT NOT NULL', __shadow_table_name, __operation_column_name );
     EXECUTE format('ALTER TABLE hive.%I ADD CONSTRAINT uk_%s UNIQUE( %I, %I )', __shadow_table_name, __shadow_table_name, __block_num_column_name, __hive_rowid_column_name );
 
+    -- create and set separated sequence for hive.base part of the registered table
+    EXECUTE format( 'CREATE SEQUENCE %I.%s', lower(_table_schema), __new_sequence_name );
+    EXECUTE format( 'ALTER TABLE %I.%I ALTER COLUMN hive_rowid SET DEFAULT nextval( ''%s.%s'' )'
+        , lower( _table_schema ), lower( _table_name )
+        , lower(_table_schema)
+        , __new_sequence_name
+    );
+    EXECUTE format( 'ALTER SEQUENCE %I.%I OWNED BY %I.%I.hive_rowid'
+        , lower(_table_schema)
+        , __new_sequence_name
+        , lower(_table_schema)
+        , lower( _table_name )
+    );
+
+    -- insert information about new registered table
     INSERT INTO hive.registered_tables( context_id, origin_table_schema, origin_table_name, shadow_table_name, origin_table_columns, is_attached )
     SELECT hc.id, tables.table_schema, tables.origin, tables.shadow, columns, TRUE
     FROM ( SELECT hc.id FROM hive.context hc WHERE hc.name =  _context_name ) as hc
@@ -41,6 +58,7 @@ BEGIN
     ASSERT __context_id IS NOT NULL, 'There is no context %', _context_name;
     ASSERT __registered_table_id IS NOT NULL;
 
+    -- create trigger functions
     EXECUTE format(
         'CREATE OR REPLACE FUNCTION %s()
             RETURNS trigger
@@ -189,6 +207,7 @@ BEGIN
         , __shadow_table_name
     );
 
+    -- register update trigger
     EXECUTE format(
         'CREATE TRIGGER %I AFTER UPDATE ON %I.%I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
         , __hive_update_trigger_name
@@ -199,6 +218,7 @@ BEGIN
         , __shadow_table_name
     );
 
+    -- register truncate trigger
     EXECUTE format(
         'CREATE TRIGGER %I BEFORE TRUNCATE ON %I.%I FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
         , __hive_truncate_trigger_name
@@ -209,6 +229,7 @@ BEGIN
         , __shadow_table_name
     );
 
+    -- save information about the triggers
     INSERT INTO hive.triggers( registered_table_id, trigger_name, function_name )
     VALUES
          ( __registered_table_id, __hive_insert_trigger_name, __hive_triggerfunction_name_insert )
