@@ -1,0 +1,28 @@
+---
+  test_name: Hivemind bridge_api.list_community_roles patterns test last alice hive-198723
+
+  marks:
+    - patterntest # mock-data - alice is in different communities
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: list_community_roles alice hive-198723
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+        json:
+          jsonrpc: "2.0"
+          id: 1
+          method: "bridge.list_community_roles"
+          params: {"community":"hive-198723", "last":"alice", "limit":100}
+      response:
+        status_code: 200
+        verify_response_with:
+          function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            method: "alice_198723"
+            directory: "bridge_api_patterns/list_community_roles"
