@@ -114,6 +114,9 @@ Rewind register tables, empty the sahdow tables
 #### hive.registered_table
 Registers an user table in the fork system, is used by the trigger for CREATE TABLE
 
+#### hive.create_shadow_table
+Creates shadow table for given table
+
 ## TODO
 1. Validation of the registered tables
 3. Validation of structure

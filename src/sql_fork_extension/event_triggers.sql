@@ -8,11 +8,13 @@ DECLARE
 __result BOOL := NULL;
 __r RECORD;
 __shadow_table_name TEXT := NULL;
+__origin_table_schema TEXT;
+__origin_table_name TEXT;
 BEGIN
-    SELECT hrt.shadow_table_name FROM
+    SELECT hrt.shadow_table_name, hrt.origin_table_schema, hrt.origin_table_name  FROM
         ( SELECT * FROM pg_event_trigger_ddl_commands() ) as tr
         JOIN hive.registered_tables hrt ON ( hrt.origin_table_schema || '.' || hrt.origin_table_name ) = tr.object_identity
-    INTO __shadow_table_name;
+    INTO __shadow_table_name, __origin_table_schema, __origin_table_name;
 
     IF __shadow_table_name IS NULL THEN
         RETURN;
@@ -23,6 +25,10 @@ BEGIN
     IF __result = TRUE THEN
         RAISE EXCEPTION 'Cannot edit structure of registered tables';
     END IF;
+
+    -- drop shadow table with old format
+    EXECUTE format( 'DROP TABLE hive.%I', __shadow_table_name );
+    PERFORM hive.create_shadow_table( __origin_table_schema, __origin_table_name );
 END;
 $$
 ;

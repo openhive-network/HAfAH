@@ -21,6 +21,10 @@ AS
 $BODY$
 BEGIN
     ALTER TABLE table1 ADD COLUMN test_column INTEGER;
+    PERFORM hive.context_next_block( 'context' );
+    INSERT INTO table1( smth, name ) VALUES( 1, 'abc' );
+
+    PERFORM hive.back_from_fork();
 END;
 $BODY$
 ;
@@ -38,6 +42,8 @@ BEGIN
         )
         , 'Column was inserted'
     ;
+
+    ASSERT ( SELECT COUNT(*) FROM table1 ) = 0, 'Back from fork did not revert insert operation';
 END;
 $BODY$
 ;

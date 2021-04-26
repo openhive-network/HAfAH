@@ -1,3 +1,27 @@
+CREATE OR REPLACE FUNCTION hive.create_shadow_table( _table_schema TEXT,  _table_name TEXT )
+    RETURNS TEXT -- name of the shadow table
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __shadow_table_name TEXT := 'shadow_' || lower(_table_schema) || '_' || lower(_table_name);
+    __block_num_column_name TEXT := 'hive_block_num';
+    __operation_column_name TEXT := 'hive_operation_type';
+    __hive_rowid_column_name TEXT := 'hive_rowid';
+BEGIN
+    EXECUTE format('CREATE TABLE hive.%I AS TABLE %I.%I', __shadow_table_name, _table_schema, _table_name );
+    EXECUTE format('DELETE FROM hive.%I', __shadow_table_name ); --empty shadow table if origin table is not empty
+    EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I INTEGER NOT NULL', __shadow_table_name, __block_num_column_name );
+    EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I SMALLINT NOT NULL', __shadow_table_name, __operation_column_name );
+    EXECUTE format('ALTER TABLE hive.%I ADD CONSTRAINT uk_%s UNIQUE( %I, %I )', __shadow_table_name, __shadow_table_name, __block_num_column_name, __hive_rowid_column_name );
+
+    RETURN __shadow_table_name;
+END;
+$BODY$
+;
+
+
 -- creates a shadow table of registered table:
 -- | [ table column1, table column2,.... ] | hive_block_num | hive_operation_type |
 DROP FUNCTION IF EXISTS hive.register_table;
@@ -9,9 +33,6 @@ AS
 $BODY$
 DECLARE
     __shadow_table_name TEXT := 'shadow_' || lower(_table_schema) || '_' || lower(_table_name);
-    __block_num_column_name TEXT := 'hive_block_num';
-    __operation_column_name TEXT := 'hive_operation_type';
-    __hive_rowid_column_name TEXT := 'hive_rowid';
     __hive_insert_trigger_name TEXT := 'hive_insert_trigger_' || lower(_table_schema) || '_' || _table_name;
     __hive_delete_trigger_name TEXT := 'hive_delete_trigger_' || lower(_table_schema) || '_' || _table_name;
     __hive_update_trigger_name TEXT := 'hive_update_trigger_' || lower(_table_schema) || '_' || _table_name;
@@ -27,11 +48,7 @@ DECLARE
 BEGIN
     -- create a shadow table
     SELECT array_agg( iss.column_name::TEXT ) FROM information_schema.columns iss WHERE iss.table_schema=_table_schema AND iss.table_name=_table_name INTO __columns_names;
-    EXECUTE format('CREATE TABLE hive.%I AS TABLE %I.%I', __shadow_table_name, _table_schema, _table_name );
-    EXECUTE format('DELETE FROM hive.%I', __shadow_table_name ); --empty shadow table if origin table is not empty
-    EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I INTEGER NOT NULL', __shadow_table_name, __block_num_column_name );
-    EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I SMALLINT NOT NULL', __shadow_table_name, __operation_column_name );
-    EXECUTE format('ALTER TABLE hive.%I ADD CONSTRAINT uk_%s UNIQUE( %I, %I )', __shadow_table_name, __shadow_table_name, __block_num_column_name, __hive_rowid_column_name );
+    SELECT hive.create_shadow_table(  _table_schema, _table_name ) INTO  __shadow_table_name;
 
     -- create and set separated sequence for hive.base part of the registered table
     EXECUTE format( 'CREATE SEQUENCE %I.%s', lower(_table_schema), __new_sequence_name );
