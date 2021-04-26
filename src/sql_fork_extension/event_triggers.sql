@@ -23,7 +23,19 @@ BEGIN
     EXECUTE format( 'SELECT EXISTS( SELECT * FROM hive.%I LIMIT 1 )', __shadow_table_name ) INTO __result;
 
     IF __result = TRUE THEN
-        RAISE EXCEPTION 'Cannot edit structure of registered tables';
+        RAISE EXCEPTION 'Cannot edit structure of registered tables when some rows are not rewinded';
+    END IF;
+
+    SELECT EXISTS (
+        SELECT *
+        FROM information_schema.columns iss
+        WHERE iss.table_schema = __origin_table_schema
+            AND iss.table_name = __origin_table_name
+            AND iss.column_name = 'hive_rowid'
+    ) INTO __result;
+
+    IF __result = FALSE THEN
+        RAISE EXCEPTION 'Cannot remove hive_rowid column';
     END IF;
 
     -- drop shadow table with old format
