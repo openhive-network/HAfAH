@@ -29,6 +29,16 @@ BEGIN
     -- drop shadow table with old format
     EXECUTE format( 'DROP TABLE hive.%I', __shadow_table_name );
     PERFORM hive.create_shadow_table( __origin_table_schema, __origin_table_name );
+
+    --update information about columns
+    UPDATE hive.registered_tables hrt
+    SET origin_table_columns =
+        (
+            SELECT array_agg( iss.column_name::TEXT )
+            FROM information_schema.columns iss
+            WHERE iss.table_schema = __origin_table_schema AND iss.table_name = __origin_table_name
+        )
+    WHERE hrt.origin_table_name = lower( __origin_table_name ) AND hrt.origin_table_schema = lower( __origin_table_schema );
 END;
 $$
 ;

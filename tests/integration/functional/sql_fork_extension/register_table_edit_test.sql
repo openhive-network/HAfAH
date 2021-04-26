@@ -22,7 +22,11 @@ $BODY$
 BEGIN
     ALTER TABLE table1 ADD COLUMN test_column INTEGER;
     PERFORM hive.context_next_block( 'context' );
+    INSERT INTO table1( test_column ) VALUES( 10 );
+
+    TRUNCATE hive.shadow_public_table1; --to do not revert already inserted rows
     INSERT INTO table1( smth, name ) VALUES( 1, 'abc' );
+    UPDATE table1 SET test_column = 1 WHERE test_column= 10;
 
     PERFORM hive.back_from_fork();
 END;
@@ -43,7 +47,8 @@ BEGIN
         , 'Column was inserted'
     ;
 
-    ASSERT ( SELECT COUNT(*) FROM table1 ) = 0, 'Back from fork did not revert insert operation';
+    ASSERT ( SELECT COUNT(*) FROM table1 WHERE name ='abc' ) = 0, 'Back from fork did not revert insert operation';
+    ASSERT ( SELECT COUNT(*) FROM table1 WHERE test_column = 10 ) = 1, 'Updated new column was not reverted';
 END;
 $BODY$
 ;
