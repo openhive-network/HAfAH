@@ -5,13 +5,12 @@ test_path=$2;
 
 psql -d postgres -a -f  ./create_db.sql;
 
-# here add extension sql scripts (order may be important)
-psql -d psql_tools_test_db -a -f  ${extension_path}/data_schema.sql
-psql -d psql_tools_test_db -a -f  ${extension_path}/event_triggers.sql
-psql -d psql_tools_test_db -a -f  ${extension_path}/context.sql
-psql -d psql_tools_test_db -a -f  ${extension_path}/register_table.sql
-psql -d psql_tools_test_db -a -f  ${extension_path}/detach_table.sql
-psql -d psql_tools_test_db -a -f  ${extension_path}/back_from_fork.sql
+psql -d psql_tools_test_db -v ON_ERROR_STOP=on -c 'CREATE EXTENSION hive_fork'
+if [ $? -ne 0 ]
+then
+  echo "FAILED. Cannot create extension"
+  exit 1;
+fi
 
 psql -d psql_tools_test_db -a -v ON_ERROR_STOP=on -f  ${test_path};
 result=$?;

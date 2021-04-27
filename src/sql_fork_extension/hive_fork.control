@@ -1,0 +1,5 @@
+# hive_fork psql extension
+comment = 'An extension to support hive forks'
+default_version = @GIT_REVISION@
+relocatable = false
+schema = hive
