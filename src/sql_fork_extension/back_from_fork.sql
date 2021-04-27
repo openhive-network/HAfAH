@@ -5,6 +5,8 @@ CREATE FUNCTION hive.back_from_fork_one_table( _table_schema TEXT, _table_name T
     VOLATILE
 AS
 $BODY$
+DECLARE
+    __columns TEXT = array_to_string( _columns, ',' );
 BEGIN
     -- First we find rows ids with lowest block num, then delete, insert or update these rows with rows ids
     -- revert inserted rows
@@ -28,7 +30,7 @@ BEGIN
 
     -- revert deleted rows
     EXECUTE format(
-        'INSERT INTO %I.%I
+        'INSERT INTO %I.%I( %s )
         (
         SELECT %s FROM
             (
@@ -40,7 +42,8 @@ BEGIN
         )'
         , _table_schema
         , _table_name
-        , array_to_string( _columns, ',' )
+        , __columns
+        , __columns
         , _shadow_table_name
     );
 
@@ -66,7 +69,7 @@ BEGIN
 
     -- now insert old rows
     EXECUTE format(
-            'INSERT INTO %I.%I
+            'INSERT INTO %I.%I( %s )
             (
             SELECT %s FROM
                 (
@@ -78,7 +81,8 @@ BEGIN
             )'
         , _table_schema
         , _table_name
-        , array_to_string( _columns, ',' )
+        , __columns
+        , __columns
         , _shadow_table_name
     );
 
