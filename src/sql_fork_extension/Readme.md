@@ -12,7 +12,7 @@ Any table is automaticly registerd during its creation only when inherits form h
 CREATE TABLE table1( id INTEGER ) INHERITS( hive.base )
 ```
 
-Data from 'hive.base' is used by the fork system to rewind operations. Especcially column 'hive_rowid'
+Data from 'hive.base' is used by the fork system to rewind operations. Especially column 'hive_rowid'
 is used by the system to distinguish between edited rows. During registartion a set of triggers are
 enabled on a table, they will record any changes.
 Moreover a new table is created - a shadow table which structure is the copy of a registered tables + columns for operation
@@ -29,6 +29,12 @@ Because triggers itself add some significant overhead for operations, in some si
 to temporary disable them for sake of better performance. To do this  there are functions: `hive.detach_table` - to disable
 triggers and 'hive.attach_table' to enable triggers. WHen triggers are disabled no support for hive fork is enabled for a table,
 so the application should solve the situation (in most cases is should happen when blocks below irreversible are processed, so no forks happen there)
+
+It is quite possible that the application which use the fork system will want to change the structure of the registered tables.
+It is possible only when coressponding shadow tables is empty. It means before an upgrade application must be in state
+in which there is no pending fork. The system will block ( rise an excpetion ) 'ALTER TABLE' command if corresponding shadow table is not empty.
+When a table is edited its shadow table is automaticly adapted to a new structure ( in fact old shaped shadow table is dropped and a new one is created with a new structure )
+
 ## Installation
 Execute sql scripts on Your database in given order:
 1. data_schema.sql
