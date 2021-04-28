@@ -13,6 +13,7 @@ INCLUDE( compiler )
 INCLUDE( git )
 INCLUDE( libraries )
 INCLUDE( postgres )
+INCLUDE ( sql_extension )
 INCLUDE( targets )
 INCLUDE( tests )
 
