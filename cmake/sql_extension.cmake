@@ -29,7 +29,7 @@ MACRO( ADD_PSQL_EXTENSION )
                 COMMENT "Generate ${EXTENSION_NAME} to ${extension_path}"
         )
 
-        ADD_CUSTOM_TARGET( extension.${EXTENSION_NAME} DEPENDS ${extension_path}/${extension_control_file} )
+        ADD_CUSTOM_TARGET( extension.${EXTENSION_NAME} ALL DEPENDS ${extension_path}/${extension_control_file} ${extension_path}/${EXTENSION_NAME}--${GIT_REVISION}.sql )
 
         INSTALL( DIRECTORY ${extension_path}/ DESTINATION ${POSTGRES_SHAREDIR}/extension OPTIONAL )
     else()

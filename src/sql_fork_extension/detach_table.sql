@@ -1,6 +1,6 @@
 -- Whe a table is deteted their triggers are removed automatically
 -- and there is no need to remove hive_rowid column
-CREATE OR REPLACE FUNCTION hive_clean_after_uregister_table( _schema_name TEXT, _table_name TEXT )
+CREATE OR REPLACE FUNCTION hive.clean_after_uregister_table( _schema_name TEXT, _table_name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE

@@ -72,7 +72,7 @@ BEGIN
     INTO __table, __schema;
 
     IF __table IS NOT NULL THEN
-        PERFORM hive_clean_after_uregister_table( __schema, __table );
+        PERFORM hive.clean_after_uregister_table( __schema, __table );
         RAISE WARNING 'Registered table were dropped: %.%', __schema, __table;
     END IF;
 END;

@@ -33,13 +33,12 @@ RUN git submodule update --init --recursive
 RUN mkdir build \
     && cd build \
     && cmake .. \
-    && make \
+    && make extension.hive_fork \
     && make install
 
 USER postgres
 RUN  /etc/init.d/postgresql start \
     && psql --command "CREATE USER root WITH SUPERUSER CREATEDB;" \
     && cd build \
-    && ctest -R test.functional.sql_fork_extension.* \
-    && ctest -R test.unit.*
+    && ctest -R test.functional.sql_fork_extension.*
 

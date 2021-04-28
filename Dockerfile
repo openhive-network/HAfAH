@@ -7,6 +7,7 @@ RUN \
         apt-get update \
     && \
         apt-get install -y \
+            iputils-ping \
             systemd \
             postgresql \
             postgresql-contrib \
@@ -23,17 +24,14 @@ RUN \
 ADD . /usr/local/src
 WORKDIR /usr/local/src
 
-RUN git submodule update --init --recursive
-
 RUN mkdir build \
-    && cd build \
-    && cmake .. \
-    && make \
-    && make install
+     && cd build \
+     && cmake .. \
+     && make \
+     && make install
 
-USER postgres
+ USER postgres
 RUN  /etc/init.d/postgresql start \
     && psql --command "CREATE USER root WITH SUPERUSER CREATEDB;" \
     && cd build \
     && make CTEST_OUTPUT_ON_FAILURE=1 test
-
