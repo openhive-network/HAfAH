@@ -1,7 +1,14 @@
-ADD_SUBDIRECTORY( googletest )
+ExternalProject_Add(
+        googletest
+        PREFIX "${CMAKE_CURRENT_BINARY_DIR}/googletest"
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        INSTALL_DIR "${CMAKE_BINARY_DIR}"
+        CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}"
+)
 
-INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/tests/unit/googletest/googlemock/include )
-INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/tests/unit/googletest/googletest/include )
+
+INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR}/googletest/googlemock/include )
+INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR}/googletest/googletest/include )
 
 ADD_SUBDIRECTORY( mockups )
 

@@ -29,7 +29,7 @@ MACRO( ADD_PSQL_EXTENSION name )
 
         ADD_CUSTOM_TARGET( extension.${name} DEPENDS ${extension_path}/${extension_control_file} )
 
-        INSTALL( DIRECTORY ${extension_path}/ DESTINATION ${POSTGRES_SHAREDIR}/extension )
+        INSTALL( DIRECTORY ${extension_path}/ DESTINATION ${POSTGRES_SHAREDIR}/extension OPTIONAL )
     else()
         MESSAGE( ERROR "GIT not found" )
     endif()
