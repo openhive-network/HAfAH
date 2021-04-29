@@ -30,7 +30,7 @@ RUN mkdir build \
      && make \
      && make install
 
- USER postgres
+USER postgres
 RUN  /etc/init.d/postgresql start \
     && psql --command "CREATE USER root WITH SUPERUSER CREATEDB;" \
     && cd build \

@@ -5,7 +5,6 @@ MACRO( ADD_PSQL_EXTENSION )
     FILE( MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/extensions/${EXTENSION_NAME} )
     SET( extension_path  ${CMAKE_BINARY_DIR}/extensions/${EXTENSION_NAME} )
     SET( extension_control_file ${EXTENSION_NAME}.control )
-    SET( extension_control_script ${EXTENSION_NAME}.sql )
 
     SET( GIT_REVISION "unknown" )
 
@@ -20,8 +19,9 @@ MACRO( ADD_PSQL_EXTENSION )
         )
         MESSAGE( STATUS "GIT hash: ${GIT_REVISION}" )
 
+        SET( extension_control_script ${extension_path}/${EXTENSION_NAME}--${GIT_REVISION}.sql )
         ADD_CUSTOM_COMMAND(
-                OUTPUT  ${extension_path}/${extension_control_file}
+                OUTPUT  ${extension_path}/${extension_control_file} ${extension_path}/${extension_control_script}
                 COMMAND sed 's/@GIT_REVISION@/${GIT_REVISION}/g' ${extension_control_file}  > ${extension_path}/${extension_control_file}
                 COMMAND ${CMAKE_MODULE_PATH}/merge_sql.sh ${EXTENSION_SOURCES} > ${extension_path}/${EXTENSION_NAME}--${GIT_REVISION}.sql
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -29,7 +29,7 @@ MACRO( ADD_PSQL_EXTENSION )
                 COMMENT "Generate ${EXTENSION_NAME} to ${extension_path}"
         )
 
-        ADD_CUSTOM_TARGET( extension.${EXTENSION_NAME} ALL DEPENDS ${extension_path}/${extension_control_file} ${extension_path}/${EXTENSION_NAME}--${GIT_REVISION}.sql )
+        ADD_CUSTOM_TARGET( extension.${EXTENSION_NAME} ALL DEPENDS ${extension_path}/${extension_control_file} ${extension_path}/${extension_control_script} )
 
         INSTALL( DIRECTORY ${extension_path}/ DESTINATION ${POSTGRES_SHAREDIR}/extension OPTIONAL )
     else()

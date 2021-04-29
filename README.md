@@ -8,7 +8,6 @@ Contains implementations of Postgres specific tools providing functionalities re
 2. postgresql server dev package: `sudo apt-get install postgresql-dev`
 
 ## CMake and make
-1. update submodules: 'git submodule update --init --recursive'
 1. create build directory, for exemple in sources root: `mkdir build`
 2. `cd build`
 3. `cmake ..`
@@ -63,5 +62,18 @@ in the code whith ```#include "gen/header_file_name.hpp"```
 7. global and static variable are written in upper case without prefixes __GLOBAL_VARIABLE_NAME__
 8. templete attributes use CamelCase started with underscore and lower case  _templeteAttribute
 9. file and directory names with snake_case: my_file.cpp
+
+## posql extension based on sql script
+If there is a need to create psql extension ( to use CREATE EXTENSION psql command ) a cmake macro isa added:
+`ADD_PSQL_EXTENSION` with parameters:
+- NAME - name of extension, in current source directory file <name>.control (see https://www.postgresql.org/docs/10/extend-extensions.html#id-1.8.3.18.11 ) 
+- SOURCES - list of sql scripts, the order of the files is important since the are compiled into one sql script
+
+The macro creates a new target extension.<name_of_extension>. The command 'make extension.<name_of_extension>' will create
+an psql extension in `${CMAKE_BINARY_DIR}/extensions/<name>`.
+To install the extension please execute 'make install'.
+
+Warning: Make install will install all already builded project items, to install only one of them please build it
+in separated build directory with making the only one target, for example: `make extension.hive_fork; make install;` 
 
 # Known problems

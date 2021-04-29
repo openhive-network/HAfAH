@@ -4,7 +4,7 @@ MACRO( ADD_UNIT_TESTS module_name)
     MESSAGE( STATUS "TEST sources : ${sources}" )
     ADD_EXECUTABLE( ${test_target} ${sources} )
 
-    ADD_DEPENDENCIES( ${test_target}  googletest )
+    ADD_DEPENDENCIES( ${test_target} googletest )
 
     SETUP_COMPILER( ${test_target} )
     ADD_POSTGRES_INCLUDES( ${test_target} )
