@@ -22,6 +22,7 @@ MACRO( ADD_PSQL_EXTENSION )
         SET( extension_control_script ${extension_path}/${EXTENSION_NAME}--${GIT_REVISION}.sql )
         ADD_CUSTOM_COMMAND(
                 OUTPUT  ${extension_path}/${extension_control_file} ${extension_path}/${extension_control_script}
+                COMMAND rm ${extension_path}/*
                 COMMAND sed 's/@GIT_REVISION@/${GIT_REVISION}/g' ${extension_control_file}  > ${extension_path}/${extension_control_file}
                 COMMAND ${CMAKE_MODULE_PATH}/merge_sql.sh ${EXTENSION_SOURCES} > ${extension_path}/${EXTENSION_NAME}--${GIT_REVISION}.sql
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

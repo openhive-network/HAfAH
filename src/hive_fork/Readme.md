@@ -86,6 +86,8 @@ Columns
 
 ### hive.control_status
 Global information required by the extension functions and trigger
+1. back_from_fork - integral flag, which tell tell the system if back_from_fork is in progress
+2. irreversible_block - irreversible block num, the higest block which cannot be reedited during back from fork
 
 Columns
 1. id - technical trick to do not allow to have more than one row

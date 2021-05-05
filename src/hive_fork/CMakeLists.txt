@@ -6,4 +6,5 @@ ADD_PSQL_EXTENSION(
             register_table.sql
             detach_table.sql
             back_from_fork.sql
+            hived_api.sql
 )
