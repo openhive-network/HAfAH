@@ -118,6 +118,9 @@ Moves a context to the next available block
 #### hive.back_from_fork()
 Rewind register tables, empty the sahdow tables
 
+#### hive.back_context_from_fork( context_name )
+Rewind only tables registered in given context
+
 ### Private - shall not be called by the user
 #### hive.registered_table
 Registers an user table in the fork system, is used by the trigger for CREATE TABLE

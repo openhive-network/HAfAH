@@ -110,3 +110,26 @@ BEGIN
 END;
 $BODY$
 ;
+
+DROP FUNCTION IF EXISTS hive.back_context_from_fork;
+CREATE FUNCTION hive.back_context_from_fork( _context TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+UPDATE hive.control_status SET back_from_fork = TRUE;
+SET CONSTRAINTS ALL DEFERRED;
+
+PERFORM
+hive.back_from_fork_one_table( hrt.origin_table_schema, hrt.origin_table_name, hrt.shadow_table_name, hrt.origin_table_columns )
+    FROM hive.registered_tables hrt
+    JOIN hive.context hc ON hrt.context_id = hc.id
+    WHERE hc.name = _context
+    ORDER BY hrt.id;
+
+UPDATE hive.control_status SET back_from_fork = FALSE;
+END;
+$BODY$
+;
