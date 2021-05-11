@@ -6,7 +6,17 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT irreversible_block FROM hive.control_status ) = 0;
+    CREATE SCHEMA A;
+    PERFORM hive.create_context( 'context' );
+    CREATE TABLE table1( id INTEGER NOT NULL ) INHERITS( hive.base );
+    PERFORM hive.context_next_block( 'context' ); -- 0
+    INSERT INTO table1( id ) VALUES( 0 );
+    PERFORM hive.context_next_block( 'context' ); -- 1
+    INSERT INTO table1( id ) VALUES( 1 );
+    PERFORM hive.context_next_block( 'context' ); -- 2
+    INSERT INTO table1( id ) VALUES( 2 );
+    PERFORM hive.context_next_block( 'context' ); -- 3
+    INSERT INTO table1( id ) VALUES( 3 );
 END;
 $BODY$
 ;
@@ -19,7 +29,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.set_irreversible_block( 101 );
+    PERFORM hive.set_irreversible_block( 2 );
 END
 $BODY$
 ;
@@ -32,7 +42,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-     ASSERT ( SELECT irreversible_block FROM hive.control_status ) = 101;
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 ) = 1, 'Wrong number of rows in the shadow table';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 3 AND hive_block_num = 3 ), 'No expected row';
 END
 $BODY$
 ;
