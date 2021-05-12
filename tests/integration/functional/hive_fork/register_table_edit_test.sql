@@ -28,7 +28,7 @@ BEGIN
     INSERT INTO table1( smth, name ) VALUES( 1, 'abc' );
     UPDATE table1 SET test_column = 1 WHERE test_column= 10;
 
-    PERFORM hive.back_from_fork();
+    PERFORM hive.back_context_from_fork(  'context'  );
 END;
 $BODY$
 ;
