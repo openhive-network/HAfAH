@@ -1,5 +1,5 @@
 DROP FUNCTION IF EXISTS hive.back_from_fork_one_table;
-CREATE FUNCTION hive.back_from_fork_one_table( _table_schema TEXT, _table_name TEXT, _shadow_table_name TEXT, _columns TEXT[])
+CREATE FUNCTION hive.back_from_fork_one_table( _table_schema TEXT, _table_name TEXT, _shadow_table_name TEXT, _columns TEXT[], _block_num_before_fork INT )
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE
@@ -18,6 +18,7 @@ BEGIN
             (
                 SELECT DISTINCT ON ( st.hive_rowid ) st.hive_rowid, st.hive_operation_type
                 FROM hive.%I st
+                WHERE st.hive_block_num > %s
                 ORDER BY st.hive_rowid, st.hive_block_num
             ) as st
         WHERE st.hive_operation_type = 0
@@ -26,6 +27,7 @@ BEGIN
         , _table_name
         , _table_name
         , _shadow_table_name
+        , _block_num_before_fork
     );
 
     -- revert deleted rows
@@ -35,8 +37,9 @@ BEGIN
         SELECT %s FROM
             (
                 SELECT DISTINCT ON ( hive_rowid ) *
-                FROM hive.%I
-                ORDER BY hive_rowid, hive_block_num
+                FROM hive.%I st
+                WHERE st.hive_block_num > %s
+                ORDER BY st.hive_rowid, st.hive_block_num
             ) as st
          WHERE st.hive_operation_type = 1
         )'
@@ -45,6 +48,7 @@ BEGIN
         , __columns
         , __columns
         , _shadow_table_name
+        , _block_num_before_fork
     );
 
     -- update deleted rows
@@ -57,6 +61,7 @@ BEGIN
             (
                 SELECT DISTINCT ON ( st.hive_rowid ) st.hive_rowid, st.hive_operation_type
                 FROM hive.%I st
+                WHERE st.hive_block_num > %s
                 ORDER BY st.hive_rowid, st.hive_block_num
             ) as st
         WHERE st.hive_operation_type = 2
@@ -65,6 +70,7 @@ BEGIN
         , _table_name
         , _table_name
         , _shadow_table_name
+        , _block_num_before_fork
     );
 
     -- now insert old rows
@@ -74,7 +80,8 @@ BEGIN
             SELECT %s FROM
                 (
                     SELECT DISTINCT ON ( hive_rowid ) *
-                    FROM hive.%I
+                    FROM hive.%I st
+                    WHERE st.hive_block_num > %s
                     ORDER BY hive_rowid, hive_block_num
                 ) as st
              WHERE st.hive_operation_type = 2
@@ -84,15 +91,17 @@ BEGIN
         , __columns
         , __columns
         , _shadow_table_name
+        , _block_num_before_fork
     );
 
-    EXECUTE format( 'TRUNCATE hive.%I', _shadow_table_name );
+    -- remove rows from shadow table
+    EXECUTE format( 'DELETE FROM hive.%I st WHERE st.hive_block_num > %s', _shadow_table_name, _block_num_before_fork );
 END;
 $BODY$
 ;
 
-DROP FUNCTION IF EXISTS hive.back_from_fork;
-CREATE FUNCTION hive.back_from_fork()
+
+CREATE OR REPLACE FUNCTION hive.back_context_from_fork( _context TEXT, _block_num_before_fork INT )
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE
@@ -103,33 +112,19 @@ BEGIN
     SET CONSTRAINTS ALL DEFERRED;
 
     PERFORM
-        hive.back_from_fork_one_table( hrt.origin_table_schema, hrt.origin_table_name, hrt.shadow_table_name, hrt.origin_table_columns )
-    FROM hive.registered_tables hrt ORDER BY hrt.id;
-
-    UPDATE hive.control_status SET back_from_fork = FALSE;
-END;
-$BODY$
-;
-
-DROP FUNCTION IF EXISTS hive.back_context_from_fork;
-CREATE FUNCTION hive.back_context_from_fork( _context TEXT )
-    RETURNS void
-    LANGUAGE plpgsql
-    VOLATILE
-AS
-$BODY$
-BEGIN
-UPDATE hive.control_status SET back_from_fork = TRUE;
-SET CONSTRAINTS ALL DEFERRED;
-
-PERFORM
-hive.back_from_fork_one_table( hrt.origin_table_schema, hrt.origin_table_name, hrt.shadow_table_name, hrt.origin_table_columns )
+        hive.back_from_fork_one_table(
+              hrt.origin_table_schema
+            , hrt.origin_table_name
+            , hrt.shadow_table_name
+            , hrt.origin_table_columns
+            , _block_num_before_fork
+        )
     FROM hive.registered_tables hrt
     JOIN hive.context hc ON hrt.context_id = hc.id
     WHERE hc.name = _context
     ORDER BY hrt.id;
 
-UPDATE hive.control_status SET back_from_fork = FALSE;
+    UPDATE hive.control_status SET back_from_fork = FALSE;
 END;
 $BODY$
 ;

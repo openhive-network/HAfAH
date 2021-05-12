@@ -41,7 +41,7 @@ DECLARE
   Delta double precision;
 BEGIN
     StartTime := clock_timestamp();
-    PERFORM hive.back_context_from_fork(  'context'  );
+    PERFORM hive.back_context_from_fork( 'context' , -1 );
     EndTime := clock_timestamp();
     Delta := 1000 * ( extract(epoch from EndTime) - extract(epoch from StartTime) );
     RAISE NOTICE 'Duration in millisecs=%', Delta;

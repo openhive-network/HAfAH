@@ -35,7 +35,7 @@ AS
 $BODY$
 BEGIN
     -- because table1 will be first rewinded table2 will stay with incorrect FK for tabe1(id)
-    PERFORM hive.back_context_from_fork(  'context'  );
+    PERFORM hive.back_context_from_fork( 'context' , -1 );
 END
 $BODY$
 ;

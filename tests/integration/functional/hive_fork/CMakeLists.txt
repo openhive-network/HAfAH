@@ -64,6 +64,7 @@ ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_3_tables_truncate_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_2_tables_schemas_insert_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_2_contexts_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_to_block_num_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_constraint_fk_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( back_from_fork_constraint_unique_test.sql )

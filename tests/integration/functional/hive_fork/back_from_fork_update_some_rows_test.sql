@@ -31,7 +31,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.back_context_from_fork(  'context'  );
+    PERFORM hive.back_context_from_fork( 'context' , -1 );
 END
 $BODY$
 ;
