@@ -6,7 +6,12 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    -- nothing to to here
+    PERFORM hive.create_context( 'context2' );
+    PERFORM hive.create_context( 'context_attached' );
+    PERFORM hive.context_next_block( 'context2' ); -- 0
+    PERFORM hive.context_next_block( 'context2' ); -- 1
+    PERFORM hive.context_next_block( 'context2' ); -- 2
+    PERFORM hive.detach_all( 'context2' );
 END;
 $BODY$
 ;
@@ -20,12 +25,25 @@ AS
 $BODY$
 BEGIN
     BEGIN
-        PERFORM hive.attach_all( 'context' );
+        -- no such context
+        PERFORM hive.attach_all( 'context', 100 );
+        ASSERT FALSE, "Did not catch expected exception for unexisted context";
     EXCEPTION WHEN OTHERS THEN
-        RETURN;
     END;
 
-    ASSERT FALSE, "Did not catch expected exception";
+    BEGIN
+        -- block already processed
+        PERFORM hive.attach_all( 'context2', 1 );
+        ASSERT FALSE, "Did not catch expected exception when block num is to small";
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        -- atach already attached context
+        PERFORM hive.attach_all( 'context_attached', 100 );
+        ASSERT FALSE, "Did not catch expected exception when context was already attached";
+    EXCEPTION WHEN OTHERS THEN
+    END;
 END
 $BODY$
 ;

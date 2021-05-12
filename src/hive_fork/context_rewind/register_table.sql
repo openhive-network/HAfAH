@@ -65,8 +65,8 @@ BEGIN
     );
 
     -- insert information about new registered table
-    INSERT INTO hive.registered_tables( context_id, origin_table_schema, origin_table_name, shadow_table_name, origin_table_columns, is_attached )
-    SELECT hc.id, tables.table_schema, tables.origin, tables.shadow, columns, TRUE
+    INSERT INTO hive.registered_tables( context_id, origin_table_schema, origin_table_name, shadow_table_name, origin_table_columns )
+    SELECT hc.id, tables.table_schema, tables.origin, tables.shadow, columns
     FROM ( SELECT hc.id FROM hive.context hc WHERE hc.name =  _context_name ) as hc
     JOIN ( VALUES( _table_schema, _table_name, __shadow_table_name, __columns_names  )  ) as tables( table_schema, origin, shadow, columns ) ON TRUE
     RETURNING context_id, id INTO __context_id, __registered_table_id

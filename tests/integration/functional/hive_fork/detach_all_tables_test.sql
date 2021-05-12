@@ -43,14 +43,13 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT * FROM hive.registered_tables WHERE origin_table_schema='a' AND origin_table_name='table1' AND is_attached = FALSE ), 'Attach flag is not set to false';
+    ASSERT EXISTS ( SELECT * FROM hive.context WHERE name = 'context' AND is_attached = FALSE ), 'Context is still marked as attached';
+    ASSERT EXISTS ( SELECT * FROM hive.registered_tables WHERE origin_table_schema='a' AND origin_table_name='table1' ), 'Attach flag is not set to false';
     ASSERT NOT EXISTS ( SELECT * FROM hive.shadow_a_table1 ), 'Trigger iserted something into shadow table';
-
-    ASSERT EXISTS ( SELECT * FROM hive.registered_tables WHERE origin_table_schema='b' AND origin_table_name='table2' AND is_attached = FALSE ), 'Attach flag is not set to false';
     ASSERT NOT EXISTS ( SELECT * FROM hive.shadow_b_table2 ), 'Trigger iserted something into shadow table';
 
-    ASSERT EXISTS ( SELECT * FROM hive.registered_tables WHERE origin_table_schema='a' AND origin_table_name='table3' AND is_attached = TRUE ), 'Attach flag is not set to true';
-    ASSERT EXISTS ( SELECT * FROM hive.shadow_a_table3 ), 'Trigger did not iserte something into shadow table';
+    ASSERT EXISTS ( SELECT * FROM hive.context WHERE name = 'context2' AND is_attached = TRUE ), 'Context is not marked as attached';
+    ASSERT EXISTS ( SELECT * FROM hive.shadow_a_table3 ), 'Trigger did not isert something into shadow table';
 END
 $BODY$
 ;

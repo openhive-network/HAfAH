@@ -7,7 +7,7 @@ AS
 $BODY$
 BEGIN
     --TODO: get irreversible = head block from irreversible_blocks table instead of -1
-    INSERT INTO hive.context( name, current_block_num, irreversible_block ) VALUES( _name, -1, -1 );
+    INSERT INTO hive.context( name, current_block_num, irreversible_block, is_attached ) VALUES( _name, -1, -1, TRUE );
 END;
 $BODY$
 ;

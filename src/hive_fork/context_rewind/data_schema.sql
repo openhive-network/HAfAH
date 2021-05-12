@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS hive.context(
     name TEXT NOT NULL,
     current_block_num INTEGER NOT NULL,
     irreversible_block INTEGER NOT NULL,
+    is_attached BOOL NOT NULL,
     CONSTRAINT uq_hive_context_name UNIQUE ( name )
 );
 
@@ -17,7 +18,6 @@ CREATE TABLE IF NOT EXISTS hive.registered_tables(
    origin_table_name TEXT NOT NULL,
    shadow_table_name TEXT NOT NULL,
    origin_table_columns TEXT[] NOT NULL,
-   is_attached BOOL,
    CONSTRAINT fk_hive_registered_tables_context FOREIGN KEY(context_id) REFERENCES hive.context( id )
 );
 

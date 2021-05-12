@@ -33,8 +33,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context' AND current_block_num = -1 AND irreversible_block = -1 );
-    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context2' AND current_block_num = -1 AND irreversible_block = -1 );
+    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context' AND current_block_num = -1 AND irreversible_block = -1 AND is_attached = TRUE );
+    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context2' AND current_block_num = -1 AND irreversible_block = -1 AND is_attached = TRUE );
 END
 $BODY$
 ;

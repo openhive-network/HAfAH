@@ -69,8 +69,6 @@ BEGIN
         EXECUTE format( 'ALTER TABLE %I.%I DISABLE TRIGGER %I', lower(_table_schema), _table_name, __trigger_name  );
     END LOOP;
 
-
-    UPDATE hive.registered_tables SET is_attached = FALSE WHERE id = __table_id;
     RETURN;
 END;
 $BODY$
@@ -94,6 +92,10 @@ BEGIN
     PERFORM hive.detach_table( hrt.origin_table_schema, hrt.origin_table_name )
     FROM hive.registered_tables hrt
     WHERE hrt.context_id = __context_id;
+
+    UPDATE hive.context
+    SET is_attached = FALSE
+    WHERE id = __context_id;
 END;
 $BODY$
 ;
@@ -113,42 +115,58 @@ DECLARE
 BEGIN
     SELECT hrt.id, hrt.shadow_table_name
     FROM hive.registered_tables hrt
-    WHERE  hrt.origin_table_schema = lower( _table_schema ) AND hrt.origin_table_name = _table_name INTO __table_id, __shadow_table_name;
+    JOIN hive.context hc ON hc.id = hrt.context_id
+    WHERE
+          hrt.origin_table_schema = lower( _table_schema )
+      AND hrt.origin_table_name = _table_name
+      AND hc.is_attached = FALSE
+    INTO __table_id, __shadow_table_name;
 
     IF __table_id IS NULL THEN
-            RAISE EXCEPTION 'Table %.% is not registered', _table_schema, _table_name;
+            RAISE EXCEPTION 'Table %.% is not registered or is already attached', _table_schema, _table_name;
     END IF;
 
     FOR __trigger_name IN SELECT ht.trigger_name FROM hive.triggers ht WHERE ht.registered_table_id = __table_id
         LOOP
         EXECUTE format( 'ALTER TABLE %I.%I ENABLE TRIGGER %I', lower(_table_schema), _table_name, __trigger_name  );
     END LOOP;
-
-
-    UPDATE hive.registered_tables SET is_attached = TRUE WHERE id = __table_id;
-    RETURN;
 END;
 $BODY$
 ;
 
-CREATE OR REPLACE FUNCTION hive.attach_all( _context TEXT )
+CREATE OR REPLACE FUNCTION hive.attach_all( _context TEXT, _last_synced_block INT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
 AS
 $BODY$
 DECLARE
-__context_id INTEGER := NULL;
+    __context_id INTEGER := NULL;
+    __current_block_num INTEGER := NULL;
 BEGIN
-SELECT ct.id FROM hive.context ct WHERE ct.name=_context INTO __context_id;
+    SELECT ct.id, ct.current_block_num
+    FROM hive.context ct
+    WHERE ct.name=_context AND ct.is_attached = FALSE
+    INTO __context_id, __current_block_num;
 
     IF __context_id IS NULL THEN
-            RAISE EXCEPTION 'Unknown context %', _context;
+        RAISE EXCEPTION 'Unknown context % or context is already attached', _context;
     END IF;
+
+    IF __current_block_num > _last_synced_block THEN
+        RAISE EXCEPTION 'Context % has already processed block nr %', _context, _last_synced_block;
+    END IF;
+
 
     PERFORM hive.attach_table( hrt.origin_table_schema, hrt.origin_table_name )
     FROM hive.registered_tables hrt
     WHERE hrt.context_id = __context_id;
+
+    UPDATE hive.context
+    SET
+          current_block_num = _last_synced_block
+        , is_attached = TRUE
+    WHERE id = __context_id;
 END;
 $BODY$
 ;

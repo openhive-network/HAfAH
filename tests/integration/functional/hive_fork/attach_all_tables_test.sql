@@ -14,6 +14,9 @@ BEGIN
     PERFORM hive.create_context( 'context2' );
     CREATE TABLE A.table3(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
 
+    PERFORM hive.context_next_block( 'context' );
+    PERFORM hive.context_next_block( 'context2' );
+
     PERFORM hive.detach_all( 'context' );
     PERFORM hive.detach_all( 'context2' );
 END;
@@ -28,9 +31,8 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.attach_all( 'context' );
+    PERFORM hive.attach_all( 'context', 100 );
     PERFORM hive.context_next_block( 'context' );
-    PERFORM hive.context_next_block( 'context2' );
     INSERT INTO A.table1( smth, name ) VALUES (1, 'abc' );
     INSERT INTO B.table2( smth, name ) VALUES (1, 'abc' );
     INSERT INTO A.table3( smth, name ) VALUES (1, 'abc' );
@@ -46,14 +48,12 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT * FROM hive.registered_tables WHERE origin_table_schema='a' AND origin_table_name='table1' AND is_attached = TRUE ), 'Attach flag is not set to false';
-    ASSERT EXISTS ( SELECT * FROM hive.shadow_a_table1 ), 'Trigger iserted something into shadow table';
+    ASSERT EXISTS ( SELECT * FROM hive.context WHERE name='context' AND is_attached = TRUE ), 'Attach flag is still not set';
+    ASSERT EXISTS ( SELECT * FROM hive.shadow_a_table1 ), 'Trigger inserted something into shadow table1';
+    ASSERT EXISTS ( SELECT * FROM hive.shadow_b_table2  ), 'Trigger inserted something into shadow table2';
 
-    ASSERT EXISTS ( SELECT * FROM hive.registered_tables WHERE origin_table_schema='b' AND origin_table_name='table2' AND is_attached = TRUE ), 'Attach flag is not set to false';
-    ASSERT EXISTS ( SELECT * FROM hive.shadow_b_table2 ), 'Trigger iserted something into shadow table';
-
-    ASSERT EXISTS ( SELECT * FROM hive.registered_tables WHERE origin_table_schema='a' AND origin_table_name='table3' AND is_attached = FALSE ), 'Attach flag is not set to true';
-    ASSERT NOT EXISTS ( SELECT * FROM hive.shadow_a_table3 ), 'Trigger did not iserte something into shadow table';
+    ASSERT EXISTS ( SELECT * FROM hive.context WHERE name='context2' AND is_attached = FALSE ), 'Attach flag is still set';
+    ASSERT NOT EXISTS ( SELECT * FROM hive.shadow_a_table3 WHERE hive_block_num = 101 ), 'Trigger did not insert something into shadow table3';
 END
 $BODY$
 ;
