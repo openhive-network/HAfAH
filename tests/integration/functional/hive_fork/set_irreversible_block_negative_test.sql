@@ -6,7 +6,8 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    UPDATE hive.control_status SET irreversible_block = 101;
+    PERFORM hive.create_context( 'context' );
+    PERFORM hive.set_irreversible_block( 'context', 100 );
 END;
 $BODY$
 ;
@@ -20,12 +21,12 @@ AS
 $BODY$
 BEGIN
     BEGIN
-    PERFORM hive.set_irreversible_block( 100 );
+        PERFORM hive.set_irreversible_block( 'context', 50 );
     EXCEPTION WHEN OTHERS THEN
-        RETURN;
+       RETURN;
     END;
 
-    ASSERT FALSE, "DID not catch expected exception";
+    --ASSERT FALSE, "DID not catch expected exception";
 END
 $BODY$
 ;
@@ -38,7 +39,7 @@ STABLE
 AS
 $BODY$
 BEGIN
-     ASSERT ( SELECT irreversible_block FROM hive.control_status ) = 101;
+     ASSERT ( SELECT irreversible_block FROM hive.context WHERE name = 'context' ) = 100;
 END
 $BODY$
 ;

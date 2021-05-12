@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS hive.context(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     current_block_num INTEGER NOT NULL,
+    irreversible_block INTEGER NOT NULL,
     CONSTRAINT uq_hive_context_name UNIQUE ( name )
 );
 

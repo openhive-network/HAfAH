@@ -6,5 +6,6 @@ ADD_PSQL_EXTENSION(
             context_rewind/register_table.sql
             context_rewind/detach_table.sql
             context_rewind/back_from_fork.sql
+            context_rewind/irreversible.sql
             hived_api.sql
 )

@@ -6,7 +6,8 @@ CREATE FUNCTION hive.create_context( _name TEXT )
 AS
 $BODY$
 BEGIN
-    INSERT INTO hive.context( name, current_block_num ) VALUES( _name, -1 );
+    --TODO: get irreversible = head block from irreversible_blocks table instead of -1
+    INSERT INTO hive.context( name, current_block_num, irreversible_block ) VALUES( _name, -1, -1 );
 END;
 $BODY$
 ;
@@ -24,5 +25,3 @@ $BODY$
     RETURNING current_block_num
 $BODY$
 ;
-
---TODO: remove context ?
