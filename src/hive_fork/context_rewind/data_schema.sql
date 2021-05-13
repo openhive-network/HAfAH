@@ -1,6 +1,9 @@
 CREATE SCHEMA IF NOT EXISTS hive;
 
-CREATE TABLE hive.base( hive_rowid BIGSERIAL );
+DROP TYPE IF EXISTS trigger_operation CASCADE;
+CREATE TYPE trigger_operation AS ENUM( 'INSERT', 'DELETE', 'UPDATE' );
+
+CREATE TABLE IF NOT EXISTS hive.base( hive_rowid BIGSERIAL );
 
 CREATE TABLE IF NOT EXISTS hive.context(
     id SERIAL PRIMARY KEY,
@@ -20,16 +23,6 @@ CREATE TABLE IF NOT EXISTS hive.registered_tables(
    origin_table_columns TEXT[] NOT NULL,
    CONSTRAINT fk_hive_registered_tables_context FOREIGN KEY(context_id) REFERENCES hive.context( id )
 );
-
-CREATE TABLE IF NOT EXISTS hive.triggers_operations(
-   id SERIAL PRIMARY KEY,
-   name TEXT NOT NULL,
-   CONSTRAINT uq_hive_triggers_operations_name UNIQUE( name )
-);
-
-INSERT INTO hive.triggers_operations( id, name )
-VALUES ( 0, 'INSERT' ), ( 1, 'DELETE' ), (2, 'UPDATE' )
-ON CONFLICT DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS hive.triggers(
    id SERIAL PRIMARY KEY,

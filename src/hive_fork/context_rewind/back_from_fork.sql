@@ -21,7 +21,7 @@ BEGIN
                 WHERE st.hive_block_num > %s
                 ORDER BY st.hive_rowid, st.hive_block_num
             ) as st
-        WHERE st.hive_operation_type = 0
+        WHERE st.hive_operation_type = ''INSERT''
         )'
         , _table_schema
         , _table_name
@@ -41,7 +41,7 @@ BEGIN
                 WHERE st.hive_block_num > %s
                 ORDER BY st.hive_rowid, st.hive_block_num
             ) as st
-         WHERE st.hive_operation_type = 1
+         WHERE st.hive_operation_type = ''DELETE''
         )'
         , _table_schema
         , _table_name
@@ -64,7 +64,7 @@ BEGIN
                 WHERE st.hive_block_num > %s
                 ORDER BY st.hive_rowid, st.hive_block_num
             ) as st
-        WHERE st.hive_operation_type = 2
+        WHERE st.hive_operation_type = ''UPDATE''
         )'
         , _table_schema
         , _table_name
@@ -84,7 +84,7 @@ BEGIN
                     WHERE st.hive_block_num > %s
                     ORDER BY hive_rowid, hive_block_num
                 ) as st
-             WHERE st.hive_operation_type = 2
+             WHERE st.hive_operation_type = ''UPDATE''
             )'
         , _table_schema
         , _table_name

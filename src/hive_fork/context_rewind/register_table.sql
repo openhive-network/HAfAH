@@ -13,7 +13,7 @@ BEGIN
     EXECUTE format('CREATE TABLE hive.%I AS TABLE %I.%I', __shadow_table_name, _table_schema, _table_name );
     EXECUTE format('DELETE FROM hive.%I', __shadow_table_name ); --empty shadow table if origin table is not empty
     EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I INTEGER NOT NULL', __shadow_table_name, __block_num_column_name );
-    EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I SMALLINT NOT NULL', __shadow_table_name, __operation_column_name );
+    EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I hive.TRIGGER_OPERATION NOT NULL', __shadow_table_name, __operation_column_name );
     EXECUTE format('ALTER TABLE hive.%I ADD CONSTRAINT uk_%s UNIQUE( %I, %I )', __shadow_table_name, __shadow_table_name, __block_num_column_name, __hive_rowid_column_name );
 
     RETURN __shadow_table_name;
@@ -99,7 +99,7 @@ BEGIN
                  RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
             END IF;
 
-            INSERT INTO hive.%I SELECT n.*,  __block_num, 0 FROM new_table n ON CONFLICT DO NOTHING;
+            INSERT INTO hive.%I SELECT n.*,  __block_num, ''INSERT'' FROM new_table n ON CONFLICT DO NOTHING;
             RETURN NEW;
         END;
         $$'
@@ -130,7 +130,7 @@ BEGIN
                 RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
             END IF;
 
-            INSERT INTO hive.%I SELECT o.*, __block_num, 1 FROM old_table o ON CONFLICT DO NOTHING;
+            INSERT INTO hive.%I SELECT o.*, __block_num, ''DELETE'' FROM old_table o ON CONFLICT DO NOTHING;
             RETURN NEW;
         END;
         $$'
@@ -161,7 +161,7 @@ BEGIN
                 RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
             END IF;
 
-            INSERT INTO hive.%I SELECT o.*, __block_num, 2 FROM old_table o ON CONFLICT DO NOTHING;
+            INSERT INTO hive.%I SELECT o.*, __block_num, ''UPDATE'' FROM old_table o ON CONFLICT DO NOTHING;
             RETURN NEW;
         END;
         $$'
@@ -192,7 +192,7 @@ BEGIN
                  RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
              END IF;
 
-             INSERT INTO hive.%I SELECT o.*, __block_num, 1 FROM %I.%I o ON CONFLICT DO NOTHING;
+             INSERT INTO hive.%I SELECT o.*, __block_num, ''DELETE'' FROM %I.%I o ON CONFLICT DO NOTHING;
              RETURN NEW;
          END;
          $$'
