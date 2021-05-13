@@ -74,34 +74,6 @@ END;
 $BODY$
 ;
 
-CREATE OR REPLACE FUNCTION hive.detach_all( _context TEXT )
-    RETURNS void
-    LANGUAGE 'plpgsql'
-    VOLATILE
-AS
-$BODY$
-DECLARE
-    __context_id INTEGER := NULL;
-BEGIN
-    SELECT ct.id FROM hive.context ct WHERE ct.name=_context INTO __context_id;
-
-    IF __context_id IS NULL THEN
-        RAISE EXCEPTION 'Unknown context %', _context;
-    END IF;
-
-    PERFORM hive.detach_table( hrt.origin_table_schema, hrt.origin_table_name )
-    FROM hive.registered_tables hrt
-    WHERE hrt.context_id = __context_id;
-
-    UPDATE hive.context
-    SET is_attached = FALSE
-    WHERE id = __context_id;
-END;
-$BODY$
-;
-
-
-
 CREATE OR REPLACE FUNCTION hive.attach_table( _table_schema TEXT, _table_name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
@@ -130,43 +102,6 @@ BEGIN
         LOOP
         EXECUTE format( 'ALTER TABLE %I.%I ENABLE TRIGGER %I', lower(_table_schema), _table_name, __trigger_name  );
     END LOOP;
-END;
-$BODY$
-;
-
-CREATE OR REPLACE FUNCTION hive.attach_all( _context TEXT, _last_synced_block INT )
-    RETURNS void
-    LANGUAGE 'plpgsql'
-    VOLATILE
-AS
-$BODY$
-DECLARE
-    __context_id INTEGER := NULL;
-    __current_block_num INTEGER := NULL;
-BEGIN
-    SELECT ct.id, ct.current_block_num
-    FROM hive.context ct
-    WHERE ct.name=_context AND ct.is_attached = FALSE
-    INTO __context_id, __current_block_num;
-
-    IF __context_id IS NULL THEN
-        RAISE EXCEPTION 'Unknown context % or context is already attached', _context;
-    END IF;
-
-    IF __current_block_num > _last_synced_block THEN
-        RAISE EXCEPTION 'Context % has already processed block nr %', _context, _last_synced_block;
-    END IF;
-
-
-    PERFORM hive.attach_table( hrt.origin_table_schema, hrt.origin_table_name )
-    FROM hive.registered_tables hrt
-    WHERE hrt.context_id = __context_id;
-
-    UPDATE hive.context
-    SET
-          current_block_num = _last_synced_block
-        , is_attached = TRUE
-    WHERE id = __context_id;
 END;
 $BODY$
 ;
