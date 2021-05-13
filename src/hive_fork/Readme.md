@@ -39,20 +39,33 @@ When a table is edited its shadow table is automaticly adapted to a new structur
 
 ## Installation
 Execute sql scripts on Your database in given order:
+1. context_rewind/data_schema.sql
+1. context_rewind/event_triggers.sql
+1. context_rewind/register_table.sql
+1. context_rewind/detach_table.sql
+1. context_rewind/back_from_fork.sql
+1. context_rewind/irreversible.sql
+1. context_rewind/rewind_api.sql
 1. data_schema.sql
-1. event_triggers.sql
-1. context.sql
-1. register_table.sql 
-1. detach_table.sql
-1. back_from_fork.sql
+1. hived_api.sql
 
 An example of script execution: `psql -d my_db_name -a -f  data_schema.sql`
 
 ## Database structure
-The script `data_schema.sql` creates all necessary tables in `hive` schema.
+The scripts `data_schema.sql` files create all necessary tables in `hive` schema.
 
-### hive.context
-Used to control currently processed blocks for application's tables registered together in th eone context. 
+### HIVE FORK
+#### hive.events_queue
+
+Columns 
+1. id - id of the event
+2. event - type of the event
+3. block_num - block num that releates to the event
+
+
+### CONTEXT REWIND
+#### hive.context
+Used to control currently processed blocks for application's tables registered together in the one context. 
 
 Columns
 1. id - id of the context
@@ -61,7 +74,7 @@ Columns
 4. irreversible_block - irreversible block num, the higest block known by the context which cannot be reedited during back from fork
 4. is_attached - True if triggers are enabled ( a table is attached ), False when are disbaled ( a table is detached )
 
-### hive.registered_tables
+#### hive.registered_tables
 Contains information about registered application tables and their contexts
 
 Columns
@@ -71,14 +84,7 @@ Columns
 4. shadow_table_name - name of the shadow table name for a registered table
 5. origin_table_columns - names of origin table's columns
 
-### hive.triggers_operations
-Names of operation on origin tables which we can revert
-
-Columns
-1. id - id of the operation
-2. name - name of operation
-
-### hive.triggers
+#### hive.triggers
 Contains informations about triggers created by the extension
 
 Columns
@@ -87,7 +93,7 @@ Columns
 3. trigger_name - trigger name
 4. function_name - function name called by the trigger
 
-### hive.control_status
+#### hive.control_status
 Global information required by the extension functions and trigger
 1. back_from_fork - integral flag, which tell tell the system if back_from_fork is in progress
 2. irreversible_block - irreversible block num, the higest block which cannot be reedited during back from fork
@@ -99,19 +105,30 @@ Columns
 ## SQL API
 The set of scripts implements an API for the applications:
 ### Public - for the user
-#### hive.context_detach( context_name )
+#### HIVED API
+##### hive.back_from_fork( _block_num_before_fork )
+Schedules back from fork
+
+##### hive.push_block( _block_num, block_data )
+Push new block
+
+##### hive.set_irreversible( _block_num )
+Set new irreversible block
+
+#### CONTEXT REWIND
+##### hive.context_detach( context_name )
 Detaches triggers atatched to register tables in a given context
 
-#### hive.context_attach( context_name, block_num )
+##### hive.context_attach( context_name, block_num )
 Enables triggers attached to register tables in a given context and set current context block num 
 
-#### hive.context_create( context_name )
+##### hive.context_create( context_name )
 Creates the context with controll block number on which the registered tables are working
 
-#### hive.context_next_block( context_name )
+##### hive.context_next_block( context_name )
 Moves a context to the next available block
 
-#### hive.context_back_from_fork( context_name, block_num )
+##### hive.context_back_from_fork( context_name, block_num )
 Rewind only tables registered in given context to given block_num
 
 ### Private - shall not be called by the user

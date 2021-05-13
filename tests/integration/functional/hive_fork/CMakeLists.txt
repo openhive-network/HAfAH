@@ -90,3 +90,8 @@ ADD_SQL_FUNCTIONAL_TESTS( context_rewind/performance_back_from_truncate_rows_tes
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/performance_insert_rows_one_by_one_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/performance_delete_rows_one_by_one_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/performance_update_rows_one_by_one_test.sql )
+
+ADD_SQL_FUNCTIONAL_TESTS( hived_api/schema_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( hived_api/back_from_fork_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( hived_api/push_block_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( hived_api/set_irreversible_test.sql )

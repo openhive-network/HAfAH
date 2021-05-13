@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS hive;
 
-DROP TYPE IF EXISTS trigger_operation CASCADE;
-CREATE TYPE trigger_operation AS ENUM( 'INSERT', 'DELETE', 'UPDATE' );
+DROP TYPE IF EXISTS hive.trigger_operation CASCADE;
+CREATE TYPE hive.trigger_operation AS ENUM( 'INSERT', 'DELETE', 'UPDATE' );
 
 CREATE TABLE IF NOT EXISTS hive.base( hive_rowid BIGSERIAL );
 
