@@ -6,7 +6,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.create_context( 'context' );
+    PERFORM hive.context_create( 'context' );
     CREATE SCHEMA A;
     CREATE SCHEMA B;
 
@@ -31,7 +31,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.back_context_from_fork( 'context', -1 );
+    PERFORM hive.context_back_from_fork( 'context', -1 );
 END
 $BODY$
 ;

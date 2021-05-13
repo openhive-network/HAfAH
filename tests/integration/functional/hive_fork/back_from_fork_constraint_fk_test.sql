@@ -6,7 +6,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.create_context( 'context' );
+    PERFORM hive.context_create( 'context' );
     CREATE TABLE table1( id INTEGER PRIMARY KEY, smth TEXT NOT NULL ) INHERITS( hive.base );
     CREATE TABLE table2(
           id INTEGER NOT NULL
@@ -33,7 +33,7 @@ AS
 $BODY$
 BEGIN
     -- because table1 will be first rewinded table2 will stay with incorrect FK for tabe1(id)
-    PERFORM hive.back_context_from_fork( 'context' , -1 );
+    PERFORM hive.context_back_from_fork( 'context' , -1 );
 END
 $BODY$
 ;

@@ -6,7 +6,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.create_context( 'context' );
+    PERFORM hive.context_create( 'context' );
     CREATE TABLE table1( id SERIAL PRIMARY KEY, smth INTEGER, name TEXT ) INHERITS( hive.base );
 END;
 $BODY$
@@ -28,7 +28,7 @@ BEGIN
     INSERT INTO table1( smth, name ) VALUES( 1, 'abc' );
     UPDATE table1 SET test_column = 1 WHERE test_column= 10;
 
-    PERFORM hive.back_context_from_fork( 'context' , -1 );
+    PERFORM hive.context_back_from_fork( 'context' , -1 );
 END;
 $BODY$
 ;

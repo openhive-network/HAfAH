@@ -12,7 +12,7 @@ BEGIN
         name TEXT
         );
 
-    PERFORM hive.create_context( 'context' );
+    PERFORM hive.context_create( 'context' );
     CREATE TABLE hive.src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) ) INHERITS( hive.base );
 
     PERFORM hive.context_next_block( 'context' );

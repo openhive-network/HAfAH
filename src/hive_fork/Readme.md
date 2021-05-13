@@ -3,10 +3,12 @@ SQL Scripts which all together creates an extension to support Hive Forks
 
 ## Architecture
 All elements of the extension are placed in 'hive' schema
+### CONTEXT REWIND
+The part of the extension which is responsible to register App tables, save and rewind  operation on the tables.
 
-An application must register its tables dependent on hive blocks.
+An application must register its tables depend of hive blocks.
 Any table is automaticly registerd during its creation only when inherits form hive.base. 
-. A table is resgistered into recently created context If there is no context an exception is thrown.
+. A table is resgistered into recently created context.If there is no context an exception is thrown.
 
 ```
 CREATE TABLE table1( id INTEGER ) INHERITS( hive.base )
@@ -56,6 +58,8 @@ Columns
 1. id - id of the context
 2. name - human redable name of the context, thathts for better readability of the application code
 3. current_block_num - current hive block num processed by the tables registered in the context
+4. irreversible_block - irreversible block num, the higest block known by the context which cannot be reedited during back from fork
+4. is_attached - True if triggers are enabled ( a table is attached ), False when are disbaled ( a table is detached )
 
 ### hive.registered_tables
 Contains information about registered application tables and their contexts
@@ -65,8 +69,7 @@ Columns
 2. context_id - id of the context in which the table is registered
 3. origin_table_name - name of the registered table
 4. shadow_table_name - name of the shadow table name for a registered table
-5. origin_table_columns - names of origin table's columns 
-6. is_attached - True if triggers are enabled ( a table is attached ), False when are disbaled ( a table is detached )
+5. origin_table_columns - names of origin table's columns
 
 ### hive.triggers_operations
 Names of operation on origin tables which we can revert
@@ -96,30 +99,20 @@ Columns
 ## SQL API
 The set of scripts implements an API for the applications:
 ### Public - for the user
-#### hive.detach_table( schema, table )
-Disables triggers atatched to a register table. It is usefull for operation below irreversible block
-when fork is impossible, then we don't want have trigger overhead for each edition of a table.
-
-#### hive.detach_all( context_name )
+#### hive.context_detach( context_name )
 Detaches triggers atatched to register tables in a given context
 
-#### hive.attach_table( schema, table )
-Enables triggers atatched to a register table.
+#### hive.context_attach( context_name, block_num )
+Enables triggers attached to register tables in a given context and set current context block num 
 
-#### hive.attach_all( context_name )
-Enables triggers atatched to register tables in a given context 
-
-#### hive.create_context( context_name )
-Creates the context - controll block number on which the registered tables are working
+#### hive.context_create( context_name )
+Creates the context with controll block number on which the registered tables are working
 
 #### hive.context_next_block( context_name )
 Moves a context to the next available block
 
-#### hive.back_from_fork()
-Rewind register tables, empty the sahdow tables
-
-#### hive.back_context_from_fork( context_name )
-Rewind only tables registered in given context
+#### hive.context_back_from_fork( context_name, block_num )
+Rewind only tables registered in given context to given block_num
 
 ### Private - shall not be called by the user
 #### hive.registered_table
@@ -127,6 +120,13 @@ Registers an user table in the fork system, is used by the trigger for CREATE TA
 
 #### hive.create_shadow_table
 Creates shadow table for given table
+
+#### hive.attach_table( schema, table )
+Enables triggers atatched to a register table.
+
+#### hive.detach_table( schema, table )
+Disables triggers atatched to a register table. It is usefull for operation below irreversible block
+when fork is impossible, then we don't want have trigger overhead for each edition of a table.
 
 ## TODO
 1. Validation of the registered tables

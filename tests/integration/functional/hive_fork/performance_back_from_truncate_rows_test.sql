@@ -12,7 +12,7 @@ BEGIN
         name TEXT
         );
 
-    PERFORM hive.create_context( 'context' );
+    PERFORM hive.context_create( 'context' );
     CREATE TABLE src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2) ) INHERITS( hive.base );
 
     PERFORM hive.context_next_block( 'context' );
@@ -41,7 +41,7 @@ DECLARE
   Delta double precision;
 BEGIN
     StartTime := clock_timestamp();
-    PERFORM hive.back_context_from_fork( 'context' , -1 );
+    PERFORM hive.context_back_from_fork( 'context' , -1 );
     EndTime := clock_timestamp();
     Delta := 1000 * ( extract(epoch from EndTime) - extract(epoch from StartTime) );
     RAISE NOTICE 'Duration in millisecs=%', Delta;

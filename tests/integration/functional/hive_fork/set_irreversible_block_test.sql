@@ -7,7 +7,7 @@ AS
 $BODY$
 BEGIN
     CREATE SCHEMA A;
-    PERFORM hive.create_context( 'context' );
+    PERFORM hive.context_create( 'context' );
     CREATE TABLE table1( id INTEGER NOT NULL ) INHERITS( hive.base );
     PERFORM hive.context_next_block( 'context' ); -- 0
     INSERT INTO table1( id ) VALUES( 0 );
@@ -18,7 +18,7 @@ BEGIN
     PERFORM hive.context_next_block( 'context' ); -- 3
     INSERT INTO table1( id ) VALUES( 3 );
 
-    PERFORM hive.create_context( 'context2' );
+    PERFORM hive.context_create( 'context2' );
     CREATE TABLE table2( id INTEGER NOT NULL ) INHERITS( hive.base );
     PERFORM hive.context_next_block( 'context2' ); -- 0
     INSERT INTO table2( id ) VALUES( 0 );
@@ -40,7 +40,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.set_irreversible_block( 'context', 2 );
+    PERFORM hive.context_set_irreversible_block( 'context', 2 );
 END
 $BODY$
 ;

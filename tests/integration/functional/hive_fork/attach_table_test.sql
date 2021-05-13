@@ -7,9 +7,9 @@ AS
 $BODY$
 BEGIN
     CREATE SCHEMA A;
-    PERFORM hive.create_context( 'context' );
+    PERFORM hive.context_create( 'context' );
     CREATE TABLE A.table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
-    PERFORM hive.detach_all( 'context' );
+    PERFORM hive.context_detach( 'context' );
 END;
 $BODY$
 ;

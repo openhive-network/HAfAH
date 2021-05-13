@@ -8,17 +8,17 @@ $BODY$
 BEGIN
     CREATE SCHEMA A;
     CREATE SCHEMA B;
-    PERFORM hive.create_context( 'context' );
+    PERFORM hive.context_create( 'context' );
     CREATE TABLE A.table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
     CREATE TABLE B.table2(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
-    PERFORM hive.create_context( 'context2' );
+    PERFORM hive.context_create( 'context2' );
     CREATE TABLE A.table3(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
 
     PERFORM hive.context_next_block( 'context' );
     PERFORM hive.context_next_block( 'context2' );
 
-    PERFORM hive.detach_all( 'context' );
-    PERFORM hive.detach_all( 'context2' );
+    PERFORM hive.context_detach( 'context' );
+    PERFORM hive.context_detach( 'context2' );
 END;
 $BODY$
 ;
@@ -31,7 +31,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.attach_all( 'context', 100 );
+    PERFORM hive.context_attach( 'context', 100 );
     PERFORM hive.context_next_block( 'context' );
     INSERT INTO A.table1( smth, name ) VALUES (1, 'abc' );
     INSERT INTO B.table2( smth, name ) VALUES (1, 'abc' );

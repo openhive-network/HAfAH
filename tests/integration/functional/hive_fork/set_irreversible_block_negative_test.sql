@@ -6,8 +6,8 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.create_context( 'context' );
-    PERFORM hive.set_irreversible_block( 'context', 100 );
+    PERFORM hive.context_create( 'context' );
+    PERFORM hive.context_set_irreversible_block( 'context', 100 );
 END;
 $BODY$
 ;
@@ -21,7 +21,7 @@ AS
 $BODY$
 BEGIN
     BEGIN
-        PERFORM hive.set_irreversible_block( 'context', 50 );
+        PERFORM hive.context_set_irreversible_block( 'context', 50 );
     EXCEPTION WHEN OTHERS THEN
        RETURN;
     END;

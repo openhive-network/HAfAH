@@ -20,7 +20,7 @@ AS
 $BODY$
 BEGIN
     BEGIN
-        PERFORM hive.detach_all( 'context' );
+        PERFORM hive.context_detach( 'context' );
     EXCEPTION WHEN OTHERS THEN
         RETURN;
     END;
