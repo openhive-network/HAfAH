@@ -21,7 +21,7 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.get_community_context"
-          params: {"account": "steemit","name": "Hive Gaming"}
+          params: {"account": "steemit","name": "hive-12345"}
       response:
         status_code: 200
         verify_response_with:

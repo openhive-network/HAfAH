@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_created patterns test mock data indirect muted with paging mechanism
 
   marks:
-    - patterntest # alice follows muted of ignoreall who ignores feline1991 (mock data); see also paging_life
+    - patterntest # alice follows muted of ignoreall who ignores agartha (mock data); see also no_param
 
   includes:
     - !include ../../common.yaml

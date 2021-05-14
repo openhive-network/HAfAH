@@ -9,7 +9,7 @@
     "body": "First comment after being muted.01",
     "category": "hive-198723",
     "children": 0,
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -19,11 +19,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive3",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-muted-comment-to-please-comment-hive3",
-    "post_id": 1258041,
+    "post_id": 1256920,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -33,7 +33,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post01",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-198723/@test-safari/please-comment-hive3#@alice/after-muted-comment-to-please-comment-hive3"
   },
   {
@@ -46,7 +46,7 @@
     "body": "Third comment after being muted.03",
     "category": "hive-157439",
     "children": 0,
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -56,11 +56,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive2-03",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-muted-comment-to-please-comment-hive2-03",
-    "post_id": 1258040,
+    "post_id": 1256919,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -70,7 +70,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post03",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-157439/@test-safari/please-comment-hive2-03#@alice/after-muted-comment-to-please-comment-hive2-03"
   },
   {
@@ -83,7 +83,7 @@
     "body": "Second comment after being muted.02",
     "category": "hive-157439",
     "children": 0,
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -93,11 +93,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive2-02",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-muted-comment-to-please-comment-hive2-02",
-    "post_id": 1258039,
+    "post_id": 1256918,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -107,7 +107,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post02",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-157439/@test-safari/please-comment-hive2-02#@alice/after-muted-comment-to-please-comment-hive2-02"
   },
   {
@@ -120,7 +120,7 @@
     "body": "First comment after being muted.01",
     "category": "hive-157439",
     "children": 0,
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -130,11 +130,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive2",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-muted-comment-to-please-comment-hive2",
-    "post_id": 1258038,
+    "post_id": 1256917,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -144,7 +144,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post01",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-157439/@test-safari/please-comment-hive2#@alice/after-muted-comment-to-please-comment-hive2"
   },
   {
@@ -161,7 +161,7 @@
     "children": 0,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -171,11 +171,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive1-03",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-muted-comment-to-please-comment-hive1-03",
-    "post_id": 1258037,
+    "post_id": 1256916,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -185,7 +185,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post03",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-171487/@test-safari/please-comment-hive1-03#@alice/after-muted-comment-to-please-comment-hive1-03"
   },
   {
@@ -202,7 +202,7 @@
     "children": 0,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -212,11 +212,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive1-02",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-muted-comment-to-please-comment-hive1-02",
-    "post_id": 1258036,
+    "post_id": 1256915,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -226,7 +226,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post01",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-171487/@test-safari/please-comment-hive1-02#@alice/after-muted-comment-to-please-comment-hive1-02"
   },
   {
@@ -243,7 +243,7 @@
     "children": 0,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -253,11 +253,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive1",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-muted-comment-to-please-comment-hive1",
-    "post_id": 1258035,
+    "post_id": 1256914,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -267,7 +267,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post01",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-171487/@test-safari/please-comment-hive1#@alice/after-muted-comment-to-please-comment-hive1"
   },
   {
@@ -280,7 +280,7 @@
     "body": "This is my third post in this community after being muted!",
     "category": "hive-198723",
     "children": 0,
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -288,11 +288,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Third-after-muted-post-hive3",
-    "post_id": 1258034,
+    "post_id": 1256913,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -302,7 +302,7 @@
       "total_votes": 0
     },
     "title": "Hello x6",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-198723/@alice/Third-after-muted-post-hive3"
   },
   {
@@ -315,7 +315,7 @@
     "body": "This is my third post in this community after being muted!",
     "category": "hive-157439",
     "children": 0,
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -323,11 +323,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Third-after-muted-post-hive2",
-    "post_id": 1258033,
+    "post_id": 1256912,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -337,7 +337,7 @@
       "total_votes": 0
     },
     "title": "Hello x6",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-157439/@alice/Third-after-muted-post-hive2"
   },
   {
@@ -354,7 +354,7 @@
     "children": 0,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -362,11 +362,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Third-after-muted-post-hive1",
-    "post_id": 1258032,
+    "post_id": 1256911,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -376,7 +376,7 @@
       "total_votes": 0
     },
     "title": "Hello x6",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-171487/@alice/Third-after-muted-post-hive1"
   },
   {
@@ -389,7 +389,7 @@
     "body": "This is my second post in this community after being muted!",
     "category": "hive-198723",
     "children": 0,
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -397,11 +397,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Second-after-muted-post-hive3",
-    "post_id": 1258031,
+    "post_id": 1256910,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -411,7 +411,7 @@
       "total_votes": 0
     },
     "title": "Hello x5",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-198723/@alice/Second-after-muted-post-hive3"
   },
   {
@@ -424,7 +424,7 @@
     "body": "This is my second post in this community after being muted!",
     "category": "hive-157439",
     "children": 0,
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -432,11 +432,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Second-after-muted-post-hive2",
-    "post_id": 1258030,
+    "post_id": 1256909,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -446,7 +446,7 @@
       "total_votes": 0
     },
     "title": "Hello x5",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-157439/@alice/Second-after-muted-post-hive2"
   },
   {
@@ -463,7 +463,7 @@
     "children": 0,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -471,11 +471,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "Second-after-muted-post-hive1",
-    "post_id": 1258029,
+    "post_id": 1256908,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -485,7 +485,7 @@
       "total_votes": 0
     },
     "title": "Hello x5",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-171487/@alice/Second-after-muted-post-hive1"
   },
   {
@@ -498,7 +498,7 @@
     "body": "This is my first post in this community after being muted!",
     "category": "hive-198723",
     "children": 0,
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -506,11 +506,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "First-after-muted-post-hive3",
-    "post_id": 1258028,
+    "post_id": 1256907,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -520,7 +520,7 @@
       "total_votes": 0
     },
     "title": "Hello x4",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-198723/@alice/First-after-muted-post-hive3"
   },
   {
@@ -533,7 +533,7 @@
     "body": "This is my first post in this community after being muted!",
     "category": "hive-157439",
     "children": 0,
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -541,11 +541,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "First-after-muted-post-hive2",
-    "post_id": 1258027,
+    "post_id": 1256906,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -555,7 +555,7 @@
       "total_votes": 0
     },
     "title": "Hello x4",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-157439/@alice/First-after-muted-post-hive2"
   },
   {
@@ -572,7 +572,7 @@
     "children": 0,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:36",
+    "created": "2016-09-15T18:01:51",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -580,11 +580,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:36",
+    "payout_at": "2016-09-22T18:01:51",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "First-after-muted-post-hive1",
-    "post_id": 1258026,
+    "post_id": 1256905,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -594,7 +594,7 @@
       "total_votes": 0
     },
     "title": "Hello x4",
-    "updated": "2016-09-15T19:47:36",
+    "updated": "2016-09-15T18:01:51",
     "url": "/hive-171487/@alice/First-after-muted-post-hive1"
   },
   {
@@ -607,7 +607,7 @@
     "body": "This is my third post in this community!",
     "category": "hive-198723",
     "children": 0,
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -615,11 +615,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "My-third-post-hive3",
-    "post_id": 1258012,
+    "post_id": 1256889,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -629,7 +629,7 @@
       "total_votes": 0
     },
     "title": "Hello x3",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-198723/@alice/My-third-post-hive3"
   },
   {
@@ -642,7 +642,7 @@
     "body": "This is my third post in this community!",
     "category": "hive-157439",
     "children": 0,
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -650,11 +650,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "My-third-post-hive2",
-    "post_id": 1258011,
+    "post_id": 1256888,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -664,7 +664,7 @@
       "total_votes": 0
     },
     "title": "Hello x3",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-157439/@alice/My-third-post-hive2"
   },
   {
@@ -681,7 +681,7 @@
     "children": 0,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -689,11 +689,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "My-third-post-hive1",
-    "post_id": 1258010,
+    "post_id": 1256887,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -703,7 +703,7 @@
       "total_votes": 0
     },
     "title": "Hello x3",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-171487/@alice/My-third-post-hive1"
   },
   {
@@ -716,7 +716,7 @@
     "body": "This is my second post in this community!",
     "category": "hive-198723",
     "children": 1,
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -724,21 +724,21 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "My-second-post-hive3",
-    "post_id": 1258006,
+    "post_id": 1256883,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
-      "gray": false,
+      "gray": true,
       "hide": false,
       "total_votes": 0
     },
     "title": "Hello x2",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-198723/@alice/My-second-post-hive3"
   }
 ]

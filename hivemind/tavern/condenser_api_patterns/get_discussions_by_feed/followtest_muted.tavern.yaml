@@ -2,9 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_feed patterns test
 
   marks:
-    - patterntest
-    - failing
-    - xfail # not filtering muted "nonlinearone"
+    - patterntest # due to controversial changes cutting out observer related functionality this test is currenttly not filtering muted "nonlinearone"
 
   includes:
     - !include ../../common.yaml

@@ -10,7 +10,7 @@ params:
 
   "start_author":"{author}" + "start_permlink":"{permlink}",
 
-    optional, should point to valid apost
+    optional, should point to valid post
 
   "limit":{number},
 

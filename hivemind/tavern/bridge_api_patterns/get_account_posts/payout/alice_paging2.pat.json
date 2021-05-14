@@ -9,7 +9,7 @@
     "body": "This is my second post in this community!",
     "category": "hive-157439",
     "children": 1,
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -17,21 +17,21 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "My-second-post-hive2",
-    "post_id": 1258005,
+    "post_id": 1256882,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
-      "gray": false,
+      "gray": true,
       "hide": false,
       "total_votes": 0
     },
     "title": "Hello x2",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-157439/@alice/My-second-post-hive2"
   },
   {
@@ -48,7 +48,7 @@
     "children": 1,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -56,21 +56,21 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "My-second-post-hive1",
-    "post_id": 1258004,
+    "post_id": 1256881,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
-      "gray": false,
+      "gray": true,
       "hide": false,
       "total_votes": 0
     },
     "title": "Hello x2",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-171487/@alice/My-second-post-hive1"
   },
   {
@@ -83,7 +83,7 @@
     "body": "This is my third comment in this community.03",
     "category": "hive-198723",
     "children": 0,
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -93,11 +93,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive3-03",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "comment-to-please-comment-hive3-03",
-    "post_id": 1258003,
+    "post_id": 1256880,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -107,7 +107,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post03",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-198723/@test-safari/please-comment-hive3-03#@alice/comment-to-please-comment-hive3-03"
   },
   {
@@ -120,7 +120,7 @@
     "body": "This is my second comment in this community.02",
     "category": "hive-198723",
     "children": 0,
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -130,11 +130,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive3-02",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "comment-to-please-comment-hive3-02",
-    "post_id": 1258002,
+    "post_id": 1256879,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -144,7 +144,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post02",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-198723/@test-safari/please-comment-hive3-02#@alice/comment-to-please-comment-hive3-02"
   },
   {
@@ -157,7 +157,7 @@
     "body": "This is my first comment in this community.01",
     "category": "hive-198723",
     "children": 0,
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -167,11 +167,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive3",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "comment-to-please-comment-hive3",
-    "post_id": 1258001,
+    "post_id": 1256878,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -181,7 +181,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post01",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-198723/@test-safari/please-comment-hive3#@alice/comment-to-please-comment-hive3"
   },
   {
@@ -194,7 +194,7 @@
     "body": "This is my third comment in this community.03",
     "category": "hive-157439",
     "children": 0,
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -204,11 +204,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive2-03",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "comment-to-please-comment-hive2-03",
-    "post_id": 1258000,
+    "post_id": 1256877,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -218,7 +218,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post03",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-157439/@test-safari/please-comment-hive2-03#@alice/comment-to-please-comment-hive2-03"
   },
   {
@@ -231,7 +231,7 @@
     "body": "This is my second comment in this community.02",
     "category": "hive-157439",
     "children": 0,
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -241,11 +241,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive2-02",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "comment-to-please-comment-hive2-02",
-    "post_id": 1257999,
+    "post_id": 1256876,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -255,7 +255,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post02",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-157439/@test-safari/please-comment-hive2-02#@alice/comment-to-please-comment-hive2-02"
   },
   {
@@ -268,7 +268,7 @@
     "body": "This is my first comment in this community.01",
     "category": "hive-157439",
     "children": 0,
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -278,11 +278,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive2",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "comment-to-please-comment-hive2",
-    "post_id": 1257998,
+    "post_id": 1256875,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -292,7 +292,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post01",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-157439/@test-safari/please-comment-hive2#@alice/comment-to-please-comment-hive2"
   },
   {
@@ -309,7 +309,7 @@
     "children": 0,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -319,11 +319,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive1-03",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "comment-to-please-comment-hive1-03",
-    "post_id": 1257997,
+    "post_id": 1256874,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -333,7 +333,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post03",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-171487/@test-safari/please-comment-hive1-03#@alice/comment-to-please-comment-hive1-03"
   },
   {
@@ -350,7 +350,7 @@
     "children": 0,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -360,11 +360,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive1-02",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "comment-to-please-comment-hive1-02",
-    "post_id": 1257996,
+    "post_id": 1256873,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -374,7 +374,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post01",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-171487/@test-safari/please-comment-hive1-02#@alice/comment-to-please-comment-hive1-02"
   },
   {
@@ -391,7 +391,7 @@
     "children": 0,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:24",
+    "created": "2016-09-15T18:01:39",
     "curator_payout_value": "0.000 HBD",
     "depth": 1,
     "is_paidout": false,
@@ -401,11 +401,11 @@
     "parent_author": "test-safari",
     "parent_permlink": "please-comment-hive1",
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:24",
+    "payout_at": "2016-09-22T18:01:39",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "comment-to-please-comment-hive1",
-    "post_id": 1257994,
+    "post_id": 1256871,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -415,7 +415,7 @@
       "total_votes": 0
     },
     "title": "RE: Comment my post01",
-    "updated": "2016-09-15T19:47:24",
+    "updated": "2016-09-15T18:01:39",
     "url": "/hive-171487/@test-safari/please-comment-hive1#@alice/comment-to-please-comment-hive1"
   },
   {
@@ -428,7 +428,7 @@
     "body": "EDITED. This is my first post in this community !",
     "category": "hive-198723",
     "children": 1,
-    "created": "2016-09-15T19:47:21",
+    "created": "2016-09-15T18:01:36",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -436,11 +436,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:21",
+    "payout_at": "2016-09-22T18:01:36",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "My-first-post-hive-3",
-    "post_id": 1257991,
+    "post_id": 1256868,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -450,7 +450,7 @@
       "total_votes": 0
     },
     "title": "Hello",
-    "updated": "2016-09-15T19:47:33",
+    "updated": "2016-09-15T18:01:48",
     "url": "/hive-198723/@alice/My-first-post-hive-3"
   },
   {
@@ -463,7 +463,7 @@
     "body": "EDITED. This is my first post in this community !",
     "category": "hive-157439",
     "children": 1,
-    "created": "2016-09-15T19:47:21",
+    "created": "2016-09-15T18:01:36",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -471,11 +471,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:21",
+    "payout_at": "2016-09-22T18:01:36",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "My-first-post-hive-2",
-    "post_id": 1257990,
+    "post_id": 1256867,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -485,7 +485,7 @@
       "total_votes": 0
     },
     "title": "Hello",
-    "updated": "2016-09-15T19:47:33",
+    "updated": "2016-09-15T18:01:48",
     "url": "/hive-157439/@alice/My-first-post-hive-2"
   },
   {
@@ -502,7 +502,7 @@
     "children": 1,
     "community": "hive-171487",
     "community_title": "Banana",
-    "created": "2016-09-15T19:47:21",
+    "created": "2016-09-15T18:01:36",
     "curator_payout_value": "0.000 HBD",
     "depth": 0,
     "is_paidout": false,
@@ -510,11 +510,11 @@
     "max_accepted_payout": "1000000.000 HBD",
     "net_rshares": 0,
     "payout": 0.0,
-    "payout_at": "2016-09-22T19:47:21",
+    "payout_at": "2016-09-22T18:01:36",
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "My-first-post-hive-1",
-    "post_id": 1257989,
+    "post_id": 1256866,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -524,7 +524,7 @@
       "total_votes": 0
     },
     "title": "Hello",
-    "updated": "2016-09-15T19:47:33",
+    "updated": "2016-09-15T18:01:48",
     "url": "/hive-171487/@alice/My-first-post-hive-1"
   },
   {

@@ -2,11 +2,7 @@
   test_name: Hivemind bridge_api.get_ranked_posts maximum limit patterns test
 
   marks:
-    - patterntest # blacklists not matched due to lack of global blacklist
-
-  # Communities not implemented under 5 mln blocks, but some were created by mock mechanism.
-  # For these communities some posts were created, therefore an original result is different from original pattern.
-  # For mock reblogs there were created some posts as well.
+    - patterntest # blacklists not matched due to lack of global blacklist; originally ordering of posts with the same creation date was wrong
 
   includes:
     - !include ../../../common.yaml

@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_discussion brianphobos
+  test_name: Hivemind bridge_api.get_discussion georgeabitbol
 
   marks:
     - fullsynctest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.get_discussion brianphobos
+    - name: bridge_api.get_discussion georgeabitbol
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
