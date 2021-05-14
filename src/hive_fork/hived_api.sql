@@ -7,6 +7,8 @@ $BODY$
 BEGIN
     INSERT INTO hive.events_queue( event, block_num )
         VALUES( 'BACK_FROM_FORK', _block_num_before_fork );
+    INSERT INTO hive.fork(block_num, time_of_fork)
+        VALUES( _block_num_before_fork, LOCALTIMESTAMP );
 END;
 $BODY$
 ;

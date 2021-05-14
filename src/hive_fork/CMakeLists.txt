@@ -9,5 +9,6 @@ ADD_PSQL_EXTENSION(
             context_rewind/rewind_api.sql
             data_schema.sql
             irreversible_blocks.sql
+            reversible_blocks.sql
             hived_api.sql
 )
