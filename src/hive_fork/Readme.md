@@ -62,6 +62,10 @@ Columns
 2. event - type of the event
 3. block_num - block num that releates to the event
 
+##### hive.app_context
+Inherits from hive.context
+
+1. event_id - id of the last processed event
 
 ### CONTEXT REWIND
 #### hive.context

@@ -6,3 +6,8 @@ CREATE TABLE IF NOT EXISTS hive.events_queue(
     , event hive.event_type NOT NULL
     , block_num INT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS hive.app_context(
+      events_id BIGINT NOT NULL
+    , CONSTRAINT fk_hive_app_context FOREIGN KEY(events_id) REFERENCES hive.events_queue( id )
+) INHERITS ( hive.context );

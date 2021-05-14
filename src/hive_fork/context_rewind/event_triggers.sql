@@ -95,7 +95,7 @@ BEGIN
         FROM pg_event_trigger_ddl_commands() as tr
         JOIN pg_catalog.pg_inherits pgi ON tr.objid = pgi.inhrelid
         JOIN pg_class pgc ON pgc.oid = tr.objid
-        WHERE tr.object_type = 'table'
+        WHERE tr.object_type = 'table' AND pgi.inhparent = 'hive.base'::regclass
     ) as tables;
 
 END;
