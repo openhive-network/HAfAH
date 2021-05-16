@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "Community 789 does not exist",
+  "data": "given community name is not valid",
   "message": "Invalid parameters"
 }

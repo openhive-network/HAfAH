@@ -2,7 +2,7 @@
   test_name: Hivemind condenser_api.get_discussions_by_created patterns test mock data muted with paging mechanism
 
   marks:
-    - patterntest # ignoreall ignores feline1991 (mock data); see also no_params
+    - patterntest # ignoreall ignores agartha (mock data); see also no_params
 
   includes:
     - !include ../../common.yaml
