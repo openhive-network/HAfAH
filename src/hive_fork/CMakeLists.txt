@@ -11,4 +11,5 @@ ADD_PSQL_EXTENSION(
             irreversible_blocks.sql
             reversible_blocks.sql
             hived_api.sql
+            app_api.sql
 )
