@@ -6,8 +6,8 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'context2' );
-    PERFORM hive.context_create( 'context_attached' );
+    PERFORM hive.context_create( 'context2', 1 );
+    PERFORM hive.context_create( 'context_attached', 1 );
     PERFORM hive.context_next_block( 'context2' ); -- 0
     PERFORM hive.context_next_block( 'context2' ); -- 1
     PERFORM hive.context_next_block( 'context2' ); -- 2

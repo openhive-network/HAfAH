@@ -6,7 +6,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'context' );
+    PERFORM hive.context_create( 'context', 1 );
 END;
 $BODY$
 ;

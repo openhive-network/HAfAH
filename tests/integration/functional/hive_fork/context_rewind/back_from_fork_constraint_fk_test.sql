@@ -6,7 +6,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'context' );
+    PERFORM hive.context_create( 'context', 1 );
     CREATE TABLE table1( id INTEGER PRIMARY KEY, smth TEXT NOT NULL ) INHERITS( hive.base );
     CREATE TABLE table2(
           id INTEGER NOT NULL

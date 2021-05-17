@@ -19,8 +19,8 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'my_context' );
-    PERFORM hive.context_create( 'my_context2' );
+    PERFORM hive.context_create( 'context', 1 );
+    PERFORM hive.context_create( 'context2', 5 );
 END
 $BODY$
 ;
@@ -33,8 +33,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context' AND current_block_num = -1 AND irreversible_block = -1 AND is_attached = TRUE );
-    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context2' AND current_block_num = -1 AND irreversible_block = -1 AND is_attached = TRUE );
+    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'context' AND current_block_num = 1 AND irreversible_block = 1 AND is_attached = TRUE );
+    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'context2' AND current_block_num = 5 AND irreversible_block = 5 AND is_attached = TRUE );
 END
 $BODY$
 ;

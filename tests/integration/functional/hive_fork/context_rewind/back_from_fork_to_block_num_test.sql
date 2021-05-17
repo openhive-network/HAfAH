@@ -6,15 +6,15 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'context' );
+    PERFORM hive.context_create( 'context', 1 );
     CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
-    PERFORM hive.context_next_block( 'context' ); -- block: 0
-    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla' );
-    PERFORM hive.context_next_block( 'context' ); -- block: 1
-    UPDATE table1 SET id=321;
     PERFORM hive.context_next_block( 'context' ); -- block: 2
-    UPDATE table1 SET id=231;
+    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla' );
     PERFORM hive.context_next_block( 'context' ); -- block: 3
+    UPDATE table1 SET id=321;
+    PERFORM hive.context_next_block( 'context' ); -- block: 4
+    UPDATE table1 SET id=231;
+    PERFORM hive.context_next_block( 'context' ); -- block: 5
     UPDATE table1 SET id=132;
 END;
 $BODY$
@@ -28,7 +28,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_back_from_fork( 'context' , 1 );
+    PERFORM hive.context_back_from_fork( 'context', 3 );
 END
 $BODY$
 ;
@@ -43,8 +43,8 @@ $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM table1 WHERE id=321 ) = 1, 'Updated row was not reverted or reverted to wrong number';
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 ) = 2, 'Unexpected number of rows in the shadow table';
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 WHERE hive_block_num = 0 ) = 1, 'No expected row (0) in the shadow table';
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 WHERE hive_block_num = 1 ) = 1, 'No expected row (1) in the shadow table';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 WHERE hive_block_num = 2 ) = 1, 'No expected row (0) in the shadow table';
+    ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 WHERE hive_block_num = 3 ) = 1, 'No expected row (1) in the shadow table';
 END
 $BODY$
 ;

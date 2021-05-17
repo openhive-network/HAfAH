@@ -6,7 +6,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'context' );
+    PERFORM hive.context_create( 'context', 1 );
     CREATE TABLE hive.table1( id SERIAL PRIMARY KEY, smth INTEGER, name TEXT ) INHERITS( hive.base );
 END;
 $BODY$

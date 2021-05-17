@@ -6,7 +6,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'context' );
+    PERFORM hive.context_create( 'context', 1 );
     CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     CREATE TABLE table2( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     CREATE TABLE table3( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
@@ -17,7 +17,7 @@ BEGIN
     INSERT INTO table3( id, smth ) VALUES( 323, 'blabla3' );
 
 
-    PERFORM hive.context_next_block( 'my_context' );
+    PERFORM hive.context_next_block( 'context' );
 
     TRUNCATE hive.shadow_public_table1; --to do not revert inserts
     TRUNCATE hive.shadow_public_table2; --to do not revert inserts
