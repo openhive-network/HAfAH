@@ -5,10 +5,10 @@ Striked out tasks are already done.
 1. ~~**context_rewind** update context rewind subsystem api to hive_fork requirements~~
 2. ~~**schema** add required tables (reversible/irreversible blocks, events queue, app_contexts)~~ 
 1. ~~**hived_api** **push_block** insert block into reversible blocks~~
-2. **hived_api** **push_block** insert event into events queue
-3. **hived_api** **back_from_fork** insert event into events queue
-4. **hived_api** **set_irreversible** insert event into events queue
-5. **hived_api** **set_irreversible** clean up obsolete and events
+2. ~~**hived_api** **push_block** insert event into events queue~~
+3. ~~**hived_api** **back_from_fork** insert event into events queue~~
+4. ~~**hived_api** **set_irreversible** insert event into events queue~~
+5. **hived_api** **set_irreversible** clean up obsolete events
 6. **hived_api** **set_irreversible** move reversible blocks into irreversible
 7. **app_api** **app_create_context** create function and context with context_rewind api
 7. **app_api** **app_create_context** create blocks view for each context
