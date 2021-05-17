@@ -6,7 +6,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'context', 1 );
+    PERFORM hive.context_create( 'context' );
     CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
 END;
 $BODY$
@@ -44,17 +44,17 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.hive_block_num = 2 AND hs.hive_operation_type='INSERT' ), 'Lack of insert operation';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 223 AND hs.hive_rowid = 2 AND hs.hive_block_num = 2 AND hs.hive_operation_type='INSERT' ), 'Lack of insert operation';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 323 AND hs.hive_rowid = 3 AND hs.hive_block_num = 2 AND hs.hive_operation_type='INSERT' ), 'Lack of insert operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.hive_block_num = 0 AND hs.hive_operation_type='INSERT' ), 'Lack of insert operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 223 AND hs.hive_rowid = 2 AND hs.hive_block_num = 0 AND hs.hive_operation_type='INSERT' ), 'Lack of insert operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 323 AND hs.hive_rowid = 3 AND hs.hive_block_num = 0 AND hs.hive_operation_type='INSERT' ), 'Lack of insert operation';
 
-    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.hive_block_num = 3 AND hs.hive_operation_type='UPDATE' ), 'Lack of update operation';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 223 AND hs.hive_rowid = 2 AND hs.hive_block_num = 3 AND hs.hive_operation_type='UPDATE' ), 'Lack of update operation';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 323 AND hs.hive_rowid = 3 AND hs.hive_block_num = 3 AND hs.hive_operation_type='UPDATE' ), 'Lack of update operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 123 AND hs.hive_rowid = 1 AND hs.hive_block_num = 1 AND hs.hive_operation_type='UPDATE' ), 'Lack of update operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 223 AND hs.hive_rowid = 2 AND hs.hive_block_num = 1 AND hs.hive_operation_type='UPDATE' ), 'Lack of update operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 323 AND hs.hive_rowid = 3 AND hs.hive_block_num = 1 AND hs.hive_operation_type='UPDATE' ), 'Lack of update operation';
 
-    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 423 AND hs.hive_rowid = 1 AND hs.hive_block_num = 4 AND hs.hive_operation_type='DELETE' ), 'Lack of delete operation';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 523 AND hs.hive_rowid = 2 AND hs.hive_block_num = 4 AND hs.hive_operation_type='DELETE' ), 'Lack of delete operation';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 623 AND hs.hive_rowid = 3 AND hs.hive_block_num = 4 AND hs.hive_operation_type='DELETE' ), 'Lack of delete operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 423 AND hs.hive_rowid = 1 AND hs.hive_block_num = 2 AND hs.hive_operation_type='DELETE' ), 'Lack of delete operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 523 AND hs.hive_rowid = 2 AND hs.hive_block_num = 2 AND hs.hive_operation_type='DELETE' ), 'Lack of delete operation';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 623 AND hs.hive_rowid = 3 AND hs.hive_block_num = 2 AND hs.hive_operation_type='DELETE' ), 'Lack of delete operation';
 
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 ) = 9;
 END

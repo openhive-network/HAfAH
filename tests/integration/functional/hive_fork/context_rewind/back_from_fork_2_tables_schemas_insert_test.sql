@@ -6,7 +6,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'context', 1 );
+    PERFORM hive.context_create( 'context' );
     CREATE SCHEMA A;
     CREATE SCHEMA B;
 

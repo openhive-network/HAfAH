@@ -1,14 +1,13 @@
 DROP FUNCTION IF EXISTS hive.context_create;
-CREATE FUNCTION hive.context_create( _name TEXT, _irreversible_block INT )
+CREATE FUNCTION hive.context_create( _name TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
 AS
 $BODY$
 BEGIN
-    -- Each context started with irreversible block
-    INSERT INTO hive.context( name, current_block_num, irreversible_block, is_attached )
-    VALUES( _name, _irreversible_block, _irreversible_block, TRUE );
+    --TODO: get irreversible = head block from irreversible_blocks table instead of -1
+    INSERT INTO hive.context( name, current_block_num, irreversible_block, is_attached ) VALUES( _name, -1, -1, TRUE );
 END;
 $BODY$
 ;

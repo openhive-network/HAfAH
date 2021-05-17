@@ -7,7 +7,7 @@ AS
 $BODY$
 BEGIN
     CREATE SCHEMA A;
-    PERFORM hive.context_create( 'context', 1 );
+    PERFORM hive.context_create( 'context' );
 END;
 $BODY$
 ;

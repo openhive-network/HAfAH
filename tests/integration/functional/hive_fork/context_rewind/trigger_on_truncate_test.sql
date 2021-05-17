@@ -6,7 +6,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'context', 1 );
+    PERFORM hive.context_create( 'context' );
     CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     PERFORM hive.context_next_block( 'context' );
     INSERT INTO table1( id, smth ) VALUES( 123, 'balbla' );
@@ -37,7 +37,7 @@ AS
 $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 hs WHERE hs.id = 123 AND hs.smth='balbla' ) = 2, 'No expected id value in shadow table';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 123 AND hs.smth='balbla' AND hive_block_num = 3 AND hive_operation_type = 'DELETE' ), 'Wrong block num';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 123 AND hs.smth='balbla' AND hive_block_num = 1 AND hive_operation_type = 'DELETE' ), 'Wrong block num';
 END
 $BODY$
 ;

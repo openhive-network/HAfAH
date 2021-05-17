@@ -6,13 +6,13 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'context', 1 );
+    PERFORM hive.context_create( 'context' );
     CREATE TABLE table1( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     PERFORM hive.context_next_block( 'context' );
     INSERT INTO table1( id, smth ) VALUES( 123, 'blabla' );
     PERFORM hive.context_next_block( 'context' );
 
-    PERFORM hive.context_create( 'context2', 1 );
+    PERFORM hive.context_create( 'context2' );
     CREATE TABLE table2( id INTEGER NOT NULL, smth TEXT NOT NULL ) INHERITS( hive.base );
     PERFORM hive.context_next_block( 'context2' );
     INSERT INTO table2( id, smth ) VALUES( 123, 'blabla' );

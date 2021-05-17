@@ -9,9 +9,9 @@ Striked out tasks are already done.
 3. ~~**hived_api** **back_from_fork** insert event into events queue~~
 4. ~~**hived_api** **set_irreversible** insert event into events queue~~
 7. **app_api** **app_create_context** create function and context with context_rewind api
-7. **app_api** **app_create_context** create blocks view for each context
 5. **hived_api** **set_irreversible** clean up obsolete events
 6. **hived_api** **set_irreversible** move reversible blocks into irreversible
+7. **app_api** **app_create_context** create blocks view for each context
 8. **app_api** **app_next_block** process NEW_BLOCK event
 9. **app_api** **app_next_block** process BACK_FROM_FORK_EVENT event
 10. **app_api** **app_next_block** process NEW_IRREVERSIBLE event

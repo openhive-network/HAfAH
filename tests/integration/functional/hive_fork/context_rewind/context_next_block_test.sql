@@ -6,8 +6,8 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.context_create( 'context', 1 );
-    PERFORM hive.context_create( 'context2', 1 );
+    PERFORM hive.context_create( 'my_context' );
+    PERFORM hive.context_create( 'my_context2' );
 END;
 $BODY$
 ;
@@ -23,12 +23,12 @@ DECLARE
     __block1 INTEGER := -1;
     __block2 INTEGER := -1;
 BEGIN
-    SELECT  hive.context_next_block( 'context' ) INTO __block1;
-    PERFORM hive.context_next_block( 'context2' );
-    SELECT hive.context_next_block( 'context2' ) INTO __block2;
+    SELECT  hive.context_next_block( 'my_context' ) INTO __block1;
+    PERFORM hive.context_next_block( 'my_context2' );
+    SELECT hive.context_next_block( 'my_context2' ) INTO __block2;
 
-    ASSERT __block1 = 2;
-    ASSERT __block2 = 3;
+    ASSERT __block1 = 0;
+    ASSERT __block2 = 1;
 END
 $BODY$
 ;
@@ -41,8 +41,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'context' AND current_block_num = 2 ), 'Wrong context block';
-    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'context2' AND current_block_num = 3 ), 'Wrong context2 block';
+    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context' AND current_block_num = 0 );
+    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context2' AND current_block_num = 1 );
 END
 $BODY$
 ;
