@@ -34,8 +34,8 @@ $BODY$
 BEGIN
     ASSERT EXISTS ( SELECT FROM hive.events_queue WHERE event = 'BACK_FROM_FORK' AND block_num = 10 ), 'No event added';
     ASSERT ( SELECT COUNT(*) FROM hive.events_queue ) = 1, 'Unexpected number of events';
-    ASSERT ( SELECT COUNT(*) FROM hive.fork WHERE id = 1 AND block_num = 10 ) = 1, 'No fork added';
-    ASSERT ( SELECT COUNT(*) FROM hive.fork ) = 1, 'To much forks';
+    ASSERT ( SELECT COUNT(*) FROM hive.fork WHERE block_num = 10 ) = 1, 'No fork added';
+    ASSERT ( SELECT COUNT(*) FROM hive.fork ) = 2, 'To much forks';
 END
 $BODY$
 ;
