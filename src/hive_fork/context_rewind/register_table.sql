@@ -95,7 +95,7 @@ BEGIN
 
             SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
-            IF ( __block_num < 0 ) THEN
+            IF ( __block_num <= 0 ) THEN
                  RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
             END IF;
 
@@ -126,7 +126,7 @@ BEGIN
 
             SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
-            IF ( __block_num < 0 ) THEN
+            IF ( __block_num <= 0 ) THEN
                 RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
             END IF;
 
@@ -157,7 +157,7 @@ BEGIN
 
             SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
-            IF ( __block_num < 0 ) THEN
+            IF ( __block_num <= 0 ) THEN
                 RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
             END IF;
 
@@ -188,7 +188,7 @@ BEGIN
 
              SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
-             IF ( __block_num < 0 ) THEN
+             IF ( __block_num <= 0 ) THEN
                  RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
              END IF;
 

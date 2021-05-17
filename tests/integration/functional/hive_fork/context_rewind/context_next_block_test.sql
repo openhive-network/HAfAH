@@ -27,8 +27,8 @@ BEGIN
     PERFORM hive.context_next_block( 'my_context2' );
     SELECT hive.context_next_block( 'my_context2' ) INTO __block2;
 
-    ASSERT __block1 = 0;
-    ASSERT __block2 = 1;
+    ASSERT __block1 = 1;
+    ASSERT __block2 = 2;
 END
 $BODY$
 ;
@@ -41,8 +41,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context' AND current_block_num = 0 );
-    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context2' AND current_block_num = 1 );
+    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context' AND current_block_num = 1 );
+    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context2' AND current_block_num = 2 );
 END
 $BODY$
 ;

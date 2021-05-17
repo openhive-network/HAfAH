@@ -38,7 +38,7 @@ AS
 $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' ) = 2, 'No expected id value in shadow table';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_a_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' AND hive_block_num = 1 AND hive_operation_type = 'UPDATE' ), 'No expected row';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_a_table1 hs WHERE hs.id = 123 AND hs.smth = 'blabla' AND hive_block_num = 2 AND hive_operation_type = 'UPDATE' ), 'No expected row';
 END
 $BODY$
 ;

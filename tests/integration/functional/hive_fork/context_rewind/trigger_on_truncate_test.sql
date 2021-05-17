@@ -37,7 +37,7 @@ AS
 $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 hs WHERE hs.id = 123 AND hs.smth='balbla' ) = 2, 'No expected id value in shadow table';
-    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 123 AND hs.smth='balbla' AND hive_block_num = 1 AND hive_operation_type = 'DELETE' ), 'Wrong block num';
+    ASSERT EXISTS ( SELECT FROM hive.shadow_public_table1 hs WHERE hs.id = 123 AND hs.smth='balbla' AND hive_block_num = 2 AND hive_operation_type = 'DELETE' ), 'Wrong block num';
 END
 $BODY$
 ;
