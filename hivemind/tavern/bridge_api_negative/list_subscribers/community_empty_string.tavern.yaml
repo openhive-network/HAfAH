@@ -1,5 +1,5 @@
 ---
-  test_name: bridge_api.list_subscribers community empty string
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: list_subscribers community empty string
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "community_empty_string"
-            directory: "bridge_api_negative/list_subscribers"
             error_response: true

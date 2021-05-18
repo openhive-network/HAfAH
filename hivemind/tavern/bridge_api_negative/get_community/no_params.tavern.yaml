@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_community patterns test no parameters
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_community test no parameters
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "no_params"
-            directory: "bridge_api_negative/get_community"
             error_response: true

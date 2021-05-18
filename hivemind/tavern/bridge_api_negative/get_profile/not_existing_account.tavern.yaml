@@ -1,6 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_profile not existing patterns test
-      #not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+  test_name: Hivemind
 
   marks:
     - patterntest # original gives no error, just no result
@@ -10,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_profile
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -26,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "not_existing_account"
-            directory: "bridge_api_negative/get_profile"
             error_response: true

@@ -1,6 +1,6 @@
 ---
-  test_name: Hivemind bridge_api.get_post_header not existing permlink patterns test
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+  test_name: Hivemind
+
   marks:
     - patterntest # original gives no error, just no result
     - negative
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_post_header gtg
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "post_not_found"
-            directory: "bridge_api_negative/get_post_header"
             error_response: true

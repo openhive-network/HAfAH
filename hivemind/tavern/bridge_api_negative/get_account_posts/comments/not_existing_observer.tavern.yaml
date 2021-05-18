@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge.get_account_posts sort comments not existing account
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -11,7 +11,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts sort comments not existing account
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -27,6 +27,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "not_existing_observer"
-            directory: "bridge_api_negative/get_account_posts/comments"
             error_response: true

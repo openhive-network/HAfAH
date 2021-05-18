@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.list_community_roles non_existing_last
+  test_name: Hivemind
 
   marks:
     - patterntest # original did not validate community
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: list_community_roles non_existing_last
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "non_existing_last"
-            directory: "bridge_api_negative/list_community_roles"
             error_response: true

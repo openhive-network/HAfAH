@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge.get_account_posts sort payout extra parameter test
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -9,7 +9,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts sort payout extra parameter
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "extra_parameter"
-            directory: "bridge_api_negative/get_account_posts/payout"
             error_response: true

@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.does_user_follow_any_lists patterns test not existing account
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: does_user_follow_any_lists not existing account
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "not_existing_account"
-            directory: "bridge_api_negative/does_user_follow_any_lists"
             error_response: true

@@ -1,5 +1,5 @@
 ---
-  test_name: bridge_api.list_communities pattern test invalid sort
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.list_pop_communities invalid sort
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_sort"
-            directory: "bridge_api_negative/list_communities"
             error_response: true

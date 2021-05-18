@@ -1,7 +1,5 @@
 ---
-  test_name: bridge_api.list_pop_communities invalid literal steemit # 8080
-  # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
-  # no nonempty result possible for 5mln set
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -11,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.list_pop_communities invalid literal steemit
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -27,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_literal_steemit"
-            directory: "bridge_api_negative/list_pop_communities"
             error_response: true

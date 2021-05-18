@@ -1,5 +1,5 @@
 ---
-  test_name: bridge_api.post_notifications invalid text representation
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.post_notifications invalid text representation
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_text_representation"
-            directory: "bridge_api_negative/post_notifications"
             error_response: true

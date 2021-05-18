@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_post_header no_permlink_parameter patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_post_header no_permlink_parameter
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "no_permlink_parameter"
-            directory: "bridge_api_negative/get_post_header"
             error_response: true
