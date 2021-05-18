@@ -10,6 +10,7 @@ ADD_PSQL_EXTENSION(
             data_schema.sql
             irreversible_blocks.sql
             reversible_blocks.sql
+            blocks_views.sql
             hived_api.sql
             app_api.sql
 )
