@@ -94,3 +94,52 @@ BEGIN
 END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.create_operations_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+EXECUTE format(
+        'DROP VIEW IF EXISTS hive.%s_OPERATIONS_VIEW;
+        CREATE VIEW hive.%s_OPERATIONS_VIEW
+        AS
+        SELECT
+              ho.id
+            , ho.block_num
+            , ho.trx_in_block
+            , ho.op_pos
+            , ho.op_type_id
+            , ho.body
+        FROM hive.operations ho
+        JOIN hive.app_context hc ON  ho.block_num <= hc.irreversible_block AND ho.block_num <= hc.current_block_num
+        WHERE hc.name = ''%s''
+        UNION ALL
+        SELECT
+              reversible.id
+            , reversible.block_num
+            , reversible.trx_in_block
+            , reversible.op_pos
+            , reversible.op_type_id
+            , reversible.body
+        FROM
+            (
+            SELECT
+            DISTINCT ON (hor.block_num) block_num
+                , hor.id
+                , hor.trx_in_block
+                , hor.op_pos
+                , hor.op_type_id
+                , hor.body
+            FROM hive.operations_reversible hor
+            JOIN hive.app_context hc ON hor.block_num > hc.irreversible_block AND hor.fork_id <= hc.fork_id AND hor.block_num <= hc.current_block_num
+            WHERE hc.name = ''%s''
+            ORDER BY hor.block_num DESC, hor.fork_id DESC
+            ) as reversible
+        ;', _context_name, _context_name, _context_name, _context_name
+    );
+END;
+$BODY$
+;
