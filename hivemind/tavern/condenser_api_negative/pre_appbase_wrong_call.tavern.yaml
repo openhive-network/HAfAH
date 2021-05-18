@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api pre_appbase test with nonexisting method
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -9,7 +9,7 @@
     - !include ../common.yaml
 
   stages:
-    - name: condenser_api pre_appbase test with nonexisting method
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "pre_appbase_wrong_call"
-            directory: "condenser_api_negative"
             error_response: true

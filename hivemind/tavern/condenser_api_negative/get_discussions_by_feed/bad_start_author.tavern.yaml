@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_feed
+  test_name: Hivemind
 
   marks:
     - patterntest # original did not validate page starting post
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_discussions_by_feed
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "bad_start_author"
-            directory: "condenser_api_negative/get_discussions_by_feed"
             error_response: true
