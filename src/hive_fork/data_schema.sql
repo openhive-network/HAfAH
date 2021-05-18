@@ -14,6 +14,9 @@ CREATE TABLE IF NOT EXISTS hive.fork(
     CONSTRAINT pk_hive_fork PRIMARY KEY( id )
 );
 
+INSERT INTO hive.fork(block_num, time_of_fork) VALUES( 1, '2016-03-24 16:05:00'::timestamp )
+ON CONFLICT DO NOTHING;
+
 CREATE TABLE IF NOT EXISTS hive.app_context(
       events_id BIGINT -- no event is processed
     , fork_id BIGINT NOT NULL

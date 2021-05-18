@@ -21,14 +21,40 @@ BEGIN
         LEFT JOIN ( SELECT hb.num FROM hive.blocks hb ORDER BY hb.num DESC LIMIT 1 ) as hb ON TRUE
     ;
 
-    -- CREATE VIEW hive.CONTEXTS_BLOCKS_VIEW
-    -- AS
-    -- SELECT merged_blocks.*
-    -- FROM (
-    --      SELECT * FROM hive.blocks hb WHERE hb . num <= hive.context.irreversible
-    --      UNION ALL
-    --      SELECT * FROM hive.blocks_reversible hbr WHERE hbr.forkid = hive.context.irreversible
-    -- ) as merged_blocks;
+    EXECUTE format(
+        'DROP VIEW IF EXISTS hive.%s_BLOCKS_VIEW;
+        CREATE VIEW hive.%s_BLOCKS_VIEW
+        AS
+        SELECT
+               hb.num
+             , hb.hash
+             , hb.prev
+             , hb.created_at
+        FROM hive.blocks hb
+        JOIN hive.app_context hc ON  hb.num <= hc.irreversible_block
+        WHERE hc.name = ''%s''
+        UNION ALL
+        SELECT
+               reversible.num
+             , reversible.hash
+             , reversible.prev
+             , reversible.created_at
+        FROM
+            (
+            SELECT
+            DISTINCT ON (hbr.num) num
+               , hbr.hash
+               , hbr.prev
+               , hbr.created_at
+               , hbr.fork_id
+            FROM hive.blocks_reversible hbr
+            JOIN hive.app_context hc ON  hbr.num > hc.irreversible_block AND hbr.fork_id <= hc.fork_id
+            WHERE hc.name = ''%s''
+            ORDER BY hbr.num DESC, hbr.fork_id DESC
+            ) as reversible
+        ;', _name, _name, _name, _name
+    );
+
 END;
 $BODY$
 ;

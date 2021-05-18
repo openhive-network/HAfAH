@@ -1,6 +1,3 @@
-INSERT INTO hive.fork(block_num, time_of_fork) VALUES( 1, '2016-03-24 16:05:00'::timestamp )
-ON CONFLICT DO NOTHING;
-
 CREATE TABLE IF NOT EXISTS hive.blocks_reversible AS TABLE hive.blocks;
 ALTER TABLE hive.blocks_reversible
     ADD COLUMN IF NOT EXISTS fork_id BIGINT NOT NULL,

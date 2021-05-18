@@ -41,6 +41,9 @@ BEGIN
 
     ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'context' AND current_block_num = 0 AND irreversible_block = 0 AND is_attached = TRUE );
     ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'context2' AND current_block_num = 0 AND irreversible_block = 101 AND is_attached = TRUE );
+
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name='context_blocks_view' ), 'No context blocks view';
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name='context2_blocks_view' ), 'No context2 blocks view';
 END
 $BODY$
 ;
