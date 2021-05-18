@@ -41,3 +41,56 @@ BEGIN
 END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.create_transactions_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    EXECUTE format(
+        'DROP VIEW IF EXISTS hive.%s_TRANSACTIONS_VIEW;
+        CREATE VIEW hive.%s_TRANSACTIONS_VIEW
+        AS
+        SELECT
+              ht.block_num
+            , ht.trx_in_block
+            , ht.trx_hash
+            , ht.ref_block_num
+            , ht.ref_block_prefix
+            , ht.expiration
+            , ht.signature
+        FROM hive.transactions ht
+        JOIN hive.app_context hc ON  ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num
+        WHERE hc.name = ''%s''
+        UNION ALL
+        SELECT
+               reversible.block_num
+             , reversible.trx_in_block
+             , reversible.trx_hash
+             , reversible.ref_block_num
+             , reversible.ref_block_prefix
+             , reversible.expiration
+             , reversible.signature
+        FROM
+            (
+            SELECT
+            DISTINCT ON (htr.block_num) block_num
+                , htr.trx_in_block
+                , htr.trx_hash
+                , htr.ref_block_num
+                , htr.ref_block_prefix
+                , htr.expiration
+                , htr.signature
+                , htr.fork_id
+            FROM hive.transactions_reversible htr
+            JOIN hive.app_context hc ON htr.block_num > hc.irreversible_block AND htr.fork_id <= hc.fork_id AND htr.block_num <= hc.current_block_num
+            WHERE hc.name = ''%s''
+            ORDER BY htr.block_num DESC, htr.fork_id DESC
+            ) as reversible
+        ;', _context_name, _context_name, _context_name, _context_name
+    );
+END;
+$BODY$
+;
