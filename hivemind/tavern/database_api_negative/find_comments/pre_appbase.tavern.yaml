@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind database_api.find_comments pre_appbase patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # `call` requires condenser_api
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: database_api.find_comments pre_appbase patterns test
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "pre_appbase"
-            directory: "database_api_negative/find_comments"
             error_response: true

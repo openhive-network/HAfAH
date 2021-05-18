@@ -1,29 +1,15 @@
 ---
-test_name: Hivemind database_api.find_votes no data
+test_name: Hivemind
 
 marks:
   - patterntest
-  - negative  # on API docs it "shows" {
-            #   "votes": [
-            #     {
-            #       "id": 0,
-            #       "voter": "",
-            #       "author": "",
-            #       "permlink": "",
-            #       "weight": "0",
-            #       "rshares": 0,
-            #       "vote_percent": 0,
-            #       "last_update": "2016-04-07T19:15:36",
-            #       "num_changes": -1
-            #     }
-            #   ]
-            # }
+  - negative
 
 includes:
   - !include ../../common.yaml
 
 stages:
-  - name: database_api.find_votes no data
+  - name: test
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -43,6 +29,4 @@ stages:
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "no_data"
-          directory: "database_api_negative/find_votes"
           error_response: true

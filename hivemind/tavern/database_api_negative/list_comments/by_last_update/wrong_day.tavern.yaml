@@ -1,5 +1,5 @@
 ---
-test_name: Hivemind database_api.list_comments "by_last_update" day out of range
+test_name: Hivemind
 
 marks:
   - patterntest
@@ -9,7 +9,7 @@ includes:
   - !include ../../../common.yaml
 
 stages:
-  - name: list_comments day out of range
+  - name: test
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -30,6 +30,4 @@ stages:
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "wrong_day"
-          directory: "database_api_negative/list_comments/by_last_update"
           error_response: true

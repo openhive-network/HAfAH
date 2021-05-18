@@ -1,5 +1,5 @@
 ---
-test_name: Hivemind database_api.find_comments too many comments
+test_name: Hivemind
 
 marks:
   - patterntest # it doesn't matter that they are all the same and not even existing
@@ -9,7 +9,7 @@ includes:
   - !include ../../common.yaml
 
 stages:
-  - name: database_api.find_comments too many comments
+  - name: test
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -140,6 +140,4 @@ stages:
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "too_many_requested"
-          directory: "database_api_negative/find_comments"
           error_response: true

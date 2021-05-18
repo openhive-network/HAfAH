@@ -1,5 +1,5 @@
 ---
-test_name: Hivemind database_api.list_votes patterns test order "by_comment_voter" no data
+test_name: Hivemind
 
 marks:
   - patterntest # fat node didn't care if params are given
@@ -9,7 +9,7 @@ includes:
   - !include ../../../common.yaml
 
 stages:
-  - name: database_api.list_votes patterns test order "by_comment_voter" no data
+  - name: test
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -30,7 +30,5 @@ stages:
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "no_data"
-          directory: "database_api_negative/list_votes/by_comment_voter"
           error_response: true
 

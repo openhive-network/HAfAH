@@ -1,14 +1,15 @@
 ---
-test_name: Hivemind database_api.list_votes patterns test order "by_comment_voter"
+test_name: Hivemind
 
 marks:
   - patterntest
+  - negative
 
 includes:
   - !include ../../common.yaml
 
 stages:
-  - name: list_votes_by_comment_voter
+  - name: test
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -28,6 +29,4 @@ stages:
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "no_order"
-          directory: "database_api_negative/list_votes"
           error_response: true
