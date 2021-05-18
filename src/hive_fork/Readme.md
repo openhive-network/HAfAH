@@ -1,8 +1,14 @@
-# SQL FORK EXTENSION
-SQL Scripts which all together creates an extension to support Hive Forks
+# HIVE_FORK
+SQL Scripts which all together create an extension to support Hive Forks
 
 ## Architecture
 All elements of the extension are placed in 'hive' schema
+
+The postgres extension is written in events source architecture style. It means that during live syncing
+hived only schedules events, and then application procces them at his own pace.
+
+It is possible to have multiple applications which process blocks independent on each other.
+
 ### CONTEXT REWIND
 The part of the extension which is responsible to register App tables, save and rewind  operation on the tables.
 
@@ -55,6 +61,15 @@ An example of script execution: `psql -d my_db_name -a -f  data_schema.sql`
 The scripts `data_schema.sql` files create all necessary tables in `hive` schema.
 
 ### HIVE FORK
+
+#### hive.forks
+hive.fork
+
+Columns
+1. id - id of the fork
+2. block_num last block before the fork
+3. time_of_fork time of signaling fork by hived
+
 #### hive.events_queue
 
 Columns 
@@ -66,6 +81,23 @@ Columns
 Inherits from hive.context
 
 1. event_id - id of the last processed event
+
+### Additionaly to tables above hive_fork contains tables for irreversible and reversible blocks data
+
+#### Irreversible blocks
+
+##### hive.blocks
+##### hive.transactions
+##### hive.transactions_multisig
+##### hive.operation_types
+##### hive.operations
+
+#### Reversible blocks
+Tables for rreversible blocks are copies of irreveersible + columns for fork_id
+##### hive.blocks_reversible
+##### hive.transactions_reversible
+##### hive.transactions_multisig_reversible
+##### hive.operations_reversible
 
 ### CONTEXT REWIND
 #### hive.context
@@ -113,8 +145,8 @@ The set of scripts implements an API for the applications:
 ##### hive.back_from_fork( _block_num_before_fork )
 Schedules back from fork
 
-##### hive.push_block( _block_num, block_data )
-Push new block
+##### hive.push_block( _block, transactions[], signatures[], operations[] )
+Push new block with its transactions, their operations and signatures
 
 ##### hive.set_irreversible( _block_num )
 Set new irreversible block
