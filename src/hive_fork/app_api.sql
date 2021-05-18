@@ -12,12 +12,23 @@ BEGIN
          , current_block_num
          , irreversible_block
          , is_attached
-         , events_id)
-    SELECT cdata.name, cdata.block_num, COALESCE( hb.num, 0 ), cdata.is_attached, cdata.events_id
+         , events_id
+         , fork_id)
+    SELECT cdata.name, cdata.block_num, COALESCE( hb.num, 0 ), cdata.is_attached, cdata.events_id, hf.id
     FROM
         ( VALUES ( _name, 0, TRUE, NULL::BIGINT ) ) as cdata( name, block_num, is_attached, events_id )
+        JOIN ( SELECT hf.id FROM hive.fork hf ORDER BY id DESC LIMIT 1 ) as hf ON TRUE
         LEFT JOIN ( SELECT hb.num FROM hive.blocks hb ORDER BY hb.num DESC LIMIT 1 ) as hb ON TRUE
     ;
+
+    -- CREATE VIEW hive.CONTEXTS_BLOCKS_VIEW
+    -- AS
+    -- SELECT merged_blocks.*
+    -- FROM (
+    --      SELECT * FROM hive.blocks hb WHERE hb . num <= hive.context.irreversible
+    --      UNION ALL
+    --      SELECT * FROM hive.blocks_reversible hbr WHERE hbr.forkid = hive.context.irreversible
+    -- ) as merged_blocks;
 END;
 $BODY$
 ;
