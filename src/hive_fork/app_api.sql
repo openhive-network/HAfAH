@@ -31,7 +31,7 @@ BEGIN
              , hb.prev
              , hb.created_at
         FROM hive.blocks hb
-        JOIN hive.app_context hc ON  hb.num <= hc.irreversible_block
+        JOIN hive.app_context hc ON  hb.num <= hc.irreversible_block AND hb.num <= hc.current_block_num
         WHERE hc.name = ''%s''
         UNION ALL
         SELECT
@@ -48,7 +48,7 @@ BEGIN
                , hbr.created_at
                , hbr.fork_id
             FROM hive.blocks_reversible hbr
-            JOIN hive.app_context hc ON  hbr.num > hc.irreversible_block AND hbr.fork_id <= hc.fork_id
+            JOIN hive.app_context hc ON  hbr.num > hc.irreversible_block AND hbr.fork_id <= hc.fork_id AND hbr.num <= hc.current_block_num
             WHERE hc.name = ''%s''
             ORDER BY hbr.num DESC, hbr.fork_id DESC
             ) as reversible
