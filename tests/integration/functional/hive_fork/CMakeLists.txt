@@ -98,3 +98,4 @@ ADD_SQL_FUNCTIONAL_TESTS( hived_api/set_irreversible_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( app_api/create_context_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/context_blocks_view_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/context_transactions_view_test.sql )
