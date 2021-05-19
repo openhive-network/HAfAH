@@ -16,7 +16,17 @@ class NoResultException(Exception):
 # be a string denoting predefined situation), exclusive with regular (not predefined)
 # tags (in normal case ignore_tags must be a list of tag specifiers)
 predefined_ignore_tags = {
-  '<bridge post>' : re.compile(r"root\[\d+\]\['post_id'\]")
+  '<bridge posts>' : re.compile(r"root\[\d+\]\['post_id'\]"),
+  '<condenser posts>' : re.compile(r"root\[\d+\]\['post_id'\]"),
+  '<condenser content>' : re.compile(r"root\['id'\]"), # condenser_api.get_content
+  '<condenser replies>' : re.compile(r"root\[\d+\]\['id'\]"), # condenser_api.get_content_replies
+  '<condenser blog>' : re.compile(r"root\[\d+\]\['comment'\]\['post_id'\]"), # condenser_api.get_blog
+  '<condenser state>' : re.compile(r"root\['content'\]\[\d+\]\['post_id'\]"), # condenser_api.get_state
+  '<database posts>' : re.compile(r"root\['comments'\]\[\d+\]\['id'\]"),
+  '<database votes>' : re.compile(r"root\['votes'\]\[\d+\]\['id'\]"),
+  '<follow blog>' : re.compile(r"root\[\d+\]\['comment'\]\['post_id'\]"), # follow_api.get_blog
+  '<tags posts>' : re.compile(r"root\[\d+\]\['post_id'\]"),
+  '<tags post>' : re.compile(r"root\['post_id'\]") # tags_api.get_discussion
 }
 
 def get_overlap(s1, s2):

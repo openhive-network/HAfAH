@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind hive.get_info patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: hive.get_info
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,6 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "test"
-            directory: "hive_api_patterns/get_info"
             ignore_tags: ["hivemind_git_rev", "hivemind_git_date", "hivemind_version", "database_patch_date", "database_patched_to_revision"]
