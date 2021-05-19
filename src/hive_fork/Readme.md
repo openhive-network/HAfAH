@@ -15,6 +15,21 @@ An Application groups its tables into named contexts. Each contexts holds inform
 a fork which is now processed. These two pice of information are enaugh to create views which presents combined irreversible and
 reversible blocks data. Each of the views has name started from 'hive.{context_name}_'  
 
+### REVERSIBLE AND IRREVERSIBLE BLOCKS
+IRREVERSIBLE BLOCKS is information (set of datbase tables) about blocks which blockchain considern as irreveresible - it will never change.
+
+REVERSIBLE BLOCKS (set of datbase tables) is information about blocks for which blockachain is not sure if they are already irreversible, because they
+may be a part of fork which will be abandoned soon.
+
+Each application should works on snapshot of blocks information, which is a combination of reversible and irreversible information based
+on current status of the application - its last processed block and fork.
+
+Because applications may work with different paces, the system has to hold reversible blocks information for every block num and fork not already processed by any
+of the applications, this requires to construct an efficient data structure. Fortunetly the idea is quite simple:
+
+
+
+
 ### CONTEXT REWIND
 The part of the extension which is responsible to register App tables, save and rewind  operation on the tables.
 
