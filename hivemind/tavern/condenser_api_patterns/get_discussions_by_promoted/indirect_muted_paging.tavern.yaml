@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_promoted patterns test observer alice with paging mechanism
+  test_name: Hivemind
 
   marks:
     - patterntest # alice follows muted of ignoreall who ignores fyrstikken (mock data); see also indirect_muted
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: condenser_api.get_discussions_by_promoted observer alice with paging
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,5 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "indirect_muted_paging"
-            directory: "condenser_api_patterns/get_discussions_by_promoted"
+            ignore_tags: "<condenser posts>"

@@ -1,18 +1,15 @@
 ---
-  test_name: Hivemind condenser_api.get_blog_entries patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # old didn't correct limit when it was too big, also there was less reblogs due to some bug (.orig prepared with max valid limit 4)
                   # finally time of reblog was incorrectly taken from post, now it is time when reblog happened
 
-  # Communities not implemented under 5 mln blocks, but some were created by mock mechanism.
-  # For these communities for account `test-safari` were created 4 artificial comments. Permlinks: `secrets1`, `secrets2`, `secrets4`, `secrets5`.
-
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_blog_entries
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -27,6 +24,3 @@
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
-          extra_kwargs:
-            method: "reblogs"
-            directory: "condenser_api_patterns/get_blog_entries"

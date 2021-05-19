@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_author_before_date patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # original produced overlapping pages
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_discussions_by_author_before_date_no_results
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,5 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "good-karma"
-            directory: "condenser_api_patterns/get_discussions_by_author_before_date"
+            ignore_tags: "<condenser posts>"

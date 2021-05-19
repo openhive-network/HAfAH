@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_post_discussions_by_payout patterns test observer ignoreall with tag and paging mechanism
+  test_name: Hivemind
 
   marks:
     - patterntest # ignoreall ignores kental (mock data); see also tag paging (without observer)
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_post_discussions_by_payout observer ignoreall with tag and paging mechanism
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -26,5 +26,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "observer_tag_paging"
-            directory: "condenser_api_patterns/get_post_discussions_by_payout"
+            ignore_tags: "<condenser posts>"

@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_promoted community patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # relies on mock data (there was no communities in 5mln blocks)
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: condenser_api.get_discussions_by_promoted community patterns test
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,5 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "community_mock"
-            directory: "condenser_api_patterns/get_discussions_by_promoted"
+            ignore_tags: "<condenser posts>"

@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_state patterns test # Deprecated
+  test_name: Hivemind
 
   marks:
     - patterntest # there are differences against orig. pattern i.e. for post "sweetsssj/a-chinese-twist-on-japanese-cuisine"
@@ -10,7 +10,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_state
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -26,5 +26,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "trending_asia"
-            directory: "condenser_api_patterns/get_state"
+            ignore_tags: "<condenser state>"

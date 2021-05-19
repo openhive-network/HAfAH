@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_content observer indirect blacklists author
+  test_name: Hivemind
 
   marks:
     - patterntest # alice follows blacklisted of spaminator who blacklists ned (mock data)
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_content observer indirect ignores author
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,5 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "indirect_blacklist"
-            directory: "condenser_api_patterns/get_content"
+            ignore_tags: "<condenser content>"

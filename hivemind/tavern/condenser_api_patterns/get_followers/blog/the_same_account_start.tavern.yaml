@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_followers patterns test
+  test_name: Hivemind
 
   marks:
-    - patterntest 
+    - patterntest
 
   includes:
-    - !include ../../common.yaml
+    - !include ../../../common.yaml
 
   stages:
-    - name: get_followers
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -23,6 +23,3 @@
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
-          extra_kwargs:
-            method: "the_same_account_start"
-            directory: "condenser_api_negative/get_followers"

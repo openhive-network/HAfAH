@@ -21,7 +21,7 @@ predefined_ignore_tags = {
   '<condenser content>' : re.compile(r"root\['id'\]"), # condenser_api.get_content
   '<condenser replies>' : re.compile(r"root\[\d+\]\['id'\]"), # condenser_api.get_content_replies
   '<condenser blog>' : re.compile(r"root\[\d+\]\['comment'\]\['post_id'\]"), # condenser_api.get_blog
-  '<condenser state>' : re.compile(r"root\['content'\]\[\d+\]\['post_id'\]"), # condenser_api.get_state
+  '<condenser state>' : re.compile(r"root\['content'\]\[.+\]\['post_id'\]"), # condenser_api.get_state
   '<database posts>' : re.compile(r"root\['comments'\]\[\d+\]\['id'\]"),
   '<database votes>' : re.compile(r"root\['votes'\]\[\d+\]\['id'\]"),
   '<follow blog>' : re.compile(r"root\[\d+\]\['comment'\]\['post_id'\]"), # follow_api.get_blog
@@ -104,7 +104,8 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
   result = response_json.get("result", None)
 
   exclude_regex_path = None
-  if isinstance(ignore_tags, str) and ignore_tags in predefined_ignore_tags:
+  if isinstance(ignore_tags, str):
+    assert ignore_tags in predefined_ignore_tags, "Unknown predefined meta-tag specified in ignore_tags"
     exclude_regex_path = predefined_ignore_tags[ignore_tags]
     ignore_tags = None
   if ignore_tags is not None:

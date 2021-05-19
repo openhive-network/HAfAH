@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_content observer indirect blacklists voter
+  test_name: Hivemind
 
   marks:
     - patterntest # ned upvote `recursive/bertrand-russell-on-the-paradox-of-fools-and-wise-men`
@@ -10,7 +10,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_content observer indirect blacklists author
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -26,5 +26,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "indirect_blacklists_voter"
-            directory: "condenser_api_patterns/get_content"
+            ignore_tags: "<condenser content>"

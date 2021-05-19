@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_comment_discussions_by_payout patterns test observer alice with tag and paging mechanism
+  test_name: Hivemind
 
   marks:
     - patterntest # alice follows mute list of ignoreall who ignores roland.haynes (mock data); see also no_observer_paging_tag
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_comment_discussions_by_payout observer alice with tag and paging mechanism
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,5 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "indirect_muted_paging_tag"
-            directory: "condenser_api_patterns/get_comment_discussions_by_payout"
+            ignore_tags: "<condenser posts>"

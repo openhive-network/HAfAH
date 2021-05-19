@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_state patterns test # Deprecated
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -13,7 +13,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_state
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -29,5 +29,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "blog_abit"
-            directory: "condenser_api_patterns/get_state"
+            ignore_tags: "<condenser state>"
