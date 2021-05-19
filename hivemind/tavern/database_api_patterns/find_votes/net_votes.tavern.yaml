@@ -1,5 +1,5 @@
 ---
-test_name: Hivemind database_api.find_votes all data
+test_name: Hivemind
 
 marks:
   - patterntest # test added to help with difference in list_comments/by_permlink/blank_category
@@ -8,7 +8,7 @@ includes:
   - !include ../../common.yaml
 
 stages:
-  - name: database_api.find_votes all data
+  - name: test
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -28,5 +28,4 @@ stages:
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "net_votes"
-          directory: "database_api_patterns/find_votes"
+          ignore_tags: "<database votes>"

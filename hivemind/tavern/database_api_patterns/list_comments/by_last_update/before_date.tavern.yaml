@@ -1,5 +1,5 @@
 ---
-test_name: Hivemind database_api.list_comments patterns test order "by_last_update" future date
+test_name: Hivemind
 
 marks:
   - patterntest # paging mechanism not work properly, output the same as without start_author and start_permlink
@@ -9,7 +9,7 @@ includes:
   - !include ../../../common.yaml
 
 stages:
-  - name: list_comments_by_update
+  - name: test
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -30,6 +30,5 @@ stages:
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "before_date"
-          directory: "database_api_patterns/list_comments/by_last_update"
+          ignore_tags: "<database posts>"
 
