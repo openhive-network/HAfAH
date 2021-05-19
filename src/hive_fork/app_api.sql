@@ -24,6 +24,7 @@ BEGIN
     PERFORM hive.create_blocks_view( _name );
     PERFORM hive.create_transactions_view( _name );
     PERFORM hive.create_operations_view( _name );
+    PERFORM hive.create_signatures_view( _name );
 END;
 $BODY$
 ;

@@ -143,3 +143,43 @@ EXECUTE format(
 END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.create_signatures_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+EXECUTE format(
+        'DROP VIEW IF EXISTS hive.%s_TRANSACTIONS_MULTISIG_VIEW;
+        CREATE VIEW hive.%s_TRANSACTIONS_MULTISIG_VIEW
+        AS
+        SELECT
+              htm.trx_hash
+            , htm.signature
+        FROM hive.transactions_multisig htm
+        JOIN hive.transactions ht ON ht.trx_hash = htm.trx_hash
+        JOIN hive.app_context hc ON  ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num
+        WHERE hc.name = ''%s''
+        UNION ALL
+        SELECT
+              reversible.trx_hash
+            , reversible.signature
+        FROM
+            (
+            SELECT
+            DISTINCT ON (htr.block_num) block_num
+                , htmr.trx_hash
+                , htmr.signature
+            FROM hive.transactions_multisig_reversible htmr
+            JOIN hive.transactions_reversible htr ON htr.trx_hash = htmr.trx_hash AND htr.fork_id = htmr.fork_id
+            JOIN hive.app_context hc ON htr.block_num > hc.irreversible_block AND htmr.fork_id <= hc.fork_id AND htr.block_num <= hc.current_block_num
+            WHERE hc.name = ''%s''
+            ORDER BY htr.block_num DESC, htr.fork_id DESC
+            ) as reversible
+        ;', _context_name, _context_name, _context_name, _context_name
+    );
+END;
+$BODY$
+;
