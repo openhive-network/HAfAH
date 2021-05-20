@@ -25,10 +25,40 @@ Each application should works on snapshot of blocks information, which is a comb
 on current status of the application - its last processed block and fork.
 
 Because applications may work with different paces, the system has to hold reversible blocks information for every block num and fork not already processed by any
-of the applications, this requires to construct an efficient data structure. Fortunetly the idea is quite simple:
+of the applications, this requires to construct an efficient data structure. Fortunetly the idea is quite simple - it is enaugh to add
+to data inserted by hived block_num and fork id ( fork_id is a part of each reversible table ). The system controls forks ids - set
+information about each fork in hive.fork table. Moreover when 'hived' pushes a new block with function `hive.push_block`, then the system
+adds information about current fork to a new irreversible data. Irreversible data tables can be presented in generalised form as in the example below:
 
+| block_num| fork id | data      |
+|----------|---------|-----------|
+|    1     |    1    |  DATA_11  |
+|    2     |    1    |  DATA_21  |
+|    3     |    1    |  DATA_31  |
+|    2     |    2    |  DATA_22  |
+|    3     |    2    |  DATA_32  |
+|    4     |    2    |  DATA_42  |
+|    4     |    3    |  DATA_43  |
 
+If application is working on fork=2 and block_num=3 ( this information is held by `hive.app_context` ) then its snapshot of data for example above is:
 
+| block_num| fork id | data      |
+|----------|---------|-----------|
+|    1     |    1    |  DATA_11  |
+|    2     |    2    |  DATA_22  |
+|    3     |    2    |  DATA_32  |
+
+It means snaphot of data for an application with context `app_context` can be obtained by filtrating blocks and forks with relativly simple SQL query like:
+```
+SELECT
+      DISTINCT ON (block_num) block_num
+    , fork_id
+    , data
+FROM data_reversible
+JOIN hive.app_context hc ON fork_id <= hc.fork_id AND block_num <= hc.current_block_num
+WHERE hc.name = 'app_context'
+ORDER BY block_num DESC, fork_id DESC
+```
 
 ### CONTEXT REWIND
 The part of the extension which is responsible to register App tables, save and rewind  operation on the tables.
