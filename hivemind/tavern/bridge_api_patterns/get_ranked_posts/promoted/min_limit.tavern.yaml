@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_ranked_posts promoted minimum limit patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # incomparable with original since top posts are also selected now (initial pattern made with get_post)
@@ -9,7 +9,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: bridge_api.get_ranked_posts promoted minimum limit patterns test
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,5 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "min_limit"
-            directory: "bridge_api_patterns/get_ranked_posts/promoted"
+            ignore_tags: "<bridge posts>"

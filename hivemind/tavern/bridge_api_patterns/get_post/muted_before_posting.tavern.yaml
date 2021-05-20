@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_post steemit muted in community patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # alice muted before posting in this commmunity but at the end she is a member - mock_data (hive-171487)
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.get_post steemit muted in community test
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,5 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "muted_before_posting"
-            directory: "bridge_api_patterns/get_post"
+            ignore_tags: "<bridge post>"

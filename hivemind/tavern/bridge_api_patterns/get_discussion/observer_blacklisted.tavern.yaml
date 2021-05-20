@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_discussion with observer blacklisted author (from follow)
+  test_name: Hivemind
 
   marks:
     - patterntest # alice follow buildawhale list of blacklists {craig-grant ,earnest, trevonjb, wildchild, zaitsevalesyaa}
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api.get_discussion observer from follow blacklisted author
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,5 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "observer_blacklisted"
-            directory: "bridge_api_patterns/get_discussion"
+            ignore_tags: "<bridge discussion>"

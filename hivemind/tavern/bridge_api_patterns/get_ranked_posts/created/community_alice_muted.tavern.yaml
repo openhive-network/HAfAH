@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_ranked_posts alice muted of community patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # alice is muted before answering parent post in this community - mock_data (hive-171487)
@@ -12,7 +12,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: bridge_api.get_ranked_posts alice as muted patterns test
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -28,5 +28,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "community_alice_muted"
-            directory: "bridge_api_patterns/get_ranked_posts/created"
+            ignore_tags: "<bridge posts>"

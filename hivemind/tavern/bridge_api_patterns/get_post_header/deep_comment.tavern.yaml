@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_post_header patterns test deep post's comment
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_post_header deep post's comment
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,6 +24,3 @@
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
-          extra_kwargs:
-            method: "deep_comment"
-            directory: "bridge_api_patterns/get_post_header"

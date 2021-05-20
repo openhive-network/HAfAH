@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts get reblogged article test # api.hive.blog 443
+  test_name: Hivemind
 
   marks:
     - patterntest # original didn't have any reblogs from jamesc (bug?); also jamesc has no top posts
@@ -8,7 +8,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts get reblogged article
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -30,6 +30,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "account_jamesc_start_account_steemitblog"
-            directory: "bridge_api_patterns/get_account_posts/blog"
-
+            ignore_tags: "<bridge posts>"

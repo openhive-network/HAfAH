@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.normalize_post patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # TODO: multistage test since condenser_api.get_content is the source of parameter for the main call
@@ -12,7 +12,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: normalize_post
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -582,5 +582,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "gtg"
-            directory: "bridge_api_patterns/normalize_post"
+            ignore_tags: "<bridge post>"

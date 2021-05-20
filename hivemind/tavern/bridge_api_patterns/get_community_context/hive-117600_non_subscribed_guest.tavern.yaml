@@ -1,6 +1,6 @@
 ---
-  test_name: Hivemind bridge_api.get_community_context patterns test hive-117600 non subscribed guest
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+  test_name: Hivemind
+
   marks:
     - patterntest
     # Communities not implemented under 5 mln blocks, but some were created by mock mechanism, therefore they are in result.
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_community_context hive-117600 non subscribed guest
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,6 +24,3 @@
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
-          extra_kwargs:
-            method: "hive-117600_non_subscribed_guest"
-            directory: "bridge_api_patterns/get_community_context"

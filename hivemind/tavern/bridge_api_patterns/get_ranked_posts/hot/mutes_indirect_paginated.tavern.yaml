@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_ranked_posts hot observer_alice patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # see also tag_all.tavern.yaml; alice follows muted of ignoreall who ignores gavvet (mock data)
@@ -8,7 +8,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: bridge_api.get_ranked_posts hot observer_alice patterns test
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,5 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "mutes_indirect_paginated"
-            directory: "bridge_api_patterns/get_ranked_posts/hot"
+            ignore_tags: "<bridge posts>"

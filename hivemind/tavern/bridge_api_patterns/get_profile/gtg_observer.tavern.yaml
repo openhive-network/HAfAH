@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_profile gtg with new observer patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # new field followed (true/false) by observer (and muted if true)
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_profile gtg observer
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,5 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "gtg_observer"
-            directory: "bridge_api_patterns/get_profile"
+            ignore_tags: "<bridge profile>"

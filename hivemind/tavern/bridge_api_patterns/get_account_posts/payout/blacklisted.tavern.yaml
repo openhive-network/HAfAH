@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts sort payout with observer blacklist account test
+  test_name: Hivemind
 
   marks:
     - patterntest # role of observer is not yet clear (ignored for the time being)
@@ -9,7 +9,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts sort payout with observer blacklist account
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,5 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "blacklisted"
-            directory: "bridge_api_patterns/get_account_posts/payout"
+            ignore_tags: "<bridge posts>"

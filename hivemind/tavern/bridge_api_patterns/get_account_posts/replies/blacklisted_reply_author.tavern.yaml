@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge.get_account_posts author of the reply muted by observer test
+  test_name: Hivemind
 
   marks:
     - patterntest # role of observer is not yet clear (ignored for the time being)
@@ -10,7 +10,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts author of the reply muted by observer test
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -26,5 +26,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "blacklisted_reply_author"
-            directory: "bridge_api_patterns/get_account_posts/replies"
+            ignore_tags: "<bridge posts>"

@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.list_community_roles patterns test last alice hive-198723
+  test_name: Hivemind
 
   marks:
     - patterntest # mock-data - alice is in different communities
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: list_community_roles alice hive-198723
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -23,6 +23,3 @@
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
-          extra_kwargs:
-            method: "alice_198723"
-            directory: "bridge_api_patterns/list_community_roles"

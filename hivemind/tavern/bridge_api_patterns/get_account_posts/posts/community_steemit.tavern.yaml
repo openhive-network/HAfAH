@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts steemit muted of community patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # steemit muted in community (mock_data)
@@ -8,7 +8,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: bridge_api.get_account_posts steemit patterns test
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,5 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "community_steemit"
-            directory: "bridge_api_patterns/get_account_posts/posts"
+            ignore_tags: "<bridge posts>"

@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.list_subscribers patterns test paginated
+  test_name: Hivemind
 
   marks:
     - patterntest # see also hive-171488
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: list_subscribers paginated
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -23,6 +23,3 @@
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
-          extra_kwargs:
-            method: "paginated"
-            directory: "bridge_api_patterns/list_subscribers"

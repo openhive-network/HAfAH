@@ -16,7 +16,12 @@ class NoResultException(Exception):
 # be a string denoting predefined situation), exclusive with regular (not predefined)
 # tags (in normal case ignore_tags must be a list of tag specifiers)
 predefined_ignore_tags = {
+  '<bridge post>' : re.compile(r"root\['post_id'\]"),
   '<bridge posts>' : re.compile(r"root\[\d+\]\['post_id'\]"),
+  '<bridge discussion>' : re.compile(r"root\[.+\]\['post_id'\]"),
+  '<bridge community>' : re.compile(r"root\['id'\]"),
+  '<bridge communities>' : re.compile(r"root\[\d+\]\['id'\]"),
+  '<bridge profile>' : re.compile(r"root\['id'\]"),
   '<condenser posts>' : re.compile(r"root\[\d+\]\['post_id'\]"),
   '<condenser content>' : re.compile(r"root\['id'\]"), # condenser_api.get_content
   '<condenser replies>' : re.compile(r"root\[\d+\]\['id'\]"), # condenser_api.get_content_replies

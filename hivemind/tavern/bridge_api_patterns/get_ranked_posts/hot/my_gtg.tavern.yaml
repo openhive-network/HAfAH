@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_ranked_posts hot my gtg patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -10,7 +10,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: bridge_api.get_ranked_posts hot my gtg patterns test
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -26,5 +26,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "my_gtg"
-            directory: "bridge_api_patterns/get_ranked_posts/hot"
+            ignore_tags: "<bridge posts>"

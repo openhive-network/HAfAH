@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_profile
+  test_name: Hivemind
 
   marks:
     - patterntest # relies on mock data
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_profile alice
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,5 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "alice_ignoreall"
-            directory: "bridge_api_patterns/get_profile"
+            ignore_tags: "<bridge profile>"
