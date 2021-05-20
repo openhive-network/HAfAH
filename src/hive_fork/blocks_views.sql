@@ -127,16 +127,21 @@ EXECUTE format(
         FROM
             (
             SELECT
-            DISTINCT ON (hor.block_num) block_num
+                  hor.block_num
                 , hor.id
                 , hor.trx_in_block
                 , hor.op_pos
                 , hor.op_type_id
                 , hor.body
             FROM hive.operations_reversible hor
-            JOIN hive.app_context hc ON hor.block_num > hc.irreversible_block AND hor.fork_id <= hc.fork_id AND hor.block_num <= hc.current_block_num
-            WHERE hc.name = ''%s''
-            ORDER BY hor.block_num DESC, hor.fork_id DESC
+            JOIN (
+               SELECT DISTINCT ON (htr2.block_num) htr2.block_num
+                   , htr2.fork_id
+               FROM hive.transactions_reversible htr2
+               JOIN hive.app_context hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
+               WHERE hc.name = ''%s''
+               ORDER BY htr2.block_num DESC, htr2.fork_id DESC
+                ) as forks ON forks.fork_id = hor.fork_id AND forks.block_num = hor.block_num
             ) as reversible
         ;', _context_name, _context_name, _context_name, _context_name
     );

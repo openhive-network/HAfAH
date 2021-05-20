@@ -51,6 +51,7 @@ BEGIN
            ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:25-07'::timestamp, 1 )
          , ( 5, '\xBADD5A', '\xCAFE5A', '2016-06-22 19:10:55-07'::timestamp, 1 )
          , ( 6, '\xBADD60', '\xCAFE60', '2016-06-22 19:10:26-07'::timestamp, 1 )
+         , ( 7, '\xBADD71', '\xCAFE71', '2016-06-22 19:10:27-07'::timestamp, 1 )
          , ( 7, '\xBADD70', '\xCAFE70', '2016-06-22 19:10:27-07'::timestamp, 2 )
          , ( 8, '\xBADD80', '\xCAFE80', '2016-06-22 19:10:28-07'::timestamp, 2 )
          , ( 9, '\xBADD90', '\xCAFE90', '2016-06-22 19:10:29-07'::timestamp, 2 )
@@ -77,9 +78,13 @@ BEGIN
            ( 4, 4, 0, 0, 1, 'THREE OPERATION', 1 )
          , ( 5, 5, 0, 0, 1, 'FIVEFIVE OPERATION', 1 )
          , ( 6, 6, 0, 0, 1, 'SIX OPERATION', 1 )
+         , ( 7, 7, 0, 0, 1, 'SEVEN0 OPERATION', 1 ) -- must be abandon because of fork2
+         , ( 8, 7, 0, 1, 1, 'SEVEN01 OPERATION', 1 ) -- must be abandon because of fork2
+         , ( 9, 7, 0, 2, 1, 'SEVEN02 OPERATION', 1 ) -- must be abandon because of fork2
          , ( 7, 7, 0, 0, 1, 'SEVEN2 OPERATION', 2 )
-         , ( 8, 8, 0, 0, 1, 'EAIGHT2 OPERATION', 2 )
-         , ( 9, 9, 0, 0, 1, 'NINE2 OPERATION', 2 )
+         , ( 8, 7, 0, 1, 1, 'SEVEN21 OPERATION', 2 )
+         , ( 9, 8, 0, 0, 1, 'EAIGHT2 OPERATION', 2 )
+         , ( 10, 9, 0, 0, 1, 'NINE2 OPERATION', 2 )
          , ( 8, 8, 0, 0, 1, 'EIGHT3 OPERATION', 3 )
          , ( 9, 9, 0, 0, 1, 'NINE3 OPERATION', 3 )
          , ( 10, 10, 0, 0, 1, 'TEN OPERATION', 3 )
@@ -123,7 +128,8 @@ BEGIN
             , ( 5, 5, 0, 0, 1, 'FIVEFIVE OPERATION' )
             , ( 6, 6, 0, 0, 1, 'SIX OPERATION' )
             , ( 7, 7, 0, 0, 1, 'SEVEN2 OPERATION' )
-            , ( 8, 8, 0, 0, 1, 'EAIGHT2 OPERATION' )
+            , ( 8, 7, 0, 1, 1, 'SEVEN21 OPERATION' )
+            , ( 9, 8, 0, 0, 1, 'EAIGHT2 OPERATION' )
         ) as pattern
     ) , 'Unexpected rows in the view';
 END;
