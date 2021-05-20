@@ -174,14 +174,18 @@ EXECUTE format(
         FROM
             (
             SELECT
-            DISTINCT ON (htr.block_num) block_num
+            DISTINCT ON (htr.block_num) htr.block_num
                 , htmr.trx_hash
                 , htmr.signature
             FROM hive.transactions_multisig_reversible htmr
             JOIN hive.transactions_reversible htr ON htr.trx_hash = htmr.trx_hash AND htr.fork_id = htmr.fork_id
-            JOIN hive.app_context hc ON htr.block_num > hc.irreversible_block AND htmr.fork_id <= hc.fork_id AND htr.block_num <= hc.current_block_num
-            WHERE hc.name = ''%s''
-            ORDER BY htr.block_num DESC, htr.fork_id DESC
+            JOIN (
+                SELECT DISTINCT ON (htr2.block_num) htr2.block_num, htr2.fork_id
+                FROM hive.transactions_reversible htr2
+                JOIN hive.app_context hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
+                WHERE hc.name = ''%s''
+                ORDER BY htr2.block_num DESC, htr2.fork_id DESC
+            ) as forks ON forks.fork_id = htmr.fork_id AND forks.block_num = htr.block_num
             ) as reversible
         ;', _context_name, _context_name, _context_name, _context_name
     );

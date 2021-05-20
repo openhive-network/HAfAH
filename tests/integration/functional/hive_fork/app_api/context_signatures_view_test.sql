@@ -44,6 +44,8 @@ BEGIN
            ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:25-07'::timestamp, 1 )
          , ( 5, '\xBADD5A', '\xCAFE5A', '2016-06-22 19:10:55-07'::timestamp, 1 )
          , ( 6, '\xBADD60', '\xCAFE60', '2016-06-22 19:10:26-07'::timestamp, 1 )
+         , ( 7, '\xBADD70', '\xCAFE70', '2016-06-22 19:10:37-07'::timestamp, 1 )
+         , ( 10, '\xBADD11', '\xCAFE11', '2016-06-22 19:10:41-07'::timestamp, 1 )
          , ( 7, '\xBADD70', '\xCAFE70', '2016-06-22 19:10:27-07'::timestamp, 2 )
          , ( 8, '\xBADD80', '\xCAFE80', '2016-06-22 19:10:28-07'::timestamp, 2 )
          , ( 9, '\xBADD90', '\xCAFE90', '2016-06-22 19:10:29-07'::timestamp, 2 )
@@ -57,12 +59,14 @@ BEGIN
        ( 4, 0::SMALLINT, '\xDEED40', 101, 100, '2016-06-22 19:10:24-07'::timestamp, '\xBEEF',  1 )
      , ( 5, 0::SMALLINT, '\xDEED55', 101, 100, '2016-06-22 19:10:25-07'::timestamp, '\xBEEF',  1 )
      , ( 6, 0::SMALLINT, '\xDEED60', 101, 100, '2016-06-22 19:10:26-07'::timestamp, '\xBEEF',  1 )
+     , ( 7, 0::SMALLINT, '\xDEED70', 101, 100, '2016-06-22 19:10:37-07'::timestamp, '\xBEEF',  1 )
+     , ( 10, 0::SMALLINT, '\xDEED11', 101, 100, '2016-06-22 19:10:41-07'::timestamp, '\xBEEF',  1 )
      , ( 7, 0::SMALLINT, '\xDEED70', 101, 100, '2016-06-22 19:10:27-07'::timestamp, '\xBEEF',  2 )
      , ( 8, 0::SMALLINT, '\xDEED80', 101, 100, '2016-06-22 19:10:28-07'::timestamp, '\xBEEF',  2 )
      , ( 9, 0::SMALLINT, '\xDEED90', 101, 100, '2016-06-22 19:10:29-07'::timestamp, '\xBEEF',  2 )
      , ( 8, 0::SMALLINT, '\xDEED88', 101, 100, '2016-06-22 19:10:28-07'::timestamp, '\xBEEF',  3 )
      , ( 9, 0::SMALLINT, '\xDEED99', 101, 100, '2016-06-22 19:10:29-07'::timestamp, '\xBEEF',  3 )
-     , ( 10, 0::SMALLINT, '\xDEED11', 101, 100, '2016-06-22 19:10:30-07'::timestamp, '\xBEEF', 3 )
+     , ( 10, 0::SMALLINT, '\xDEED1102', 101, 100, '2016-06-22 19:10:30-07'::timestamp, '\xBEEF', 3 )
     ;
 
     INSERT INTO hive.transactions_multisig_reversible
@@ -70,15 +74,20 @@ BEGIN
        ( '\xDEED40', '\xBEEF40',  1 )
      , ( '\xDEED55', '\xBEEF55',  1 )
      , ( '\xDEED60', '\xBEEF61',  1 )
+     , ( '\xDEED70', '\xBEEF7110',  1 ) --must be abandon because of fork 2
+     , ( '\xDEED70', '\xBEEF7120',  1 ) --must be abandon because of fork 2
+     , ( '\xDEED70', '\xBEEF7130',  1 ) --must be abandon because of fork 2
+     , ( '\xDEED11', '\xBEEF7140',  1 ) --must be abandon because of fork 2
      , ( '\xDEED70', '\xBEEF72',  2 )
+     , ( '\xDEED70', '\xBEEF73',  2 )
      , ( '\xDEED80', '\xBEEF82',  2 )
      , ( '\xDEED90', '\xBEEF92',  2 )
      , ( '\xDEED88', '\xBEEF83',  3 )
      , ( '\xDEED99', '\xBEEF93',  3 )
-     , ( '\xDEED11', '\xBEEF13',  3 )
+     , ( '\xDEED1102', '\xBEEF13',  3 )
     ;
 
-    UPDATE hive.app_context SET fork_id = 2, irreversible_block = 4, current_block_num = 8;
+    UPDATE hive.app_context SET fork_id = 2, irreversible_block = 4, current_block_num = 9;
 END;
 $BODY$
 ;
@@ -116,7 +125,9 @@ BEGIN
             , ( '\xDEED55'::bytea, '\xBEEF55'::bytea )
             , ( '\xDEED60'::bytea, '\xBEEF61'::bytea )
             , ( '\xDEED70'::bytea, '\xBEEF72'::bytea )
+            , ( '\xDEED70'::bytea, '\xBEEF73'::bytea )
             , ( '\xDEED80'::bytea, '\xBEEF82'::bytea )
+            , ( '\xDEED90'::bytea, '\xBEEF92'::bytea )
          ) as pattern
     ) , 'Unexpected rows in the view';
 END;
