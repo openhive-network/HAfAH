@@ -89,3 +89,35 @@ BEGIN
 END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.copy_signatures_to_irreversible(
+      _head_block_of_irreversible_blocks INT
+    , _new_irreversible_block INT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    INSERT INTO hive.transactions_multisig
+    SELECT
+          tsr.trx_hash
+        , tsr.signature
+    FROM
+        hive.transactions_multisig_reversible tsr
+        JOIN hive.transactions_reversible htr ON htr.trx_hash = tsr.trx_hash AND htr.fork_id = tsr.fork_id
+        JOIN (
+            SELECT
+                  DISTINCT ON ( htr2.block_num ) htr2.block_num
+                , htr2.fork_id
+            FROM hive.transactions_reversible htr2
+            WHERE
+               htr2.block_num <= _new_irreversible_block
+            AND htr2.block_num > _head_block_of_irreversible_blocks
+            ORDER BY htr2.block_num ASC, htr2.fork_id DESC
+        ) as num_and_forks ON htr.block_num = num_and_forks.block_num AND htr.fork_id = num_and_forks.fork_id
+    ;
+END;
+$BODY$
+;
+
