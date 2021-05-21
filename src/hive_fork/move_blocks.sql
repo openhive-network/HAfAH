@@ -56,3 +56,36 @@ BEGIN
 END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.copy_operations_to_irreversible(
+      _head_block_of_irreversible_blocks INT
+    , _new_irreversible_block INT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    INSERT INTO hive.operations
+    SELECT
+           hor.id
+         , hor.block_num
+         , hor.trx_in_block
+         , hor.op_pos
+         , hor.op_type_id
+         , hor.body
+    FROM
+        hive.operations_reversible hor
+        JOIN ( SELECT
+                     DISTINCT ON ( hor2.block_num ) hor2.block_num
+                   , hor2.fork_id
+               FROM hive.operations_reversible hor2
+               WHERE
+                   hor2.block_num <= _new_irreversible_block
+               AND hor2.block_num > _head_block_of_irreversible_blocks
+               ORDER BY hor2.block_num ASC, hor2.fork_id DESC
+        ) as num_and_forks ON hor.block_num = num_and_forks.block_num AND hor.fork_id = num_and_forks.fork_id
+    ;
+END;
+$BODY$
+;
