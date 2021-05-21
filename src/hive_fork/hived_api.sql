@@ -55,6 +55,7 @@ BEGIN
     VALUES( 'NEW_IRREVERSIBLE', _block_num );
 
     PERFORM hive.copy_blocks_to_irreversible( __irreversible_head_block, _block_num );
+    PERFORM hive.copy_transactions_to_irreversible( __irreversible_head_block, _block_num );
 END;
 $BODY$
 ;

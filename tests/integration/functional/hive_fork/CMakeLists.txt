@@ -96,6 +96,7 @@ ADD_SQL_FUNCTIONAL_TESTS( hived_api/back_from_fork_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/push_block_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/set_irreversible_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/copy_blocks_to_irreversible.sql )
+ADD_SQL_FUNCTIONAL_TESTS( hived_api/copy_transactions_to_irreversible_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( app_api/create_context_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/context_blocks_view_test.sql )
