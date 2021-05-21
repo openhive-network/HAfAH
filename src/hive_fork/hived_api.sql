@@ -42,16 +42,19 @@ END;
 $BODY$
 ;
 
---TODO: extend parameters for the block's data
 CREATE OR REPLACE FUNCTION hive.set_irreversible( _block_num INT )
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE
 AS
 $BODY$
+DECLARE
+    __irreversible_head_block hive.blocks.num%TYPE;
 BEGIN
     INSERT INTO hive.events_queue( event, block_num )
     VALUES( 'NEW_IRREVERSIBLE', _block_num );
+
+    PERFORM hive.copy_blocks_to_irreversible( __irreversible_head_block, _block_num );
 END;
 $BODY$
 ;
