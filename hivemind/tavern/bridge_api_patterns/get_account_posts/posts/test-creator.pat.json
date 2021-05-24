@@ -1,9 +1,14 @@
 [
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 20000000,
+        "voter": "alice"
+      }
+    ],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -19,10 +24,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 20000000,
+    "payout": 0.002,
     "payout_at": "2016-09-22T18:01:51",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.002 HBD",
     "percent_hbd": 10000,
     "permlink": "nonpinpost3",
     "post_id": 1256943,
@@ -32,7 +37,7 @@
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "Not pinned post 3",
     "updated": "2016-09-15T18:01:51",
@@ -42,7 +47,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -78,10 +83,15 @@
     "url": "/hive-135485/@test-creator/pinpost12"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 50000000,
+        "voter": "alice"
+      }
+    ],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -97,10 +107,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 50000000,
+    "payout": 0.005,
     "payout_at": "2016-09-22T18:01:51",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.005 HBD",
     "percent_hbd": 10000,
     "permlink": "pinpost11",
     "post_id": 1256941,
@@ -110,7 +120,7 @@
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "Pinpost 11",
     "updated": "2016-09-15T18:01:51",
@@ -120,7 +130,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -159,7 +169,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -198,7 +208,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -237,7 +247,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -276,7 +286,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -312,10 +322,15 @@
     "url": "/hive-135485/@test-creator/pinpost6"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 11000000,
+        "voter": "alice"
+      }
+    ],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -331,10 +346,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 11000000,
+    "payout": 0.001,
     "payout_at": "2016-09-22T18:01:51",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.001 HBD",
     "percent_hbd": 10000,
     "permlink": "pinpost5",
     "post_id": 1256935,
@@ -344,7 +359,7 @@
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "Pinpost 5",
     "updated": "2016-09-15T18:01:51",
@@ -354,7 +369,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -393,7 +408,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -432,7 +447,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -468,10 +483,15 @@
     "url": "/hive-135485/@test-creator/pinpost3"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 40000000,
+        "voter": "alice"
+      }
+    ],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -487,10 +507,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 40000000,
+    "payout": 0.004,
     "payout_at": "2016-09-22T18:01:51",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.004 HBD",
     "percent_hbd": 10000,
     "permlink": "nonpinpost1",
     "post_id": 1256931,
@@ -500,7 +520,7 @@
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "Not pinned post 1",
     "updated": "2016-09-15T18:01:51",
@@ -510,7 +530,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -546,10 +566,15 @@
     "url": "/hive-135485/@test-creator/pinpost2"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 30000000,
+        "voter": "alice"
+      }
+    ],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -565,10 +590,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 30000000,
+    "payout": 0.003,
     "payout_at": "2016-09-22T18:01:51",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.003 HBD",
     "percent_hbd": 10000,
     "permlink": "pinpost1",
     "post_id": 1256929,
@@ -578,7 +603,7 @@
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "Pinpost 1",
     "updated": "2016-09-15T18:01:51",
@@ -588,7 +613,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -627,7 +652,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -666,7 +691,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -705,7 +730,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -744,7 +769,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "beneficiaries": [],
     "blacklists": [],
     "body": "This is a cross post of [@test-creator/introduce](/introduceyourself/@test-creator/introduce) by @test-creator.<br><br>crosspost test",

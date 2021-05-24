@@ -23,7 +23,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-member-comment-to-please-comment-hive3-03",
-    "post_id": 1256972,
+    "post_id": 1256977,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -60,7 +60,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-member-comment-to-please-comment-hive3-02",
-    "post_id": 1256971,
+    "post_id": 1256976,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -97,7 +97,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-member-comment-to-please-comment-hive3",
-    "post_id": 1256970,
+    "post_id": 1256975,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -134,7 +134,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-member-comment-to-please-comment-hive2-03",
-    "post_id": 1256969,
+    "post_id": 1256974,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -171,7 +171,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-member-comment-to-please-comment-hive2-02",
-    "post_id": 1256968,
+    "post_id": 1256973,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -208,7 +208,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-member-comment-to-please-comment-hive2",
-    "post_id": 1256967,
+    "post_id": 1256972,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -249,7 +249,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-member-comment-to-please-comment-hive1-03",
-    "post_id": 1256966,
+    "post_id": 1256971,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -290,7 +290,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-member-comment-to-please-comment-hive1-02",
-    "post_id": 1256965,
+    "post_id": 1256970,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -331,7 +331,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "after-member-comment-to-please-comment-hive1",
-    "post_id": 1256964,
+    "post_id": 1256969,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -348,7 +348,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -372,7 +372,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "re-community-135485-comment",
-    "post_id": 1256941,
+    "post_id": 1256944,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {

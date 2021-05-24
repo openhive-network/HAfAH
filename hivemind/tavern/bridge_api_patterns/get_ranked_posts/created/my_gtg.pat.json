@@ -78,7 +78,12 @@
     "url": "/hive-171487/@alice/Second-after-member-post-hive1"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 20000000,
+        "voter": "ignoreall"
+      }
+    ],
     "author": "agartha",
     "author_payout_value": "0.000 HBD",
     "author_reputation": 25.0,
@@ -97,10 +102,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 20000000,
+    "payout": 0.002,
     "payout_at": "2016-09-22T18:02:03",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.002 HBD",
     "percent_hbd": 10000,
     "permlink": "regular-post",
     "post_id": 1256960,
@@ -110,7 +115,7 @@
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "Why am I ignored by ignoreall",
     "updated": "2016-09-15T18:02:03",
@@ -196,10 +201,15 @@
     "url": "/hive-135485/@blocktrades/crocodile03"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 11000000,
+        "voter": "alice"
+      }
+    ],
     "author": "ignoreall",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -215,10 +225,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 11000000,
+    "payout": 0.001,
     "payout_at": "2016-09-22T18:02:00",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.001 HBD",
     "percent_hbd": 10000,
     "permlink": "regular-post",
     "post_id": 1256955,
@@ -228,7 +238,7 @@
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "Regular community post",
     "updated": "2016-09-15T18:02:00",
@@ -275,7 +285,12 @@
     "url": "/hive-135485/@blocktrades/crocodile02"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 40000000,
+        "voter": "alice"
+      }
+    ],
     "author": "blocktrades",
     "author_payout_value": "0.000 HBD",
     "author_reputation": 68.63,
@@ -294,10 +309,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 40000000,
+    "payout": 0.004,
     "payout_at": "2016-09-22T18:02:00",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.004 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile01",
     "post_id": 1256953,
@@ -307,17 +322,22 @@
       "flag_weight": 0.0,
       "gray": true,
       "hide": false,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "powerful crocodile 01",
     "updated": "2016-09-15T18:02:00",
     "url": "/hive-135485/@blocktrades/crocodile01"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 20000000,
+        "voter": "alice"
+      }
+    ],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -333,10 +353,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 20000000,
+    "payout": 0.002,
     "payout_at": "2016-09-22T18:01:51",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.002 HBD",
     "percent_hbd": 10000,
     "permlink": "nonpinpost3",
     "post_id": 1256943,
@@ -346,7 +366,7 @@
       "flag_weight": 0.0,
       "gray": false,
       "hide": false,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "Not pinned post 3",
     "updated": "2016-09-15T18:01:51",
@@ -356,7 +376,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -393,10 +413,15 @@
     "url": "/hive-135485/@test-creator/pinpost12"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 50000000,
+        "voter": "alice"
+      }
+    ],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -412,10 +437,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 50000000,
+    "payout": 0.005,
     "payout_at": "2016-09-22T18:01:51",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.005 HBD",
     "percent_hbd": 10000,
     "permlink": "pinpost11",
     "post_id": 1256941,
@@ -426,7 +451,7 @@
       "gray": false,
       "hide": false,
       "is_pinned": true,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "Pinpost 11",
     "updated": "2016-09-15T18:01:51",
@@ -436,7 +461,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -476,7 +501,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -516,7 +541,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -556,7 +581,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -596,7 +621,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -633,10 +658,15 @@
     "url": "/hive-135485/@test-creator/pinpost6"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 11000000,
+        "voter": "alice"
+      }
+    ],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -652,10 +682,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 11000000,
+    "payout": 0.001,
     "payout_at": "2016-09-22T18:01:51",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.001 HBD",
     "percent_hbd": 10000,
     "permlink": "pinpost5",
     "post_id": 1256935,
@@ -666,7 +696,7 @@
       "gray": false,
       "hide": false,
       "is_pinned": true,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "Pinpost 5",
     "updated": "2016-09-15T18:01:51",
@@ -676,7 +706,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -715,7 +745,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -755,7 +785,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],

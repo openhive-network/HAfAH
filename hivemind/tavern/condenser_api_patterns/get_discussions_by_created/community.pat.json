@@ -1,8 +1,15 @@
 [
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "percent": "200",
+        "reputation": 171875,
+        "rshares": 20000000,
+        "voter": "ignoreall"
+      }
+    ],
     "author": "agartha",
-    "author_reputation": 579514851,
+    "author_reputation": 579827351,
     "beneficiaries": [],
     "body": "Can someone tell ignoreall to stop muting me?",
     "body_length": 45,
@@ -16,10 +23,10 @@
     "last_payout": "1969-12-31T23:59:59",
     "last_update": "2016-09-15T18:02:03",
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
+    "net_rshares": 20000000,
     "parent_author": "",
     "parent_permlink": "hive-135485",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.002 HBD",
     "percent_hbd": 10000,
     "permlink": "regular-post",
     "post_id": 1256960,
@@ -33,7 +40,7 @@
   {
     "active_votes": [],
     "author": "blocktrades",
-    "author_reputation": 70486967561347,
+    "author_reputation": 70486968186347,
     "beneficiaries": [],
     "body": "only crocodiles 03",
     "body_length": 18,
@@ -62,9 +69,16 @@
     "url": "/hive-135485/@blocktrades/crocodile03"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "percent": "100",
+        "reputation": 0,
+        "rshares": 11000000,
+        "voter": "alice"
+      }
+    ],
     "author": "ignoreall",
-    "author_reputation": 0,
+    "author_reputation": 171875,
     "beneficiaries": [],
     "body": "I want to write something to the community as well",
     "body_length": 50,
@@ -78,10 +92,10 @@
     "last_payout": "1969-12-31T23:59:59",
     "last_update": "2016-09-15T18:02:00",
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
+    "net_rshares": 11000000,
     "parent_author": "",
     "parent_permlink": "hive-135485",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.001 HBD",
     "percent_hbd": 10000,
     "permlink": "regular-post",
     "post_id": 1256955,
@@ -95,7 +109,7 @@
   {
     "active_votes": [],
     "author": "blocktrades",
-    "author_reputation": 70486967561347,
+    "author_reputation": 70486968186347,
     "beneficiaries": [],
     "body": "only crocodiles 02",
     "body_length": 18,
@@ -124,9 +138,16 @@
     "url": "/hive-135485/@blocktrades/crocodile02"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "percent": "400",
+        "reputation": 0,
+        "rshares": 40000000,
+        "voter": "alice"
+      }
+    ],
     "author": "blocktrades",
-    "author_reputation": 70486967561347,
+    "author_reputation": 70486968186347,
     "beneficiaries": [],
     "body": "only crocodiles 01",
     "body_length": 18,
@@ -140,10 +161,10 @@
     "last_payout": "1969-12-31T23:59:59",
     "last_update": "2016-09-15T18:02:00",
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
+    "net_rshares": 40000000,
     "parent_author": "",
     "parent_permlink": "hive-135485",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.004 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile01",
     "post_id": 1256953,

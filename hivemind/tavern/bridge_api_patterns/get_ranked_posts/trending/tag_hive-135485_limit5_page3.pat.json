@@ -3,7 +3,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -25,7 +25,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "pinpost4",
-    "post_id": 1256932,
+    "post_id": 1256933,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -43,7 +43,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -65,7 +65,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "pinpost3",
-    "post_id": 1256931,
+    "post_id": 1256932,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -83,7 +83,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -120,10 +120,15 @@
     "url": "/hive-135485/@test-creator/pinpost2"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 30000000,
+        "voter": "alice"
+      }
+    ],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],
@@ -139,10 +144,10 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 30000000,
+    "payout": 0.003,
     "payout_at": "2016-09-22T18:01:51",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.003 HBD",
     "percent_hbd": 10000,
     "permlink": "pinpost1",
     "post_id": 1256929,
@@ -153,7 +158,7 @@
       "gray": false,
       "hide": false,
       "is_pinned": true,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "Pinpost 1",
     "updated": "2016-09-15T18:01:51",
@@ -163,7 +168,7 @@
     "active_votes": [],
     "author": "test-creator",
     "author_payout_value": "0.000 HBD",
-    "author_reputation": 25,
+    "author_reputation": 25.0,
     "author_role": "guest",
     "author_title": "",
     "beneficiaries": [],

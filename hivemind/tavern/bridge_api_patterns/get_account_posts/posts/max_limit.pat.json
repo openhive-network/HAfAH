@@ -25,7 +25,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile03",
-    "post_id": 1256952,
+    "post_id": 1256956,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -64,7 +64,7 @@
     "pending_payout_value": "0.000 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile02",
-    "post_id": 1256951,
+    "post_id": 1256954,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
@@ -78,7 +78,12 @@
     "url": "/hive-135485/@blocktrades/crocodile02"
   },
   {
-    "active_votes": [],
+    "active_votes": [
+      {
+        "rshares": 40000000,
+        "voter": "alice"
+      }
+    ],
     "author": "blocktrades",
     "author_payout_value": "0.000 HBD",
     "author_reputation": 68.63,
@@ -97,20 +102,20 @@
     "is_paidout": false,
     "json_metadata": {},
     "max_accepted_payout": "1000000.000 HBD",
-    "net_rshares": 0,
-    "payout": 0.0,
+    "net_rshares": 40000000,
+    "payout": 0.004,
     "payout_at": "2016-09-22T18:02:00",
-    "pending_payout_value": "0.000 HBD",
+    "pending_payout_value": "0.004 HBD",
     "percent_hbd": 10000,
     "permlink": "crocodile01",
-    "post_id": 1256950,
+    "post_id": 1256953,
     "promoted": "0.000 HBD",
     "replies": [],
     "stats": {
       "flag_weight": 0.0,
       "gray": true,
       "hide": false,
-      "total_votes": 0
+      "total_votes": 1
     },
     "title": "powerful crocodile 01",
     "updated": "2016-09-15T18:02:00",
