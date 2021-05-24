@@ -51,6 +51,7 @@ $BODY$
 DECLARE
     __irreversible_head_block hive.blocks.num%TYPE;
 BEGIN
+    -- application contexts will use the event to clear data in shadow tables
     INSERT INTO hive.events_queue( event, block_num )
     VALUES( 'NEW_IRREVERSIBLE', _block_num );
 
@@ -61,6 +62,7 @@ BEGIN
     PERFORM hive.copy_signatures_to_irreversible( __irreversible_head_block, _block_num );
 
     -- remove unneeded blocks
+    PERFORM hive.remove_obsolete_reversible_data( _block_num );
 END;
 $BODY$
 ;

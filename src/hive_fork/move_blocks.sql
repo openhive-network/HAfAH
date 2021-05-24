@@ -152,8 +152,6 @@ BEGIN
         __lowest_contexts_block_on_fork = _new_irreversible_block;
     END IF;
 
-    RAISE NOTICE 'current fork: %, lowest fork: %, lowest block: %', __current_fork, __lowest_contexts_fork, __lowest_contexts_block_on_fork;
-
     DELETE FROM hive.operations_reversible hor
     WHERE
            hor.fork_id < __lowest_contexts_fork
