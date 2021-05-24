@@ -20,11 +20,15 @@ MACRO( ADD_PSQL_EXTENSION )
         MESSAGE( STATUS "GIT hash: ${GIT_REVISION}" )
 
         SET( extension_control_script ${extension_path}/${EXTENSION_NAME}--${GIT_REVISION}.sql )
+        EXECUTE_PROCESS( COMMAND printf %d 0x${GIT_REVISION} OUTPUT_VARIABLE git_ver_dec )
+        MESSAGE( STATUS "DEC VERSION: ${git_ver_dec}" )
+        # MATH( EXPR git_ver_dec "0x${GIT_REVISION}" OUTPUT_FORMAT DECIMAL)
+
         ADD_CUSTOM_COMMAND(
                 OUTPUT  ${extension_path}/${extension_control_file} ${extension_path}/${extension_control_script}
                 COMMAND rm -rf ${extension_path}/*
-                COMMAND sed 's/@GIT_REVISION@/${GIT_REVISION}/g' ${extension_control_file}  > ${extension_path}/${extension_control_file}
-                COMMAND ${CMAKE_MODULE_PATH}/merge_sql.sh ${EXTENSION_SOURCES} > ${extension_path}/${EXTENSION_NAME}--${GIT_REVISION}.sql
+                COMMAND sed 's/@GIT_REVISION@/${git_ver_dec}/g' ${extension_control_file}  > ${extension_path}/${extension_control_file}
+                COMMAND ${CMAKE_MODULE_PATH}/merge_sql.sh ${EXTENSION_SOURCES} > ${extension_path}/${EXTENSION_NAME}--${git_ver_dec}.sql
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                 DEPENDS ${EXTENSION_SOURCES} ${extension_control_file}
                 COMMENT "Generate ${EXTENSION_NAME} to ${extension_path}"
