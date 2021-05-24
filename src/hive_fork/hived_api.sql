@@ -54,10 +54,13 @@ BEGIN
     INSERT INTO hive.events_queue( event, block_num )
     VALUES( 'NEW_IRREVERSIBLE', _block_num );
 
+    -- copy to irreversible
     PERFORM hive.copy_blocks_to_irreversible( __irreversible_head_block, _block_num );
     PERFORM hive.copy_transactions_to_irreversible( __irreversible_head_block, _block_num );
     PERFORM hive.copy_operations_to_irreversible( __irreversible_head_block, _block_num );
     PERFORM hive.copy_signatures_to_irreversible( __irreversible_head_block, _block_num );
+
+    -- remove unneeded blocks
 END;
 $BODY$
 ;

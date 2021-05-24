@@ -11,7 +11,7 @@ It is possible to have multiple applications which process blocks independent on
 
 Blocks data are stored in two separated, but similar tables for irreversible and potentialy reversible blocks.
 
-An Application groups its tables into named contexts. Each contexts holds information about its processed events and
+An Application groups its tables into named contexts (context are named only with alphanumerical characters). Each contexts holds information about its processed events and
 a fork which is now processed. These two pice of information are enaugh to create views which presents combined irreversible and
 reversible blocks data. Each of the views has name started from 'hive.{context_name}_'  
 
