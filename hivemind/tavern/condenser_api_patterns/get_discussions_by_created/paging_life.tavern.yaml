@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_created patterns test paging mechanism
+  test_name: Hivemind
 
   marks:
     - patterntest # see also tag_life
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_discussions_by_created paging mechanism
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,5 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "paging_life"
-            directory: "condenser_api_patterns/get_discussions_by_created"
+            ignore_tags: "<condenser posts>"

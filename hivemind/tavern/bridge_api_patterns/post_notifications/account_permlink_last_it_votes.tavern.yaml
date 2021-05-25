@@ -1,5 +1,6 @@
 ---
-  test_name: Hivemind bridge.post_notifications patterns test valid account, permlink and last_id
+  test_name: Hivemind
+
   marks:
     - patterntest # show only votes (bc of last_it type - vote)
 
@@ -7,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge.post_notifications
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -22,6 +23,3 @@
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
-          extra_kwargs:
-            method: "account_permlink_last_it_votes"
-            directory: "bridge_api_patterns/post_notifications"

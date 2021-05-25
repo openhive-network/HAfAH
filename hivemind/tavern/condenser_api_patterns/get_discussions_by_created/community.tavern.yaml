@@ -1,14 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_created community patterns test
+  test_name: Hivemind
 
   marks:
-    - patterntest # communities not implemented under 5 mln blocks
+    - patterntest
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: condenser_api.get_discussions_by_created community patterns test
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -18,11 +18,10 @@
           jsonrpc: "2.0"
           id: 1
           method: "condenser_api.get_discussions_by_created"
-          params: {"tag":"hive-173493", "limit":5}
+          params: {"tag":"hive-135485", "limit":5}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "community"
-            directory: "condenser_api_patterns/get_discussions_by_created"
+            ignore_tags: "<condenser posts>"

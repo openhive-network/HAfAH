@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_discussions_by_promoted patterns test observer ignoreall
+  test_name: Hivemind
 
   marks:
     - patterntest # ignoreall ignores fyrstikken (mock data); see also no_params
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: condenser_api.get_discussions_by_promoted observer ignoreall
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,5 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "observer_muted"
-            directory: "condenser_api_patterns/get_discussions_by_promoted"
+            ignore_tags: "<condenser posts>"

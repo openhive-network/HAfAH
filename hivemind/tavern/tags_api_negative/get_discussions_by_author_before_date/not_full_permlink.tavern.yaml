@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind tags_api.get_discussions_by_author_before_date patterns test not full permlink
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -10,7 +10,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_discussions_by_author_before_date
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -26,6 +26,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "not_full_permlink"
-            directory: "tags_api_negative/get_discussions_by_author_before_date"
             error_response: true

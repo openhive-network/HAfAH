@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_ranked_posts hot maximum limit patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # blacklists not present due to lack of global blacklist
@@ -8,7 +8,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: bridge_api.get_ranked_posts hot maximum limit patterns test
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,5 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "max_limit"
-            directory: "bridge_api_patterns/get_ranked_posts/hot"
+            ignore_tags: "<bridge posts>"

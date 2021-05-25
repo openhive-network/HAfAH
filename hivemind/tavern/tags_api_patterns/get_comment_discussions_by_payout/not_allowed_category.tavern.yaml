@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind tags_api.get_comment_discussions_by_payout patterns test limit not allowed category
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -10,7 +10,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_comment_discussions_by_payout
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -26,5 +26,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "not_allowed_category"
-            directory: "tags_api_patterns/get_comment_discussions_by_payout"
+            ignore_tags: "<tags posts>"

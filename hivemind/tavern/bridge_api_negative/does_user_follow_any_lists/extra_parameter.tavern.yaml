@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.does_user_follow_any_lists patterns test extra parameter
+  test_name: Hivemind
 
   marks:
     - patterntest # there is no observer name validation - account can by unspecified
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: does_user_follow_any_lists extra parameter
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "extra_parameter"
-            directory: "bridge_api_negative/does_user_follow_any_lists"
             error_response: true

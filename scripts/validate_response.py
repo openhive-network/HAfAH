@@ -2,12 +2,37 @@ import os
 import csv
 from difflib import SequenceMatcher
 from time import perf_counter as perf
+import deepdiff
+import re
 
 class PatternDiffException(Exception):
   pass
 
 class NoResultException(Exception):
   pass
+
+# set of predefined "tags" that can be used in tests to ignore specific elements
+# of result json when comparing with pattern - only one per test (ignore_tags should
+# be a string denoting predefined situation), exclusive with regular (not predefined)
+# tags (in normal case ignore_tags must be a list of tag specifiers)
+predefined_ignore_tags = {
+  '<bridge post>' : re.compile(r"root\['post_id'\]"),
+  '<bridge posts>' : re.compile(r"root\[\d+\]\['post_id'\]"),
+  '<bridge discussion>' : re.compile(r"root\[.+\]\['post_id'\]"),
+  '<bridge community>' : re.compile(r"root\['id'\]"),
+  '<bridge communities>' : re.compile(r"root\[\d+\]\['id'\]"),
+  '<bridge profile>' : re.compile(r"root\['id'\]"),
+  '<condenser posts>' : re.compile(r"root\[\d+\]\['post_id'\]"),
+  '<condenser content>' : re.compile(r"root\['id'\]"), # condenser_api.get_content
+  '<condenser replies>' : re.compile(r"root\[\d+\]\['id'\]"), # condenser_api.get_content_replies
+  '<condenser blog>' : re.compile(r"root\[\d+\]\['comment'\]\['post_id'\]"), # condenser_api.get_blog
+  '<condenser state>' : re.compile(r"root\['content'\]\[.+\]\['post_id'\]"), # condenser_api.get_state
+  '<database posts>' : re.compile(r"root\['comments'\]\[\d+\]\['id'\]"),
+  '<database votes>' : re.compile(r"root\['votes'\]\[\d+\]\['id'\]"),
+  '<follow blog>' : re.compile(r"root\[\d+\]\['comment'\]\['post_id'\]"), # follow_api.get_blog
+  '<tags posts>' : re.compile(r"root\[\d+\]\['post_id'\]"),
+  '<tags post>' : re.compile(r"root\['post_id'\]") # tags_api.get_discussion
+}
 
 def get_overlap(s1, s2):
     s = SequenceMatcher(None, s1, s2)
@@ -36,9 +61,12 @@ TEST_FILE_EXT = ".tavern.yaml"
 def load_pattern(name):
   """ Loads pattern from json file to python object """
   from json import load
-  ret = {}
-  with open(name, 'r') as f:
-    ret = load(f)
+  ret = None
+  try:
+    with open(name, 'r') as f:
+      ret = load(f)
+  except FileNotFoundError as ex:
+    pass
   return ret
 
 def remove_tag(data, tags_to_remove):
@@ -77,14 +105,18 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     os.remove(response_fname)
 
   response_json = response.json()
-  if ignore_tags is not None:
-    assert isinstance(ignore_tags, list), "ignore_tags should be list of tags"
-    response_json = remove_tag(response_json, ignore_tags)
   error = response_json.get("error", None)
   result = response_json.get("result", None)
 
-  # disable coparison with pattern on demand
-  # and save 
+  exclude_regex_path = None
+  if isinstance(ignore_tags, str):
+    assert ignore_tags in predefined_ignore_tags, "Unknown predefined meta-tag specified in ignore_tags"
+    exclude_regex_path = predefined_ignore_tags[ignore_tags]
+    ignore_tags = None
+  if ignore_tags is not None:
+    assert isinstance(ignore_tags, list), "ignore_tags should be list of tags"
+
+  # disable comparison with pattern on demand and save 
   if tavern_disable_comparator:
     if error is not None:
       save_json(response_fname, error)
@@ -97,11 +129,11 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     return
 
   if error is not None and not error_response:
-    msg = "Error detected in response: {}".format(error["message"])
+    msg = "Error detected in response - see {} for details".format(response_fname)
     save_json(response_fname, response_json)
     raise PatternDiffException(msg)
   if error is None and error_response:
-    msg = "Error expected but got result: {}".format(result)
+    msg = "Error expected but got result - see {} for details".format(response_fname)
     save_json(response_fname, response_json)
     raise PatternDiffException(msg)
 
@@ -112,11 +144,18 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
     save_json(response_fname, response_json)
     raise PatternDiffException(msg)
 
-  import deepdiff
   pattern = load_pattern(pattern_fname)
+  if pattern is None:
+    save_json(response_fname, result)
+    msg = "Pattern is missing."
+    raise PatternDiffException(msg)
   if ignore_tags is not None:
     pattern = remove_tag(pattern, ignore_tags)
-  pattern_resp_diff = deepdiff.DeepDiff(pattern, result)
+    result = remove_tag(result, ignore_tags)
+  if exclude_regex_path is not None:
+    pattern_resp_diff = deepdiff.DeepDiff(pattern, result, exclude_regex_paths=[exclude_regex_path])
+  else:
+    pattern_resp_diff = deepdiff.DeepDiff(pattern, result)
   if pattern_resp_diff:
     save_json(response_fname, result)
     msg = "Differences detected between response and pattern."

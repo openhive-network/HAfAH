@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_trending_topics patterns invalid observer test
+  test_name: Hivemind
 
   marks:
     - patterntest # observer is ignored both by old and new; it is not clear what observer could influence in this call
@@ -10,7 +10,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_trending_topics invalid observer
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -26,6 +26,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_observer"
-            directory: "bridge_api_negative/get_trending_topics"
             error_response: true

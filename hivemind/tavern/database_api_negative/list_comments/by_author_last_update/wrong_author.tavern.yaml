@@ -1,5 +1,5 @@
 ---
-test_name: Hivemind database_api.list_comments patterns test order "by_author_last_update" not full author and corr date
+test_name: Hivemind
 
 marks:
   - patterntest # fat node did not check existence of given author account
@@ -9,7 +9,7 @@ includes:
   - !include ../../../common.yaml
 
 stages:
-  - name: list_comments_by_author_last_update
+  - name: test
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -30,6 +30,4 @@ stages:
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "wrong_author"
-          directory: "database_api_negative/list_comments/by_author_last_update"
           error_response: true

@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_follow_list wrong account name
+  test_name: Hivemind
 
   marks:
     - patterntest # tested on anyx.io
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_follow_list
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "wrong_account"
-            directory: "bridge_api_negative/get_follow_list"
             error_response: true

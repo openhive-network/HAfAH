@@ -1,15 +1,14 @@
 ---
-  test_name: Hivemind bridge_api.get_account_posts sort payout alice with paging2 test
+  test_name: Hivemind
 
   marks:
     - patterntest # mock_data - second and -02 posts muted
-
 
   includes:
     - !include ../../../common.yaml
 
   stages:
-    - name: get_account_posts sort payout alice with paging2
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,5 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "alice_paging2"
-            directory: "bridge_api_patterns/get_account_posts/payout"
+            ignore_tags: "<bridge posts>"

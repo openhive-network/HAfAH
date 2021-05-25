@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_ranked_posts my without observer
+  test_name: Hivemind
 
   marks:
     - patterntest # original did not validate observer
@@ -9,7 +9,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: bridge_api.get_ranked_posts invalid my without observer
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "my_without_observer"
-            directory: "bridge_api_negative/get_ranked_posts/created"
             error_response: true

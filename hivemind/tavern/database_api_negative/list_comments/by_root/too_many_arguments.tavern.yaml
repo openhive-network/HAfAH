@@ -1,14 +1,15 @@
 ---
-test_name: Hivemind database_api.list_comments patterns test order "by_root" too many arguments
+test_name: Hivemind
 
 marks:
   - patterntest
   - negative
+
 includes:
   - !include ../../../common.yaml
 
 stages:
-  - name: list_comments by_root too many arguments
+  - name: test
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -29,6 +30,4 @@ stages:
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "too_many_arguments"
-          directory: "database_api_negative/list_comments/by_root"
           error_response: true

@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_community patterns test invalid observer community type
+  test_name: Hivemind
 
   marks:
     - patterntest # should validate community name
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_community test invalid observer community type
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_community_type"
-            directory: "bridge_api_negative/get_community"
             error_response: true

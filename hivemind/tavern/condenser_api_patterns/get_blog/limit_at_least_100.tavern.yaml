@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind condenser_api.get_blog limit at least 100 patterns test
+  test_name: Hivemind
 
   marks:
     - patterntest # original code didn't correct limit when offset was auto selected (.orig created with limit 1), it was corrected in new version
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_blog limit at least 100
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,5 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "limit_at_least_100"
-            directory: "condenser_api_patterns/get_blog"
+            ignore_tags: "<condenser blog>"

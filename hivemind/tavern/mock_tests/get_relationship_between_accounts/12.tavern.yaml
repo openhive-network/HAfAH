@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_relationship_between_accounts
+  test_name: Hivemind
 
   marks:
     - patterntest # relies on mock data and extra unofficial argument
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_relationship_between_accounts
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -23,7 +23,3 @@
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
-          extra_kwargs:
-            method: "12"
-            directory: "mock_tests/get_relationship_between_accounts"
-

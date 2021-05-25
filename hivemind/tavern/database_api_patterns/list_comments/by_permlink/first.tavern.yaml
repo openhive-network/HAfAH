@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind database_api.list_comments patterns test order "by_permlink"
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../../common.yaml
 
   stages:
-    - name: list_comments
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,6 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "first"
-            directory: "database_api_patterns/list_comments/by_permlink"
-
+            ignore_tags: "<database posts>"

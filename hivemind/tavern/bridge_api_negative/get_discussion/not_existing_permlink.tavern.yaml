@@ -1,6 +1,5 @@
 ---
-  test_name: Hivemind bridge_api.get_discussion non existing permlink patterns test
-      # not documented on https://developers.hive.io/apidefinitions/#apidefinitions-bridge
+  test_name: Hivemind
 
   marks:
     - patterntest # original returns empty result
@@ -10,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_discussion
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -26,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "not_existing_permlink"
-            directory: "bridge_api_negative/get_discussion"
             error_response: true

@@ -1,5 +1,5 @@
 ---
-  test_name: Hived bridge_api get_follow_list funny follow_type follow_blacklist
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge_api get_follow_list funny follow_blacklist
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -23,6 +23,3 @@
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
-          extra_kwargs:
-            method: "funny_follow_blacklist"
-            directory: "bridge_api_patterns/get_follow_list"

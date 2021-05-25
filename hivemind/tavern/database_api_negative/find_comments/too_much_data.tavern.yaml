@@ -1,5 +1,5 @@
 ---
-test_name: Hivemind database_api.find_comments unknown extra arguments
+test_name: Hivemind
 
 marks:
   - patterntest # fat node didn't care about extra arguments so it gave response like in database_api_patterns/find_comments/all_data.tavern.yaml
@@ -9,7 +9,7 @@ includes:
   - !include ../../common.yaml
 
 stages:
-  - name: database_api.find_comments unknown extra arguments
+  - name: test
     request:
       url: "{service.proto:s}://{service.server:s}:{service.port}/"
       method: POST
@@ -30,6 +30,4 @@ stages:
       verify_response_with:
         function: validate_response:compare_response_with_pattern
         extra_kwargs:
-          method: "too_much_data"
-          directory: "database_api_negative/find_comments"
           error_response: true

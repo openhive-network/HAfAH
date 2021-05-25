@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind hive.db_head_state
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: hive.db_head_state
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -24,6 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "test"
-            directory: "hive_api_patterns/db_head_state"
             ignore_tags: ['db_head_age']

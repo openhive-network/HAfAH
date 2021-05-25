@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind tags_api.get_comment_discussions_by_payout patterns test permlink type error
+  test_name: Hivemind
 
   marks:
     - patterntest
@@ -9,7 +9,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: get_comment_discussions_by_payout
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +25,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "permlink_type"
-            directory: "tags_api_negative/get_comment_discussions_by_payout"
             error_response: true

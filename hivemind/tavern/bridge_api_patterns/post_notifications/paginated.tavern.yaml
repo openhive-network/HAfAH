@@ -1,5 +1,5 @@
 ---
-  test_name: Hivemind bridge.post_notifications patterns test steve-walschot paging
+  test_name: Hivemind
 
   marks:
     - patterntest # see also steve-walschot (one before last id checked)
@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: bridge.post_notifications steve-walschot paging
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -26,6 +26,3 @@
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
-          extra_kwargs:
-            method: "paginated"
-            directory: "bridge_api_patterns/post_notifications"

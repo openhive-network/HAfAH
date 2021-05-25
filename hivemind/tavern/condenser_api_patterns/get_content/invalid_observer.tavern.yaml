@@ -1,15 +1,14 @@
 ---
-  test_name: Hivemind condenser_api.get_content invalid observer
+  test_name: Hivemind
 
   marks:
     - patterntest # does not validate observer in any way at the moment
-   # - negative
 
   includes:
     - !include ../../common.yaml
 
   stages:
-    - name: get_content invalid observer
+    - name: test
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
@@ -25,6 +24,4 @@
         verify_response_with:
           function: validate_response:compare_response_with_pattern
           extra_kwargs:
-            method: "invalid_observer"
-            directory: "condenser_api_patterns/get_content"
-           # error_response: true
+            ignore_tags: "<condenser content>"
