@@ -15,7 +15,7 @@ BEGIN
              , hb.prev
              , hb.created_at
         FROM hive.blocks hb
-        JOIN hive.app_context hc ON  hb.num <= hc.irreversible_block AND hb.num <= hc.current_block_num
+        JOIN hive.context hc ON  hb.num <= hc.irreversible_block AND hb.num <= hc.current_block_num
         WHERE hc.name = ''%s''
         UNION ALL
         SELECT
@@ -32,7 +32,7 @@ BEGIN
                , hbr.created_at
                , hbr.fork_id
             FROM hive.blocks_reversible hbr
-            JOIN hive.app_context hc ON  hbr.num > hc.irreversible_block AND hbr.fork_id <= hc.fork_id AND hbr.num <= hc.current_block_num
+            JOIN hive.context hc ON  hbr.num > hc.irreversible_block AND hbr.fork_id <= hc.fork_id AND hbr.num <= hc.current_block_num
             WHERE hc.name = ''%s''
             ORDER BY hbr.num DESC, hbr.fork_id DESC
             ) as reversible
@@ -60,7 +60,7 @@ BEGIN
            ht.expiration,
            ht.signature
         FROM hive.transactions ht
-        JOIN hive.app_context hc ON ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num
+        JOIN hive.context hc ON ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num
         WHERE hc.name = ''%s''
         UNION ALL
         SELECT reversible.block_num,
@@ -84,7 +84,7 @@ BEGIN
            SELECT DISTINCT ON (htr2.block_num) htr2.block_num
                , htr2.fork_id
            FROM hive.transactions_reversible htr2
-           JOIN hive.app_context hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
+           JOIN hive.context hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
            WHERE hc.name = ''%s''
            ORDER BY htr2.block_num DESC, htr2.fork_id DESC
         ) as forks ON forks.fork_id = htr.fork_id AND forks.block_num = htr.block_num
@@ -114,7 +114,7 @@ EXECUTE format(
             , ho.op_type_id
             , ho.body
         FROM hive.operations ho
-        JOIN hive.app_context hc ON  ho.block_num <= hc.irreversible_block AND ho.block_num <= hc.current_block_num
+        JOIN hive.context hc ON  ho.block_num <= hc.irreversible_block AND ho.block_num <= hc.current_block_num
         WHERE hc.name = ''%s''
         UNION ALL
         SELECT
@@ -138,7 +138,7 @@ EXECUTE format(
                SELECT DISTINCT ON (htr2.block_num) htr2.block_num
                    , htr2.fork_id
                FROM hive.transactions_reversible htr2
-               JOIN hive.app_context hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
+               JOIN hive.context hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
                WHERE hc.name = ''%s''
                ORDER BY htr2.block_num DESC, htr2.fork_id DESC
                 ) as forks ON forks.fork_id = hor.fork_id AND forks.block_num = hor.block_num
@@ -165,7 +165,7 @@ EXECUTE format(
             , htm.signature
         FROM hive.transactions_multisig htm
         JOIN hive.transactions ht ON ht.trx_hash = htm.trx_hash
-        JOIN hive.app_context hc ON  ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num
+        JOIN hive.context hc ON  ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num
         WHERE hc.name = ''%s''
         UNION ALL
         SELECT
@@ -182,7 +182,7 @@ EXECUTE format(
             JOIN (
                 SELECT DISTINCT ON (htr2.block_num) htr2.block_num, htr2.fork_id
                 FROM hive.transactions_reversible htr2
-                JOIN hive.app_context hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
+                JOIN hive.context hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
                 WHERE hc.name = ''%s''
                 ORDER BY htr2.block_num DESC, htr2.fork_id DESC
             ) as forks ON forks.fork_id = htmr.fork_id AND forks.block_num = htr.block_num

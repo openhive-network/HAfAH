@@ -7,7 +7,7 @@ $BODY$
 BEGIN
     -- Any context always starts with block before genesis, the app may detach the context and execute 'massive sync'
     -- after massive sync the application must attach its context to last already synced block
-    INSERT INTO hive.app_context(
+    INSERT INTO hive.context(
            name
          , current_block_num
          , irreversible_block
@@ -50,7 +50,7 @@ BEGIN
         , hac.fork_id
         , hac.events_id
         , hac.id
-    FROM hive.app_context hac
+    FROM hive.context hac
     WHERE hac.name = _context_name
     INTO __current_block_num, __current_fork, __current_event_id, __context_id;
 
@@ -76,7 +76,7 @@ BEGIN
     CASE __next_event_type
         WHEN 'BACK_FROM_FORK' THEN
             PERFORM hive.context_back_from_fork( _name, __next_event_block_num );
-            UPDATE hive.app_context
+            UPDATE hive.context
             SET
                   events_id = __next_event_id
                 , current_block_num = __next_event_block_num
@@ -87,7 +87,7 @@ BEGIN
         WHEN 'NEW_BLOCK' THEN
             ASSERT  __next_event_block_num > __current_block_num, 'We could not process block without consume event';
             IF __next_event_block_num = ( __current_block_num + 1 ) THEN
-                UPDATE hive.app_context
+                UPDATE hive.context
                 SET   events_id = __next_event_id
                     , current_block_num = __next_event_block_num
                 WHERE id = __context_id;
@@ -109,7 +109,7 @@ BEGIN
         RETURN NULL;
     END IF;
 
-    UPDATE hive.app_context
+    UPDATE hive.context
     SET current_block_num = __next_block_to_process
     WHERE id = __context_id;
     RETURN __next_block_to_process;

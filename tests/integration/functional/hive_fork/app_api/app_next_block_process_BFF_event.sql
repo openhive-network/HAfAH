@@ -71,7 +71,7 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT current_block_num FROM hive.app_context WHERE name='context' ) = 2, 'Wrong current block num';
+    ASSERT ( SELECT current_block_num FROM hive.context WHERE name='context' ) = 2, 'Wrong current block num';
 END
 $BODY$
 ;

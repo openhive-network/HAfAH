@@ -40,7 +40,7 @@ adds information about current fork to a new irreversible data. Irreversible dat
 |    4     |    2    |  DATA_42  |
 |    4     |    3    |  DATA_43  |
 
-If application is working on fork=2 and block_num=3 ( this information is held by `hive.app_context` ) then its snapshot of data for example above is:
+If application is working on fork=2 and block_num=3 ( this information is held by `hive.context` ) then its snapshot of data for example above is:
 
 | block_num| fork id | data      |
 |----------|---------|-----------|
@@ -55,7 +55,7 @@ SELECT
     , fork_id
     , data
 FROM data_reversible
-JOIN hive.app_context hc ON fork_id <= hc.fork_id AND block_num <= hc.current_block_num
+JOIN hive.context hc ON fork_id <= hc.fork_id AND block_num <= hc.current_block_num
 WHERE hc.name = 'app_context'
 ORDER BY block_num DESC, fork_id DESC
 ```
@@ -128,7 +128,7 @@ Columns
 2. event - type of the event
 3. block_num - block num that releates to the event
 
-##### hive.app_context
+##### hive.context
 Inherits from hive.context
 
 1. event_id - id of the last processed event

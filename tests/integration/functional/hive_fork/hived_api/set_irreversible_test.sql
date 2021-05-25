@@ -120,7 +120,7 @@ BEGIN
          , ( 11, 10, 0, 0, 1, 'TEN OPERATION', 3 )
     ;
 
-    UPDATE hive.app_context SET fork_id = 2, irreversible_block = 3, current_block_num = 8;
+    UPDATE hive.context SET fork_id = 2, irreversible_block = 3, current_block_num = 8;
     -- SUMMARY:
     --We have 3 forks: 1 (blocks: 4,5,6),2 (blocks: 7,8,9) ,3 (blocks: 8,9, 10), moreover block 1,2,3,4 are
     --in set of irreversible blocks. There is one context which is working on 8 block on fork 2, and has information

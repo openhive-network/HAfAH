@@ -87,7 +87,7 @@ BEGIN
      , ( '\xDEED1102', '\xBEEF13',  3 )
     ;
 
-    UPDATE hive.app_context SET fork_id = 2, irreversible_block = 4, current_block_num = 9;
+    UPDATE hive.context SET fork_id = 2, irreversible_block = 4, current_block_num = 9;
 END;
 $BODY$
 ;

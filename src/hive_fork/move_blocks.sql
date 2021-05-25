@@ -143,7 +143,7 @@ BEGIN
           COALESCE( hac.fork_id, 0 )
         , COALESCE( hac.current_block_num, 0 )
     INTO __lowest_contexts_fork, __lowest_contexts_block_on_fork
-    FROM hive.app_context hac
+    FROM hive.context hac
     ORDER BY hac.fork_id ASC, hac.current_block_num ASC
     LIMIT 1;
 

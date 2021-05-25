@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS hive.context(
     current_block_num INTEGER NOT NULL,
     irreversible_block INTEGER NOT NULL,
     is_attached BOOL NOT NULL,
+    events_id BIGINT, -- no event is processed
+    fork_id BIGINT NOT NULL DEFAULT 1,
     CONSTRAINT uq_hive_context_name UNIQUE ( name )
 );
 
