@@ -28,3 +28,85 @@ BEGIN
 END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.app_next_block( _context_name TEXT )
+    RETURNS INT
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __context_id INT;
+    __current_block_num INT;
+    __current_fork BIGINT;
+    __current_event_id BIGINT;
+    __next_event_id BIGINT;
+    __next_event_type hive.event_type;
+    __next_event_block_num INT;
+    __next_block_to_process INT;
+BEGIN
+    SELECT
+          hac.current_block_num
+        , hac.fork_id
+        , hac.events_id
+        , hac.id
+    FROM hive.app_context hac
+    WHERE hac.name = _context_name
+    INTO __current_block_num, __current_fork, __current_event_id, __context_id;
+
+    IF __context_id IS NULL THEN
+        RAISE EXCEPTION 'No context with name %', _context_name;
+    END IF;
+
+    -- no event was processed
+    IF __current_event_id IS NULL THEN
+        __current_event_id = 0;
+    END IF;
+
+    SELECT
+          heq.event
+        , heq.block_num
+        , heq.id
+    FROM hive.events_queue heq
+    WHERE id > __current_event_id
+    ORDER BY heq.id ASC
+    LIMIT 1
+    INTO __next_event_type,  __next_event_block_num, __next_event_id;
+
+    CASE __next_event_type
+        WHEN 'BACK_FROM_FORK' THEN
+            ASSERT FALSE, 'BACK_FROM_FORK is not supported';
+        WHEN 'NEW_IRREVERSIBLE' THEN
+            ASSERT FALSE, 'NEW IRREVERSIBLE is not supported';
+        WHEN 'NEW_BLOCK' THEN
+            ASSERT  __next_event_block_num > __current_block_num, 'We could not process block without consume event';
+            IF __next_event_block_num = ( __current_block_num + 1 ) THEN
+                UPDATE hive.app_context
+                SET   events_id = __next_event_id
+                    , current_block_num = __next_event_block_num
+                WHERE id = __context_id;
+                RETURN __next_event_block_num;
+            END IF;
+        ELSE
+    END CASE;
+
+    -- if there is no event or we still process irreversible blocks
+    SELECT hb.num
+    FROM hive.blocks hb
+    WHERE hb.num > __current_block_num
+    ORDER BY hb.num ASC LIMIT 1
+    INTO __next_block_to_process;
+
+    IF __next_block_to_process IS NULL THEN
+        -- There is no new and expected block, needs to wait for a new block
+        PERFORM pg_sleep( 1.5 );
+        RETURN NULL;
+    END IF;
+
+    UPDATE hive.app_context
+    SET current_block_num = __next_block_to_process
+    WHERE id = __context_id;
+    RETURN __next_block_to_process;
+END;
+$BODY$
+;
