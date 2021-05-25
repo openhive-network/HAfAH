@@ -6,7 +6,6 @@ CREATE FUNCTION hive.context_create( _name TEXT )
 AS
 $BODY$
 BEGIN
-    --TODO: get irreversible = head block from irreversible_blocks table instead of 0 ( before genesis )
     INSERT INTO hive.context( name, current_block_num, irreversible_block, is_attached ) VALUES( _name, 0, 0, TRUE );
 END;
 $BODY$

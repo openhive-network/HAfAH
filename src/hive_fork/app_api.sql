@@ -75,7 +75,13 @@ BEGIN
 
     CASE __next_event_type
         WHEN 'BACK_FROM_FORK' THEN
-            ASSERT FALSE, 'BACK_FROM_FORK is not supported';
+            PERFORM hive.context_back_from_fork( _name, __next_event_block_num );
+            UPDATE hive.app_context
+            SET
+                  events_id = __next_event_id
+                , current_block_num = __next_event_block_num
+            WHERE id = __context_id;
+            RETURN NULL;
         WHEN 'NEW_IRREVERSIBLE' THEN
             ASSERT FALSE, 'NEW IRREVERSIBLE is not supported';
         WHEN 'NEW_BLOCK' THEN
