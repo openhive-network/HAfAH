@@ -75,7 +75,7 @@ BEGIN
 
     CASE __next_event_type
         WHEN 'BACK_FROM_FORK' THEN
-            PERFORM hive.context_back_from_fork( _name, __next_event_block_num );
+            PERFORM hive.context_back_from_fork( _context_name, __next_event_block_num );
             UPDATE hive.context
             SET
                   events_id = __next_event_id
