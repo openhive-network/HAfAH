@@ -37,11 +37,12 @@ The best option is to execute `make install` from build directory
         fork_extension        Contains C language extension which implements solution for hive forks
         pq_utils              C++ interface for PostgreSQL PQ interface
         psql_utils            C++ utilities to PostgreSQL C interfaces
-        sql_fork_extension    Contains SQL extension which implements solution for hive forks 
-   tests                  Contains test
-        functional        Contains functional tests
-        unit              Contains unit tests and mocks
-            mockups       Contains mocks 
+        hive_fork             Contains SQL extension which implements solution for hive forks 
+   tests                      Contains test
+        integration           Folder for non-unit tests like functional or system tests
+          functional          Contains functional tests
+        unit                  Contains unit tests and mocks
+            mockups           Contains mocks 
    ```
 
 There is also a `generated` directory inside the build directory. It contains autmatically generated headers which can be included
@@ -63,7 +64,7 @@ in the code whith ```#include "gen/header_file_name.hpp"```
 8. templete attributes use CamelCase started with underscore and lower case  _templeteAttribute
 9. file and directory names with snake_case: my_file.cpp
 
-## posql extension based on sql script
+## PSQL extension based on sql script
 If there is a need to create psql extension ( to use CREATE EXTENSION psql command ) a cmake macro isa added:
 `ADD_PSQL_EXTENSION` with parameters:
 - NAME - name of extension, in current source directory file <name>.control (see https://www.postgresql.org/docs/10/extend-extensions.html#id-1.8.3.18.11 ) 
@@ -76,4 +77,8 @@ To install the extension please execute 'make install'.
 Warning: Make install will install all already builded project items, to install only one of them please build it
 in separated build directory with making the only one target, for example: `make extension.hive_fork; make install;` 
 
+### Versioning
+Postgres extensions are versioned - extension control file contains `default_version` configuration entry. The build system
+fills the entry with the repository git sha converted to decimal presentation (postgres accepts only digits in version string).
+Also corresponding sql script file is named with the same version, as is required by the postgres.
 # Known problems
