@@ -159,7 +159,7 @@ Columns
 ##### hive.operations
 
 #### Reversible blocks
-Tables for rreversible blocks are copies of irreveersible + columns for fork_id
+Tables for reversible blocks are copies of irreveersible + columns for fork_id
 ##### hive.blocks_reversible
 ##### hive.transactions_reversible
 ##### hive.transactions_multisig_reversible
@@ -231,8 +231,16 @@ block to process or events which did not delivery blocks were processed. It is a
 To ensure correct work of fork rewind mechanism any application must process returned block and modify their tables according
 to block chain state on time where the returned block is a head block.
 
+##### hive.app_context_detach( context_name )
+Detaches triggers atatched to register tables in a given context
+
+##### hive.app_context_attach( context_name, block_num )
+Enables triggers attached to register tables in a given context and set current context block num. The `block_num` cannot
+be greater than top of irreversible block.
 
 #### CONTEXT REWIND
+Context rewind function shall not be used by hived and applications.
+
 ##### hive.context_detach( context_name )
 Detaches triggers atatched to register tables in a given context
 
@@ -248,7 +256,6 @@ Moves a context to the next available block
 ##### hive.context_back_from_fork( context_name, block_num )
 Rewind only tables registered in given context to given block_num
 
-### Private - shall not be called by the user
 #### hive.registered_table
 Registers an user table in the fork system, is used by the trigger for CREATE TABLE
 

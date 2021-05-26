@@ -122,3 +122,37 @@ BEGIN
 END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.app_context_attach( _context TEXT, _last_synced_block INT )
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __head_of_irreversible_block INT:=0;
+BEGIN
+    SELECT hb.num INTO __head_of_irreversible_block
+    FROM hive.blocks hb ORDER BY hb.num DESC LIMIT 1;
+
+    IF _last_synced_block > __head_of_irreversible_block THEN
+        RAISE EXCEPTION 'Cannot attach context % because the block num % is grater than top of irreversible block %'
+            , _context, _last_synced_block,  __head_of_irreversible_block;
+    END IF;
+
+    PERFORM hive.context_attach( _context, _last_synced_block );
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.app_context_detach( _context TEXT )
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    PERFORM hive.context_detach( _context );
+END;
+$BODY$
+;
