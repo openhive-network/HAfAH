@@ -6,6 +6,10 @@ CREATE FUNCTION hive.context_create( _name TEXT )
 AS
 $BODY$
 BEGIN
+    IF NOT _name SIMILAR TO '[a-zA-Z0-9_]+' THEN
+        RAISE EXCEPTION 'Incorrect context name %, only characters a-z A-Z 0-9 _ are allowed', name;
+    END IF;
+
     INSERT INTO hive.context( name, current_block_num, irreversible_block, is_attached ) VALUES( _name, 0, 0, TRUE );
 END;
 $BODY$

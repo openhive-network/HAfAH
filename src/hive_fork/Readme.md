@@ -229,7 +229,7 @@ Creates a new context
 Process next event from events queue. Returns block number to process or NULL. If null is returned, then there is no
 block to process or events which did not delivery blocks were processed. It is a most important function for any application.
 To ensure correct work of fork rewind mechanism any application must process returned block and modify their tables according
-to block chain state on time where the returned block is a head block.
+to block chain state on time where the returned block is a head block. Context name can contains only characters from set: `a-zA-Z0-9_`
 
 hive.app_next_block cannot be used when context is detached - in such case an exception is thrown.
 

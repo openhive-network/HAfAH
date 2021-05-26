@@ -34,6 +34,7 @@ ADD_SQL_FUNCTIONAL_TESTS( context_rewind/register_table_no_context_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/register_table_public_schema_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/create_context_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( context_rewind/create_context_negative.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/context_next_block_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/trigger_on_insert_test.sql )
