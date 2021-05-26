@@ -7,11 +7,13 @@ ADD_PSQL_EXTENSION(
             context_rewind/back_from_fork.sql
             context_rewind/irreversible.sql
             context_rewind/rewind_api.sql
-            data_schema.sql
+            events_queue.sql
+            forks.sql
+            app_context.sql
             irreversible_blocks.sql
             reversible_blocks.sql
-            blocks_views.sql
-            move_blocks.sql
+            blocks_views_for_contexts.sql
+            hived_api_impl.sql
             hived_api.sql
             app_api.sql
 )
