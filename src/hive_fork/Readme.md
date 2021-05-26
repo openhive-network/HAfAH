@@ -14,6 +14,18 @@ Blocks data are stored in two separated, but similar tables for irreversible and
 An Application groups its tables into named contexts (context are named only with alphanumerical characters). Each contexts holds information about its processed events and
 a fork which is now processed. These two pice of information are enaugh to create views which presents combined irreversible and
 reversible blocks data. Each of the views has name started from 'hive.{context_name}_'  
+### Overview of hive_fork and its relations with applications and hived
+![alt text](./doc/evq_c3.png )
+
+### Requirements for an application algorithm
+![alt text](./doc/evq_app_process_block.png)
+
+Any application must first create context, then creates its tables with inherit from hive.base. If application
+wants to process some large number of irreversible block, then it must detach it contexts, do the sync, and attach toe context again.
+After massive processing of irreversible block an application has to call `hive.app_next_block` to block number to process.
+If NULL was returned an application must immediatly re-call `hive.app_next_block`. Any waiting (sleeps) for new block are
+executed by `hive.app_next_block`. When block number is returned then an application may edit its own tables and use blocks
+data snaphot by asking 'hive.{context_name}_{ blocks | transactions | operations | transactions_multisig }' views.
 
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
 IRREVERSIBLE BLOCKS is information (set of datbase tables) about blocks which blockchain considern as irreveresible - it will never change.
@@ -103,10 +115,17 @@ Execute sql scripts on Your database in given order:
 1. context_rewind/back_from_fork.sql
 1. context_rewind/irreversible.sql
 1. context_rewind/rewind_api.sql
-1. data_schema.sql
+1. events_queue.sql
+1. forks.sql
+1. app_context.sql
+1. irreversible_blocks.sql
+1. reversible_blocks.sql
+1. blocks_views_for_contexts.sql
+1. hived_api_impl.sql
 1. hived_api.sql
+1. app_api.sql
 
-An example of script execution: `psql -d my_db_name -a -f  data_schema.sql`
+An example of script execution: `psql -d my_db_name -a -f  context_rewind/data_schema.sql`
 
 ## Database structure
 The scripts `data_schema.sql` files create all necessary tables in `hive` schema.
@@ -128,10 +147,6 @@ Columns
 2. event - type of the event
 3. block_num - block num that releates to the event
 
-##### hive.context
-Inherits from hive.context
-
-1. event_id - id of the last processed event
 
 ### Additionaly to tables above hive_fork contains tables for irreversible and reversible blocks data
 
@@ -160,6 +175,8 @@ Columns
 3. current_block_num - current hive block num processed by the tables registered in the context
 4. irreversible_block - irreversible block num, the higest block known by the context which cannot be reedited during back from fork
 4. is_attached - True if triggers are enabled ( a table is attached ), False when are disbaled ( a table is detached )
+5. events_id - las events id which was processed 
+6. fork_id - fork id on which the context works
 
 #### hive.registered_tables
 Contains information about registered application tables and their contexts
@@ -183,7 +200,6 @@ Columns
 #### hive.control_status
 Global information required by the extension functions and trigger
 1. back_from_fork - integral flag, which tell tell the system if back_from_fork is in progress
-2. irreversible_block - irreversible block num, the higest block which cannot be reedited during back from fork
 
 Columns
 1. id - technical trick to do not allow to have more than one row
@@ -193,6 +209,7 @@ Columns
 The set of scripts implements an API for the applications:
 ### Public - for the user
 #### HIVED API
+The functions which are used by hived
 ##### hive.back_from_fork( _block_num_before_fork )
 Schedules back from fork
 
@@ -201,6 +218,19 @@ Push new block with its transactions, their operations and signatures
 
 ##### hive.set_irreversible( _block_num )
 Set new irreversible block
+
+#### APP API
+The functions which should be used by application
+
+##### hive.app_create_context( _name )
+Creates a new context
+
+##### hive.app_next_block( _context_name )
+Process next event from events queue. Returns block number to process or NULL. If null is returned, then there is no
+block to process or events which did not delivery blocks were processed. It is a most important function for any application.
+To ensure correct work of fork rewind mechanism any application must process returned block and modify their tables according
+to block chain state on time where the returned block is a head block.
+
 
 #### CONTEXT REWIND
 ##### hive.context_detach( context_name )

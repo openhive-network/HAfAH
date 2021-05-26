@@ -38,10 +38,9 @@ CREATE TABLE IF NOT EXISTS hive.triggers(
 CREATE TABLE IF NOT EXISTS hive.control_status(
       id BOOL PRIMARY KEY DEFAULT TRUE
     , back_from_fork BOOL NOT NULL
-    , irreversible_block INTEGER NOT NULL
     , CONSTRAINT uq_hive_control_status CHECK( id )
 );
 
-INSERT INTO hive.control_status( id, back_from_fork, irreversible_block ) VALUES( TRUE, FALSE, 0 ) ON CONFLICT DO NOTHING;
+INSERT INTO hive.control_status( id, back_from_fork ) VALUES( TRUE, FALSE ) ON CONFLICT DO NOTHING;
 
 
