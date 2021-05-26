@@ -83,7 +83,13 @@ BEGIN
             WHERE id = __context_id;
             RETURN NULL;
         WHEN 'NEW_IRREVERSIBLE' THEN
-            ASSERT FALSE, 'NEW IRREVERSIBLE is not supported';
+            PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
+            UPDATE hive.context
+            SET
+                events_id = __next_event_id
+              , current_block_num = __next_event_block_num
+            WHERE id = __context_id;
+            RETURN NULL;
         WHEN 'NEW_BLOCK' THEN
             ASSERT  __next_event_block_num > __current_block_num, 'We could not process block without consume event';
             IF __next_event_block_num = ( __current_block_num + 1 ) THEN

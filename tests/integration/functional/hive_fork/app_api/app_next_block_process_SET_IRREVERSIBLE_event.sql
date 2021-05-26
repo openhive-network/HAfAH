@@ -24,10 +24,10 @@ BEGIN
         , NULL
     );
 
-    PERFORM hive.back_from_fork( 2 );
+    PERFORM hive.set_irreversible( 3 );
 
     PERFORM hive.push_block(
-         ( 3, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:25-07'::timestamp )
+         ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:25-07'::timestamp )
         , NULL
         , NULL
         , NULL
@@ -35,23 +35,14 @@ BEGIN
 
     PERFORM hive.app_create_context( 'context' );
     CREATE SCHEMA A;
-    CREATE SCHEMA B;
     CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.base );
-    PERFORM hive.app_create_context( 'context2' );
-    CREATE TABLE B.table2(id  INTEGER ) INHERITS( hive.base );
 
     PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 1
     INSERT INTO A.table1(id) VALUES( 1 );
     PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 2
-    PERFORM hive.app_next_block( 'context2' ); -- NEW_BLOCK event block 1
-    INSERT INTO B.table2(id) VALUES( 11 );
     INSERT INTO A.table1(id) VALUES( 2 );
     PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 3
     INSERT INTO A.table1(id) VALUES( 3 );
-
-    PERFORM hive.app_next_block( 'context2' ); -- NEW_BLOCK event block 2
-    PERFORM hive.app_next_block( 'context2' ); -- NEW_BLOCK event block 3
-    INSERT INTO B.table2(id) VALUES( 13 );
 END;
 $BODY$
 ;
@@ -67,11 +58,7 @@ DECLARE
     __result INT;
 BEGIN
     SELECT hive.app_next_block( 'context' ) INTO __result;
-    ASSERT __result IS NULL, 'Processing  BFF event did not return NULL';
-
-    PERFORM hive.app_next_block( 'context2' ); -- BFF EVENT event
-    PERFORM hive.app_next_block( 'context2' ); -- NEW_BLOCK event block 3
-    INSERT INTO B.table2(id) VALUES( 14 );
+    ASSERT __result IS NULL, 'Processing  SET_IRREVERSIBLE event did not return NULL';
 END
 $BODY$
 ;
@@ -84,19 +71,16 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT current_block_num FROM hive.context WHERE name='context' ) = 2, 'Wrong current block num';
+    ASSERT ( SELECT current_block_num FROM hive.context WHERE name='context' ) = 3, 'Wrong current block num';
     ASSERT ( SELECT events_id FROM hive.context WHERE name='context' ) = 3, 'Wrong events id';
+    ASSERT ( SELECT irreversible_block FROM hive.context WHERE name='context' ) = 3, 'Wrong irreversible';
 
-    ASSERT ( SELECT current_block_num FROM hive.context WHERE name='context2' ) = 3, 'Wrong current block num context2';
-    ASSERT ( SELECT events_id FROM hive.context WHERE name='context2' ) = 4, 'Wrong events id context2';
+    ASSERT ( SELECT COUNT(*)  FROM A.table1 ) = 3, 'Wrong number of rows in app table';
+    ASSERT EXISTS ( SELECT *  FROM A.table1 WHERE id = 1 ), 'No id 1';
+    ASSERT EXISTS ( SELECT *  FROM A.table1 WHERE id = 2 ), 'No id 2';
+    ASSERT EXISTS ( SELECT *  FROM A.table1 WHERE id = 3 ), 'No id 3';
 
-    ASSERT ( SELECT COUNT(*)  FROM A.table1 ) = 2, 'Wrong number of rows in app table';
-    ASSERT EXISTS ( SELECT *  FROM A.table1 WHERE id = 1 ), 'No id 1' ;
-    ASSERT EXISTS ( SELECT *  FROM A.table1 WHERE id = 2 ), 'No id 2' ;
-
-    ASSERT ( SELECT COUNT(*)  FROM B.table2 ) = 2, 'Wrong number of rows in app table context2';
-    ASSERT EXISTS ( SELECT *  FROM B.table2 WHERE id = 11 ), 'No id 11' ;
-    ASSERT EXISTS ( SELECT *  FROM B.table2 WHERE id = 14 ), 'No id 14' ;
+    ASSERT NOT EXISTS ( SELECT * FROM hive.shadow_a_table1 ), 'Shadow table is not empty';
 END
 $BODY$
 ;
