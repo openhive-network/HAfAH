@@ -37,6 +37,7 @@ AS
 $BODY$
 DECLARE
     __context_id INT;
+    __context_is_attached BOOL;
     __current_block_num INT;
     __current_fork BIGINT;
     __current_event_id BIGINT;
@@ -50,12 +51,17 @@ BEGIN
         , hac.fork_id
         , hac.events_id
         , hac.id
+        , hac.is_attached
     FROM hive.context hac
     WHERE hac.name = _context_name
-    INTO __current_block_num, __current_fork, __current_event_id, __context_id;
+    INTO __current_block_num, __current_fork, __current_event_id, __context_id, __context_is_attached;
 
     IF __context_id IS NULL THEN
         RAISE EXCEPTION 'No context with name %', _context_name;
+    END IF;
+
+    IF __context_is_attached = FALSE THEN
+        RAISE EXCEPTION 'Context % is detached', _context_name;
     END IF;
 
     -- no event was processed

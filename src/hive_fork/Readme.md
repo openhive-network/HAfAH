@@ -231,6 +231,8 @@ block to process or events which did not delivery blocks were processed. It is a
 To ensure correct work of fork rewind mechanism any application must process returned block and modify their tables according
 to block chain state on time where the returned block is a head block.
 
+hive.app_next_block cannot be used when context is detached - in such case an exception is thrown.
+
 ##### hive.app_context_detach( context_name )
 Detaches triggers atatched to register tables in a given context
 
