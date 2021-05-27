@@ -120,3 +120,4 @@ ADD_SQL_FUNCTIONAL_TESTS( app_api/app_next_block_process_SET_IRREVERSIBLE_event_
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_attach.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_attach_negative.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_detach.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/app_next_block_process_MASSIVE_SYNC_event.sql )

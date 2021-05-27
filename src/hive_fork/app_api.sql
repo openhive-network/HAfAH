@@ -103,6 +103,24 @@ BEGIN
               , current_block_num = __next_event_block_num
             WHERE id = __context_id;
             RETURN NULL;
+        WHEN 'MASSIVE_SYNC' THEN
+            --first we need to rewind all reversible changes
+            PERFORM hive.context_back_from_fork( _context_name, hc.irreversible_block )
+            FROM hive.context hc
+            WHERE hc.id = __context_id;
+
+            UPDATE hive.context
+            SET   events_id = __next_event_id
+                , current_block_num = current_block_num + 1
+                , irreversible_block = __next_event_block_num
+            WHERE id = __context_id;
+
+            SELECT hc.current_block_num INTO __result.first_block
+            FROM hive.context hc
+            WHERE hc.id = __context_id;
+
+            __result.last_block = __next_event_block_num;
+            RETURN __result;
         WHEN 'NEW_BLOCK' THEN
             ASSERT  __next_event_block_num > __current_block_num, 'We could not process block without consume event';
             IF __next_event_block_num = ( __current_block_num + 1 ) THEN

@@ -52,6 +52,7 @@ BEGIN
         WHERE hc.name = _context
         ORDER BY hrt.id;
 
+    UPDATE hive.context SET current_block_num = _block_num_before_fork WHERE name = _context;
     UPDATE hive.control_status SET back_from_fork = FALSE;
 END;
 $BODY$
