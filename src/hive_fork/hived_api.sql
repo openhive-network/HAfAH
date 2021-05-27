@@ -66,3 +66,16 @@ BEGIN
 END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.end_massive_sync( _block_num INT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    INSERT INTO hive.events_queue( event, block_num )
+    VALUES( 'MASSIVE_SYNC', _block_num );
+END;
+$BODY$
+;

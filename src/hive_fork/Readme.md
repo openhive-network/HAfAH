@@ -277,6 +277,10 @@ Enables triggers atatched to a register table.
 Disables triggers atatched to a register table. It is usefull for operation below irreversible block
 when fork is impossible, then we don't want have trigger overhead for each edition of a table.
 
+#### hive.end_massive_sync( _block_num )
+After fnishing massive push of blocks hived will invoke this metod to schedlue MASSIVE_SYNC event. The parameter `_block_num`
+is a last massivly synced block - head or irreversible blocks.
+
 ## TODO
 1. Validation of the registered tables
 3. Validation of structure
