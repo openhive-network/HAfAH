@@ -17,6 +17,10 @@ reversible blocks data. Each of the views has name started from 'hive.{context_n
 ### Overview of hive_fork and its relations with applications and hived
 ![alt text](./doc/evq_c3.png )
 
+### Hived alghorithm
+![alt text](./doc/evq_hived_process_blocks.png)
+
+
 ### Requirements for an application algorithm
 ![alt text](./doc/evq_app_process_block.png)
 
