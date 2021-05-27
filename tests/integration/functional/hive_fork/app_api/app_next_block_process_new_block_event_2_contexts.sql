@@ -38,26 +38,26 @@ CREATE FUNCTION test_when()
 AS
 $BODY$
 DECLARE
-    __first_block INT;
-    __second_block INT;
-    __third_block INT;
-    __first_block_2 INT;
-    __second_block_2 INT;
+    __first_blocks hive.blocks_range;
+    __second_blocks hive.blocks_range;
+    __third_blocks hive.blocks_range;
+    __first_blocks_2 hive.blocks_range;
+    __second_blocks_2 hive.blocks_range;
 BEGIN
-    SELECT hive.app_next_block( 'context' ) INTO __first_block;
-    ASSERT __first_block = 1, 'Wrong first block';
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __first_blocks;
+    ASSERT __first_blocks.first_block = 1 AND __first_blocks.last_block = 1, 'Wrong first block';
 
-    SELECT hive.app_next_block( 'context' ) INTO __second_block;
-    ASSERT __second_block = 2, 'Wrong second block';
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __second_blocks;
+    ASSERT __second_blocks.first_block = 2 AND __second_blocks.last_block = 2, 'Wrong second block';
 
-    SELECT hive.app_next_block( 'context' ) INTO __third_block;
-    ASSERT __third_block IS NULL, 'Wrong second block';
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __third_blocks;
+    ASSERT __third_blocks.first_block IS NULL, 'Wrong second block';
 
-    SELECT hive.app_next_block( 'context2' ) INTO __first_block_2;
-    ASSERT __first_block_2 = 1, 'Wrong first block context2';
+    SELECT * FROM hive.app_next_block( 'context2' ) INTO __first_blocks_2;
+    ASSERT __first_blocks_2.first_block = 1 AND __first_blocks_2.last_block = 1, 'Wrong first block context2';
 
-    SELECT hive.app_next_block( 'context2' ) INTO __second_block_2;
-    ASSERT __second_block_2 = 2, 'Wrong second block context2';
+    SELECT * FROM hive.app_next_block( 'context2' ) INTO __second_blocks_2;
+    ASSERT __second_blocks_2.first_block = 2 AND __second_blocks_2.last_block =2, 'Wrong second block context2';
 END
 $BODY$
 ;

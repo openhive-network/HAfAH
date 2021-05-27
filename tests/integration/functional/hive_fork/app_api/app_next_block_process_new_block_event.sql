@@ -7,7 +7,8 @@ AS
 $BODY$
 BEGIN
     INSERT INTO hive.operation_types
-    VALUES (0, 'OP 0', FALSE )
+    VALUES
+          ( 0, 'OP 0', FALSE )
         , ( 1, 'OP 1', FALSE )
         , ( 2, 'OP 2', FALSE )
         , ( 3, 'OP 3', TRUE )
@@ -37,18 +38,18 @@ CREATE FUNCTION test_when()
 AS
 $BODY$
 DECLARE
-    __first_block INT;
-    __second_block INT;
-    __third_block INT;
+    __first_blocks hive.blocks_range;
+    __second_blocks hive.blocks_range;
+    __third_blocks hive.blocks_range;
 BEGIN
-    SELECT hive.app_next_block( 'context' ) INTO __first_block;
-    ASSERT __first_block = 1, 'Wrong first block';
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __first_blocks;
+    ASSERT __first_blocks.first_block = 1 AND __first_blocks.last_block = 1, 'Wrong first block';
 
-    SELECT hive.app_next_block( 'context' ) INTO __second_block;
-    ASSERT __second_block = 2, 'Wrong second block';
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __second_blocks;
+    ASSERT __second_blocks.first_block = 2 AND __second_blocks.last_block = 2, 'Wrong second block';
 
-    SELECT hive.app_next_block( 'context' ) INTO __third_block;
-    ASSERT __third_block IS NULL, 'Wrong second block';
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __third_blocks;
+    ASSERT __third_blocks IS NULL, 'Wrong second block';
 END
 $BODY$
 ;

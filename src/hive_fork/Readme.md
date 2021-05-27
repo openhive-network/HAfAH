@@ -231,6 +231,12 @@ block to process or events which did not delivery blocks were processed. It is a
 To ensure correct work of fork rewind mechanism any application must process returned block and modify their tables according
 to block chain state on time where the returned block is a head block. Context name can contains only characters from set: `a-zA-Z0-9_`
 
+Return range of blocks to process, if range is empt ( first and last blocks are the same ), then an application
+must process the one returnrned block num, if range is grater than 0 *(last_block -first_block) > 0, it means that hived
+executes massive sync - a large number of irreversible blocks are added, and an application can process them massivly without
+fork control (detach context is required), or still process them one by one ( process the first_block in range and then back to `hive.app_next_block` to get
+next block ).
+
 hive.app_next_block cannot be used when context is detached - in such case an exception is thrown.
 
 ##### hive.app_context_detach( context_name )

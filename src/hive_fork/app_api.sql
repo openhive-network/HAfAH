@@ -29,8 +29,14 @@ END;
 $BODY$
 ;
 
+DROP TYPE IF EXISTS hive.blocks_range;
+CREATE TYPE hive.blocks_range AS (
+      first_block INT
+    , last_block INT
+);
+
 CREATE OR REPLACE FUNCTION hive.app_next_block( _context_name TEXT )
-    RETURNS INT
+    RETURNS hive.blocks_range
     LANGUAGE plpgsql
     VOLATILE
 AS
@@ -45,6 +51,7 @@ DECLARE
     __next_event_type hive.event_type;
     __next_event_block_num INT;
     __next_block_to_process INT;
+    __result hive.blocks_range;
 BEGIN
     SELECT
           hac.current_block_num
@@ -103,7 +110,9 @@ BEGIN
                 SET   events_id = __next_event_id
                     , current_block_num = __next_event_block_num
                 WHERE id = __context_id;
-                RETURN __next_event_block_num;
+                __result.first_block = __next_event_block_num;
+                __result.last_block = __next_event_block_num;
+                RETURN __result ;
             END IF;
         ELSE
     END CASE;
@@ -124,7 +133,9 @@ BEGIN
     UPDATE hive.context
     SET current_block_num = __next_block_to_process
     WHERE id = __context_id;
-    RETURN __next_block_to_process;
+    __result.first_block = __next_block_to_process;
+    __result.last_block = __next_block_to_process;
+    RETURN __result;
 END;
 $BODY$
 ;
