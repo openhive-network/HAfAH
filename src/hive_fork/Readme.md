@@ -1,19 +1,54 @@
 # HIVE_FORK
 SQL Scripts which all together create an extension to support Hive Forks
 
+## Installation
+It is possible to install the extension in two forms - as a regular postgres extension
+or as a simple set of tables and functions
+### Install extension
+1. create somwhere on a filesystem directory `build` and change terminal directory to it
+2. `cmake <path to root of the project psql_tools>`
+3. `make extension.hive_fork`
+4. `make install`
+
+The extension will be installed in the directory `<postgres_shareddir>/extension`.
+
+To start using extension in a database execute postgres command: `CREATE EXTENSION hive_fork`
+### Execute sql scripts on Your database in given order:
+1. context_rewind/data_schema.sql
+1. context_rewind/event_triggers.sql
+1. context_rewind/register_table.sql
+1. context_rewind/detach_table.sql
+1. context_rewind/back_from_fork.sql
+1. context_rewind/irreversible.sql
+1. context_rewind/rewind_api.sql
+1. events_queue.sql
+1. forks.sql
+1. app_context.sql
+1. irreversible_blocks.sql
+1. reversible_blocks.sql
+1. blocks_views_for_contexts.sql
+1. hived_api_impl.sql
+1. hived_api.sql
+1. app_api.sql
+
+An example of script execution: `psql -d my_db_name -a -f  context_rewind/data_schema.sql`
+
+If the order of files is incorrect in documentation please look at file `src/hive_fork/CMakeLists.txt`
+
 ## Architecture
 All elements of the extension are placed in 'hive' schema
 
 The postgres extension is written in events source architecture style. It means that during live syncing
-hived only schedules events, and then application procces them at his own pace.
+hived only schedules events, and then applicationx proccess them at their own pace.
 
 It is possible to have multiple applications which process blocks independent on each other.
 
 Blocks data are stored in two separated, but similar tables for irreversible and potentialy reversible blocks.
 
-An Application groups its tables into named contexts (context are named only with alphanumerical characters). Each contexts holds information about its processed events and
-a fork which is now processed. These two pice of information are enaugh to create views which presents combined irreversible and
-reversible blocks data. Each of the views has name started from 'hive.{context_name}_'  
+An Application groups its tables into named contexts (context are named only with alphanumerical characters + underscore).
+Each contexts holds information about its processed events, blocks and a fork which is now processed. These pice of information
+are enaugh to create views which presents combined irreversible and reversible blocks data.
+Each of the views has name started from 'hive.{context_name}_'  
 ### Overview of hive_fork and its relations with applications and hived
 ![alt text](./doc/evq_c3.png )
 
@@ -25,26 +60,29 @@ reversible blocks data. Each of the views has name started from 'hive.{context_n
 ![alt text](./doc/evq_app_process_block.png)
 
 Any application must first create context, then creates its tables with inherit from hive.base. If application
-wants to process some large number of irreversible block, then it must detach it contexts, do the sync, and attach toe context again.
-After massive processing of irreversible block an application has to call `hive.app_next_block` to block number to process.
-If NULL was returned an application must immediatly re-call `hive.app_next_block`. Any waiting (sleeps) for new block are
-executed by `hive.app_next_block`. When block number is returned then an application may edit its own tables and use blocks
-data snaphot by asking 'hive.{context_name}_{ blocks | transactions | operations | transactions_multisig }' views.
+wants to process some large number of irreversible blocks, then it must detach it contexts, do the sync, and attach the contexts again.
+After massive processing of irreversible blocks an application has to call `hive.app_next_block` to get next block num to proces.
+If NULL was returned an application must immediatly re-call `hive.app_next_block`. Any waiting (sleeps) for a new block are
+executed by `hive.app_next_block`. When range of block number is returned then an application may edit its own tables and use blocks
+data snaphot by asking 'hive.{context_name}_{ blocks | transactions | operations | transactions_multisig }' views. Views present
+data snapshot for firt block in returned blocks range. If the range of returned blocks nums is large, then it may be worth to
+back to massive sync - detach contexts, execute sync and attach the contexts - it will save triggers overhead during edition of tables.
 
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
 IRREVERSIBLE BLOCKS is information (set of datbase tables) about blocks which blockchain considern as irreveresible - it will never change.
+You can check how th e tables look in the file `src/hive_fork/irreversible_blocks.sql`
 
 REVERSIBLE BLOCKS (set of datbase tables) is information about blocks for which blockachain is not sure if they are already irreversible, because they
-may be a part of fork which will be abandoned soon.
+may be a part of fork which will be abandoned soon. Please look at `src/hive_fork/reversible_blocks.sql`
 
-Each application should works on snapshot of blocks information, which is a combination of reversible and irreversible information based
+Each application should work on a snapshot of blocks information, which is a combination of reversible and irreversible information based
 on current status of the application - its last processed block and fork.
 
-Because applications may work with different paces, the system has to hold reversible blocks information for every block num and fork not already processed by any
+Because of applications may work with different paces, the system has to hold reversible blocks information for every block num and fork not already processed by any
 of the applications, this requires to construct an efficient data structure. Fortunetly the idea is quite simple - it is enaugh to add
-to data inserted by hived block_num and fork id ( fork_id is a part of each reversible table ). The system controls forks ids - set
-information about each fork in hive.fork table. Moreover when 'hived' pushes a new block with function `hive.push_block`, then the system
-adds information about current fork to a new irreversible data. Irreversible data tables can be presented in generalised form as in the example below:
+to data inserted by hived block_num and fork id ( fork_id is a part of each reversible table ). The system controls forks ids - 
+information about each fork is in hive.fork table. Moreover when 'hived' pushes a new block with function `hive.push_block`, then the system
+adds information about current fork to a new reversible data. Reversible data tables can be presented in generalised form as in the example below:
 
 | block_num| fork id | data      |
 |----------|---------|-----------|
@@ -79,8 +117,10 @@ ORDER BY block_num DESC, fork_id DESC
 ### CONTEXT REWIND
 The part of the extension which is responsible to register App tables, save and rewind  operation on the tables.
 
-An application must register its tables depend of hive blocks.
-Any table is automaticly registerd during its creation only when inherits form hive.base. 
+An application and hived shall not use directly any function from directory `src/hive_fork/context_rewind`.
+
+An application must register those its tables, which are dependant on hive blocks
+Any table is automaticly registerd during its creation only when inherits from hive.base. 
 . A table is resgistered into recently created context.If there is no context an exception is thrown.
 
 ```
@@ -92,53 +132,26 @@ is used by the system to distinguish between edited rows. During registartion a 
 enabled on a table, they will record any changes.
 Moreover a new table is created - a shadow table which structure is the copy of a registered tables + columns for operation
 registered tables. A shadow table is the place where triggers records changes. A shadow table is created in 'hive' schema
-an is name is created with the rule below:
+and its name is created with the rule below:
 ```
 hive.shadow_<table_schema>_<table_name>
 ```
-It is possible to rewind all operation registered in shadow tables with `hive_back_from_fork`
-type and block num. Further triggers are created, which will fill the shadow tables with any edition of
-
+It is possible to rewind all operations registered in shadow tables with `hive_back_from_fork`
 
 Because triggers itself add some significant overhead for operations, in some situation it may be necessary
-to temporary disable them for sake of better performance. To do this  there are functions: `hive.detach_table` - to disable
-triggers and 'hive.attach_table' to enable triggers. WHen triggers are disabled no support for hive fork is enabled for a table,
+to temporary disable them for sake of better performance. To do this there are functions: `hive.detach_table` - to disable
+triggers and 'hive.attach_table' to enable triggers. When triggers are disabled no support for hive fork is enabled for a table,
 so the application should solve the situation (in most cases is should happen when blocks below irreversible are processed, so no forks happen there)
 
 It is quite possible that the application which use the fork system will want to change the structure of the registered tables.
-It is possible only when coressponding shadow tables is empty. It means before an upgrade application must be in state
+It is possible only when coresponding shadow tables is empty. It means before an upgrade application must be in state
 in which there is no pending fork. The system will block ( rise an excpetion ) 'ALTER TABLE' command if corresponding shadow table is not empty.
 When a table is edited its shadow table is automaticly adapted to a new structure ( in fact old shaped shadow table is dropped and a new one is created with a new structure )
 
-## Installation
-Execute sql scripts on Your database in given order:
-1. context_rewind/data_schema.sql
-1. context_rewind/event_triggers.sql
-1. context_rewind/register_table.sql
-1. context_rewind/detach_table.sql
-1. context_rewind/back_from_fork.sql
-1. context_rewind/irreversible.sql
-1. context_rewind/rewind_api.sql
-1. events_queue.sql
-1. forks.sql
-1. app_context.sql
-1. irreversible_blocks.sql
-1. reversible_blocks.sql
-1. blocks_views_for_contexts.sql
-1. hived_api_impl.sql
-1. hived_api.sql
-1. app_api.sql
-
-An example of script execution: `psql -d my_db_name -a -f  context_rewind/data_schema.sql`
-
 ## Database structure
-The scripts `data_schema.sql` files create all necessary tables in `hive` schema.
-
 ### HIVE FORK
 
-#### hive.forks
-hive.fork
-
+#### hive.fork
 Columns
 1. id - id of the fork
 2. block_num last block before the fork
@@ -219,31 +232,38 @@ Push new block with its transactions, their operations and signatures
 ##### hive.set_irreversible( _block_num )
 Set new irreversible block
 
+#### hive.end_massive_sync()
+After fnishing massive push of blocks hived will invoke this metod to schedlue MASSIVE_SYNC event. The parameter `_block_num`
+is a last massivly synced block - head or irreversible blocks.
+
 #### APP API
-The functions which should be used by application
+The functions which should be used by an application
 
 ##### hive.app_create_context( _name )
-Creates a new context
+Creates a new context. Context name can contains only characters from set: `a-zA-Z0-9_`
 
 ##### hive.app_next_block( _context_name )
-Process next event from events queue. Returns block number to process or NULL. If null is returned, then there is no
-block to process or events which did not delivery blocks were processed. It is a most important function for any application.
-To ensure correct work of fork rewind mechanism any application must process returned block and modify their tables according
-to block chain state on time where the returned block is a head block. Context name can contains only characters from set: `a-zA-Z0-9_`
+Returns `hive.blocks_rangerange` -range of blocks numbers to process or NULL
+It is a most important function for any application.
+To ensure correct work of fork rewind mechanism any application must process returned blocks and modify their tables according
+to block chain state on time where the returned block is a head block.
 
-Return range of blocks to process, if range is empt ( first and last blocks are the same ), then an application
-must process the one returnrned block num, if range is grater than 0 *(last_block -first_block) > 0, it means that hived
-executes massive sync - a large number of irreversible blocks are added, and an application can process them massivly without
+If NULL is returned, then there is no block to process or events which did not delivery blocks were processed. 
+
+Returns range of blocks to process, if range is empty ( first and last blocks are the same ), then an application
+must process the one returned block num, if range is grater than 0, (last_block -first_block) > 0, it means that hived
+executed massive sync - a large number of irreversible blocks are added, and an application can process them massively without
 fork control (detach context is required), or still process them one by one ( process the first_block in range and then back to `hive.app_next_block` to get
-next block ).
+next block, but it will  be slower because of triggers overhead ).
 
 hive.app_next_block cannot be used when context is detached - in such case an exception is thrown.
 
 ##### hive.app_context_detach( context_name )
-Detaches triggers atatched to register tables in a given context
+Detaches triggers atatched to register tables in a given context, It allow to do a massive sync of irreversible
+blocks without triggers overhead.
 
 ##### hive.app_context_attach( context_name, block_num )
-Enables triggers attached to register tables in a given context and set current context block num. The `block_num` cannot
+Enables triggers attached to registered tables in a given context and set current context block num. The `block_num` cannot
 be greater than top of irreversible block.
 
 #### CONTEXT REWIND
@@ -276,14 +296,6 @@ Enables triggers atatched to a register table.
 #### hive.detach_table( schema, table )
 Disables triggers atatched to a register table. It is usefull for operation below irreversible block
 when fork is impossible, then we don't want have trigger overhead for each edition of a table.
-
-#### hive.end_massive_sync( _block_num )
-After fnishing massive push of blocks hived will invoke this metod to schedlue MASSIVE_SYNC event. The parameter `_block_num`
-is a last massivly synced block - head or irreversible blocks.
-
-## TODO
-1. Validation of the registered tables
-3. Validation of structure
 
 ## Known Problems
 1. Constraints like FK, UNIQUE, EXCLUDE, PK must be DEFFERABLE, otherwise we cannot guarnteen success or rewinding changes
