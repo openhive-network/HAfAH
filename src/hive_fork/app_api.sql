@@ -53,6 +53,8 @@ DECLARE
     __next_block_to_process INT;
     __result hive.blocks_range;
 BEGIN
+    PERFORM hive.squash_events( _context_name );
+
     SELECT
           hac.current_block_num
         , hac.fork_id

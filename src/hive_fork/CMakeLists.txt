@@ -14,6 +14,7 @@ ADD_PSQL_EXTENSION(
             reversible_blocks.sql
             blocks_views_for_contexts.sql
             hived_api_impl.sql
+            app_api_impl.sql
             hived_api.sql
             app_api.sql
 )

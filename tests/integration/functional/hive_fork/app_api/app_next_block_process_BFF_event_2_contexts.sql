@@ -46,12 +46,8 @@ BEGIN
     PERFORM hive.app_next_block( 'context2' ); -- NEW_BLOCK event block 1
     INSERT INTO B.table2(id) VALUES( 11 );
     INSERT INTO A.table1(id) VALUES( 2 );
-    PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 3
-    INSERT INTO A.table1(id) VALUES( 3 );
 
     PERFORM hive.app_next_block( 'context2' ); -- NEW_BLOCK event block 2
-    PERFORM hive.app_next_block( 'context2' ); -- NEW_BLOCK event block 3
-    INSERT INTO B.table2(id) VALUES( 13 );
 END;
 $BODY$
 ;

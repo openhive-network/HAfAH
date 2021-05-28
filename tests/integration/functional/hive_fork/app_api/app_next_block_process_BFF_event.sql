@@ -41,8 +41,6 @@ BEGIN
     INSERT INTO A.table1(id) VALUES( 1 );
     PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 2
     INSERT INTO A.table1(id) VALUES( 2 );
-    PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 3
-    INSERT INTO A.table1(id) VALUES( 3 );
 END;
 $BODY$
 ;
@@ -57,6 +55,8 @@ $BODY$
 DECLARE
     __result INT;
 BEGIN
+    -- theoretically next_block should process NEW_BLOCK 3, but optimizations for fork
+    -- will ommit unnecessary events which will be rewinded, and we get BFF EVENT 2
     SELECT hive.app_next_block( 'context' ) INTO __result;
     ASSERT __result IS NULL, 'Processing  BFF event did not return NULL';
 END
