@@ -181,4 +181,18 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.remove_unecessary_events( _new_irreversible_block INT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    DELETE FROM hive.events_queue heq
+    USING ( SELECT MIN( hc.events_id) as id FROM hive.context hc ) as min_event
+    WHERE heq.block_num < _new_irreversible_block AND heq.block_num < min_event.id;
+END;
+$BODY$
+;
+
 

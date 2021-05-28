@@ -61,8 +61,9 @@ BEGIN
     PERFORM hive.copy_operations_to_irreversible( __irreversible_head_block, _block_num );
     PERFORM hive.copy_signatures_to_irreversible( __irreversible_head_block, _block_num );
 
-    -- remove unneeded blocks
+    -- remove unneeded blocks and events
     PERFORM hive.remove_obsolete_reversible_data( _block_num );
+    PERFORM hive.remove_unecessary_events( _block_num );
 END;
 $BODY$
 ;

@@ -17,6 +17,6 @@ Striked out tasks are already done.
 10. ~~**app_api** **app_next_block** process NEW_IRREVERSIBLE event~~
 11. ~~**app_api** **app_next_block** update APP_CONTEXT~~
 11. ~~**start/restart** problem with starting, closing and restarting hived and hive_fork~~
-12. testing, testing, testing...
-13. optimizations to save space for blocks and events_queue tables 
+12. ~~testing, testing, testing...~~
+13. ~~optimizations to save space for blocks and events_queue tables~~ 
 14. testing, testing...
