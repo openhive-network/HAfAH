@@ -150,30 +150,7 @@ When a table is edited its shadow table is automaticly adapted to a new structur
 
 ## Database structure
 ### HIVE FORK
-
-#### hive.fork
-Columns
-1. id - id of the fork
-2. block_num last block before the fork
-3. time_of_fork time of signaling fork by hived
-
-#### hive.events_queue
-
-Columns 
-1. id - id of the event
-2. event - type of the event
-3. block_num - block num that releates to the event
-
-
-### Additionaly to tables above hive_fork contains tables for irreversible and reversible blocks data
-
-#### Irreversible blocks
-
-##### hive.blocks
-##### hive.transactions
-##### hive.transactions_multisig
-##### hive.operation_types
-##### hive.operations
+![alt text](./doc/evq_fork_db.png)
 
 #### Reversible blocks
 Tables for reversible blocks are copies of irreveersible + columns for fork_id
@@ -183,40 +160,7 @@ Tables for reversible blocks are copies of irreveersible + columns for fork_id
 ##### hive.operations_reversible
 
 ### CONTEXT REWIND
-#### hive.context
-Used to control currently processed blocks for application's tables registered together in the one context. 
-
-Columns
-1. id - id of the context
-2. name - human redable name of the context, thathts for better readability of the application code
-3. current_block_num - current hive block num processed by the tables registered in the context
-4. irreversible_block - irreversible block num, the higest block known by the context which cannot be reedited during back from fork
-4. is_attached - True if triggers are enabled ( a table is attached ), False when are disbaled ( a table is detached )
-5. events_id - las events id which was processed 
-6. fork_id - fork id on which the context works
-
-#### hive.registered_tables
-Contains information about registered application tables and their contexts
-
-Columns
-1. id - id of the registered table
-2. context_id - id of the context in which the table is registered
-3. origin_table_name - name of the registered table
-4. shadow_table_name - name of the shadow table name for a registered table
-5. origin_table_columns - names of origin table's columns
-
-#### hive.triggers
-Contains informations about triggers created by the extension
-
-Columns
-1. id - id of the trigger
-2. registered_table_id - id ot the rgeistered table which triggers the trigger
-3. trigger_name - trigger name
-4. function_name - function name called by the trigger
-
-Columns
-1. id - technical trick to do not allow to have more than one row
-2. back_from_fork - flag which indicated that back_from_fork is in progress
+![alt text](./doc/evq_context_rewind_db.png)
 
 ## SQL API
 The set of scripts implements an API for the applications:
