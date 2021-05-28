@@ -35,8 +35,16 @@ CREATE OR REPLACE FUNCTION hive.context_back_from_fork( _context TEXT, _block_nu
     VOLATILE
 AS
 $BODY$
+DECLARE
+    __trigger_name TEXT;
+    __registerd_table_schema TEXT;
+    __registerd_table_name TEXT;
 BEGIN
-    UPDATE hive.control_status SET back_from_fork = TRUE;
+    -- we need a flag for back_from_fork to returns from triggers immediatly
+    -- we cannot use ALTER TABLE DISABE TRIGGERS because DDL event trigger cause an error:
+    -- Cannot ALTER TABLE "table" because it has pending trigger events, but only when origin tables have contstraints
+    UPDATE hive.context SET back_from_fork = TRUE WHERE name = _context;
+
     SET CONSTRAINTS ALL DEFERRED;
 
     PERFORM
@@ -52,8 +60,10 @@ BEGIN
         WHERE hc.name = _context
         ORDER BY hrt.id;
 
-    UPDATE hive.context SET current_block_num = _block_num_before_fork WHERE name = _context;
-    UPDATE hive.control_status SET back_from_fork = FALSE;
+    UPDATE hive.context
+    SET   current_block_num = _block_num_before_fork
+        , back_from_fork = FALSE
+    WHERE name = _context;
 END;
 $BODY$
 ;

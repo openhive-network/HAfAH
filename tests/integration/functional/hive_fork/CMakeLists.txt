@@ -26,6 +26,7 @@ ADD_SQL_FUNCTIONAL_TESTS( context_rewind/detach_negative_unregistered_table_test
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/detach_negative_not_empty_shadow_table_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/detach_all_tables_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/detach_all_negative_tables_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( context_rewind/detach_constraint_fk_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/attach_negative_unregistered_table_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/attach_all_tables_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/attach_all_negative_tables_test.sql )

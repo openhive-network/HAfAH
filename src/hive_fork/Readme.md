@@ -201,10 +201,6 @@ Columns
 3. trigger_name - trigger name
 4. function_name - function name called by the trigger
 
-#### hive.control_status
-Global information required by the extension functions and trigger
-1. back_from_fork - integral flag, which tell tell the system if back_from_fork is in progress
-
 Columns
 1. id - technical trick to do not allow to have more than one row
 2. back_from_fork - flag which indicated that back_from_fork is in progress

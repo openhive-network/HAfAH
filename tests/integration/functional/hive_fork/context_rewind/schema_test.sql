@@ -35,10 +35,7 @@ BEGIN
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name = 'context' ), 'No contexts table';
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name = 'registered_tables' ), 'No registered_tables table';
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'triggers' ), 'No triggers table';
-    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'control_status' ), 'No control_status table';
-    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'base' ), 'No control_status table';
-
-    ASSERT EXISTS ( SELECT FROM hive.control_status WHERE back_from_fork=FALSE ), 'No control row';
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'base' ), 'No hive.base table';
 END
 $BODY$
 ;

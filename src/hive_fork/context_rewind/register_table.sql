@@ -87,7 +87,7 @@ BEGIN
            __values TEXT;
            __is_back_from_fork_in_progress BOOL := FALSE;
         BEGIN
-            SELECT back_from_fork FROM hive.control_status INTO __is_back_from_fork_in_progress;
+            SELECT back_from_fork FROM hive.context WHERE id=%s INTO __is_back_from_fork_in_progress;
 
             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                 RETURN NEW;
@@ -104,6 +104,7 @@ BEGIN
         END;
         $$'
         , __hive_triggerfunction_name_insert
+        , __context_id
         , __shadow_table_name
     );
 
@@ -118,7 +119,7 @@ BEGIN
            __values TEXT;
            __is_back_from_fork_in_progress BOOL := FALSE;
         BEGIN
-            SELECT back_from_fork FROM hive.control_status INTO __is_back_from_fork_in_progress;
+            SELECT back_from_fork FROM hive.context WHERE id=%s INTO __is_back_from_fork_in_progress;
 
             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                 RETURN NEW;
@@ -135,6 +136,7 @@ BEGIN
         END;
         $$'
         , __hive_triggerfunction_name_delete
+        , __context_id
         , __shadow_table_name
     );
 
@@ -149,7 +151,7 @@ BEGIN
            __values TEXT;
            __is_back_from_fork_in_progress BOOL := FALSE;
         BEGIN
-        SELECT back_from_fork FROM hive.control_status INTO __is_back_from_fork_in_progress;
+            SELECT back_from_fork FROM hive.context WHERE id=%s INTO __is_back_from_fork_in_progress;
 
             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                 RETURN NEW;
@@ -166,6 +168,7 @@ BEGIN
         END;
         $$'
         , __hive_triggerfunction_name_update
+        , __context_id
         , __shadow_table_name
     );
 
@@ -180,7 +183,7 @@ BEGIN
             __values TEXT;
             __is_back_from_fork_in_progress BOOL := FALSE;
          BEGIN
-         SELECT back_from_fork FROM hive.control_status INTO __is_back_from_fork_in_progress;
+             SELECT back_from_fork FROM hive.context WHERE id=%s INTO __is_back_from_fork_in_progress;
 
              IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                  RETURN NEW;
@@ -197,6 +200,7 @@ BEGIN
          END;
          $$'
         , __hive_triggerfunction_name_truncate
+        , __context_id
         , __shadow_table_name
         , _table_schema
         , _table_name

@@ -14,6 +14,8 @@ BEGIN
     SELECT hrt.shadow_table_name, hrt.origin_table_schema, hrt.origin_table_name  FROM
         ( SELECT * FROM pg_event_trigger_ddl_commands() ) as tr
         JOIN hive.registered_tables hrt ON ( hrt.origin_table_schema || '.' || hrt.origin_table_name ) = tr.object_identity
+        JOIN hive.context hc ON hrt.context_id = hc.id
+        WHERE hc.back_from_fork = FALSE
     INTO __shadow_table_name, __origin_table_schema, __origin_table_name;
 
     IF __shadow_table_name IS NULL THEN

@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS hive.context(
     current_block_num INTEGER NOT NULL,
     irreversible_block INTEGER NOT NULL,
     is_attached BOOL NOT NULL,
+    back_from_fork BOOL NOT NULL DEFAULT FALSE,
     events_id BIGINT, -- no event is processed
     fork_id BIGINT NOT NULL DEFAULT 1,
     CONSTRAINT uq_hive_context_name UNIQUE ( name )
@@ -34,13 +35,5 @@ CREATE TABLE IF NOT EXISTS hive.triggers(
    CONSTRAINT fk_hive_triggers_registered_table FOREIGN KEY( registered_table_id ) REFERENCES hive.registered_tables( id ),
    CONSTRAINT uq_hive_triggers_registered_table UNIQUE( trigger_name )
 );
-
-CREATE TABLE IF NOT EXISTS hive.control_status(
-      id BOOL PRIMARY KEY DEFAULT TRUE
-    , back_from_fork BOOL NOT NULL
-    , CONSTRAINT uq_hive_control_status CHECK( id )
-);
-
-INSERT INTO hive.control_status( id, back_from_fork ) VALUES( TRUE, FALSE ) ON CONFLICT DO NOTHING;
 
 
