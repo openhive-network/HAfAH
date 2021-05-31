@@ -63,7 +63,7 @@ BEGIN
     UPDATE hive.context
     SET   current_block_num = _block_num_before_fork
         , back_from_fork = FALSE
-    WHERE name = _context;
+    WHERE name = _context AND current_block_num > _block_num_before_fork;
 END;
 $BODY$
 ;
