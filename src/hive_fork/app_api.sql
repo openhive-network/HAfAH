@@ -51,6 +51,7 @@ DECLARE
     __next_event_type hive.event_type;
     __next_event_block_num INT;
     __next_block_to_process INT;
+    __last_block_to_process INT;
     __result hive.blocks_range;
 BEGIN
     PERFORM hive.squash_events( _context_name );
@@ -138,11 +139,10 @@ BEGIN
     END CASE;
 
     -- if there is no event or we still process irreversible blocks
-    SELECT hb.num
+    SELECT MIN( hb.num ), MAX( hb.num )
     FROM hive.blocks hb
     WHERE hb.num > __current_block_num
-    ORDER BY hb.num ASC LIMIT 1
-    INTO __next_block_to_process;
+    INTO __next_block_to_process, __last_block_to_process;
 
     IF __next_block_to_process IS NULL THEN
         -- There is no new and expected block, needs to wait for a new block
@@ -154,7 +154,7 @@ BEGIN
     SET current_block_num = __next_block_to_process
     WHERE id = __context_id;
     __result.first_block = __next_block_to_process;
-    __result.last_block = __next_block_to_process;
+    __result.last_block = __last_block_to_process;
     RETURN __result;
 END;
 $BODY$

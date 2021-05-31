@@ -83,12 +83,28 @@ CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.base );
 
 SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 1
 ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks';
-ASSERT __blocks.first_block = 1, 'Incorrect first block 1';
-ASSERT __blocks.last_block = 5, 'Incorrect last range 5';
+ASSERT __blocks = (1,5), 'Incorrect first block (1,5)';
 INSERT INTO A.table1 VALUES( 1 );
+
 SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 2
-ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (2,2)';
-ASSERT __blocks = (2,2), 'Incorrect range (2,2)';
+ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (2,5)';
+ASSERT __blocks = (2,5), 'Incorrect range (2,5)';
+INSERT INTO A.table1 VALUES( 2 );
+
+SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 3
+ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (3,5)';
+ASSERT __blocks = (3,5), 'Incorrect range (3,5)';
+INSERT INTO A.table1 VALUES( 3 );
+
+SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 4
+ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (4,5)';
+ASSERT __blocks = (4,5), 'Incorrect range (4,5)';
+INSERT INTO A.table1 VALUES( 4 );
+
+SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 5
+ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (5,5)';
+ASSERT __blocks = (5,5), 'Incorrect range (5,5)';
+INSERT INTO A.table1 VALUES( 5 );
 
 END;
 $BODY$
