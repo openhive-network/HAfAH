@@ -14,9 +14,9 @@ Contains implementations of Postgres specific tools providing functionalities re
 4. `make`
 
 # Tests
-The project use ctest to start tests, just execute in build directory `make test`
+The project uses ctest to start tests, just execute in build directory `make test`
 
-Test are grouped in a three by names and `.` as a branch separator where 'test' is the root.
+Test are grouped in a tree by names and `.` as a branch separator where 'test' is the root.
 For example You can start all unit tests with command `ctest -R test.unit.*` 
 
 # Installation
@@ -29,10 +29,10 @@ The best option is to execute `make install` from build directory
 # Architecture
 ## Directory structure
    ```
-   cmake                      Contains common function used by cmake build
+   cmake                      Contains common functions used by cmake build
    common_includes
         include               Constains library interfaces header files, to share them among the project items
-   doc                        Contains documentation documents
+   doc                        Contains documentation
    src                        Contains sources
         fork_extension        Contains C language extension which implements solution for hive forks
         pq_utils              C++ interface for PostgreSQL PQ interface
@@ -47,7 +47,7 @@ The best option is to execute `make install` from build directory
 
 There is also a `generated` directory inside the build directory. It contains autmatically generated headers which can be included
 in the code whith ```#include "gen/header_file_name.hpp"```
-## Error handling
+## Error handling in C++
 - Exceptions are used as an error handling method
 - Each PostgreSQL 'C' entry points have to catch all unhandled exceptions and logs them as errors using LOG_ERROR macro
   what breaks pending transaction
@@ -65,10 +65,10 @@ in the code whith ```#include "gen/header_file_name.hpp"```
 9. file and directory names with snake_case: my_file.cpp
 
 ## PSQL extension based on sql script
-If there is a need to create psql extension ( to use CREATE EXTENSION psql command ) a cmake macro isa added:
+If there is a need to create psql extension ( to use CREATE EXTENSION psql command ) a cmake macro is added:
 `ADD_PSQL_EXTENSION` with parameters:
 - NAME - name of extension, in current source directory file <name>.control (see https://www.postgresql.org/docs/10/extend-extensions.html#id-1.8.3.18.11 ) 
-- SOURCES - list of sql scripts, the order of the files is important since the are compiled into one sql script
+- SOURCES - list of sql scripts, the order of the files is important since they are compiled into one sql script
 
 The macro creates a new target extension.<name_of_extension>. The command 'make extension.<name_of_extension>' will create
 an psql extension in `${CMAKE_BINARY_DIR}/extensions/<name>`.

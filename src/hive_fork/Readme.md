@@ -10,7 +10,7 @@ or as a simple set of tables and functions
 3. `make extension.hive_fork`
 4. `make install`
 
-The extension will be installed in the directory `<postgres_shareddir>/extension`.
+The extension will be installed in the directory `<postgres_shareddir>/extension`. You can check the directory with `pg_config --sharedir`.
 
 To start using extension in a database execute postgres command: `CREATE EXTENSION hive_fork`
 ### Execute sql scripts on Your database in given order:
@@ -39,7 +39,7 @@ If the order of files is incorrect in documentation please look at file `src/hiv
 All elements of the extension are placed in 'hive' schema
 
 The postgres extension is written in events source architecture style. It means that during live syncing
-hived only schedules events, and then applicationx proccess them at their own pace.
+hived only schedules events, and then applications process them at their own pace.
 
 It is possible to have multiple applications which process blocks independent on each other.
 
@@ -66,19 +66,19 @@ If NULL was returned an application must immediatly re-call `hive.app_next_block
 executed by `hive.app_next_block`. When range of block number is returned then an application may edit its own tables and use blocks
 data snaphot by asking 'hive.{context_name}_{ blocks | transactions | operations | transactions_multisig }' views. Views present
 data snapshot for firt block in returned blocks range. If the range of returned blocks nums is large, then it may be worth to
-back to massive sync - detach contexts, execute sync and attach the contexts - it will save triggers overhead during edition of tables.
+back to massive sync - detach contexts, execute sync and attach the contexts - it will save triggers overhead during edition of the tables.
 
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
-IRREVERSIBLE BLOCKS is information (set of datbase tables) about blocks which blockchain considern as irreveresible - it will never change.
+IRREVERSIBLE BLOCKS is information (set of database tables) about blocks which blockchain considern as irreveresible - they will never change.
 You can check how th e tables look in the file `src/hive_fork/irreversible_blocks.sql`
 
-REVERSIBLE BLOCKS (set of datbase tables) is information about blocks for which blockachain is not sure if they are already irreversible, because they
+REVERSIBLE BLOCKS (set of database tables) is information about blocks for which blockachain is not sure if they are already irreversible, because they
 may be a part of fork which will be abandoned soon. Please look at `src/hive_fork/reversible_blocks.sql`
 
 Each application should work on a snapshot of blocks information, which is a combination of reversible and irreversible information based
-on current status of the application - its last processed block and fork.
+on current status of the application's context - its last processed block and fork.
 
-Because of applications may work with different paces, the system has to hold reversible blocks information for every block num and fork not already processed by any
+Because of the applications may work with different paces, the system has to hold reversible blocks information for every block num and fork not already processed by any
 of the applications, this requires to construct an efficient data structure. Fortunetly the idea is quite simple - it is enaugh to add
 to data inserted by hived block_num and fork id ( fork_id is a part of each reversible table ). The system controls forks ids - 
 information about each fork is in hive.fork table. Moreover when 'hived' pushes a new block with function `hive.push_block`, then the system
@@ -113,15 +113,16 @@ JOIN hive.context hc ON fork_id <= hc.fork_id AND block_num <= hc.current_block_
 WHERE hc.name = 'app_context'
 ORDER BY block_num DESC, fork_id DESC
 ```
+Remark: The fork_id is not a part of blockchain, it is only a helpful part of hive_fork extension and may differ with any instation of the extension.
 
 ### CONTEXT REWIND
 The part of the extension which is responsible to register App tables, save and rewind  operation on the tables.
 
 An application and hived shall not use directly any function from directory `src/hive_fork/context_rewind`.
 
-An application must register those its tables, which are dependant on hive blocks
+An application must register those its tables, which are dependant on hive blocks.
 Any table is automaticly registerd during its creation only when inherits from hive.base. 
-. A table is resgistered into recently created context.If there is no context an exception is thrown.
+. A table is registered into recently created context. If there is no context an exception is thrown.
 
 ```
 CREATE TABLE table1( id INTEGER ) INHERITS( hive.base )
@@ -136,7 +137,7 @@ and its name is created with the rule below:
 ```
 hive.shadow_<table_schema>_<table_name>
 ```
-It is possible to rewind all operations registered in shadow tables with `hive_back_from_fork`
+It is possible to rewind all operations registered in shadow tables with `hive.context_back_from_fork`
 
 Because triggers itself add some significant overhead for operations, in some situation it may be necessary
 to temporary disable them for sake of better performance. To do this there are functions: `hive.detach_table` - to disable
