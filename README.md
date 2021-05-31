@@ -4,7 +4,7 @@ Contains implementations of Postgres specific tools providing functionalities re
 
 # Compilation
 ## Requirements
-1. Ubuntu 18.04
+1. Tested on Ubuntu 18.04
 2. postgresql server dev package: `sudo apt-get install postgresql-dev`
 
 ## CMake and make
@@ -34,7 +34,6 @@ The best option is to execute `make install` from build directory
         include               Constains library interfaces header files, to share them among the project items
    doc                        Contains documentation
    src                        Contains sources
-        fork_extension        Contains C language extension which implements solution for hive forks
         pq_utils              C++ interface for PostgreSQL PQ interface
         psql_utils            C++ utilities to PostgreSQL C interfaces
         hive_fork             Contains SQL extension which implements solution for hive forks 
