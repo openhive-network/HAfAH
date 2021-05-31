@@ -92,7 +92,6 @@ BEGIN
             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                 RETURN NEW;
             END IF;
-
             SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
             IF ( __block_num <= 0 ) THEN

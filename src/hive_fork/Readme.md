@@ -48,7 +48,7 @@ Blocks data are stored in two separated, but similar tables for irreversible and
 An Application groups its tables into named contexts (context are named only with alphanumerical characters + underscore).
 Each contexts holds information about its processed events, blocks and a fork which is now processed. These pice of information
 are enaugh to create views which presents combined irreversible and reversible blocks data.
-Each of the views has name started from 'hive.{context_name}_'  
+Each of the views has name started from 'hive.{context_name}_{blocks|transactions|multi_signatures|operations}_view'  
 ### Overview of hive_fork and its relations with applications and hived
 ![alt text](./doc/evq_c3.png )
 

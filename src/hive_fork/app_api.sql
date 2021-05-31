@@ -52,6 +52,7 @@ DECLARE
     __next_event_block_num INT;
     __next_block_to_process INT;
     __last_block_to_process INT;
+    __fork_id BIGINT;
     __result hive.blocks_range;
 BEGIN
     PERFORM hive.squash_events( _context_name );
@@ -91,11 +92,17 @@ BEGIN
 
     CASE __next_event_type
         WHEN 'BACK_FROM_FORK' THEN
+            SELECT hf.id, hf.block_num INTO __fork_id, __next_event_block_num
+            FROM hive.fork hf
+            WHERE hf.id = __next_event_block_num; -- block_num for BFF events = fork_id
+
             PERFORM hive.context_back_from_fork( _context_name, __next_event_block_num );
+
             UPDATE hive.context
             SET
                   events_id = __next_event_id
                 , current_block_num = __next_event_block_num
+                , fork_id = __fork_id
             WHERE id = __context_id;
             RETURN NULL;
         WHEN 'NEW_IRREVERSIBLE' THEN

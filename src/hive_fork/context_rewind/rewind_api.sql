@@ -43,7 +43,7 @@ BEGIN
     -- we need a flag for back_from_fork to returns from triggers immediatly
     -- we cannot use ALTER TABLE DISABE TRIGGERS because DDL event trigger cause an error:
     -- Cannot ALTER TABLE "table" because it has pending trigger events, but only when origin tables have contstraints
-    UPDATE hive.context SET back_from_fork = TRUE WHERE name = _context;
+    UPDATE hive.context SET back_from_fork = TRUE WHERE name = _context AND current_block_num > _block_num_before_fork;
 
     SET CONSTRAINTS ALL DEFERRED;
 
@@ -55,10 +55,10 @@ BEGIN
                 , hrt.origin_table_columns
                 , _block_num_before_fork
             )
-        FROM hive.registered_tables hrt
-        JOIN hive.context hc ON hrt.context_id = hc.id
-        WHERE hc.name = _context
-        ORDER BY hrt.id;
+    FROM hive.registered_tables hrt
+    JOIN hive.context hc ON hrt.context_id = hc.id
+    WHERE hc.name = _context AND hc.current_block_num > _block_num_before_fork
+    ORDER BY hrt.id;
 
     UPDATE hive.context
     SET   current_block_num = _block_num_before_fork
