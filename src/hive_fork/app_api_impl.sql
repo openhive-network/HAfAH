@@ -13,7 +13,7 @@ BEGIN
     -- first find a newer fork nearest current block
     SELECT heq.id, heq.block_num, hc.current_block_num, hc.id INTO __next_fork_event_id, __next_fork_block_num, __context_current_block_num, __context_id
     FROM hive.events_queue heq
-    JOIN hive.context hc ON hc.events_id < heq.id AND hc.current_block_num <= heq.block_num
+    JOIN hive.context hc ON hc.events_id < heq.id AND hc.current_block_num >= heq.block_num
     WHERE heq.event = 'BACK_FROM_FORK' AND hc.name = _context
     ORDER BY heq.block_num ASC, heq.id DESC
     LIMIT 1;

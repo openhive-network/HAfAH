@@ -86,6 +86,9 @@ ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks';
 ASSERT __blocks.first_block = 1, 'Incorrect first block 1';
 ASSERT __blocks.last_block = 5, 'Incorrect last range 5';
 INSERT INTO A.table1 VALUES( 1 );
+SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 2
+ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (2,2)';
+ASSERT __blocks = (2,2), 'Incorrect range (2,2)';
 
 END;
 $BODY$
