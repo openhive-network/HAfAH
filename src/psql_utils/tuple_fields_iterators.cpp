@@ -27,10 +27,10 @@ TuplesFieldIterator::TuplesFieldIterator( bytea* _tuple_in_copy_format ) {
   m_current_field = m_tuple_bytes + NUMBER_OF_FIELDS_SIZE;
 }
 
-TuplesFieldIterator::Field
+boost::optional< TuplesFieldIterator::Field >
 TuplesFieldIterator::next() {
   if ( atEnd() ) {
-    return Field();
+    return boost::optional< TuplesFieldIterator::Field >();
   }
 
   std::size_t column_distant = ( m_current_field - m_tuple_bytes );

@@ -40,29 +40,29 @@ BOOST_AUTO_TEST_CASE( simple_iteration_by_fields )
 
   auto field1 = it_under_test.next();
   BOOST_REQUIRE( field1 );
-  BOOST_REQUIRE_EQUAL( field1.getSize(), ntohl( tuple_pattern.m_field1_size ) );
-  BOOST_REQUIRE_EQUAL( *reinterpret_cast< uint32_t* >( field1.getValue() ), tuple_pattern.m_field1_value );
+  BOOST_REQUIRE_EQUAL( (*field1).getSize(), ntohl( tuple_pattern.m_field1_size ) );
+  BOOST_REQUIRE_EQUAL( *reinterpret_cast< uint32_t* >( (*field1).getValue() ), tuple_pattern.m_field1_value );
 
   auto field2 = it_under_test.next();
   BOOST_REQUIRE( field2 );
-  BOOST_REQUIRE_EQUAL( field2.getSize(), ntohl( tuple_pattern.m_field2_size ) );
-  BOOST_REQUIRE_EQUAL( *reinterpret_cast< float* >( field2.getValue() ), tuple_pattern.m_field2_value );
+  BOOST_REQUIRE_EQUAL( (*field2).getSize(), ntohl( tuple_pattern.m_field2_size ) );
+  BOOST_REQUIRE_EQUAL( *reinterpret_cast< float* >( (*field2).getValue() ), tuple_pattern.m_field2_value );
 
   auto field3 = it_under_test.next();
   BOOST_REQUIRE( field3 );
-  BOOST_REQUIRE_EQUAL( field3.getSize(), ntohl( tuple_pattern.m_field3_size ) );
-  BOOST_REQUIRE_EQUAL( reinterpret_cast< char* >( field3.getValue() ), tuple_pattern.m_field3_value );
+  BOOST_REQUIRE_EQUAL( (*field3).getSize(), ntohl( tuple_pattern.m_field3_size ) );
+  BOOST_REQUIRE_EQUAL( reinterpret_cast< char* >( (*field3).getValue() ), tuple_pattern.m_field3_value );
 
   auto field4 = it_under_test.next();
   BOOST_REQUIRE( field4 );
-  BOOST_REQUIRE( field4.isNullValue() );
-  BOOST_REQUIRE_EQUAL( field3.getSize(), ntohl( tuple_pattern.m_field3_size ) );
+  BOOST_REQUIRE( (*field4).isNullValue() );
+  BOOST_REQUIRE_EQUAL( (*field3).getSize(), ntohl( tuple_pattern.m_field3_size ) );
 
   auto field5 = it_under_test.next();
   BOOST_REQUIRE( field5 );
-  BOOST_REQUIRE( !field5.isNullValue() );
-  BOOST_REQUIRE_EQUAL( field5.getSize(), ntohl( tuple_pattern.m_field5_size ) );
-  BOOST_REQUIRE_EQUAL( *field5.getValue(), tuple_pattern.m_field5_value );
+  BOOST_REQUIRE( !(*field5).isNullValue() );
+  BOOST_REQUIRE_EQUAL( (*field5).getSize(), ntohl( tuple_pattern.m_field5_size ) );
+  BOOST_REQUIRE_EQUAL( *(*field5).getValue(), tuple_pattern.m_field5_value );
 
   BOOST_REQUIRE( !it_under_test.next() );
 }

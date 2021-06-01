@@ -98,7 +98,7 @@ RelationWrapper::createPkeyCondition(bytea* _relation_tuple_in_copy_format ) con
       THROW_RUNTIME_ERROR(  message );
     }
 
-    auto value = binaryValueToText(field_value.getValue(), field_value.getSize(), m_relation->rd_att,
+    auto value = binaryValueToText( (*field_value).getValue(), (*field_value).getSize(), m_relation->rd_att,
                                    pkey_column_id - 1);
     if ( !result.empty() ) {
       result.append( " AND " );
@@ -128,7 +128,7 @@ RelationWrapper::createRowValuesAssignment([[maybe_unused]] bytea* _relation_tup
       THROW_RUNTIME_ERROR( message );
     }
 
-    auto value = binaryValueToText(field_value.getValue(), field_value.getSize(), m_relation->rd_att, column_id);
+    auto value = binaryValueToText((*field_value).getValue(), (*field_value).getSize(), m_relation->rd_att, column_id);
 
     if ( !result.empty() ) {
       result.push_back( ',' );

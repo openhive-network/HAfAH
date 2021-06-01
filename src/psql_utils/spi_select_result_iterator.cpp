@@ -35,7 +35,7 @@ SelectResultIterator::SelectResultIterator(std::shared_ptr< SpiSession > _sessio
     THROW_INITIALIZATION_ERROR( "No SpiSession in progress" );
   }
 
-  constexpr auto all_rows = 0l;
+  constexpr auto all_rows = 0L;
   auto result = SPI_execute( m_query.c_str(), true, all_rows );
   if ( result != SPI_OK_SELECT ) {
     THROW_INITIALIZATION_ERROR( "Cannot execute query "s + m_query );

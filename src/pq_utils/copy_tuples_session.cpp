@@ -8,8 +8,6 @@
 #include <vector>
 #include <exception>
 
-typedef void (*func_ptr_t)(Oid,Oid*,bool*);
-
 static constexpr auto NULL_FIELD_SIZE = sizeof( uint32_t );
 static constexpr auto SIZE_OF_NUMBER_OF_COLUMNS = sizeof( uint16_t );
 static constexpr auto SIZE_OF_COLUMN_SIZE = sizeof( uint32_t );
@@ -52,7 +50,7 @@ FieldSizeAndValue get_size_and_value( const HeapTupleData& _tuple, const TupleDe
 namespace PsqlTools::PostgresPQ {
 #pragma pack(push, 1)
   struct BinaryFileFormatHeader {
-      char header[11] = {'P', 'G','C','O','P','Y','\n','\377','\r','\n','\0'};
+      char header[11] = "PGCOPY\n\377\r\n";
       const uint32_t flags = 0u;
       const uint32_t extension = 0u;
   };

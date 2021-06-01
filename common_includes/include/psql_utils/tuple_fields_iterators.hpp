@@ -2,6 +2,8 @@
 
 #include "include/psql_utils/postgres_includes.hpp"
 
+#include <boost/optional.hpp>
+
 namespace PsqlTools::PsqlUtils {
 
   /* Tuple in copy format
@@ -13,12 +15,11 @@ namespace PsqlTools::PsqlUtils {
     class Field {
       public:
         Field( uint8_t* _value, uint32_t _size ) : m_value( _value ), m_size( _size ) {}
-        Field() : m_value( nullptr ), m_size( 0 ) {}
 
         uint8_t* getValue() const { return m_value;}
         uint32_t getSize() const { return m_size; }
 
-        operator bool() const { return m_value || m_size; }
+        explicit operator bool() const { return m_value || m_size; }
         bool isNullValue() const { return m_size == 0xFFFFFFFF; }
       private:
         uint8_t* m_value;
@@ -32,15 +33,15 @@ namespace PsqlTools::PsqlUtils {
     TuplesFieldIterator& operator=( TuplesFieldIterator& ) = delete;
     TuplesFieldIterator& operator=( TuplesFieldIterator&& ) = delete;
 
-    Field next();
+    boost::optional< Field > next();
 
   private:
     bool atEnd() const;
     Field getField() const;
 
   private:
-    static constexpr auto NUMBER_OF_FIELDS_SIZE = 2; // Bytes
-    static constexpr auto FIELD_SIZE_SIZE = 4; // Bytes
+    static constexpr auto NUMBER_OF_FIELDS_SIZE = 2u; // Bytes
+    static constexpr auto FIELD_SIZE_SIZE = 4u; // Bytes
     uint8_t* m_tuple_bytes;
     uint16_t m_number_of_fields;
     uint32_t m_tuple_size;
