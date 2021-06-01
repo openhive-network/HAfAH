@@ -33,7 +33,7 @@ RUN git submodule update --init --recursive
 RUN mkdir build \
     && cd build \
     && cmake .. \
-    && make extension.hive_fork \
+    && make \
     && make install
 
 USER postgres

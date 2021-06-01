@@ -1,4 +1,4 @@
-# docker build -t psql-tools .
+# The file is used to build docker container for gitlab ci
 FROM phusion/baseimage:0.11
 
 ENV LANG=en_US.UTF-8
@@ -19,19 +19,8 @@ RUN \
     && \
         apt-get clean
 
-
-
-ADD . /usr/local/src
-WORKDIR /usr/local/src
-
-RUN mkdir build \
-     && cd build \
-     && cmake .. \
-     && make \
-     && make install
-
 USER postgres
 RUN  /etc/init.d/postgresql start \
-    && psql --command "CREATE USER root WITH SUPERUSER CREATEDB;" \
-    && cd build \
-    && make CTEST_OUTPUT_ON_FAILURE=1 test
+    && psql --command "CREATE USER root WITH SUPERUSER CREATEDB;"
+
+USER root
