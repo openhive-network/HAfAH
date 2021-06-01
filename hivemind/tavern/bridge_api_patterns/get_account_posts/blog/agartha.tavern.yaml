@@ -2,7 +2,7 @@
   test_name: Hivemind
 
   marks:
-    - patterntest # see issue #168 - test-safari/reblogged-and-recreated should not be reblogged (but is - bug),
+    - patterntest # see issue #162 - test-safari/reblogged-and-recreated should not be reblogged (but is - bug),
                   # but test-safari/reblogged-and-edited should (and correctly is)
 
   includes:

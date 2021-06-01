@@ -2,7 +2,7 @@
   test_name: Hivemind
 
   marks:
-    - patterntest # note that test-safari/muted-and-recreated is not muted (lost flag when deleted and reused - correct)
+    - patterntest # see issue #162 - test-safari/muted-and-recreated is not muted (lost flag when deleted and reused - correct)
                   # while test-safari/muted-and-edited retained its muted flag through edit (also correct)
 
   includes:
