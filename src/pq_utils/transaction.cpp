@@ -47,6 +47,6 @@ std::unique_ptr< CopyTuplesSession >
 Transaction::startCopyTuplesSession( const std::string& _table_name, const std::vector< std::string >& _columns ) {
   assert( m_connection );
 
-  return std::unique_ptr< CopyTuplesSession >( new CopyTuplesSession( m_connection, _table_name, _columns ) );
+  return std::make_unique< CopyTuplesSession >( m_connection, _table_name, _columns );
 }
 } // namespace PsqlTools::PostgresPQ

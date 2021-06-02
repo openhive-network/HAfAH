@@ -35,7 +35,7 @@ DbClient::DbClient():DbClient(getCurrentDatabaseName() ) {
 
 std::unique_ptr< Transaction >
 DbClient::startTransaction() {
-  return std::unique_ptr< Transaction >( new Transaction( m_connection ) );
+  return std::make_unique< Transaction >( m_connection );
 }
 
 DbClient::~DbClient() {
