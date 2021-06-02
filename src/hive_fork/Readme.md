@@ -69,7 +69,11 @@ data snapshot for firt block in returned blocks range. If the range of returned 
 back to massive sync - detach contexts, execute sync and attach the contexts - it will save triggers overhead during edition of the tables.
 
 ### Non-forking applications
-It is possible to 
+It is expected tah some application won't use fork mechanism and will read only irreversible. From perspective of such non-forking app components diagram looks much simpler:
+![](./doc/evq_c3_only_irreversible.png)
+
+The non-forking application can read freely irreversible data and process them in its own way. There is no speccial support
+for such kind of applications - hived using hive_forks fills irreversible data in the same way like when they are working with a forking application.
 
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
 IRREVERSIBLE BLOCKS is information (set of database tables) about blocks which blockchain considern as irreveresible - they will never change.
