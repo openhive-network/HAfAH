@@ -33,7 +33,7 @@ To start using extension in a database execute postgres command: `CREATE EXTENSI
 
 An example of script execution: `psql -d my_db_name -a -f  context_rewind/data_schema.sql`
 
-If the order of files is incorrect in documentation please look at file `src/hive_fork/CMakeLists.txt`
+If the order of files is incorrect in documentation please look at file [src/hive_fork/CMakeLists.txt](./CMakeLists.txt)
 
 ## Architecture
 All elements of the extension are placed in 'hive' schema
@@ -68,12 +68,15 @@ data snaphot by asking 'hive.{context_name}_{ blocks | transactions | operations
 data snapshot for firt block in returned blocks range. If the range of returned blocks nums is large, then it may be worth to
 back to massive sync - detach contexts, execute sync and attach the contexts - it will save triggers overhead during edition of the tables.
 
+### Non-forking applications
+It is possible to 
+
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
 IRREVERSIBLE BLOCKS is information (set of database tables) about blocks which blockchain considern as irreveresible - they will never change.
-You can check how th e tables look in the file `src/hive_fork/irreversible_blocks.sql`
+You can check how th e tables look in the file [src/hive_fork/irreversible_blocks.sql](./irreversible_blocks.sql)
 
 REVERSIBLE BLOCKS (set of database tables) is information about blocks for which blockachain is not sure if they are already irreversible, because they
-may be a part of fork which will be abandoned soon. Please look at `src/hive_fork/reversible_blocks.sql`
+may be a part of fork which will be abandoned soon. Please look at [src/hive_fork/reversible_blocks.sql](./reversible_blocks.sql)
 
 Each application should work on a snapshot of blocks information, which is a combination of reversible and irreversible information based
 on current status of the application's context - its last processed block and fork.
@@ -118,7 +121,7 @@ Remark: The fork_id is not a part of blockchain, it is only a helpful part of hi
 ### CONTEXT REWIND
 The part of the extension which is responsible to register App tables, save and rewind  operation on the tables.
 
-An application and hived shall not use directly any function from directory `src/hive_fork/context_rewind`.
+An application and hived shall not use directly any function from directory [src/hive_fork/context_rewind](./context_rewind/).
 
 An application must register those its tables, which are dependant on hive blocks.
 Any table is automaticly registerd during its creation only when inherits from hive.base. 
@@ -127,11 +130,12 @@ Any table is automaticly registerd during its creation only when inherits from h
 ```
 CREATE TABLE table1( id INTEGER ) INHERITS( hive.base )
 ```
+hive.base table is defined here: [context_rewind/data_schema.sql](./context_rewind/data_schema.sql).
 
 Data from 'hive.base' is used by the fork system to rewind operations. Especially column 'hive_rowid'
 is used by the system to distinguish between edited rows. During registartion a set of triggers are
 enabled on a table, they will record any changes.
-Moreover a new table is created - a shadow table which structure is the copy of a registered tables + columns for operation
+Moreover a new table is created - a shadow table which structure is the copy of a registered table + columns for operation
 registered tables. A shadow table is the place where triggers records changes. A shadow table is created in 'hive' schema
 and its name is created with the rule below:
 ```
@@ -145,7 +149,7 @@ triggers and 'hive.attach_table' to enable triggers. When triggers are disabled 
 so the application should solve the situation (in most cases is should happen when blocks below irreversible are processed, so no forks happen there)
 
 It is quite possible that the application which use the fork system will want to change the structure of the registered tables.
-It is possible only when coresponding shadow tables is empty. It means before an upgrade application must be in state
+It is possible only when coresponding shadow tables are empty. It means before an upgrade application must be in state
 in which there is no pending fork. The system will block ( rise an excpetion ) 'ALTER TABLE' command if corresponding shadow table is not empty.
 When a table is edited its shadow table is automaticly adapted to a new structure ( in fact old shaped shadow table is dropped and a new one is created with a new structure )
 
