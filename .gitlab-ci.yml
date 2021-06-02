@@ -1,21 +1,32 @@
 stages:
-  - build
-  - test
+  - build_and_test
 
 variables:
   GIT_DEPTH: 1
   BUILDER_IMAGE_TAG: "@sha256:7408688a8a093031852b0cd725e3c1d47981639e2fca69d9909eef2510bcfc41"
 
-build_psql_tools:
-  stage: build
+hive_fork:
+  stage: build_and_test
   image: "$CI_REGISTRY_IMAGE/builder$BUILDER_IMAGE_TAG"
   script:
     - /etc/init.d/postgresql start
     - mkdir -p "$CI_JOB_NAME"/build
     - cd "$CI_JOB_NAME"/build
     - cmake ../..
-    - make
+    - make extension.hive_fork
     - make install
-    - make CTEST_OUTPUT_ON_FAILURE=1 test
+    - ctest --debug -R test.functional.hive_fork.*
+  tags:
+    - public-runner-docker
+
+c++_unit_tests:
+  stage: build_and_test
+  image: "$CI_REGISTRY_IMAGE/builder$BUILDER_IMAGE_TAG"
+  script:
+    - mkdir -p "$CI_JOB_NAME"/build
+    - cd "$CI_JOB_NAME"/build
+    - cmake ../..
+    - make
+    - ctest --debug -R test.unit.*
   tags:
     - public-runner-docker
