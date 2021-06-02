@@ -154,6 +154,22 @@ ASSERT __blocks = (9,9), 'Incorrect range (9,9)';
 ASSERT '\xBADD92'::bytea = ( SELECT hash FROM hive.context_blocks_view WHERE num = 9 ), 'Unexpect hash of block 9';
 INSERT INTO A.table1(id) VALUES( 9 );
 
+SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- no block 10
+ASSERT __blocks IS NULL, 'Null is not returned instead for block 10';
+
+PERFORM hive.push_block(
+         ( 10, '\xBADD1010', '\xCAFE1010', '2016-06-22 19:10:25-07'::timestamp )
+        , NULL
+        , NULL
+        , NULL
+    );
+
+PERFORM hive.set_irreversible( 8 );
+
+SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- block 10
+ASSERT __blocks IS NOT NULL, 'Null is returned instead for block 10';
+ASSERT __blocks = (10,10), 'Incorrect range (10,10)';
+
 END;
 $BODY$
 ;

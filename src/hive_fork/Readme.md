@@ -69,7 +69,7 @@ data snapshot for firt block in returned blocks range. If the range of returned 
 back to massive sync - detach contexts, execute sync and attach the contexts - it will save triggers overhead during edition of the tables.
 
 ### Non-forking applications
-It is expected tah some application won't use fork mechanism and will read only irreversible. From perspective of such non-forking app components diagram looks much simpler:
+It is expected that some applications won't use fork mechanism and will read only irreversible blocks. From perspective of such non-forking app components diagram looks much simpler:
 ![](./doc/evq_c3_only_irreversible.png)
 
 The non-forking application can read freely irreversible data and process them in its own way. There is no speccial support
@@ -121,6 +121,36 @@ WHERE hc.name = 'app_context'
 ORDER BY block_num DESC, fork_id DESC
 ```
 Remark: The fork_id is not a part of blockchain, it is only a helpful part of hive_fork extension and may differ with any instation of the extension.
+
+### EVENTS QUEUE
+Events queue is a table defined in [src/hive_fork/events_queue.sql](./events_queue.sql). Each row in the table represents an event.
+Each event is defined with its **id**, **type** and BIGINT **block_num** value. The `block_num` value has different meaning for a different
+type of events:
+
+|   event type     | block_num meaning                                     |
+|----------------- |-----------------------------------------------------  |
+| BACK_FROM_FORK   | fork id of corresponding entry in `hive.fork`         |
+| NEW_BLOCK        | num of the new block                                  |
+| NEW_IRREVERSIBLE | num of irreversible block                             |
+| MASSIVE_SYNC     | the higest num of blocks pushed massivly by the hived |
+
+Events are ordered by the **id**, thus event that happen earlier has lower id than next events. The events queue
+is traversed by the application when they call `hive.app_next_block` - the lowest event form all with id higer than
+`event_id` form context is choosen and processed, and at the end context's 'event_id' is updated.
+
+#### Optimizaton of forks
+There are situations when application don't have to travers events queue and process all the events. When there are
+`BACK_FROM_FORK` events ahead of a context's `event_id`, then we can ommit all events before the fork with lower `block_num`, what can be presented as here:
+![](./doc/evq_events_optimization.png)
+
+The optimization above is implemented in [src/hive_fork/app_api_impl.sql](./app_api_impl.sql) in function `hive.squash_events`
+and is calle by `hive.app_next_block` function.
+
+#### Removing obsolete events
+Because the applications never back to already processed events, during time some events become useless and redundant.
+Events in which releates to blocks which already become irreversible and were already processed by the all of contexts
+are removed by the hived with function `hive.set_irreversible`.
+
 
 ### CONTEXT REWIND
 The part of the extension which is responsible to register App tables, save and rewind  operation on the tables.
@@ -196,7 +226,7 @@ The functions which should be used by an application
 Creates a new context. Context name can contains only characters from set: `a-zA-Z0-9_`
 
 ##### hive.app_next_block( _context_name )
-Returns `hive.blocks_rangerange` -range of blocks numbers to process or NULL
+Returns `hive.blocks_range` -range of blocks numbers to process or NULL
 It is a most important function for any application.
 To ensure correct work of fork rewind mechanism any application must process returned blocks and modify their tables according
 to block chain state on time where the returned block is a head block.
