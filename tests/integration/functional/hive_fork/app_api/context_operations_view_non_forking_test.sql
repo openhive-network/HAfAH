@@ -7,7 +7,6 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.app_create_context( 'context' );
-    CREATE TABLE table1( id INT ) INHERITS( hive.base );
 
     INSERT INTO hive.operation_types
     VALUES (0, 'OP 0', FALSE )
@@ -126,14 +125,8 @@ BEGIN
             , ( 2, 2, 0, 0, 1, 'ONE OPERATION' )
             , ( 3, 3, 0, 0, 1, 'TWO OPERATION' )
             , ( 4, 4, 0, 0, 1, 'THREE OPERATION' )
-            , ( 5, 5, 0, 0, 1, 'FIVEFIVE OPERATION' )
-            , ( 6, 6, 0, 0, 1, 'SIX OPERATION' )
-            , ( 7, 7, 0, 0, 1, 'SEVEN2 OPERATION' )
-            , ( 8, 7, 0, 1, 1, 'SEVEN21 OPERATION' )
-            , ( 9, 8, 0, 0, 1, 'EAIGHT2 OPERATION' )
         ) as pattern
     ) , 'Unexpected rows in the view';
-
 
     ASSERT NOT EXISTS (
         SELECT * FROM ( VALUES
@@ -141,11 +134,6 @@ BEGIN
             , ( 2, 2, 0, 0, 1, 'ONE OPERATION' )
             , ( 3, 3, 0, 0, 1, 'TWO OPERATION' )
             , ( 4, 4, 0, 0, 1, 'THREE OPERATION' )
-            , ( 5, 5, 0, 0, 1, 'FIVEFIVE OPERATION' )
-            , ( 6, 6, 0, 0, 1, 'SIX OPERATION' )
-            , ( 7, 7, 0, 0, 1, 'SEVEN2 OPERATION' )
-            , ( 8, 7, 0, 1, 1, 'SEVEN21 OPERATION' )
-            , ( 9, 8, 0, 0, 1, 'EAIGHT2 OPERATION' )
         ) as pattern
         EXCEPT SELECT * FROM hive.context_operations_view
     ) , 'Unexpected rows in the view2';

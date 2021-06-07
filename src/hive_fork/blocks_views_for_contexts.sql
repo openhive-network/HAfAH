@@ -33,6 +33,7 @@ BEGIN
                , hbr.fork_id
             FROM hive.blocks_reversible hbr
             JOIN hive.context hc ON  hbr.num > hc.irreversible_block AND hbr.fork_id <= hc.fork_id AND hbr.num <= hc.current_block_num
+            JOIN hive.registered_tables hrt ON hrt.context_id = hc.id
             WHERE hc.name = ''%s''
             ORDER BY hbr.num DESC, hbr.fork_id DESC
             ) as reversible
@@ -85,6 +86,7 @@ BEGIN
                , htr2.fork_id
            FROM hive.transactions_reversible htr2
            JOIN hive.context hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
+           JOIN hive.registered_tables hrt ON hrt.context_id = hc.id
            WHERE hc.name = ''%s''
            ORDER BY htr2.block_num DESC, htr2.fork_id DESC
         ) as forks ON forks.fork_id = htr.fork_id AND forks.block_num = htr.block_num
@@ -139,6 +141,7 @@ EXECUTE format(
                    , htr2.fork_id
                FROM hive.transactions_reversible htr2
                JOIN hive.context hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
+               JOIN hive.registered_tables hrt ON hrt.context_id = hc.id
                WHERE hc.name = ''%s''
                ORDER BY htr2.block_num DESC, htr2.fork_id DESC
                 ) as forks ON forks.fork_id = hor.fork_id AND forks.block_num = hor.block_num
@@ -174,8 +177,7 @@ EXECUTE format(
         FROM
             (
             SELECT
-            DISTINCT ON (htr.block_num) htr.block_num
-                , htmr.trx_hash
+                  htmr.trx_hash
                 , htmr.signature
             FROM hive.transactions_multisig_reversible htmr
             JOIN hive.transactions_reversible htr ON htr.trx_hash = htmr.trx_hash AND htr.fork_id = htmr.fork_id
@@ -183,6 +185,7 @@ EXECUTE format(
                 SELECT DISTINCT ON (htr2.block_num) htr2.block_num, htr2.fork_id
                 FROM hive.transactions_reversible htr2
                 JOIN hive.context hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
+                JOIN hive.registered_tables hrt ON hrt.context_id = hc.id
                 WHERE hc.name = ''%s''
                 ORDER BY htr2.block_num DESC, htr2.fork_id DESC
             ) as forks ON forks.fork_id = htmr.fork_id AND forks.block_num = htr.block_num

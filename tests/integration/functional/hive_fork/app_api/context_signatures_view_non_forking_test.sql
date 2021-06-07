@@ -7,14 +7,6 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.app_create_context( 'context' );
-    CREATE TABLE table1( id INT ) INHERITS( hive.base );
-
-    INSERT INTO hive.operation_types
-    VALUES (0, 'OP 0', FALSE )
-        , ( 1, 'OP 1', FALSE )
-        , ( 2, 'OP 2', FALSE )
-        , ( 3, 'OP 3', TRUE )
-    ;
 
     INSERT INTO hive.fork( id, block_num, time_of_fork)
     VALUES ( 2, 6, '2020-06-22 19:10:25-07'::timestamp ),
@@ -22,7 +14,7 @@ BEGIN
 
     INSERT INTO hive.blocks
     VALUES
-    ( 1, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp )
+           ( 1, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp )
          , ( 2, '\xBADD20', '\xCAFE20', '2016-06-22 19:10:22-07'::timestamp )
          , ( 3, '\xBADD30', '\xCAFE30', '2016-06-22 19:10:23-07'::timestamp )
          , ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:24-07'::timestamp )
@@ -38,13 +30,13 @@ BEGIN
          , ( 5, 0::SMALLINT, '\xDEED50', 101, 100, '2016-06-22 19:10:25-07'::timestamp, '\xBEEF' )
     ;
 
-    INSERT INTO hive.operations
+    INSERT INTO hive.transactions_multisig
     VALUES
-          ( 1, 1, 0, 0, 1, 'ZERO OPERATION' )
-        , ( 2, 2, 0, 0, 1, 'ONE OPERATION' )
-        , ( 3, 3, 0, 0, 1, 'TWO OPERATION' )
-        , ( 4, 4, 0, 0, 1, 'THREE OPERATION' )
-        , ( 5, 5, 0, 0, 1, 'FIVE OPERATION' )
+           ( '\xDEED10', '\xBAAD10' )
+         , ( '\xDEED20', '\xBAAD20' )
+         , ( '\xDEED30', '\xBAAD30' )
+         , ( '\xDEED40', '\xBAAD40' )
+         , ( '\xDEED50', '\xBAAD50' )
     ;
 
     INSERT INTO hive.blocks_reversible
@@ -52,7 +44,8 @@ BEGIN
            ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:25-07'::timestamp, 1 )
          , ( 5, '\xBADD5A', '\xCAFE5A', '2016-06-22 19:10:55-07'::timestamp, 1 )
          , ( 6, '\xBADD60', '\xCAFE60', '2016-06-22 19:10:26-07'::timestamp, 1 )
-         , ( 7, '\xBADD71', '\xCAFE71', '2016-06-22 19:10:27-07'::timestamp, 1 )
+         , ( 7, '\xBADD70', '\xCAFE70', '2016-06-22 19:10:37-07'::timestamp, 1 )
+         , ( 10, '\xBADD11', '\xCAFE11', '2016-06-22 19:10:41-07'::timestamp, 1 )
          , ( 7, '\xBADD70', '\xCAFE70', '2016-06-22 19:10:27-07'::timestamp, 2 )
          , ( 8, '\xBADD80', '\xCAFE80', '2016-06-22 19:10:28-07'::timestamp, 2 )
          , ( 9, '\xBADD90', '\xCAFE90', '2016-06-22 19:10:29-07'::timestamp, 2 )
@@ -66,32 +59,35 @@ BEGIN
        ( 4, 0::SMALLINT, '\xDEED40', 101, 100, '2016-06-22 19:10:24-07'::timestamp, '\xBEEF',  1 )
      , ( 5, 0::SMALLINT, '\xDEED55', 101, 100, '2016-06-22 19:10:25-07'::timestamp, '\xBEEF',  1 )
      , ( 6, 0::SMALLINT, '\xDEED60', 101, 100, '2016-06-22 19:10:26-07'::timestamp, '\xBEEF',  1 )
+     , ( 7, 0::SMALLINT, '\xDEED70', 101, 100, '2016-06-22 19:10:37-07'::timestamp, '\xBEEF',  1 )
+     , ( 10, 0::SMALLINT, '\xDEED11', 101, 100, '2016-06-22 19:10:41-07'::timestamp, '\xBEEF',  1 )
      , ( 7, 0::SMALLINT, '\xDEED70', 101, 100, '2016-06-22 19:10:27-07'::timestamp, '\xBEEF',  2 )
      , ( 8, 0::SMALLINT, '\xDEED80', 101, 100, '2016-06-22 19:10:28-07'::timestamp, '\xBEEF',  2 )
      , ( 9, 0::SMALLINT, '\xDEED90', 101, 100, '2016-06-22 19:10:29-07'::timestamp, '\xBEEF',  2 )
      , ( 8, 0::SMALLINT, '\xDEED88', 101, 100, '2016-06-22 19:10:28-07'::timestamp, '\xBEEF',  3 )
      , ( 9, 0::SMALLINT, '\xDEED99', 101, 100, '2016-06-22 19:10:29-07'::timestamp, '\xBEEF',  3 )
-     , ( 10, 0::SMALLINT, '\xDEED11', 101, 100, '2016-06-22 19:10:30-07'::timestamp, '\xBEEF', 3 )
+     , ( 10, 0::SMALLINT, '\xDEED1102', 101, 100, '2016-06-22 19:10:30-07'::timestamp, '\xBEEF', 3 )
     ;
 
-    INSERT INTO hive.operations_reversible
+    INSERT INTO hive.transactions_multisig_reversible
     VALUES
-           ( 4, 4, 0, 0, 1, 'THREE OPERATION', 1 )
-         , ( 5, 5, 0, 0, 1, 'FIVEFIVE OPERATION', 1 )
-         , ( 6, 6, 0, 0, 1, 'SIX OPERATION', 1 )
-         , ( 7, 7, 0, 0, 1, 'SEVEN0 OPERATION', 1 ) -- must be abandon because of fork2
-         , ( 8, 7, 0, 1, 1, 'SEVEN01 OPERATION', 1 ) -- must be abandon because of fork2
-         , ( 9, 7, 0, 2, 1, 'SEVEN02 OPERATION', 1 ) -- must be abandon because of fork2
-         , ( 7, 7, 0, 0, 1, 'SEVEN2 OPERATION', 2 )
-         , ( 8, 7, 0, 1, 1, 'SEVEN21 OPERATION', 2 )
-         , ( 9, 8, 0, 0, 1, 'EAIGHT2 OPERATION', 2 )
-         , ( 10, 9, 0, 0, 1, 'NINE2 OPERATION', 2 )
-         , ( 8, 8, 0, 0, 1, 'EIGHT3 OPERATION', 3 )
-         , ( 9, 9, 0, 0, 1, 'NINE3 OPERATION', 3 )
-         , ( 10, 10, 0, 0, 1, 'TEN OPERATION', 3 )
+       ( '\xDEED40', '\xBEEF40',  1 )
+     , ( '\xDEED55', '\xBEEF55',  1 )
+     , ( '\xDEED60', '\xBEEF61',  1 )
+     , ( '\xDEED70', '\xBEEF7110',  1 ) --must be abandon because of fork 2
+     , ( '\xDEED70', '\xBEEF7120',  1 ) --must be abandon because of fork 2
+     , ( '\xDEED70', '\xBEEF7130',  1 ) --must be abandon because of fork 2
+     , ( '\xDEED11', '\xBEEF7140',  1 ) --must be abandon because of fork 2
+     , ( '\xDEED70', '\xBEEF72',  2 )
+     , ( '\xDEED70', '\xBEEF73',  2 )
+     , ( '\xDEED80', '\xBEEF82',  2 )
+     , ( '\xDEED90', '\xBEEF92',  2 )
+     , ( '\xDEED88', '\xBEEF83',  3 )
+     , ( '\xDEED99', '\xBEEF93',  3 )
+     , ( '\xDEED1102', '\xBEEF13',  3 )
     ;
 
-    UPDATE hive.context SET fork_id = 2, irreversible_block = 4, current_block_num = 8;
+    UPDATE hive.context SET fork_id = 2, irreversible_block = 4, current_block_num = 9;
 END;
 $BODY$
 ;
@@ -117,38 +113,27 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name='context_operations_view' ), 'No context transactions view';
+    ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name='context_transactions_view' ), 'No context transactions view';
 
     ASSERT NOT EXISTS (
-        SELECT * FROM hive.context_operations_view
+        SELECT * FROM hive.context_transactions_multisig_view
         EXCEPT SELECT * FROM ( VALUES
-              ( 1, 1, 0, 0, 1, 'ZERO OPERATION' )
-            , ( 2, 2, 0, 0, 1, 'ONE OPERATION' )
-            , ( 3, 3, 0, 0, 1, 'TWO OPERATION' )
-            , ( 4, 4, 0, 0, 1, 'THREE OPERATION' )
-            , ( 5, 5, 0, 0, 1, 'FIVEFIVE OPERATION' )
-            , ( 6, 6, 0, 0, 1, 'SIX OPERATION' )
-            , ( 7, 7, 0, 0, 1, 'SEVEN2 OPERATION' )
-            , ( 8, 7, 0, 1, 1, 'SEVEN21 OPERATION' )
-            , ( 9, 8, 0, 0, 1, 'EAIGHT2 OPERATION' )
-        ) as pattern
+               ( '\xDEED10'::bytea, '\xBAAD10'::bytea )
+             , ( '\xDEED20'::bytea, '\xBAAD20'::bytea )
+             , ( '\xDEED30'::bytea, '\xBAAD30'::bytea )
+             , ( '\xDEED40'::bytea, '\xBAAD40'::bytea )
+         ) as pattern
     ) , 'Unexpected rows in the view';
-
 
     ASSERT NOT EXISTS (
         SELECT * FROM ( VALUES
-              ( 1, 1, 0, 0, 1, 'ZERO OPERATION' )
-            , ( 2, 2, 0, 0, 1, 'ONE OPERATION' )
-            , ( 3, 3, 0, 0, 1, 'TWO OPERATION' )
-            , ( 4, 4, 0, 0, 1, 'THREE OPERATION' )
-            , ( 5, 5, 0, 0, 1, 'FIVEFIVE OPERATION' )
-            , ( 6, 6, 0, 0, 1, 'SIX OPERATION' )
-            , ( 7, 7, 0, 0, 1, 'SEVEN2 OPERATION' )
-            , ( 8, 7, 0, 1, 1, 'SEVEN21 OPERATION' )
-            , ( 9, 8, 0, 0, 1, 'EAIGHT2 OPERATION' )
-        ) as pattern
-        EXCEPT SELECT * FROM hive.context_operations_view
-    ) , 'Unexpected rows in the view2';
+               ( '\xDEED10'::bytea, '\xBAAD10'::bytea )
+             , ( '\xDEED20'::bytea, '\xBAAD20'::bytea )
+             , ( '\xDEED30'::bytea, '\xBAAD30'::bytea )
+             , ( '\xDEED40'::bytea, '\xBAAD40'::bytea )
+         ) as pattern
+        EXCEPT SELECT * FROM hive.context_transactions_multisig_view
+    ) , 'Unexpected rows in the view 2';
 END;
 $BODY$
 ;

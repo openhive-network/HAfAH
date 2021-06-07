@@ -7,7 +7,6 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.app_create_context( 'context' );
-    CREATE TABLE table1( id INT ) INHERITS( hive.base );
 
     INSERT INTO hive.fork( id, block_num, time_of_fork)
     VALUES ( 2, 6, '2020-06-22 19:10:25-07'::timestamp ),
@@ -70,12 +69,9 @@ BEGIN
                  , (2, '\xBADD20'::bytea, '\xCAFE20'::bytea, '2016-06-22 19:10:22-07'::timestamp)
                  , (3, '\xBADD30'::bytea, '\xCAFE30'::bytea, '2016-06-22 19:10:23-07'::timestamp)
                  , (4, '\xBADD40'::bytea, '\xCAFE40'::bytea, '2016-06-22 19:10:24-07'::timestamp)
-                 , (5, '\xBADD5A'::bytea, '\xCAFE5A'::bytea, '2016-06-22 19:10:55-07'::timestamp)
-                 , (6, '\xBADD60'::bytea, '\xCAFE60'::bytea, '2016-06-22 19:10:26-07'::timestamp)
-                 , (7, '\xBADD70'::bytea, '\xCAFE70'::bytea, '2016-06-22 19:10:27-07'::timestamp)
-                 , (8, '\xBADD80'::bytea, '\xCAFE80'::bytea, '2016-06-22 19:10:28-07'::timestamp)
+                 , (5, '\xBADD50'::bytea, '\xCAFE50'::bytea, '2016-06-22 19:10:25-07'::timestamp)
                  ) as pattern
-    ) , 'Unexpected rows in the view';
+    ), 'Unexpected rows in the view';
 END
 $BODY$
 ;

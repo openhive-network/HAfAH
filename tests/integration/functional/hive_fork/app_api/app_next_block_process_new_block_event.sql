@@ -26,6 +26,8 @@ BEGIN
     );
 
     PERFORM hive.app_create_context( 'context' );
+    -- create a table to test forking app
+    CREATE TABLE table1( id INT) INHERITS( hive.base );
 END;
 $BODY$
 ;

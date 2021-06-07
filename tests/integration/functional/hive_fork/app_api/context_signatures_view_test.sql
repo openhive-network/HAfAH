@@ -7,6 +7,7 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.app_create_context( 'context' );
+    CREATE TABLE table1( id INT ) INHERITS( hive.base );
 
     INSERT INTO hive.fork( id, block_num, time_of_fork)
     VALUES ( 2, 6, '2020-06-22 19:10:25-07'::timestamp ),
@@ -130,6 +131,23 @@ BEGIN
             , ( '\xDEED90'::bytea, '\xBEEF92'::bytea )
          ) as pattern
     ) , 'Unexpected rows in the view';
+
+
+    ASSERT NOT EXISTS (
+        SELECT * FROM ( VALUES
+              ( '\xDEED10'::bytea, '\xBAAD10'::bytea )
+            , ( '\xDEED20'::bytea, '\xBAAD20'::bytea )
+            , ( '\xDEED30'::bytea, '\xBAAD30'::bytea )
+            , ( '\xDEED40'::bytea, '\xBAAD40'::bytea )
+            , ( '\xDEED55'::bytea, '\xBEEF55'::bytea )
+            , ( '\xDEED60'::bytea, '\xBEEF61'::bytea )
+            , ( '\xDEED70'::bytea, '\xBEEF72'::bytea )
+            , ( '\xDEED70'::bytea, '\xBEEF73'::bytea )
+            , ( '\xDEED80'::bytea, '\xBEEF82'::bytea )
+            , ( '\xDEED90'::bytea, '\xBEEF92'::bytea )
+         ) as pattern
+        EXCEPT SELECT * FROM hive.context_transactions_multisig_view
+    ) , 'Unexpected rows in the view 2';
 END;
 $BODY$
 ;
