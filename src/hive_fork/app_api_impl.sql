@@ -67,14 +67,14 @@ BEGIN
          , hac.is_attached
     FROM hive.context hac
     WHERE hac.name = _context_name
-        INTO __current_block_num, __current_fork, __current_event_id, __context_id, __context_is_attached;
+    INTO __current_block_num, __current_fork, __current_event_id, __context_id, __context_is_attached;
 
     IF __context_id IS NULL THEN
-            RAISE EXCEPTION 'No context with name %', _context_name;
+        RAISE EXCEPTION 'No context with name %', _context_name;
     END IF;
 
-        IF __context_is_attached = FALSE THEN
-            RAISE EXCEPTION 'Context % is detached', _context_name;
+    IF __context_is_attached = FALSE THEN
+        RAISE EXCEPTION 'Context % is detached', _context_name;
     END IF;
 
         -- no event was processed
@@ -93,61 +93,62 @@ BEGIN
     INTO __next_event_type,  __next_event_block_num, __next_event_id;
 
     CASE __next_event_type
-            WHEN 'BACK_FROM_FORK' THEN
-    SELECT hf.id, hf.block_num INTO __fork_id, __next_event_block_num
-    FROM hive.fork hf
-    WHERE hf.id = __next_event_block_num; -- block_num for BFF events = fork_id
+    WHEN 'BACK_FROM_FORK' THEN
+        SELECT hf.id, hf.block_num INTO __fork_id, __next_event_block_num
+        FROM hive.fork hf
+        WHERE hf.id = __next_event_block_num; -- block_num for BFF events = fork_id
 
-    PERFORM hive.context_back_from_fork( _context_name, __next_event_block_num );
+        PERFORM hive.context_back_from_fork( _context_name, __next_event_block_num );
 
-    UPDATE hive.context
-    SET
-        events_id = __next_event_id
-      , current_block_num = __next_event_block_num
-      , fork_id = __fork_id
-    WHERE id = __context_id;
-    RETURN NULL;
+        UPDATE hive.context
+        SET
+            events_id = __next_event_id
+          , current_block_num = __next_event_block_num
+          , fork_id = __fork_id
+        WHERE id = __context_id;
+        RETURN NULL;
     WHEN 'NEW_IRREVERSIBLE' THEN
-                PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
-    UPDATE hive.context
-    SET
-        events_id = __next_event_id
-      , current_block_num = __next_event_block_num
-    WHERE id = __context_id;
-    RETURN NULL;
+        PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
+        UPDATE hive.context
+        SET
+            events_id = __next_event_id
+          , current_block_num = __next_event_block_num
+        WHERE id = __context_id;
+        RETURN NULL;
     WHEN 'MASSIVE_SYNC' THEN
-                --first we need to rewind all reversible changes
-                PERFORM hive.context_back_from_fork( _context_name, hc.irreversible_block )
-                FROM hive.context hc
-                WHERE hc.id = __context_id;
+        --first we need to rewind all reversible changes
+        PERFORM hive.context_back_from_fork( _context_name, hc.irreversible_block )
+        FROM hive.context hc
+        WHERE hc.id = __context_id;
 
-    UPDATE hive.context
-    SET   events_id = __next_event_id
-      , current_block_num = current_block_num + 1
-      , irreversible_block = __next_event_block_num
-    WHERE id = __context_id;
+        UPDATE hive.context
+        SET   events_id = __next_event_id
+            , current_block_num = current_block_num + 1
+            , irreversible_block = __next_event_block_num
+        WHERE id = __context_id;
 
-    SELECT hc.current_block_num INTO __result.first_block
-    FROM hive.context hc
-    WHERE hc.id = __context_id;
+        SELECT hc.current_block_num INTO __result.first_block
+        FROM hive.context hc
+        WHERE hc.id = __context_id;
 
-    __result.last_block = __next_event_block_num;
-                RETURN __result;
+        __result.last_block = __next_event_block_num;
+        RETURN __result;
     WHEN 'NEW_BLOCK' THEN
-                ASSERT  __next_event_block_num > __current_block_num, 'We could not process block without consume event';
-                IF __next_event_block_num = ( __current_block_num + 1 ) THEN
-    UPDATE hive.context
-    SET   events_id = __next_event_id
-      , current_block_num = __next_event_block_num
-    WHERE id = __context_id;
-    __result.first_block = __next_event_block_num;
-    __result.last_block = __next_event_block_num;
-                    RETURN __result ;
-    END IF;
+        ASSERT  __next_event_block_num > __current_block_num, 'We could not process block without consume event';
+        IF __next_event_block_num = ( __current_block_num + 1 ) THEN
+            UPDATE hive.context
+            SET   events_id = __next_event_id
+                , current_block_num = __next_event_block_num
+            WHERE id = __context_id;
+
+            __result.first_block = __next_event_block_num;
+            __result.last_block = __next_event_block_num;
+            RETURN __result ;
+        END IF;
     ELSE
     END CASE;
 
-        -- if there is no event or we still process irreversible blocks
+    -- if there is no event or we still process irreversible blocks
     SELECT MIN( hb.num ), MAX( hb.num )
     FROM hive.blocks hb
     WHERE hb.num > __current_block_num
@@ -164,8 +165,8 @@ BEGIN
     WHERE id = __context_id;
     __result.first_block = __next_block_to_process;
     __result.last_block = __last_block_to_process;
-        RETURN __result;
-    END;
+    RETURN __result;
+END;
 $BODY$
 ;
 

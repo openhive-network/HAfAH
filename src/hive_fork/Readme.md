@@ -14,27 +14,9 @@ The extension will be installed in the directory `<postgres_shareddir>/extension
 
 To start using extension in a database execute postgres command: `CREATE EXTENSION hive_fork`
 ### Execute sql scripts on Your database in given order:
-1. context_rewind/data_schema.sql
-1. context_rewind/event_triggers.sql
-1. context_rewind/register_table.sql
-1. context_rewind/detach_table.sql
-1. context_rewind/back_from_fork.sql
-1. context_rewind/irreversible.sql
-1. context_rewind/rewind_api.sql
-1. events_queue.sql
-1. forks.sql
-1. app_context.sql
-1. irreversible_blocks.sql
-1. reversible_blocks.sql
-1. blocks_views_for_contexts.sql
-1. hived_api_impl.sql
-1. hived_api.sql
-1. app_api.sql
-
-An example of script execution: `psql -d my_db_name -a -f  context_rewind/data_schema.sql`
-
-If the order of files is incorrect in documentation please look at file [src/hive_fork/CMakeLists.txt](./CMakeLists.txt)
-
+The ordered list of sql scripts is included in the cmake file [src/hive_fork/CMakeLists.txt](./CMakeLists.txt).
+Execute each script one by one with `psql` as in example: `psql -d my_db_name -a -f  context_rewind/data_schema.sql`
+ 
 ## Architecture
 All elements of the extension are placed in 'hive' schema
 
@@ -46,7 +28,7 @@ It is possible to have multiple applications which process blocks independent on
 Blocks data are stored in two separated, but similar tables for irreversible and potentialy reversible blocks.
 
 An Application groups its tables into named contexts (context are named only with alphanumerical characters + underscore).
-Each contexts holds information about its processed events, blocks and a fork which is now processed. These pice of information
+Each context holds information about its processed events, blocks and a fork which is now processed. This pice of information
 are enaugh to create views which presents combined irreversible and reversible blocks data.
 Each of the views has name started from 'hive.{context_name}_{blocks|transactions|multi_signatures|operations}_view'  
 ### Overview of hive_fork and its relations with applications and hived
@@ -69,11 +51,19 @@ data snapshot for firt block in returned blocks range. If the range of returned 
 back to massive sync - detach contexts, execute sync and attach the contexts - it will save triggers overhead during edition of the tables.
 
 ### Non-forking applications
-It is expected that some applications won't use fork mechanism and will read only irreversible blocks. From perspective of such non-forking app components diagram looks much simpler:
-![](./doc/evq_c3_only_irreversible.png)
+It is expected that some applications won't use fork mechanism and will read only irreversible blocks. For such kind of applications
+it is required to do not register any table in a context. Context without registered tables, lets name it 'irreversible context', will travers
+only irreversible data of blocks - it means that function `hive.app_next_block` will return only range of irreversible, not already processed
+blocks or NULL. Moreover set of views 'hive.{context_name}_{ blocks | transactions | operations | transactions_multisig }'
+delivery only snapshot of irreversible data up to the block already processed by the application.
 
-The non-forking application can read freely irreversible data and process them in its own way. There is no speccial support
-for such kind of applications - hived using hive_forks fills irreversible data in the same way like when they are working with a forking application.
+Summarizing, non-forking applications works in similar way as forking applications, but do not register tables within their contexts.
+
+### Important notice about irreversible data
+:warning: **Althought data of irreversible blocks are visible directly for the apllications, it is not recommented to use them.
+It is expected that the structure of irreversible data will be changed in the future, but the stucture of context's views will stay not changed.
+It means that the applications which read directly `irreversible blocks` may need to be refactored in the future to use newer version
+of `hive_fork`.**
 
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
 IRREVERSIBLE BLOCKS is information (set of database tables) about blocks which blockchain considern as irreveresible - they will never change.
@@ -281,5 +271,38 @@ Disables triggers atatched to a register table. It is usefull for operation belo
 when fork is impossible, then we don't want have trigger overhead for each edition of a table.
 
 ## Known Problems
-1. Constraints like FK, UNIQUE, EXCLUDE, PK must be DEFFERABLE, otherwise we cannot guarnteen success or rewinding changes
+1. Constraints like FK, UNIQUE, EXCLUDE, PK must be DEFERRABLE, otherwise we cannot guarnteen success or rewinding changes.
+   More informations about DEFERRABLE constraint can be found in PosgreSQL documentaion for [CREATE TABLE](https://www.postgresql.org/docs/10/sql-createtable.html)
+   and [SET CONSTRAINTS](https://www.postgresql.org/docs/10/sql-set-constraints.html)
 
+## Other architectures which were abandoned
+### C++ extension
+There was a hope that extension written in C/C++ can be more performance and access to a low level of PostgreSQL can give some benefits.
+The most important problem in the project is to rewind reversible changes in a way which do not violate
+the constraints of tables. It was implemented by encoding changed blobs of rows from the registered tables into byte arrays and save them
+in a separated table in the order in which the changes occur ( actually the stack of changed rows was implemented ). The extension was
+implemented and then abandoned with the [commit](https://gitlab.syncad.com/hive/psql_tools/-/commit/e6ac13be5d137fe0de5d7fe916905a9b97a11bdc).
+There were few reasons to resign from C/C++ extension:
+1. The extension could cause crash not only the client connection but also the main PostgreSQL server process ( what was observed )
+2. The documentation for PostgreSQL C interface is terse, and for some details PostgresSQL source code needed to be analyzed.
+3. There was a doubt about portability of such extension between different version of PostgreSQL, indeed the extension was working
+   with PostgreSQL 10, but did not work with PostgreSQL 13.
+4. It turned out that it was impossible to execute some actions only with C iterface and execute SQL queries from the code was required.
+5. It turned out that the C/C++ extension was slower than current SQL implementation in every test. The report is [here](https://gitlab.syncad.com/hive/psql_tools/-/blob/c1140df5f72a29df4d3d26d95f63e52595702c3c/doc/Performance.md)
+6. Code in C/C++ is more complicated than SQL. The implementation of rewinding reversible operation in C++ took more than 3 weeks, and implementation of similar functionality
+   with SQl took a week.
+   
+### SQL extension with one stack of changes ( no shadow tables )
+It turned out that it is impossible to implement with SQL similar stack of changed rows as was implemented in C++ extension.
+There is no method to take and save blob of a table's row in a generic form, so it is not possible to have a common table for all changes
+from different tables.
+
+
+### SQL extension without events queue
+When the SQL method of rewinding reversible tables was implemented ( this part is now named `context_rewind` ), there was a noble
+idea to use it for rewinding both the applications tables and the tables filled directly by hived. Relatively simple implementation
+of the whole extension was possible - hived will have its tables registered in its context and in case of back from a fork, the tables are reminded.
+Unfortunately, during analysis, it was found that this kind of architecture will require to use of locks on hived's tables to solve
+race condition between the reading hived tables by the applications and modifying them by hived. Introducing locking will
+make hived work dependant on applications quality - how fast they will commit transactions to release locks. Moreover, the applications
+become dependant on each other, because one application may block hived and other applications could not get new live blocks.
