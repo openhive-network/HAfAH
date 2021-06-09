@@ -44,18 +44,18 @@ CREATE OR REPLACE FUNCTION hive.app_next_block_forking_app( _context_name TEXT )
 AS
 $BODY$
 DECLARE
-__context_id INT;
-__context_is_attached BOOL;
-__current_block_num INT;
-__current_fork BIGINT;
-__current_event_id BIGINT;
-__next_event_id BIGINT;
-__next_event_type hive.event_type;
-__next_event_block_num INT;
-__next_block_to_process INT;
-__last_block_to_process INT;
-__fork_id BIGINT;
-__result hive.blocks_range;
+    __context_id INT;
+    __context_is_attached BOOL;
+    __current_block_num INT;
+    __current_fork BIGINT;
+    __current_event_id BIGINT;
+    __next_event_id BIGINT;
+    __next_event_type hive.event_type;
+    __next_event_block_num INT;
+    __next_block_to_process INT;
+    __last_block_to_process INT;
+    __fork_id BIGINT;
+    __result hive.blocks_range;
 BEGIN
     PERFORM hive.squash_events( _context_name );
 
@@ -187,10 +187,12 @@ BEGIN
     PERFORM hive.squash_events( _context_name );
 
     SELECT
-        hac.current_block_num
+          hac.id
+        , hac.current_block_num
+        , hac.is_attached
     FROM hive.context hac
     WHERE hac.name = _context_name
-    INTO __current_block_num;
+    INTO __context_id, __current_block_num, __context_is_attached;
 
     IF __context_id IS NULL THEN
                 RAISE EXCEPTION 'No context with name %', _context_name;
@@ -215,9 +217,10 @@ BEGIN
 
 
     UPDATE hive.context
-    SET current_block_num = __next_block_to_process
-        irreversible_block = __next_block_to_process
+    SET   current_block_num = __next_block_to_process
+        , irreversible_block = __next_block_to_process
     WHERE id = __context_id;
+
     __result.first_block = __next_block_to_process;
     __result.last_block = __last_block_to_process;
     RETURN __result;

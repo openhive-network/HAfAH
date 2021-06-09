@@ -127,5 +127,7 @@ ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_attach.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_attach_negative.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_detach.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_next_block_process_MASSIVE_SYNC_event.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/app_next_block_non_forking_app.sql)
 
 ADD_SQL_FUNCTIONAL_TESTS( scenarios/massive_sync_live_blocks_and_fork.sql )
+ADD_SQL_FUNCTIONAL_TESTS( scenarios/massive_sync_live_blocks_and_fork_non_forking_app.sql )

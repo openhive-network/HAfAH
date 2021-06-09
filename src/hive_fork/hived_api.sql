@@ -55,6 +55,8 @@ $BODY$
 DECLARE
     __irreversible_head_block hive.blocks.num%TYPE;
 BEGIN
+    SELECT MAX( num ) INTO __irreversible_head_block FROM hive.blocks;
+
     -- application contexts will use the event to clear data in shadow tables
     INSERT INTO hive.events_queue( event, block_num )
     VALUES( 'NEW_IRREVERSIBLE', _block_num );
