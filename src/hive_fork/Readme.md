@@ -32,7 +32,7 @@ Hive block data is stored in two separated, but similar tables: irreversible and
 An application groups its tables into a named context. A context name can only be composed of alphanumerical characters and underscores. An application's context holds information about its processed events, blocks, and the fork which is now being processed by the application. These pieces of information
 are enough to automatically create views which combine irreversible and reversible blocks data seamlessly for application queries. The auto-constructed view names use the following template: 'hive.{context_name}_{blocks|transactions|multi_signatures|operations}_view'.
 
-### Overview of the fork manager and its interatctions with applications and hived
+### Overview of the fork manager and its interactions with applications and hived
 ![alt text](./doc/evq_c3.png )
 
 ### Hived block-processing algorithm
@@ -44,32 +44,33 @@ are enough to automatically create views which combine irreversible and reversib
 
 Any application must first create a context, then create its tables which inherit from `hive.base`.
 
-An application calls `hive.app_next_block` to get the next block num to process. If NULL was returned, an application must immediatly call `hive.app_next_block` again. Note: the application will automatically be blocked when it calls `hive.app_next_block` if there are no blocks to process. 
+An application calls `hive.app_next_block` to get the next block number to process. If NULL was returned, an application must immediatly call `hive.app_next_block` again. Note: the application will automatically be blocked when it calls `hive.app_next_block` if there are no blocks to process. 
 
 When a range of block numbers is returned by app_next_block, the application may edit its own tables and use the appropriate snapshot of the blocks
-data by querying the 'hive.{context_name}_{ blocks | transactions | operations | transactions_multisig }' views. These View present a data snapshot for the first block in the returned blck range. If the number of blocks in the returned range is large, then it may be more efficient for the application to do a "massive sync" instead of syncing block-by-block. To perform a massive sync, the application should detach the context, execute its sync algorithm using the block data, then re-attach the contexts. This will eliminate the performance overhead associated with the  triggers installed by the fork manager that monitor changes to the application tables.
+data by querying the 'hive.{context_name}_{ blocks | transactions | operations | transactions_multisig }' views. These view present a data snapshot for the first block in the returned block range. If the number of blocks in the returned range is large, then it may be more efficient for the application to do a "massive sync" instead of syncing block-by-block.
+
+To perform a massive sync, the application should detach the context, execute its sync algorithm using the block data, then reattach the context. This will eliminate the performance overhead associated with the  triggers installed by the fork manager that monitor changes to the application's tables.
 
 ### Non-forking applications
-It is expected that some applications will only want to process irreversible blocks, and therefore don't require the overhead associating with fork switching. Such an application should not register any table in its context. A context without registered tables (aka an 'irreversible context') will traverse only irreversible block data. This means that calls to `hive.app_next_block` will return only the range of irreversible blocks, not already processed blocks, or NULL. Similarly, the set of views for an irreversible context only deliver a snapshot of irreversible data up to the block already processed by the application.
+It is expected that some applications will only want to process irreversible blocks, and therefore don't require the overhead associating with fork switching. Such an application should not register any table in its context. A context without registered tables (aka an 'irreversible context') will traverse only irreversible block data. This means that calls to `hive.app_next_block` will return only the range of irreversible blocks which are not already processed or NULL. Similarly, the set of views for an irreversible context only deliver a snapshot of irreversible data up to the block already processed by the application.
 
-Summarizing, a non-forking application is coded in much the same way as a forking application (making it relatively easy to change between these two modes), but a non-forking app does not register its tables with its context and it is only served up information about irreversible blocks.
+In summary, a non-forking application is coded in much the same way as a forking application (making it relatively easy to change between these two modes), but a non-forking app does not register its tables with its context and it is only served up information about irreversible blocks.
 
 ### Important notice about irreversible data
-:warning: **Although reversible and irreversible block tables are directly visible to aplications, these tables should not be queried directly. It is expected that the structure of irreversible data may change in the future, but the stucture of a context's views will likely stay constant.
-This means that the applications which directly read the tables instead of the views may need to be refactored in the future to use newer versions of the fork manager.**
+:warning: **Although reversible and irreversible block tables are directly visible to aplications, these tables should not be queried directly. It is expected that the structure of the underlying tables may change in the future, but the structure of a context's views will likely stay constant. This means that the applications which directly read the tables instead of the views may need to be refactored in the future to use newer versions of the fork manager.**
 
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
-IRREVERSIBLE BLOCKS is a set of database tables for blocks which the blockchain considers irreveresible - they will never change (i.e. they can no longer be reverted by a fork switch).
+IRREVERSIBLE BLOCKS is a set of database tables for blocks which the blockchain considers irreversible - they will never change (i.e. they can no longer be reverted by a fork switch).
 These tables are defined in [src/hive_fork/irreversible_blocks.sql](./irreversible_blocks.sql)
 
 REVERSIBLE BLOCKS is a set of database tables for blocks which could still be reverted by a fork switch.
 These tables are defined in [src/hive_fork/reversible_blocks.sql](./reversible_blocks.sql)
 
-Each application should work on a snapshot of block information, which is a combination of reversible and irreversible information based on the current status of the application's context (status being the state of its last processed block and the associated fork for that block).
+Each application should work on a snapshot of block information, which is a combination of reversible and irreversible information based on the current status of the application's context (status being the state of the application's last processed block and the associated fork for that block).
 
-Because of applications may work at different speeds, the system has to hold reversible blocks information for every block num and fork not already processed by any of the applications. This requires an efficient data structure. Fortunately the solution is quite simple - it is enough to add
-a fork id to the block data inserted by hive in the irreversible blocks table. The fork manager manages forks ids - 
-information about each fork is in hive.fork table. When 'hived' pushes a new block with a call to `hive.push_block`, the fork manager adds information about the current fork to a new reversible data row. Reversible data tables are presented in a generalised form in the example below:
+Because applications may work at different speeds, the fork manager has to hold reversible blocks information for every block and fork not already processed by any of the applications. This requires an efficient data structure. Fortunately the solution is quite simple - it is enough to add
+a fork id to the block data inserted by hived to the irreversible blocks table. The fork manager manages forks ids - 
+information about each fork is stored in the hive.fork table. When 'hived' pushes a new block with a call to `hive.push_block`, the fork manager adds information about the current fork to a new reversible data row. Reversible data tables are presented in a generalised form in the example below:
 
 | block_num| fork id | data      |
 |----------|---------|-----------|
@@ -89,7 +90,7 @@ If an application is working on fork=2 and block_num=3 (this information is held
 |    2     |    2    |  DATA_22  |
 |    3     |    2    |  DATA_32  |
 
-This means that snaphot of data for an application with context `app_context` can be obtained by filtering  blocks and forks with a relativly simple SQL query like:
+This means that the snaphot of data for an application with context `app_context` can be obtained by filtering  blocks and forks with a relativly simple SQL query like:
 ```
 SELECT
       DISTINCT ON (block_num) block_num
@@ -100,16 +101,16 @@ JOIN hive.context hc ON fork_id <= hc.fork_id AND block_num <= hc.current_block_
 WHERE hc.name = 'app_context'
 ORDER BY block_num DESC, fork_id DESC
 ```
-Remark: The fork_id is not a part of the real blockchain data, it is artifact created by the fork manager, and may differ across instances of an application running in different databases.
+Remark: The fork_id is not a part of the real blockchain data, it is an artifact created by the fork manager, and may differ across instances of an application running in different databases.
 
 ### EVENTS QUEUE
-The events queue is a table defined in [src/hive_fork/events_queue.sql](./events_queue.sql). Each row in the table represents an event. Each event is defined with its **id**, **type** and BIGINT **block_num** value. The `block_num` value has different meaning for a different type of events:
+The events queue is a table defined in [src/hive_fork/events_queue.sql](./events_queue.sql). Each row in the table represents an event. Each event is defined with its **id**, **type** and BIGINT **block_num** value. The `block_num` value has different meaning for different types of events:
 
 |   event type     | block_num meaning                                           |
 |----------------- |-------------------------------------------------------------|
 | BACK_FROM_FORK   | fork id of corresponding entry in `hive.fork`               |
-| NEW_BLOCK        | num of the new block                                        |
-| NEW_IRREVERSIBLE | num of irreversible block                                   |
+| NEW_BLOCK        | number of the new block                                     |
+| NEW_IRREVERSIBLE | number of the latest irreversible block                     |
 | MASSIVE_SYNC     | the highest number of blocks pushed massively by hived node |
 
 Events are ordered by the **id**, thus events that happen earlier have lower ids than subsequent events. The events queue is traversed by an application when it calls `hive.app_next_block` - the lowest event from all events with an id higher than the `event_id` stored in the application's context is chosen and processed, and at the end the context's 'event_id' is updated.
@@ -121,16 +122,16 @@ There are situations when an application doesn't have to traverse the events que
 The optimization above is implemented in [src/hive_fork/app_api_impl.sql](./app_api_impl.sql) in function `hive.squash_events` (which is automatically called by the `hive.app_next_block` function).
 
 #### Removing obsolete events
-Once a block becomes irreversible, events which relate to that block that have been processed by all contexts are no longer needed by applications. These events are automatcially removed from the events queue by the function `hive.set_irreversible` (this function is periodically called by hived when the last irreversible block number changes).
+Once a block becomes irreversible, events related to that block which have been processed by all contexts (applications) are no longer needed by applications. These events are automatcially removed from the events queue by the function `hive.set_irreversible` (this function is periodically called by hived when the last irreversible block number changes).
 
 
 ### CONTEXT REWIND
-The part of the fork manager which is responsible for registering application tables and the saving/rewinding  operation on the tables to handle fork switching.
+Context_rewind is the part of the fork manager which is responsible for registering application tables and the saving/rewinding  operation on the tables to handle fork switching.
 
 Applications and hived shall not use directly any function from the [src/hive_fork/context_rewind](./context_rewind/) directory.
 
-An application must register any of its tables which are dependant on hive blocks.
-Any table is automatically registered during its creation only when inherits from hive.base. 
+An application must register any of its tables which are dependant on changes to hive blocks.
+Any table is automatically registered during its creation only when it inherits from hive.base. 
 A table is registered into the most recently created context (*this aspect of the design may change, still under discussion*). If there is no context, an exception is thrown.
 
 ```
@@ -139,24 +140,25 @@ CREATE TABLE table1( id INTEGER ) INHERITS( hive.base )
 hive.base table is defined here: [context_rewind/data_schema.sql](./context_rewind/data_schema.sql).
 
 Data from 'hive.base' is used by the fork manager to rewind operations. Column 'hive_rowid'
-is used by the system to distinguish between edited rows. During registartion, a set of triggers are
-enabled on a table that record any changes.
-Moreover a new table is created - a shadow table whose structure is a copy of the registered table + columns for operation registered tables. A shadow table is the place where triggers record changes to its associated application table. A shadow table is created in 'hive' schema
-and its name is created using the rule below:
+is used by the system to distinguish between edited rows. During registration, a set of triggers are
+enabled on a table that record any changes. 
+
+Moreover a new table is created - a shadow table whose structure is a copy of the registered table + columns for operation registered tables. A shadow table is the place where triggers record changes to the associated application table. A shadow table is created in the 'hive' schema and its name is created using the rule below:
 ```
 hive.shadow_<table_schema>_<table_name>
 ```
 It is possible to rewind all operations registered in shadow tables with `hive.context_back_from_fork`
 
-Because the triggers add some significant overhead to application table modifications, in some situations it may be necessary to temporary disable the triggers for the sake of better performance. To do this there are functions: `hive.detach_table` - to disable
-triggers and 'hive.attach_table' to enable triggers. 
+Because the triggers add some significant overhead when modifying application tables, in some situations it may be necessary to temporary disable the triggers for the sake of better performance. To do this there are functions: 
+* `hive.detach_table` to disable triggers
+* 'hive.attach_table' to enable triggers. 
 
-When triggers are disabled no support for fork management is enabled for a table,
-so the application should solve the situation (in most cases this should happen when blocks below irreversible are processed, so no forks happen there).
+When triggers are disabled, no support for fork management is enabled for a table,
+so the application should solve the situation. In most cases this should only be done when blocks older than the last irreversible block are being processed, so no forks can happen there.
 
-It is quite possible that applications which use the fork system will want to change the structure of the registered tables. It is possible only when coresponding shadow tables are empty. This means, before an upgrade, the application must be in a state in which there is no pending fork. The system will block ( raise an exception ) 'ALTER TABLE' command if the corresponding shadow table is not empty.
+It is quite possible that applications which use the fork system will want to change the structure of the registered tables. This is possible only when coresponding shadow tables are empty. This means, before an upgrade, the application must be in a state in which there is no pending fork. The system will block ( raise an exception ) 'ALTER TABLE' command if the corresponding shadow table is not empty.
 
-When a table is edited its shadow table is automaticaly adapted to the new structure (the old shadow table is dropped and a new one is created with the new structure).
+When a table is edited, its shadow table is automatically adapted to the new structure (the old shadow table is dropped and a new one is created with the new structure).
 
 ## Database structure
 ### Fork manager
@@ -259,8 +261,7 @@ when fork is impossible, then we don't want have trigger overhead for each editi
 ### C++-based extension for fork management
 There was a hope that an extension written in C/C++ can be more performant and that access to a lower level of PostgreSQL could give some benefits.
 
-The most important problem in the project is to rewind reversible changes in a way which do not violate
-the constraints of tables. The C++-based extension was implemented by encoding changed blobs of rows from the registered tables into byte arrays and saving them in a separated table in the order in which the changes occurred (actually a stack of changed rows was implemented). The extension was
+The most important problem faced by the fork manager is to rewind reversible changes in a way which does not violate constraints on the application tables. The C++-based extension was implemented by encoding changed blobs of rows from the registered tables into byte arrays and saving them in a separated table in the order in which the changes occurred (actually a stack of changed rows was implemented). The extension was
 implemented and then abandoned with the [commit](https://gitlab.syncad.com/hive/psql_tools/-/commit/e6ac13be5d137fe0de5d7fe916905a9b97a11bdc).
 
 There were a few reasons to retreat from the C/C++-based fork manager extension:
@@ -269,17 +270,17 @@ There were a few reasons to retreat from the C/C++-based fork manager extension:
 3. There was a doubt about portability of such an extension between different versions of PostgreSQL, indeed the extension was working with PostgreSQL 10, but did not work with PostgreSQL 13.
 4. It turned out that it was impossible to execute some actions only with the C iterface and executing some SQL queries from the C++ code was required.
 5. It turned out that the C/C++ extension was slower than the current SQL implementation in every test. The report is [here](https://gitlab.syncad.com/hive/psql_tools/-/blob/c1140df5f72a29df4d3d26d95f63e52595702c3c/doc/Performance.md)
-6. Code in C/C++ is more complicated than SQL. The implementation of rewinding reversible operations in C++ took more than 3 weeks whereas implementation of similar functionality with SQL took a week.
+6. The C/C++ version was more complicated than the SQL version. The implementation of rewinding reversible operations in C++ took more than 3 weeks, whereas implementation of similar functionality with SQL took a week.
    
 ### SQL extension with one stack of changes ( no shadow tables )
-It turned out that it is impossible to implement with SQL a similar stack of changed rows as was implemented in C++ extension.
+It turned out that it is impossible to implement with SQL a similar stack of changed rows as was implemented in the C++ extension.
 
 There is no method to take and save a blob of a table's row in a generic form, so it is not possible to have a common table for all changes from different tables.
 
 
 ### SQL extension without events queue
-When the SQL method of rewinding reversible tables was implemented (this part is now named `context_rewind`), there was a noble idea to use it for rewinding both the applications tables and the tables filled directly by hived. This would make for a relatively simple implementation
-of the whole extension - hived would have its tables registered in its context and in case of a fork switch, the block tables would be reverted.
-Unfortunately, during analysis, it was found that this kind of architecture will require the use of locks on hived's tables to solve race condition between reading of hived tables by the applications and modifications to them by hived. Introducing locking would
-make hived's operation dependent on the quality of the applications operating on the data - how fast they will commit transactions to release their locks on the data being written by hived. Moreover, the applications
-become dependant on each other, because one application may block hived and other applications could not get new live blocks.
+When the SQL method of rewinding reversible tables was implemented (this part is now named `context_rewind`), there was a noble idea to use it for rewinding both the applications tables and the tables filled directly by hived. This would make for a relatively simple implementation of the whole extension - hived would have its tables registered in its context and in case of a fork switch, the block tables would be reverted.
+
+Unfortunately, during analysis, it was found that this kind of architecture will require the use of locks on hived's tables to solve race condition between reading of hived tables by the applications and modifications to them by hived. 
+
+Introducing locking would make hived's operation dependent on the quality of the applications operating on the data - how fast they will commit transactions to release their locks on the data being written by hived. Moreover, the applications become dependant on each other, because one application may block hived and other applications would then not get new live blocks while that application blocked hived.
