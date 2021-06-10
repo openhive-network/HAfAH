@@ -23,6 +23,9 @@ All elements of the extension are placed in 'hive' schema
 The postgres extension is written in events source architecture style. It means that during live syncing
 hived only schedules events, and then applications process them at their own pace.
 
+The extension is designed to work with transaction isolation level `READ COMMITTED`, what is the default for PostgreSQL.
+More about transaction isolation [here](https://www.postgresql.org/docs/10/transaction-iso.html).
+
 It is possible to have multiple applications which process blocks independent on each other.
 
 Blocks data are stored in two separated, but similar tables for irreversible and potentialy reversible blocks.
