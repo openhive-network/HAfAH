@@ -3,8 +3,7 @@ CREATE TABLE IF NOT EXISTS hive.blocks (
        hash bytea NOT NULL,
        prev bytea NOT NULL,
        created_at timestamp without time zone NOT NULL,
-       CONSTRAINT pk_hive_blocks PRIMARY KEY( num ),
-       CONSTRAINT uq_hive_block UNIQUE( num )
+       CONSTRAINT pk_hive_blocks PRIMARY KEY( num )
 );
 
 CREATE TABLE IF NOT EXISTS hive.transactions (
