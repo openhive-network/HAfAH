@@ -59,6 +59,33 @@ In summary, a non-forking application is coded in much the same way as a forking
 ### Important notice about irreversible data
 :warning: **Although reversible and irreversible block tables are directly visible to aplications, these tables should not be queried directly. It is expected that the structure of the underlying tables may change in the future, but the structure of a context's views will likely stay constant. This means that the applications which directly read the tables instead of the views may need to be refactored in the future to use newer versions of the fork manager.**
 
+### Examples of the application
+Two application examples written in Python3 were prapared. Both programs use `sqlalchemy` package as a databae engine. Programs
+are very simple, both of them collect number of transaction per day - they prepare histograms in a table named `trx_histogram`.
+One of the program is a non-forking application - it operates only on irreversible blocks and second application utilizes
+support for blockchain forks. Applications are available here:
+- forking application [doc/examples/hive_fork_app.py](./doc/examples/hive_fork_app.py)
+- non-forking application [doc/examples/hive_non_fork_app.py](./doc/examples/hive_non_fork_app.py)
+
+Actually both programs are different only in lines which create a 'trx_histogram' table - the table in forking application
+inherits from`hive.base` to register it into the context. Look at the differences in diff format:
+```diff
+--- hive_non_fork_app.py
++++ hive_fork_app.py
+@@ -6 +6 @@
+-SQL_CREATE_HISTOGRAM_TABLE = """
++SQL_CREATE_AND_REGISTER_HISTOGRAM_TABLE = """
+@@ -10,0 +11 @@
++    INHERITS( hive.base )
+@@ -51 +52 @@
+-        db_connection.execute( SQL_CREATE_HISTOGRAM_TABLE )
++        db_connection.execute( SQL_CREATE_AND_REGISTER_HISTOGRAM_TABLE )
+```
+
+:warning: At the moment there is no defined method to switch from non-forking application to forking one. This problem will be
+solved together with final solution for a method to register tables into context. 
+
+
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
 IRREVERSIBLE BLOCKS is a set of database tables for blocks which the blockchain considers irreversible - they will never change (i.e. they can no longer be reverted by a fork switch).
 These tables are defined in [src/hive_fork/irreversible_blocks.sql](./irreversible_blocks.sql)

@@ -29,6 +29,19 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.app_context_exists( _name TEXT )
+    RETURNS BOOL
+    LANGUAGE plpgsql
+    STABLE
+AS
+$BODY$
+BEGIN
+    RETURN hive.context_exists( _name );
+END;
+$BODY$
+;
+
+
 CREATE OR REPLACE FUNCTION hive.app_next_block( _context_name TEXT )
     RETURNS hive.blocks_range
     LANGUAGE plpgsql

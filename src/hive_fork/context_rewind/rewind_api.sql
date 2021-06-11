@@ -15,6 +15,20 @@ END;
 $BODY$
 ;
 
+
+DROP FUNCTION IF EXISTS hive.context_exists;
+CREATE FUNCTION hive.context_exists( _name TEXT )
+    RETURNS BOOL
+    LANGUAGE 'plpgsql'
+    STABLE
+AS
+$BODY$
+BEGIN
+    RETURN EXISTS( SELECT 1 FROM hive.context hc WHERE hc.name = _name );
+END;
+$BODY$
+;
+
 DROP FUNCTION IF EXISTS hive.context_next_block;
 CREATE FUNCTION hive.context_next_block( _name TEXT )
     RETURNS INTEGER
