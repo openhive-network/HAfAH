@@ -3,6 +3,7 @@
 
   marks:
     - patterntest # original produced overlapping pages
+                  # see issue #162 - test-safari/reblogged-and-recreated reblog should not be there
 
   includes:
     - !include ../../../common.yaml
