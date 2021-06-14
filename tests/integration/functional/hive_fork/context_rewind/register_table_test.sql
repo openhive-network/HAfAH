@@ -20,7 +20,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    CREATE TABLE A.table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
+    CREATE TABLE A.table1(id  SERIAL PRIMARY KEY DEFERRABLE, smth INTEGER, name TEXT) INHERITS( hive.base );
 
     -- tables which shall not be registered
     CREATE TABLE A.table_base( id INT );

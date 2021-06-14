@@ -73,6 +73,8 @@ ADD_SQL_FUNCTIONAL_TESTS( context_rewind/back_from_fork_to_block_num_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/back_from_fork_constraint_fk_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/back_from_fork_constraint_unique_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( context_rewind/register_table_edit_negative_unique_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( context_rewind/register_table_negative_unique_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/back_from_fork_complex_type_update_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/back_from_fork_complex_type_insert_test.sql )
@@ -92,6 +94,7 @@ ADD_SQL_FUNCTIONAL_TESTS( context_rewind/performance_back_from_truncate_rows_tes
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/performance_insert_rows_one_by_one_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/performance_delete_rows_one_by_one_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/performance_update_rows_one_by_one_test.sql )
+
 
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/schema_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/back_from_fork_test.sql )

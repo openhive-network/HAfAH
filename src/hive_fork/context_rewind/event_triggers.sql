@@ -1,3 +1,32 @@
+CREATE OR REPLACE FUNCTION hive.chceck_constrains( _table_schema TEXT,  _table_name TEXT )
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    STABLE
+AS
+$BODY$
+DECLARE
+    __exists_non_defferable BOOL := FALSE;
+    __constraint_name TEXT;
+BEGIN
+    EXECUTE format( 'SELECT EXISTS(
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE constraint_catalog = current_database()
+              AND constraint_type != ''CHECK''
+              AND constraint_type != ''PRIMARY KEY''
+              AND is_deferrable = ''NO''
+              AND table_schema=''%I'' AND table_name=''%I'' )'
+    , _table_schema, _table_name )
+    INTO __exists_non_defferable;
+
+    IF __exists_non_defferable = TRUE THEN
+        RAISE EXCEPTION 'A registered table cannot have non-deferrable constraints. Please check constraints on table %.%'
+            , _table_schema, _table_name;
+    END IF;
+END;
+$BODY$
+;
+
+
 -- block registerd tables trigger
 CREATE OR REPLACE FUNCTION hive.on_edit_registered_tables()
     RETURNS event_trigger
@@ -53,6 +82,8 @@ BEGIN
             WHERE iss.table_schema = __origin_table_schema AND iss.table_name = __origin_table_name
         )
     WHERE hrt.origin_table_name = lower( __origin_table_name ) AND hrt.origin_table_schema = lower( __origin_table_schema );
+
+    PERFORM hive.chceck_constrains( lower( __origin_table_schema ),  __origin_table_name );
 END;
 $$
 ;
@@ -91,7 +122,7 @@ DECLARE
 BEGIN
     SELECT hc.name FROM hive.context hc ORDER BY hc.id DESC LIMIT 1 INTO __newest_context;
 
-    PERFORM hive.register_table( tables.schema_name, tables.relname,  __newest_context )
+    PERFORM hive.register_table( tables.schema_name, tables.relname,  __newest_context ), hive.chceck_constrains(tables.schema_name, tables.relname)
     FROM (
         SELECT DISTINCT( pgc.relname ), tr.schema_name
         FROM pg_event_trigger_ddl_commands() as tr
