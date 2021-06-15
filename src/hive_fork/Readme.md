@@ -280,9 +280,7 @@ Disables triggers atatched to a register table. It is usefull for operation belo
 when fork is impossible, then we don't want have trigger overhead for each edition of a table.
 
 ## Known Problems
-1. Constraints like FK, UNIQUE, EXCLUDE must be DEFERRABLE, otherwise we cannot guarnteen success or rewinding changes - the process may temporary violates tables constraints.
-   Because PostgreSQL does not allow to create FK referenced to `DEFERRABLE` PRIMERY KEYS, it was decided to allow to use non-deferrable primary keys, but applications which modify
-   PK values are not supported, and rewind of their tables may fail.
+1. Constraints FOREIGN KEY must be DEFERRABLE, otherwise we cannot guarnteen success or rewinding changes - the process may temporary violates tables constraints.
    More informations about DEFERRABLE constraint can be found in PosgreSQL documentaion for [CREATE TABLE](https://www.postgresql.org/docs/10/sql-createtable.html)
    and [SET CONSTRAINTS](https://www.postgresql.org/docs/10/sql-set-constraints.html)
 

@@ -10,17 +10,17 @@ BEGIN
     CREATE TABLE table1(
           id INTEGER NOT NULL
         , smth TEXT NOT NULL
-        , CONSTRAINT uq_table1 UNIQUE ( smth )
+        , CONSTRAINT pk_table1 PRIMARY KEY ( smth )
     ) INHERITS( hive.base );
 
     PERFORM hive.context_next_block( 'context' );
-    INSERT INTO table1( id, smth ) VALUES( 123, 'blabla1' );
-    INSERT INTO table1( id, smth ) VALUES( 124, 'blabla2' );
+    INSERT INTO table1( id, smth ) VALUES( 1, 'A' );
+    INSERT INTO table1( id, smth ) VALUES( 2, 'B' );
 
     TRUNCATE hive.shadow_public_table1; --to do not revert inserts
 
-    DELETE FROM table1 WHERE id=123;
-    UPDATE table1 SET smth='blabla1' WHERE id=124;
+    DELETE FROM table1 WHERE id=1;
+    UPDATE table1 SET id=1 WHERE id=2;
 END;
 $BODY$
 ;
@@ -48,8 +48,8 @@ AS
 $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM table1 ) = 2, 'Deleted row was not reinserted';
-    ASSERT EXISTS ( SELECT FROM table1 WHERE id=123 AND smth='blabla1' ), 'First row was not restored';
-    ASSERT EXISTS ( SELECT FROM table1 WHERE id=124 AND smth='blabla2' ), 'Second row was not restored';
+    ASSERT EXISTS ( SELECT FROM table1 WHERE id=1 AND smth='A' ), 'First row was not restored';
+    ASSERT EXISTS ( SELECT FROM table1 WHERE id=2 AND smth='B' ), 'Second row was not restored';
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_public_table1 ) = 0, 'Shadow table is not empty';
 END
 $BODY$

@@ -13,13 +13,15 @@ BEGIN
         WHERE constraint_catalog = current_database()
               AND constraint_type != ''CHECK''
               AND constraint_type != ''PRIMARY KEY''
+              AND constraint_type != ''UNIQUE''
+              AND constraint_type != ''EXCLUDE''
               AND is_deferrable = ''NO''
               AND table_schema=''%I'' AND table_name=''%I'' )'
     , _table_schema, _table_name )
     INTO __exists_non_defferable;
 
     IF __exists_non_defferable = TRUE THEN
-        RAISE EXCEPTION 'A registered table cannot have non-deferrable constraints. Please check constraints on table %.%'
+        RAISE EXCEPTION 'A registered table cannot have non-deferrable referenced constraints. Please check constraints on table %.%'
             , _table_schema, _table_name;
     END IF;
 END;

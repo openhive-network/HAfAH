@@ -1,5 +1,21 @@
-DROP FUNCTION IF EXISTS hive.back_from_fork_one_table;
-CREATE FUNCTION hive.back_from_fork_one_table( _table_schema TEXT, _table_name TEXT, _shadow_table_name TEXT, _columns TEXT[], _block_num_before_fork INT )
+CREATE OR REPLACE FUNCTION hive.revert_insert( _table_schema TEXT, _table_name TEXT, _row_id BIGINT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    EXECUTE format(
+          'DELETE FROM %I.%I WHERE hive_rowid = %s'
+        , _table_schema
+        , _table_name
+        , _row_id
+    );
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.revert_delete( _table_schema TEXT, _table_name TEXT, _shadow_table_name TEXT, _operation_id BIGINT , _columns TEXT[] )
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE
@@ -8,88 +24,74 @@ $BODY$
 DECLARE
     __columns TEXT = array_to_string( _columns, ',' );
 BEGIN
-    -- First we find rows ids with lowest block num, then delete, insert or update these rows with rows ids
-    -- revert inserted rows
-    EXECUTE format(
-        'DELETE FROM %I.%I
-        WHERE %I.hive_rowid IN
-        (
-        SELECT st.hive_rowid FROM
-            (
-                SELECT DISTINCT ON ( st.hive_rowid ) st.hive_rowid, st.hive_operation_type
-                FROM hive.%I st
-                WHERE st.hive_block_num > %s
-                ORDER BY st.hive_rowid, st.hive_block_num
-            ) as st
-        WHERE st.hive_operation_type = ''INSERT''
-        )'
-        , _table_schema
-        , _table_name
-        , _table_name
-        , _shadow_table_name
-        , _block_num_before_fork
-    );
-
-    -- revert deleted rows
     EXECUTE format(
         'INSERT INTO %I.%I( %s )
         (
-        SELECT %s FROM
-            (
-                SELECT DISTINCT ON ( hive_rowid ) *
-                FROM hive.%I st
-                WHERE st.hive_block_num > %s
-                ORDER BY st.hive_rowid, st.hive_block_num
-            ) as st
-         WHERE st.hive_operation_type = ''DELETE''
+            SELECT %s
+            FROM hive.%I st
+            WHERE st.hive_operation_id = %s
         )'
         , _table_schema
         , _table_name
         , __columns
         , __columns
         , _shadow_table_name
-        , _block_num_before_fork
+        , _operation_id
     );
+END;
+$BODY$
+;
 
-    -- update deleted rows
-    -- first remove rows
-    EXECUTE format(
-        'DELETE FROM %I.%I
-        WHERE %I.hive_rowid IN
-        (
-        SELECT st.hive_rowid FROM
-            (
-                SELECT DISTINCT ON ( st.hive_rowid ) st.hive_rowid, st.hive_operation_type
-                FROM hive.%I st
-                WHERE st.hive_block_num > %s
-                ORDER BY st.hive_rowid, st.hive_block_num
-            ) as st
-        WHERE st.hive_operation_type = ''UPDATE''
-        )'
-        , _table_schema
-        , _table_name
-        , _table_name
-        , _shadow_table_name
-        , _block_num_before_fork
+CREATE OR REPLACE FUNCTION hive.revert_update( _table_schema TEXT, _table_name TEXT, _shadow_table_name TEXT, _operation_id BIGINT, _columns TEXT[], _row_id BIGINT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __columns TEXT = array_to_string( _columns, ',' );
+BEGIN
+EXECUTE format(
+    'UPDATE %I.%I as t SET ( %s ) = (
+        SELECT %s
+        FROM hive.%I st1
+        WHERE st1.hive_operation_id = %s
+    )
+    WHERE t.hive_rowid = %s'
+    , _table_schema
+    , _table_name
+    , __columns
+    , __columns
+    , _shadow_table_name
+    , _operation_id
+    , _row_id
     );
+END;
+$BODY$
+;
 
-    -- now insert old rows
+
+DROP FUNCTION IF EXISTS hive.back_from_fork_one_table;
+CREATE FUNCTION hive.back_from_fork_one_table( _table_schema TEXT, _table_name TEXT, _shadow_table_name TEXT, _columns TEXT[], _block_num_before_fork INT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
     EXECUTE format(
-            'INSERT INTO %I.%I( %s )
-            (
-            SELECT %s FROM
-                (
-                    SELECT DISTINCT ON ( hive_rowid ) *
-                    FROM hive.%I st
-                    WHERE st.hive_block_num > %s
-                    ORDER BY hive_rowid, hive_block_num
-                ) as st
-             WHERE st.hive_operation_type = ''UPDATE''
-            )'
-        , _table_schema
-        , _table_name
-        , __columns
-        , __columns
+        'SELECT
+        CASE st.hive_operation_type
+            WHEN ''INSERT'' THEN hive.revert_insert( ''%s'', ''%s'', st.hive_rowid )
+            WHEN ''DELETE'' THEN hive.revert_delete( ''%s'', ''%s'', ''%s'', st.hive_operation_id, ''%s'' )
+            WHEN ''UPDATE'' THEN hive.revert_update( ''%s'', ''%s'', ''%s'', st.hive_operation_id, ''%s'', st.hive_rowid )
+        END
+        FROM hive.%I st
+        WHERE st.hive_block_num > %s
+        ORDER BY st.hive_operation_id DESC'
+        , _table_schema, _table_name
+        , _table_schema, _table_name, _shadow_table_name, _columns
+        , _table_schema, _table_name, _shadow_table_name, _columns
         , _shadow_table_name
         , _block_num_before_fork
     );
