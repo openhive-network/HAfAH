@@ -1,3 +1,77 @@
+CREATE OR REPLACE FUNCTION hive.create_revert_functions( _table_schema TEXT,  _table_name TEXT, _shadow_table_name TEXT, _columns TEXT[] )
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+DECLARE
+__columns TEXT = array_to_string( _columns, ',' );
+BEGIN
+    -- rewind_insert
+    EXECUTE format(
+        'CREATE OR REPLACE FUNCTION hive.%I_%I_revert_insert( _row_id BIGINT )
+        RETURNS void
+        LANGUAGE plpgsql
+        VOLATILE
+        AS
+        $$
+        BEGIN
+            DELETE FROM %I.%I WHERE hive_rowid = _row_id;
+        END;
+        $$'
+    , _table_schema,  _table_name
+    , _table_schema,  _table_name
+    );
+
+    --rewind delete
+    EXECUTE format(
+        'CREATE OR REPLACE FUNCTION hive.%I_%I_revert_delete( _operation_id BIGINT )
+        RETURNS void
+        LANGUAGE plpgsql
+        VOLATILE
+        AS
+        $$
+        BEGIN
+            INSERT INTO %I.%I( %s )
+            (
+                SELECT %s
+                FROM hive.%I st
+                WHERE st.hive_operation_id = _operation_id
+            );
+        END;
+        $$'
+    , _table_schema, _table_name
+    , _table_schema, _table_name, __columns
+    , __columns
+    , _shadow_table_name
+    );
+
+    EXECUTE format(
+        'CREATE OR REPLACE FUNCTION hive.%I_%I_revert_update( _operation_id BIGINT, _row_id BIGINT )
+        RETURNS void
+        LANGUAGE plpgsql
+        VOLATILE
+        AS
+        $$
+        BEGIN
+            UPDATE %I.%I as t SET ( %s ) = (
+            SELECT %s
+            FROM hive.%I st1
+            WHERE st1.hive_operation_id = _operation_id
+            )
+            WHERE t.hive_rowid = _row_id;
+        END;
+        $$'
+    , _table_schema, _table_name
+    , _table_schema, _table_name, __columns
+    , __columns
+    , _shadow_table_name
+    );
+END;
+$BODY$
+;
+
+
 CREATE OR REPLACE FUNCTION hive.create_shadow_table( _table_schema TEXT,  _table_name TEXT )
     RETURNS TEXT -- name of the shadow table
     LANGUAGE 'plpgsql'
@@ -251,6 +325,8 @@ BEGIN
         , __context_id
         , __shadow_table_name
     );
+
+    PERFORM hive.create_revert_functions( _table_schema, _table_name, __shadow_table_name, __columns_names );
 
     -- save information about the triggers
     INSERT INTO hive.triggers( registered_table_id, trigger_name, function_name )

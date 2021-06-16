@@ -74,22 +74,20 @@ CREATE FUNCTION hive.back_from_fork_one_table( _table_schema TEXT, _table_name T
     VOLATILE
 AS
 $BODY$
-DECLARE
-    __columns TEXT = array_to_string( _columns, ',' );
 BEGIN
     EXECUTE format(
         'SELECT
         CASE st.hive_operation_type
-            WHEN ''INSERT'' THEN hive.revert_insert( ''%s'', ''%s'', st.hive_rowid )
-            WHEN ''DELETE'' THEN hive.revert_delete( ''%s'', ''%s'', ''%s'', st.hive_operation_id, ''%s'' )
-            WHEN ''UPDATE'' THEN hive.revert_update( ''%s'', ''%s'', ''%s'', st.hive_operation_id, ''%s'', st.hive_rowid )
+            WHEN ''INSERT'' THEN hive.%I_%I_revert_insert( st.hive_rowid )
+            WHEN ''DELETE'' THEN hive.%I_%I_revert_delete( st.hive_operation_id )
+            WHEN ''UPDATE'' THEN hive.%I_%I_revert_update( st.hive_operation_id, st.hive_rowid )
         END
         FROM hive.%I st
         WHERE st.hive_block_num > %s
         ORDER BY st.hive_operation_id DESC'
         , _table_schema, _table_name
-        , _table_schema, _table_name, _shadow_table_name, __columns
-        , _table_schema, _table_name, _shadow_table_name, __columns
+        , _table_schema, _table_name
+        , _table_schema, _table_name
         , _shadow_table_name
         , _block_num_before_fork
     );

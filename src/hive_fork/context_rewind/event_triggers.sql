@@ -41,6 +41,7 @@ __r RECORD;
 __shadow_table_name TEXT := NULL;
 __origin_table_schema TEXT;
 __origin_table_name TEXT;
+__new_columns TEXT[];
 BEGIN
     SELECT hrt.shadow_table_name, hrt.origin_table_schema, hrt.origin_table_name  FROM
         ( SELECT * FROM pg_event_trigger_ddl_commands() ) as tr
@@ -76,16 +77,16 @@ BEGIN
     PERFORM hive.create_shadow_table( __origin_table_schema, __origin_table_name );
 
     --update information about columns
+    SELECT array_agg( iss.column_name::TEXT ) INTO __new_columns
+    FROM information_schema.columns iss
+    WHERE iss.table_schema = __origin_table_schema AND iss.table_name = __origin_table_name;
+
     UPDATE hive.registered_tables hrt
-    SET origin_table_columns =
-        (
-            SELECT array_agg( iss.column_name::TEXT )
-            FROM information_schema.columns iss
-            WHERE iss.table_schema = __origin_table_schema AND iss.table_name = __origin_table_name
-        )
+    SET origin_table_columns = __new_columns
     WHERE hrt.origin_table_name = lower( __origin_table_name ) AND hrt.origin_table_schema = lower( __origin_table_schema );
 
     PERFORM hive.chceck_constrains( lower( __origin_table_schema ),  __origin_table_name );
+    PERFORM hive.create_revert_functions( lower( __origin_table_schema ),  __origin_table_name, __shadow_table_name, __new_columns );
 END;
 $$
 ;
