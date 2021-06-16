@@ -15,14 +15,12 @@ END;
 $BODY$
 ;
 
-CREATE OR REPLACE FUNCTION hive.revert_delete( _table_schema TEXT, _table_name TEXT, _shadow_table_name TEXT, _operation_id BIGINT , _columns TEXT[] )
+CREATE OR REPLACE FUNCTION hive.revert_delete( _table_schema TEXT, _table_name TEXT, _shadow_table_name TEXT, _operation_id BIGINT , _columns TEXT )
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE
 AS
 $BODY$
-DECLARE
-    __columns TEXT = array_to_string( _columns, ',' );
 BEGIN
     EXECUTE format(
         'INSERT INTO %I.%I( %s )
@@ -33,8 +31,8 @@ BEGIN
         )'
         , _table_schema
         , _table_name
-        , __columns
-        , __columns
+        , _columns
+        , _columns
         , _shadow_table_name
         , _operation_id
     );
@@ -42,14 +40,12 @@ END;
 $BODY$
 ;
 
-CREATE OR REPLACE FUNCTION hive.revert_update( _table_schema TEXT, _table_name TEXT, _shadow_table_name TEXT, _operation_id BIGINT, _columns TEXT[], _row_id BIGINT )
+CREATE OR REPLACE FUNCTION hive.revert_update( _table_schema TEXT, _table_name TEXT, _shadow_table_name TEXT, _operation_id BIGINT, _columns TEXT, _row_id BIGINT )
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE
 AS
 $BODY$
-DECLARE
-    __columns TEXT = array_to_string( _columns, ',' );
 BEGIN
 EXECUTE format(
     'UPDATE %I.%I as t SET ( %s ) = (
@@ -60,8 +56,8 @@ EXECUTE format(
     WHERE t.hive_rowid = %s'
     , _table_schema
     , _table_name
-    , __columns
-    , __columns
+    , _columns
+    , _columns
     , _shadow_table_name
     , _operation_id
     , _row_id
@@ -78,6 +74,8 @@ CREATE FUNCTION hive.back_from_fork_one_table( _table_schema TEXT, _table_name T
     VOLATILE
 AS
 $BODY$
+DECLARE
+    __columns TEXT = array_to_string( _columns, ',' );
 BEGIN
     EXECUTE format(
         'SELECT
@@ -90,8 +88,8 @@ BEGIN
         WHERE st.hive_block_num > %s
         ORDER BY st.hive_operation_id DESC'
         , _table_schema, _table_name
-        , _table_schema, _table_name, _shadow_table_name, _columns
-        , _table_schema, _table_name, _shadow_table_name, _columns
+        , _table_schema, _table_name, _shadow_table_name, __columns
+        , _table_schema, _table_name, _shadow_table_name, __columns
         , _shadow_table_name
         , _block_num_before_fork
     );

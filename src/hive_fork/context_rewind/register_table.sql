@@ -15,7 +15,7 @@ BEGIN
     EXECUTE format('DELETE FROM hive.%I', __shadow_table_name ); --empty shadow table if origin table is not empty
     EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I INTEGER NOT NULL', __shadow_table_name, __block_num_column_name );
     EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I hive.TRIGGER_OPERATION NOT NULL', __shadow_table_name, __operation_column_name );
-    EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I BIGSERIAL NOT NULL', __shadow_table_name, __operation_id_column_name );
+    EXECUTE format('ALTER TABLE hive.%I ADD COLUMN %I BIGSERIAL PRIMARY KEY', __shadow_table_name, __operation_id_column_name );
 
     RETURN __shadow_table_name;
 END;
@@ -64,6 +64,8 @@ BEGIN
         , lower(_table_schema)
         , lower( _table_name )
     );
+
+    EXECUTE format('CREATE INDEX idx_%I_%I_row_id ON %I.%I(hive_rowid)', lower(_table_schema), lower(_table_name), lower(_table_schema), lower(_table_name) );
 
     -- insert information about new registered table
     INSERT INTO hive.registered_tables( context_id, origin_table_schema, origin_table_name, shadow_table_name, origin_table_columns )
