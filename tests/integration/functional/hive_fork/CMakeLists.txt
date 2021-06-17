@@ -13,6 +13,21 @@ MACRO( ADD_SQL_FUNCTIONAL_TESTS sql_test_path)
     MESSAGE( STATUS "Added functional tests '${test_target}'" )
 ENDMACRO()
 
+MACRO( ADD_AUTHORIZATION_FUNCTIONAL_TESTS sql_test_path)
+    STRING( REGEX MATCH "^(([^\\/]*)\\/)?(.*)\\.[^.]*$" dummy ${sql_test_path} ) # remove sql extension
+    SET( test_name ${CMAKE_MATCH_3})
+    IF( CMAKE_MATCH_2 )
+        SET( test_name ${CMAKE_MATCH_2}.${test_name} )
+    ENDIF()
+    SET( test_target test.functional.hive_fork.${test_name} )
+    SET( sources_under_tests_path ${CMAKE_SOURCE_DIR}/src/hive_fork )
+    ADD_TEST( NAME ${test_target}
+            COMMAND test_authorization.sh ${sources_under_tests_path} ${sql_test_path}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            )
+    MESSAGE( STATUS "Added functional authorization tests '${test_target}'" )
+ENDMACRO()
+
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/schema_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/register_table_test.sql )
@@ -137,3 +152,10 @@ ADD_SQL_FUNCTIONAL_TESTS( app_api/register_already_registered_table_negative.sql
 
 ADD_SQL_FUNCTIONAL_TESTS( scenarios/massive_sync_live_blocks_and_fork.sql )
 ADD_SQL_FUNCTIONAL_TESTS( scenarios/massive_sync_live_blocks_and_fork_non_forking_app.sql )
+
+
+ADD_AUTHORIZATION_FUNCTIONAL_TESTS( authorization/alice_access_to_bob_negative.sql )
+ADD_AUTHORIZATION_FUNCTIONAL_TESTS( authorization/alice_access_events_infrustructure.sql )
+ADD_AUTHORIZATION_FUNCTIONAL_TESTS( authorization/hived_access_alice_context_data.sql )
+ADD_AUTHORIZATION_FUNCTIONAL_TESTS( authorization/api_protection.sql )
+ADD_AUTHORIZATION_FUNCTIONAL_TESTS( authorization/massive_sync_live_blocks_and_fork.sql )

@@ -128,8 +128,8 @@ BEGIN
     SELECT hive.create_shadow_table(  _table_schema, _table_name ) INTO  __shadow_table_name;
 
     -- insert information about new registered table
-    INSERT INTO hive.registered_tables( context_id, origin_table_schema, origin_table_name, shadow_table_name, origin_table_columns )
-    SELECT hc.id, tables.table_schema, tables.origin, tables.shadow, columns
+    INSERT INTO hive.registered_tables( context_id, origin_table_schema, origin_table_name, shadow_table_name, origin_table_columns, owner )
+    SELECT hc.id, tables.table_schema, tables.origin, tables.shadow, columns, current_user
     FROM ( SELECT hc.id FROM hive.contexts hc WHERE hc.name =  _context_name ) as hc
     JOIN ( VALUES( lower(_table_schema), lower(_table_name), __shadow_table_name, __columns_names  )  ) as tables( table_schema, origin, shadow, columns ) ON TRUE
     RETURNING context_id, id INTO __context_id, __registered_table_id
@@ -331,12 +331,12 @@ BEGIN
     PERFORM hive.create_revert_functions( _table_schema, _table_name, __shadow_table_name, __columns_names );
 
     -- save information about the triggers
-    INSERT INTO hive.triggers( registered_table_id, trigger_name, function_name )
+    INSERT INTO hive.triggers( registered_table_id, trigger_name, function_name, owner )
     VALUES
-         ( __registered_table_id, __hive_insert_trigger_name, __hive_triggerfunction_name_insert )
-       , ( __registered_table_id, __hive_delete_trigger_name, __hive_triggerfunction_name_delete )
-       , ( __registered_table_id, __hive_update_trigger_name, __hive_triggerfunction_name_update )
-       , ( __registered_table_id, __hive_truncate_trigger_name, __hive_triggerfunction_name_truncate )
+         ( __registered_table_id, __hive_insert_trigger_name, __hive_triggerfunction_name_insert, current_user )
+       , ( __registered_table_id, __hive_delete_trigger_name, __hive_triggerfunction_name_delete, current_user )
+       , ( __registered_table_id, __hive_update_trigger_name, __hive_triggerfunction_name_update, current_user )
+       , ( __registered_table_id, __hive_truncate_trigger_name, __hive_triggerfunction_name_truncate, current_user )
     ;
 END;
 $BODY$

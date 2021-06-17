@@ -17,7 +17,22 @@ To start using the extension in a database, execute psql command: `CREATE EXTENS
 ### Alternatively, you can manually execute the SQL scripts to directly install the fork manager
 The required ordering of the sql scripts is included in the cmake file [src/hive_fork/CMakeLists.txt](./CMakeLists.txt).
 Execute each script one-by-one with `psql` as in this example: `psql -d my_db_name -a -f  context_rewind/data_schema.sql`
- 
+
+### Authorization
+During its creation the extension introduces two new roles (groups): `hived_group` and `hive_application_group`. The maintainer of
+the PostgreSQL cluster server needs to create roles ( users ) which inherits from one of these groups.
+```
+   CREATE ROLE hived LOGIN PASSWORD 'hivedpass' INHERIT IN ROLE hived_group;
+   CREATE ROLE application LOGIN PASSWORD 'applicationpass' INHERIT IN ROLE hive_applications_group;
+```
+The roles which inherits
+from `hived_groups` must be used by `hived` process to login into the database, roles which inherit from `hive_application_group` shall
+be used by the applications. Each application role does not have access to internal data created by other application roles and cannot
+modify data modified by the 'hived'. 'Hived' roles cannot modify the applications data.
+
+More about roles in PostgreSQL documentaion: [CREATE ROLE](https://www.postgresql.org/docs/10/sql-createrole.html)
+
+
 ## Architecture
 All elements of the fork manager are placed in a schema called 'hive'.
 
@@ -42,7 +57,11 @@ are enough to automatically create views which combine irreversible and reversib
 ### Requirements for an application algorithm using the fork manager API
 ![alt text](./doc/evq_app_process_block.png)
 
-Any application must first create a context, then create its tables which inherit from `hive.base`.
+Only roles ( users ) which inherits from 'hive_applications_group' have access to 'The APP API', and only these roles allow
+applications to work with 'hive_fork_menager'
+
+Any application must first create a context, then create its tables which inherit from `hive.base`. The context is owned
+and can be accessed only by the role which created it.
 
 An application calls `hive.app_next_block` to get the next block number to process. If NULL was returned, an application must immediatly call `hive.app_next_block` again. Note: the application will automatically be blocked when it calls `hive.app_next_block` if there are no blocks to process. 
 

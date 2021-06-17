@@ -11,7 +11,7 @@ BEGIN
     END IF;
 
     EXECUTE format( 'CREATE TABLE hive.%I( hive_rowid BIGSERIAL )', _name );
-    INSERT INTO hive.contexts( name, current_block_num, irreversible_block, is_attached ) VALUES( _name, 0, 0, TRUE );
+    INSERT INTO hive.contexts( name, current_block_num, irreversible_block, is_attached, owner ) VALUES( _name, 0, 0, TRUE, current_user );
 END;
 $BODY$
 ;

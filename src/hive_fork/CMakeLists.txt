@@ -17,4 +17,5 @@ ADD_PSQL_EXTENSION(
             app_api_impl.sql
             hived_api.sql
             app_api.sql
+            authorization.sql
 )
