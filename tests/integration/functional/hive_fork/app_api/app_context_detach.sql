@@ -14,7 +14,7 @@ BEGIN
 
     PERFORM hive.app_create_context( 'context' );
     CREATE SCHEMA A;
-    CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.base );
+    CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.context );
 END;
 $BODY$
 ;

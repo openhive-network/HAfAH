@@ -21,6 +21,7 @@ BEGIN
         LEFT JOIN ( SELECT hb.num FROM hive.blocks hb ORDER BY hb.num DESC LIMIT 1 ) as hb ON TRUE
     ;
 
+    EXECUTE format( 'CREATE TABLE hive.%I( hive_rowid BIGSERIAL )', _name );
     PERFORM hive.create_blocks_view( _name );
     PERFORM hive.create_transactions_view( _name );
     PERFORM hive.create_operations_view( _name );
@@ -92,6 +93,19 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.context_detach( _context );
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.app_register_table( _table_full_name TEXT,  _context TEXT )
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    EXECUTE format( 'ALTER TABLE %s ADD COLUMN hive_rowid BIGINT NOT NULL DEFAULT 0', _table_full_name );
+    EXECUTE format( 'ALTER TABLE %s INHERIT hive.%s', _table_full_name, _context );
 END;
 $BODY$
 ;

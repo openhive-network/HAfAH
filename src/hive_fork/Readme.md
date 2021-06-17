@@ -82,8 +82,8 @@ inherits from`hive.base` to register it into the context. Look at the difference
 +        db_connection.execute( SQL_CREATE_AND_REGISTER_HISTOGRAM_TABLE )
 ```
 
-:warning: At the moment there is no defined method to switch from non-forking application to forking one. This problem will be
-solved together with final solution for a method to register tables into context. 
+To switch from non-forking application to forking one all the applications' tables have to be registered in contexts using
+'hive.app_register_table' method.
 
 
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
@@ -158,15 +158,14 @@ Context_rewind is the part of the fork manager which is responsible for register
 Applications and hived shall not use directly any function from the [src/hive_fork/context_rewind](./context_rewind/) directory.
 
 An application must register any of its tables which are dependant on changes to hive blocks.
-Any table is automatically registered during its creation only when it inherits from hive.base. 
-A table is registered into the most recently created context (*this aspect of the design may change, still under discussion*). If there is no context, an exception is thrown.
+Any table is automatically registered during its creation into context only when it inherits from hive.<context_name> table. Base table hive.<context_name> is created
+always when a context is created.
 
 ```
-CREATE TABLE table1( id INTEGER ) INHERITS( hive.base )
+CREATE TABLE table1( id INTEGER ) INHERITS( hive.context )
 ```
-hive.base table is defined here: [context_rewind/data_schema.sql](./context_rewind/data_schema.sql).
 
-Data from 'hive.base' is used by the fork manager to rewind operations. Column 'hive_rowid'
+Data from 'hive.<conext_name>' is used by the fork manager to rewind operations. Column 'hive_rowid'
 is used by the system to distinguish between edited rows. During registration, a set of triggers are
 enabled on a table that record any changes. 
 
@@ -247,6 +246,13 @@ blocks without triggers overhead.
 ##### hive.app_context_attach( context_name, block_num )
 Enables triggers attached to registered tables in a given context and set current context block num. The `block_num` cannot
 be greater than top of irreversible block.
+
+#### hive.app_context_exists( context_name )
+Returns TRUE when context with given name exists
+
+### hive.app_register_table( table_name, context_name );
+Register not already registered table with name 'table_name' into context. It allow to move from 'non-forking application'
+to application which support forks.
 
 #### CONTEXT REWIND
 Context rewind function shall not be used by hived and applications.

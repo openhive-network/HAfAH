@@ -15,7 +15,7 @@ BEGIN
         );
 
     PERFORM hive.context_create( 'context' );
-    CREATE TABLE A.src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2)  ) INHERITS( hive.base );
+    CREATE TABLE A.src_table(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT, values FLOAT[], data custom_type, name2 VARCHAR, num NUMERIC(3,2)  ) INHERITS( hive.context );
 
     PERFORM hive.context_next_block( 'context' );
     INSERT INTO A.src_table ( smth, name, values, data, name2, num )

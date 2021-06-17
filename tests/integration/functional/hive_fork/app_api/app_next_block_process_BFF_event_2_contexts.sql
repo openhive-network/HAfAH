@@ -36,9 +36,9 @@ BEGIN
     PERFORM hive.app_create_context( 'context' );
     CREATE SCHEMA A;
     CREATE SCHEMA B;
-    CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.base );
+    CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.context );
     PERFORM hive.app_create_context( 'context2' );
-    CREATE TABLE B.table2(id  INTEGER ) INHERITS( hive.base );
+    CREATE TABLE B.table2(id  INTEGER ) INHERITS( hive.context2 );
 
     PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 1
     INSERT INTO A.table1(id) VALUES( 1 );

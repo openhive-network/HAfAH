@@ -19,7 +19,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    CREATE TABLE table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
+    CREATE TABLE table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.context );
 END
 $BODY$
 ;

@@ -6,7 +6,8 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    -- nothing to prepare
+    PERFORM hive.context_create( 'context' );
+    PERFORM hive.context_create( 'context2' );
 END;
 $BODY$
 ;
@@ -20,12 +21,11 @@ AS
 $BODY$
 BEGIN
     BEGIN
-        CREATE TABLE hive.table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.context );
+        CREATE TABLE table1( id SERIAL PRIMARY KEY, smth INTEGER, name TEXT ) INHERITS( hive.context, hive.context2 );
+        ASSERT FALSE, 'Did not throw exception';
     EXCEPTION WHEN OTHERS THEN
         RETURN;
     END;
-
-    ASSERT FALSE, 'Expected exception was not catched';
 END;
 $BODY$
 ;
@@ -38,8 +38,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT NOT EXISTS ( SELECT * FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'table1' ), 'The table was created';
-END
+    -- nothing to check here
+END;
 $BODY$
 ;
 

@@ -7,7 +7,7 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.app_create_context( 'context' );
-    CREATE TABLE table1( id INT ) INHERITS( hive.base );
+    CREATE TABLE table1( id INT ) INHERITS( hive.context );
 
     INSERT INTO hive.operation_types
     VALUES (0, 'OP 0', FALSE )

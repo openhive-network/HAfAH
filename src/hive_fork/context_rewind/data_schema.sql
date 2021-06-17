@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS hive.registered_tables(
    origin_table_name TEXT NOT NULL,
    shadow_table_name TEXT NOT NULL,
    origin_table_columns TEXT[] NOT NULL,
-   CONSTRAINT fk_hive_registered_tables_context FOREIGN KEY(context_id) REFERENCES hive.contexts( id )
+   CONSTRAINT fk_hive_registered_tables_context FOREIGN KEY(context_id) REFERENCES hive.contexts( id ),
+   CONSTRAINT uq_registere_table UNIQUE( origin_table_schema, origin_table_name )
 );
 
 CREATE TABLE IF NOT EXISTS hive.triggers(

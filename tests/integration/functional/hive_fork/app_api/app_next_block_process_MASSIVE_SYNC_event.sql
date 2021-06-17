@@ -12,7 +12,7 @@ BEGIN
 
     PERFORM hive.app_create_context( 'context' );
     CREATE SCHEMA A;
-    CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.base );
+    CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.context );
 
     PERFORM hive.push_block(
          ( 2, '\xBADD20', '\xCAFE20', '2016-06-22 19:10:25-07'::timestamp )

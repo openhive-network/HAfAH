@@ -9,10 +9,10 @@ BEGIN
     CREATE SCHEMA A;
     CREATE SCHEMA B;
     PERFORM hive.context_create( 'context' );
-    CREATE TABLE A.table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
-    CREATE TABLE B.table2(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
+    CREATE TABLE A.table1(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.context );
+    CREATE TABLE B.table2(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.context );
     PERFORM hive.context_create( 'context2' );
-    CREATE TABLE A.table3(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.base );
+    CREATE TABLE A.table3(id  SERIAL PRIMARY KEY, smth INTEGER, name TEXT) INHERITS( hive.context2 );
 END;
 $BODY$
 ;

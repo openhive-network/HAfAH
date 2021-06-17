@@ -8,7 +8,7 @@ $BODY$
 BEGIN
     CREATE SCHEMA A;
     PERFORM hive.context_create( 'context' );
-    CREATE TABLE table1( id INTEGER NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE table1( id INTEGER NOT NULL ) INHERITS( hive.context );
     PERFORM hive.context_next_block( 'context' ); -- 1
     INSERT INTO table1( id ) VALUES( 0 );
     PERFORM hive.context_next_block( 'context' ); -- 2
@@ -19,7 +19,7 @@ BEGIN
     INSERT INTO table1( id ) VALUES( 3 );
 
     PERFORM hive.context_create( 'context2' );
-    CREATE TABLE table2( id INTEGER NOT NULL ) INHERITS( hive.base );
+    CREATE TABLE table2( id INTEGER NOT NULL ) INHERITS( hive.context );
     PERFORM hive.context_next_block( 'context2' ); -- 1
     INSERT INTO table2( id ) VALUES( 0 );
     PERFORM hive.context_next_block( 'context2' ); -- 2

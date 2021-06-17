@@ -47,10 +47,19 @@ BEGIN
         ( SELECT * FROM pg_event_trigger_ddl_commands() ) as tr
         JOIN hive.registered_tables hrt ON ( hrt.origin_table_schema || '.' || hrt.origin_table_name ) = tr.object_identity
         JOIN hive.contexts hc ON hrt.context_id = hc.id
-        WHERE hc.back_from_fork = FALSE
     INTO __shadow_table_name, __origin_table_schema, __origin_table_name;
 
     IF __shadow_table_name IS NULL THEN
+        -- maybe ALTER INHERIT ( hive.<context_name> ) to register table into context
+        PERFORM hive.register_table( tables.schema_name, tables.relname, tables.context ), hive.chceck_constrains(tables.schema_name, tables.relname)
+        FROM (
+            SELECT DISTINCT( pgc.relname ), tr.schema_name, hc.name as context
+            FROM pg_event_trigger_ddl_commands() as tr
+            JOIN pg_catalog.pg_inherits pgi ON tr.objid = pgi.inhrelid
+            JOIN pg_class pgc ON pgc.oid = tr.objid
+            JOIN hive.contexts hc ON ( 'hive.' || hc.name )::regclass = pgi.inhparent
+            WHERE tr.object_type = 'table'
+        ) as tables;
         RETURN;
     END IF;
 
@@ -120,20 +129,16 @@ CREATE OR REPLACE FUNCTION hive.on_create_tables()
     LANGUAGE plpgsql
 AS
 $$
-DECLARE
-    __newest_context TEXT :=  NULL;
 BEGIN
-    SELECT hc.name FROM hive.contexts hc ORDER BY hc.id DESC LIMIT 1 INTO __newest_context;
-
-    PERFORM hive.register_table( tables.schema_name, tables.relname,  __newest_context ), hive.chceck_constrains(tables.schema_name, tables.relname)
+    PERFORM hive.register_table( tables.schema_name, tables.relname, tables.context ), hive.chceck_constrains(tables.schema_name, tables.relname)
     FROM (
-        SELECT DISTINCT( pgc.relname ), tr.schema_name
+        SELECT DISTINCT( pgc.relname ), tr.schema_name, hc.name as context
         FROM pg_event_trigger_ddl_commands() as tr
         JOIN pg_catalog.pg_inherits pgi ON tr.objid = pgi.inhrelid
         JOIN pg_class pgc ON pgc.oid = tr.objid
-        WHERE tr.object_type = 'table' AND pgi.inhparent = 'hive.base'::regclass
+        JOIN hive.contexts hc ON ( 'hive.' || hc.name )::regclass = pgi.inhparent
+        WHERE tr.object_type = 'table'
     ) as tables;
-
 END;
 $$
 ;
