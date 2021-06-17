@@ -67,7 +67,7 @@ BEGIN
     ASSERT EXISTS ( SELECT FROM hive.events_queue WHERE id = 1 AND event = 'NEW_BLOCK' AND block_num = 2 ), 'No event added';
     ASSERT ( SELECT COUNT(*) FROM hive.events_queue ) = 1, 'Unexpected number of events';
 
-    ASSERT ( SELECT current_block_num FROM hive.context WHERE name='context' ) = 2, 'Wrong current block num';
+    ASSERT ( SELECT current_block_num FROM hive.contexts WHERE name='context' ) = 2, 'Wrong current block num';
 END
 $BODY$
 ;

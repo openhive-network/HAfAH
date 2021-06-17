@@ -48,7 +48,7 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT * FROM hive.context WHERE name = 'context' AND is_attached = TRUE ), 'Context is not marked as attached';
+    ASSERT EXISTS ( SELECT * FROM hive.contexts WHERE name = 'context' AND is_attached = TRUE ), 'Context is not marked as attached';
 END
 $BODY$
 ;

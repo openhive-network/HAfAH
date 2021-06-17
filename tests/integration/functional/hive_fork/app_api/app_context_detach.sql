@@ -41,7 +41,7 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT * FROM hive.context WHERE name='context' AND is_attached = FALSE ), 'Attach flag is still set';
+    ASSERT EXISTS ( SELECT * FROM hive.contexts WHERE name='context' AND is_attached = FALSE ), 'Attach flag is still set';
 
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 ) = 0, 'Trigger inserted something into shadow table1';
 END;

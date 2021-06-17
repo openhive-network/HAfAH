@@ -7,7 +7,7 @@ $BODY$
 BEGIN
     -- Any context always starts with block before genesis, the app may detach the context and execute 'massive sync'
     -- after massive sync the application must attach its context to last already synced block
-    INSERT INTO hive.context(
+    INSERT INTO hive.contexts(
            name
          , current_block_num
          , irreversible_block
@@ -52,7 +52,7 @@ DECLARE
     __result hive.blocks_range;
 BEGIN
     -- if there ther is  registered table for given context
-    IF EXISTS( SELECT 1 FROM hive.registered_tables hrt JOIN hive.context hc ON hrt.context_id = hc.id WHERE hc.name = _context_name )
+    IF EXISTS( SELECT 1 FROM hive.registered_tables hrt JOIN hive.contexts hc ON hrt.context_id = hc.id WHERE hc.name = _context_name )
     THEN
         RETURN hive.app_next_block_forking_app( _context_name );
     END IF;

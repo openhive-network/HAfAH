@@ -39,7 +39,7 @@ STABLE
 AS
 $BODY$
 BEGIN
-     ASSERT ( SELECT irreversible_block FROM hive.context WHERE name = 'context' ) = 100;
+     ASSERT ( SELECT irreversible_block FROM hive.contexts WHERE name = 'context' ) = 100;
 END
 $BODY$
 ;

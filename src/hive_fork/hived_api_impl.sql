@@ -143,7 +143,7 @@ BEGIN
           COALESCE( hac.fork_id, 0 )
         , COALESCE( hac.current_block_num, 0 )
     INTO __lowest_contexts_fork, __lowest_contexts_block_on_fork
-    FROM hive.context hac
+    FROM hive.contexts hac
     ORDER BY hac.fork_id ASC, hac.current_block_num ASC
     LIMIT 1;
 
@@ -189,7 +189,7 @@ AS
 $BODY$
 BEGIN
     DELETE FROM hive.events_queue heq
-    USING ( SELECT MIN( hc.events_id) as id FROM hive.context hc ) as min_event
+    USING ( SELECT MIN( hc.events_id) as id FROM hive.contexts hc ) as min_event
     WHERE heq.block_num < _new_irreversible_block AND heq.block_num < min_event.id;
 END;
 $BODY$

@@ -8,13 +8,13 @@ DECLARE
     __next_fork_event_id BIGINT;
     __next_fork_block_num INT;
     __context_current_block_num INT;
-    __context_id hive.context.id%TYPE;
+    __context_id hive.contexts.id%TYPE;
 BEGIN
     -- first find a newer fork nearest current block
     SELECT heq.id, heq.block_num, hc.current_block_num, hc.id INTO __next_fork_event_id, __next_fork_block_num, __context_current_block_num, __context_id
     FROM hive.events_queue heq
     JOIN hive.fork hf ON hf.id = heq.block_num
-    JOIN hive.context hc ON hc.events_id < heq.id AND hc.current_block_num >= hf.block_num
+    JOIN hive.contexts hc ON hc.events_id < heq.id AND hc.current_block_num >= hf.block_num
     WHERE heq.event = 'BACK_FROM_FORK' AND hc.name = _context
     ORDER BY hf.block_num ASC, heq.id DESC
     LIMIT 1;
@@ -24,7 +24,7 @@ BEGIN
         RETURN;
     END IF;
 
-    UPDATE hive.context
+    UPDATE hive.contexts
     SET events_id = __next_fork_event_id - 1 -- -1 because we pretend that we stay just before the next fork
     WHERE id = __context_id;
 END;
@@ -65,7 +65,7 @@ BEGIN
          , hac.events_id
          , hac.id
          , hac.is_attached
-    FROM hive.context hac
+    FROM hive.contexts hac
     WHERE hac.name = _context_name
     INTO __current_block_num, __current_fork, __current_event_id, __context_id, __context_is_attached;
 
@@ -100,7 +100,7 @@ BEGIN
 
         PERFORM hive.context_back_from_fork( _context_name, __next_event_block_num );
 
-        UPDATE hive.context
+        UPDATE hive.contexts
         SET
             events_id = __next_event_id
           , current_block_num = __next_event_block_num
@@ -109,7 +109,7 @@ BEGIN
         RETURN NULL;
     WHEN 'NEW_IRREVERSIBLE' THEN
         PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
-        UPDATE hive.context
+        UPDATE hive.contexts
         SET
             events_id = __next_event_id
           , current_block_num = __next_event_block_num
@@ -118,17 +118,17 @@ BEGIN
     WHEN 'MASSIVE_SYNC' THEN
         --first we need to rewind all reversible changes
         PERFORM hive.context_back_from_fork( _context_name, hc.irreversible_block )
-        FROM hive.context hc
+        FROM hive.contexts hc
         WHERE hc.id = __context_id;
 
-        UPDATE hive.context
+        UPDATE hive.contexts
         SET   events_id = __next_event_id
             , current_block_num = current_block_num + 1
             , irreversible_block = __next_event_block_num
         WHERE id = __context_id;
 
         SELECT hc.current_block_num INTO __result.first_block
-        FROM hive.context hc
+        FROM hive.contexts hc
         WHERE hc.id = __context_id;
 
         __result.last_block = __next_event_block_num;
@@ -136,7 +136,7 @@ BEGIN
     WHEN 'NEW_BLOCK' THEN
         ASSERT  __next_event_block_num > __current_block_num, 'We could not process block without consume event';
         IF __next_event_block_num = ( __current_block_num + 1 ) THEN
-            UPDATE hive.context
+            UPDATE hive.contexts
             SET   events_id = __next_event_id
                 , current_block_num = __next_event_block_num
             WHERE id = __context_id;
@@ -160,7 +160,7 @@ BEGIN
     RETURN NULL;
     END IF;
 
-    UPDATE hive.context
+    UPDATE hive.contexts
     SET current_block_num = __next_block_to_process
     WHERE id = __context_id;
     __result.first_block = __next_block_to_process;
@@ -191,7 +191,7 @@ BEGIN
           hac.id
         , hac.current_block_num
         , hac.is_attached
-    FROM hive.context hac
+    FROM hive.contexts hac
     WHERE hac.name = _context_name
     INTO __context_id, __current_block_num, __context_is_attached;
 
@@ -217,7 +217,7 @@ BEGIN
 
 
 
-    UPDATE hive.context
+    UPDATE hive.contexts
     SET   current_block_num = __next_block_to_process
         , irreversible_block = __next_block_to_process
     WHERE id = __context_id;

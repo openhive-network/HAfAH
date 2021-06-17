@@ -46,7 +46,7 @@ BEGIN
     SELECT hrt.shadow_table_name, hrt.origin_table_schema, hrt.origin_table_name  FROM
         ( SELECT * FROM pg_event_trigger_ddl_commands() ) as tr
         JOIN hive.registered_tables hrt ON ( hrt.origin_table_schema || '.' || hrt.origin_table_name ) = tr.object_identity
-        JOIN hive.context hc ON hrt.context_id = hc.id
+        JOIN hive.contexts hc ON hrt.context_id = hc.id
         WHERE hc.back_from_fork = FALSE
     INTO __shadow_table_name, __origin_table_schema, __origin_table_name;
 
@@ -123,7 +123,7 @@ $$
 DECLARE
     __newest_context TEXT :=  NULL;
 BEGIN
-    SELECT hc.name FROM hive.context hc ORDER BY hc.id DESC LIMIT 1 INTO __newest_context;
+    SELECT hc.name FROM hive.contexts hc ORDER BY hc.id DESC LIMIT 1 INTO __newest_context;
 
     PERFORM hive.register_table( tables.schema_name, tables.relname,  __newest_context ), hive.chceck_constrains(tables.schema_name, tables.relname)
     FROM (

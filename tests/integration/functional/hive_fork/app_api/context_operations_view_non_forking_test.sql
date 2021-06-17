@@ -90,7 +90,7 @@ BEGIN
          , ( 10, 10, 0, 0, 1, 'TEN OPERATION', 3 )
     ;
 
-    UPDATE hive.context SET fork_id = 2, irreversible_block = 4, current_block_num = 8;
+    UPDATE hive.contexts SET fork_id = 2, irreversible_block = 4, current_block_num = 8;
 END;
 $BODY$
 ;

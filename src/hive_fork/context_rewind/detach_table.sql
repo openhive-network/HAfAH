@@ -87,7 +87,7 @@ DECLARE
 BEGIN
     SELECT hrt.id, hrt.shadow_table_name
     FROM hive.registered_tables hrt
-    JOIN hive.context hc ON hc.id = hrt.context_id
+    JOIN hive.contexts hc ON hc.id = hrt.context_id
     WHERE
           hrt.origin_table_schema = lower( _table_schema )
       AND hrt.origin_table_name = _table_name

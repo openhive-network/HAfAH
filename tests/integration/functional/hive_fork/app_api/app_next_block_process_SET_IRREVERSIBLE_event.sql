@@ -71,9 +71,9 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT ( SELECT current_block_num FROM hive.context WHERE name='context' ) = 3, 'Wrong current block num';
-    ASSERT ( SELECT events_id FROM hive.context WHERE name='context' ) = 3, 'Wrong events id';
-    ASSERT ( SELECT irreversible_block FROM hive.context WHERE name='context' ) = 3, 'Wrong irreversible';
+    ASSERT ( SELECT current_block_num FROM hive.contexts WHERE name='context' ) = 3, 'Wrong current block num';
+    ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context' ) = 3, 'Wrong events id';
+    ASSERT ( SELECT irreversible_block FROM hive.contexts WHERE name='context' ) = 3, 'Wrong irreversible';
 
     ASSERT ( SELECT COUNT(*)  FROM A.table1 ) = 3, 'Wrong number of rows in app table';
     ASSERT EXISTS ( SELECT *  FROM A.table1 WHERE id = 1 ), 'No id 1';

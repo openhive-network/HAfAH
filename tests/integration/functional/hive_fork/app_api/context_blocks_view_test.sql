@@ -35,7 +35,7 @@ BEGIN
         , ( 10, '\xBADD1A', '\xCAFE1A', '2016-06-22 19:10:32-07'::timestamp, 3 )
     ;
 
-    UPDATE hive.context SET fork_id = 2, irreversible_block = 4, current_block_num = 8;
+    UPDATE hive.contexts SET fork_id = 2, irreversible_block = 4, current_block_num = 8;
 END;
 $BODY$
 ;

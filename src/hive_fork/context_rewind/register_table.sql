@@ -144,7 +144,7 @@ BEGIN
     -- insert information about new registered table
     INSERT INTO hive.registered_tables( context_id, origin_table_schema, origin_table_name, shadow_table_name, origin_table_columns )
     SELECT hc.id, tables.table_schema, tables.origin, tables.shadow, columns
-    FROM ( SELECT hc.id FROM hive.context hc WHERE hc.name =  _context_name ) as hc
+    FROM ( SELECT hc.id FROM hive.contexts hc WHERE hc.name =  _context_name ) as hc
     JOIN ( VALUES( _table_schema, _table_name, __shadow_table_name, __columns_names  )  ) as tables( table_schema, origin, shadow, columns ) ON TRUE
     RETURNING context_id, id INTO __context_id, __registered_table_id
     ;
@@ -164,12 +164,12 @@ BEGIN
            __values TEXT;
            __is_back_from_fork_in_progress BOOL := FALSE;
         BEGIN
-            SELECT back_from_fork FROM hive.context WHERE id=%s INTO __is_back_from_fork_in_progress;
+            SELECT back_from_fork FROM hive.contexts WHERE id=%s INTO __is_back_from_fork_in_progress;
 
             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                 RETURN NEW;
             END IF;
-            SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
+            SELECT hc.current_block_num FROM hive.contexts hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
             IF ( __block_num <= 0 ) THEN
                  RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
@@ -195,13 +195,13 @@ BEGIN
            __values TEXT;
            __is_back_from_fork_in_progress BOOL := FALSE;
         BEGIN
-            SELECT back_from_fork FROM hive.context WHERE id=%s INTO __is_back_from_fork_in_progress;
+            SELECT back_from_fork FROM hive.contexts WHERE id=%s INTO __is_back_from_fork_in_progress;
 
             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                 RETURN NEW;
             END IF;
 
-            SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
+            SELECT hc.current_block_num FROM hive.contexts hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
             IF ( __block_num <= 0 ) THEN
                 RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
@@ -227,13 +227,13 @@ BEGIN
            __values TEXT;
            __is_back_from_fork_in_progress BOOL := FALSE;
         BEGIN
-            SELECT back_from_fork FROM hive.context WHERE id=%s INTO __is_back_from_fork_in_progress;
+            SELECT back_from_fork FROM hive.contexts WHERE id=%s INTO __is_back_from_fork_in_progress;
 
             IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                 RETURN NEW;
             END IF;
 
-            SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
+            SELECT hc.current_block_num FROM hive.contexts hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
             IF ( __block_num <= 0 ) THEN
                 RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';
@@ -259,13 +259,13 @@ BEGIN
             __values TEXT;
             __is_back_from_fork_in_progress BOOL := FALSE;
          BEGIN
-             SELECT back_from_fork FROM hive.context WHERE id=%s INTO __is_back_from_fork_in_progress;
+             SELECT back_from_fork FROM hive.contexts WHERE id=%s INTO __is_back_from_fork_in_progress;
 
              IF ( __is_back_from_fork_in_progress = TRUE ) THEN
                  RETURN NEW;
              END IF;
 
-             SELECT hc.current_block_num FROM hive.context hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
+             SELECT hc.current_block_num FROM hive.contexts hc WHERE hc.id = CAST( TG_ARGV[ 0 ] as INTEGER ) INTO __block_num;
 
              IF ( __block_num <= 0 ) THEN
                  RAISE EXCEPTION ''Did not execute hive.context_next_block before table edition'';

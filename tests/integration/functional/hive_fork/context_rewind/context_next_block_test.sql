@@ -41,8 +41,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context' AND current_block_num = 1 );
-    ASSERT EXISTS ( SELECT FROM hive.context WHERE name = 'my_context2' AND current_block_num = 2 );
+    ASSERT EXISTS ( SELECT FROM hive.contexts WHERE name = 'my_context' AND current_block_num = 1 );
+    ASSERT EXISTS ( SELECT FROM hive.contexts WHERE name = 'my_context2' AND current_block_num = 2 );
 END
 $BODY$
 ;

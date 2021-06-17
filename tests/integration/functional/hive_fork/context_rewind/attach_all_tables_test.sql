@@ -48,11 +48,11 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT * FROM hive.context WHERE name='context' AND is_attached = TRUE ), 'Attach flag is still not set';
+    ASSERT EXISTS ( SELECT * FROM hive.contexts WHERE name='context' AND is_attached = TRUE ), 'Attach flag is still not set';
     ASSERT EXISTS ( SELECT * FROM hive.shadow_a_table1 ), 'Trigger inserted something into shadow table1';
     ASSERT EXISTS ( SELECT * FROM hive.shadow_b_table2  ), 'Trigger inserted something into shadow table2';
 
-    ASSERT EXISTS ( SELECT * FROM hive.context WHERE name='context2' AND is_attached = FALSE ), 'Attach flag is still set';
+    ASSERT EXISTS ( SELECT * FROM hive.contexts WHERE name='context2' AND is_attached = FALSE ), 'Attach flag is still set';
     ASSERT NOT EXISTS ( SELECT * FROM hive.shadow_a_table3 WHERE hive_block_num = 101 ), 'Trigger did not insert something into shadow table3';
 END
 $BODY$

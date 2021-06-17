@@ -42,7 +42,7 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT NOT EXISTS ( SELECT * FROM hive.context ), 'Some context were created';
+    ASSERT NOT EXISTS ( SELECT * FROM hive.contexts ), 'Some context were created';
 END
 $BODY$
 ;
