@@ -12,12 +12,22 @@
   "num_authors": 0,
   "num_pending": 0,
   "settings": {},
-  "subscribers": 1,
+  "subscribers": 2,
   "sum_pending": 0,
   "team": [
     [
       "hive-188204",
       "owner",
+      ""
+    ],
+    [
+      "agartha",
+      "admin",
+      ""
+    ],
+    [
+      "alice",
+      "mod",
       ""
     ]
   ],
