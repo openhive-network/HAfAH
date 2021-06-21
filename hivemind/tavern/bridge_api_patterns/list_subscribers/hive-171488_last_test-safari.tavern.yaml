@@ -2,7 +2,7 @@
   test_name: Hivemind
 
   marks:
-    - patterntest
+    - patterntest # mock data subs: (test-safari, gtg, roadscape), good-karma
 
   includes:
     - !include ../../common.yaml

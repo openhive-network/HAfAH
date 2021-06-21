@@ -8,7 +8,7 @@
     - !include ../../common.yaml
 
   stages:
-    - name: test
+    - name: test # mock data subs: test-safari, good-karma, alice, camilla, (gtg, abit), agartha
       request:
         url: "{service.proto:s}://{service.server:s}:{service.port}/"
         method: POST
