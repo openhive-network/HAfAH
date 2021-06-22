@@ -60,7 +60,7 @@ are enough to automatically create views which combine irreversible and reversib
 Only roles ( users ) which inherits from 'hive_applications_group' have access to 'The APP API', and only these roles allow
 applications to work with 'hive_fork_menager'
 
-Any application must first create a context, then create its tables which inherit from `hive.base`. The context is owned
+Any application must first create a context, then create its tables which inherit from `hive.<context_name>`. The context is owned
 and can be accessed only by the role which created it.
 
 An application calls `hive.app_next_block` to get the next block number to process. If NULL was returned, an application must immediatly call `hive.app_next_block` again. Note: the application will automatically be blocked when it calls `hive.app_next_block` if there are no blocks to process. 
@@ -87,7 +87,7 @@ support for blockchain forks. Applications are available here:
 - non-forking application [doc/examples/hive_non_fork_app.py](./doc/examples/hive_non_fork_app.py)
 
 Actually both programs are different only in lines which create a 'trx_histogram' table - the table in forking application
-inherits from`hive.base` to register it into the context. Look at the differences in diff format:
+inherits from`hive.trx_histogram` to register it into the context 'trx_histogram'. Look at the differences in diff format:
 ```diff
 --- hive_non_fork_app.py
 +++ hive_fork_app.py
