@@ -58,6 +58,6 @@ $BODY$
 ;
 
 
-SELECT test_given();
-SELECT test_when();
-SELECT test_then();
+
+
+
