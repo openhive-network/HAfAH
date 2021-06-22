@@ -1,5 +1,5 @@
 # Functional test
-The tests start sql scripts which checks hive_fork plugin functionalities.
+The tests start sql scripts which checks hive_fork_manager extension functionalities.
 
 # Tests coventions
 - #### Each test case is a separated sql script

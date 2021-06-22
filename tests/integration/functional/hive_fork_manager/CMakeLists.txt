@@ -4,7 +4,7 @@ MACRO( ADD_SQL_FUNCTIONAL_TESTS sql_test_path)
     IF( CMAKE_MATCH_2 )
         SET( test_name ${CMAKE_MATCH_2}.${test_name} )
     ENDIF()
-    SET( test_target test.functional.hive_fork.${test_name} )
+    SET( test_target test.functional.hive_fork_manager.${test_name} )
     SET( sources_under_tests_path ${CMAKE_SOURCE_DIR}/src/sql_fork_extension )
     ADD_TEST( NAME ${test_target}
             COMMAND test.sh ${sources_under_tests_path} ${sql_test_path}
@@ -19,8 +19,8 @@ MACRO( ADD_AUTHORIZATION_FUNCTIONAL_TESTS sql_test_path)
     IF( CMAKE_MATCH_2 )
         SET( test_name ${CMAKE_MATCH_2}.${test_name} )
     ENDIF()
-    SET( test_target test.functional.hive_fork.${test_name} )
-    SET( sources_under_tests_path ${CMAKE_SOURCE_DIR}/src/hive_fork )
+    SET( test_target test.functional.hive_fork_manager.${test_name} )
+    SET( sources_under_tests_path ${CMAKE_SOURCE_DIR}/src/hive_fork_manager )
     ADD_TEST( NAME ${test_target}
             COMMAND test_authorization.sh ${sources_under_tests_path} ${sql_test_path}
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

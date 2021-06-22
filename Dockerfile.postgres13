@@ -40,5 +40,5 @@ USER postgres
 RUN  /etc/init.d/postgresql start \
     && psql --command "CREATE USER root WITH SUPERUSER CREATEDB;" \
     && cd build \
-    && ctest --debug -R test.functional.hive_fork.*
+    && ctest --debug -R test.functional.hive_fork_manager.*
 

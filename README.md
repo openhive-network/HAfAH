@@ -36,7 +36,7 @@ The best option is to execute `make install` from build directory
    src                        Contains sources
         pq_utils              C++ interface for PostgreSQL PQ interface
         psql_utils            C++ utilities to PostgreSQL C interfaces
-        hive_fork             Contains SQL extension which implements solution for hive forks 
+        hive_fork_manager     Contains SQL extension which implements solution for hive forks 
    tests                      Contains test
         integration           Folder for non-unit tests like functional or system tests
           functional          Contains functional tests
@@ -74,7 +74,7 @@ an psql extension in `${CMAKE_BINARY_DIR}/extensions/<name>`.
 To install the extension please execute 'make install'.
 
 Warning: Make install will install all already builded project items, to install only one of them please build it
-in separated build directory with making the only one target, for example: `make extension.hive_fork; make install;` 
+in separated build directory with making the only one target, for example: `make extension.hive_fork_manager; make install;` 
 
 ### Versioning
 Postgres extensions are versioned - extension control file contains `default_version` configuration entry. The build system

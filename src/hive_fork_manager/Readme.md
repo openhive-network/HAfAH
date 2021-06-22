@@ -7,15 +7,15 @@ It is possible to install the fork manager in two forms - as a regular Postgres 
 ### Install fork manager as an extension
 1. create somwhere on a filesystem directory `build` and change terminal directory to it
 2. `cmake <path to root of the project psql_tools>`
-3. `make extension.hive_fork`
+3. `make extension.hive_fork_manager`
 4. `make install`
 
 The extension will be installed in the directory `<postgres_shareddir>/extension`. You can check the directory with `pg_config --sharedir`.
 
-To start using the extension in a database, execute psql command: `CREATE EXTENSION hive_fork`
+To start using the extension in a database, execute psql command: `CREATE EXTENSION hive_fork_manager`
 
 ### Alternatively, you can manually execute the SQL scripts to directly install the fork manager
-The required ordering of the sql scripts is included in the cmake file [src/hive_fork/CMakeLists.txt](./CMakeLists.txt).
+The required ordering of the sql scripts is included in the cmake file [src/hive_fork_manager/CMakeLists.txt](./CMakeLists.txt).
 Execute each script one-by-one with `psql` as in this example: `psql -d my_db_name -a -f  context_rewind/data_schema.sql`
 
 ### Authorization
@@ -107,10 +107,10 @@ To switch from non-forking application to forking one all the applications' tabl
 
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
 IRREVERSIBLE BLOCKS is a set of database tables for blocks which the blockchain considers irreversible - they will never change (i.e. they can no longer be reverted by a fork switch).
-These tables are defined in [src/hive_fork/irreversible_blocks.sql](./irreversible_blocks.sql)
+These tables are defined in [src/hive_fork_manager/irreversible_blocks.sql](./irreversible_blocks.sql)
 
 REVERSIBLE BLOCKS is a set of database tables for blocks which could still be reverted by a fork switch.
-These tables are defined in [src/hive_fork/reversible_blocks.sql](./reversible_blocks.sql)
+These tables are defined in [src/hive_fork_manager/reversible_blocks.sql](./reversible_blocks.sql)
 
 Each application should work on a snapshot of block information, which is a combination of reversible and irreversible information based on the current status of the application's context (status being the state of the application's last processed block and the associated fork for that block).
 
@@ -150,7 +150,7 @@ ORDER BY block_num DESC, fork_id DESC
 Remark: The fork_id is not a part of the real blockchain data, it is an artifact created by the fork manager, and may differ across instances of an application running in different databases.
 
 ### EVENTS QUEUE
-The events queue is a table defined in [src/hive_fork/events_queue.sql](./events_queue.sql). Each row in the table represents an event. Each event is defined with its **id**, **type** and BIGINT **block_num** value. The `block_num` value has different meaning for different types of events:
+The events queue is a table defined in [src/hive_fork_manager/events_queue.sql](./events_queue.sql). Each row in the table represents an event. Each event is defined with its **id**, **type** and BIGINT **block_num** value. The `block_num` value has different meaning for different types of events:
 
 |   event type     | block_num meaning                                           |
 |----------------- |-------------------------------------------------------------|
@@ -165,7 +165,7 @@ Events are ordered by the **id**, thus events that happen earlier have lower ids
 There are situations when an application doesn't have to traverse the events queue and process all the events. When there are `BACK_FROM_FORK` events ahead of a context's `event_id`, then the application can ignore all events before the fork with lower `block_num` (because all such blocks have been reverted by a fork switch). Here is a diagram to show this situation:
 ![](./doc/evq_events_optimization.png)
 
-The optimization above is implemented in [src/hive_fork/app_api_impl.sql](./app_api_impl.sql) in function `hive.squash_events` (which is automatically called by the `hive.app_next_block` function).
+The optimization above is implemented in [src/hive_fork_manager/app_api_impl.sql](./app_api_impl.sql) in function `hive.squash_events` (which is automatically called by the `hive.app_next_block` function).
 
 #### Removing obsolete events
 Once a block becomes irreversible, events related to that block which have been processed by all contexts (applications) are no longer needed by applications. These events are automatcially removed from the events queue by the function `hive.set_irreversible` (this function is periodically called by hived when the last irreversible block number changes).
@@ -174,7 +174,7 @@ Once a block becomes irreversible, events related to that block which have been 
 ### CONTEXT REWIND
 Context_rewind is the part of the fork manager which is responsible for registering application tables and the saving/rewinding  operation on the tables to handle fork switching.
 
-Applications and hived shall not use directly any function from the [src/hive_fork/context_rewind](./context_rewind/) directory.
+Applications and hived shall not use directly any function from the [src/hive_fork_manager/context_rewind](./context_rewind/) directory.
 
 An application must register any of its tables which are dependant on changes to hive blocks.
 Any table is automatically registered during its creation into context only when it inherits from hive.<context_name> table. Base table hive.<context_name> is created
