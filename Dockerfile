@@ -16,8 +16,15 @@ RUN \
             libboost-all-dev \
             postgresql-server-dev-all \
             git \
+            python3-pip \
     && \
         apt-get clean
+
+RUN \
+    python3 -mpip install \
+        pexpect \
+        psycopg2 \
+        sqlalchemy
 
 USER postgres
 RUN  /etc/init.d/postgresql start \

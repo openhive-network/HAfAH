@@ -8,8 +8,8 @@ SQL_CREATE_AND_REGISTER_HISTOGRAM_TABLE = """
           day DATE
         , trx INT
         , CONSTRAINT pk_trx_histogram PRIMARY KEY( day ) )
-    INHERITS( hive.base )
-    """
+    INHERITS( hive.{} )
+    """.format( APPLICATION_CONTEXT )
 SQL_CREATE_UPDATE_HISTOGRAM_FUNCTION = """
     CREATE OR REPLACE FUNCTION public.update_histogram( _first_block INT, _last_block INT )
     RETURNS void
@@ -36,7 +36,7 @@ SQL_CREATE_UPDATE_HISTOGRAM_FUNCTION = """
 
 def create_db_engine():
     return sqlalchemy.create_engine(
-                "postgresql://marcin:marcin@localhost:5432/psql_tools_test_db", # this is only example of db
+                "postgresql://alice:test@localhost:5432/psql_tools_test_db", # this is only example of db
                 isolation_level="READ COMMITTED",
                 pool_size=1,
                 pool_recycle=3600,

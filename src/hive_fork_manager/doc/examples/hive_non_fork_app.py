@@ -35,7 +35,7 @@ SQL_CREATE_UPDATE_HISTOGRAM_FUNCTION = """
 
 def create_db_engine():
     return sqlalchemy.create_engine(
-                "postgresql://marcin:marcin@localhost:5432/psql_tools_test_db", # this is only example of db
+                "postgresql://alice:test@localhost:5432/psql_tools_test_db", # this is only example of db
                 isolation_level="READ COMMITTED",
                 pool_size=1,
                 pool_recycle=3600,
