@@ -284,8 +284,9 @@ Detaches triggers atatched to register tables in a given context
 ##### hive.context_attach( context_name, block_num )
 Enables triggers attached to register tables in a given context and set current context block num 
 
-##### hive.context_create( context_name )
-Creates the context with controll block number on which the registered tables are working
+##### hive.context_create( context_name, forkid, irreversible_block )
+Creates the context with controll block number on which the registered tables are working. The 'fork_id' and
+'irreversible_block' are used only by application api.
 
 ##### hive.context_next_block( context_name )
 Moves a context to the next available block

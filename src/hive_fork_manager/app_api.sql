@@ -7,22 +7,12 @@ $BODY$
 BEGIN
     -- Any context always starts with block before genesis, the app may detach the context and execute 'massive sync'
     -- after massive sync the application must attach its context to last already synced block
-    INSERT INTO hive.contexts(
-           name
-         , current_block_num
-         , irreversible_block
-         , is_attached
-         , events_id
-         , fork_id
-         , owner)
-    SELECT cdata.name, cdata.block_num, COALESCE( hb.num, 0 ), cdata.is_attached, cdata.events_id, hf.id, current_user
-    FROM
-        ( VALUES ( _name, 0, TRUE, NULL::BIGINT ) ) as cdata( name, block_num, is_attached, events_id )
-        JOIN ( SELECT hf.id FROM hive.fork hf ORDER BY id DESC LIMIT 1 ) as hf ON TRUE
-        LEFT JOIN ( SELECT hb.num FROM hive.blocks hb ORDER BY hb.num DESC LIMIT 1 ) as hb ON TRUE
-    ;
+    PERFORM hive.context_create(
+        _name
+        , ( SELECT MAX( hf.id ) FROM hive.fork hf ) -- current fork id
+        , COALESCE( ( SELECT MAX( hb.num ) FROM hive.blocks hb ), 0 ) -- head of irreversible block
+    );
 
-    EXECUTE format( 'CREATE TABLE hive.%I( hive_rowid BIGSERIAL )', _name );
     PERFORM hive.create_blocks_view( _name );
     PERFORM hive.create_transactions_view( _name );
     PERFORM hive.create_operations_view( _name );

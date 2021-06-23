@@ -1,5 +1,5 @@
 DROP FUNCTION IF EXISTS hive.context_create;
-CREATE FUNCTION hive.context_create( _name TEXT )
+CREATE FUNCTION hive.context_create( _name TEXT, _fork_id BIGINT = 1, _irreversible_block INT = 0 )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
@@ -11,7 +11,8 @@ BEGIN
     END IF;
 
     EXECUTE format( 'CREATE TABLE hive.%I( hive_rowid BIGSERIAL )', _name );
-    INSERT INTO hive.contexts( name, current_block_num, irreversible_block, is_attached, owner ) VALUES( _name, 0, 0, TRUE, current_user );
+    INSERT INTO hive.contexts( name, current_block_num, irreversible_block, is_attached, events_id, fork_id, owner )
+    VALUES( _name, 0, _irreversible_block, TRUE, NULL, _fork_id, current_user );
 END;
 $BODY$
 ;
