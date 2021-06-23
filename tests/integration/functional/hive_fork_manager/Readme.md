@@ -7,6 +7,8 @@ Moreover three roles are created 'hived' (inherits 'hived_group') , 'alice' and 
 The tests require to have configured locally (means on local host) postgres server with the current system user as postgres SUPERUSER with CREATEDB option
   and authentication method peer(setting inside `pg_hba.conf`)
 
+For tests which check the applications examples python3 is required with modules:  pexpect, psycopg2, sqlalchemy
+
 # Types of functional test
 
 ## SQL_FUNCTIONAL
