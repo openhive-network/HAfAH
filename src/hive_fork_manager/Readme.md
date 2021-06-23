@@ -94,8 +94,10 @@ inherits from`hive.trx_histogram` to register it into the context 'trx_histogram
 @@ -6 +6 @@
 -SQL_CREATE_HISTOGRAM_TABLE = """
 +SQL_CREATE_AND_REGISTER_HISTOGRAM_TABLE = """
-@@ -10,0 +11 @@
-+    INHERITS( hive.base )
+@@ -11 +11,2 @@
+-    """
++    INHERITS( hive.{} )
++    """.format( APPLICATION_CONTEXT )
 @@ -51 +52 @@
 -        db_connection.execute( SQL_CREATE_HISTOGRAM_TABLE )
 +        db_connection.execute( SQL_CREATE_AND_REGISTER_HISTOGRAM_TABLE )
