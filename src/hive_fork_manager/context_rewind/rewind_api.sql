@@ -1,5 +1,5 @@
 DROP FUNCTION IF EXISTS hive.context_create;
-CREATE FUNCTION hive.context_create( _name TEXT, _fork_id BIGINT = 1, _irreversible_block INT = 0 )
+CREATE FUNCTION hive.context_create( _name hive.context_name, _fork_id BIGINT = 1, _irreversible_block INT = 0 )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE

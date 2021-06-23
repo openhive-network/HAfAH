@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION hive.app_create_context( _name TEXT )
+CREATE OR REPLACE FUNCTION hive.app_create_context( _name hive.context_name )
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE

@@ -1,11 +1,27 @@
 CREATE SCHEMA IF NOT EXISTS hive;
 
-DROP TYPE IF EXISTS hive.trigger_operation CASCADE;
-CREATE TYPE hive.trigger_operation AS ENUM( 'INSERT', 'DELETE', 'UPDATE' );
+DO
+$$
+    BEGIN
+    CREATE DOMAIN hive.context_name AS TEXT;
+    EXCEPTION
+            WHEN duplicate_object THEN null;
+    END
+$$;
+
+
+DO
+$$
+    BEGIN
+        CREATE TYPE hive.trigger_operation AS ENUM( 'INSERT', 'DELETE', 'UPDATE' );
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+    END
+$$;
 
 CREATE TABLE IF NOT EXISTS hive.contexts(
     id SERIAL NOT NULL,
-    name TEXT NOT NULL,
+    name hive.context_name NOT NULL,
     current_block_num INTEGER NOT NULL,
     irreversible_block INTEGER NOT NULL,
     is_attached BOOL NOT NULL,
