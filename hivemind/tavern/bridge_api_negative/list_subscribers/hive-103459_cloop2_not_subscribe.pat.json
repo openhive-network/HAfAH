@@ -1,9 +1,5 @@
 {
-  "error": {
-    "code": -32602,
-    "data": "cloop2 subscription on hive-103459 does not exist",
-    "message": "Invalid parameters"
-  },
-  "id": 1,
-  "jsonrpc": "2.0"
+  "code": -32602,
+  "data": "cloop2 subscription on hive-103459 does not exist",
+  "message": "Invalid parameters"
 }
