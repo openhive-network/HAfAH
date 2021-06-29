@@ -1,5 +1,5 @@
 {
   "code": -32602,
-  "data": "Account nonexisting does not exist",
+  "data": "nonexisting subscription on hive-135485 does not exist",
   "message": "Invalid parameters"
 }

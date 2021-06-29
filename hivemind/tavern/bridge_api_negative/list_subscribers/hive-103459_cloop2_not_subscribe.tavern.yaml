@@ -2,7 +2,7 @@
   test_name: Hivemind
 
   marks:
-    - patterntest # mock data subs: (test-safari, gtg, roadscape), good-karma
+    - patterntest # last: cloop2 does not subscribe any community
 
   includes:
     - !include ../../common.yaml
@@ -18,8 +18,10 @@
           jsonrpc: "2.0"
           id: 1
           method: "bridge.list_subscribers"
-          params: {"community":"hive-171488", "last":"test-safari"}
+          params: {"community":"hive-103459", "last":"cloop2"}
       response:
         status_code: 200
         verify_response_with:
           function: validate_response:compare_response_with_pattern
+          extra_kwargs:
+            error_response: true
