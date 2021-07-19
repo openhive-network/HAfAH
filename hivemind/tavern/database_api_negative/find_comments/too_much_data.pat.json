@@ -1,5 +1,0 @@
-{
-  "code": -32602,
-  "data": "got an unexpected keyword argument 'limit'",
-  "message": "Invalid parameters"
-}
