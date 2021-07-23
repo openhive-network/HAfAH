@@ -19,7 +19,7 @@ The required ordering of the sql scripts is included in the cmake file [src/hive
 Execute each script one-by-one with `psql` as in this example: `psql -d my_db_name -a -f  context_rewind/data_schema.sql`
 
 ### Authorization
-During its creation the extension introduces two new roles (groups): `hived_group` and `hive_application_group`. The maintainer of
+During its creation the extension introduces two new roles (groups): `hived_group` and `hive_applications_group`. The maintainer of
 the PostgreSQL cluster server needs to create roles ( users ) which inherits from one of these groups.
 ```
    CREATE ROLE hived LOGIN PASSWORD 'hivedpass' INHERIT IN ROLE hived_group;
@@ -74,6 +74,15 @@ To perform a massive sync, the application should detach the context, execute it
 It is expected that some applications will only want to process irreversible blocks, and therefore don't require the overhead associating with fork switching. Such an application should not register any table in its context. A context without registered tables (aka an 'irreversible context') will traverse only irreversible block data. This means that calls to `hive.app_next_block` will return only the range of irreversible blocks which are not already processed or NULL. Similarly, the set of views for an irreversible context only deliver a snapshot of irreversible data up to the block already processed by the application.
 
 In summary, a non-forking application is coded in much the same way as a forking application (making it relatively easy to change between these two modes), but a non-forking app does not register its tables with its context and it is only served up information about irreversible blocks.
+
+### Sharing tables with other applications
+If an application wants to expose some of its tables for reading by other applications, then it is enaugh to grant
+SELECT privilege on the tables to hive_applications_group.
+```
+GRANT SELECT ON my_table TO hive_applications_group;
+```
+:warning: An application which uses tables exposed by other application must be written taking into account that applications
+works at different speed, and they may contain data computed for different forks and blocks range.
 
 ### Important notice about irreversible data
 :warning: **Although reversible and irreversible block tables are directly visible to aplications, these tables should not be queried directly. It is expected that the structure of the underlying tables may change in the future, but the structure of a context's views will likely stay constant. This means that the applications which directly read the tables instead of the views may need to be refactored in the future to use newer versions of the fork manager.**
