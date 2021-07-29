@@ -1,0 +1,3 @@
+ADD_SUBDIRECTORY( psql_utils )
+ADD_SUBDIRECTORY( pq_utils )
+ADD_SUBDIRECTORY( hive_fork_manager )
