@@ -164,6 +164,8 @@ ADD_SQL_FUNCTIONAL_TESTS( app_api/app_next_block_non_forking_app.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_exists.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/register_already_existed_table.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/register_already_registered_table_negative.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/app_get_irreversible_block_forking.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/app_get_irreversible_block_non_forking.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( scenarios/massive_sync_live_blocks_and_fork.sql )
 ADD_SQL_FUNCTIONAL_TESTS( scenarios/massive_sync_live_blocks_and_fork_non_forking_app.sql )

@@ -33,6 +33,32 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.app_is_forking( _context_name TEXT )
+    RETURNS BOOL
+    LANGUAGE plpgsql
+    STABLE
+AS
+$BODY$
+DECLARE
+    __context_id hive.contexts.id%TYPE;
+    __result BOOL;
+BEGIN
+    SELECT  hac.id
+    FROM hive.contexts hac
+    WHERE hac.name = _context_name
+    INTO __context_id;
+
+    IF __context_id IS NULL THEN
+                RAISE EXCEPTION 'No context with name %', _context_name;
+    END IF;
+
+    -- if there there is a registered table for a given context
+    SELECT EXISTS( SELECT 1 FROM hive.registered_tables hrt WHERE hrt.context_id = __context_id ) INTO __result;
+    RETURN __result;
+END;
+$BODY$
+;
+
 
 CREATE OR REPLACE FUNCTION hive.app_next_block( _context_name TEXT )
     RETURNS hive.blocks_range
@@ -44,7 +70,7 @@ DECLARE
     __result hive.blocks_range;
 BEGIN
     -- if there ther is  registered table for given context
-    IF EXISTS( SELECT 1 FROM hive.registered_tables hrt JOIN hive.contexts hc ON hrt.context_id = hc.id WHERE hc.name = _context_name )
+    IF hive.app_is_forking( _context_name )
     THEN
         RETURN hive.app_next_block_forking_app( _context_name );
     END IF;
@@ -100,3 +126,25 @@ BEGIN
 END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.app_get_irreversible_block( _context_name TEXT )
+    RETURNS hive.contexts.irreversible_block%TYPE
+    LANGUAGE plpgsql
+    STABLE
+AS
+$BODY$
+DECLARE
+    __result hive.contexts.irreversible_block%TYPE;
+BEGIN
+    IF hive.app_is_forking( _context_name )
+    THEN
+        SELECT hc.irreversible_block INTO __result
+        FROM hive.contexts hc
+        WHERE hc.name = _context_name;
+    ELSE
+        SELECT COALESCE( MAX( hb.num ), 0 ) INTO __result FROM hive.blocks hb;
+    END IF;
+
+    RETURN __result;
+END;
+$BODY$;
