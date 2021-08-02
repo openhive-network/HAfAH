@@ -219,7 +219,7 @@ BEGIN
 
     UPDATE hive.contexts
     SET   current_block_num = __next_block_to_process
-        , irreversible_block = __next_block_to_process
+        , irreversible_block = __last_block_to_process
     WHERE id = __context_id;
 
     __result.first_block = __next_block_to_process;
