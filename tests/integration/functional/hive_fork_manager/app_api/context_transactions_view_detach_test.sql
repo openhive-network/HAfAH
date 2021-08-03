@@ -7,6 +7,7 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.app_create_context( 'context' );
+    CREATE TABLE table1( id INT ) INHERITS( hive.context );
 
     INSERT INTO hive.fork( id, block_num, time_of_fork)
     VALUES ( 2, 6, '2020-06-22 19:10:25-07'::timestamp ),
@@ -59,7 +60,7 @@ BEGIN
          , ( 10, 0::SMALLINT, '\xDEED11', 101, 100, '2016-06-22 19:10:30-07'::timestamp, '\xBEEF', 3 )
     ;
 
-    UPDATE hive.contexts SET fork_id = 2, irreversible_block = 4, current_block_num = 8;
+    UPDATE hive.contexts SET fork_id = 2, irreversible_block = 4, current_block_num = 1;
 END;
 $BODY$
 ;
@@ -96,6 +97,7 @@ BEGIN
                  , ( 4, 0::SMALLINT, '\xDEED40'::bytea, 101, 100, '2016-06-22 19:10:24-07'::timestamp, '\xBEEF'::bytea )
                  ) as pattern
     ) , 'Unexpected rows in the view';
+
 
     ASSERT NOT EXISTS (
         SELECT * FROM ( VALUES

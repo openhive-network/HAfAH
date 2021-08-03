@@ -84,7 +84,7 @@ BEGIN
      , ( '\xDEED1102', '\xBEEF13',  3 )
     ;
 
-    UPDATE hive.contexts SET fork_id = 2, irreversible_block = 4, current_block_num = 9;
+    UPDATE hive.contexts SET fork_id = 2, irreversible_block = 4, current_block_num = 1;
 END;
 $BODY$
 ;
@@ -97,7 +97,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    --NOTHING TODO HERE
+    PERFORM hive.app_context_detach( 'context' );
 END
 $BODY$
 ;
