@@ -1,5 +1,0 @@
-{
-  "code": -32602,
-  "data": "invalid account name length: `totally_valid_length`",
-  "message": "Invalid parameters"
-}
