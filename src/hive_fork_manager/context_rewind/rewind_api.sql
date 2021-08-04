@@ -1,5 +1,4 @@
-DROP FUNCTION IF EXISTS hive.context_create;
-CREATE FUNCTION hive.context_create( _name hive.context_name, _fork_id BIGINT = 1, _irreversible_block INT = 0 )
+CREATE OR REPLACE FUNCTION hive.context_create( _name hive.context_name, _fork_id BIGINT = 1, _irreversible_block INT = 0 )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
@@ -17,8 +16,7 @@ END;
 $BODY$
 ;
 
-DROP FUNCTION IF EXISTS hive.context_remove;
-CREATE FUNCTION hive.context_remove( _name hive.context_name )
+CREATE OR REPLACE FUNCTION hive.context_remove( _name hive.context_name )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
@@ -43,8 +41,7 @@ $BODY$
 ;
 
 
-DROP FUNCTION IF EXISTS hive.context_exists;
-CREATE FUNCTION hive.context_exists( _name TEXT )
+CREATE OR REPLACE FUNCTION hive.context_exists( _name TEXT )
     RETURNS BOOL
     LANGUAGE 'plpgsql'
     STABLE
@@ -56,8 +53,7 @@ END;
 $BODY$
 ;
 
-DROP FUNCTION IF EXISTS hive.context_next_block;
-CREATE FUNCTION hive.context_next_block( _name TEXT )
+CREATE OR REPLACE FUNCTION hive.context_next_block( _name TEXT )
     RETURNS INTEGER
     LANGUAGE 'sql'
     VOLATILE
