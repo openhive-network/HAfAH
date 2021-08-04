@@ -51,6 +51,7 @@ BEGIN
 
     IF __shadow_table_name IS NULL THEN
         -- maybe ALTER INHERIT ( hive.<context_name> ) to register table into context
+
         PERFORM hive.register_table( tables.schema_name, tables.relname, tables.context ), hive.chceck_constrains(tables.schema_name, tables.relname)
         FROM (
             SELECT DISTINCT( pgc.relname ), tr.schema_name, hc.name as context

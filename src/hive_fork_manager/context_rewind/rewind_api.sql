@@ -17,6 +17,31 @@ END;
 $BODY$
 ;
 
+DROP FUNCTION IF EXISTS hive.context_remove;
+CREATE FUNCTION hive.context_remove( _name hive.context_name )
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __context_id hive.contexts.id%TYPE := NULL;
+BEGIN
+    SELECT hc.id INTO __context_id FROM hive.contexts hc WHERE hc.name = _name;
+
+    IF __context_id IS NULL THEN
+        RAISE EXCEPTION 'Context %s does not exist', _name;
+    END IF;
+
+    PERFORM hive.unregister_table( hrt.origin_table_schema, hrt.origin_table_name )
+    FROM hive.registered_tables hrt
+    WHERE hrt.context_id = __context_id;
+
+    EXECUTE format( 'DROP TABLE hive.%I', _name );
+END;
+$BODY$
+;
+
 
 DROP FUNCTION IF EXISTS hive.context_exists;
 CREATE FUNCTION hive.context_exists( _name TEXT )

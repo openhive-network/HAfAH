@@ -21,7 +21,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.app_register_table( 'a.table1', 'context' );
+    PERFORM hive.app_register_table( 'a', 'table1', 'context' );
     --ALTER TABLE a.table1 ADD COLUMN hive_rowid BIGINT NOT NULL;
     --ALTER TABLE a.table1 INHERIT hive.context;
 END;

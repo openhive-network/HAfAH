@@ -254,6 +254,9 @@ The functions which should be used by an application
 ##### hive.app_create_context( _name )
 Creates a new context. Context name can contains only characters from set: `a-zA-Z0-9_`
 
+##### hive.app_remove_context( _name hive.context_name )
+Remove the context and unregister all its tables.
+
 ##### hive.app_next_block( _context_name )
 Returns `hive.blocks_range` -range of blocks numbers to process or NULL
 It is a most important function for any application.
@@ -302,6 +305,10 @@ Enables triggers attached to register tables in a given context and set current 
 ##### hive.context_create( context_name, forkid, irreversible_block )
 Creates the context with controll block number on which the registered tables are working. The 'fork_id' and
 'irreversible_block' are used only by application api.
+
+##### hive.context_create( context_name )
+Removes the context: removes triggers, remove hive_row id columns from registered tables, unregister all tables, removes
+base table hive.<context>
 
 ##### hive.context_next_block( context_name )
 Moves a context to the next available block
