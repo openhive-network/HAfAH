@@ -89,3 +89,43 @@ BEGIN
 END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.disable_indexes_of_irreversible()
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'blocks' );
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'transactions' );
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'transactions_multisig' );
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'operations' );
+
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.blocks' );
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.transactions' );
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.transactions_multisig' );
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.operations' );
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.enable_indexes_of_irreversible()
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    PERFORM hive.restore_indexes_constraints( 'hive.blocks' );
+    PERFORM hive.restore_indexes_constraints( 'hive.transactions' );
+    PERFORM hive.restore_indexes_constraints( 'hive.transactions_multisig' );
+    PERFORM hive.restore_indexes_constraints( 'hive.operations' );
+
+    PERFORM hive.restore_foreign_keys( 'hive.blocks' );
+    PERFORM hive.restore_foreign_keys( 'hive.transactions' );
+    PERFORM hive.restore_foreign_keys( 'hive.transactions_multisig' );
+    PERFORM hive.restore_foreign_keys( 'hive.operations' );
+END;
+$BODY$
+;

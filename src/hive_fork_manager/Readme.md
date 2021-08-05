@@ -248,6 +248,14 @@ Set new irreversible block
 After finishing a massive push of blocks, hived will invoke this method to schedlue MASSIVE_SYNC event. The parameter `_block_num`
 is a last massivly synced block - head or irreversible blocks.
 
+#### hive.disable_indexes_of_irreversible()
+There are some indexes created by the extension on irreversible blocks data. Those indexes may slows down massive dumps
+of blocks data by hived. The function drops and saves description of indexes and FK constraints created on irreversible blocks table.
+Hived nay use this function before start massive sync of blocks.
+
+#### hive.enable_indexes_of_irreversible()
+It restores indexes and FK constarint dropped and saved by the function above. 
+
 #### APP API
 The functions which should be used by an application
 

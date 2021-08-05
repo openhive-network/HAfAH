@@ -139,6 +139,8 @@ ADD_SQL_FUNCTIONAL_TESTS( hived_api/remove_obsolete_blocks_with_set_irreversible
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/remove_obsolete_blocks_with_set_irreversible_no_contexts.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/end_massive_sync_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/set_irreversible_cleaning_events_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( hived_api/disable_indexes_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( hived_api/enable_indexes_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( app_api/create_context_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_remove_test.sql )
