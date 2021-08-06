@@ -76,7 +76,7 @@ def main_loop( db_connection ):
                 db_connection.execute( "SELECT hive.app_context_detach( '{}' )".format( APPLICATION_CONTEXT ) )
 
                 # update massivly the application's table - one commit transaction for whole massive edition
-                db_connection.execute( "SELECT public.update_histogram( {}, {} )", first_block, last_block )
+                db_connection.execute( "SELECT public.update_histogram( {}, {} )".format( first_block, last_block ) )
 
                 # attach context and moves it to last synced block
                 db_connection.execute( "SELECT hive.app_context_attach( '{}', {} )".format( APPLICATION_CONTEXT, last_block ) )

@@ -26,5 +26,5 @@ ALTER TABLE hive.operations_reversible
     ADD COLUMN IF NOT EXISTS fork_id BIGINT NOT NULL,
     ADD CONSTRAINT fk_1_hive_operations_reversible FOREIGN KEY (block_num, fork_id) REFERENCES hive.blocks_reversible(num, fork_id),
     ADD CONSTRAINT fk_2_hive_operations_reversible FOREIGN KEY (op_type_id) REFERENCES hive.operation_types (id),
-    ADD CONSTRAINT fk_3_hive_operations_reversible FOREIGN KEY( fork_id ) REFERENCES hive.fork( id )
+    ADD CONSTRAINT fk_3_hive_operations_reversible FOREIGN KEY ( fork_id ) REFERENCES hive.fork( id )
 ;
