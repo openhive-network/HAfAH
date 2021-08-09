@@ -244,7 +244,7 @@ Push new block with its transactions, their operations and signatures
 ##### hive.set_irreversible( _block_num )
 Set new irreversible block
 
-#### hive.end_massive_sync()
+#### hive.end_massive_sync(block_num)
 After finishing a massive push of blocks, hived will invoke this method to schedlue MASSIVE_SYNC event. The parameter `_block_num`
 is a last massivly synced block - head or irreversible blocks.
 

@@ -74,7 +74,7 @@ END;
 $BODY$
 ;
 
-CREATE OR REPLACE FUNCTION hive.end_massive_sync()
+CREATE OR REPLACE FUNCTION hive.end_massive_sync( _block_num INTEGER )
     RETURNS void
     LANGUAGE plpgsql
     VOLATILE
@@ -82,10 +82,7 @@ AS
 $BODY$
 BEGIN
     INSERT INTO hive.events_queue( event, block_num )
-    SELECT event_type.event, irreversible.num
-    FROM
-         ( VALUES ( 'MASSIVE_SYNC'::hive.event_type ) ) as event_type( event )
-    JOIN ( SELECT hib.num FROM hive.blocks hib ORDER BY hib.num DESC LIMIT 1 ) as irreversible ON irreversible.num IS NOT NULL;
+    VALUES ( 'MASSIVE_SYNC'::hive.event_type, _block_num );
 END;
 $BODY$
 ;

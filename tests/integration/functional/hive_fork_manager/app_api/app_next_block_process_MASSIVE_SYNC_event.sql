@@ -38,7 +38,7 @@ BEGIN
            , ( 6, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp )
     ;
 
-    PERFORM hive.end_massive_sync();
+    PERFORM hive.end_massive_sync(6);
 
     PERFORM hive.app_next_block( 'context' ); --block 1
     INSERT INTO A.table1(id) VALUES ( 1 );

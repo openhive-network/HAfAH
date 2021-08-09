@@ -14,7 +14,7 @@ BEGIN
          , ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:24-07'::timestamp )
          , ( 5, '\xBADD50', '\xCAFE50', '2016-06-22 19:10:25-07'::timestamp )
     ;
-    PERFORM hive.end_massive_sync();
+    PERFORM hive.end_massive_sync(5);
 END;
 $BODY$
 ;
