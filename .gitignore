@@ -1,2 +1,5 @@
 __workbook
 .vscode
+**/__pycache__
+**/*.pyc
+*.pyc
