@@ -8,6 +8,7 @@ from aiohttp.web_request import Request
 from jsonrpcserver.response import Response
 from ah.api.endpoints import *
 from aiohttp.web import json_response
+from ah.api.objects import result
 
 psql_conn_str = "postgresql://postgres:pass@127.0.0.1:5432/hafah"
 ah_singleton = backend_singleton(psql_conn_str)

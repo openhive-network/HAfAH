@@ -1,4 +1,4 @@
-from ah.api.objects import account_history, operation, ops_in_block, transaction, virtual_ops
+from ah.db.objects import account_history, operation, ops_in_block, transaction, virtual_ops
 from ah.db.connection import Db
 from ah.db.queries import account_history_db_connector
 
