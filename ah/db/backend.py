@@ -50,10 +50,10 @@ class account_history_impl:
     return result
 
 
-  async def get_ops_in_block( self, block_num : int, only_virtual : bool ) -> list:
-    return ops_in_block( block_num, await self.api.get_ops_in_block(block_num, only_virtual) )
+  async def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool) -> ops_in_block:
+    return ops_in_block( block_num, await self.api.get_ops_in_block(block_num, only_virtual, include_reversible) )
 
-  async def get_transaction(self, trx_hash : str ) -> dict:
+  async def get_transaction(self, trx_hash : str ) -> transaction:
     transaction_basic_info = await self.api.get_transaction( trx_hash.encode('ascii') )
     
     if len(transaction_basic_info) == 0: return dict()
@@ -71,25 +71,25 @@ class account_history_impl:
     return transaction(trx_hash, transaction_basic_info)
 
 
-  async def enum_virtual_ops(self, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int ) -> list:
+  async def enum_virtual_ops(self, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool) -> virtual_ops:
     return virtual_ops( 
       await self.api.enum_virtual_ops( 
         self.__translate_filter( filter ), 
         block_range_begin, 
         block_range_end, 
         operation_begin, 
-        limit 
+        limit,
+        include_reversible
       )
     )
 
-  async def get_account_history(self, filter : int, account : str, start : int, limit : int) -> list:
+  async def get_account_history(self, filter : int, account : str, start : int, limit : int, include_reversible : bool) -> account_history:
     return account_history( 
       await self.api.get_account_history(
         self.__translate_filter( filter ), 
         account, 
         start, 
-        limit 
+        limit,
+        include_reversible
       )
     )
-
-

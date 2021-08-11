@@ -1,5 +1,7 @@
 from .connection import Db
 
+CONTEXT_NAME = 'account_history'
+
 class account_history_db_connector:
   def __init__(self, db : Db) -> None:
     assert db is not None
@@ -25,11 +27,12 @@ class account_history_db_connector:
       trx_in_block=trx_in_block
     )
 
-  async def get_ops_in_block( self, block_num : int, only_virtual : bool ):
+  async def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool):
     return self._get_all(
-      "SELECT * FROM get_ops_in_block( :block_num,  :only_virt )",
+      "SELECT * FROM get_ops_in_block( :block_num,  :only_virt, :include_reversible )",
       block_num=block_num,
-      only_virt=only_virtual
+      only_virt=only_virtual,
+      include_reversible=include_reversible
     )
 
   async def get_transaction(self, trx_hash : bytes ):
@@ -38,36 +41,23 @@ class account_history_db_connector:
       trx_hash=trx_hash
     )
 
-  async def enum_virtual_ops(self, filter : list, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int ):
+  async def enum_virtual_ops(self, filter : list, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool):
     return self._get_all(
-      "SELECT * FROM enum_virtual_ops( :filter ::INT[] , :block_range_begin, :block_range_end, :operation_begin, :limit )",
+      "SELECT * FROM enum_virtual_ops( :filter ::INT[] , :block_range_begin, :block_range_end, :operation_begin, :limit, :include_reversible )",
       filter=filter,
       block_range_begin=block_range_begin,
       block_range_end=block_range_end,
       operation_begin=operation_begin,
-      limit=limit
+      limit=limit,
+      include_reversible=include_reversible
     )
 
-  async def get_account_history(self, filter : list, account : str, start : int, limit : int):
+  async def get_account_history(self, filter : list, account : str, start : int, limit : int, include_reversible : bool):
     return self._get_all(
-      "SELECT * FROM ah_get_account_history( :filter, :account, :start, :limit )",
+      "SELECT * FROM ah_get_account_history( :filter, :account, :start, :limit, :include_reversible )",
       filter=filter,
       account=account,
       start=start,
-      limit=limit
+      limit=limit,
+      include_reversible=include_reversible
     )
-
-#   def get_operation_ids(self, values : list):
-#     def sql_tuple( item ):
-#         return f"({item[0]}, '{item[1]}')"
-#     assert len(values)
-#     return self._get_all( f"""
-
-# SELECT inputs._id as input_id, hot.id as output_id FROM hive.operation_types as hot
-# INNER JOIN ( VALUES 
-# { ','.join([ sql_tuple(value) for value in values ]) } 
-# ) as inputs(_id, _name) ON hot.name = inputs._name
-
-# """ )
-
-
