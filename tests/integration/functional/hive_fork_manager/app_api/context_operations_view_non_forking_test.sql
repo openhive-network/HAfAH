@@ -25,7 +25,6 @@ BEGIN
          , ( 2, '\xBADD20', '\xCAFE20', '2016-06-22 19:10:22-07'::timestamp )
          , ( 3, '\xBADD30', '\xCAFE30', '2016-06-22 19:10:23-07'::timestamp )
          , ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:24-07'::timestamp )
-         , ( 5, '\xBADD50', '\xCAFE50', '2016-06-22 19:10:25-07'::timestamp )
     ;
 
     INSERT INTO hive.transactions
@@ -34,7 +33,6 @@ BEGIN
          , ( 2, 0::SMALLINT, '\xDEED20', 101, 100, '2016-06-22 19:10:22-07'::timestamp, '\xBEEF' )
          , ( 3, 0::SMALLINT, '\xDEED30', 101, 100, '2016-06-22 19:10:23-07'::timestamp, '\xBEEF' )
          , ( 4, 0::SMALLINT, '\xDEED40', 101, 100, '2016-06-22 19:10:24-07'::timestamp, '\xBEEF' )
-         , ( 5, 0::SMALLINT, '\xDEED50', 101, 100, '2016-06-22 19:10:25-07'::timestamp, '\xBEEF' )
     ;
 
     INSERT INTO hive.operations
@@ -43,7 +41,6 @@ BEGIN
         , ( 2, 2, 0, 0, 1, 'ONE OPERATION' )
         , ( 3, 3, 0, 0, 1, 'TWO OPERATION' )
         , ( 4, 4, 0, 0, 1, 'THREE OPERATION' )
-        , ( 5, 5, 0, 0, 1, 'FIVE OPERATION' )
     ;
 
     INSERT INTO hive.blocks_reversible

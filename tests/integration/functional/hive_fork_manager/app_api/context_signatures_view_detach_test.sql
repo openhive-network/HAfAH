@@ -7,6 +7,7 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.app_create_context( 'context' );
+    CREATE TABLE table1( id INT ) INHERITS( hive.context );
 
     INSERT INTO hive.fork( id, block_num, time_of_fork)
     VALUES ( 2, 6, '2020-06-22 19:10:25-07'::timestamp ),
@@ -84,7 +85,7 @@ BEGIN
      , ( '\xDEED1102', '\xBEEF13',  3 )
     ;
 
-    UPDATE hive.contexts SET fork_id = 2, irreversible_block = 4, current_block_num = 9;
+    UPDATE hive.contexts SET fork_id = 2, irreversible_block = 4, current_block_num = 1;
 END;
 $BODY$
 ;
@@ -97,7 +98,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    --NOTHING TODO HERE
+    PERFORM hive.app_context_detach( 'context' );
 END
 $BODY$
 ;
@@ -115,19 +116,20 @@ BEGIN
     ASSERT NOT EXISTS (
         SELECT * FROM hive.context_transactions_multisig_view
         EXCEPT SELECT * FROM ( VALUES
-               ( '\xDEED10'::bytea, '\xBAAD10'::bytea )
-             , ( '\xDEED20'::bytea, '\xBAAD20'::bytea )
-             , ( '\xDEED30'::bytea, '\xBAAD30'::bytea )
-             , ( '\xDEED40'::bytea, '\xBAAD40'::bytea )
+              ( '\xDEED10'::bytea, '\xBAAD10'::bytea )
+            , ( '\xDEED20'::bytea, '\xBAAD20'::bytea )
+            , ( '\xDEED30'::bytea, '\xBAAD30'::bytea )
+            , ( '\xDEED40'::bytea, '\xBAAD40'::bytea )
          ) as pattern
     ) , 'Unexpected rows in the view';
 
+
     ASSERT NOT EXISTS (
         SELECT * FROM ( VALUES
-               ( '\xDEED10'::bytea, '\xBAAD10'::bytea )
-             , ( '\xDEED20'::bytea, '\xBAAD20'::bytea )
-             , ( '\xDEED30'::bytea, '\xBAAD30'::bytea )
-             , ( '\xDEED40'::bytea, '\xBAAD40'::bytea )
+              ( '\xDEED10'::bytea, '\xBAAD10'::bytea )
+            , ( '\xDEED20'::bytea, '\xBAAD20'::bytea )
+            , ( '\xDEED30'::bytea, '\xBAAD30'::bytea )
+            , ( '\xDEED40'::bytea, '\xBAAD40'::bytea )
          ) as pattern
         EXCEPT SELECT * FROM hive.context_transactions_multisig_view
     ) , 'Unexpected rows in the view 2';

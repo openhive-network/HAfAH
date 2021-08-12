@@ -15,7 +15,7 @@ BEGIN
              , hb.prev
              , hb.created_at
         FROM hive.blocks hb
-        JOIN hive.contexts hc ON  hb.num <= hc.irreversible_block AND hb.num <= hc.current_block_num
+        JOIN hive.contexts hc ON ( hb.num <= hc.irreversible_block AND hb.num <= hc.current_block_num ) OR NOT hc.is_attached
         WHERE hc.name = ''%s''
         UNION ALL
         SELECT
@@ -61,7 +61,7 @@ BEGIN
            ht.expiration,
            ht.signature
         FROM hive.transactions ht
-        JOIN hive.contexts hc ON ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num
+        JOIN hive.contexts hc ON ( ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num ) OR NOT hc.is_attached
         WHERE hc.name = ''%s''
         UNION ALL
         SELECT reversible.block_num,
@@ -116,7 +116,7 @@ EXECUTE format(
             , ho.op_type_id
             , ho.body
         FROM hive.operations ho
-        JOIN hive.contexts hc ON  ho.block_num <= hc.irreversible_block AND ho.block_num <= hc.current_block_num
+        JOIN hive.contexts hc ON ( ho.block_num <= hc.irreversible_block AND ho.block_num <= hc.current_block_num ) OR NOT hc.is_attached
         WHERE hc.name = ''%s''
         UNION ALL
         SELECT
@@ -168,7 +168,7 @@ EXECUTE format(
             , htm.signature
         FROM hive.transactions_multisig htm
         JOIN hive.transactions ht ON ht.trx_hash = htm.trx_hash
-        JOIN hive.contexts hc ON  ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num
+        JOIN hive.contexts hc ON ( ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num ) OR NOT hc.is_attached
         WHERE hc.name = ''%s''
         UNION ALL
         SELECT
