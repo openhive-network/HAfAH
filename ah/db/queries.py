@@ -61,3 +61,6 @@ class account_history_db_connector:
       limit=limit,
       include_reversible=include_reversible
     )
+
+  def get_irreversible_block_num(self) -> int:
+    return self._get_all("SELECT public.get_irreversible_block_num() as num")[0]['num']

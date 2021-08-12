@@ -71,8 +71,9 @@ class account_history_impl:
     return transaction(trx_hash, transaction_basic_info)
 
 
-  async def enum_virtual_ops(self, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool) -> virtual_ops:
+  async def enum_virtual_ops(self, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False ) -> virtual_ops:
     return virtual_ops( 
+      self.api.get_irreversible_block_num() if group_by_block else None,
       await self.api.enum_virtual_ops( 
         self.__translate_filter( filter ), 
         block_range_begin, 

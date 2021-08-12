@@ -23,11 +23,11 @@ class api_operation:
     self.op : operation = operation(obj["_value"])
     self.operation_id : int = obj["_operation_id"]
 
-class api_operations:
+class api_operations_container:
   item = api_operation
   def __init__(self, block, iterable : list):
       assert iterable is not None
-      self.ops : list = [ api_operations.item( block, row ) for row in iterable ]
+      self.ops : list = [ api_operations_container.item( block, row ) for row in iterable ]
 
 class transaction:
   def __init__(self, trx_id, obj):
@@ -42,43 +42,49 @@ class transaction:
     self.block_num : str = obj['_block_num']
     self.transaction_num : str = obj['_trx_in_block']
 
-class ops_in_block(api_operations): pass
+class ops_in_block(api_operations_container): pass
+class ops_by_block_wrapper:
+  def __init__(self, iterable: list, block : int, timestamp : str, irreversible : bool):
+      self.ops = iterable
+      self.block = block
+      self.timestamp = timestamp
+      self.irreversible = irreversible
 
-class virtual_ops(api_operations):
-  def __init__(self, iterable: list):
-      super().__init__(None, iterable)
+class virtual_ops(api_operations_container):
 
-'''
-[
-        999,
-        {
-          "trx_id": "97cae29dce3cffa37da96082943e612264716048",
-          "block": 41745907,
-          "trx_in_block": 11,
-          "op_in_trx": 0,
-          "virtual_op": 1,
-          "timestamp": "2020-03-18T01:12:15",
-          "op": {
-            "type": "effective_comment_vote_operation",
-            "value": {
-              "voter": "sammie",
-              "author": "hiveio",
-              "permlink": "announcing-the-launch-of-hive-blockchain",
-              "weight": 108,
-              "rshares": "7229031685",
-              "total_vote_weight": 21629808,
-              "pending_payout": {
-                "amount": "150713",
-                "precision": 3,
-                "nai": "@@000000013"
-              }
-            }
-          },
-          "operation_id": 0
-        }
-      ]
+  def __init__(self, irreversible_block : int, iterable: list):
+    super().__init__(None, iterable)
+    self.ops_by_block : list = []
+    self.next_block_range_begin : int = 0
+    self.next_operation_begin : int = 0
+    self.__setup_pagination()
 
-'''
+    if irreversible_block is not None:
+      self.__group_by_block(irreversible_block)
+
+  def __setup_pagination(self):
+    last_op : api_operation = self.ops[-1]
+    self.next_block_range_begin = last_op.block
+    self.next_operation_begin = last_op.operation_id
+    self.ops.remove(last_op)
+
+  def __group_by_block(self, irreversible_block):
+    supp = dict()
+    for item in self.ops:
+      if item.block in supp:
+        supp[item.block].append(item)
+      else:
+        supp[item.block] = [item]
+
+    self.ops_by_block = []
+    for block, items in supp.items():
+      self.ops_by_block.append( ops_by_block_wrapper(
+        iterable=items, 
+        block=block, 
+        timestamp=items[0].timestamp,
+        irreversible=block > irreversible_block
+      ))
+
 
 class account_history_item:
   def __init__(self, row):
