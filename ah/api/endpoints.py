@@ -1,5 +1,8 @@
 from ah.db.backend import account_history_impl
 
+DEFAULT_INCLUDE_IRREVERSIBLE = False
+DEFAULT_LIMIT = 1_000
+
 class backend_singleton:
   __m_backend = None
   def __init__(self, db_url):
@@ -53,12 +56,12 @@ def require_unsigned(*params_to_check):
 
 @verify_types
 @require_unsigned('block_num')
-async def get_ops_in_block(*, block_num : int, only_virtual : bool, include_reversible : bool = True):
+async def get_ops_in_block(*, block_num : int, only_virtual : bool, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE):
   return build_response( await backend().get_ops_in_block( block_num, only_virtual, include_reversible) )
 
 @verify_types
-@require_unsigned('block_range_begin', 'block_range_end', 'operation_begin', 'limit')
-async def enum_virtual_ops(*, block_range_begin : int, block_range_end : int, operation_begin : int = 0, limit : int = 1_000, filter : int = 0, include_reversible : bool = True, group_by_block : bool = False):
+@require_unsigned('block_range_begin', 'block_range_end', 'limit')
+async def enum_virtual_ops(*, block_range_begin : int, block_range_end : int, operation_begin : int = 0, limit : int = DEFAULT_LIMIT, filter : int = 0, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE, group_by_block : bool = False):
   assert block_range_end > block_range_begin, 'Block range must be upward'
   return build_response( await backend().enum_virtual_ops( filter, block_range_begin, block_range_end, operation_begin, limit, include_reversible, group_by_block ) )
 
@@ -68,7 +71,7 @@ async def get_transaction(*, trx_hash : str):
 
 @verify_types
 @require_unsigned('limit')
-async def get_account_history(*, account : str, start : int, limit : int, operation_filter_low : int = 0, operation_filter_high : int = 0, include_reversible : bool = True):
+async def get_account_history(*, account : str, start : int, limit : int = DEFAULT_LIMIT, operation_filter_low : int = 0, operation_filter_high : int = 0, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE):
   filter = ( operation_filter_low << 0xFFFFFFFF ) | operation_filter_high
   assert isinstance(filter, int)
   return build_response( await backend().get_account_history( filter, account, start, limit, include_reversible ) )
