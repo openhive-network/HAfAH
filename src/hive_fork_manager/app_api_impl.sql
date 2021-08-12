@@ -83,13 +83,13 @@ BEGIN
     END IF;
 
     SELECT
-        heq.event
+           heq.event
          , heq.block_num
          , heq.id
     FROM hive.events_queue heq
     WHERE id > __current_event_id
     ORDER BY heq.id ASC
-        LIMIT 1
+    LIMIT 1
     INTO __next_event_type,  __next_event_block_num, __next_event_id;
 
     CASE __next_event_type
@@ -170,7 +170,6 @@ END;
 $BODY$
 ;
 
-
 CREATE OR REPLACE FUNCTION hive.app_next_block_non_forking_app( _context_name TEXT )
     RETURNS hive.blocks_range
     LANGUAGE plpgsql
@@ -181,50 +180,97 @@ DECLARE
     __context_id INT;
     __context_is_attached BOOL;
     __current_block_num INT;
+    __irreversible_block_num INT;
+    __current_fork BIGINT;
+    __current_event_id BIGINT;
+    __next_event_id BIGINT;
+    __next_event_type hive.event_type;
+    __next_event_block_num INT;
     __next_block_to_process INT;
     __last_block_to_process INT;
+    __fork_id BIGINT;
+    __max_events_id BIGINT;
     __result hive.blocks_range;
 BEGIN
     PERFORM hive.squash_events( _context_name );
 
     SELECT
-          hac.id
-        , hac.current_block_num
-        , hac.is_attached
+           hac.current_block_num
+         , hac.fork_id
+         , hac.events_id
+         , hac.id
+         , hac.is_attached
+         , hac.irreversible_block
     FROM hive.contexts hac
     WHERE hac.name = _context_name
-    INTO __context_id, __current_block_num, __context_is_attached;
+    INTO __current_block_num, __current_fork, __current_event_id, __context_id, __context_is_attached, __irreversible_block_num;
 
     IF __context_id IS NULL THEN
-                RAISE EXCEPTION 'No context with name %', _context_name;
+            RAISE EXCEPTION 'No context with name %', _context_name;
     END IF;
 
     IF __context_is_attached = FALSE THEN
-        RAISE EXCEPTION 'Context % is detached', _context_name;
+            RAISE EXCEPTION 'Context % is detached', _context_name;
     END IF;
 
+    -- no event was processed
+    IF __current_event_id IS NULL THEN
+        __current_event_id = 0;
+    END IF;
 
+    SELECT
+           heq.event
+         , heq.block_num
+         , heq.id
+    FROM hive.events_queue heq
+    WHERE id > __current_event_id
+    ORDER BY heq.id ASC
+    LIMIT 1
+    INTO __next_event_type,  __next_event_block_num, __next_event_id;
+
+    IF __next_event_id IS NOT NULL THEN
+        UPDATE hive.contexts
+        SET events_id = __next_event_id
+        WHERE id = __context_id;
+    END IF;
+
+    CASE __next_event_type
+        WHEN 'NEW_IRREVERSIBLE' THEN
+            IF __next_event_block_num > __irreversible_block_num THEN
+                PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
+            END IF;
+        WHEN 'MASSIVE_SYNC' THEN
+            IF __next_event_block_num > __irreversible_block_num THEN
+                PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
+            END IF;
+        ELSE
+    END CASE;
+
+    SELECT hc.irreversible_block INTO __irreversible_block_num
+    FROM hive.contexts hc WHERE hc.id = __context_id;
+
+    -- if there is no event or we still process irreversible blocks
     SELECT MIN( hb.num ), MAX( hb.num )
     FROM hive.blocks hb
-    WHERE hb.num > __current_block_num
+    WHERE hb.num > __current_block_num AND hb.num <= __irreversible_block_num
     INTO __next_block_to_process, __last_block_to_process;
 
     IF __next_block_to_process IS NULL THEN
-            -- There is no new and expected block, needs to wait for a new block
+        -- There is no new and expected block, needs to wait for a new block
+        SELECT MAX( heq.id ) INTO __max_events_id FROM hive.events_queue heq;
+        IF __max_events_id <= __next_event_id THEN
             PERFORM pg_sleep( 1.5 );
-            RETURN NULL;
+        END IF;
+        RETURN NULL;
     END IF;
 
-
-
     UPDATE hive.contexts
-    SET   current_block_num = __next_block_to_process
-        , irreversible_block = __last_block_to_process
+    SET current_block_num = __next_block_to_process
     WHERE id = __context_id;
 
     __result.first_block = __next_block_to_process;
     __result.last_block = __last_block_to_process;
     RETURN __result;
-END;
+    END;
 $BODY$
 ;

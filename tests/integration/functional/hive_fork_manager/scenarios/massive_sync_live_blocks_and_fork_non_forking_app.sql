@@ -125,8 +125,17 @@ BEGIN
 
     PERFORM hive.set_irreversible( 8 );
 
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks;
+    ASSERT __blocks IS NULL, 'Instead of NULL something is returned for FORK event';
+
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks;
+    ASSERT __blocks IS NULL, 'Instead of NULL something is returned for NEW_BLOCK(8) event';
+
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks;
+    ASSERT __blocks IS NULL, 'Instead of NULL something is returned for NEW_BLOCK(9) event';
+
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- irreversible block 7
-    ASSERT __blocks IS NOT NULL, 'Null is returned instead for block 10';
+    ASSERT __blocks IS NOT NULL, 'Null is returned instead for irreversible block 7';
     ASSERT __blocks = (7,8), 'Incorrect range (7,8)';
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- irreversible block 8
@@ -135,7 +144,6 @@ BEGIN
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- block 9 is reversible
     ASSERT __blocks IS NULL, 'Null was not returned for block 9';
-
 END;
 $BODY$
 ;

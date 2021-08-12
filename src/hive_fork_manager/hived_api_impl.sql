@@ -201,7 +201,7 @@ $BODY$
 BEGIN
     DELETE FROM hive.events_queue heq
     USING ( SELECT MIN( hc.events_id) as id FROM hive.contexts hc ) as min_event
-    WHERE heq.block_num < _new_irreversible_block AND heq.block_num < min_event.id;
+    WHERE heq.block_num < _new_irreversible_block AND heq.id < min_event.id;
 END;
 $BODY$
 ;
