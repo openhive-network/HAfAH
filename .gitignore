@@ -3,3 +3,4 @@ __workbook
 **/__pycache__
 **/*.pyc
 *.pyc
+tests/data/records.sql
