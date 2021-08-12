@@ -19,7 +19,6 @@ BEGIN
         RAISE EXCEPTION 'Table is not registered';
     END IF;
 
-
     -- remove triggers functions
     FOR  __trigger_funtion_name IN SELECT ht.function_name FROM hive.triggers ht
     WHERE ht.registered_table_id = __table_id

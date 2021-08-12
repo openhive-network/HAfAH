@@ -27,17 +27,24 @@ AS
 $BODY$
 DECLARE
 __result INT;
+__blocks hive.blocks_range;
+__curent_block INT;
 BEGIN
         ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 0, 'hive.app_get_irreversible_block !=0 (1)';
 
-        PERFORM hive.app_next_block( 'context' ); -- no events
+        ASSERT ( SELECT hc.current_block_num FROM hive.contexts hc WHERE name = 'context' ) = 0, 'Wrng current block != 0(1)';
+
+        SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- no events
+        ASSERT ( SELECT hc.current_block_num FROM hive.contexts hc  WHERE name = 'context' ) = 0, 'Wrong current block != 0(2)';
         ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 0, 'hive.app_get_irreversible_block !=0 (2)';
 
         --hived ends massive sync - irreversible = 1
         PERFORM hive.end_massive_sync( 1 );
         ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 0, 'hive.app_get_irreversible_block !=0 (3)';
 
-        PERFORM hive.app_next_block( 'context' ); -- massive sync event
+        SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- massive sync event
+        RAISE NOTICE 'Blocks range after MASSIVE_SYNC = %', __blocks;
+
         ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 1, 'hive.app_get_irreversible_block !=1 (1)';
 
         PERFORM hive.push_block(

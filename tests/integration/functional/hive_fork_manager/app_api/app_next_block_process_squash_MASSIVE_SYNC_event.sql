@@ -38,14 +38,16 @@ BEGIN
            , ( 6, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp )
     ;
 
-    PERFORM hive.app_next_block( 'context' ); --block 1 (squash massive sync)
+    PERFORM hive.app_next_block( 'context' ); --block 1
     INSERT INTO A.table1(id) VALUES ( 1 );
-    PERFORM hive.app_next_block( 'context' ); --block 2 - irreversible
+    PERFORM hive.app_next_block( 'context' ); --block 2
     INSERT INTO A.table1(id) VALUES ( 2 );
     PERFORM hive.app_next_block( 'context' ); --set irreversible block 2
-    PERFORM hive.app_next_block( 'context' ); --block 3 --reversible
-    INSERT INTO A.table1(id) VALUES ( 3 ); --reversible
+    PERFORM hive.app_next_block( 'context' ); --block 3
+    INSERT INTO A.table1(id) VALUES ( 3 );
 
+    PERFORM hive.end_massive_sync(3);
+    PERFORM hive.end_massive_sync(5);
     PERFORM hive.end_massive_sync(6);
 END;
 $BODY$
@@ -61,11 +63,7 @@ $BODY$
 DECLARE
     __blocks hive.blocks_range;
 BEGIN
-    SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- MASSIVE_SYNC
-    ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks';
-    RAISE NOTICE 'Blocks range = %', __blocks;
-    ASSERT __blocks.first_block = 3, 'Incorrect first block';
-    ASSERT __blocks.last_block = 6, 'Incorrect last range';
+    -- NOTHING TODO HERE
 END;
 $BODY$
 ;
@@ -74,12 +72,22 @@ DROP FUNCTION IF EXISTS test_then;
 CREATE FUNCTION test_then()
     RETURNS void
     LANGUAGE 'plpgsql'
-STABLE
+    VOLATILE
 AS
 $BODY$
+DECLARE
+    __blocks hive.blocks_range;
 BEGIN
+    ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context' LIMIT 1 ) = 3, 'Wrong events id 1';
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- MASSIVE_SYNC
+
+    ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks';
+    RAISE NOTICE 'Blocks range = %', __blocks;
+    ASSERT __blocks.first_block = 3, 'Incorrect first block';
+    ASSERT __blocks.last_block = 6, 'Incorrect last range';
+
     ASSERT ( SELECT current_block_num FROM hive.contexts WHERE name='context' ) = 3, 'Wrong current block num';
-    ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context' ) = 4, 'Wrong events id';
+    ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context' ) = 6, 'Wrong events id';
     ASSERT ( SELECT irreversible_block FROM hive.contexts WHERE name='context' ) = 6, 'Wrong irreversible';
 
     ASSERT ( SELECT COUNT(*)  FROM A.table1 ) = 2, 'Wrong number of rows in app table';
