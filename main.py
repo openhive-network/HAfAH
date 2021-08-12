@@ -6,7 +6,7 @@ from aiohttp import web
 from aiohttp.web_app import Application
 from aiohttp.web_request import Request
 from jsonrpcserver.response import Response
-from ah.api.endpoints import *
+from ah.api.endpoints import build_methods, backend_singleton
 from aiohttp.web import json_response
 from ah.api.objects import result
 
