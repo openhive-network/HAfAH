@@ -66,8 +66,8 @@ async def enum_virtual_ops(*, block_range_begin : int, block_range_end : int, op
   return build_response( await backend().enum_virtual_ops( filter, block_range_begin, block_range_end, operation_begin, limit, include_reversible, group_by_block ) )
 
 @verify_types
-async def get_transaction(*, trx_hash : str):
-  return build_response( await backend().get_transaction( trx_hash ) )
+async def get_transaction(*, trx_hash : str, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE):
+  return build_response( await backend().get_transaction( trx_hash, include_reversible ) )
 
 @verify_types
 @require_unsigned('limit')

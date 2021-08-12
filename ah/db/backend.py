@@ -53,8 +53,8 @@ class account_history_impl:
   async def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool) -> ops_in_block:
     return ops_in_block( block_num, await self.api.get_ops_in_block(block_num, only_virtual, include_reversible) )
 
-  async def get_transaction(self, trx_hash : str ) -> transaction:
-    transaction_basic_info = await self.api.get_transaction( trx_hash.encode('ascii') )
+  async def get_transaction(self, trx_hash : str, include_reversible : bool ) -> transaction:
+    transaction_basic_info = await self.api.get_transaction( trx_hash.encode('ascii'), include_reversible )
     
     if len(transaction_basic_info) == 0: return dict()
     else: transaction_basic_info = dict(transaction_basic_info[0])

@@ -35,10 +35,11 @@ class account_history_db_connector:
       include_reversible=include_reversible
     )
 
-  async def get_transaction(self, trx_hash : bytes ):
+  async def get_transaction(self, trx_hash : bytes, include_reversible : bool ):
     return self._get_all(
-      "SELECT * FROM get_transaction( :trx_hash )",
-      trx_hash=trx_hash
+      "SELECT * FROM get_transaction( :trx_hash, :include_reversible )",
+      trx_hash=trx_hash,
+      include_reversible=include_reversible
     )
 
   async def enum_virtual_ops(self, filter : list, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool):
