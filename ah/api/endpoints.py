@@ -10,35 +10,77 @@ class backend_singleton:
     assert backend_singleton.__m_backend is not None
     return backend_singleton.__m_backend
 
+  @classmethod
+  def finish(cls):
+    cls.backend().db.close()
+
 def backend():
   return backend_singleton.backend()
 
 def build_response( obj ):
-  from json import dumps
   return obj
 
-async def get_ops_in_block(block_num : int, only_virtual : bool, include_reversible : bool = True):
+def get_input_arguments( foo, kwargs ):
+  defaults = foo.__kwdefaults__
+  if defaults is not None:
+    for param_name, param_value in defaults.items():
+      if param_name not in kwargs:
+        kwargs[param_name] = param_value
+  return kwargs
+
+def verify_types(foo):
+  '''' verifies types given from API user '''
+  def verify_types_impl(**kwargs):
+    annotations = dict(foo.__annotations__)
+    kwargs = get_input_arguments( foo, kwargs )
+    for param_name, param_type in annotations.items():
+      assert isinstance(kwargs[param_name], param_type), f'`{param_name}` is {str(type(kwargs[param_name]))} type, but should be {str(param_type)} type'
+    return foo(**kwargs)
+  return verify_types_impl
+
+def require_unsigned(*params_to_check):
+  ''' verifies is given value is non-negative number '''
+  def require_positive_wrap(foo):
+    def require_positive_impl(**kwargs):
+      kwargs = get_input_arguments( foo, kwargs )
+      for param_name in params_to_check:
+        assert isinstance( kwargs[param_name], int )
+        assert kwargs[param_name] >= 0
+      return foo(**kwargs)
+    return require_positive_impl
+  return require_positive_wrap
+
+
+@verify_types
+@require_unsigned('block_num')
+async def get_ops_in_block(*, block_num : int, only_virtual : bool, include_reversible : bool = True):
   return build_response( await backend().get_ops_in_block( block_num, only_virtual, include_reversible) )
 
-async def enum_virtual_ops(block_range_begin : int, block_range_end : int, operation_begin : int = 0, limit : int = 1_000, filter : int = 0, include_reversible : bool = True ):
-  return build_response( await backend().enum_virtual_ops( filter, block_range_begin, block_range_end, operation_begin, limit, include_reversible) )
+@verify_types
+@require_unsigned('block_range_begin', 'block_range_end', 'operation_begin', 'limit')
+async def enum_virtual_ops(*, block_range_begin : int, block_range_end : int, operation_begin : int = 0, limit : int = 1_000, filter : int = 0, include_reversible : bool = True, group_by_block : bool = False):
+  assert block_range_end > block_range_begin, 'Block range must be upward'
+  return build_response( await backend().enum_virtual_ops( filter, block_range_begin, block_range_end, operation_begin, limit, include_reversible, group_by_block ) )
 
-async def get_transaction(trx_hash : str ):
+@verify_types
+async def get_transaction(*, trx_hash : str):
   return build_response( await backend().get_transaction( trx_hash ) )
 
-async def get_account_history(account : str, start : int, limit : int, operation_filter_low : int = 0, operation_filter_high : int = 0, include_reversible : bool = True):
+@verify_types
+@require_unsigned('limit')
+async def get_account_history(*, account : str, start : int, limit : int, operation_filter_low : int = 0, operation_filter_high : int = 0, include_reversible : bool = True):
   filter = ( operation_filter_low << 0xFFFFFFFF ) | operation_filter_high
   assert isinstance(filter, int)
   return build_response( await backend().get_account_history( filter, account, start, limit, include_reversible ) )
 
 def build_methods():
-  def method( foo ):
-    return (f'account_history_api.{foo.__name__}', foo)
+  def method( name, foo ):
+    return (f'account_history_api.{name}', foo)
 
   methods = dict([
-    method( get_ops_in_block ),
-    method( enum_virtual_ops ),
-    method( get_transaction ),
-    method( get_account_history )
+    method( 'get_ops_in_block', get_ops_in_block ),
+    method( 'enum_virtual_ops', enum_virtual_ops ),
+    method( 'get_transaction', get_transaction ),
+    method( 'get_account_history', get_account_history )
   ])
   return methods
