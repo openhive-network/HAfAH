@@ -65,3 +65,7 @@ class account_history_db_connector:
 
   def get_irreversible_block_num(self) -> int:
     return self._get_all("SELECT hive.app_get_irreversible_block( 'account_history' ) as num")[0]['num']
+
+  def get_operation_id_types(self):
+    ''' for tests only '''
+    return self._get_all("SELECT name, id FROM hive.operation_types")
