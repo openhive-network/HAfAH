@@ -21,9 +21,11 @@ def backend():
   return backend_singleton.backend()
 
 def build_response( obj ):
+  '''proxy method, currently useless'''
   return obj
 
 def get_input_arguments( foo, kwargs ):
+  '''helper methods to gently merge defaults and given kwargs'''
   defaults = foo.__kwdefaults__
   if defaults is not None:
     for param_name, param_value in defaults.items():
