@@ -1,3 +1,6 @@
+from typing import List, Tuple
+
+
 class result:
   def __init__( self, result, id : int, jsonrpc : str = "2.0" ):
     self.jsonrpc = jsonrpc
@@ -99,10 +102,10 @@ class account_history_item:
 
 class account_history:
   def __init__(self, iterable):
-      self.history : list = [ self.__format_item( row ) for row in iterable ]
+      self.history : List[ Tuple[ int, account_history_item ] ] = [ self.__format_item( row ) for row in iterable ]
 
-  def __format_item( self, row ) -> list:
-    return [
+  def __format_item( self, row ) -> Tuple[ int, account_history_item ]:
+    return (
       row["_operation_id"],
       account_history_item( row )
-    ]
+    )
