@@ -61,6 +61,7 @@ class virtual_ops(api_operations_container):
 
     if irreversible_block is not None:
       self.__group_by_block(irreversible_block)
+      self.ops.clear()
 
   def __setup_pagination(self):
     last_op : api_operation = self.ops[-1]
