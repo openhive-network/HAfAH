@@ -6,41 +6,8 @@ class account_history_impl:
   def __init__(self, db_address):
       self.db = Db(db_address)
       self.api = account_history_db_connector(self.db)
-      self.translation_map = {
-        0x000001: "fill_convert_request_operation",
-        0x000002: "author_reward_operation",
-        0x000004: "curation_reward_operation",
-        0x000008: "comment_reward_operation",
-        0x000010: "liquidity_reward_operation",
-        0x000020: "interest_operation",
-        0x000040: "fill_vesting_withdraw_operation",
-        0x000080: "fill_order_operation",
-        0x000100: "shutdown_witness_operation",
-        0x000200: "fill_transfer_from_savings_operation",
-        0x000400: "hardfork_operation",
-        0x000800: "comment_payout_update_operation",
-        0x001000: "return_vesting_delegation_operation",
-        0x002000: "comment_benefactor_reward_operation",
-        0x004000: "producer_reward_operation",
-        0x008000: "clear_null_account_balance_operation",
-        0x010000: "proposal_pay_operation",
-        0x020000: "sps_fund_operation",
-        0x040000: "hardfork_hive_operation",
-        0x080000: "hardfork_hive_restore_operation",
-        0x100000: "delayed_voting_operation",
-        0x200000: "consolidate_treasury_balance_operation",
-        0x400000: "effective_comment_vote_operation",
-        0x800000: "ineffective_delete_comment_operation",
-        0x1000000: "sps_convert_operation"
-      }
-
 
   def __translate_filter(self, input : int):
-    def __fetch_ids():
-      pass
-      # self.translation_map = { row[0]: row[1] for row in self.api.get_operation_ids( list(self.translation_map.items()) ) }
-    # if isinstance(self.translation_map[1], str):
-      # self.__fetch_ids()
     result = []
     if input:
       print(input)
