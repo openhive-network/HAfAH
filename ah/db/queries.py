@@ -44,7 +44,7 @@ class account_history_db_connector:
 
   async def enum_virtual_ops(self, filter : list, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool):
     return self._get_all(
-      "SELECT * FROM enum_virtual_ops( :filter ::INT[] , :block_range_begin, :block_range_end, :operation_begin, :limit, :include_reversible )",
+      "SELECT * FROM enum_virtual_ops( :filter ::INT[] , :block_range_begin, :block_range_end, :operation_begin, :limit, :include_reversible ) ORDER BY _operation_id",
       filter=filter,
       block_range_begin=block_range_begin,
       block_range_end=block_range_end,
