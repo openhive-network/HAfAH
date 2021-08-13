@@ -2,6 +2,7 @@
 
 from json import loads
 from json.decoder import JSONDecodeError
+from typing_extensions import final
 from aiohttp import web
 from aiohttp.web_app import Application
 from aiohttp.web_request import Request
@@ -58,6 +59,8 @@ async def jsonrpc_handler(request : Request):
         data="Details: " + str(ex),
         status=500
       )
-
-app.router.add_post('/', jsonrpc_handler)
-web.run_app(app, port=8090)
+try:
+  app.router.add_post('/', jsonrpc_handler)
+  web.run_app(app, port=8090)
+finally:
+  ah_singleton.finish()
