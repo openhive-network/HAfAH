@@ -72,8 +72,7 @@ async def get_transaction(*, trx_hash : str, include_reversible : bool = DEFAULT
 @verify_types
 @require_unsigned('limit')
 async def get_account_history(*, account : str, start : int, limit : int = DEFAULT_LIMIT, operation_filter_low : int = 0, operation_filter_high : int = 0, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE):
-  filter = ( operation_filter_low << 0xFFFFFFFF ) | operation_filter_high
-  assert isinstance(filter, int)
+  filter = ( operation_filter_high << 32 ) | operation_filter_low
   return build_response( await backend().get_account_history( filter, account, start, limit, include_reversible ) )
 
 def build_methods():
