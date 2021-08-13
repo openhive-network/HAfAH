@@ -1,19 +1,5 @@
 from . import *
 
-@fixture
-def op_name_id_translation():
-  return {
-    'account_witness_vote_operation': 12,
-    'producer_reward_operation': 62
-  }
-
-def operation_ids_to_binary( op_ids : list ) -> int:
-  op_ids = sorted(op_ids)
-  result = 0
-  for op_id in op_ids:
-    result += pow(2, op_id)
-  return result
-
 async def enum_with_filters( api : api_t, op_ids : list) -> virtual_ops:
   return await api.enum_virtual_ops( 
     filter=operation_ids_to_binary(op_ids),
