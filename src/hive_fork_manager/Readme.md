@@ -178,6 +178,10 @@ There are situations when an application doesn't have to traverse the events que
 
 The optimization above is implemented in [src/hive_fork_manager/app_api_impl.sql](./app_api_impl.sql) in function `hive.squash_events` (which is automatically called by the `hive.app_next_block` function).
 
+#### Optimizations of MASSIVE_SYNC_EVENTs
+MASSIVE_SYNC_EVENTs are squashed - it means that the context is moved to the newest MASSIVE_SYNC_EVENT. MASSIVE_SYNC_EVENTS ensures that older blocks
+are irreversible, so there is no sens to process lowest events
+
 #### Removing obsolete events
 Once a block becomes irreversible, events related to that block which have been processed by all contexts (applications) are no longer needed by applications. These events are automatcially removed from the events queue by the function `hive.set_irreversible` (this function is periodically called by hived when the last irreversible block number changes).
 
@@ -206,8 +210,8 @@ hive.shadow_<table_schema>_<table_name>
 It is possible to rewind all operations registered in shadow tables with `hive.context_back_from_fork`
 
 Because the triggers add some significant overhead when modifying application tables, in some situations it may be necessary to temporary disable the triggers for the sake of better performance. To do this there are functions: 
-* `hive.detach_table` to disable triggers
-* 'hive.attach_table' to enable triggers. 
+* `hive.detach_table` to remove triggers
+* 'hive.attach_table' to add triggers. 
 
 When triggers are disabled, no support for fork management is enabled for a table,
 so the application should solve the situation. In most cases this should only be done when blocks older than the last irreversible block are being processed, so no forks can happen there.
