@@ -155,7 +155,7 @@ BEGIN
     END IF;
 
 
-    PERFORM hive.attach_table( hrt.origin_table_schema, hrt.origin_table_name )
+    PERFORM hive.attach_table( hrt.origin_table_schema, hrt.origin_table_name, __context_id )
     FROM hive.registered_tables hrt
     WHERE hrt.context_id = __context_id;
 

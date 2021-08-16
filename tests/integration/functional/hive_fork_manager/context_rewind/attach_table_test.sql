@@ -22,7 +22,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.attach_table( 'A'::TEXT, 'table1'::TEXT );
+    PERFORM hive.attach_table( 'A'::TEXT, 'table1'::TEXT, 1 );
     PERFORM hive.context_next_block( 'context' );
     INSERT INTO A.table1( smth, name ) VALUES (1, 'abc' );
 END

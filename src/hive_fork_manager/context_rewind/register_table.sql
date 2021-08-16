@@ -314,49 +314,7 @@ BEGIN
         , _table_name
     );
 
-    -- register insert trigger
-    EXECUTE format(
-        'CREATE TRIGGER %I AFTER INSERT ON %I.%I REFERENCING NEW TABLE AS NEW_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
-        , __hive_insert_trigger_name
-        , _table_schema
-        , _table_name
-        , __hive_triggerfunction_name_insert
-        , __context_id
-        , __shadow_table_name
-    );
-
-    -- register delete trigger
-    EXECUTE format(
-        'CREATE TRIGGER %I AFTER DELETE ON %I.%I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
-        , __hive_delete_trigger_name
-        , _table_schema
-        , _table_name
-        , __hive_triggerfunction_name_delete
-        , __context_id
-        , __shadow_table_name
-    );
-
-    -- register update trigger
-    EXECUTE format(
-        'CREATE TRIGGER %I AFTER UPDATE ON %I.%I REFERENCING OLD TABLE AS OLD_TABLE FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
-        , __hive_update_trigger_name
-        , _table_schema
-        , _table_name
-        , __hive_triggerfunction_name_update
-        , __context_id
-        , __shadow_table_name
-    );
-
-    -- register truncate trigger
-    EXECUTE format(
-        'CREATE TRIGGER %I BEFORE TRUNCATE ON %I.%I FOR EACH STATEMENT EXECUTE PROCEDURE %s( %L, %L )'
-        , __hive_truncate_trigger_name
-        , _table_schema
-        , _table_name
-        , __hive_triggerfunction_name_truncate
-        , __context_id
-        , __shadow_table_name
-    );
+    PERFORM hive.create_triggers(  _table_schema, _table_name, __context_id );
 
     PERFORM hive.create_revert_functions( _table_schema, _table_name, __shadow_table_name, __columns_names );
 

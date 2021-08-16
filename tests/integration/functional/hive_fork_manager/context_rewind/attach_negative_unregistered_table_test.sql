@@ -20,7 +20,7 @@ AS
 $BODY$
 BEGIN
     BEGIN
-        PERFORM hive.attach_table( 'public', 'notregisteredtable' );
+        PERFORM hive.attach_table( 'public', 'notregisteredtable', 1 );
     EXCEPTION WHEN OTHERS THEN
         RETURN;
     END;

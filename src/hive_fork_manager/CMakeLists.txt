@@ -1,6 +1,7 @@
 ADD_PSQL_EXTENSION(
     NAME hive_fork_manager
     SOURCES context_rewind/data_schema.sql
+            context_rewind/triggers.sql
             context_rewind/event_triggers.sql
             context_rewind/register_table.sql
             context_rewind/detach_table.sql

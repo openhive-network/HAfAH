@@ -63,17 +63,14 @@ BEGIN
         RAISE EXCEPTION 'Cannot detach a table %.%. Shadow table hive.% is not empty', _table_schema, _table_name, __shadow_table_name;
     END IF;
 
-    FOR __trigger_name IN SELECT ht.trigger_name FROM hive.triggers ht WHERE ht.registered_table_id = __table_id
-    LOOP
-        EXECUTE format( 'ALTER TABLE %I.%I DISABLE TRIGGER %I', lower(_table_schema), _table_name, __trigger_name  );
-    END LOOP;
+    PERFORM hive.drop_triggers( _table_schema, _table_name );
 
     RETURN;
 END;
 $BODY$
 ;
 
-CREATE OR REPLACE FUNCTION hive.attach_table( _table_schema TEXT, _table_name TEXT )
+CREATE OR REPLACE FUNCTION hive.attach_table( _table_schema TEXT, _table_name TEXT, _context_id hive.contexts.id%TYPE )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
@@ -97,10 +94,7 @@ BEGIN
             RAISE EXCEPTION 'Table %.% is not registered or is already attached', _table_schema, _table_name;
     END IF;
 
-    FOR __trigger_name IN SELECT ht.trigger_name FROM hive.triggers ht WHERE ht.registered_table_id = __table_id
-        LOOP
-        EXECUTE format( 'ALTER TABLE %I.%I ENABLE TRIGGER %I', lower(_table_schema), _table_name, __trigger_name  );
-    END LOOP;
+    PERFORM hive.create_triggers( _table_schema, _table_name, _context_id );
 END;
 $BODY$
 ;
