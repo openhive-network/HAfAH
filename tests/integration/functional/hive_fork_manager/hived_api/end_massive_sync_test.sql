@@ -32,7 +32,7 @@ VOLATILE
 AS
 $BODY$
 BEGIN
-    PERFORM hive.end_massive_sync();
+    PERFORM hive.end_massive_sync(10);
 END
 $BODY$
 ;

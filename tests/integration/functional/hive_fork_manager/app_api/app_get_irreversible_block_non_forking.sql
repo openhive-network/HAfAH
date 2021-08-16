@@ -32,7 +32,7 @@ BEGIN
     ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 1, 'hive.app_get_irreversible_block !=1 (2)';
 
     --hived ends massive sync - irreversible = 1
-    PERFORM hive.end_massive_sync();
+    PERFORM hive.end_massive_sync( 1 );
     ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 1, 'hive.app_get_irreversible_block !=1 (3)';
 
     PERFORM hive.app_next_block( 'context' ); -- massive sync event

@@ -18,7 +18,7 @@ VALUES
     , ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:24-07'::timestamp )
     , ( 5, '\xBADD50', '\xCAFE50', '2016-06-22 19:10:25-07'::timestamp )
 ;
-PERFORM hive.end_massive_sync();
+PERFORM hive.end_massive_sync(5);
 
 -- live sync
 PERFORM hive.push_block(
@@ -130,23 +130,23 @@ BEGIN
 
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 2
-    ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (2,6)';
-    ASSERT __blocks = (2,6), 'Incorrect range (2,6)';
+    ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (2,5)';
+    ASSERT __blocks = (2,5), 'Incorrect range (2,5)';
     INSERT INTO A.table1(id) VALUES( 2 );
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 3
-    ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (3,6)';
-    ASSERT __blocks = (3,6), 'Incorrect range (3,6)';
+    ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (3,5)';
+    ASSERT __blocks = (3,5), 'Incorrect range (3,5)';
     INSERT INTO A.table1(id) VALUES( 3 );
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 4
-    ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (4,6)';
-    ASSERT __blocks = (4,6), 'Incorrect range (4,6)';
+    ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (4,5)';
+    ASSERT __blocks = (4,5), 'Incorrect range (4,5)';
     INSERT INTO A.table1(id) VALUES( 4 );
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 5
-    ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (5,6)';
-    ASSERT __blocks = (5,6), 'Incorrect range (5,6)';
+    ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (5,5)';
+    ASSERT __blocks = (5,5), 'Incorrect range (5,5)';
     INSERT INTO A.table1(id) VALUES( 5 );
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 6
@@ -161,7 +161,9 @@ BEGIN
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- SET_IRREVERSIBLE_EVENT
     ASSERT __blocks IS NULL, 'NUll was not returned for processing SET_IRREVERSIBLE_EVENT';
 
-    -- here squash of forks should work
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks;
+    ASSERT __blocks IS NULL, 'NULL was not returned from BACK_FROM_FORK';
+
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 8
     ASSERT ( SELECT COUNT(*) FROM A.table1 ) = 7, 'Wrong number of rows after fork(7)';
     ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (8,8)';

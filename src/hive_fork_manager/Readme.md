@@ -178,6 +178,10 @@ There are situations when an application doesn't have to traverse the events que
 
 The optimization above is implemented in [src/hive_fork_manager/app_api_impl.sql](./app_api_impl.sql) in function `hive.squash_events` (which is automatically called by the `hive.app_next_block` function).
 
+#### Optimizations of MASSIVE_SYNC_EVENTs
+MASSIVE_SYNC_EVENTs are squashed - it means that the context is moved to the newest MASSIVE_SYNC_EVENT. MASSIVE_SYNC_EVENTS ensures that older blocks
+are irreversible, so there is no sens to process lowest events
+
 #### Removing obsolete events
 Once a block becomes irreversible, events related to that block which have been processed by all contexts (applications) are no longer needed by applications. These events are automatcially removed from the events queue by the function `hive.set_irreversible` (this function is periodically called by hived when the last irreversible block number changes).
 
@@ -206,8 +210,8 @@ hive.shadow_<table_schema>_<table_name>
 It is possible to rewind all operations registered in shadow tables with `hive.context_back_from_fork`
 
 Because the triggers add some significant overhead when modifying application tables, in some situations it may be necessary to temporary disable the triggers for the sake of better performance. To do this there are functions: 
-* `hive.detach_table` to disable triggers
-* 'hive.attach_table' to enable triggers. 
+* `hive.detach_table` to remove triggers
+* 'hive.attach_table' to add triggers. 
 
 When triggers are disabled, no support for fork management is enabled for a table,
 so the application should solve the situation. In most cases this should only be done when blocks older than the last irreversible block are being processed, so no forks can happen there.
@@ -244,15 +248,26 @@ Push new block with its transactions, their operations and signatures
 ##### hive.set_irreversible( _block_num )
 Set new irreversible block
 
-#### hive.end_massive_sync()
+#### hive.end_massive_sync(block_num)
 After finishing a massive push of blocks, hived will invoke this method to schedlue MASSIVE_SYNC event. The parameter `_block_num`
 is a last massivly synced block - head or irreversible blocks.
+
+#### hive.disable_indexes_of_irreversible()
+There are some indexes created by the extension on irreversible blocks data. Those indexes may slows down massive dumps
+of blocks data by hived. The function drops and saves description of indexes and FK constraints created on irreversible blocks table.
+Hived nay use this function before start massive sync of blocks.
+
+#### hive.enable_indexes_of_irreversible()
+It restores indexes and FK constarint dropped and saved by the function above. 
 
 #### APP API
 The functions which should be used by an application
 
 ##### hive.app_create_context( _name )
 Creates a new context. Context name can contains only characters from set: `a-zA-Z0-9_`
+
+##### hive.app_remove_context( _name hive.context_name )
+Remove the context and unregister all its tables.
 
 ##### hive.app_next_block( _context_name )
 Returns `hive.blocks_range` -range of blocks numbers to process or NULL
@@ -302,6 +317,10 @@ Enables triggers attached to register tables in a given context and set current 
 ##### hive.context_create( context_name, forkid, irreversible_block )
 Creates the context with controll block number on which the registered tables are working. The 'fork_id' and
 'irreversible_block' are used only by application api.
+
+##### hive.context_create( context_name )
+Removes the context: removes triggers, remove hive_row id columns from registered tables, unregister all tables, removes
+base table hive.<context>
 
 ##### hive.context_next_block( context_name )
 Moves a context to the next available block

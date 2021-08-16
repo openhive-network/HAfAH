@@ -21,6 +21,18 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.app_remove_context( _name hive.context_name )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    PERFORM hive.context_remove( _name );
+END;
+$BODY$
+;
+
 CREATE OR REPLACE FUNCTION hive.app_context_exists( _name TEXT )
     RETURNS BOOL
     LANGUAGE plpgsql
@@ -114,15 +126,27 @@ END;
 $BODY$
 ;
 
-CREATE OR REPLACE FUNCTION hive.app_register_table( _table_full_name TEXT,  _context TEXT )
+CREATE OR REPLACE FUNCTION hive.app_register_table( _table_schema TEXT,  _table_name TEXT,  _context TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
     VOLATILE
 AS
 $BODY$
 BEGIN
-    EXECUTE format( 'ALTER TABLE %s ADD COLUMN hive_rowid BIGINT NOT NULL DEFAULT 0', _table_full_name );
-    EXECUTE format( 'ALTER TABLE %s INHERIT hive.%s', _table_full_name, _context );
+    EXECUTE format( 'ALTER TABLE %I.%s ADD COLUMN hive_rowid BIGINT NOT NULL DEFAULT 0', _table_schema, _table_name );
+    EXECUTE format( 'ALTER TABLE %I.%s INHERIT hive.%s', _table_schema, _table_name, _context );
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.app_unregister_table( _table_schema TEXT,  _table_name TEXT )
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    PERFORM hive.unregister_table( _table_schema, _table_name );
 END;
 $BODY$
 ;
