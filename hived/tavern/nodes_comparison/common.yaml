@@ -1,0 +1,8 @@
+---
+  name: Common test values
+  description: Common values for tests
+
+  variables:
+    service:
+      url1: "{tavern.env_vars.FIRST_HIVEMIND_URL}"
+      url2: "{tavern.env_vars.SECOND_HIVEMIND_URL}"
