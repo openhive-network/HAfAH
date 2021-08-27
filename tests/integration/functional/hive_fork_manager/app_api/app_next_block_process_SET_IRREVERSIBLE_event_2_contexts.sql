@@ -24,15 +24,6 @@ BEGIN
         , NULL
     );
 
-    PERFORM hive.set_irreversible( 3 );
-
-    PERFORM hive.push_block(
-         ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:25-07'::timestamp )
-        , NULL
-        , NULL
-        , NULL
-    );
-
     PERFORM hive.app_create_context( 'context' );
     CREATE SCHEMA A;
     CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.context );
@@ -54,6 +45,15 @@ BEGIN
     INSERT INTO B.table2(id) VALUES( 2 );
     PERFORM hive.app_next_block( 'context2' ); -- NEW_BLOCK event block 3
     INSERT INTO B.table2(id) VALUES( 3 );
+
+    PERFORM hive.set_irreversible( 3 );
+
+    PERFORM hive.push_block(
+         ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:25-07'::timestamp )
+        , NULL
+        , NULL
+        , NULL
+    );
 END;
 $BODY$
 ;

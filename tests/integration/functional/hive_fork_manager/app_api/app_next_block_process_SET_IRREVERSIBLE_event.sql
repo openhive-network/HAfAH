@@ -24,14 +24,6 @@ BEGIN
         , NULL
     );
 
-    PERFORM hive.set_irreversible( 3 );
-
-    PERFORM hive.push_block(
-         ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:25-07'::timestamp )
-        , NULL
-        , NULL
-        , NULL
-    );
 
     PERFORM hive.app_create_context( 'context' );
     CREATE SCHEMA A;
@@ -57,6 +49,7 @@ $BODY$
 DECLARE
     __result INT;
 BEGIN
+    PERFORM hive.set_irreversible( 3 );
     SELECT hive.app_next_block( 'context' ) INTO __result;
     ASSERT __result IS NULL, 'Processing  SET_IRREVERSIBLE event did not return NULL';
 END

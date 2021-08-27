@@ -55,6 +55,7 @@ $BODY$
 DECLARE
     __irreversible_head_block hive.blocks.num%TYPE;
 BEGIN
+    PERFORM hive.remove_unecessary_events( _block_num );
     SELECT MAX( num ) INTO __irreversible_head_block FROM hive.blocks;
 
     -- application contexts will use the event to clear data in shadow tables
@@ -69,7 +70,6 @@ BEGIN
 
     -- remove unneeded blocks and events
     PERFORM hive.remove_obsolete_reversible_data( _block_num );
-    PERFORM hive.remove_unecessary_events( _block_num );
 END;
 $BODY$
 ;
@@ -81,8 +81,13 @@ CREATE OR REPLACE FUNCTION hive.end_massive_sync( _block_num INTEGER )
 AS
 $BODY$
 BEGIN
+     -- remove all events less than lowest context events_id
+    PERFORM hive.remove_unecessary_events( _block_num );
+
     INSERT INTO hive.events_queue( event, block_num )
     VALUES ( 'MASSIVE_SYNC'::hive.event_type, _block_num );
+
+    PERFORM hive.remove_obsolete_reversible_data( _block_num );
 END;
 $BODY$
 ;
