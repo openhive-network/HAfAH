@@ -11,3 +11,5 @@ CREATE TABLE IF NOT EXISTS hive.events_queue(
     , event hive.event_type NOT NULL
     , block_num BIGINT NOT NULL
 );
+
+INSERT INTO hive.events_queue VALUES( 0, 'NEW_IRREVERSIBLE', 0 ) ON CONFLICT DO NOTHING;

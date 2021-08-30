@@ -18,6 +18,7 @@ ALTER TABLE hive.blocks OWNER TO hived_group;
 ALTER TABLE hive.transactions OWNER TO hived_group;
 ALTER TABLE hive.operations OWNER TO hived_group;
 ALTER TABLE hive.transactions_multisig OWNER TO hived_group;
+ALTER TABLE hive.irreversible_data OWNER TO hived_group;
 
 -- generic protection for tables in hive schema
 -- 1. hived_group allow to edit every table in hive schema

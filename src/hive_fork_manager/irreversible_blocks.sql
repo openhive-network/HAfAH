@@ -6,6 +6,15 @@ CREATE TABLE IF NOT EXISTS hive.blocks (
        CONSTRAINT pk_hive_blocks PRIMARY KEY( num )
 );
 
+CREATE TABLE IF NOT EXISTS hive.irreversible_data (
+      id integer,
+      consistent_block integer,
+      CONSTRAINT pk_irreversible_data PRIMARY KEY ( id ),
+      CONSTRAINT fk_1_hive_irreversible_data FOREIGN KEY (consistent_block) REFERENCES hive.blocks (num)
+);
+
+INSERT INTO hive.irreversible_data VALUES(1,NULL) ON CONFLICT DO NOTHING;
+
 CREATE TABLE IF NOT EXISTS hive.transactions (
     block_num integer NOT NULL,
     trx_in_block smallint NOT NULL,

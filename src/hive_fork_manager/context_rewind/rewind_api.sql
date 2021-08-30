@@ -11,7 +11,7 @@ BEGIN
 
     EXECUTE format( 'CREATE TABLE hive.%I( hive_rowid BIGSERIAL )', _name );
     INSERT INTO hive.contexts( name, current_block_num, irreversible_block, is_attached, events_id, fork_id, owner )
-    VALUES( _name, 0, _irreversible_block, TRUE, NULL, _fork_id, current_user );
+    VALUES( _name, 0, _irreversible_block, TRUE, 0, _fork_id, current_user );
 END;
 $BODY$
 ;
@@ -181,7 +181,7 @@ BEGIN
     SELECT irreversible_block FROM hive.contexts hc WHERE hc.name = _context INTO __current_irreversible;
 
     IF _block_num < __current_irreversible THEN
-                RAISE EXCEPTION 'The proposed block number of irreversible block is lower than the current one for context %', _context;
+            RAISE EXCEPTION 'The proposed block number of irreversible block is lower than the current one for context %', _context;
     END IF;
 
     UPDATE hive.contexts  SET irreversible_block = _block_num WHERE name = _context;

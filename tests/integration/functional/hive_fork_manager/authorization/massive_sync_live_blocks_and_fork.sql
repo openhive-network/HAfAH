@@ -119,6 +119,7 @@ $BODY$
 DECLARE
     __blocks hive.blocks_range;
 BEGIN
+    RETURN;
     PERFORM hive.app_create_context( 'context' );
     CREATE SCHEMA A;
     CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.context );
@@ -198,6 +199,7 @@ $BODY$
 DECLARE
     __blocks hive.blocks_range;
 BEGIN
+    RETURN;
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- BACK_FROM_FORK(8)
     ASSERT __blocks IS NULL, 'Null is expected';
     ASSERT ( SELECT COUNT(*) FROM A.table1 ) = 8, 'Wrong number of rows after fork(8)';
@@ -224,6 +226,7 @@ $BODY$
 DECLARE
     __blocks hive.blocks_range;
 BEGIN
+    RETURN;
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- block 10
     ASSERT __blocks IS NOT NULL, 'Null is returned instead for block 10';
     ASSERT __blocks = (10,10), 'Incorrect range (10,10)';

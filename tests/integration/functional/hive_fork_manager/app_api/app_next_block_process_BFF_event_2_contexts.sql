@@ -10,6 +10,8 @@ BEGIN
     VALUES ( 1, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp )
     ;
 
+    PERFORM hive.end_massive_sync( 1 );
+
     PERFORM hive.push_block(
          ( 2, '\xBADD20', '\xCAFE20', '2016-06-22 19:10:25-07'::timestamp )
         , NULL
@@ -81,10 +83,10 @@ AS
 $BODY$
 BEGIN
     ASSERT ( SELECT current_block_num FROM hive.contexts WHERE name='context' ) = 2, 'Wrong current block num';
-    ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context' ) = 3, 'Wrong events id';
+    ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context' ) = 4, 'Wrong events id';
 
     ASSERT ( SELECT current_block_num FROM hive.contexts WHERE name='context2' ) = 3, 'Wrong current block num context2';
-    ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context2' ) = 4, 'Wrong events id context2';
+    ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context2' ) = 5, 'Wrong events id context2';
 
     ASSERT ( SELECT COUNT(*)  FROM A.table1 ) = 2, 'Wrong number of rows in app table';
     ASSERT EXISTS ( SELECT *  FROM A.table1 WHERE id = 1 ), 'No id 1' ;

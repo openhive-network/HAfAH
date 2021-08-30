@@ -23,6 +23,8 @@ BEGIN
 
     -- check if correct irreversibe block is set
     INSERT INTO hive.blocks VALUES( 101, '\xBADD', '\xCAFE', '2016-06-22 19:10:25-07'::timestamp );
+    PERFORM hive.end_massive_sync( 101 );
+
     PERFORM hive.app_create_context( 'context2');
 END
 $BODY$
@@ -36,11 +38,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT FROM hive.contexts WHERE name = 'context' AND current_block_num = 0 AND irreversible_block = 0 AND events_id IS NULL AND is_attached = TRUE );
-    ASSERT EXISTS ( SELECT FROM hive.contexts WHERE name = 'context2' AND current_block_num = 0 AND irreversible_block = 101  AND events_id IS NULL AND is_attached = TRUE );
-
-    ASSERT EXISTS ( SELECT FROM hive.contexts WHERE name = 'context' AND current_block_num = 0 AND irreversible_block = 0 AND is_attached = TRUE );
-    ASSERT EXISTS ( SELECT FROM hive.contexts WHERE name = 'context2' AND current_block_num = 0 AND irreversible_block = 101 AND is_attached = TRUE );
+    ASSERT EXISTS ( SELECT FROM hive.contexts WHERE name = 'context' AND current_block_num = 0 AND irreversible_block = 0 AND events_id = 0 AND is_attached = TRUE ), 'No context context';
+    ASSERT EXISTS ( SELECT FROM hive.contexts WHERE name = 'context2' AND current_block_num = 0 AND irreversible_block = 101  AND events_id = 0 AND is_attached = TRUE ), 'No context context2';
 
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name='context_blocks_view' ), 'No context blocks view';
     ASSERT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name='context2_blocks_view' ), 'No context2 blocks view';

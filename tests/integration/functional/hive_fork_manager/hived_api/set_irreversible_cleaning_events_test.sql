@@ -10,6 +10,8 @@ BEGIN
     VALUES ( 1, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp )
     ;
 
+    PERFORM hive.end_massive_sync( 1 );
+
     PERFORM hive.push_block(
          ( 2, '\xBADD20', '\xCAFE20', '2016-06-22 19:10:25-07'::timestamp )
         , NULL
@@ -67,6 +69,7 @@ AS
 $BODY$
 BEGIN
     ASSERT ( SELECT COUNT(*) FROM hive.events_queue ) = 2, 'Wrong number of events';
+    ASSERT ( SELECT hid.consistent_block FROM hive.irreversible_data hid ) = 3 , 'Wrong consisten irreversible block';
     ASSERT EXISTS ( SELECT * FROM hive.events_queue WHERE event = 'NEW_BLOCK' AND block_num=4 ), 'No NEW_BLOCK event 4';
     ASSERT EXISTS ( SELECT * FROM hive.events_queue WHERE event = 'NEW_IRREVERSIBLE' AND block_num=3 ), 'No NEW_IRREVERSIBLE event';
 END;

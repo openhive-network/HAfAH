@@ -13,6 +13,8 @@ BEGIN
             , ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:24-07'::timestamp )
     ;
 
+    PERFORM hive.end_massive_sync(4);
+
     PERFORM hive.app_create_context( 'context' );
 END;
 $BODY$
