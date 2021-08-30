@@ -185,7 +185,12 @@ BEGIN
         WHERE id = __context_id;
         RETURN NULL;
     WHEN 'NEW_IRREVERSIBLE' THEN
-        PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
+        -- we may got on context  creation irreversible block based on hive.irreversible_data
+        -- unfortunetly some slow app may prevent to removing this event, so wee need to process it
+        -- but do not update irreversible
+        IF ( __irreversible_block_num < __next_event_block_num ) THEN
+            PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
+        END IF;
         UPDATE hive.contexts
         SET
             events_id = __next_event_id
@@ -193,7 +198,12 @@ BEGIN
         -- no RETURN here because code after the case will continue processing irreversible blocks only
     WHEN 'MASSIVE_SYNC' THEN
         --massive events are squashe at the function begin
-        PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
+        -- we may got on context  creation irreversible block based on hive.irreversible_data
+        -- unfortunetly some slow app may prevent to removing this event, so we need to process it
+        -- but do not update irreversible
+        IF ( __irreversible_block_num < __next_event_block_num ) THEN
+            PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
+        END IF;
         UPDATE hive.contexts
         SET   events_id = __next_event_id
         WHERE id = __context_id;

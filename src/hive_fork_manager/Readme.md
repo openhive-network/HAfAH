@@ -118,7 +118,8 @@ To switch from non-forking application to forking one all the applications' tabl
 
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
 IRREVERSIBLE BLOCKS is a set of database tables for blocks which the blockchain considers irreversible - they will never change (i.e. they can no longer be reverted by a fork switch).
-These tables are defined in [src/hive_fork_manager/irreversible_blocks.sql](./irreversible_blocks.sql)
+These tables are defined in [src/hive_fork_manager/irreversible_blocks.sql](./irreversible_blocks.sql). Hived may push massivly blocs data into irreversible tables and the date may be inconsistant.
+Hived pushe MASSIVE_SYNC_EVENT and NEW_IRREVERSIBLE_EVENT to mark the block num which is consistend and can be read directly from the irreversible tables.
 
 REVERSIBLE BLOCKS is a set of database tables for blocks which could still be reverted by a fork switch.
 These tables are defined in [src/hive_fork_manager/reversible_blocks.sql](./reversible_blocks.sql)

@@ -10,6 +10,8 @@ BEGIN
     VALUES ( 1, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp )
     ;
 
+    PERFORM hive.end_massive_sync( 1 );
+
     PERFORM hive.push_block(
          ( 2, '\xBADD20', '\xCAFE20', '2016-06-22 19:10:25-07'::timestamp )
         , NULL
@@ -37,9 +39,9 @@ BEGIN
     CREATE SCHEMA A;
     CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.context );
 
-    PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 1
+    PERFORM hive.app_next_block( 'context' ); -- (1,1) END_MASSIVE_SYNC e1
     INSERT INTO A.table1(id) VALUES( 1 );
-    PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 2
+    PERFORM hive.app_next_block( 'context' ); -- (2,2) NEW_BLOCK event block 2 e2
     INSERT INTO A.table1(id) VALUES( 2 );
 END;
 $BODY$
@@ -72,7 +74,7 @@ AS
 $BODY$
 BEGIN
     ASSERT ( SELECT current_block_num FROM hive.contexts WHERE name='context' ) = 2, 'Wrong current block num';
-    ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context' ) = 3, 'Wrong events id';
+    ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context' ) = 4, 'Wrong events id';
 
     ASSERT ( SELECT COUNT(*)  FROM A.table1 ) = 2, 'Wrong number of rows in app table';
     ASSERT EXISTS ( SELECT *  FROM A.table1 WHERE id = 1 ), 'No id 1' ;

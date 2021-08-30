@@ -87,6 +87,7 @@ RAISE NOTICE 'Blocks: %', __blocks;
 ASSERT __blocks = (1,6), 'Incorrect first block (1,6)';
 INSERT INTO A.table1(id) VALUES( 1 );
 
+RETURN;
 
 SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 2 NEW_BLOCK(6)
 ASSERT __blocks IS NOT NULL, 'Null is returned instead of range of blocks (2,6)';
