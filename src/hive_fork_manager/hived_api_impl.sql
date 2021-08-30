@@ -198,10 +198,17 @@ CREATE OR REPLACE FUNCTION hive.remove_unecessary_events( _new_irreversible_bloc
     VOLATILE
 AS
 $BODY$
+DECLARE
+    __lowest_events_id BIGINT := NULL;
 BEGIN
+    SELECT MAX(heq.id) INTO __lowest_events_id
+    FROM hive.events_queue heq
+    WHERE heq.event != 'BACK_FROM_FORK' AND heq.block_num = ( _new_irreversible_block + 1 ); --next block after irreversible
+
     DELETE FROM hive.events_queue heq
     USING ( SELECT MIN( hc.events_id) as id FROM hive.contexts hc ) as min_event
-    WHERE heq.block_num < _new_irreversible_block AND heq.id < min_event.id;
+    WHERE ( heq.id < __lowest_events_id OR __lowest_events_id IS NULL )  AND ( heq.id < min_event.id OR min_event.id IS NULL );
+
 END;
 $BODY$
 ;

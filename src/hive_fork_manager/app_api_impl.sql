@@ -56,6 +56,7 @@ DECLARE
     __context_current_block_num INT;
     __context_id hive.contexts.id%TYPE;
     __irreversible_block_num INT;
+    __before_next_massive_sync_event_id BIGINT := NULL;
 BEGIN
     -- first find a newer massive_sync nearest current block
     SELECT heq.id, hc.current_block_num, hc.id, hc.irreversible_block
@@ -80,8 +81,11 @@ BEGIN
     -- back form fork is required
     PERFORM hive.context_back_from_fork( _context, __irreversible_block_num );
 
+    SELECT MAX( heq.id ) INTO __before_next_massive_sync_event_id
+    FROM hive.events_queue heq WHERE heq.id < __next_massive_sync_event_id;
+
     UPDATE hive.contexts
-    SET events_id = __next_massive_sync_event_id - 1 -- -1 because we pretend that we stay just before the next MASSIVE_SYNC_EVENT
+    SET events_id = __before_next_massive_sync_event_id -- it may be null if there is no events before the massive sync
     WHERE id = __context_id;
     RETURN TRUE;
 END;
@@ -189,9 +193,9 @@ BEGIN
         -- no RETURN here because code after the case will continue processing irreversible blocks only
     WHEN 'MASSIVE_SYNC' THEN
         --massive events are squashe at the function begin
+        PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
         UPDATE hive.contexts
         SET   events_id = __next_event_id
-            , irreversible_block = __next_event_block_num
         WHERE id = __context_id;
         -- no RETURN here because code after the case will continue processing irreversible blocks only
     WHEN 'NEW_BLOCK' THEN

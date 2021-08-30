@@ -38,12 +38,11 @@ BEGIN
            , ( 6, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp )
     ;
 
-    PERFORM hive.app_next_block( 'context' ); --block 1
+    PERFORM hive.app_next_block( 'context' ); --block (1, 2), NEW_IRREVERSIBLE
     INSERT INTO A.table1(id) VALUES ( 1 );
-    PERFORM hive.app_next_block( 'context' ); --block 2
+    PERFORM hive.app_next_block( 'context' ); --block (2,2), NEW_BLOCK(3)
     INSERT INTO A.table1(id) VALUES ( 2 );
-    PERFORM hive.app_next_block( 'context' ); --set irreversible block 2
-    PERFORM hive.app_next_block( 'context' ); --block 3
+    PERFORM hive.app_next_block( 'context' ); --block (3,3)
     INSERT INTO A.table1(id) VALUES ( 3 );
 
     PERFORM hive.end_massive_sync(3);
@@ -85,8 +84,9 @@ BEGIN
     RAISE NOTICE 'Blocks range = %', __blocks;
     ASSERT __blocks.first_block = 3, 'Incorrect first block';
     ASSERT __blocks.last_block = 6, 'Incorrect last range';
+    ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context' LIMIT 1 ) = 6, 'Wrong events id 6'; -- MASSIVE_SYNC_EVENTS squashed
 
-    ASSERT ( SELECT current_block_num FROM hive.contexts WHERE name='context' ) = 3, 'Wrong current block num';
+    ASSERT ( SELECT current_block_num FROM hive.contexts WHERE name='context' ) = 3, 'Wrong current block num 3';
     ASSERT ( SELECT events_id FROM hive.contexts WHERE name='context' ) = 6, 'Wrong events id';
     ASSERT ( SELECT irreversible_block FROM hive.contexts WHERE name='context' ) = 6, 'Wrong irreversible';
 

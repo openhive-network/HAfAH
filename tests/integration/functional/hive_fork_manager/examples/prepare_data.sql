@@ -70,5 +70,3 @@ SELECT hive.push_block(
         , NULL
         , NULL
     );
-
-SELECT hive.set_irreversible( 8 );

@@ -125,7 +125,6 @@ ADD_SQL_FUNCTIONAL_TESTS( context_rewind/performance_insert_rows_one_by_one_test
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/performance_delete_rows_one_by_one_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( context_rewind/performance_update_rows_one_by_one_test.sql )
 
-
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/schema_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/back_from_fork_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/push_block_test.sql )
@@ -141,6 +140,8 @@ ADD_SQL_FUNCTIONAL_TESTS( hived_api/end_massive_sync_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/set_irreversible_cleaning_events_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/disable_indexes_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/enable_indexes_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( hived_api/remove_obsolete_end_massive_sync_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( hived_api/remove_obsolete_end_massive_sync_with_app_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( app_api/create_context_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_remove_test.sql )

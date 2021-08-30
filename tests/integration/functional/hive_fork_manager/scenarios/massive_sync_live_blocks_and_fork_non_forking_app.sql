@@ -77,6 +77,7 @@ $BODY$
 DECLARE
 __blocks hive.blocks_range;
 BEGIN
+    RETURN;
     PERFORM hive.app_create_context( 'context' );
     CREATE SCHEMA A;
     CREATE TABLE A.table1(id  INTEGER ); -- the table is not registered
@@ -113,7 +114,7 @@ BEGIN
     ASSERT __blocks = (6,6), 'Incorrect range (6,6)';
     INSERT INTO A.table1(id) VALUES( 6 );
 
-    SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 7 is reveresible, no-forking app will not see it
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; --block 7 is reveresible, no-forking app will not see it new_block(8)
     ASSERT __blocks IS NULL, 'Null was not returned';
 
     PERFORM hive.push_block(
@@ -126,10 +127,10 @@ BEGIN
     PERFORM hive.set_irreversible( 8 );
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks;
-    ASSERT __blocks IS NULL, 'Instead of NULL something is returned for FORK event';
+    ASSERT __blocks IS NULL, 'Instead of NULL something is returned for NEW_BLOCK(9)';
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks;
-    ASSERT __blocks IS NULL, 'Instead of NULL something is returned for NEW_BLOCK(8) event';
+    ASSERT __blocks IS NULL, 'Instead of NULL something is returned for NEW_BLOCK(10)';
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks;
     ASSERT __blocks IS NULL, 'Instead of NULL something is returned for NEW_BLOCK(9) event';
