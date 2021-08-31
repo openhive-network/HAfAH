@@ -293,6 +293,9 @@ blocks without triggers overhead.
 Enables triggers attached to registered tables in a given context and set current context block num. The `block_num` cannot
 be greater than top of irreversible block.
 
+##### hive.app_context_is_attached( context_name )
+Returns TRUE when a given context is attached. It may thrown an exception when there is no a context with the given context_name
+
 #### hive.app_context_exists( context_name )
 Returns TRUE when context with given name exists
 
