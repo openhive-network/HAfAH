@@ -172,3 +172,24 @@ BEGIN
     RETURN __result;
 END;
 $BODY$;
+
+CREATE OR REPLACE FUNCTION hive.app_context_is_attached( _context_name TEXT )
+    RETURNS bool
+    LANGUAGE plpgsql
+    STABLE
+AS
+$BODY$
+DECLARE
+    __result bool;
+BEGIN
+    SELECT hc.is_attached INTO __result
+    FROM hive.contexts hc
+    WHERE hc.name = _context_name;
+
+    IF __result IS NULL THEN
+        RAISE EXCEPTION 'No context with name %', _context_name;
+    END IF;
+
+    RETURN __result;
+END;
+$BODY$;
