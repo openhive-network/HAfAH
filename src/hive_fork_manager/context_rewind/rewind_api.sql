@@ -125,7 +125,7 @@ BEGIN
     WHERE hrt.context_id = __context_id;
 
     UPDATE hive.contexts
-    SET is_attached = FALSE
+    SET is_attached = FALSE, detached_block_num = NULL
     WHERE id = __context_id;
 END;
 $BODY$

@@ -193,3 +193,50 @@ BEGIN
     RETURN __result;
 END;
 $BODY$;
+
+CREATE OR REPLACE FUNCTION hive.app_context_detached_save_block_num( _context_name TEXT, _block_num INTEGER )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __context_id hive.contexts.id%TYPE;
+BEGIN
+    UPDATE hive.contexts hc
+    SET detached_block_num = _block_num
+    WHERE hc.name = _context_name AND hc.is_attached = FALSE
+    RETURNING hc.id INTO __context_id;
+
+    IF __context_id IS NULL  THEN
+        RAISE EXCEPTION 'Context % does not exist or is attached', _context_name;
+    END IF;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION hive.app_context_detached_get_block_num( _context_name TEXT )
+    RETURNS INTEGER
+    LANGUAGE plpgsql
+    STABLE
+AS
+$BODY$
+DECLARE
+    __result INTEGER;
+    __context_id hive.contexts.id%TYPE;
+BEGIN
+    SELECT hc.id INTO __context_id
+    FROM hive.contexts hc
+    WHERE hc.name = _context_name AND hc.is_attached = FALSE;
+
+    IF __context_id IS NULL  THEN
+        RAISE EXCEPTION 'Context % does not exist or is attached', _context_name;
+    END IF;
+
+
+    SELECT hc.detached_block_num INTO __result
+    FROM hive.contexts hc
+    WHERE hc.id = __context_id;
+
+    RETURN __result;
+END;
+$BODY$;
