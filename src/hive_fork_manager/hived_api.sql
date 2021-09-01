@@ -56,7 +56,7 @@ DECLARE
     __irreversible_head_block hive.blocks.num%TYPE;
 BEGIN
     PERFORM hive.remove_unecessary_events( _block_num );
-    SELECT MAX( num ) INTO __irreversible_head_block FROM hive.blocks;
+    SELECT COALESCE( MAX( num ), 0 ) INTO __irreversible_head_block FROM hive.blocks;
 
     -- application contexts will use the event to clear data in shadow tables
     INSERT INTO hive.events_queue( event, block_num )
