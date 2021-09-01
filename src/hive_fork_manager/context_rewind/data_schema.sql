@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS hive.contexts(
     events_id BIGINT NOT NULL DEFAULT 0, -- 0 - is a special fake event, means no events are processed, it is required to satisfy FK constraint
     fork_id BIGINT NOT NULL DEFAULT 1,
     owner NAME NOT NULL,
+    detached_block_num INTEGER, -- place where application can save last processed block num in detached state
     CONSTRAINT pk_hive_contexts PRIMARY KEY( id ),
     CONSTRAINT uq_hive_context_name UNIQUE ( name )
 );

@@ -15,8 +15,6 @@ BEGIN
     PERFORM hive.app_create_context( 'context' );
     CREATE SCHEMA A;
     CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.context );
-
-    UPDATE hive.contexts SET detached_block_num = 5;
 END;
 $BODY$
 ;
@@ -29,8 +27,19 @@ CREATE FUNCTION test_when()
 AS
 $BODY$
 BEGIN
+    BEGIN
+        PERFORM hive.app_context_detached_get_block_num( 'context' );
+        ASSERT FALSE, 'No exception when context is attached';
+        EXCEPTION WHEN OTHERS THEN
+    END;
+
     PERFORM hive.app_context_detach( 'context' );
-    INSERT INTO A.table1( id ) VALUES (10);
+
+    BEGIN
+        PERFORM hive.app_context_detached_get_block_num( 'unexisted_context', 2 );
+        ASSERT FALSE, 'No exception when unexisted_context';
+        EXCEPTION WHEN OTHERS THEN
+    END;
 END;
 $BODY$
 ;
@@ -43,10 +52,8 @@ STABLE
 AS
 $BODY$
 BEGIN
-    ASSERT EXISTS ( SELECT * FROM hive.contexts WHERE name='context' AND is_attached = FALSE ), 'Attach flag is still set';
-    ASSERT ( SELECT detached_block_num FROM hive.contexts WHERE name='context' ) IS NULL, 'detached_block_num was not set to NULL';
-
-    ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 ) = 0, 'Trigger inserted something into shadow table1';
+    return;
+    ASSERT ( SELECT hive.app_context_detached_get_block_num( 'context' ) ) IS NULL, 'NULL was not returned';
 END;
 $BODY$
 ;

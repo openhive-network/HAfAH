@@ -70,6 +70,11 @@ data by querying the 'hive.{context_name}_{ blocks | transactions | operations |
 
 To perform a massive sync, the application should detach the context, execute its sync algorithm using the block data, then reattach the context. This will eliminate the performance overhead associated with the  triggers installed by the fork manager that monitor changes to the application's tables.
 
+There is possible that application will break during massive sync - in the detached state. In such case during restart the application has to
+check if its context is attached `hive.app_context_is_attached`, and if not then it has to attach it `hive.app_context_attach`. To attach the context
+the application has to know num of last processed block, to save and get it there are functions `app_context_detached_save_block_num` and 'app_context_detached_get_block_num'. The
+functions may be used only in the datached state, otherwise they will throw exceptions.
+
 ### Non-forking applications
 It is expected that some applications will only want to process irreversible blocks, and therefore don't require the overhead associating with fork switching. Such an application should not register any table in its context. A context without registered tables (aka an 'irreversible context') will traverse only irreversible block data. This means that calls to `hive.app_next_block` will return only the range of irreversible blocks which are not already processed or NULL. Similarly, the set of views for an irreversible context only deliver a snapshot of irreversible data up to the block already processed by the application.
 
@@ -295,6 +300,13 @@ be greater than top of irreversible block.
 
 ##### hive.app_context_is_attached( context_name )
 Returns TRUE when a given context is attached. It may thrown an exception when there is no a context with the given context_name
+
+##### hive.app_context_detached_save_block_num( _context_name )
+The application may use the function to temporary save block num which was recently processed in the datached state. The function
+will throw when is call on an attached context. The saved value is set to NULL when a context is being detached.
+
+##### hive.app_context_detached_get_block_num( _context_name )
+Returns block num recently saved in a detached state. The function will throw when the context is attached. 
 
 #### hive.app_context_exists( context_name )
 Returns TRUE when context with given name exists
