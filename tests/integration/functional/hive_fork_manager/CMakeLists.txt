@@ -146,6 +146,7 @@ ADD_SQL_FUNCTIONAL_TESTS( hived_api/remove_obsolete_end_massive_sync_with_app_te
 ADD_SQL_FUNCTIONAL_TESTS( app_api/create_context_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_remove_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_remove_negative_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_re_create_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/context_blocks_view_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/context_blocks_view_nonforking_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/context_transactions_view_test.sql )

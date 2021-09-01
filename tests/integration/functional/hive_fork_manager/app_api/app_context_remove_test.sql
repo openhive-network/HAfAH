@@ -34,6 +34,7 @@ STABLE
 AS
 $BODY$
 BEGIN
+    ASSERT NOT EXISTS ( SELECT FROM hive.contexts WHERE name = 'context' ), 'The contexts is still in hive.contexts';
     ASSERT NOT EXISTS ( SELECT FROM information_schema.columns WHERE table_name='table1' AND column_name='hive_rowid' ), 'hive.row_id column exists';
 
     ASSERT NOT EXISTS ( SELECT FROM information_schema.tables WHERE table_schema='hive' AND table_name  = 'shadow_a_table1' ), 'shadow table exists';

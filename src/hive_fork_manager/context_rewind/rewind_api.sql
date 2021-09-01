@@ -35,6 +35,8 @@ BEGIN
     FROM hive.registered_tables hrt
     WHERE hrt.context_id = __context_id;
 
+    DELETE FROM hive.contexts WHERE id = __context_id;
+
     EXECUTE format( 'DROP TABLE hive.%I', _name );
 END;
 $BODY$
