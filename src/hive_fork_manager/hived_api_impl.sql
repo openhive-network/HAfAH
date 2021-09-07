@@ -143,10 +143,7 @@ DECLARE
     __lowest_contexts_block_on_fork INT;
     __current_fork BIGINT;
 BEGIN
-    SELECT hf.id INTO __current_fork
-    FROM hive.fork hf
-    ORDER BY hf.id DESC
-    LIMIT 1;
+    SELECT MAX( hf.id ) INTO __current_fork FROM hive.fork hf;
 
     ASSERT __current_fork IS NOT NULL;
 
@@ -164,30 +161,21 @@ BEGIN
     END IF;
 
     DELETE FROM hive.operations_reversible hor
-    WHERE
-           hor.fork_id < __lowest_contexts_fork
-        OR ( hor.fork_id = __lowest_contexts_fork AND hor.block_num < __lowest_contexts_block_on_fork );
+    WHERE hor.fork_id <= __lowest_contexts_fork AND hor.block_num < __lowest_contexts_block_on_fork;
 
     DELETE
     FROM hive.transactions_multisig_reversible htmr
     USING hive.transactions_reversible htr
     WHERE
         ( htr.fork_id = htmr.fork_id AND htr.trx_hash = htmr.trx_hash )
-        AND (
-            htmr.fork_id < __lowest_contexts_fork
-            OR ( htmr.fork_id = __lowest_contexts_fork AND htr.block_num < __lowest_contexts_block_on_fork )
-        )
+        AND ( htmr.fork_id <= __lowest_contexts_fork AND htr.block_num < __lowest_contexts_block_on_fork )
     ;
 
     DELETE FROM hive.transactions_reversible htr
-    WHERE
-          htr.fork_id < __lowest_contexts_fork
-       OR ( htr.fork_id = __lowest_contexts_fork AND htr.block_num < __lowest_contexts_block_on_fork );
+    WHERE htr.fork_id <= __lowest_contexts_fork AND htr.block_num < __lowest_contexts_block_on_fork;
 
     DELETE FROM hive.blocks_reversible hbr
-    WHERE
-               hbr.fork_id < __lowest_contexts_fork
-            OR ( hbr.fork_id = __lowest_contexts_fork AND hbr.num < __lowest_contexts_block_on_fork );
+    WHERE hbr.fork_id <= __lowest_contexts_fork AND hbr.num < __lowest_contexts_block_on_fork;
 END;
 $BODY$
 ;
