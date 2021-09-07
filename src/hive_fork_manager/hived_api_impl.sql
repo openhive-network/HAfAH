@@ -204,13 +204,13 @@ DECLARE
 BEGIN
     SELECT consistent_block INTO __max_block_num FROM hive.irreversible_data;
 
-    SELECT MAX(heq.id) INTO __lowest_events_id
+    SELECT MIN(heq.id) INTO __lowest_events_id
     FROM hive.events_queue heq
     WHERE heq.event != 'BACK_FROM_FORK' AND heq.block_num = ( _new_irreversible_block + 1 ); --next block after irreversible
 
     DELETE FROM hive.events_queue heq
-    USING ( SELECT COALESCE( MIN( hc.events_id), __max_block_num ) as id FROM hive.contexts hc ) as min_event
-    WHERE ( heq.id < __lowest_events_id OR __lowest_events_id IS NULL )  AND heq.id < min_event.id AND heq.id != 0;
+    USING ( SELECT MIN( hc.events_id) as id FROM hive.contexts hc ) as min_event
+    WHERE ( heq.id < __lowest_events_id OR __lowest_events_id IS NULL )  AND ( heq.id < min_event.id OR min_event.id IS NULL ) AND heq.id != 0;
 
 END;
 $BODY$
