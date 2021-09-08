@@ -143,10 +143,7 @@ DECLARE
     __lowest_contexts_block_on_fork INT;
     __current_fork BIGINT;
 BEGIN
-    SELECT hf.id INTO __current_fork
-    FROM hive.fork hf
-    ORDER BY hf.id DESC
-    LIMIT 1;
+    SELECT MAX( hf.id ) INTO __current_fork FROM hive.fork hf;
 
     ASSERT __current_fork IS NOT NULL;
 
@@ -164,30 +161,21 @@ BEGIN
     END IF;
 
     DELETE FROM hive.operations_reversible hor
-    WHERE
-           hor.fork_id < __lowest_contexts_fork
-        OR ( hor.fork_id = __lowest_contexts_fork AND hor.block_num < __lowest_contexts_block_on_fork );
+    WHERE hor.fork_id <= __lowest_contexts_fork AND hor.block_num < __lowest_contexts_block_on_fork;
 
     DELETE
     FROM hive.transactions_multisig_reversible htmr
     USING hive.transactions_reversible htr
     WHERE
         ( htr.fork_id = htmr.fork_id AND htr.trx_hash = htmr.trx_hash )
-        AND (
-            htmr.fork_id < __lowest_contexts_fork
-            OR ( htmr.fork_id = __lowest_contexts_fork AND htr.block_num < __lowest_contexts_block_on_fork )
-        )
+        AND ( htmr.fork_id <= __lowest_contexts_fork AND htr.block_num < __lowest_contexts_block_on_fork )
     ;
 
     DELETE FROM hive.transactions_reversible htr
-    WHERE
-          htr.fork_id < __lowest_contexts_fork
-       OR ( htr.fork_id = __lowest_contexts_fork AND htr.block_num < __lowest_contexts_block_on_fork );
+    WHERE htr.fork_id <= __lowest_contexts_fork AND htr.block_num < __lowest_contexts_block_on_fork;
 
     DELETE FROM hive.blocks_reversible hbr
-    WHERE
-               hbr.fork_id < __lowest_contexts_fork
-            OR ( hbr.fork_id = __lowest_contexts_fork AND hbr.num < __lowest_contexts_block_on_fork );
+    WHERE hbr.fork_id <= __lowest_contexts_fork AND hbr.num < __lowest_contexts_block_on_fork;
 END;
 $BODY$
 ;
@@ -204,13 +192,13 @@ DECLARE
 BEGIN
     SELECT consistent_block INTO __max_block_num FROM hive.irreversible_data;
 
-    SELECT MAX(heq.id) INTO __lowest_events_id
+    SELECT MIN(heq.id) INTO __lowest_events_id
     FROM hive.events_queue heq
     WHERE heq.event != 'BACK_FROM_FORK' AND heq.block_num = ( _new_irreversible_block + 1 ); --next block after irreversible
 
     DELETE FROM hive.events_queue heq
-    USING ( SELECT COALESCE( MIN( hc.events_id), __max_block_num ) as id FROM hive.contexts hc ) as min_event
-    WHERE ( heq.id < __lowest_events_id OR __lowest_events_id IS NULL )  AND heq.id < min_event.id AND heq.id != 0;
+    USING ( SELECT MIN( hc.events_id) as id FROM hive.contexts hc ) as min_event
+    WHERE ( heq.id < __lowest_events_id OR __lowest_events_id IS NULL )  AND ( heq.id < min_event.id OR min_event.id IS NULL ) AND heq.id != 0;
 
 END;
 $BODY$

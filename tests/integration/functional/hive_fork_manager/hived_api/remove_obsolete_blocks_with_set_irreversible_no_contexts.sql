@@ -55,7 +55,7 @@ BEGIN
          , ( '\xDEED70', '\xBEEF7110',  1 ) --must be abandon because of fork 2
          , ( '\xDEED70', '\xBEEF7120',  1 ) --must be abandon because of fork 2
          , ( '\xDEED70', '\xBEEF7130',  1 ) --must be abandon because of fork 2
-         , ( '\xDEED11', '\xBEEF7140',  1 ) --must be abandon because of fork 2
+         , ( '\xDEED11', '\xBEEF7140',  1 )
          , ( '\xDEED70', '\xBEEF72',  2 ) -- block 7
          , ( '\xDEED70', '\xBEEF73',  2 ) -- block 7
          , ( '\xDEED80', '\xBEEF82',  2 ) -- block 8
@@ -121,7 +121,10 @@ BEGIN
     ASSERT NOT EXISTS (
         SELECT * FROM hive.blocks_reversible
         EXCEPT SELECT * FROM ( VALUES
-           ( 8, '\xBADD80'::bytea, '\xCAFE80'::bytea, '2016-06-22 19:10:30-07'::timestamp, 3 )
+           ( 10, '\xBADD11', '\xCAFE11', '2016-06-22 19:10:41-07'::timestamp, 1 )
+         , ( 8, '\xBADD80', '\xCAFE80', '2016-06-22 19:10:28-07'::timestamp, 2 )
+         , ( 9, '\xBADD90', '\xCAFE90', '2016-06-22 19:10:29-07'::timestamp, 2 )
+         , ( 8, '\xBADD80'::bytea, '\xCAFE80'::bytea, '2016-06-22 19:10:30-07'::timestamp, 3 )
          , ( 9, '\xBADD90'::bytea, '\xCAFE90'::bytea, '2016-06-22 19:10:31-07'::timestamp, 3 )
          , ( 10, '\xBADD1A'::bytea, '\xCAFE1A'::bytea, '2016-06-22 19:10:32-07'::timestamp, 3 )
         ) as pattern
@@ -132,7 +135,10 @@ BEGIN
     ASSERT NOT EXISTS (
         SELECT * FROM hive.transactions_reversible
         EXCEPT SELECT * FROM ( VALUES
-           ( 8, 0::SMALLINT, '\xDEED88'::bytea, 101, 100, '2016-06-22 19:10:28-07'::timestamp, '\xBEEF'::bytea,  3 )
+           ( 10, 0::SMALLINT, '\xDEED11', 101, 100, '2016-06-22 19:10:41-07'::timestamp, '\xBEEF',  1 )
+         , ( 8, 0::SMALLINT, '\xDEED80', 101, 100, '2016-06-22 19:10:28-07'::timestamp, '\xBEEF',  2 )
+         , ( 9, 0::SMALLINT, '\xDEED90', 101, 100, '2016-06-22 19:10:29-07'::timestamp, '\xBEEF',  2 )
+         , ( 8, 0::SMALLINT, '\xDEED88'::bytea, 101, 100, '2016-06-22 19:10:28-07'::timestamp, '\xBEEF'::bytea,  3 )
          , ( 9, 0::SMALLINT, '\xDEED99'::bytea, 101, 100, '2016-06-22 19:10:29-07'::timestamp, '\xBEEF'::bytea,  3 )
          , ( 10, 0::SMALLINT, '\xDEED1102'::bytea, 101, 100, '2016-06-22 19:10:30-07'::timestamp, '\xBEEF'::bytea, 3 )
         ) as pattern
@@ -143,7 +149,10 @@ BEGIN
     ASSERT NOT EXISTS (
     SELECT * FROM hive.transactions_multisig_reversible
     EXCEPT SELECT * FROM ( VALUES
-           ( '\xDEED88'::bytea, '\xBEEF83'::bytea,  3 ) -- block 8
+           ( '\xDEED11', '\xBEEF7140',  1 ) -- block 10 , fork 1
+         , ( '\xDEED80', '\xBEEF82',  2 )  -- block 8 f2
+         , ( '\xDEED90', '\xBEEF92',  2 ) -- block 9 f2
+         , ( '\xDEED88'::bytea, '\xBEEF83'::bytea,  3 ) -- block 8
          , ( '\xDEED99'::bytea, '\xBEEF93'::bytea,  3 ) -- block 9
          , ( '\xDEED1102'::bytea, '\xBEEF13'::bytea,  3 ) -- block 10
     ) as pattern
@@ -154,7 +163,9 @@ BEGIN
     ASSERT NOT EXISTS (
     SELECT * FROM hive.operations_reversible
     EXCEPT SELECT * FROM ( VALUES
-           ( 9, 8, 0, 0, 1, 'EIGHT3 OPERATION', 3 )
+           ( 9, 8, 0, 0, 1, 'EAIGHT2 OPERATION', 2 )
+         , ( 10, 9, 0, 0, 1, 'NINE2 OPERATION', 2 )
+         , ( 9, 8, 0, 0, 1, 'EIGHT3 OPERATION', 3 )
          , ( 10, 9, 0, 0, 1, 'NINE3 OPERATION', 3 )
          , ( 11, 10, 0, 0, 1, 'TEN OPERATION', 3 )
     ) as pattern

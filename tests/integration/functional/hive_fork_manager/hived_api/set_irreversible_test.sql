@@ -72,7 +72,7 @@ BEGIN
 
     INSERT INTO hive.transactions_reversible
     VALUES
-    ( 4, 0::SMALLINT, '\xDEED40'::bytea, 101, 100, '2016-06-22 19:10:24-07'::timestamp, '\xBEEF'::bytea,  1 )
+           ( 4, 0::SMALLINT, '\xDEED40'::bytea, 101, 100, '2016-06-22 19:10:24-07'::timestamp, '\xBEEF'::bytea,  1 )
          , ( 5, 0::SMALLINT, '\xDEED55'::bytea, 101, 100, '2016-06-22 19:10:25-07'::timestamp, '\xBEEF'::bytea,  1 )
          , ( 6, 0::SMALLINT, '\xDEED60'::bytea, 101, 100, '2016-06-22 19:10:26-07'::timestamp, '\xBEEF'::bytea,  1 )
          , ( 7, 0::SMALLINT, '\xDEED70'::bytea, 101, 100, '2016-06-22 19:10:37-07'::timestamp, '\xBEEF'::bytea,  1 )
@@ -92,8 +92,8 @@ BEGIN
          , ( '\xDEED60'::bytea, '\xBEEF61'::bytea,  1 ) --block 6
          , ( '\xDEED70'::bytea, '\xBEEF7110'::bytea,  1 ) -- block 7
          , ( '\xDEED70'::bytea, '\xBEEF7120'::bytea,  1 ) -- block 7
-         , ( '\xDEED70'::bytea, '\xBEEF7130'::bytea,  1 ) -- block 7
-         , ( '\xDEED11'::bytea, '\xBEEF7140'::bytea,  1 ) --must be abandon because of fork 2
+         , ( '\xDEED70'::bytea, '\xBEEF7130'::bytea,  1 ) -- block 7 --must be abandon because of fork 2
+         , ( '\xDEED11'::bytea, '\xBEEF7140'::bytea,  1 )
          , ( '\xDEED70'::bytea, '\xBEEF72'::bytea,  2 ) -- block 7
          , ( '\xDEED70'::bytea, '\xBEEF73'::bytea,  2 ) -- block 7
          , ( '\xDEED80'::bytea, '\xBEEF82'::bytea,  2 ) -- block 8
@@ -173,7 +173,8 @@ BEGIN
     ASSERT NOT EXISTS (
         SELECT * FROM hive.blocks_reversible
         EXCEPT SELECT * FROM ( VALUES
-              ( 8, '\xBADD80'::bytea, '\xCAFE80'::bytea, '2016-06-22 19:10:28-07'::timestamp, 2 )
+              ( 10, '\xBADD11', '\xCAFE11', '2016-06-22 19:10:41-07'::timestamp, 1 )
+            , ( 8, '\xBADD80'::bytea, '\xCAFE80'::bytea, '2016-06-22 19:10:28-07'::timestamp, 2 )
             , ( 9, '\xBADD90'::bytea, '\xCAFE90'::bytea, '2016-06-22 19:10:29-07'::timestamp, 2 )
             , ( 8, '\xBADD83'::bytea, '\xCAFE80'::bytea, '2016-06-22 19:10:30-07'::timestamp, 3 )
             , ( 9, '\xBADD90'::bytea, '\xCAFE90'::bytea, '2016-06-22 19:10:31-07'::timestamp, 3 )
@@ -234,10 +235,12 @@ BEGIN
 
     ASSERT EXISTS( SELECT * FROM hive.transactions_reversible ), 'No reversible transactions';
 
+
     ASSERT NOT EXISTS (
         SELECT * FROM hive.transactions_reversible
         EXCEPT SELECT * FROM ( VALUES
-               ( 8, 0::SMALLINT, '\xDEED80'::bytea, 101, 100, '2016-06-22 19:10:28-07'::timestamp, '\xBEEF'::bytea,  2 )
+               ( 10, 0::SMALLINT, '\xDEED11'::bytea, 101, 100, '2016-06-22 19:10:41-07'::timestamp, '\xBEEF'::bytea,  1 )
+             , ( 8, 0::SMALLINT, '\xDEED80'::bytea, 101, 100, '2016-06-22 19:10:28-07'::timestamp, '\xBEEF'::bytea,  2 )
              , ( 9, 0::SMALLINT, '\xDEED90'::bytea, 101, 100, '2016-06-22 19:10:29-07'::timestamp, '\xBEEF'::bytea,  2 )
              , ( 8, 0::SMALLINT, '\xDEED88'::bytea, 101, 100, '2016-06-22 19:10:28-07'::timestamp, '\xBEEF'::bytea,  3 )
              , ( 9, 0::SMALLINT, '\xDEED99'::bytea, 101, 100, '2016-06-22 19:10:29-07'::timestamp, '\xBEEF'::bytea,  3 )
@@ -250,7 +253,8 @@ BEGIN
     ASSERT NOT EXISTS (
     SELECT * FROM hive.transactions_multisig_reversible
     EXCEPT SELECT * FROM ( VALUES
-           ( '\xDEED80'::bytea, '\xBEEF82'::bytea,  2 ) -- block 8
+           ( '\xDEED11'::bytea, '\xBEEF7140'::bytea,  1 ) -- block 10
+         , ( '\xDEED80'::bytea, '\xBEEF82'::bytea,  2 ) -- block 8
          , ( '\xDEED90'::bytea, '\xBEEF92'::bytea,  2 ) -- block 9
          , ( '\xDEED88'::bytea, '\xBEEF83'::bytea,  3 ) -- block 8
          , ( '\xDEED99'::bytea, '\xBEEF93'::bytea,  3 ) -- block 9
