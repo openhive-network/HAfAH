@@ -83,45 +83,53 @@ BEGIN
     EXECUTE format(
         'DROP VIEW IF EXISTS hive.%s_transactions_view;
         CREATE VIEW hive.%s_transactions_view AS
-        SELECT ht.block_num,
-           ht.trx_in_block,
-           ht.trx_hash,
-           ht.ref_block_num,
-           ht.ref_block_prefix,
-           ht.expiration,
-           ht.signature
-        FROM hive.transactions ht
-        JOIN hive.contexts hc ON ( ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num ) OR NOT hc.is_attached
-        WHERE hc.name = ''%s''
-        UNION ALL
-        SELECT reversible.block_num,
-            reversible.trx_in_block,
-            reversible.trx_hash,
-            reversible.ref_block_num,
-            reversible.ref_block_prefix,
-            reversible.expiration,
-            reversible.signature
-        FROM ( SELECT
-            htr.block_num,
-            htr.trx_in_block,
-            htr.trx_hash,
-            htr.ref_block_num,
-            htr.ref_block_prefix,
-            htr.expiration,
-            htr.signature,
-            htr.fork_id
-        FROM hive.transactions_reversible htr
-        JOIN (
-           SELECT DISTINCT ON (htr2.block_num) htr2.block_num
-               , htr2.fork_id
-           FROM hive.transactions_reversible htr2
-           JOIN hive.contexts hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
-           JOIN hive.registered_tables hrt ON hrt.context_id = hc.id
-           WHERE hc.name = ''%s''
-           ORDER BY htr2.block_num DESC, htr2.fork_id DESC
-        ) as forks ON forks.fork_id = htr.fork_id AND forks.block_num = htr.block_num
-     ) reversible;'
-    , _context_name, _context_name, _context_name, _context_name
+        SELECT t.block_num,
+           t.trx_in_block,
+           t.trx_hash,
+           t.ref_block_num,
+           t.ref_block_prefix,
+           t.expiration,
+           t.signature
+        FROM hive.%s_context_data_view c,
+        LATERAL
+        (
+          SELECT ht.block_num,
+                   ht.trx_in_block,
+                   ht.trx_hash,
+                   ht.ref_block_num,
+                   ht.ref_block_prefix,
+                   ht.expiration,
+                   ht.signature
+                FROM hive.transactions ht
+                WHERE ht.block_num <= c.min_block
+                UNION ALL
+                SELECT reversible.block_num,
+                    reversible.trx_in_block,
+                    reversible.trx_hash,
+                    reversible.ref_block_num,
+                    reversible.ref_block_prefix,
+                    reversible.expiration,
+                    reversible.signature
+                FROM ( SELECT
+                    htr.block_num,
+                    htr.trx_in_block,
+                    htr.trx_hash,
+                    htr.ref_block_num,
+                    htr.ref_block_prefix,
+                    htr.expiration,
+                    htr.signature,
+                    htr.fork_id
+                FROM hive.transactions_reversible htr
+                JOIN (
+                   SELECT htr2.block_num, MAX(htr2.fork_id) AS max_fork_id
+                   FROM hive.transactions_reversible htr2
+                   WHERE c.reversible_range AND htr2.block_num > c.irreversible_block AND htr2.fork_id <= c.fork_id AND htr2.block_num <= c.current_block_num
+                   GROUP BY htr2.block_num
+                ) as forks ON forks.max_fork_id = htr.fork_id AND forks.block_num = htr.block_num
+             ) reversible
+        ) t
+        ;'
+    , _context_name, _context_name, _context_name
     );
 END;
 $BODY$
