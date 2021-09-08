@@ -10,7 +10,6 @@ class account_history_impl:
   def __translate_filter(self, input : int):
     result = []
     if input:
-      print(input)
       for i in range(128):
         if input & (1 << i):
           result.append( i )

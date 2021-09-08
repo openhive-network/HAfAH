@@ -63,7 +63,7 @@ async def get_ops_in_block(*, block_num : int, only_virtual : bool, include_reve
 
 @verify_types
 @require_unsigned('block_range_begin', 'block_range_end', 'limit')
-async def enum_virtual_ops(*, block_range_begin : int, block_range_end : int, operation_begin : int = 0, limit : int = DEFAULT_LIMIT, filter : int = 0, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE, group_by_block : bool = False):
+async def enum_virtual_ops(*, block_range_begin : int, block_range_end : int, operation_begin : int = 0, limit : int = DEFAULT_LIMIT, filter : int = 0xffffffffffffffff, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE, group_by_block : bool = False):
   assert block_range_end > block_range_begin, 'Block range must be upward'
   return build_response( await backend().enum_virtual_ops( filter, block_range_begin, block_range_end, operation_begin, limit, include_reversible, group_by_block ) )
 
