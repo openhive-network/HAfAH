@@ -136,23 +136,35 @@ EXECUTE format(
             t.op_type_id,
             t.body
           FROM hive.%s_context_data_view c,
-          LATERAL ( SELECT ho.id,
-                    ho.block_num,
-                    ho.trx_in_block,
-                    ho.op_pos,
-                    ho.op_type_id,
-                    ho.body
-                   FROM hive.operations ho
-                  WHERE ho.block_num <= c.min_block
-                UNION ALL
-                 SELECT hor.id,
-                    hor.block_num,
-                    hor.trx_in_block,
-                    hor.op_pos,
-                    hor.op_type_id,
-                    hor.body
-                    FROM hive.operations_reversible hor
-                    WHERE c.reversible_range AND hor.block_num > c.irreversible_block AND hor.fork_id <= c.fork_id AND hor.block_num <= c.current_block_num
+          LATERAL 
+          (
+            SELECT
+              ho.id,
+              ho.block_num,
+              ho.trx_in_block,
+              ho.op_pos,
+              ho.op_type_id,
+              ho.body
+              FROM hive.operations ho
+              WHERE ho.block_num <= c.min_block
+            UNION ALL
+              SELECT
+                o.id,
+                o.block_num,
+                o.trx_in_block,
+                o.op_pos,
+                o.op_type_id,
+                o.body
+              FROM hive.operations_reversible o
+              -- Reversible operations view must show ops comming from newest fork (specific to app-context)
+              -- and also hide ops present at earlier forks for given block
+              JOIN
+              (
+                SELECT hor.block_num, MAX(hor.fork_id) as max_fork_id
+                FROM hive.operations_reversible hor
+                WHERE c.reversible_range AND hor.block_num > c.irreversible_block AND hor.fork_id <= c.fork_id AND hor.block_num <= c.current_block_num
+                GROUP by hor.block_num
+              ) visible_ops on visible_ops.block_num = o.block_num and visible_ops.max_fork_id = o.fork_id
         ) t
         ;', _context_name, _context_name
     );
