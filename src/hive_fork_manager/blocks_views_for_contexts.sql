@@ -58,7 +58,15 @@ BEGIN
             hbr.prev,
             hbr.created_at
            FROM hive.blocks_reversible hbr
-          WHERE c.reversible_range AND hbr.num > c.irreversible_block AND hbr.fork_id <= c.fork_id AND hbr.num <= c.current_block_num) t;
+           JOIN
+           (
+             SELECT rb.num, MAX(rb.fork_id) AS max_fork_id
+             FROM hive.blocks_reversible rb
+             WHERE c.reversible_range AND rb.num > c.irreversible_block AND rb.fork_id <= c.fork_id AND rb.num <= c.current_block_num
+             GROUP BY rb.num
+           ) visible_blks ON visible_blks.num = hbr.num AND visible_blks.max_fork_id = hbr.fork_id
+
+        ) t;
         ;', _context_name, _context_name
     );
 END;
