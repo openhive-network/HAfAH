@@ -1,3 +1,36 @@
+CREATE OR REPLACE FUNCTION hive.create_context_data_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+EXECUTE format(
+        'CREATE OR REPLACE VIEW hive.%s_context_data_view AS
+        SELECT
+        hc.current_block_num,
+        hc.irreversible_block,
+        hc.is_attached,
+        hc.fork_id,
+        CASE hc.is_attached
+          WHEN true THEN LEAST(hc.irreversible_block, hc.current_block_num)
+          ELSE 2147483647
+        END AS min_block,
+        CASE hc.is_attached
+          WHEN true THEN hc.current_block_num > hc.irreversible_block and exists (SELECT NULL::text FROM hive.registered_tables hrt
+                                              WHERE hrt.context_id = hc.id)
+          ELSE false
+        END AS reversible_range
+        FROM hive.contexts hc
+        WHERE hc.name::text = ''%s''::text
+        limit 1
+        ;', _context_name, _context_name
+    );
+END;
+$BODY$
+;
+
+
 CREATE OR REPLACE FUNCTION hive.create_blocks_view( _context_name TEXT )
     RETURNS void
     LANGUAGE plpgsql

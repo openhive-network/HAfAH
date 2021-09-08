@@ -13,6 +13,7 @@ BEGIN
         , COALESCE( ( SELECT hid.consistent_block FROM hive.irreversible_data hid ), 0 ) -- head of irreversible block
     );
 
+    PERFORM hive.create_context_data_view( _name );
     PERFORM hive.create_blocks_view( _name );
     PERFORM hive.create_transactions_view( _name );
     PERFORM hive.create_operations_view( _name );
