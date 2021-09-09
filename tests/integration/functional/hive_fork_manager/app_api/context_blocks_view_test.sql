@@ -76,6 +76,21 @@ BEGIN
                  , (8, '\xBADD80'::bytea, '\xCAFE80'::bytea, '2016-06-22 19:10:28-07'::timestamp)
                  ) as pattern
     ) , 'Unexpected rows in the view';
+
+    ASSERT NOT EXISTS (
+        SELECT * FROM ( VALUES
+               (1, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp)
+             , (2, '\xBADD20'::bytea, '\xCAFE20'::bytea, '2016-06-22 19:10:22-07'::timestamp)
+             , (3, '\xBADD30'::bytea, '\xCAFE30'::bytea, '2016-06-22 19:10:23-07'::timestamp)
+             , (4, '\xBADD40'::bytea, '\xCAFE40'::bytea, '2016-06-22 19:10:24-07'::timestamp)
+             , (5, '\xBADD5A'::bytea, '\xCAFE5A'::bytea, '2016-06-22 19:10:55-07'::timestamp)
+             , (6, '\xBADD60'::bytea, '\xCAFE60'::bytea, '2016-06-22 19:10:26-07'::timestamp)
+             , (7, '\xBADD70'::bytea, '\xCAFE70'::bytea, '2016-06-22 19:10:27-07'::timestamp)
+             , (8, '\xBADD80'::bytea, '\xCAFE80'::bytea, '2016-06-22 19:10:28-07'::timestamp)
+        ) as pattern
+        EXCEPT SELECT * FROM hive.context_blocks_view
+    ) , 'Unexpected rows in the view2';
+
 END
 $BODY$
 ;

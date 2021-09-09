@@ -196,37 +196,42 @@ AS
 $BODY$
 BEGIN
 EXECUTE format(
-        'DROP VIEW IF EXISTS hive.%s_TRANSACTIONS_MULTISIG_VIEW;
-        CREATE VIEW hive.%s_TRANSACTIONS_MULTISIG_VIEW
-        AS
+    'DROP VIEW IF EXISTS hive.%s_TRANSACTIONS_MULTISIG_VIEW;
+    CREATE VIEW hive.%s_TRANSACTIONS_MULTISIG_VIEW
+    AS
+    SELECT
+          t.trx_hash
+        , t.signature
+    FROM hive.%s_context_data_view c,
+    LATERAL(
         SELECT
-              htm.trx_hash
-            , htm.signature
+                  htm.trx_hash
+                , htm.signature
         FROM hive.transactions_multisig htm
         JOIN hive.transactions ht ON ht.trx_hash = htm.trx_hash
-        JOIN hive.contexts hc ON ( ht.block_num <= hc.irreversible_block AND ht.block_num <= hc.current_block_num ) OR NOT hc.is_attached
-        WHERE hc.name = ''%s''
+        WHERE ht.block_num <= c.min_block
         UNION ALL
         SELECT
-              reversible.trx_hash
-            , reversible.signature
-        FROM
-            (
+               reversible.trx_hash
+             , reversible.signature
+        FROM (
             SELECT
-                  htmr.trx_hash
-                , htmr.signature
+                   htmr.trx_hash
+                 , htmr.signature
             FROM hive.transactions_multisig_reversible htmr
-            JOIN hive.transactions_reversible htr ON htr.trx_hash = htmr.trx_hash AND htr.fork_id = htmr.fork_id
             JOIN (
-                SELECT DISTINCT ON (htr2.block_num) htr2.block_num, htr2.fork_id
-                FROM hive.transactions_reversible htr2
-                JOIN hive.contexts hc ON htr2.block_num > hc.irreversible_block AND htr2.fork_id <= hc.fork_id AND htr2.block_num <= hc.current_block_num
-                JOIN hive.registered_tables hrt ON hrt.context_id = hc.id
-                WHERE hc.name = ''%s''
-                ORDER BY htr2.block_num DESC, htr2.fork_id DESC
-            ) as forks ON forks.fork_id = htmr.fork_id AND forks.block_num = htr.block_num
-            ) as reversible
-        ;', _context_name, _context_name, _context_name, _context_name
+                    SELECT htr.trx_hash, forks.max_fork_id
+                    FROM hive.transactions_reversible htr
+                    JOIN (
+                        SELECT htr2.block_num, MAX(htr2.fork_id) AS max_fork_id
+                        FROM hive.transactions_reversible htr2
+                        WHERE c.reversible_range AND htr2.block_num > c.irreversible_block AND htr2.fork_id <= c.fork_id AND htr2.block_num <= c.current_block_num
+                        GROUP BY htr2.block_num
+                    ) as forks ON forks.max_fork_id = htr.fork_id AND forks.block_num = htr.block_num
+            ) as trr ON trr.trx_hash = htmr.trx_hash AND trr.max_fork_id = htmr.fork_id
+        ) reversible
+        ) t;'
+        , _context_name, _context_name, _context_name, _context_name
     );
 END;
 $BODY$
