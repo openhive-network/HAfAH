@@ -30,6 +30,17 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.drop_context_data_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+EXECUTE format( 'DROP VIEW hive.%s_context_data_view;', _context_name );
+END;
+$BODY$
+;
 
 CREATE OR REPLACE FUNCTION hive.create_blocks_view( _context_name TEXT )
     RETURNS void
@@ -69,6 +80,18 @@ BEGIN
         ) t;
         ;', _context_name, _context_name
     );
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.drop_blocks_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+EXECUTE format( 'DROP VIEW hive.%s_blocks_view;', _context_name );
 END;
 $BODY$
 ;
@@ -135,6 +158,18 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.drop_transactions_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    EXECUTE format( 'DROP VIEW hive.%s_transactions_view;', _context_name );
+END;
+$BODY$
+;
+
 CREATE OR REPLACE FUNCTION hive.create_operations_view( _context_name TEXT )
     RETURNS void
     LANGUAGE plpgsql
@@ -188,6 +223,18 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.drop_operations_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    EXECUTE format( 'DROP VIEW hive.%s_operations_view;', _context_name );
+END;
+$BODY$
+;
+
 CREATE OR REPLACE FUNCTION hive.create_signatures_view( _context_name TEXT )
     RETURNS void
     LANGUAGE plpgsql
@@ -233,6 +280,18 @@ EXECUTE format(
         ) t;'
         , _context_name, _context_name, _context_name, _context_name
     );
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.drop_signatures_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    EXECUTE format( 'DROP VIEW hive.%s_TRANSACTIONS_MULTISIG_VIEW;', _context_name );
 END;
 $BODY$
 ;

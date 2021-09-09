@@ -30,6 +30,12 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.context_remove( _name );
+
+    PERFORM hive.drop_signatures_view( _name );
+    PERFORM hive.drop_operations_view( _name );
+    PERFORM hive.drop_transactions_view( _name );
+    PERFORM hive.drop_blocks_view( _name );
+    PERFORM hive.drop_context_data_view( _name );
 END;
 $BODY$
 ;
