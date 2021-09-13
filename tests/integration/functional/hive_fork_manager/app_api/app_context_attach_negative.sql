@@ -12,6 +12,8 @@ BEGIN
         , ( 2, '\xBADD20', '\xCAFE20', '2016-06-22 19:10:24-07'::timestamp )
     ;
 
+    PERFORM hive.end_massive_sync(2);
+
     PERFORM hive.app_create_context( 'context' );
     CREATE SCHEMA A;
     CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.context );

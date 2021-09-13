@@ -107,7 +107,7 @@ AS
 $BODY$
 DECLARE
     __head_of_irreversible_block INT:=0;
-    __next_event_id BIGINT;
+    __next_event_id BIGINT:=0;
 BEGIN
     SELECT hir.consistent_block INTO __head_of_irreversible_block
     FROM hive.irreversible_data hir;
@@ -119,7 +119,7 @@ BEGIN
 
     PERFORM hive.context_attach( _context, _last_synced_block );
 
-    SELECT COALESCE( MIN( heq.id ), hc.events_id + 1 ) - 1 INTO __next_event_id
+    SELECT COALESCE( MIN( heq.id ), hc.events_id + 1 ) - 1 INTO __next_event_id -- -1 to stay one event before
     FROM hive.events_queue heq
     JOIN hive.contexts hc ON
             ( hc.name = _context )
@@ -129,10 +129,12 @@ BEGIN
     GROUP BY hc.events_id
     ;
 
-    UPDATE hive.contexts
-    SET events_id = __next_event_id
-    WHERE name = _context
-    ;
+    IF __next_event_id IS NOT NULL THEN
+        UPDATE hive.contexts
+        SET events_id = __next_event_id
+        WHERE name = _context
+        ;
+    END IF;
 END;
 $BODY$
 ;

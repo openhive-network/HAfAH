@@ -241,6 +241,7 @@ BEGIN
     UPDATE hive.contexts
     SET current_block_num = __next_block_to_process
     WHERE id = __context_id;
+
     __result.first_block = __next_block_to_process;
     __result.last_block = __last_block_to_process;
     RETURN __result;
@@ -324,6 +325,7 @@ BEGIN
         ELSE
     END CASE;
 
+    -- if there is no event or we still process irreversible blocks
     SELECT hc.irreversible_block INTO __irreversible_block_num
     FROM hive.contexts hc WHERE hc.id = __context_id;
 
