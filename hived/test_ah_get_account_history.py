@@ -149,12 +149,15 @@ def get_account_history(url1, url2, account, max_tries=10, timeout=0.1):
     if status1 == False or status2 == False or json1 != json2:
       print("Comparison failed for account: {}; start: {}; limit: {}".format(account, START, LIMIT))
 
-      filename1 = wdir / (account + "_ref")
-      filename2 = wdir / (account + "_tested")
+      filename1 = wdir / (account.strip() + "_ref.json")
+      filename2 = wdir / (account.strip() + "_tested.json")
+      filename3 = wdir / (account.strip() + "_diff.json")
       try:    file1 = filename1.open("w")
       except: print("Cannot open file:", filename1); return False
       try:    file2 = filename2.open("w")
       except: print("Cannot open file:", filename2); return False
+      try:    file3 = filename3.open("w")
+      except: print("Cannot open file:", filename3); return False
       
       file1.write("{} response:\n".format(url1))
       json.dump(json1, file1, indent=2, sort_keys=True)
@@ -162,16 +165,17 @@ def get_account_history(url1, url2, account, max_tries=10, timeout=0.1):
       file2.write("{} response:\n".format(url2))
       json.dump(json2, file2, indent=2, sort_keys=True)
       file2.close()
+      file3.write("{} response:\n".format(url2))
+      json.dump(json2, file3, indent=2, sort_keys=True)
+      file3.close()
       return False
 
     history = json1["result"]["history"]
     last = history[0][0] if len(history) else 0
     
     if last == 0 or last == 1: 
-      print("koniec")
       break
 
-    print("lecimy dalej")
     last -= 1
     START = last
     LIMIT = last if last < HARD_LIMIT else HARD_LIMIT
