@@ -38,5 +38,5 @@ Example:
 6. If you need worst execution times of SQL queries here is handy command:
 
 ```
-grep SQL /path/to/log/from/main.py | cut -d '|' -f 2: | sort -r -n | head -n 20
+grep SQL /path/to/log/from/HAfAH| cut -d '|' -f 2: | sort -r -n | head -n 20
 ```
