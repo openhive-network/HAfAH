@@ -1,0 +1,54 @@
+#!/bin/bash
+
+JMETER=$1										# path to jmeter which is avaible here: https://jmeter.apache.org/download_jmeter.cgi
+PATH_TO_INPUT_DIR=$2				# located in: $PROJECT_ROOT_DIR/tests/performance
+PATH_TO_INPUT_CSV="$PATH_TO_INPUT_DIR/config.csv"
+PATH_TO_INPUT_PROJECT_FILE="$PATH_TO_INPUT_DIR/proj.jmx.in"
+PATH_TO_PARSE_SCRIPT="$PATH_TO_INPUT_DIR/parse.py"
+
+if [ ! -f $JMETER ]; then
+	echo "jmeter binary at given address: '$JMETER' not found!"
+	exit -1
+fi
+
+if [ !-f "$PATH_TO_INPUT_DIR" ]; then
+	echo "$PATH_TO_INPUT_DIR does not exists"
+	exit -2
+fi
+
+if [[ ! "$PATH_TO_INPUT_DIR" = /* ]]; then
+	echo "paths should be absolute!"
+	exit -3
+fi 
+
+
+generate_output() {
+  # JMETER=$1
+  PORT=$1
+
+  OUTPUT_PROJECT_FILE=out_$PORT.jmx
+  OUTPUT_REPORT_FILE=result_$PORT.jtl
+
+  echo "configuring test..."
+  sed "s/ENTER PORT NUMBER HERE/$PORT/g" $PATH_TO_INPUT_PROJECT_FILE > $OUTPUT_PROJECT_FILE.v0
+  sed "s|ENTER PATH TO CSV HERE|$PATH_TO_INPUT_CSV|g" $OUTPUT_PROJECT_FILE.v0 > $OUTPUT_PROJECT_FILE
+
+  echo "running test..."
+  rm -f $OUTPUT_REPORT_FILE
+  $JMETER -n -t $OUTPUT_PROJECT_FILE -l $OUTPUT_REPORT_FILE
+}
+
+mkdir -p workdir
+pushd workdir
+
+ARGUMENTS=""
+for ((i=3; i<=$#; i++))
+do
+  PORT=${!i}
+  generate_output $PORT
+  ARGUMENTS="$ARGUMENTS result_$PORT.jtl"
+done
+
+$PATH_TO_PARSE_SCRIPT $PATH_TO_INPUT_CSV $ARGUMENTS && echo "summary: $PWD/parsed.csv"
+
+popd

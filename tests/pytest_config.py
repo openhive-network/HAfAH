@@ -17,8 +17,8 @@ command to install: `pip3 install pytest-asyncio --user`
   )
 
 @fixture(scope='session')
-def op_name_id_translation(api : api_t) -> Dict[ str, int ]:
-  return { row['name']: row['id'] for row in api.backend().api.get_operation_id_types() }
+async def op_name_id_translation(api : api_t) -> Dict[ str, int ]:
+  return { row['name']: row['id'] for row in await api.backend().api.get_operation_id_types() }
   # return {
   #   'account_witness_vote_operation': 12,
   #   'producer_reward_operation': 62

@@ -67,10 +67,11 @@ class virtual_ops(api_operations_container):
       self.ops.clear()
 
   def __setup_pagination(self):
-    last_op : api_operation = self.ops[-1]
-    self.next_block_range_begin = last_op.block
-    self.next_operation_begin = last_op.operation_id
-    self.ops.remove(last_op)
+    if len(self.ops):
+      last_op : api_operation = self.ops[-1]
+      self.next_block_range_begin = last_op.block
+      self.next_operation_begin = last_op.operation_id
+      self.ops.remove(last_op)
 
   def __group_by_block(self, irreversible_block):
     supp = dict()
