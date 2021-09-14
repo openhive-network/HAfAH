@@ -10,7 +10,11 @@ BEGIN
     VALUES
           ( 1, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp )
         , ( 2, '\xBADD20', '\xCAFE20', '2016-06-22 19:10:24-07'::timestamp )
+        , ( 3, '\xBADD20', '\xCAFE20', '2016-06-22 19:10:24-07'::timestamp )
     ;
+
+    INSERT INTO hive.fork VALUES( 2, 2, '2016-06-22 19:10:24-07'::timestamp );
+    INSERT INTO hive.fork VALUES( 3, 3, '2016-06-22 19:10:25-07'::timestamp );
 
     PERFORM hive.app_create_context( 'context' );
     CREATE SCHEMA A;
@@ -43,6 +47,7 @@ AS
 $BODY$
 BEGIN
     ASSERT EXISTS ( SELECT * FROM hive.contexts WHERE name='context' AND is_attached = TRUE ), 'Attach flag is still not set';
+    ASSERT EXISTS ( SELECT * FROM hive.contexts WHERE name='context' AND fork_id = 2 ), 'Wrong fork_id';
 
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 ) = 1, 'Trigger inserted something into shadow table1';
 END;

@@ -107,9 +107,11 @@ AS
 $BODY$
 DECLARE
     __head_of_irreversible_block INT:=0;
+    __next_event_id BIGINT:=0;
+    __fork_id BIGINT := 1;
 BEGIN
-    SELECT hb.num INTO __head_of_irreversible_block
-    FROM hive.blocks hb ORDER BY hb.num DESC LIMIT 1;
+    SELECT hir.consistent_block INTO __head_of_irreversible_block
+    FROM hive.irreversible_data hir;
 
     IF _last_synced_block > __head_of_irreversible_block THEN
         RAISE EXCEPTION 'Cannot attach context % because the block num % is grater than top of irreversible block %'
@@ -117,6 +119,29 @@ BEGIN
     END IF;
 
     PERFORM hive.context_attach( _context, _last_synced_block );
+
+    SELECT MAX(hf.id) INTO __fork_id FROM hive.fork hf WHERE hf.block_num <= _last_synced_block;
+    UPDATE hive.contexts
+    SET fork_id = __fork_id
+    WHERE name = _context
+    ;
+
+    SELECT COALESCE( MIN( heq.id ), hc.events_id + 1 ) - 1 INTO __next_event_id -- -1 to stay one event before
+    FROM hive.events_queue heq
+    JOIN hive.contexts hc ON
+            ( hc.name = _context )
+        AND ( heq.id > hc.events_id )
+        AND ( heq.event != 'BACK_FROM_FORK' )
+        AND ( heq.block_num > hc.current_block_num )
+    GROUP BY hc.events_id
+    ;
+
+    IF __next_event_id IS NOT NULL THEN
+        UPDATE hive.contexts
+        SET events_id = __next_event_id
+        WHERE name = _context
+        ;
+    END IF;
 END;
 $BODY$
 ;

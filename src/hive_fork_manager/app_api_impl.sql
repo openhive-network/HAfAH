@@ -195,7 +195,7 @@ BEGIN
         SET
             events_id = __next_event_id
         WHERE id = __context_id;
-        -- no RETURN here because code after the case will continue processing irreversible blocks only
+        RETURN NULL;
     WHEN 'MASSIVE_SYNC' THEN
         --massive events are squashe at the function begin
         -- we may got on context  creation irreversible block based on hive.irreversible_data
@@ -241,6 +241,7 @@ BEGIN
     UPDATE hive.contexts
     SET current_block_num = __next_block_to_process
     WHERE id = __context_id;
+
     __result.first_block = __next_block_to_process;
     __result.last_block = __last_block_to_process;
     RETURN __result;
@@ -324,6 +325,7 @@ BEGIN
         ELSE
     END CASE;
 
+    -- if there is no event or we still process irreversible blocks
     SELECT hc.irreversible_block INTO __irreversible_block_num
     FROM hive.contexts hc WHERE hc.id = __context_id;
 
