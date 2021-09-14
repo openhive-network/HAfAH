@@ -108,6 +108,7 @@ $BODY$
 DECLARE
     __head_of_irreversible_block INT:=0;
     __next_event_id BIGINT:=0;
+    __fork_id BIGINT := 1;
 BEGIN
     SELECT hir.consistent_block INTO __head_of_irreversible_block
     FROM hive.irreversible_data hir;
@@ -118,6 +119,12 @@ BEGIN
     END IF;
 
     PERFORM hive.context_attach( _context, _last_synced_block );
+
+    SELECT MAX(hf.id) INTO __fork_id FROM hive.fork hf WHERE hf.block_num <= _last_synced_block;
+    UPDATE hive.contexts
+    SET fork_id = __fork_id
+    WHERE name = _context
+    ;
 
     SELECT COALESCE( MIN( heq.id ), hc.events_id + 1 ) - 1 INTO __next_event_id -- -1 to stay one event before
     FROM hive.events_queue heq
