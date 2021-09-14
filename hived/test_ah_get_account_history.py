@@ -18,6 +18,7 @@ from jsonsocket import JSONSocket
 from jsonsocket import hived_call
 from list_account import list_accounts
 from pathlib import Path
+import deepdiff
 
 
 wdir = Path()
@@ -165,8 +166,10 @@ def get_account_history(url1, url2, account, max_tries=10, timeout=0.1):
       file2.write("{} response:\n".format(url2))
       json.dump(json2, file2, indent=2, sort_keys=True)
       file2.close()
-      file3.write("{} response:\n".format(url2))
-      json.dump(json2, file3, indent=2, sort_keys=True)
+
+      file3.write("Differences:\n")
+      json_diff = deepdiff.DeepDiff(json1, json2)
+      json.dump(json_diff, file3, indent=2, sort_keys=True)
       file3.close()
       return False
 
