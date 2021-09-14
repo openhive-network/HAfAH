@@ -71,32 +71,13 @@ def conf_stdout_custom_file_logger(logger, file_name):
 
 def run_server(db_url, port):
     """Configure and launch the API server."""
-    #pylint: disable=too-many-statements
 
-    # configure jsonrpcserver logging
-    log_level = logging.INFO
-    # logging.getLogger('aiohttp.access').setLevel(logging.WARNING)
-    # logging.getLogger('jsonrpcserver.dispatcher.response').setLevel(log_level)
-    # truncate_response_log(logging.getLogger('jsonrpcserver.dispatcher.request'))
-    # truncate_response_log(logging.getLogger('jsonrpcserver.dispatcher.response'))
-
-    # init
     log = logging.getLogger(__name__)
-
-    # logger for storing Request processing times 
-
-    req_res_log = None
-
-    # if conf.get('log_request_times'):
-    #   req_res_log = logging.getLogger("Request-Process-Time-Logger")
-    #   conf_stdout_custom_file_logger(req_res_log, "./request_process_times.log")
-
     methods = build_methods()
 
     app = web.Application()
     app['config'] = dict()
     app['config']['hive.MAX_DB_ROW_RESULTS'] = 100000
-    #app['config']['hive.logger'] = logger
 
     async def init_db(app):
         """Initialize db adapter."""
@@ -140,30 +121,16 @@ def run_server(db_url, port):
                 'Access-Control-Allow-Origin': '*'
             }
             
-            ret = web.json_response(error_response, status=200, headers=headers, dumps=decimal_serialize)
-            # if req_res_log is not None:
-              # req_res_log.info("Request: {} processed in {:.4f}s".format(request, perf_counter() - t_start))
-
-            return ret
+            return web.json_response(error_response, status=200, headers=headers, dumps=decimal_serialize)
 
         if response is not None and response.wanted:
             headers = {
                 'Access-Control-Allow-Origin': '*'
             }
             ret = web.json_response(response.deserialized(), status=200, headers=headers, dumps=decimal_serialize)
-            # if req_res_log is not None:
-              # req_res_log.info("Request: {} processed in {:.4f}s".format(request, perf_counter() - t_start))
             return ret
         ret = web.Response()
-
-        # if req_res_log is not None:
-          # req_res_log.info("Request: {} processed in {:.4f}s".format(request, perf_counter() - t_start))
-
         return ret
 
-    # if conf.get('sync_to_s3'):
-        # app.router.add_get('/head_age', head_age)
-    # app.router.add_get('/.well-known/healthcheck.json', health)
-    # app.router.add_get('/health', health)
     app.router.add_post('/', jsonrpc_handler)
     web.run_app(app, port=port)
