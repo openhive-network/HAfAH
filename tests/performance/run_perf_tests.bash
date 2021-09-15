@@ -11,7 +11,7 @@ if [ ! -f $JMETER ]; then
 	exit -1
 fi
 
-if [ !-f "$PATH_TO_INPUT_DIR" ]; then
+if [ ! -d "$PATH_TO_INPUT_DIR" ]; then
 	echo "$PATH_TO_INPUT_DIR does not exists"
 	exit -2
 fi
