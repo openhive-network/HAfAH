@@ -227,10 +227,27 @@ BEGIN
     SELECT hc.irreversible_block INTO __irreversible_block_num
     FROM hive.contexts hc WHERE hc.id = __context_id;
 
-    SELECT MIN( hb.num ), MAX( hb.num )
-    FROM hive.blocks hb
-    WHERE hb.num > __current_block_num AND hb.num <= __irreversible_block_num
-    INTO __next_block_to_process, __last_block_to_process;
+    IF ( __current_block_num =  __irreversible_block_num AND __current_block_num != 0  ) THEN
+        --this situation can happen when new context was created, then detached and attached
+        --or there are not events after reaching irreversible block
+        --and in parallel for hive.app_context_create hived executes hive.set_irreversible
+        --details are in issue#13: https://gitlab.syncad.com/hive/psql_tools/-/issues/13
+        SELECT hb.num, hb.num
+        FROM hive.blocks hb
+        WHERE hb.num = __current_block_num + 1
+        INTO __next_block_to_process, __last_block_to_process;
+
+        IF __next_block_to_process IS NOT NULL THEN
+            PERFORM hive.context_set_irreversible_block( _context_name, __next_block_to_process );
+        END IF;
+    ELSE
+        SELECT MIN( hb.num ), MAX( hb.num )
+        FROM hive.blocks hb
+        WHERE hb.num > __current_block_num AND hb.num <= __irreversible_block_num
+        INTO __next_block_to_process, __last_block_to_process;
+    END IF;
+
+
 
     IF __next_block_to_process IS NULL THEN
             -- There is no new and expected block, needs to wait for a new block

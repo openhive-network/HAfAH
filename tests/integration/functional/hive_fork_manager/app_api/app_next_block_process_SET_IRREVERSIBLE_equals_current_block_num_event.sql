@@ -6,6 +6,10 @@ VOLATILE
 AS
 $BODY$
 BEGIN
+    PERFORM hive.app_create_context( 'context' );
+    CREATE SCHEMA A;
+    CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.context );
+
     INSERT INTO hive.blocks
     VALUES
        ( 1, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp )
@@ -20,8 +24,9 @@ BEGIN
         , ( 2, 'NEW_BLOCK', 5)
     ;
 
-    INSERT INTO hive.contexts
-    VALUES (1, 'context', 3, 3, true, false, 0, 1, 'user', null );
+    UPDATE hive.contexts
+    SET current_block_num = 3
+      , irreversible_block = 3;
 END;
 $BODY$
 ;
@@ -56,7 +61,7 @@ BEGIN
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __result; -- process NEW IRREVERSIBLE
     RAISE NOTICE 'result=%', __result;
-    ASSERT __result = (2,4), 'Not return (2,4)';
+    ASSERT __result = (4,4), 'Not return (2,4)';
 
 
 END
