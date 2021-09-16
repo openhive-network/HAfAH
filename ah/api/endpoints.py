@@ -63,7 +63,7 @@ async def get_transaction(*, db, id : str, include_reversible : bool = DEFAULT_I
 @require_unsigned('limit')
 async def get_account_history(*, db, account : str, start : int, limit : int = DEFAULT_LIMIT, operation_filter_low : int = 0, operation_filter_high : int = 0, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE, **kwargs):
   filter = ( operation_filter_high << 32 ) | operation_filter_low
-  return build_response( await backend().get_account_history( db, filter, account, start, limit, include_reversible ) )
+  start = start if start >= 0 else 9223372036854775807 # max bigint in psql
 
 def build_methods():
   def method( name, foo ):
