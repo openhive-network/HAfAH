@@ -97,9 +97,10 @@ class account_history_item:
     self.block : int = row["_block"]
     self.trx_in_block : int = row["_trx_in_block"]
     self.op_in_trx : int = row["_op_in_trx"]
-    self.virtual_op : int = row["_virtual_op"]
+    self.virtual_op : int = int(row["_virtual_op"])
     self.timestamp : str = row["_timestamp"]
     self.op : operation = operation( row["_value"] )
+    self.operation_id : int = 0
 
 class account_history:
   def __init__(self, iterable):
