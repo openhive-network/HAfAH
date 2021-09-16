@@ -13,12 +13,12 @@ class account_history_impl:
       return None
 
 
-  async def get_ops_in_block( self, db, block_num : int, only_virtual : bool, include_reversible : bool) -> ops_in_block:
-    api = account_history_db_connector(db)
+  async def get_ops_in_block( self, args, block_num : int, only_virtual : bool, include_reversible : bool) -> ops_in_block:
+    api = account_history_db_connector(args)
     return ops_in_block( block_num, await api.get_ops_in_block(block_num, only_virtual, include_reversible) )
 
-  async def get_transaction(self, db, trx_hash : str, include_reversible : bool ) -> transaction:
-    api = account_history_db_connector(db)
+  async def get_transaction(self, args, trx_hash : str, include_reversible : bool ) -> transaction:
+    api = account_history_db_connector(args)
 
     transaction_basic_info = await api.get_transaction( trx_hash.encode('ascii'), include_reversible )
     
@@ -37,8 +37,8 @@ class account_history_impl:
     return transaction(trx_hash, transaction_basic_info)
 
 
-  async def enum_virtual_ops(self, db, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False ) -> virtual_ops:
-    api = account_history_db_connector(db)
+  async def enum_virtual_ops(self, args, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False ) -> virtual_ops:
+    api = account_history_db_connector(args)
     return virtual_ops( 
       await api.get_irreversible_block_num() if group_by_block else None,
       await api.enum_virtual_ops( 
@@ -51,8 +51,8 @@ class account_history_impl:
       )
     )
 
-  async def get_account_history(self, db, filter : int, account : str, start : int, limit : int, include_reversible : bool) -> account_history:
-    api = account_history_db_connector(db)
+  async def get_account_history(self, args, filter : int, account : str, start : int, limit : int, include_reversible : bool) -> account_history:
+    api = account_history_db_connector(args)
     return account_history( 
       await api.get_account_history(
         self.__translate_filter( filter ), 

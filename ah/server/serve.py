@@ -5,6 +5,7 @@ import sys
 import logging
 import time
 import traceback
+import json
 
 from datetime import datetime
 from time import perf_counter
@@ -95,10 +96,14 @@ def run_server(db_url, port):
         """Handles all hive jsonrpc API requests."""
         t_start = perf_counter()
         request = await request.text()
+        ctx = {
+          "db": app["db"],
+          "id": json.loads(request)['id']
+        }
         # debug=True refs https://github.com/bcb/jsonrpcserver/issues/71
         response = None
         try:
-            response = await dispatch(request, methods=methods, debug=True, context=app, serialize=decimal_serialize, deserialize=decimal_deserialize)
+            response = await dispatch(request, methods=methods, debug=True, context=ctx, serialize=decimal_serialize, deserialize=decimal_deserialize)
         except Exception as ex:
             # first log exception
             # TODO: consider removing this log - potential log spam

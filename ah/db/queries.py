@@ -1,20 +1,19 @@
+from typing import Any
 from ah.server.db import Db
 from time import perf_counter
 
 class account_history_db_connector:
-  def __init__(self, db : Db) -> None:
-    assert db is not None
-    self._conn : Db = db
+  def __init__(self, args : dict) -> None:
+    self._conn : Db = args['db']
+    assert self._conn is not None
+    self._id : Any = args['id']
 
   def _get_db(self) -> Db:
     assert self._conn is not None
     return self._conn
 
   async def _get_all(self, query, **kwargs):
-    before = perf_counter()
-    result = await self._get_db().query_all(query, **kwargs)
-    print(f'### SQL|{perf_counter() - before}|{query}|{kwargs}', flush=True)
-    return result
+    return await self._get_db().query_all(query + f' -- ## ID: {self._id}', **kwargs)
 
   async def get_multi_signatures_in_transaction(self, trx_hash : bytes ):
     return self._get_all(
