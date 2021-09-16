@@ -40,3 +40,20 @@ Example:
 ```
 grep SQL /path/to/log/from/HAfAH| cut -d '|' -f 2: | sort -r -n | head -n 20
 ```
+
+## Interpretting results in CSV
+---
+
+```
+|	sample_id	|	body					|	sql			|	result_8091.jtl	|	result_8095.jtl	|	result_5432.jtl	|
+|-----------------------------------------------------------------------------------------------------------------------|
+|	1519		|	{"jsonrpc" ... "id": 1}	|	SELECT ...;	|	6879,9			|	35768,7			|	1327,5			|
+|	1919		|	{"jsonrpc" ... "id": 1}	|	SELECT ...;	|	14257,5			|	33485,3			|	1144,4			|
+|	1819		|	{"jsonrpc" ... "id": 1}	|	SELECT ...;	|	7591,5			|	33112,7			|	1156,5			|
+|-----------------------------------------------------------------------------------------------------------------------|
+```
+
+`sample_id` - global sequential mesurement for whole test <br>
+`body` - JSON that can be pasted to curl or insomnia <br>
+`sql` - SQL that was performed (only get_transaction has a bit modified query) <br>
+`result_<port>.jtl` - contains average duration of whole call from all 10 threads in miliseconds for given port
