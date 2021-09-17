@@ -57,7 +57,7 @@ BEGIN
 
     INSERT INTO hive.blocks_reversible
     VALUES
-    ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:25-07'::timestamp, 1 )
+           ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:25-07'::timestamp, 1 )
          , ( 5, '\xBADD5A', '\xCAFE5A', '2016-06-22 19:10:55-07'::timestamp, 1 )
          , ( 6, '\xBADD60', '\xCAFE60', '2016-06-22 19:10:26-07'::timestamp, 1 )
          , ( 7, '\xBADD70', '\xCAFE70', '2016-06-22 19:10:37-07'::timestamp, 1 )
@@ -120,11 +120,11 @@ BEGIN
          , ( 11, 10, 0, 0, 1, 'TEN OPERATION', 3 )
     ;
 
-    UPDATE hive.contexts SET fork_id = 2, irreversible_block = 3, current_block_num = 8;
+    UPDATE hive.contexts SET fork_id = 2, irreversible_block = 8, current_block_num = 8;
     -- SUMMARY:
     --We have 3 forks: 1 (blocks: 4,5,6),2 (blocks: 7,8,9) ,3 (blocks: 8,9, 10), moreover block 1,2,3,4 are
     --in set of irreversible blocks. There is one context which is working on 8 block on fork 2, and has information
-    --that block nr 3 is last known irreversible block.
+    --that block nr 8 is last known irreversible block.
 
 END;
 $BODY$
