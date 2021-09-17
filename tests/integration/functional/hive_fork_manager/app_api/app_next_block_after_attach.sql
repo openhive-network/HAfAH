@@ -72,9 +72,13 @@ DECLARE
     __blocks hive.blocks_range;
 BEGIN
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks;
-    ASSERT __blocks IS NOT NULL, 'Null returned';
     RAISE NOTICE 'Blocks range %', __blocks;
+    ASSERT __blocks IS NULL, 'Not NULL returned for NEW_IRREVERSIBLE(4)';
+
+    SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks;
+    ASSERT __blocks IS NOT NULL, 'Null returned';
     ASSERT __blocks.first_block = 3, 'Wrong first block';
+    ASSERT __blocks.last_block = 4, 'Wrong first block';
 END
 $BODY$
 ;

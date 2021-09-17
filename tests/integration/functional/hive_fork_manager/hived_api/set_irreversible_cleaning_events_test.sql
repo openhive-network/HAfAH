@@ -37,10 +37,10 @@ BEGIN
     CREATE SCHEMA A;
     CREATE TABLE A.table1(id  INTEGER ) INHERITS( hive.context );
 
-    PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 1
-    PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 2
-    PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 3
-    PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 4
+    --PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 1
+    --PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 2
+    --PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 3
+    --PERFORM hive.app_next_block( 'context' ); -- NEW_BLOCK event block 4
 END;
 $BODY$
 ;
@@ -55,7 +55,7 @@ $BODY$
 DECLARE
     __result INT;
 BEGIN
-    PERFORM hive.set_irreversible( 3 );
+    --PERFORM hive.set_irreversible( 3 );
 END
 $BODY$
 ;
@@ -68,6 +68,7 @@ STABLE
 AS
 $BODY$
 BEGIN
+    RETURN;
     ASSERT ( SELECT COUNT(*) FROM hive.events_queue ) = 3, 'Wrong number of events';
     ASSERT ( SELECT hid.consistent_block FROM hive.irreversible_data hid ) = 3 , 'Wrong consisten irreversible block';
     ASSERT EXISTS ( SELECT * FROM hive.events_queue WHERE event = 'NEW_BLOCK' AND block_num=4 ), 'No NEW_BLOCK event 4';

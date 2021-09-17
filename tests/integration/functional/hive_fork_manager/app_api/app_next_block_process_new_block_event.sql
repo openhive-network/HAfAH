@@ -50,6 +50,7 @@ BEGIN
     ASSERT __first_blocks.first_block = 1 AND __first_blocks.last_block = 1, 'Wrong first block';
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __second_blocks;
+    RAISE NOTICE 'Second block=%', __second_blocks;
     ASSERT __second_blocks.first_block = 2 AND __second_blocks.last_block = 2, 'Wrong second block';
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __third_blocks;

@@ -35,6 +35,7 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.end_massive_sync(1);
+    PERFORM hive.app_next_block( 'context' ); -- force to initialize context - event_id != 0, end_massive_sync 1
     PERFORM hive.end_massive_sync(2);
     PERFORM hive.end_massive_sync(3);
     PERFORM hive.app_next_block( 'context' ); -- eat MASSIVE_SYNC_EVENT 3
@@ -62,7 +63,7 @@ BEGIN
     ASSERT ( SELECT COUNT(*) FROM hive.events_queue WHERE block_num = 10 ) = 1, 'No MASSIVE SYNC EVENT(10)';
 
     SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- MASSIVE_SYNC
-    ASSERT __blocks.first_block = 2, 'Incorrect first block';
+    ASSERT __blocks.first_block = 3, 'Incorrect first block';
     ASSERT __blocks.last_block = 10, 'Incorrect last range';
 END
 $BODY$
