@@ -137,6 +137,17 @@ BEGIN
     ;
 
     IF __next_event_id IS NOT NULL THEN
+        SELECT
+            CASE
+                WHEN __next_event_id <
+                    ( SELECT MIN(heq.id)
+                      FROM hive.events_queue heq
+                      WHERE heq.id > 0 ) THEN 0
+                ELSE __next_event_id
+            END as value
+        INTO __next_event_id;
+
+
         UPDATE hive.contexts
         SET events_id = __next_event_id
         WHERE name = _context
