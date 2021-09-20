@@ -229,9 +229,9 @@ BEGIN
 
     IF ( __current_block_num =  __irreversible_block_num AND __current_block_num != 0  ) THEN
         --this situation can happen when new context was created, then detached and attached
-        --or there are not events after reaching irreversible block
         --and in parallel for hive.app_context_create hived executes hive.set_irreversible
         --details are in issue#13: https://gitlab.syncad.com/hive/psql_tools/-/issues/13
+        --or there are not events after reaching irreversible block
         SELECT hb.num, hb.num
         FROM hive.blocks hb
         WHERE hb.num = __current_block_num + 1
