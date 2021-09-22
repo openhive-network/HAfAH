@@ -42,7 +42,6 @@ BEGIN
         PERFORM hive.end_massive_sync( 1 );
         ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 0, 'hive.app_get_irreversible_block !=0 (3)';
 
-        RETURN;
         SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- massive sync event
         RAISE NOTICE 'Blocks range after MASSIVE_SYNC = %', __blocks;
 

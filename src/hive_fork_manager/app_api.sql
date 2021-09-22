@@ -106,8 +106,8 @@ CREATE OR REPLACE FUNCTION hive.app_context_attach( _context TEXT, _last_synced_
 AS
 $BODY$
 DECLARE
-    __head_of_irreversible_block INT:=0;
-    __fork_id BIGINT := 1;
+    __head_of_irreversible_block hive.blocks.num%TYPE:=0;
+    __fork_id hive.fork.id%TYPE := 1;
 BEGIN
     SELECT hir.consistent_block INTO __head_of_irreversible_block
     FROM hive.irreversible_data hir;
@@ -123,7 +123,7 @@ BEGIN
 
     UPDATE hive.contexts
     SET   fork_id = __fork_id
-        , events_id = 0
+        , irreversible_block = COALESCE( __head_of_irreversible_block, 0 )
     WHERE name = _context
     ;
 END;
