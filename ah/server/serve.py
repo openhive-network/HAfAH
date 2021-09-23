@@ -8,6 +8,8 @@ import traceback
 import json
 
 import asyncio
+import time
+import logging
 
 from datetime import datetime
 from time import perf_counter
@@ -78,66 +80,74 @@ def run_server(db_url, port):
     log = logging.getLogger(__name__)
     methods = build_methods()
 
-    app = web.Application()
-    app['config'] = dict()
-    app['config']['hive.MAX_DB_ROW_RESULTS'] = 100000
+    # Create asyncio event loop
+    loop = asyncio.get_event_loop()
+    try:
+        app = web.Application()
+        app['config'] = dict()
+        app['config']['hive.MAX_DB_ROW_RESULTS'] = 100000
 
-    async def init_db(app):
-        """Initialize db adapter."""
-        app['db'] = await Db.create(db_url)
+        async def init_db(app):
+            """Initialize db adapter."""
+            app['db'] = await Db.create(db_url)
 
-    async def close_db(app):
-        """Teardown db adapter."""
-        app['db'].close()
-        await app['db'].wait_closed()
+        async def close_db(app):
+            """Teardown db adapter."""
+            app['db'].close()
+            await app['db'].wait_closed()
 
-    app.on_startup.append(init_db)
-    app.on_cleanup.append(close_db)
+        app.on_startup.append(init_db)
+        app.on_cleanup.append(close_db)
 
-    async def jsonrpc_handler(request):
-        """Handles all hive jsonrpc API requests."""
-        t_start = perf_counter()
-        request = await request.text()
-        ctx = {
-          "db": app["db"],
-          "id": json.loads(request)['id']
-        }
-        # debug=True refs https://github.com/bcb/jsonrpcserver/issues/71
-        response = None
-        try:
-            response = await dispatch(request, methods=methods, debug=True, context=ctx, serialize=decimal_serialize, deserialize=decimal_deserialize)
-        except Exception as ex:
-            # first log exception
-            # TODO: consider removing this log - potential log spam
-            log.exception(ex)
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            print("*** print_tb:")
-            traceback.print_tb(exc_traceback, limit=1000, file=sys.stdout)
-
-            # create and send error response
-            error_response = {
-                "jsonrpc":"2.0",
-                "error" : {
-                    "code": -32602,
-                    "data": "Invalid JSON in request: " + str(ex),
-                    "message": "Invalid parameters"
-                },
-                "id" : -1
+        async def jsonrpc_handler(request):
+            """Handles all hive jsonrpc API requests."""
+            t_start = perf_counter()
+            request = await request.text()
+            ctx = {
+            "db": app["db"],
+            "id": json.loads(request)['id']
             }
-            headers = {
-                'Access-Control-Allow-Origin': '*'
-            }
-            
-            return web.json_response(error_response, status=200, headers=headers, dumps=decimal_serialize)
+            # debug=True refs https://github.com/bcb/jsonrpcserver/issues/71
+            response = None
+            try:
+                response = await dispatch(request, methods=methods, debug=True, context=ctx, serialize=decimal_serialize, deserialize=decimal_deserialize)
+            except Exception as ex:
+                # first log exception
+                # TODO: consider removing this log - potential log spam
+                log.exception(ex)
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                print("*** print_tb:")
+                traceback.print_tb(exc_traceback, limit=1000, file=sys.stdout)
 
-        if response is not None and response.wanted:
-            headers = {
-                'Access-Control-Allow-Origin': '*'
-            }
-            ret = web.json_response(response.deserialized(), status=200, headers=headers, dumps=decimal_serialize)
+                # create and send error response
+                error_response = {
+                    "jsonrpc":"2.0",
+                    "error" : {
+                        "code": -32602,
+                        "data": "Invalid JSON in request: " + str(ex),
+                        "message": "Invalid parameters"
+                    },
+                    "id" : -1
+                }
+                headers = {
+                    'Access-Control-Allow-Origin': '*'
+                }
+                
+                return web.json_response(error_response, status=200, headers=headers, dumps=decimal_serialize)
+
+            if response is not None and response.wanted:
+                headers = {
+                    'Access-Control-Allow-Origin': '*'
+                }
+                ret = web.json_response(response.deserialized(), status=200, headers=headers, dumps=decimal_serialize)
+                return ret
+            ret = web.Response()
             return ret
-        ret = web.Response()
-        return ret
 
-    app.router.add_post('/', jsonrpc_handler)
-    web.run_app(app, port=port)
+        app.router.add_post('/', jsonrpc_handler)
+        web.run_app(app, port=port)
+
+    finally:
+        # Shutdown the loop event if there is an exception
+        loop.close()
+    
