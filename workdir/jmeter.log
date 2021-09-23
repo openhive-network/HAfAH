@@ -1,0 +1,292 @@
+2021-09-23 10:51:52,684 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2021-09-23 10:51:52,694 INFO o.a.j.JMeter: Loading user properties from: /home/dev/apache-jmeter-5.4.1/bin/user.properties
+2021-09-23 10:51:52,694 INFO o.a.j.JMeter: Loading system properties from: /home/dev/apache-jmeter-5.4.1/bin/system.properties
+2021-09-23 10:51:52,699 INFO o.a.j.JMeter: Copyright (c) 1998-2021 The Apache Software Foundation
+2021-09-23 10:51:52,699 INFO o.a.j.JMeter: Version 5.4.1
+2021-09-23 10:51:52,699 INFO o.a.j.JMeter: java.version=1.8.0_292
+2021-09-23 10:51:52,699 INFO o.a.j.JMeter: java.vm.name=OpenJDK 64-Bit Server VM
+2021-09-23 10:51:52,699 INFO o.a.j.JMeter: os.name=Linux
+2021-09-23 10:51:52,699 INFO o.a.j.JMeter: os.arch=amd64
+2021-09-23 10:51:52,699 INFO o.a.j.JMeter: os.version=5.4.0-84-generic
+2021-09-23 10:51:52,700 INFO o.a.j.JMeter: file.encoding=UTF-8
+2021-09-23 10:51:52,700 INFO o.a.j.JMeter: java.awt.headless=true
+2021-09-23 10:51:52,700 INFO o.a.j.JMeter: Max memory     =1073741824
+2021-09-23 10:51:52,700 INFO o.a.j.JMeter: Available Processors =12
+2021-09-23 10:51:52,703 INFO o.a.j.JMeter: Default Locale=English (EN)
+2021-09-23 10:51:52,703 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2021-09-23 10:51:52,703 INFO o.a.j.JMeter: JMeterHome=/home/dev/apache-jmeter-5.4.1
+2021-09-23 10:51:52,703 INFO o.a.j.JMeter: user.dir  =/home/dev/HAfAH/workdir
+2021-09-23 10:51:52,703 INFO o.a.j.JMeter: PWD       =/home/dev/HAfAH/workdir
+2021-09-23 10:51:52,704 INFO o.a.j.JMeter: IP: 127.0.1.1 Name: dev-MS-7B84 FullName: dev-MS-7B84
+2021-09-23 10:51:52,707 INFO o.a.j.s.FileServer: Default base='/home/dev/HAfAH/workdir'
+2021-09-23 10:51:52,707 INFO o.a.j.s.FileServer: Set new base='/home/dev/HAfAH/workdir'
+2021-09-23 10:51:52,785 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2021-09-23 10:51:52,799 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2021-09-23 10:51:52,802 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2021-09-23 10:51:52,806 INFO o.a.j.s.SaveService: Loading file: out_8095.jmx
+2021-09-23 10:51:53,009 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2021-09-23 10:51:53,009 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2021-09-23 10:51:53,009 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2021-09-23 10:51:53,009 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2021-09-23 10:51:53,009 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2021-09-23 10:51:53,009 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2021-09-23 10:51:53,038 INFO o.a.j.JMeter: Creating summariser <summary>
+2021-09-23 10:51:53,042 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2021-09-23 10:51:53,042 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2021-09-23 10:51:53,042 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2021-09-23 10:51:53,045 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2021-09-23 10:51:53,045 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2021-09-23 10:51:53,113 ERROR o.a.j.p.j.c.DataSourceElement: Error preinitializing the connection pool: psql@176843465
+java.sql.SQLException: Cannot load JDBC driver class 'org.postgresql.Driver'
+	at org.apache.commons.dbcp2.DriverFactory.createDriver(DriverFactory.java:54) ~[commons-dbcp2-2.8.0.jar:2.8.0]
+	at org.apache.commons.dbcp2.BasicDataSource.createConnectionFactory(BasicDataSource.java:462) ~[commons-dbcp2-2.8.0.jar:2.8.0]
+	at org.apache.commons.dbcp2.BasicDataSource.createDataSource(BasicDataSource.java:528) ~[commons-dbcp2-2.8.0.jar:2.8.0]
+	at org.apache.commons.dbcp2.BasicDataSource.getConnection(BasicDataSource.java:734) ~[commons-dbcp2-2.8.0.jar:2.8.0]
+	at org.apache.jmeter.protocol.jdbc.config.DataSourceElement.initPool(DataSourceElement.java:308) [ApacheJMeter_jdbc.jar:5.4.1]
+	at org.apache.jmeter.protocol.jdbc.config.DataSourceElement.testStarted(DataSourceElement.java:127) [ApacheJMeter_jdbc.jar:5.4.1]
+	at org.apache.jmeter.engine.StandardJMeterEngine.notifyTestListenersOfStart(StandardJMeterEngine.java:205) [ApacheJMeter_core.jar:5.4.1]
+	at org.apache.jmeter.engine.StandardJMeterEngine.run(StandardJMeterEngine.java:382) [ApacheJMeter_core.jar:5.4.1]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_292]
+Caused by: java.lang.ClassNotFoundException: org.postgresql.Driver
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:382) ~[?:1.8.0_292]
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:418) ~[?:1.8.0_292]
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:351) ~[?:1.8.0_292]
+	at org.apache.commons.dbcp2.DriverFactory.createDriver(DriverFactory.java:49) ~[commons-dbcp2-2.8.0.jar:2.8.0]
+	... 8 more
+2021-09-23 10:51:53,122 INFO o.a.j.JMeter: Running test (1632387113122)
+2021-09-23 10:51:53,149 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : enum_virtual_ops
+2021-09-23 10:51:53,149 INFO o.a.j.e.StandardJMeterEngine: Starting 10 threads for group enum_virtual_ops.
+2021-09-23 10:51:53,149 INFO o.a.j.e.StandardJMeterEngine: Thread will stop on error
+2021-09-23 10:51:53,149 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=10 ramp-up=0 delayedStart=false
+2021-09-23 10:51:53,158 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2021-09-23 10:51:53,158 INFO o.a.j.e.StandardJMeterEngine: Waiting for thread group: enum_virtual_ops to finish before starting next group
+2021-09-23 10:51:53,161 INFO o.a.j.t.JMeterThread: Thread started: enum_virtual_ops 1-7
+2021-09-23 10:51:53,161 INFO o.a.j.t.JMeterThread: Thread started: enum_virtual_ops 1-4
+2021-09-23 10:51:53,161 INFO o.a.j.t.JMeterThread: Thread started: enum_virtual_ops 1-2
+2021-09-23 10:51:53,161 INFO o.a.j.t.JMeterThread: Thread started: enum_virtual_ops 1-8
+2021-09-23 10:51:53,161 INFO o.a.j.t.JMeterThread: Thread started: enum_virtual_ops 1-5
+2021-09-23 10:51:53,161 INFO o.a.j.t.JMeterThread: Thread started: enum_virtual_ops 1-10
+2021-09-23 10:51:53,161 INFO o.a.j.t.JMeterThread: Thread started: enum_virtual_ops 1-9
+2021-09-23 10:51:53,161 INFO o.a.j.t.JMeterThread: Thread started: enum_virtual_ops 1-6
+2021-09-23 10:51:53,161 INFO o.a.j.t.JMeterThread: Thread started: enum_virtual_ops 1-3
+2021-09-23 10:51:53,161 INFO o.a.j.t.JMeterThread: Thread started: enum_virtual_ops 1-1
+2021-09-23 10:51:53,162 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@217225635
+2021-09-23 10:51:53,162 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@927351784
+2021-09-23 10:51:53,162 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@964152613
+2021-09-23 10:51:53,162 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1730287505
+2021-09-23 10:51:53,162 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1444999812
+2021-09-23 10:51:53,163 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@33005985
+2021-09-23 10:51:53,163 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@895187643
+2021-09-23 10:51:53,163 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@2040484944
+2021-09-23 10:51:53,166 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@474655340
+2021-09-23 10:51:53,166 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1188257224
+2021-09-23 10:51:53,254 INFO o.a.j.p.h.s.HTTPHCAbstractImpl: Local host = dev-MS-7B84
+2021-09-23 10:51:53,259 INFO o.a.j.p.h.s.HTTPHC4Impl: HTTP request retry count = 0
+2021-09-23 10:51:53,260 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2021-09-23 10:51:53,260 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to ISO-8859-1
+2021-09-23 10:51:53,260 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2021-09-23 10:51:53,260 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2021-09-23 10:51:53,368 INFO o.a.j.u.JsseSSLManager: Using default SSL protocol: TLS
+2021-09-23 10:51:53,368 INFO o.a.j.u.JsseSSLManager: SSL session context: per-thread
+2021-09-23 10:52:00,003 INFO o.a.j.r.Summariser: summary +   3927 in 00:00:07 =  570.8/s Avg:    16 Min:    12 Max:    43 Err:     0 (0.00%) Active: 10 Started: 10 Finished: 0
+2021-09-23 10:52:01,776 INFO o.a.j.t.JMeterThread: Thread is done: enum_virtual_ops 1-7
+2021-09-23 10:52:01,776 INFO o.a.j.t.JMeterThread: Thread finished: enum_virtual_ops 1-7
+2021-09-23 10:52:01,777 INFO o.a.j.t.JMeterThread: Thread is done: enum_virtual_ops 1-1
+2021-09-23 10:52:01,777 INFO o.a.j.t.JMeterThread: Thread finished: enum_virtual_ops 1-1
+2021-09-23 10:52:01,778 INFO o.a.j.t.JMeterThread: Thread is done: enum_virtual_ops 1-5
+2021-09-23 10:52:01,778 INFO o.a.j.t.JMeterThread: Thread finished: enum_virtual_ops 1-5
+2021-09-23 10:52:01,785 INFO o.a.j.t.JMeterThread: Thread is done: enum_virtual_ops 1-6
+2021-09-23 10:52:01,785 INFO o.a.j.t.JMeterThread: Thread finished: enum_virtual_ops 1-6
+2021-09-23 10:52:01,785 INFO o.a.j.t.JMeterThread: Thread is done: enum_virtual_ops 1-3
+2021-09-23 10:52:01,786 INFO o.a.j.t.JMeterThread: Thread finished: enum_virtual_ops 1-3
+2021-09-23 10:52:01,787 INFO o.a.j.t.JMeterThread: Thread is done: enum_virtual_ops 1-2
+2021-09-23 10:52:01,787 INFO o.a.j.t.JMeterThread: Thread finished: enum_virtual_ops 1-2
+2021-09-23 10:52:01,788 INFO o.a.j.t.JMeterThread: Thread is done: enum_virtual_ops 1-8
+2021-09-23 10:52:01,788 INFO o.a.j.t.JMeterThread: Thread finished: enum_virtual_ops 1-8
+2021-09-23 10:52:01,789 INFO o.a.j.t.JMeterThread: Thread is done: enum_virtual_ops 1-4
+2021-09-23 10:52:01,789 INFO o.a.j.t.JMeterThread: Thread finished: enum_virtual_ops 1-4
+2021-09-23 10:52:01,789 INFO o.a.j.t.JMeterThread: Thread is done: enum_virtual_ops 1-10
+2021-09-23 10:52:01,790 INFO o.a.j.t.JMeterThread: Thread finished: enum_virtual_ops 1-10
+2021-09-23 10:52:01,792 INFO o.a.j.t.JMeterThread: Thread is done: enum_virtual_ops 1-9
+2021-09-23 10:52:01,792 INFO o.a.j.t.JMeterThread: Thread finished: enum_virtual_ops 1-9
+2021-09-23 10:52:01,792 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 2 : get_transaction
+2021-09-23 10:52:01,792 INFO o.a.j.e.StandardJMeterEngine: Starting 10 threads for group get_transaction.
+2021-09-23 10:52:01,792 INFO o.a.j.e.StandardJMeterEngine: Thread will stop on error
+2021-09-23 10:52:01,792 INFO o.a.j.t.ThreadGroup: Starting thread group... number=2 threads=10 ramp-up=0 delayedStart=false
+2021-09-23 10:52:01,794 INFO o.a.j.t.JMeterThread: Thread started: get_transaction 2-1
+2021-09-23 10:52:01,794 INFO o.a.j.t.JMeterThread: Thread started: get_transaction 2-2
+2021-09-23 10:52:01,795 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1234545026
+2021-09-23 10:52:01,796 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1176139390
+2021-09-23 10:52:01,795 INFO o.a.j.t.JMeterThread: Thread started: get_transaction 2-3
+2021-09-23 10:52:01,796 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1692507549
+2021-09-23 10:52:01,797 INFO o.a.j.t.JMeterThread: Thread started: get_transaction 2-5
+2021-09-23 10:52:01,797 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1778558636
+2021-09-23 10:52:01,797 INFO o.a.j.t.JMeterThread: Thread started: get_transaction 2-4
+2021-09-23 10:52:01,797 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@204166173
+2021-09-23 10:52:01,797 INFO o.a.j.t.JMeterThread: Thread started: get_transaction 2-6
+2021-09-23 10:52:01,797 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1256732472
+2021-09-23 10:52:01,798 INFO o.a.j.t.JMeterThread: Thread started: get_transaction 2-7
+2021-09-23 10:52:01,799 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1134118187
+2021-09-23 10:52:01,799 INFO o.a.j.t.ThreadGroup: Started thread group number 2
+2021-09-23 10:52:01,799 INFO o.a.j.e.StandardJMeterEngine: Waiting for thread group: get_transaction to finish before starting next group
+2021-09-23 10:52:01,799 INFO o.a.j.t.JMeterThread: Thread started: get_transaction 2-9
+2021-09-23 10:52:01,800 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1231948295
+2021-09-23 10:52:01,800 INFO o.a.j.t.JMeterThread: Thread started: get_transaction 2-8
+2021-09-23 10:52:01,800 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1786441395
+2021-09-23 10:52:01,801 INFO o.a.j.t.JMeterThread: Thread started: get_transaction 2-10
+2021-09-23 10:52:01,801 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@2113940510
+2021-09-23 10:52:08,696 INFO o.a.j.t.JMeterThread: Thread is done: get_transaction 2-8
+2021-09-23 10:52:08,696 INFO o.a.j.t.JMeterThread: Thread finished: get_transaction 2-8
+2021-09-23 10:52:08,709 INFO o.a.j.t.JMeterThread: Thread is done: get_transaction 2-4
+2021-09-23 10:52:08,709 INFO o.a.j.t.JMeterThread: Thread finished: get_transaction 2-4
+2021-09-23 10:52:08,709 INFO o.a.j.t.JMeterThread: Thread is done: get_transaction 2-6
+2021-09-23 10:52:08,709 INFO o.a.j.t.JMeterThread: Thread finished: get_transaction 2-6
+2021-09-23 10:52:08,710 INFO o.a.j.t.JMeterThread: Thread is done: get_transaction 2-1
+2021-09-23 10:52:08,710 INFO o.a.j.t.JMeterThread: Thread finished: get_transaction 2-1
+2021-09-23 10:52:08,710 INFO o.a.j.t.JMeterThread: Thread is done: get_transaction 2-3
+2021-09-23 10:52:08,710 INFO o.a.j.t.JMeterThread: Thread finished: get_transaction 2-3
+2021-09-23 10:52:08,711 INFO o.a.j.t.JMeterThread: Thread is done: get_transaction 2-10
+2021-09-23 10:52:08,711 INFO o.a.j.t.JMeterThread: Thread finished: get_transaction 2-10
+2021-09-23 10:52:08,712 INFO o.a.j.t.JMeterThread: Thread is done: get_transaction 2-9
+2021-09-23 10:52:08,712 INFO o.a.j.t.JMeterThread: Thread finished: get_transaction 2-9
+2021-09-23 10:52:08,712 INFO o.a.j.t.JMeterThread: Thread is done: get_transaction 2-5
+2021-09-23 10:52:08,712 INFO o.a.j.t.JMeterThread: Thread finished: get_transaction 2-5
+2021-09-23 10:52:08,715 INFO o.a.j.t.JMeterThread: Thread is done: get_transaction 2-2
+2021-09-23 10:52:08,715 INFO o.a.j.t.JMeterThread: Thread finished: get_transaction 2-2
+2021-09-23 10:52:08,716 INFO o.a.j.t.JMeterThread: Thread is done: get_transaction 2-7
+2021-09-23 10:52:08,716 INFO o.a.j.t.JMeterThread: Thread finished: get_transaction 2-7
+2021-09-23 10:52:08,716 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 3 : get_account_history
+2021-09-23 10:52:08,716 INFO o.a.j.e.StandardJMeterEngine: Starting 10 threads for group get_account_history.
+2021-09-23 10:52:08,716 INFO o.a.j.e.StandardJMeterEngine: Thread will stop on error
+2021-09-23 10:52:08,716 INFO o.a.j.t.ThreadGroup: Starting thread group... number=3 threads=10 ramp-up=0 delayedStart=false
+2021-09-23 10:52:08,717 INFO o.a.j.t.JMeterThread: Thread started: get_account_history 3-1
+2021-09-23 10:52:08,717 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1829841575
+2021-09-23 10:52:08,717 INFO o.a.j.t.JMeterThread: Thread started: get_account_history 3-2
+2021-09-23 10:52:08,717 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1844915816
+2021-09-23 10:52:08,717 INFO o.a.j.t.JMeterThread: Thread started: get_account_history 3-3
+2021-09-23 10:52:08,718 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1858593520
+2021-09-23 10:52:08,718 INFO o.a.j.t.JMeterThread: Thread started: get_account_history 3-4
+2021-09-23 10:52:08,718 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@614255615
+2021-09-23 10:52:08,718 INFO o.a.j.t.JMeterThread: Thread started: get_account_history 3-5
+2021-09-23 10:52:08,718 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1334026322
+2021-09-23 10:52:08,718 INFO o.a.j.t.JMeterThread: Thread started: get_account_history 3-6
+2021-09-23 10:52:08,718 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@660789172
+2021-09-23 10:52:08,719 INFO o.a.j.t.JMeterThread: Thread started: get_account_history 3-7
+2021-09-23 10:52:08,719 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@404678447
+2021-09-23 10:52:08,719 INFO o.a.j.t.JMeterThread: Thread started: get_account_history 3-8
+2021-09-23 10:52:08,719 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@486436085
+2021-09-23 10:52:08,719 INFO o.a.j.t.ThreadGroup: Started thread group number 3
+2021-09-23 10:52:08,719 INFO o.a.j.t.JMeterThread: Thread started: get_account_history 3-9
+2021-09-23 10:52:08,719 INFO o.a.j.e.StandardJMeterEngine: Waiting for thread group: get_account_history to finish before starting next group
+2021-09-23 10:52:08,720 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1253884109
+2021-09-23 10:52:08,720 INFO o.a.j.t.JMeterThread: Thread started: get_account_history 3-10
+2021-09-23 10:52:08,720 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@615307576
+2021-09-23 10:52:15,754 INFO o.a.j.t.JMeterThread: Thread is done: get_account_history 3-6
+2021-09-23 10:52:15,754 INFO o.a.j.t.JMeterThread: Thread finished: get_account_history 3-6
+2021-09-23 10:52:15,756 INFO o.a.j.t.JMeterThread: Thread is done: get_account_history 3-2
+2021-09-23 10:52:15,756 INFO o.a.j.t.JMeterThread: Thread finished: get_account_history 3-2
+2021-09-23 10:52:15,757 INFO o.a.j.t.JMeterThread: Thread is done: get_account_history 3-5
+2021-09-23 10:52:15,757 INFO o.a.j.t.JMeterThread: Thread finished: get_account_history 3-5
+2021-09-23 10:52:15,757 INFO o.a.j.t.JMeterThread: Thread is done: get_account_history 3-7
+2021-09-23 10:52:15,757 INFO o.a.j.t.JMeterThread: Thread finished: get_account_history 3-7
+2021-09-23 10:52:15,764 INFO o.a.j.t.JMeterThread: Thread is done: get_account_history 3-8
+2021-09-23 10:52:15,764 INFO o.a.j.t.JMeterThread: Thread finished: get_account_history 3-8
+2021-09-23 10:52:15,766 INFO o.a.j.t.JMeterThread: Thread is done: get_account_history 3-10
+2021-09-23 10:52:15,766 INFO o.a.j.t.JMeterThread: Thread finished: get_account_history 3-10
+2021-09-23 10:52:15,766 INFO o.a.j.t.JMeterThread: Thread is done: get_account_history 3-9
+2021-09-23 10:52:15,766 INFO o.a.j.t.JMeterThread: Thread finished: get_account_history 3-9
+2021-09-23 10:52:15,766 INFO o.a.j.t.JMeterThread: Thread is done: get_account_history 3-1
+2021-09-23 10:52:15,767 INFO o.a.j.t.JMeterThread: Thread finished: get_account_history 3-1
+2021-09-23 10:52:15,767 INFO o.a.j.t.JMeterThread: Thread is done: get_account_history 3-4
+2021-09-23 10:52:15,767 INFO o.a.j.t.JMeterThread: Thread finished: get_account_history 3-4
+2021-09-23 10:52:15,768 INFO o.a.j.t.JMeterThread: Thread is done: get_account_history 3-3
+2021-09-23 10:52:15,768 INFO o.a.j.t.JMeterThread: Thread finished: get_account_history 3-3
+2021-09-23 10:52:15,768 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 4 : get_ops_in_block
+2021-09-23 10:52:15,768 INFO o.a.j.e.StandardJMeterEngine: Starting 10 threads for group get_ops_in_block.
+2021-09-23 10:52:15,768 INFO o.a.j.e.StandardJMeterEngine: Thread will stop on error
+2021-09-23 10:52:15,768 INFO o.a.j.t.ThreadGroup: Starting thread group... number=4 threads=10 ramp-up=0 delayedStart=false
+2021-09-23 10:52:15,769 INFO o.a.j.t.JMeterThread: Thread started: get_ops_in_block 4-1
+2021-09-23 10:52:15,769 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@826068454
+2021-09-23 10:52:15,769 INFO o.a.j.t.JMeterThread: Thread started: get_ops_in_block 4-2
+2021-09-23 10:52:15,769 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1547296103
+2021-09-23 10:52:15,769 INFO o.a.j.t.JMeterThread: Thread started: get_ops_in_block 4-3
+2021-09-23 10:52:15,769 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@2106436397
+2021-09-23 10:52:15,769 INFO o.a.j.t.JMeterThread: Thread started: get_ops_in_block 4-4
+2021-09-23 10:52:15,769 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1196490278
+2021-09-23 10:52:15,770 INFO o.a.j.t.JMeterThread: Thread started: get_ops_in_block 4-6
+2021-09-23 10:52:15,770 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1508926320
+2021-09-23 10:52:15,770 INFO o.a.j.t.JMeterThread: Thread started: get_ops_in_block 4-7
+2021-09-23 10:52:15,770 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@850757330
+2021-09-23 10:52:15,770 INFO o.a.j.t.JMeterThread: Thread started: get_ops_in_block 4-5
+2021-09-23 10:52:15,771 INFO o.a.j.t.ThreadGroup: Started thread group number 4
+2021-09-23 10:52:15,771 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2021-09-23 10:52:15,771 INFO o.a.j.t.JMeterThread: Thread started: get_ops_in_block 4-9
+2021-09-23 10:52:15,771 INFO o.a.j.t.JMeterThread: Thread started: get_ops_in_block 4-8
+2021-09-23 10:52:15,771 INFO o.a.j.t.JMeterThread: Thread started: get_ops_in_block 4-10
+2021-09-23 10:52:15,771 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@316114699
+2021-09-23 10:52:15,771 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1414640590
+2021-09-23 10:52:15,771 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@1268542354
+2021-09-23 10:52:15,772 INFO o.a.j.s.FileServer: Stored: /home/dev/HAfAH/tests/performance/config.csv Alias: /home/dev/HAfAH/tests/performance/config.csv@547106708
+2021-09-23 10:52:22,628 INFO o.a.j.t.JMeterThread: Thread is done: get_ops_in_block 4-4
+2021-09-23 10:52:22,628 INFO o.a.j.t.JMeterThread: Thread finished: get_ops_in_block 4-4
+2021-09-23 10:52:22,636 INFO o.a.j.t.JMeterThread: Thread is done: get_ops_in_block 4-3
+2021-09-23 10:52:22,636 INFO o.a.j.t.JMeterThread: Thread finished: get_ops_in_block 4-3
+2021-09-23 10:52:22,636 INFO o.a.j.t.JMeterThread: Thread is done: get_ops_in_block 4-9
+2021-09-23 10:52:22,636 INFO o.a.j.t.JMeterThread: Thread finished: get_ops_in_block 4-9
+2021-09-23 10:52:22,641 INFO o.a.j.t.JMeterThread: Thread is done: get_ops_in_block 4-1
+2021-09-23 10:52:22,641 INFO o.a.j.t.JMeterThread: Thread finished: get_ops_in_block 4-1
+2021-09-23 10:52:22,643 INFO o.a.j.t.JMeterThread: Thread is done: get_ops_in_block 4-6
+2021-09-23 10:52:22,643 INFO o.a.j.t.JMeterThread: Thread finished: get_ops_in_block 4-6
+2021-09-23 10:52:22,644 INFO o.a.j.t.JMeterThread: Thread is done: get_ops_in_block 4-8
+2021-09-23 10:52:22,644 INFO o.a.j.t.JMeterThread: Thread finished: get_ops_in_block 4-8
+2021-09-23 10:52:22,644 INFO o.a.j.t.JMeterThread: Thread is done: get_ops_in_block 4-7
+2021-09-23 10:52:22,644 INFO o.a.j.t.JMeterThread: Thread finished: get_ops_in_block 4-7
+2021-09-23 10:52:22,645 INFO o.a.j.t.JMeterThread: Thread is done: get_ops_in_block 4-2
+2021-09-23 10:52:22,645 INFO o.a.j.t.JMeterThread: Thread finished: get_ops_in_block 4-2
+2021-09-23 10:52:22,646 INFO o.a.j.t.JMeterThread: Thread is done: get_ops_in_block 4-10
+2021-09-23 10:52:22,647 INFO o.a.j.t.JMeterThread: Thread finished: get_ops_in_block 4-10
+2021-09-23 10:52:22,647 INFO o.a.j.t.JMeterThread: Thread is done: get_ops_in_block 4-5
+2021-09-23 10:52:22,647 INFO o.a.j.t.JMeterThread: Thread finished: get_ops_in_block 4-5
+2021-09-23 10:52:22,647 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2021-09-23 10:52:22,647 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1844915816
+2021-09-23 10:52:22,648 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@316114699
+2021-09-23 10:52:22,648 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1334026322
+2021-09-23 10:52:22,648 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1692507549
+2021-09-23 10:52:22,648 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@204166173
+2021-09-23 10:52:22,648 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1268542354
+2021-09-23 10:52:22,648 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1176139390
+2021-09-23 10:52:22,648 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@547106708
+2021-09-23 10:52:22,648 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@660789172
+2021-09-23 10:52:22,648 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1730287505
+2021-09-23 10:52:22,648 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1253884109
+2021-09-23 10:52:22,648 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1188257224
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1829841575
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@614255615
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@486436085
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1786441395
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1547296103
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1778558636
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1508926320
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@217225635
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@895187643
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1234545026
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@850757330
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@927351784
+2021-09-23 10:52:22,649 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1444999812
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@615307576
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1196490278
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@2106436397
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@474655340
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1256732472
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1858593520
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@2040484944
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@2113940510
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1134118187
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1231948295
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@826068454
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@33005985
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@1414640590
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@404678447
+2021-09-23 10:52:22,650 INFO o.a.j.s.FileServer: Close: /home/dev/HAfAH/tests/performance/config.csv@964152613
+2021-09-23 10:52:22,650 INFO o.a.j.r.Summariser: summary +  16073 in 00:00:23 =  709.7/s Avg:    13 Min:     4 Max:    33 Err:     0 (0.00%) Active: 0 Started: 40 Finished: 40
+2021-09-23 10:52:22,651 INFO o.a.j.r.Summariser: summary =  20000 in 00:00:30 =  677.3/s Avg:    14 Min:     4 Max:    43 Err:     0 (0.00%)
