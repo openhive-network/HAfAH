@@ -66,11 +66,12 @@ BEGIN
         PERFORM hive.set_irreversible( 2 );
         ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 1, 'hive.app_get_irreversible_block !=1 (4)';
 
+        -- we are next after massive sync
         PERFORM hive.app_next_block( 'context' ); -- block 2
-        ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 1, 'hive.app_get_irreversible_block !=1 (5)';
+        ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 2, 'hive.app_get_irreversible_block !=2 (5)';
 
         PERFORM hive.app_next_block( 'context' ); -- block 3
-        ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 1, 'hive.app_get_irreversible_block !=1 (6)';
+        ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 2, 'hive.app_get_irreversible_block !=1 (6)';
 
         PERFORM hive.app_next_block( 'context' ); -- SET IRREVERSIBLE 2
         ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 2, 'hive.app_get_irreversible_block !=2 (1)';

@@ -1,3 +1,67 @@
+CREATE OR REPLACE FUNCTION hive.find_next_event( _context TEXT )
+    RETURNS hive.events_queue
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __curent_events_id hive.events_queue.id%TYPE;
+    __newest_irreversible_block_num hive.blocks.num%TYPE;
+    __current_context_block_num hive.blocks.num%TYPE;
+    __current_context_irreversible_block hive.blocks.num%TYPE;
+    __result hive.events_queue%ROWTYPE;
+BEGIN
+    SELECT hc.events_id
+         , hc.current_block_num
+         , hc.irreversible_block
+    INTO __curent_events_id, __current_context_block_num, __current_context_irreversible_block
+    FROM hive.contexts hc WHERE hc.name = _context;
+    SELECT consistent_block INTO __newest_irreversible_block_num FROM hive.irreversible_data;
+    IF __current_context_block_num <= __current_context_irreversible_block  AND  __newest_irreversible_block_num IS NOT NULL THEN
+        -- here we are sure that context only processing irreversible blocks, we can continue
+        -- processing irreversible blocks or find next event after irreversible
+        SELECT * INTO  __result
+        FROM hive.events_queue heq
+        WHERE heq.block_num > __newest_irreversible_block_num AND heq.event != 'BACK_FROM_FORK'
+        ORDER BY heq.id LIMIT 1;
+
+        IF __result IS NULL THEN
+            -- there is no reversible blocks event
+            -- the last possible event are MASSIVE_SYNC(__newest_irreversible_block_num) or NEW_IRREVERSIBLE(__newest_irreversible_block_num)
+            SELECT * INTO  __result
+            FROM hive.events_queue heq
+            WHERE heq.block_num = __newest_irreversible_block_num
+              AND ( heq.event = 'MASSIVE_SYNC' OR heq.event = 'NEW_IRREVERSIBLE' )
+            ORDER BY heq.id LIMIT 1;
+
+            IF __result IS NOT NULL AND __result.id = __curent_events_id THEN
+                -- when there is no event than recently processed
+                RETURN NULL;
+            END IF;
+        END IF;
+
+        UPDATE hive.contexts
+        SET irreversible_block = __newest_irreversible_block_num WHERE name = _context;
+    ELSE
+        ---- find next event
+        SELECT * INTO __result
+        FROM hive.events_queue heq
+        WHERE heq.id > __curent_events_id
+        ORDER BY id LIMIT 1;
+    END IF;
+
+    IF __result IS NOT NULL THEN
+        UPDATE hive.contexts
+        SET events_id = __result.id
+        WHERE name = _context;
+    END IF;
+
+    RETURN __result;
+END;
+$BODY$
+;
+
+
 CREATE OR REPLACE FUNCTION hive.squash_fork_events( _context TEXT )
     RETURNS void
     LANGUAGE 'plpgsql'
@@ -98,7 +162,16 @@ CREATE OR REPLACE FUNCTION hive.squash_events( _context TEXT )
     VOLATILE
 AS
 $BODY$
+DECLARE
+    __current_event_id hive.events_queue.id%TYPE;
 BEGIN
+    SELECT hc.events_id INTO __current_event_id FROM hive.contexts hc WHERE hc.name = _context;
+
+    -- do not squash not initialzed context
+    IF __current_event_id = 0  THEN
+            RETURN;
+    END IF;
+
     IF NOT hive.squash_end_massive_sync_events( _context ) THEN
         PERFORM hive.squash_fork_events( _context );
     END IF;
@@ -154,20 +227,8 @@ BEGIN
         RAISE EXCEPTION 'Context % is detached', _context_name;
     END IF;
 
-        -- no event was processed
-        IF __current_event_id IS NULL THEN
-            __current_event_id = 0;
-    END IF;
-
-    SELECT
-           heq.event
-         , heq.block_num
-         , heq.id
-    FROM hive.events_queue heq
-    WHERE id > __current_event_id
-    ORDER BY heq.id ASC
-    LIMIT 1
-    INTO __next_event_type,  __next_event_block_num, __next_event_id;
+    SELECT * INTO __next_event_id, __next_event_type,  __next_event_block_num
+    FROM hive.find_next_event( _context_name );
 
     CASE __next_event_type
     WHEN 'BACK_FROM_FORK' THEN
@@ -179,8 +240,7 @@ BEGIN
 
         UPDATE hive.contexts
         SET
-            events_id = __next_event_id
-          , current_block_num = __next_event_block_num
+            current_block_num = __next_event_block_num
           , fork_id = __fork_id
         WHERE id = __context_id;
         RETURN NULL;
@@ -191,10 +251,6 @@ BEGIN
         IF ( __irreversible_block_num < __next_event_block_num ) THEN
             PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
         END IF;
-        UPDATE hive.contexts
-        SET
-            events_id = __next_event_id
-        WHERE id = __context_id;
         RETURN NULL;
     WHEN 'MASSIVE_SYNC' THEN
         --massive events are squashe at the function begin
@@ -204,22 +260,21 @@ BEGIN
         IF ( __irreversible_block_num < __next_event_block_num ) THEN
             PERFORM hive.context_set_irreversible_block( _context_name, __next_event_block_num );
         END IF;
-        UPDATE hive.contexts
-        SET   events_id = __next_event_id
-        WHERE id = __context_id;
         -- no RETURN here because code after the case will continue processing irreversible blocks only
     WHEN 'NEW_BLOCK' THEN
         ASSERT  __next_event_block_num > __current_block_num, 'We could not process block without consume event';
         IF __next_event_block_num = ( __current_block_num + 1 ) THEN
             UPDATE hive.contexts
-            SET   events_id = __next_event_id
-                , current_block_num = __next_event_block_num
+            SET current_block_num = __next_event_block_num
             WHERE id = __context_id;
 
             __result.first_block = __next_event_block_num;
             __result.last_block = __next_event_block_num;
             RETURN __result ;
         END IF;
+        -- it is impossible to have hole between __current_block_num and NEW_BLOCK event block_num
+        -- when __current_block_num is not irreversible
+        ASSERT __current_block_num <= __irreversible_block_num, 'current_block_num is reversible!';
     ELSE
     END CASE;
 
@@ -227,27 +282,10 @@ BEGIN
     SELECT hc.irreversible_block INTO __irreversible_block_num
     FROM hive.contexts hc WHERE hc.id = __context_id;
 
-    IF ( __current_block_num =  __irreversible_block_num AND __current_block_num != 0  ) THEN
-        --this situation can happen when new context was created, then detached and attached
-        --and in parallel for hive.app_context_create hived executes hive.set_irreversible
-        --details are in issue#13: https://gitlab.syncad.com/hive/psql_tools/-/issues/13
-        --or there are not events after reaching irreversible block
-        SELECT hb.num, hb.num
-        FROM hive.blocks hb
-        WHERE hb.num = __current_block_num + 1
-        INTO __next_block_to_process, __last_block_to_process;
-
-        IF __next_block_to_process IS NOT NULL THEN
-            PERFORM hive.context_set_irreversible_block( _context_name, __next_block_to_process );
-        END IF;
-    ELSE
-        SELECT MIN( hb.num ), MAX( hb.num )
-        FROM hive.blocks hb
-        WHERE hb.num > __current_block_num AND hb.num <= __irreversible_block_num
-        INTO __next_block_to_process, __last_block_to_process;
-    END IF;
-
-
+    SELECT MIN( hb.num ), MAX( hb.num )
+    FROM hive.blocks hb
+    WHERE hb.num > __current_block_num AND hb.num <= __irreversible_block_num
+    INTO __next_block_to_process, __last_block_to_process;
 
     IF __next_block_to_process IS NULL THEN
             -- There is no new and expected block, needs to wait for a new block
@@ -309,26 +347,8 @@ BEGIN
             RAISE EXCEPTION 'Context % is detached', _context_name;
     END IF;
 
-    -- no event was processed
-    IF __current_event_id IS NULL THEN
-        __current_event_id = 0;
-    END IF;
-
-    SELECT
-           heq.event
-         , heq.block_num
-         , heq.id
-    FROM hive.events_queue heq
-    WHERE id > __current_event_id
-    ORDER BY heq.id ASC
-    LIMIT 1
-    INTO __next_event_type,  __next_event_block_num, __next_event_id;
-
-    IF __next_event_id IS NOT NULL THEN
-        UPDATE hive.contexts
-        SET events_id = __next_event_id
-        WHERE id = __context_id;
-    END IF;
+    SELECT * INTO __next_event_id, __next_event_type,  __next_event_block_num
+    FROM hive.find_next_event( _context_name );
 
     CASE __next_event_type
         WHEN 'NEW_IRREVERSIBLE' THEN
