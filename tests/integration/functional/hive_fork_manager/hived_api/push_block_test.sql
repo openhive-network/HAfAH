@@ -35,8 +35,8 @@ BEGIN
     __block = ( 101, '\xBADD', '\xCAFE', '2016-06-22 19:10:25-07'::timestamp );
     __transaction1 = ( 101, 0::SMALLINT, '\xDEED', 101, 100, '2016-06-22 19:10:25-07'::timestamp, '\xBEEF' );
     __transaction2 = ( 101, 1::SMALLINT, '\xBEEF', 101, 100, '2016-06-22 19:10:25-07'::timestamp, '\xDEED' );
-    __operation1_1 = ( 1, 101, 0, 0, 1, 'ZERO OPERATION' );
-    __operation2_1 = ( 2, 101, 1, 0, 2, 'ONE OPERATION' );
+    __operation1_1 = ( 1, 101, 0, 0, 1, '2016-06-22 19:10:21-07'::timestamp, 'ZERO OPERATION' );
+    __operation2_1 = ( 2, 101, 1, 0, 2, '2016-06-22 19:10:21-07'::timestamp, 'ONE OPERATION' );
     __signatures1 = ( '\xDEED', '\xFEED' );
     __signatures2 = ( '\xBEEF', '\xBABE' );
     PERFORM hive.push_block(
@@ -118,6 +118,7 @@ BEGIN
               AND trx_in_block = 0
               AND op_pos = 0
               AND op_type_id = 1
+              AND timestamp = '2016-06-22 19:10:21-07'::timestamp
               AND body = 'ZERO OPERATION'
               AND fork_id = 1
     ) = 1, 'Wrong data of operation 1';
@@ -129,6 +130,7 @@ BEGIN
            AND trx_in_block = 1
            AND op_pos = 0
            AND op_type_id = 2
+           AND timestamp = '2016-06-22 19:10:21-07'::timestamp
            AND body = 'ONE OPERATION'
            AND fork_id = 1
      ) = 1, 'Wrong data of operation 2';
