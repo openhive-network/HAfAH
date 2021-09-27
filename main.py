@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+import threading
 
 from ah.server.serve import run_server
 from argparse import ArgumentParser
@@ -12,4 +12,5 @@ if __name__ == '__main__':
   engine.add_argument('-n, --port', dest='port', type=int, required=True, help='port to listen on (ex. 6380)')
   args = engine.parse_args(argv[1:])
 
-  run_server(args.psql, args.port)
+  t = threading.Thread(run_server, args=(args.psql, args.port))
+  t.start()
