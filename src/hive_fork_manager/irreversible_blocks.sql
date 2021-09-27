@@ -48,6 +48,14 @@ CREATE TABLE IF NOT EXISTS hive.operations (
     trx_in_block smallint NOT NULL,
     op_pos integer NOT NULL,
     op_type_id smallint NOT NULL,
+    -- timestamp: Specific to operation kind.  It may be set for block time -3s (current hived head_block_time)
+    -- or for **next**  block time (when hived node finished evaluation of current block).
+    -- This behavior depends on hived implementation, and **this logic should not be** repeated HAF-client app side. Specifically:
+    -- - regular user operations put into transactions got head_block_time: -3s ( time of block predecessing currently applied block )
+    -- - fork and schedule operations got head_block_time: -3s ( time of block predecessing currently applied block )
+    -- - system triggered virtual operations usualy are created after applaying current block and got time equals its time
+    --   (after hived not changed head_block to another one)
+    timestamp TIMESTAMP NOT NULL,
     body text DEFAULT NULL,
     CONSTRAINT pk_hive_operations PRIMARY KEY ( id ),
     CONSTRAINT fk_1_hive_operations FOREIGN KEY (block_num) REFERENCES hive.blocks(num),

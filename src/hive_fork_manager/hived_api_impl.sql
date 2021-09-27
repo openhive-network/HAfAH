@@ -84,6 +84,7 @@ BEGIN
          , hor.trx_in_block
          , hor.op_pos
          , hor.op_type_id
+         , hor.timestamp
          , hor.body
     FROM
         hive.operations_reversible hor
