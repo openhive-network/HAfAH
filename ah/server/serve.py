@@ -6,6 +6,8 @@ import logging
 import time
 import traceback
 import json
+import asyncio
+import threading
 
 from datetime import datetime
 from time import perf_counter
@@ -70,9 +72,16 @@ def conf_stdout_custom_file_logger(logger, file_name):
     logger.addHandler(stdout_handler)
     logger.addHandler(file_handler)
 
-def run_server(db_url, port):
-    """Configure and launch the API server."""
+def event_loop(runner, host, port):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(runner.setup())
+    site = web.TCPSite(runner, host, port)
+    loop.run_until_complete(site.start())
+    loop.run_forever()
 
+def run_server(db_url):
+    """Configure and launch the API server."""
     log = logging.getLogger(__name__)
     methods = build_methods()
 
@@ -138,4 +147,6 @@ def run_server(db_url, port):
         return ret
 
     app.router.add_post('/', jsonrpc_handler)
-    web.run_app(app, port=port)
+    runner = web.AppRunner(app)
+    return runner
+    # web.run_app(app, port=port)
