@@ -29,7 +29,8 @@ CREATE FUNCTION test_when()
 AS
 $BODY$
 BEGIN
-    PERFORM hive.app_context_detach( 'context' );
+    PERFORM hive.context_next_block( 'context' ); -- move to block 1
+    PERFORM hive.app_context_detach( 'context' ); -- back to block 0
     INSERT INTO A.table1( id ) VALUES (10);
 END;
 $BODY$
@@ -44,6 +45,7 @@ AS
 $BODY$
 BEGIN
     ASSERT EXISTS ( SELECT * FROM hive.contexts WHERE name='context' AND is_attached = FALSE ), 'Attach flag is still set';
+    ASSERT ( SELECT current_block_num FROM hive.contexts WHERE name='context' ) = 0, 'Wrong current_block_num';
     ASSERT ( SELECT detached_block_num FROM hive.contexts WHERE name='context' ) IS NULL, 'detached_block_num was not set to NULL';
 
     ASSERT ( SELECT COUNT(*) FROM hive.shadow_a_table1 ) = 0, 'Trigger inserted something into shadow table1';
