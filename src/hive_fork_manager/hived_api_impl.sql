@@ -58,6 +58,7 @@ BEGIN
               DISTINCT ON ( htr2.block_num ) htr2.block_num
             , htr2.fork_id
             FROM hive.transactions_reversible htr2
+            JOIN hive.fork hf ON hf.id = htr2.fork_id AND htr2.block_num <= hf.block_num
             WHERE
                 htr2.block_num <= _new_irreversible_block
                 AND htr2.block_num > _head_block_of_irreversible_blocks
@@ -92,6 +93,7 @@ BEGIN
                      DISTINCT ON ( hor2.block_num ) hor2.block_num
                    , hor2.fork_id
                FROM hive.operations_reversible hor2
+               JOIN hive.fork hf ON hf.id = hor2.fork_id AND hor2.block_num <= hf.block_num
                WHERE
                    hor2.block_num <= _new_irreversible_block
                AND hor2.block_num > _head_block_of_irreversible_blocks
@@ -123,6 +125,7 @@ BEGIN
                   DISTINCT ON ( htr2.block_num ) htr2.block_num
                 , htr2.fork_id
             FROM hive.transactions_reversible htr2
+            JOIN hive.fork hf ON hf.id = htr2.fork_id AND htr2.block_num <= hf.block_num
             WHERE
                htr2.block_num <= _new_irreversible_block
             AND htr2.block_num > _head_block_of_irreversible_blocks
