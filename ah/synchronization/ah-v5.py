@@ -318,11 +318,9 @@ class ah_loader(metaclass = singleton):
 
   def context_detached_get_block_num(self):
     _result = self.sql_executor.perform_query_one(sql_data.query.context_detached_get_block_num)
-    #Here is problem, when a value of `detached_block_num` == NULL
-    #Issues 13,14 should be earlier solved
     if _result is None:
       _result = 0
-    return _result + 2
+    return _result
 
   def switch_context_internal(self, force_attach, last_block = 0):
     _is_attached = self.context_is_attached()
