@@ -1,5 +1,5 @@
 # The file is used to build docker container for gitlab ci
-FROM phusion/baseimage:0.11
+FROM phusion/baseimage:focal-1.0.0
 
 ENV LANG=en_US.UTF-8
 
@@ -14,7 +14,7 @@ RUN \
             build-essential \
             cmake \
             libboost-all-dev \
-            postgresql-server-dev-all \
+            postgresql-server-dev-12 \
             git \
             python3-pip \
     && \
@@ -28,6 +28,7 @@ RUN \
 
 USER postgres
 RUN  /etc/init.d/postgresql start \
+    && psql --command "SELECT version();" \
     && psql --command "CREATE USER root WITH SUPERUSER CREATEDB;"
 
 USER root
