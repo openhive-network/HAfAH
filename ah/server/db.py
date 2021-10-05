@@ -7,17 +7,15 @@ import sqlalchemy
 from sqlalchemy.engine.url import make_url
 from aiopg.sa import create_engine
 
-from hive.utils.stats import Stats
-
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
 
 def sqltimer(function):
     """Decorator for DB query methods which tracks timing."""
     async def _wrapper(*args, **kwargs):
+        return await function(*args, **kwargs)
         start = perf()
-        result = await function(*args, **kwargs)
-        Stats.log_db(args[1], perf() - start)
+        (args[1], perf() - start)
         return result
     return _wrapper
 
