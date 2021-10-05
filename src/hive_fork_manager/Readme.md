@@ -120,7 +120,7 @@ inherits from`hive.trx_histogram` to register it into the context 'trx_histogram
 To switch from non-forking application to forking one all the applications' tables have to be registered in contexts using
 'hive.app_register_table' method.
 
-
+## Important implementation details
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
 IRREVERSIBLE BLOCKS is a set of database tables for blocks which the blockchain considers irreversible - they will never change (i.e. they can no longer be reverted by a fork switch).
 These tables are defined in [src/hive_fork_manager/irreversible_blocks.sql](./irreversible_blocks.sql). Hived may push massivly blocs data into irreversible tables and the date may be inconsistant.
