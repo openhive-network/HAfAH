@@ -99,6 +99,7 @@ One of the program is a non-forking application - it operates only on irreversib
 support for blockchain forks. Applications are available here:
 - forking application [doc/examples/hive_fork_app.py](./doc/examples/hive_fork_app.py)
 - non-forking application [doc/examples/hive_non_fork_app.py](./doc/examples/hive_non_fork_app.py)
+- forking application with a state provider [doc/examples/hive_accounts_state_provider.py](./doc/examples/hive_accounts_state_provider.py)
 
 Actually both programs are different only in lines which create a 'trx_histogram' table - the table in forking application
 inherits from`hive.trx_histogram` to register it into the context 'trx_histogram'. Look at the differences in diff format:
@@ -119,6 +120,65 @@ inherits from`hive.trx_histogram` to register it into the context 'trx_histogram
 
 To switch from non-forking application to forking one all the applications' tables have to be registered in contexts using
 'hive.app_register_table' method.
+
+## States Providers Library
+There are examples of applications that are generic and theirs tables could be used by a wide range of more specific applications.
+The tables present in a more conviniet way some part of the blockchain state included in blocks data.
+Some of the common applications are embedded inside hive_fork_manager in form of state providers: tables definitions and code which fill them.
+
+### Basic concept
+A state provider is a SQL code that contains tables definitions and methods which fill that tables. A user's application
+may import a provider with SQL command `hive.app_state_provider_import( _state_name, _context )`. During import, new tables
+are created and registered in the application's context. The application needs to call `hive.app_state_provider_import( range_of_blocks )`
+to update tables created by imported states providers.
+The import of 'state providers' must be called by the application before any call of its massive sync or hive.app_next_block. Repeating
+the same import does nothing.
+
+### A state provider structure
+Each state provider is a SQL file placed in `state_providers' folder and contains functions:
+
+* `hive.start_provider_<provider_name>( context )`
+  The function gests application context name and creates tables to hold the state.
+  The tables name have format `hive.<context_name>_<base table_name>` and returns list of created tables names.
+
+* `hive.update_state_provider_<provider_name>( first_block, last_block, context )`
+  The function updates all 'state providers' tables registered in the context.
+
+* `hive.drop_state_provider_<provider_name>( _context hive.context_name )`
+  The function drops all tables created by the state provider for a given context.
+
+### How to add a new state provider
+The template for creating a new state provider is here: [state_providers/state_provider.template](state_providers/state_provider.template).
+You may copy it, change extension to .sql add to the CMakeLists.txt and change in the new file '<provider_name>' to a new state provider name.
+After this the enum `hive.state_providers` has to be extended for the new provider name.
+
+### State provider and forks
+When the context is a non-forking one, then the tables are not registered to rewind during a fork servicing. When the context
+is forking one then the tables are registered in the forking mechanism and will be rewind during forks. When the context
+is changing from non-forking to forking one, then the provider's tables being also registered.
+
+### State providers API
+Applicat can import, update and drop state providers with functions:
+* `hive.app_state_provider_import( state_provider, _context )`
+* `hive.app_state_providers_update( _first_block, _last_block, _context )`
+* `hive.app_state_provider_drop( state_provider, _context )`
+
+
+### Why we introduced The States Providers instead of preparing regular applications?
+The problem is that applications work with different speeds and so they work on data snapshots from different blockchain times.
+If we would deliver regular applications, then all user applications won't be synchronized with delivered applications.
+The user's applications may read data from prepared applications which are not fit to theirs states.
+
+### Why we introduced The States Providers instead of extending the set of reversible/irreversible tables?
+There is one big difference between reversible data and other tables - reversible data are only inserted or removed ( whole rows are inserted or removed )
+, other tables can also be updated ( fields in particular row may be updated ). Whole reversible/irreversible mechanics is based on assumption
+that the rows are only inserted or removed when a fork is serviced. 
+
+### Disadvantages
+Each application which imports any 'state provider' got the tables exclusively for its PostgreSQL Role. A lot of data may be
+redundant in the case when a few applications use the same state provider because each of them has its own private instance of its tables.
+It may look redundant for some cases, but indeed there is no other method to guarantee consistency between the provider's
+state and other application's tables. Even small differences between head blocks of two applications may result in large differences between contents of their provider's tables
 
 ## Important implementation details
 ### REVERSIBLE AND IRREVERSIBLE BLOCKS
@@ -311,15 +371,28 @@ Returns block num recently saved in a detached state. The function will throw wh
 #### hive.app_context_exists( context_name )
 Returns TRUE when context with given name exists
 
-### hive.app_register_table( table_name, context_name );
+#### hive.app_register_table( table_name, context_name );
 Register not already registered table with name 'table_name' into context. It allow to move from 'non-forking application'
 to application which support forks.
 
-### hive.app_get_irreversible_block( context_name )
+#### hive.app_get_irreversible_block( context_name )
 Returns last irreversible block number, or 0 if there is no irreversible block
 
-### hive.app_is_forking( context_name )
+#### hive.app_is_forking( context_name )
 Returns boolean information if a given context is forking ( returns TRUE ) or non-forking ( returns FALSE )
+
+#### hive.app_state_provider_import( state_provider, context )
+Imports state provider into contexts - the state provider tables are created and registered
+in `HIVE.STATE_PROVIDERS_REGISTERED` table.
+
+#### hive.app_state_providers_update( _first_block, _last_block, _context )
+All state provider registerd by the contexts are updated.
+
+#### hive.hive.app_state_provider_drop( state_provider, context )
+State provider become unregistered from contexts, and its tables are dropped.
+
+#### hive.app_state_provider_drop_all( context )
+All state providers become unregistered from contexts,and their tables are dropped.
 
 #### CONTEXT REWIND
 Context rewind function shall not be used by hived and applications.

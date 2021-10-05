@@ -151,6 +151,8 @@ DECLARE
     __registered_table_id INTEGER := NULL;
     __columns_names TEXT[];
 BEGIN
+    RAISE NOTICE '!!!REGISTER TABLE!!! %', __shadow_table_name;
+
     PERFORM hive.chceck_constrains(_table_schema, _table_name);
 
     -- create a shadow table

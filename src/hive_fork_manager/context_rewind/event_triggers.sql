@@ -28,6 +28,31 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.register_state_provider_tables( _context hive.context_name )
+    RETURNS void
+    LANGUAGE 'plpgsql'
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    IF EXISTS ( SELECT 1 FROM hive.contexts WHERE name=_context AND registering_state_provider = TRUE )
+       OR hive.app_is_forking( _context ) THEN
+            RETURN;
+    END IF;
+
+    -- register tables
+    UPDATE hive.contexts SET registering_state_provider = TRUE WHERE name =  _context;
+
+    PERFORM hive.app_register_table( 'hive', unnest( hsp.tables ), _context )
+    FROM hive.state_providers_registered hsp
+    JOIN hive.contexts hc ON hc.id = hsp.context_id
+    WHERE hc.name = _context;
+
+    UPDATE hive.contexts SET registering_state_provider = FALSE WHERE name =  _context;
+END;
+$BODY$
+;
+
 
 -- block registerd tables trigger
 CREATE OR REPLACE FUNCTION hive.on_edit_registered_tables()
@@ -52,7 +77,10 @@ BEGIN
     IF __shadow_table_name IS NULL THEN
         -- maybe ALTER INHERIT ( hive.<context_name> ) to register table into context
 
-        PERFORM hive.register_table( tables.schema_name, tables.relname, tables.context ), hive.chceck_constrains(tables.schema_name, tables.relname)
+        PERFORM
+              hive.register_state_provider_tables( tables.context )
+            , hive.register_table( tables.schema_name, tables.relname, tables.context )
+            , hive.chceck_constrains(tables.schema_name, tables.relname)
         FROM (
             SELECT DISTINCT( pgc.relname ), tr.schema_name, hc.name as context
             FROM pg_event_trigger_ddl_commands() as tr
@@ -131,7 +159,10 @@ CREATE OR REPLACE FUNCTION hive.on_create_tables()
 AS
 $$
 BEGIN
-    PERFORM hive.register_table( tables.schema_name, tables.relname, tables.context ), hive.chceck_constrains(tables.schema_name, tables.relname)
+    PERFORM
+          hive.register_state_provider_tables( tables.context )
+        , hive.register_table( tables.schema_name, tables.relname, tables.context )
+        , hive.chceck_constrains(tables.schema_name, tables.relname)
     FROM (
         SELECT DISTINCT( pgc.relname ), tr.schema_name, hc.name as context
         FROM pg_event_trigger_ddl_commands() as tr
