@@ -7,7 +7,6 @@ import time
 import traceback
 import json
 import asyncio
-import threading
 
 from datetime import datetime
 from time import perf_counter
@@ -73,6 +72,7 @@ def conf_stdout_custom_file_logger(logger, file_name):
     logger.addHandler(file_handler)
 
 def event_loop(port, runner):
+    """Create an event loop in child thread."""
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     loop.run_until_complete(runner.setup())
