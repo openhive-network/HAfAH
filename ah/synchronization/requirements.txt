@@ -1,0 +1,5 @@
+# run via: 
+# pip3 install --user -r requirements.txt
+
+funcy==1.16
+sqlalchemy==1.4.18
