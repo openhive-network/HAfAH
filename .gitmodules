@@ -1,1 +1,4 @@
 
+[submodule "src/hive_fork_manager/ah_manager/protocol"]
+	path = src/hive_fork_manager/ah_manager/protocol
+	url = https://gitlab.syncad.com/hive/hive_protocol.git
