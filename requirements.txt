@@ -22,7 +22,6 @@ diff-match-patch==20200713
 ecdsa==0.13
 funcy==1.16
 future==0.17.1
-gdal==2.4.0
 gitdb2==2.0.5
 gitpython==2.1.11
 gps==3.9
@@ -74,7 +73,6 @@ six==1.16.0
 smmap2==2.0.5
 snaptime==0.2.4
 sqlalchemy==1.4.18
-steem==1.0.2
 toml==0.10.2
 toolz==0.11.1
 typing-extensions==3.10.0.0
