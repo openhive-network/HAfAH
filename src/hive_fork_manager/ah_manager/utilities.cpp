@@ -1,5 +1,5 @@
 
-#include <hive/chain/util/impacted.hpp>
+#include <hive/protocol/forward_impacted.hpp>
 
 #include <fc/io/json.hpp>
 #include <fc/string.hpp>
@@ -15,7 +15,8 @@ extern "C"
 #undef elog
 #endif
 
-#include <postgres.h>
+#include "../../../common_includes/include/psql_utils/postgres_includes.hpp"
+
 #include <fmgr.h>
 #include <catalog/pg_type.h>
 #include <utils/builtins.h>
