@@ -362,10 +362,12 @@ class ah_loader(metaclass = singleton):
 
   def attach_context(self, last_block = 0):
     #True value of force_attach
+    logger.info("Attaching context... Last block:".format(last_block))
     self.switch_context_internal(True, last_block)
 
   def detach_context(self):
     #False value of force_attach
+    logger.info("Detaching context...")
     self.switch_context_internal(False)
 
   def gather_part_of_queries(self, operation_id, account_name):
@@ -412,19 +414,9 @@ class ah_loader(metaclass = singleton):
         tables_query    = self.read_file( sql_data.args.schema_path + "/ah_schema_tables.sql" )
         functions_query = self.read_file( sql_data.args.schema_path + "/ah_schema_functions.sql" )
 
-        if self.is_interrupted():
-          return
-
         self.sql_executor.perform_query(sql_data.query.create_context)
 
-        if self.is_interrupted():
-          return
-
         self.sql_executor.perform_query(tables_query)
-
-        if self.is_interrupted():
-          return
-
         self.sql_executor.perform_query(functions_query)
 
       self.import_initial_data()
@@ -498,6 +490,9 @@ class ah_loader(metaclass = singleton):
 
   def receive(self):
     while len(self.block_ranges) > 0:
+      if self.is_interrupted():
+        break
+
       start = datetime.datetime.now()
 
       _item = self.block_ranges.popleft()
@@ -585,13 +580,7 @@ class ah_loader(metaclass = singleton):
     while True:
       start = datetime.datetime.now()
 
-      if self.is_interrupted():
-        return
-
       _last_block_num = self.prepare_sql()
-
-      if self.is_interrupted():
-        return
 
       self.send_data()
 
