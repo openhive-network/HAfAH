@@ -307,7 +307,7 @@ class ah_loader(metaclass = singleton):
       if _id > account_info.next_account_id:
         account_info.next_account_id = _id
 
-      account_cache[_name] = account_info( _id, 0 )
+      self.account_cache[_name] = account_info( _id, 0 )
 
     if account_info.next_account_id:
       account_info.next_account_id += 1
@@ -325,9 +325,9 @@ class ah_loader(metaclass = singleton):
       _name             = str(_record["name"])
       _operation_count  = int(_record["operation_count"])
 
-      found = name in account_cache
+      found = _name in self.account_cache
       assert found, "found"
-      account_cache[_name] = _operation_count
+      self.account_cache[_name] = _operation_count
 
   def import_initial_data(self):
     self.import_accounts()
