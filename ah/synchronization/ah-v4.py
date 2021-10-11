@@ -45,6 +45,9 @@ class account_op:
     self.op_id  = op_id
     self.name   = name
 
+  def __repr__(self):
+    return "op_id: {} name: {}".format(self.op_id, self.name)
+
 class account_info:
 
   next_account_id = 1
@@ -270,6 +273,8 @@ class ah_loader(metaclass = singleton):
     self.is_massive           = True
     self.interrupted          = False
 
+    self.last_block_num       = 0
+
     self.application_context  = "account_history"
 
     self.accounts_queries     = []
@@ -307,7 +312,7 @@ class ah_loader(metaclass = singleton):
       if _id > account_info.next_account_id:
         account_info.next_account_id = _id
 
-      self.account_cache[_name] = account_info( _id, 0 )
+      self.account_cache[_name] = account_info(_id, 0)
 
     if account_info.next_account_id:
       account_info.next_account_id += 1
@@ -327,7 +332,7 @@ class ah_loader(metaclass = singleton):
 
       found = _name in self.account_cache
       assert found, "found"
-      self.account_cache[_name] = _operation_count
+      self.account_cache[_name].operation_count = _operation_count
 
   def import_initial_data(self):
     self.import_accounts()
@@ -515,22 +520,29 @@ class ah_loader(metaclass = singleton):
     received_items_block = None
     while not _received:
       try:
-        received_items_block = self.queue.get(True, _get_delay)
-        _received = True
-      except queue.Empty:
-        if self.finished:
-          if cnt < tries:
-            logger.info("Queue is probably empty... Try: {}/{}".format(cnt/tries))
-            cnt += 1
+        try:
+          received_items_block = self.queue.get(True, _get_delay)
+          _received = True
+        except queue.Empty:
+          if self.finished:
+            if cnt < tries:
+              logger.info("Queue is probably empty... Try: {}/{}".format(cnt/tries))
+              cnt += 1
+            else:
+              logger.info("Queue is empty... All data was received")
+              break
           else:
-            logger.info("Queue is empty... All data was received")
-            break
-        else:
-          logger.info("Queue is empty... Waiting {} seconds".format(_sleep))
-          time.sleep(_sleep)
+            logger.info("Queue is empty... Waiting {} seconds".format(_sleep))
+            time.sleep(_sleep)
+      except Exception as ex:
+        logger.error("Exception during processing `prepare_sql` method: {0}".format(ex))
 
     if received_items_block is None:
       logger.info("Lack of impacted accounts...")
+      return None
+
+    if 'elements' not in received_items_block:
+      logger.info("Lack of impacted accounts - empty set...")
       return None
 
     for items in received_items_block['elements']:
@@ -577,20 +589,22 @@ class ah_loader(metaclass = singleton):
       raise ex
 
   def send(self):
+    logger.info("Sending...")
     while True:
       start = datetime.datetime.now()
 
-      _last_block_num = self.prepare_sql()
+      self.last_block_num = self.prepare_sql()
 
       self.send_data()
 
-      if self.is_massive and _last_block_num is not None:
-        self.save_detached_block_num(_last_block_num)
+      if self.is_massive and self.last_block_num is not None:
+        self.save_detached_block_num(self.last_block_num)
 
       end = datetime.datetime.now()
       logger.info("send time[ms]: {}".format(helper.get_time(start, end)))
 
       if self.finished and self.queue.empty():
+        logger.info("Sending is finished...")
         break
 
   def work(self):
@@ -651,7 +665,7 @@ class ah_loader(metaclass = singleton):
 
           self.work()
 
-          self.attach_context(_last_block)
+          self.attach_context(self.last_block_num if (self.last_block_num is not None) else 0)
         else:
           self.work()
 
