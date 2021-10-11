@@ -48,21 +48,21 @@ BEGIN
     ASSERT NOT EXISTS ( SELECT FROM hive.registered_tables WHERE origin_table_schema='a' AND origin_table_name='table_child' ), 'Table shall not be registerd';
     ASSERT NOT EXISTS ( SELECT FROM hive.registered_tables WHERE origin_table_schema='a' AND origin_table_name='table_base' ), 'Table shall not be registerd';
 
-    -- triggers
-    ASSERT EXISTS ( SELECT FROM hive.triggers WHERE trigger_name='hive_insert_trigger_a_table1' AND function_name='hive_on_table_trigger_insert_a_table1' );
-    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive_insert_trigger_a_table1');
+    ---- triggers
+    ASSERT EXISTS ( SELECT FROM hive.triggers WHERE trigger_name='hive.hive_insert_trigger_a_table1' AND function_name='hive.hive_on_table_trigger_insert_a_table1' );
+    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive.hive_insert_trigger_a_table1');
     ASSERT EXISTS ( SELECT * FROM pg_proc WHERE proname = 'hive_on_table_trigger_insert_a_table1');
 
-    ASSERT EXISTS ( SELECT FROM hive.triggers WHERE trigger_name='hive_delete_trigger_a_table1' AND function_name='hive_on_table_trigger_delete_a_table1'  );
-    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive_delete_trigger_a_table1' );
+    ASSERT EXISTS ( SELECT FROM hive.triggers WHERE trigger_name='hive.hive_delete_trigger_a_table1' AND function_name='hive.hive_on_table_trigger_delete_a_table1'  );
+    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive.hive_delete_trigger_a_table1' );
     ASSERT EXISTS ( SELECT * FROM pg_proc WHERE proname = 'hive_on_table_trigger_delete_a_table1');
-
-    ASSERT EXISTS ( SELECT FROM hive.triggers WHERE trigger_name='hive_update_trigger_a_table1' AND function_name='hive_on_table_trigger_update_a_table1' );
-    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive_update_trigger_a_table1' );
+--
+    ASSERT EXISTS ( SELECT FROM hive.triggers WHERE trigger_name='hive.hive_update_trigger_a_table1' AND function_name='hive.hive_on_table_trigger_update_a_table1' );
+    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive.hive_update_trigger_a_table1' );
     ASSERT EXISTS ( SELECT * FROM pg_proc WHERE proname = 'hive_on_table_trigger_update_a_table1');
-
-    ASSERT EXISTS ( SELECT FROM hive.triggers WHERE trigger_name='hive_truncate_trigger_a_table1' AND function_name='hive_on_table_trigger_truncate_a_table1' );
-    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive_truncate_trigger_a_table1' );
+--
+    ASSERT EXISTS ( SELECT FROM hive.triggers WHERE trigger_name='hive.hive_truncate_trigger_a_table1' AND function_name='hive.hive_on_table_trigger_truncate_a_table1' );
+    ASSERT EXISTS ( SELECT FROM pg_trigger WHERE tgname='hive.hive_truncate_trigger_a_table1' );
     ASSERT EXISTS ( SELECT * FROM pg_proc WHERE proname = 'hive_on_table_trigger_truncate_a_table1');
 END
 $BODY$
