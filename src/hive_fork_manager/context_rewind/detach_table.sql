@@ -23,7 +23,7 @@ BEGIN
     FOR  __trigger_funtion_name IN SELECT ht.function_name FROM hive.triggers ht
     WHERE ht.registered_table_id = __table_id
     LOOP
-       EXECUTE format( 'DROP FUNCTION %I', __trigger_funtion_name );
+       EXECUTE format( 'DROP FUNCTION %s', __trigger_funtion_name );
     END LOOP;
 
     -- remove informations about triggers

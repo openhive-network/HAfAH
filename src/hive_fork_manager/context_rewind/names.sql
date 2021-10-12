@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION hive.get_trigger_insert_name( _table_schema TEXT,  _t
 AS
 $BODY$
 BEGIN
-    RETURN 'hive_insert_trigger_' || lower(_table_schema) || '_' || lower( _table_name );
+    RETURN 'hive.hive_insert_trigger_' || lower(_table_schema) || '_' || lower( _table_name );
 END;
 $BODY$
 ;
@@ -29,7 +29,7 @@ CREATE OR REPLACE FUNCTION hive.get_trigger_delete_name( _table_schema TEXT,  _t
 AS
 $BODY$
 BEGIN
-    RETURN 'hive_delete_trigger_' || lower(_table_schema) || '_' || lower( _table_name );
+    RETURN 'hive.hive_delete_trigger_' || lower(_table_schema) || '_' || lower( _table_name );
 END;
 $BODY$
 ;
@@ -41,7 +41,7 @@ CREATE OR REPLACE FUNCTION hive.get_trigger_update_name( _table_schema TEXT,  _t
 AS
 $BODY$
 BEGIN
-    RETURN 'hive_update_trigger_' || lower(_table_schema) || '_' || lower( _table_name );
+    RETURN 'hive.hive_update_trigger_' || lower(_table_schema) || '_' || lower( _table_name );
 END;
 $BODY$
 ;
@@ -53,7 +53,7 @@ CREATE OR REPLACE FUNCTION hive.get_trigger_truncate_name( _table_schema TEXT,  
 AS
 $BODY$
 BEGIN
-    RETURN 'hive_truncate_trigger_' || lower(_table_schema) || '_' || lower( _table_name );
+    RETURN 'hive.hive_truncate_trigger_' || lower(_table_schema) || '_' || lower( _table_name );
 END;
 $BODY$
 ;
@@ -65,7 +65,7 @@ CREATE OR REPLACE FUNCTION hive.get_trigger_insert_function_name( _table_schema 
 AS
 $BODY$
 BEGIN
-    RETURN 'hive_on_table_trigger_insert_' || lower(_table_schema) || '_' || lower( _table_name );
+    RETURN 'hive.hive_on_table_trigger_insert_' || lower(_table_schema) || '_' || lower( _table_name );
 END;
 $BODY$
 ;
@@ -77,7 +77,7 @@ CREATE OR REPLACE FUNCTION hive.get_trigger_delete_function_name( _table_schema 
 AS
 $BODY$
 BEGIN
-    RETURN 'hive_on_table_trigger_delete_' || lower(_table_schema) || '_' || lower( _table_name );
+    RETURN 'hive.hive_on_table_trigger_delete_' || lower(_table_schema) || '_' || lower( _table_name );
 END;
 $BODY$
 ;
@@ -89,7 +89,7 @@ CREATE OR REPLACE FUNCTION hive.get_trigger_update_function_name( _table_schema 
 AS
 $BODY$
 BEGIN
-    RETURN 'hive_on_table_trigger_update_' || lower(_table_schema) || '_' || lower( _table_name );
+    RETURN 'hive.hive_on_table_trigger_update_' || lower(_table_schema) || '_' || lower( _table_name );
 END;
 $BODY$
 ;
@@ -101,7 +101,7 @@ CREATE OR REPLACE FUNCTION hive.get_trigger_truncate_function_name( _table_schem
 AS
 $BODY$
 BEGIN
-    RETURN 'hive_on_table_trigger_truncate_' || lower(_table_schema) || '_' || lower( _table_name );
+    RETURN 'hive.hive_on_table_trigger_truncate_' || lower(_table_schema) || '_' || lower( _table_name );
 END;
 $BODY$
 ;
