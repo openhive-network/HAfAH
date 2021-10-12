@@ -1,3 +1,6 @@
+
+SET( BUILD_SHARED_LIBS ON FORCE )
+
 ADD_SUBDIRECTORY( protocol )
 
 SET( target_name ah_manager )
