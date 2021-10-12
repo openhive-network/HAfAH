@@ -24,7 +24,7 @@ class api_operation:
     self.virtual_op : int = int(obj["_virtual_op"])
     self.timestamp : str = obj["_timestamp"]
     self.op : operation = operation(obj["_value"])
-    self.operation_id : int = obj["_operation_id"]
+    self.operation_id : int = 0
 
 class api_operations_container:
   item = api_operation
