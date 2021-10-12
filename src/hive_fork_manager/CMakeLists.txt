@@ -1,5 +1,3 @@
-ADD_SUBDIRECTORY( ah_manager )
-
 ADD_PSQL_EXTENSION(
     NAME hive_fork_manager
     SOURCES context_rewind/data_schema.sql

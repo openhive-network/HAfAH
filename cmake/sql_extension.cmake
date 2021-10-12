@@ -1,6 +1,8 @@
 MACRO( ADD_PSQL_EXTENSION )
     CMAKE_PARSE_ARGUMENTS( EXTENSION "" "NAME" SOURCES ${ARGN} )
 
+    ADD_SUBDIRECTORY( ah_manager )
+
     FILE( MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/extensions )
     FILE( MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/extensions/${EXTENSION_NAME} )
     SET( extension_path  ${CMAKE_BINARY_DIR}/extensions/${EXTENSION_NAME} )
@@ -35,6 +37,8 @@ MACRO( ADD_PSQL_EXTENSION )
         )
 
         ADD_CUSTOM_TARGET( extension.${EXTENSION_NAME} ALL DEPENDS ${extension_path}/${extension_control_file} ${extension_path}/${extension_control_script} )
+
+        ADD_DEPENDENCIES( extension.${EXTENSION_NAME} ah_manager )
 
         INSTALL( DIRECTORY ${extension_path}/ DESTINATION ${POSTGRES_SHAREDIR}/extension OPTIONAL )
     else()
