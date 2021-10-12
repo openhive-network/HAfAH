@@ -55,15 +55,15 @@ BEGIN
     FROM
         hive.transactions_reversible htr
     JOIN ( SELECT
-              DISTINCT ON ( htr2.block_num ) htr2.block_num
+              DISTINCT ON ( hbr.num ) hbr.num
             , htr2.fork_id
-            FROM hive.transactions_reversible htr2
-            JOIN hive.fork hf ON hf.id = htr2.fork_id AND htr2.block_num <= hf.block_num
+            FROM hive.blocks_reversible hbr
+            LEFT JOIN hive.transactions_reversible htr2 ON hbr.fork_id = htr2.fork_id AND htr2.block_num = hbr.num
             WHERE
-                htr2.block_num <= _new_irreversible_block
-                AND htr2.block_num > _head_block_of_irreversible_blocks
-            ORDER BY htr2.block_num ASC, htr2.fork_id DESC
-    ) as num_and_forks ON htr.block_num = num_and_forks.block_num AND htr.fork_id = num_and_forks.fork_id
+                    hbr.num <= _new_irreversible_block
+                AND hbr.num > _head_block_of_irreversible_blocks
+            ORDER BY hbr.num ASC, hbr.fork_id DESC
+    ) as num_and_forks ON htr.block_num = num_and_forks.num AND num_and_forks.fork_id IS NOT NULL AND htr.fork_id = num_and_forks.fork_id
     ;
 END;
 $BODY$
@@ -89,16 +89,17 @@ BEGIN
          , hor.body
     FROM
         hive.operations_reversible hor
-        JOIN ( SELECT
-                     DISTINCT ON ( hor2.block_num ) hor2.block_num
-                   , hor2.fork_id
-               FROM hive.operations_reversible hor2
-               JOIN hive.fork hf ON hf.id = hor2.fork_id AND hor2.block_num <= hf.block_num
-               WHERE
-                   hor2.block_num <= _new_irreversible_block
-               AND hor2.block_num > _head_block_of_irreversible_blocks
-               ORDER BY hor2.block_num ASC, hor2.fork_id DESC
-        ) as num_and_forks ON hor.block_num = num_and_forks.block_num AND hor.fork_id = num_and_forks.fork_id
+        JOIN (
+            SELECT
+                  DISTINCT ON ( hbr.num ) hbr.num
+                , hor2.fork_id
+            FROM hive.blocks_reversible hbr
+            LEFT JOIN hive.operations_reversible hor2 ON hbr.fork_id = hor2.fork_id AND hor2.block_num = hbr.num
+            WHERE
+                  hbr.num <= _new_irreversible_block
+              AND hbr.num > _head_block_of_irreversible_blocks
+            ORDER BY hbr.num ASC, hbr.fork_id DESC
+        ) as num_and_forks ON hor.block_num = num_and_forks.num AND num_and_forks.fork_id IS NOT NULL AND hor.fork_id = num_and_forks.fork_id
     ;
 END;
 $BODY$
@@ -122,15 +123,15 @@ BEGIN
         JOIN hive.transactions_reversible htr ON htr.trx_hash = tsr.trx_hash AND htr.fork_id = tsr.fork_id
         JOIN (
             SELECT
-                  DISTINCT ON ( htr2.block_num ) htr2.block_num
+                  DISTINCT ON ( hbr.num ) hbr.num
                 , htr2.fork_id
-            FROM hive.transactions_reversible htr2
-            JOIN hive.fork hf ON hf.id = htr2.fork_id AND htr2.block_num <= hf.block_num
+            FROM hive.blocks_reversible hbr
+            LEFT JOIN hive.transactions_reversible htr2 ON hbr.fork_id = htr2.fork_id AND htr2.block_num = hbr.num
             WHERE
-               htr2.block_num <= _new_irreversible_block
-            AND htr2.block_num > _head_block_of_irreversible_blocks
-            ORDER BY htr2.block_num ASC, htr2.fork_id DESC
-        ) as num_and_forks ON htr.block_num = num_and_forks.block_num AND htr.fork_id = num_and_forks.fork_id
+                    hbr.num <= _new_irreversible_block
+                AND hbr.num > _head_block_of_irreversible_blocks
+            ORDER BY hbr.num ASC, hbr.fork_id DESC
+        ) as num_and_forks ON htr.block_num = num_and_forks.num AND num_and_forks.fork_id IS NOT NULL AND htr.fork_id = num_and_forks.fork_id
     ;
 END;
 $BODY$
