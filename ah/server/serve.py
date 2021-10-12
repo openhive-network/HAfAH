@@ -98,7 +98,7 @@ def run_server(db_url, port):
         request = await request.text()
         ctx = {
           "db": app["db"],
-          "id": json.loads(request)['id']
+          "id": json.loads(request)['id'] # TODO: remove this if additional logging is not required
         }
         # debug=True refs https://github.com/bcb/jsonrpcserver/issues/71
         response = None
