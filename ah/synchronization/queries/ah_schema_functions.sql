@@ -3,7 +3,7 @@ RETURNS TABLE(
     _trx_id TEXT,
     _trx_in_block BIGINT,
     _op_in_trx BIGINT,
-    _virtual_op BOOLEAN,
+    _virtual_op BIGINT,
     _timestamp TEXT,
     _value TEXT,
     _operation_id INT
@@ -17,7 +17,7 @@ BEGIN
       NULL::TEXT,
       NULL::BIGINT,
       NULL::BIGINT,
-      NULL::BOOLEAN,
+      NULL::BIGINT,
       NULL::TEXT,
       NULL::TEXT,
       NULL::INT
@@ -39,8 +39,28 @@ BEGIN
         ELSE ht.trx_in_block
         END
       ) _trx_in_block,
-      T.op_pos _op_in_trx,
-      T.is_virtual _virtual_op,
+      (
+        CASE
+        WHEN T.trx_in_block <= -1 THEN 0 ::BIGINT
+        ELSE abs(T.op_pos::BIGINT)
+        END
+      ) AS _op_in_trx,
+      (
+        CASE 
+        WHEN T.trx_in_block <= -1 THEN T.op_pos ::BIGINT
+        ELSE (T.id - (
+          SELECT nahov.id
+          FROM hive.account_history_operations_view nahov
+          JOIN hive.operation_types nhot 
+          ON nahov.op_type_id = nhot.id 
+          WHERE nahov.block_num=T.block_num 
+            AND nahov.trx_in_block=T.trx_in_block 
+            AND nahov.op_pos=T.op_pos
+            AND nhot.is_virtual=FALSE
+          LIMIT 1
+        ) ) :: BIGINT
+      END
+      ) _virtual_op,
       trim(both '"' from to_json(T.timestamp)::text) _timestamp,
       T.body _value,
       T.id::INT _operation_id
@@ -54,7 +74,8 @@ BEGIN
         WHERE ho.block_num = _BLOCK_NUM AND ( _ONLY_VIRTUAL = FALSE OR ( _ONLY_VIRTUAL = TRUE AND hot.is_virtual = TRUE ) )
       ) T
       JOIN hive.account_history_blocks_view hb ON hb.num = T.block_num
-      LEFT JOIN hive.account_history_transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block;
+      LEFT JOIN hive.account_history_transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block
+      ORDER BY _operation_id;
 END
 $function$
 language plpgsql STABLE;
