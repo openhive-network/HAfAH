@@ -52,11 +52,15 @@ MACRO( ADD_STATIC_LIB target_name )
     ADD_POSTGRES_LIBRARIES( ${target_name} )
 ENDMACRO()
 
-MACRO( PREPARE_STATIC_LIB target_name )
+MACRO( PREPARE_LIB target_name )
     FILE( GLOB sources ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp )
     ADD_LIBRARY( ${target_name} ${sources} )
 
-    ADD_BOOST_LIBRARIES( ${target_name} TRUE )
+    if( BUILD_SHARED_LIBS )
+      ADD_BOOST_LIBRARIES( ${target_name} FALSE )
+    else()
+      ADD_BOOST_LIBRARIES( ${target_name} TRUE )
+    endif()
 
     ADD_POSTGRES_INCLUDES( ${target_name} )
     ADD_POSTGRES_LIBRARIES( ${target_name} )
