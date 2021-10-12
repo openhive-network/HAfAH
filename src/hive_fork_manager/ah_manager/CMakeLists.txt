@@ -2,7 +2,7 @@ ADD_SUBDIRECTORY( protocol )
 
 SET( target_name ah_manager )
 
-ADD_STATIC_LIB( ${target_name} )
+PREPARE_STATIC_LIB( ${target_name} )
 
 TARGET_LINK_LIBRARIES( ${target_name} PUBLIC hive_protocol )
 
