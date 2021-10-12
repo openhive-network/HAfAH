@@ -1,4 +1,4 @@
-MACRO( ADD_BOOST_LIBRARIES target_name )
+MACRO( ADD_BOOST_LIBRARIES target_name static_library )
     SET( BOOST_COMPONENTS )
     LIST( APPEND BOOST_COMPONENTS
             thread
@@ -10,7 +10,11 @@ MACRO( ADD_BOOST_LIBRARIES target_name )
             unit_test_framework
             context locale iostreams
     )
-    SET( Boost_USE_STATIC_LIBS ON CACHE STRING "ON or OFF" )
+    IF( ${static_library} )
+      SET( Boost_USE_STATIC_LIBS ON CACHE STRING "ON or OFF" )
+    else()
+      SET( Boost_USE_STATIC_LIBS OFF CACHE STRING "ON or OFF" )
+    endif()
 
     FIND_PACKAGE( Boost 1.53 REQUIRED COMPONENTS ${BOOST_COMPONENTS} )
 
