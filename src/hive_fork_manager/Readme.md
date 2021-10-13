@@ -434,7 +434,18 @@ when fork is impossible, then we don't want have trigger overhead for each editi
 1. Constraints FOREIGN KEY must be DEFERRABLE, otherwise we cannot guarnteen success or rewinding changes - the process may temporary violates tables constraints.
    More informations about DEFERRABLE constraint can be found in PosgreSQL documentaion for [CREATE TABLE](https://www.postgresql.org/docs/10/sql-createtable.html)
    and [SET CONSTRAINTS](https://www.postgresql.org/docs/10/sql-set-constraints.html)
+2. The applications usually are divided for two parts: a part which synchronizes data with blockchain, and a server
+   part which responses for remote queries and reads already synchronized data. In case of micro-fork occurence, during rewinding data
+   a race conditions is possible between synchronization process and the server, for example the server may make some action
+   when some 'Account' exsits, but the 'Account' is being removing by the micro-fork rewind code:
+   ![race conditions](doc/race_conditions.png)
+   In a such case as at the picture above the server response for a query will fail . At the moment there is an assumption
+   that we can accept this situation because next query will be serviced normally. If it won't be acceptable, then we
+   can make exclusive lock on registered tables for a time of back from micro-fork, but the consequences would be dramatic,
+   including possibility of stopping whole HAF node by a wrongly written application. 
+      
 
+    
 ## Other architectures which were abandoned
 ### C++-based extension for fork management
 There was a hope that an extension written in C/C++ can be more performant and that access to a lower level of PostgreSQL could give some benefits.
