@@ -6,7 +6,8 @@ Contains implementations of Postgres specific tools providing functionalities re
 ## Requirements
 1. Tested on Ubuntu 18.04
 2. postgresql server dev package: `sudo apt-get install postgresql-dev-12`
-3. postgresql server dev package: `sudo apt-get install libssl-dev`
+3. ssl dev package:               `sudo apt-get install libssl-dev`
+4. readline dev package:          `sudo apt-get install libreadline-dev`
 
 ## CMake and make
 1. create build directory, for exemple in sources root: `mkdir build`
