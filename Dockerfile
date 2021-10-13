@@ -16,6 +16,7 @@ RUN \
             libboost-all-dev \
             postgresql-server-dev-12 \
             git \
+            libssl-dev \
             python3-pip \
     && \
         apt-get clean
