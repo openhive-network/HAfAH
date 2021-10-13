@@ -3,7 +3,7 @@ stages:
 
 variables:
   GIT_DEPTH: 1
-  BUILDER_IMAGE_TAG: "@sha256:bbe403c8321173324c54da3c21c6fb197dd5c0c8aed94df909c72cd24901f646"
+  BUILDER_IMAGE_TAG: "@sha256:0bc52ffa665d61f7c8324240b07059ac2b7fbd5e8620e3c6f513e6390c2c2b6f"
 
 hive_fork_manager:
   stage: build_and_test
