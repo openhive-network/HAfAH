@@ -17,6 +17,7 @@ RUN \
             postgresql-server-dev-12 \
             git \
             libssl-dev \
+            libreadline-dev \
             python3-pip \
     && \
         apt-get clean
