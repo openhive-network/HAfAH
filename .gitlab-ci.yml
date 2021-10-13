@@ -3,6 +3,7 @@ stages:
 
 variables:
   GIT_DEPTH: 1
+  GIT_SUBMODULE_STRATEGY: recursive
   BUILDER_IMAGE_TAG: "@sha256:c9c70e6f8f96defc9f04dd2011c40c752b1e8c2ae9ac2e153cec2199c11636af"
 
 hive_fork_manager:
