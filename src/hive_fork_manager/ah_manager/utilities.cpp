@@ -29,8 +29,6 @@ extern "C"
 PG_MODULE_MAGIC;
 
 PG_FUNCTION_INFO_V1(get_impacted_accounts);
-PG_FUNCTION_INFO_V1(clear_counters);
-PG_FUNCTION_INFO_V1(get_counter);
 
 flat_set<account_name_type> get_accounts( const std::string& operation_body )
 {
