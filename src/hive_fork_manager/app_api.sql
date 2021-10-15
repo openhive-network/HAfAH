@@ -63,14 +63,7 @@ DECLARE
     __context_id hive.contexts.id%TYPE;
     __result BOOL;
 BEGIN
-    SELECT  hac.id
-    FROM hive.contexts hac
-    WHERE hac.name = _context_name
-    INTO __context_id;
-
-    IF __context_id IS NULL THEN
-            RAISE EXCEPTION 'No context with name %', _context_name;
-    END IF;
+    __context_id = hive.get_context_id( _context_name );
 
     -- if there there is a registered table for a given context
     SELECT EXISTS( SELECT 1 FROM hive.registered_tables hrt WHERE hrt.context_id = __context_id ) INTO __result;
@@ -273,9 +266,7 @@ BEGIN
     WHERE hac.name = _context
     INTO __context_id;
 
-    IF __context_id IS NULL THEN
-         RAISE EXCEPTION 'No context with name %', _context;
-    END IF;
+    __context_id = hive.get_context_id( _context );
 
     IF EXISTS( SELECT 1 FROM hive.state_providers_registered WHERE context_id = __context_id AND state_provider = _state_provider ) THEN
         RAISE LOG 'The state % provider is already imported for context %.', _state_provider, _context;

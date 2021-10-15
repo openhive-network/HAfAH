@@ -9,6 +9,7 @@ ADD_PSQL_EXTENSION(
             context_rewind/back_from_fork.sql
             context_rewind/irreversible.sql
             context_rewind/rewind_api.sql
+            tools.sql
             events_queue.sql
             forks.sql
             app_context.sql
