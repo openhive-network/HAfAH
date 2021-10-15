@@ -546,6 +546,8 @@ class ah_loader(metaclass = singleton):
           else:
             logger.info("Queue is empty... Waiting {} seconds".format(_sleep))
             time.sleep(_sleep)
+            if self.is_interrupted():
+              break
       except Exception as ex:
         logger.error("Exception during processing `prepare_sql` method: {0}".format(ex))
 
@@ -617,6 +619,9 @@ class ah_loader(metaclass = singleton):
 
       if self.finished and self.queue.empty():
         logger.info("Sending is finished...")
+        break
+      if self.is_interrupted():
+        logger.info("Sending is interrupted...")
         break
 
   def work(self):
