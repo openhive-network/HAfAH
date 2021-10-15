@@ -55,6 +55,32 @@ BEGIN
         ASSERT FALSE, 'Hived can edit Alice''s shadow table';
     EXCEPTION WHEN OTHERS THEN
     END;
+
+    ASSERT NOT EXISTS( SELECT * FROM hive.state_providers_registered ), 'Hived sees Alices registered state provider';
+
+    BEGIN
+        PERFORM hive.app_state_provider_import( 'ACCOUNTS', 'alice_context' );
+        ASSERT FALSE, 'Hived can import state providers to Alices context';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        PERFORM hive.app_state_providers_update( 0, 100, 'alice_context' );
+        ASSERT FALSE, 'Hived can update Alices state providers';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        PERFORM hive.app_state_providers_update( 0, 100, 'alice_context' );
+        ASSERT FALSE, 'Hived can update Alices state providers';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        PERFORM hive.app_state_provider_drop( 'ACCOUNTS', 'alice_context' );
+        ASSERT FALSE, 'Hived can drop Alices state providers';
+    EXCEPTION WHEN OTHERS THEN
+    END;
 END;
 $BODY$
 ;
@@ -71,6 +97,7 @@ BEGIN
     PERFORM hive.app_create_context( 'alice_context_detached' );
     PERFORM hive.app_context_detach( 'alice_context_detached' );
     CREATE TABLE alice_table( id INT ) INHERITS( hive.alice_context );
+    PERFORM hive.app_state_provider_import( 'ACCOUNTS', 'alice_context' );
     PERFORM hive.app_next_block( 'alice_context' );
     INSERT INTO alice_table VALUES( 10 );
 END;
@@ -100,6 +127,7 @@ $BODY$
 BEGIN
     ASSERT EXISTS( SELECT * FROM hive.contexts WHERE name = 'alice_context' ), 'Alice''s context was removed by hived';
     ASSERT ( SELECT current_block_num FROM hive.contexts WHERE name = 'alice_context' ) = 1, 'Alice''s context was updated by hived';
+    ASSERT ( SELECT COUNT(*) FROM hive.state_providers_registered ) = 1, 'Alice lost her state providers';
 END;
 $BODY$
 ;

@@ -391,3 +391,19 @@ BEGIN
     END;
 $BODY$
 ;
+
+CREATE OR REPLACE FUNCTION hive.update_one_state_providers( _first_block hive.blocks.num%TYPE, _last_block hive.blocks.num%TYPE, _state_provider HIVE.STATE_PROVIDERS, _context hive.context_name )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    EXECUTE format(
+          'SELECT hive.update_state_provider_%s( %s, %s, %L )'
+        , _state_provider, _first_block, _last_block, _context
+    );
+END;
+$BODY$
+;
+

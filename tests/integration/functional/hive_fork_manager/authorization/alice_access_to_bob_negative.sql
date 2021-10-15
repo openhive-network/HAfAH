@@ -164,6 +164,33 @@ BEGIN
         ASSERT FALSE, 'Alice can drop Bob''s blocks views';
     EXCEPTION WHEN OTHERS THEN
     END;
+
+    ASSERT NOT EXISTS( SELECT * FROM hive.state_providers_registered ), 'Alice sees Bobs registered state provider';
+
+    BEGIN
+        PERFORM hive.app_state_provider_import( 'ACCOUNTS', 'bob_context' );
+        ASSERT FALSE, 'Alice can import state providers to Bob context';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        PERFORM hive.app_state_providers_update( 0, 100, 'bob_context' );
+        ASSERT FALSE, 'Alice can update Bobs state providers';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        PERFORM hive.app_state_providers_update( 0, 100, 'bob_context' );
+        ASSERT FALSE, 'Alice can update Bobs state providers';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        PERFORM hive.app_state_provider_drop( 'ACCOUNTS', 'bob_context' );
+        ASSERT FALSE, 'Alice can drop Bobs state providers';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
 END;
 $BODY$
 ;
@@ -182,6 +209,7 @@ BEGIN
     CREATE TABLE bob_table( id INT ) INHERITS( hive.bob_context );
     PERFORM hive.app_next_block( 'bob_context' );
     INSERT INTO bob_table VALUES( 100 );
+    PERFORM hive.app_state_provider_import( 'ACCOUNTS', 'bob_context' );
 END;
 $BODY$
 ;
@@ -281,6 +309,8 @@ BEGIN
         ASSERT FALSE, 'Bob can drop Alice''s blocks views';
     EXCEPTION WHEN OTHERS THEN
     END;
+
+    ASSERT ( SELECT COUNT(*) FROM hive.state_providers_registered ) = 1, 'Bob lost his state providers';
 END;
 $BODY$
 ;

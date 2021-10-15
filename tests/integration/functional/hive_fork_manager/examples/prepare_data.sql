@@ -1,3 +1,10 @@
+INSERT INTO hive.operation_types
+VALUES
+       ( 1, 'hive::protocol::account_created_operation', TRUE )
+     , ( 6, 'other', FALSE ) -- non creating accounts
+;
+
+
 INSERT INTO hive.blocks
 VALUES
        ( 1, '\xBADD10', '\xCAFE10', '2016-06-22 19:10:21-07'::timestamp )
@@ -6,6 +13,16 @@ VALUES
      , ( 4, '\xBADD40', '\xCAFE40', '2016-06-22 19:10:24-07'::timestamp )
      , ( 5, '\xBADD50', '\xCAFE50', '2016-06-22 19:10:25-07'::timestamp )
 ;
+
+INSERT INTO hive.transactions
+VALUES
+    ( 1, 0::SMALLINT, '\xDEED50', 101, 100, '2016-06-22 19:10:25-07'::timestamp, '\xBEEF' )
+;
+
+INSERT INTO hive.operations
+VALUES
+( 1, 5, 0, 0, 1, '2016-06-22 19:10:21-07'::timestamp, '{"value":{"new_account_name": "account_5"}}' );
+
 SELECT hive.end_massive_sync(5);
 
 -- live sync
@@ -32,6 +49,16 @@ SELECT hive.push_block(
         , NULL
     );
 
+INSERT INTO hive.transactions_reversible
+VALUES
+    ( 8, 0::SMALLINT, '\xDEED80', 101, 100, '2016-06-22 19:10:25-07'::timestamp, '\xBEEF', 1 )
+;
+
+INSERT INTO hive.operations_reversible
+VALUES
+    ( 2, 8, 0, 0, 1, '2016-06-22 19:10:21-07'::timestamp, '{"value":{"new_account_name": "account_8_reversible"}}', 1 );
+
+
 SELECT hive.push_block(
          ( 9, '\xBADD90', '\xCAFE90', '2016-06-22 19:10:25-07'::timestamp )
         , NULL
@@ -47,6 +74,15 @@ SELECT hive.push_block(
         , NULL
         , NULL
     );
+
+INSERT INTO hive.transactions_reversible
+VALUES
+    ( 8, 0::SMALLINT, '\xDEED70', 101, 100, '2016-06-22 19:10:25-07'::timestamp, '\xBEEF', 2 )
+;
+
+INSERT INTO hive.operations_reversible
+VALUES
+    ( 2, 8, 0, 0, 1, '2016-06-22 19:10:21-07'::timestamp, '{"value":{"new_account_name": "account_8"}}', 2 );
 
 SELECT hive.push_block(
          ( 9, '\xBADD91', '\xCAFE91', '2016-06-22 19:10:25-07'::timestamp )

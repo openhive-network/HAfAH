@@ -29,6 +29,7 @@ CREATE OR REPLACE FUNCTION hive.app_remove_context( _name hive.context_name )
 AS
 $BODY$
 BEGIN
+    PERFORM hive.app_state_provider_drop_all( _name );
     PERFORM hive.context_remove( _name );
 
     PERFORM hive.drop_signatures_view( _name );
@@ -62,14 +63,7 @@ DECLARE
     __context_id hive.contexts.id%TYPE;
     __result BOOL;
 BEGIN
-    SELECT  hac.id
-    FROM hive.contexts hac
-    WHERE hac.name = _context_name
-    INTO __context_id;
-
-    IF __context_id IS NULL THEN
-                RAISE EXCEPTION 'No context with name %', _context_name;
-    END IF;
+    __context_id = hive.get_context_id( _context_name );
 
     -- if there there is a registered table for a given context
     SELECT EXISTS( SELECT 1 FROM hive.registered_tables hrt WHERE hrt.context_id = __context_id ) INTO __result;
@@ -248,7 +242,6 @@ BEGIN
         RAISE EXCEPTION 'Context % does not exist or is attached', _context_name;
     END IF;
 
-
     SELECT hc.detached_block_num INTO __result
     FROM hive.contexts hc
     WHERE hc.id = __context_id;
@@ -256,3 +249,119 @@ BEGIN
     RETURN __result;
 END;
 $BODY$;
+
+
+CREATE OR REPLACE FUNCTION hive.app_state_provider_import( _state_provider hive.state_providers, _context hive.context_name )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __context_id hive.contexts.id%TYPE;
+BEGIN
+
+    SELECT hac.id
+    FROM hive.contexts hac
+    WHERE hac.name = _context
+    INTO __context_id;
+
+    __context_id = hive.get_context_id( _context );
+
+    IF EXISTS( SELECT 1 FROM hive.state_providers_registered WHERE context_id = __context_id AND state_provider = _state_provider ) THEN
+        RAISE LOG 'The state % provider is already imported for context %.', _state_provider, _context;
+        RETURN;
+    END IF;
+
+
+    EXECUTE format(
+        'INSERT INTO hive.state_providers_registered( context_id, state_provider, tables, owner )
+        SELECT %s , %L, hive.start_provider_%s( %L ), current_user
+        ON CONFLICT DO NOTHING', __context_id, _state_provider, _state_provider, _context
+    );
+
+    IF NOT hive.app_is_forking( _context ) THEN
+        RETURN;
+    END IF;
+
+    -- register tables
+    PERFORM hive.app_register_table( 'hive', unnest( hsp.tables ), _context )
+    FROM hive.state_providers_registered hsp
+    WHERE hsp.context_id = __context_id AND hsp.state_provider = _state_provider;
+END;
+$BODY$
+;
+
+
+CREATE OR REPLACE FUNCTION hive.app_state_providers_update( _first_block hive.blocks.num%TYPE, _last_block hive.blocks.num%TYPE, _context hive.context_name )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __context_id hive.contexts.id%TYPE;
+    __is_attached BOOL;
+    __current_block_num hive.blocks.num%TYPE;
+BEGIN
+    SELECT hac.id, hac.is_attached, hac.current_block_num
+    FROM hive.contexts hac
+    WHERE hac.name = _context
+        INTO __context_id, __is_attached, __current_block_num;
+
+    IF __context_id IS NULL THEN
+        RAISE EXCEPTION 'No context with name %', _context;
+    END IF;
+
+    IF __is_attached = TRUE AND _first_block != _last_block  THEN
+        RAISE EXCEPTION 'Only one block can be processed when context is attached';
+    END IF;
+
+    IF _first_block > _last_block THEN
+        RAISE EXCEPTION 'First block % is greater than %', _first_block, _last_block;
+    END IF;
+
+    IF  _first_block < __current_block_num THEN
+        RAISE EXCEPTION 'First block % is lower than context % current block %', _first_block, _context, __current_block_num;
+    END IF;
+
+    PERFORM hive.update_one_state_providers( _first_block, _last_block, hsp.state_provider, _context )
+    FROM hive.state_providers_registered hsp
+    WHERE hsp.context_id = __context_id;
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.app_state_provider_drop( _state_provider HIVE.STATE_PROVIDERS, _context hive.context_name )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    EXECUTE format(
+            'SELECT hive.drop_state_provider_%s( %L )'
+        , _state_provider, _context
+        );
+
+    DELETE FROM hive.state_providers_registered hsp
+        USING hive.contexts hc
+    WHERE hc.name = _context AND hsp.state_provider = _state_provider AND hc.id = hsp.context_id;
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.app_state_provider_drop_all( _context hive.context_name )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    PERFORM hive.app_state_provider_drop( hsp.state_provider, _context )
+    FROM hive.state_providers_registered hsp
+    JOIN hive.contexts hc ON hc.id = hsp.context_id
+    WHERE hc.name = _context;
+END;
+$BODY$
+;
