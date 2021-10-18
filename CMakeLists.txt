@@ -2,11 +2,15 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.2 )
 
 PROJECT( psql_tools )
 
+IF ( NOT DEFINED POSTGRES_INSTALLATION_DIR )
+    SET( POSTGRES_INSTALLATION_DIR "/usr/lib/postgresql/12/bin" )
+ENDIF()
+
 SET( CMAKE_POSITION_INDEPENDENT_CODE ON )
 SET( CMAKE_SKIP_INSTALL_ALL_DEPENDENCY TRUE )
 SET( BUILD_SHARED_LIBS ON )
 
-include( ExternalProject )
+INCLUDE( ExternalProject )
 
 SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake )
 
@@ -14,7 +18,7 @@ INCLUDE( compiler )
 INCLUDE( git )
 INCLUDE( libraries )
 INCLUDE( postgres )
-INCLUDE ( sql_extension )
+INCLUDE( sql_extension )
 INCLUDE( targets )
 INCLUDE( tests )
 
