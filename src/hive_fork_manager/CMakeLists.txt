@@ -25,3 +25,5 @@ ADD_PSQL_EXTENSION(
             authorization.sql
             get_impacted_accounts.sql
 )
+
+ADD_DEPENDENCIES( extension.${EXTENSION_NAME} hfm )

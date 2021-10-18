@@ -38,8 +38,6 @@ MACRO( ADD_PSQL_EXTENSION )
 
         ADD_CUSTOM_TARGET( extension.${EXTENSION_NAME} ALL DEPENDS ${extension_path}/${extension_control_file} ${extension_path}/${extension_control_script} )
 
-        ADD_DEPENDENCIES( extension.${EXTENSION_NAME} hfm )
-
         INSTALL( DIRECTORY ${extension_path}/ DESTINATION ${POSTGRES_SHAREDIR}/extension OPTIONAL )
     else()
         MESSAGE( ERROR "GIT not found" )
