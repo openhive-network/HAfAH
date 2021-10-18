@@ -14,7 +14,7 @@ SET( DONT_INSTALL_LIBRARY OFF )
 
 ADD_SUBDIRECTORY( protocol )
 
-SET( target_name ah_manager )
+SET( target_name hfm )
 
 PREPARE_LIB( ${target_name} )
 
