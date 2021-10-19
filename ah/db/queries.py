@@ -16,7 +16,7 @@ class account_history_db_connector:
     return await self._get_db().query_all(query + f' -- ## ID: {self._id}', **kwargs)
 
   async def get_multi_signatures_in_transaction(self, trx_hash : bytes ):
-    return self._get_all(
+    return await self._get_all(
       "SELECT * FROM get_multi_signatures_in_transaction( :trx_hash )",
       trx_hash=trx_hash
     )
