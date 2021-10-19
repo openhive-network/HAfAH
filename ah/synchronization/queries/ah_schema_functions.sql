@@ -13,7 +13,7 @@ $function$
 BEGIN
 
   IF (NOT _INCLUDE_REVERSIBLE) AND _BLOCK_NUM > hive.app_get_irreversible_block( 'account_history' ) THEN
-    RETURN QUERY SELECT 
+    RETURN QUERY SELECT
       NULL::TEXT,
       NULL::BIGINT,
       NULL::BIGINT,
@@ -46,15 +46,15 @@ BEGIN
         END
       ) AS _op_in_trx,
       (
-        CASE 
+        CASE
         WHEN T.trx_in_block <= -1 THEN T.op_pos ::BIGINT
         ELSE (T.id - (
           SELECT nahov.id
           FROM hive.account_history_operations_view nahov
-          JOIN hive.operation_types nhot 
-          ON nahov.op_type_id = nhot.id 
-          WHERE nahov.block_num=T.block_num 
-            AND nahov.trx_in_block=T.trx_in_block 
+          JOIN hive.operation_types nhot
+          ON nahov.op_type_id = nhot.id
+          WHERE nahov.block_num=T.block_num
+            AND nahov.trx_in_block=T.trx_in_block
             AND nahov.op_pos=T.op_pos
             AND nhot.is_virtual=FALSE
           LIMIT 1
@@ -161,87 +161,144 @@ END
 $function$
 language plpgsql STABLE;
 
+CREATE IF NOT EXISTS TYPE enum_virtual_ops_result AS ( _trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BIGINT, _timestamp TEXT, _value TEXT, _operation_id BIGINT );
 CREATE OR REPLACE FUNCTION public.enum_virtual_ops( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN )
-RETURNS TABLE(
-    _trx_id TEXT,
-    _block INT,
-    _trx_in_block BIGINT,
-    _op_in_trx BIGINT,
-    _virtual_op BOOLEAN,
-    _timestamp TEXT,
-    _value TEXT,
-    _operation_id INT
-)
+RETURNS SETOF enum_virtual_ops_result
 AS
 $function$
 DECLARE
   __upper_block_limit INT;
   __filter_info INT;
+  __iterator enum_virtual_ops_result;
+  __counter INT := 0;
 BEGIN
-
-   SELECT INTO __filter_info ( select array_length( _FILTER, 1 ) );
-
-  IF NOT _INCLUDE_REVERSIBLE THEN 
+  SELECT INTO __filter_info ( select array_length( _FILTER, 1 ) );
+  IF NOT _INCLUDE_REVERSIBLE THEN
     SELECT hive.app_get_irreversible_block( 'account_history' ) INTO __upper_block_limit;
     IF _BLOCK_RANGE_BEGIN > __upper_block_limit THEN
-      RETURN QUERY SELECT 
+      RETURN QUERY SELECT
         NULL::TEXT,
         NULL::INT,
         NULL::BIGINT,
         NULL::BIGINT,
-        NULL::BOOLEAN,
+        NULL::BIGINT,
         NULL::TEXT,
         NULL::TEXT,
-        NULL::INT
+        NULL::BIGINT
       LIMIT 0;
       RETURN;
-    ELSIF __upper_block_limit < _BLOCK_RANGE_END  THEN
+    ELSIF __upper_block_limit <= _BLOCK_RANGE_END THEN
       SELECT __upper_block_limit INTO _BLOCK_RANGE_END;
     END IF;
   END IF;
 
   RETURN QUERY
+    SELECT * FROM public.enum_virtual_ops_impl( _FILTER, _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, _OPERATION_BEGIN, _LIMIT, __filter_info )
+  UNION ALL
+    SELECT
+      '',
+      _next_block _block,
+      0::BIGINT,
+      0::BIGINT,
+      0::BIGINT,
+      ''::TEXT,
+      '{"type":"","value":""}'::TEXT,
+      _next_op_id _operation_id
+    FROM
+      public.enum_virtual_ops_pagination(_FILTER, _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, _OPERATION_BEGIN, _LIMIT, __filter_info)
+  LIMIT _LIMIT + 1; -- if first query didn't returned _LIMIT + 1 results append additional record with data required to pagination
+END
+$function$
+language plpgsql STABLE;
+
+CREATE OR REPLACE FUNCTION public.enum_virtual_ops_impl( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in __filter_info INT )
+RETURNS SETOF enum_virtual_ops_result
+AS
+$function$
+BEGIN
+  RETURN QUERY
     SELECT
       (
         CASE
-        WHEN T2.trx_hash IS NULL THEN '0000000000000000000000000000000000000000'
-        ELSE encode( T2.trx_hash, 'escape')
+          WHEN T2.trx_hash IS NULL THEN '0000000000000000000000000000000000000000'
+          ELSE encode( T2.trx_hash, 'escape')
         END
       ) _trx_id,
       T.block_num _block,
       (
         CASE
-        WHEN T2.trx_in_block IS NULL THEN 4294967295
-        ELSE T2.trx_in_block
+          WHEN T2.trx_in_block IS NULL THEN 4294967295
+          ELSE T2.trx_in_block
         END
       ) _trx_in_block,
-      T.op_pos _op_in_trx,
-      TRUE _virtual_op,
+      (
+        CASE
+          WHEN T.trx_in_block <= -1 THEN 0 ::BIGINT
+          ELSE abs(T.op_pos::BIGINT)
+        END
+      ) AS _op_in_trx,
+      (
+        CASE
+          WHEN T.trx_in_block <= -1 THEN T.op_pos ::BIGINT
+          ELSE ( T.id - (
+            SELECT nahov.id
+            FROM hive.operations nahov
+            JOIN hive.operation_types nhot
+            ON nahov.op_type_id = nhot.id
+            WHERE nahov.block_num=T.block_num
+              AND nahov.trx_in_block=T.trx_in_block
+              AND nahov.op_pos=T.op_pos
+              AND nhot.is_virtual=FALSE
+            LIMIT 1
+          ) ) :: BIGINT
+        END
+      ) _virtual_op,
       trim(both '"' from to_json(T.timestamp)::text) _timestamp,
       T.body _value,
-      T.id::INT _operation_id
+      T.id - 1 _operation_id -- 1 is substracted because ho.id start from 1, when it should start from 0
     FROM
-      (
-        --`abs` it's temporary, until position of operation is correctly saved
-        SELECT
-          ho.id, ho.block_num, ho.trx_in_block, abs(ho.op_pos::BIGINT) op_pos, ho.body, ho.op_type_id, ho.timestamp
-          FROM hive.account_history_operations_view ho
-          JOIN hive.operation_types hot ON hot.id = ho.op_type_id
-          WHERE ho.block_num >= _BLOCK_RANGE_BEGIN AND ho.block_num < _BLOCK_RANGE_END
-          AND hot.is_virtual = TRUE
-          AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id = ANY( _FILTER ) ) )
-          AND ( _OPERATION_BEGIN = -1 OR ho.id >= _OPERATION_BEGIN )
-          --There is `+1` because next block/operation is needed in order to do correct paging. This won't be put into result set.
-          ORDER BY ho.id
-          LIMIT _LIMIT + 1
-      ) T
-      LEFT JOIN
-      (
-        SELECT block_num, trx_in_block, trx_hash
-        FROM hive.account_history_transactions_view ht
-        WHERE ht.block_num >= _BLOCK_RANGE_BEGIN AND ht.block_num < _BLOCK_RANGE_END
-      )T2 ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
-      WHERE T.block_num >= _BLOCK_RANGE_BEGIN AND T.block_num < _BLOCK_RANGE_END;
+    (
+      --`abs` it's temporary, until position of operation is correctly saved
+      SELECT
+      ho.id, ho.block_num, ho.trx_in_block, abs(ho.op_pos::BIGINT) op_pos, ho.body, ho.op_type_id, ho.timestamp
+      FROM hive.operations ho -- usage of hive.operations instead of `hive.account_history_operations_view` is ok, because range is always in proper range, thanks to `app_get_irreversible_block` call
+      JOIN hive.operation_types hot ON hot.id = ho.op_type_id
+      WHERE ho.block_num >= _BLOCK_RANGE_BEGIN AND ho.block_num < _BLOCK_RANGE_END
+      AND hot.is_virtual = TRUE
+      AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id = ANY( _FILTER ) ) )
+      AND ( _OPERATION_BEGIN = -1 OR ho.id >= _OPERATION_BEGIN )
+      ORDER BY ho.id
+      LIMIT _LIMIT + 1
+    ) T
+    LEFT JOIN
+    (
+      SELECT block_num, trx_in_block, trx_hash
+      FROM hive.transactions ht
+      WHERE ht.block_num >= _BLOCK_RANGE_BEGIN AND ht.block_num < _BLOCK_RANGE_END
+    )T2 ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
+    WHERE T.block_num >= _BLOCK_RANGE_BEGIN AND T.block_num < _BLOCK_RANGE_END;
+END
+$function$
+language plpgsql STABLE;
+
+CREATE OR REPLACE FUNCTION public.enum_virtual_ops_pagination( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in __filter_info INT )
+RETURNS TABLE( _next_block INT, _next_op_id BIGINT )
+AS
+$function$
+BEGIN
+  RETURN QUERY
+    SELECT
+      ho.block_num _next_block,
+      ho.id - 1 _next_op_id -- 1 is substracted because ho.id start from 1, when it should start from 0
+    FROM 	hive.operations ho
+    JOIN 	hive.operation_types hot
+    ON 	ho.op_type_id=hot.id
+    WHERE 	hot.is_virtual = TRUE
+      AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id = ANY( _FILTER ) ) )
+      AND ( _OPERATION_BEGIN = -1 OR ho.id >= _OPERATION_BEGIN )
+    AND ho.block_num >= _BLOCK_RANGE_END -- this cannot be set to N+1 block because following block can be empty
+    ORDER BY ho.block_num, ho.id
+    LIMIT 1;
 END
 $function$
 language plpgsql STABLE;
@@ -296,15 +353,15 @@ BEGIN
         END
       ) AS _op_in_trx,
       (
-        CASE 
+        CASE
         WHEN ho.trx_in_block <= -1 THEN ho.op_pos ::BIGINT
         ELSE (ho.id - (
           SELECT nahov.id
           FROM hive.operations nahov
-          JOIN hive.operation_types nhot 
-          ON nahov.op_type_id = nhot.id 
-          WHERE nahov.block_num=ho.block_num 
-            AND nahov.trx_in_block=ho.trx_in_block 
+          JOIN hive.operation_types nhot
+          ON nahov.op_type_id = nhot.id
+          WHERE nahov.block_num=ho.block_num
+            AND nahov.trx_in_block=ho.trx_in_block
             AND nahov.op_pos=ho.op_pos
             AND nhot.is_virtual=FALSE
           LIMIT 1
@@ -317,7 +374,7 @@ BEGIN
       FROM
       (
         SELECT hao.operation_id as operation_id, hao.account_op_seq_no as seq_no
-        FROM public.account_operations hao 
+        FROM public.account_operations hao
         WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _START
         ORDER BY seq_no DESC
         LIMIT _LIMIT
@@ -351,15 +408,15 @@ BEGIN
           END
         ) AS _op_in_trx,
         (
-          CASE 
+          CASE
           WHEN ho.trx_in_block <= -1 THEN ho.op_pos ::BIGINT
           ELSE (ho.id - (
             SELECT nahov.id
             FROM hive.operations nahov
-            JOIN hive.operation_types nhot 
-            ON nahov.op_type_id = nhot.id 
-            WHERE nahov.block_num=ho.block_num 
-              AND nahov.trx_in_block=ho.trx_in_block 
+            JOIN hive.operation_types nhot
+            ON nahov.op_type_id = nhot.id
+            WHERE nahov.block_num=ho.block_num
+              AND nahov.trx_in_block=ho.trx_in_block
               AND nahov.op_pos=ho.op_pos
               AND nhot.is_virtual=FALSE
             LIMIT 1
@@ -406,5 +463,3 @@ FROM public.account_operations ao
 GROUP BY ao.account_id
 )T ON ha.id = T.account_id
 ;
-
-
