@@ -55,22 +55,21 @@ class ops_by_block_wrapper:
 
 class virtual_ops(api_operations_container):
 
-  def __init__(self, irreversible_block : int, iterable: list):
-    super().__init__(None, iterable)
+  def __init__(self, irreversible_block : int, iterable: list, last_block : int):
     self.ops_by_block : list = []
     self.next_block_range_begin : int = 0
     self.next_operation_begin : int = 0
-    self.__setup_pagination()
+    self.__setup_pagination(last_block)
 
     if irreversible_block is not None:
       self.__group_by_block(irreversible_block)
       self.ops.clear()
 
-  def __setup_pagination(self):
+  def __setup_pagination(self, last_block):
     if len(self.ops):
       last_op : api_operation = self.ops[-1]
       self.next_block_range_begin = last_op.block
-      self.next_operation_begin = last_op.operation_id
+      self.next_operation_begin = int(last_op.operation_id) if last_block < last_op.block else 0
       self.ops.remove(last_op)
 
   def __group_by_block(self, irreversible_block):

@@ -21,7 +21,7 @@ class account_history_impl:
     api = account_history_db_connector(args)
 
     transaction_basic_info = await api.get_transaction( trx_hash.encode('ascii'), include_reversible )
-    
+
     if len(transaction_basic_info) == 0: return dict()
     else: transaction_basic_info = dict(transaction_basic_info[0])
 
@@ -39,25 +39,26 @@ class account_history_impl:
 
   async def enum_virtual_ops(self, args, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False ) -> virtual_ops:
     api = account_history_db_connector(args)
-    return virtual_ops( 
+    return virtual_ops(
       await api.get_irreversible_block_num() if group_by_block else None,
-      await api.enum_virtual_ops( 
-        self.__translate_filter( filter ), 
-        block_range_begin, 
-        block_range_end, 
-        operation_begin, 
+      await api.enum_virtual_ops(
+        self.__translate_filter( filter ),
+        block_range_begin,
+        block_range_end,
+        operation_begin,
         limit,
         include_reversible
-      )
+      ),
+      block_range_end
     )
 
   async def get_account_history(self, args, filter : int, account : str, start : int, limit : int, include_reversible : bool) -> account_history:
     api = account_history_db_connector(args)
-    return account_history( 
+    return account_history(
       await api.get_account_history(
-        self.__translate_filter( filter ), 
-        account, 
-        start, 
+        self.__translate_filter( filter ),
+        account,
+        start,
         limit,
         include_reversible
       )
