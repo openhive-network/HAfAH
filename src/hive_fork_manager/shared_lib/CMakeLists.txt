@@ -14,7 +14,7 @@ SET( target_name hfm )
 
 include_directories( "${CMAKE_SOURCE_DIR}/src/protocol/include" )
 
-PREPARE_LIB( ${target_name} )
+ADD_RUNTIME_LOADED_LIB( ${target_name} )
 
 TARGET_LINK_LIBRARIES( ${target_name} PUBLIC hive_protocol )
 
