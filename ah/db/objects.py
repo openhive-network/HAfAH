@@ -15,7 +15,7 @@ class operation:
     self.value = data["value"]
 
 class api_operation:
-  def __init__(self, block : int, obj):
+  def __init__(self, block : int, obj, *, include_op_id = False):
     assert obj is not None
     self.trx_id : str = obj["_trx_id"]
     self.block : int = obj['_block'] if block is None else block
@@ -24,13 +24,13 @@ class api_operation:
     self.virtual_op : int = int(obj["_virtual_op"])
     self.timestamp : str = obj["_timestamp"]
     self.op : operation = operation(obj["_value"])
-    self.operation_id : int = 0
+    self.operation_id = str(0x8000000000000000 | int(obj["_operation_id"])) if include_op_id else 0
 
 class api_operations_container:
   item = api_operation
-  def __init__(self, block, iterable : list):
+  def __init__(self, block, iterable : list, *, include_op_id = False):
       assert iterable is not None
-      self.ops : list = [ api_operations_container.item( block, row ) for row in iterable ]
+      self.ops : list = [ api_operations_container.item( block, row, include_op_id=include_op_id ) for row in iterable ]
 
 class transaction:
   def __init__(self, trx_id, obj):
@@ -56,6 +56,7 @@ class ops_by_block_wrapper:
 class virtual_ops(api_operations_container):
 
   def __init__(self, irreversible_block : int, iterable: list, last_block : int):
+    super().__init__(None, iterable, include_op_id=True)
     self.ops_by_block : list = []
     self.next_block_range_begin : int = 0
     self.next_operation_begin : int = 0
