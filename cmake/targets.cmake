@@ -2,6 +2,8 @@ MACRO( ADD_RUNTIME_LOADED_LIB target_name )
   FILE( GLOB_RECURSE sources ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp )
   ADD_LIBRARY( ${target_name} ${sources} )
 
+  SETUP_COMPILER( ${target_name} )
+
   if( BUILD_SHARED_LIBS )
     ADD_BOOST_LIBRARIES( ${target_name} FALSE )
   else()

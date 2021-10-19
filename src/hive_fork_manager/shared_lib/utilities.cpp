@@ -15,7 +15,7 @@ extern "C"
 #undef elog
 #endif
 
-#include <postgres.h>
+#include <include/psql_utils/postgres_includes.hpp>
 
 #include <fmgr.h>
 #include <catalog/pg_type.h>
