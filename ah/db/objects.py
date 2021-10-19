@@ -40,7 +40,7 @@ class transaction:
     self.expiration : str = obj['_expiration']
     self.operations : list = obj['_value']
     self.extensions : list = []
-    self.signatures : list = obj['_signature']
+    self.signatures : list = [x for x in obj['_signature'] if x is not None]
     self.transaction_id : str = trx_id
     self.block_num : str = obj['_block_num']
     self.transaction_num : str = obj['_trx_in_block']
@@ -84,8 +84,8 @@ class virtual_ops(api_operations_container):
     self.ops_by_block = []
     for block, items in supp.items():
       self.ops_by_block.append( ops_by_block_wrapper(
-        iterable=items, 
-        block=block, 
+        iterable=items,
+        block=block,
         timestamp=items[0].timestamp,
         irreversible=block > irreversible_block
       ))
