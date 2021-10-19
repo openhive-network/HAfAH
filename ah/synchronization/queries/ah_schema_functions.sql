@@ -117,7 +117,7 @@ BEGIN
     SELECT
       __result.ref_block_num _ref_block_num,
       __result.ref_block_prefix _ref_block_prefix,
-      '2016-06-20T19:34:09' _expiration,--lack of data
+      trim(both '"' from to_json(__result.expiration)::text) _expiration,
       __result.block_num _block_num,
       __result.trx_in_block _trx_in_block,
       encode(__result.signature, 'escape') _signature,
