@@ -144,11 +144,11 @@ BEGIN
                     htr.fork_id
                 FROM hive.transactions_reversible htr
                 JOIN (
-                   SELECT htr2.block_num, MAX(htr2.fork_id) AS max_fork_id
-                   FROM hive.transactions_reversible htr2
-                   WHERE c.reversible_range AND htr2.block_num > c.irreversible_block AND htr2.fork_id <= c.fork_id AND htr2.block_num <= c.current_block_num
-                   GROUP BY htr2.block_num
-                ) as forks ON forks.max_fork_id = htr.fork_id AND forks.block_num = htr.block_num
+                    SELECT hbr.num, MAX(hbr.fork_id) as max_fork_id
+                    FROM hive.blocks_reversible hbr
+                    WHERE c.reversible_range AND hbr.num > c.irreversible_block AND hbr.fork_id <= c.fork_id AND hbr.num <= c.current_block_num
+                    GROUP by hbr.num
+                ) as forks ON forks.max_fork_id = htr.fork_id AND forks.num = htr.block_num
              ) reversible
         ) t
         ;'
@@ -214,11 +214,11 @@ EXECUTE format(
               -- and also hide ops present at earlier forks for given block
               JOIN
               (
-                SELECT hor.block_num, MAX(hor.fork_id) as max_fork_id
-                FROM hive.operations_reversible hor
-                WHERE c.reversible_range AND hor.block_num > c.irreversible_block AND hor.fork_id <= c.fork_id AND hor.block_num <= c.current_block_num
-                GROUP by hor.block_num
-              ) visible_ops on visible_ops.block_num = o.block_num and visible_ops.max_fork_id = o.fork_id
+                SELECT hbr.num, MAX(hbr.fork_id) as max_fork_id
+                FROM hive.blocks_reversible hbr
+                WHERE c.reversible_range AND hbr.num > c.irreversible_block AND hbr.fork_id <= c.fork_id AND hbr.num <= c.current_block_num
+                GROUP by hbr.num
+              ) visible_ops on visible_ops.num = o.block_num and visible_ops.max_fork_id = o.fork_id
         ) t
         ;', _context_name, _context_name
     );
@@ -273,11 +273,11 @@ EXECUTE format(
                     SELECT htr.trx_hash, forks.max_fork_id
                     FROM hive.transactions_reversible htr
                     JOIN (
-                        SELECT htr2.block_num, MAX(htr2.fork_id) AS max_fork_id
-                        FROM hive.transactions_reversible htr2
-                        WHERE c.reversible_range AND htr2.block_num > c.irreversible_block AND htr2.fork_id <= c.fork_id AND htr2.block_num <= c.current_block_num
-                        GROUP BY htr2.block_num
-                    ) as forks ON forks.max_fork_id = htr.fork_id AND forks.block_num = htr.block_num
+                        SELECT hbr.num, MAX(hbr.fork_id) as max_fork_id
+                        FROM hive.blocks_reversible hbr
+                        WHERE c.reversible_range AND hbr.num > c.irreversible_block AND hbr.fork_id <= c.fork_id AND hbr.num <= c.current_block_num
+                        GROUP by hbr.num
+                    ) as forks ON forks.max_fork_id = htr.fork_id AND forks.num = htr.block_num
             ) as trr ON trr.trx_hash = htmr.trx_hash AND trr.max_fork_id = htmr.fork_id
         ) reversible
         ) t;'
