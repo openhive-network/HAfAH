@@ -7,6 +7,8 @@
 using hive::protocol::account_name_type;
 using fc::string;
 
+#define CUSTOM_LOG(format, ... ) { FILE *pFile = fopen("get-impacted-accounts.log","a"); fprintf(pFile,format "\n",__VA_ARGS__); fclose(pFile); }
+
 extern "C"
 {
 
@@ -131,6 +133,17 @@ Datum get_impacted_accounts(PG_FUNCTION_ARGS)
   }
   catch(...)
   {
+    try
+    {
+      VarChar* _arg0 = (VarChar*)PG_GETARG_VARCHAR_P(0);
+      char* _op_body = (char*)VARDATA(_arg0);
+
+      CUSTOM_LOG( "An exception was raised during `get_impacted_accounts` call. Operation: %s", _op_body ? _op_body : "" )
+    }
+    catch(...)
+    {
+    }
+
     SRF_RETURN_DONE(funcctx);
   }
 }
