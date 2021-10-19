@@ -10,7 +10,7 @@ SET(CMAKE_INSTALL_PREFIX ${_CUSTOM_RUNTIME_PATH} CACHE PATH "Default prefix" FOR
 SET(DEFAULT_LIBRARY_INSTALL_DIR ${_CUSTOM_RUNTIME_PATH} CACHE PATH "Default library" FORCE)
 SET( DONT_INSTALL_LIBRARY OFF )
 
-SET( target_name hfm )
+SET( target_name hfm-${GIT_VER_DEC} )
 
 include_directories( "${CMAKE_SOURCE_DIR}/src/protocol/include" )
 
@@ -21,8 +21,8 @@ TARGET_LINK_LIBRARIES( ${target_name} PUBLIC hive_protocol )
 INSTALL( TARGETS
   ${target_name}
 
-   RUNTIME DESTINATION bin
-   LIBRARY DESTINATION ./
-   ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION ./
+  ARCHIVE DESTINATION lib
 )
 

@@ -26,4 +26,4 @@ ADD_PSQL_EXTENSION(
             get_impacted_accounts.sql
 )
 
-ADD_DEPENDENCIES( extension.${EXTENSION_NAME} hfm )
+ADD_DEPENDENCIES( extension.${EXTENSION_NAME} hfm-${GIT_VER_DEC} )
