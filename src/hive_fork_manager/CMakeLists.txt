@@ -23,4 +23,7 @@ ADD_PSQL_EXTENSION(
             hived_api.sql
             app_api.sql
             authorization.sql
+            get_impacted_accounts.sql
 )
+
+ADD_DEPENDENCIES( extension.${EXTENSION_NAME} hfm-${GIT_VER_DEC} )
