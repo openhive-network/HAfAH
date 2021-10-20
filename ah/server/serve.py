@@ -149,4 +149,3 @@ def run_server(db_url):
     app.router.add_post('/', jsonrpc_handler)
     runner = web.AppRunner(app)
     return runner
-    # web.run_app(app, port=port)
