@@ -76,32 +76,12 @@ class ah_query:
     self.next_block                       = "SELECT * FROM hive.app_next_block('{}');".format( self.application_context )
 
     self.get_bodies                       = """
-SELECT T.id, T.account FROM (
-SELECT ahov.id, get_impacted_accounts(body) as account,
-( CASE WHEN trx_in_block = -1 THEN 4294967295 ELSE trx_in_block END ) AS helper_trx_in_block,
-( CASE WHEN ahov.trx_in_block <= -1 THEN ahov.op_pos
-  ELSE (ahov.id - (
-  SELECT nahov.id
-  FROM hive.operations nahov
-  JOIN hive.operation_types nhot 
-  ON nahov.op_type_id = nhot.id 
-  WHERE nahov.block_num=ahov.block_num 
-    AND nahov.trx_in_block=ahov.trx_in_block 
-    AND nahov.op_pos=ahov.op_pos
-    AND nhot.is_virtual=FALSE
-  LIMIT 1
-) )
-END
-) virtual_pos
+SELECT ahov.id, get_impacted_accounts(body) as account
 FROM
   hive.account_history_operations_view ahov
-JOIN
-  hive.operation_types hot ON hot.id = ahov.op_type_id
 WHERE 
   block_num >= {} AND block_num <= {}
-ORDER BY
-  block_num, helper_trx_in_block, op_pos, virtual_pos
-) T
+ORDER BY ahov.id
     """
 
     self.insert_into_accounts             = []
