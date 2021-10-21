@@ -100,7 +100,7 @@ JOIN
 WHERE 
   block_num >= {} AND block_num <= {}
 ORDER BY
-  block_num, helper_trx_in_block, op_pos ASC, hot.is_virtual DESC, virtual_pos ASC
+  block_num, helper_trx_in_block, op_pos, virtual_pos
 ) T
     """
 
@@ -482,7 +482,7 @@ class ah_loader(metaclass = singleton):
           _futures.append(executor.submit(self.sql_executor.receive_impacted_accounts, self.sql_pool.get_item(), range.low, range.high))
 
       _elements = []
-      for future in as_completed(_futures):
+      for future in _futures:
         _elements.append(future.result())
 
       if len(_elements) == 0:
