@@ -22,7 +22,12 @@ MACRO( ADD_BOOST_LIBRARIES target_name static_library )
 ENDMACRO()
 
 MACRO( ADD_POSTGRES_LIBRARIES target_name )
-    TARGET_LINK_LIBRARIES( ${target_name} PRIVATE ${POSTGRES_LIBDIR} )
+    FIND_LIBRARY(PQ_LIB pq)
+    IF ( PQ_LIB )
+        TARGET_LINK_LIBRARIES( ${target_name} PRIVATE ${PQ_LIB} )
+    ELSE()
+        MESSAGE( WARNING "PQ_LIB not found" )
+    ENDIF()
 ENDMACRO()
 
 MACRO( ADD_POSTGRES_INCLUDES target_name )

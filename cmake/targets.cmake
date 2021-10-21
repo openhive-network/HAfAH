@@ -1,6 +1,6 @@
 MACRO( ADD_RUNTIME_LOADED_LIB target_name )
-  FILE( GLOB_RECURSE sources ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp )
-  ADD_LIBRARY( ${target_name} ${sources} )
+    FILE( GLOB_RECURSE sources ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp )
+    ADD_LIBRARY( ${target_name} SHARED ${sources} )
 
   SETUP_COMPILER( ${target_name} )
 

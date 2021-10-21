@@ -11,10 +11,11 @@ Contains implementations of Postgres specific tools providing functionalities re
 
 
 ## CMake and make
-1. create build directory, for exemple in sources root: `mkdir build`
-2. `cd build`
-3. `cmake ..`
-4. `make`
+1. `git submodule update --init --recursive`
+2. create build directory, for exemple in sources root: `mkdir build`
+3. `cd build`
+4. `cmake -DCMAKE_BUILD_TYPE=Release ..`
+5. `make`
 
 ### Choose version of the Postgres to compile with
 CMake variable `POSTGRES_INSTALLATION_DIR` is used to point the installation folder

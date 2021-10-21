@@ -26,4 +26,6 @@ ADD_PSQL_EXTENSION(
             get_impacted_accounts.sql
 )
 
+ADD_SUBDIRECTORY( shared_lib )
+
 ADD_DEPENDENCIES( extension.${EXTENSION_NAME} hfm-${GIT_VER_DEC} )
