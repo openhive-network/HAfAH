@@ -4,15 +4,26 @@ Contains implementations of Postgres specific tools providing functionalities re
 
 # Compilation
 ## Requirements
-1. Tested on Ubuntu 18.04
+1. Tested on Ubuntu 20.04
 2. postgresql server dev package: `sudo apt-get install postgresql-dev-12`
 3. ssl dev package:               `sudo apt-get install libssl-dev`
 4. readline dev package:          `sudo apt-get install libreadline-dev`
 
+
 ## CMake and make
+1. `git submodule update --init --recursive`
+2. create build directory, for exemple in sources root: `mkdir build`
+3. `cd build`
+4. `cmake -DCMAKE_BUILD_TYPE=Release ..`
+5. `make`
+
+### Choose version of the Postgres to compile with
+CMake variable `POSTGRES_INSTALLATION_DIR` is used to point the installation folder
+with PostgreSQL binaries, by default it is `/usr/lib/postgresql/12/bin` - place where Postgres v.12
+is installed on Ubuntu. An example of choosing different version of Postgres:
 1. create build directory, for exemple in sources root: `mkdir build`
 2. `cd build`
-3. `cmake ..`
+3. `cmake -DPOSTGRES_INSTALLATION_DIR=/usr/lib/postgresql/10/bin ..`
 4. `make`
 
 # Tests

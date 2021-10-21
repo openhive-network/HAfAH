@@ -9,7 +9,7 @@ SET( target_name hfm-${GIT_VER_DEC} )
 
 ADD_RUNTIME_LOADED_LIB( ${target_name} )
 
-TARGET_INCLUDE_DIRECTORIES( ${target_name} PRIVATE "${CMAKE_SOURCE_DIR}/src/protocol/include" )
+TARGET_INCLUDE_DIRECTORIES( ${target_name} PRIVATE "${PROJECT_SOURCE_DIR}/src/protocol/include" )
 
 TARGET_LINK_LIBRARIES( ${target_name} PUBLIC hive_protocol )
 
