@@ -61,8 +61,8 @@ class ah_query:
 
     self.application_context              = application_context
 
-    self.accounts                         = "SELECT id, name FROM accounts;"
-    self.account_ops                      = "SELECT ai.name, ai.id, ai.operation_count FROM account_operation_count_info_view ai;"
+    self.accounts                         = "SELECT id, name FROM hafah_python.accounts;"
+    self.account_ops                      = "SELECT ai.name, ai.id, ai.operation_count FROM hafah_python.account_operation_count_info_view ai;"
 
     self.create_context                   = "SELECT * FROM hive.app_create_context('{}');".format( self.application_context )
     self.detach_context                   = "SELECT * FROM hive.app_context_detach('{}');".format( self.application_context )
@@ -76,21 +76,21 @@ class ah_query:
     self.next_block                       = "SELECT * FROM hive.app_next_block('{}');".format( self.application_context )
 
     self.get_bodies                       = """
-SELECT ahov.id, get_impacted_accounts(body) as account
+SELECT ahov.id, hive.get_impacted_accounts(body) as account
 FROM
-  hive.account_history_operations_view ahov
+  hive.account_history_python_operations_view ahov
 WHERE 
   block_num >= {} AND block_num <= {}
 ORDER BY ahov.id
     """
 
     self.insert_into_accounts             = []
-    self.insert_into_accounts.append( "INSERT INTO public.accounts( id, name ) VALUES" )
+    self.insert_into_accounts.append( "INSERT INTO hafah_python.accounts( id, name ) VALUES" )
     self.insert_into_accounts.append( " ( {}, '{}')" )
     self.insert_into_accounts.append( " ;" )
 
     self.insert_into_account_ops          = []
-    self.insert_into_account_ops.append( "INSERT INTO public.account_operations( account_id, account_op_seq_no, operation_id ) VALUES" )
+    self.insert_into_account_ops.append( "INSERT INTO hafah_python.account_operations( account_id, account_op_seq_no, operation_id ) VALUES" )
     self.insert_into_account_ops.append( " ( {}, {}, {} )" )
     self.insert_into_account_ops.append( " ;" )
 
@@ -267,7 +267,7 @@ class ah_loader(metaclass = singleton):
 
     self.last_block_num       = 0
 
-    self.application_context  = "account_history"
+    self.application_context  = "account_history_python"
 
     self.accounts_queries     = []
     self.account_ops_queries  = []
