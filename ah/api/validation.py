@@ -59,7 +59,6 @@ def convert_maybe(incoming_value, param_type : type, param_name : str):
   elif isinstance(incoming_value, int) and issubclass(param_type, bool):
     return bool(incoming_value)
 
-  print(f'returning default {param_name}')
   return incoming_value
 
 def is_numeric(value) -> bool:
