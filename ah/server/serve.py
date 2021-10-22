@@ -125,7 +125,7 @@ def run_server(db_url, port):
             headers = {
                 'Access-Control-Allow-Origin': '*'
             }
-            
+
             return web.json_response(error_response, status=200, headers=headers, dumps=decimal_serialize)
 
         if response is not None and response.wanted:
