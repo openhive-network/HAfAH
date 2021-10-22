@@ -2,12 +2,15 @@ from ah.db.objects import account_history, operation, ops_in_block, transaction,
 from ah.db.queries import account_history_db_connector
 
 class account_history_impl:
-  def __translate_filter(self, input : int):
+
+  VIRTUAL_OP_ID_OFFSET = None
+
+  def __translate_filter(self, input : int, transform = lambda x : x):
     if input:
       result = []
-      for i in range(128):
+      for i in range(64):
         if input & (1 << i):
-          result.append( i )
+          result.append( transform(i) )
       return result
     else:
       return None
@@ -39,10 +42,12 @@ class account_history_impl:
 
   async def enum_virtual_ops(self, args, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False ) -> virtual_ops:
     api = account_history_db_connector(args)
+    if account_history_impl.VIRTUAL_OP_ID_OFFSET is None and filter is not None:
+      account_history_impl.VIRTUAL_OP_ID_OFFSET = await api.get_virtual_op_offset()
     return virtual_ops(
       await api.get_irreversible_block_num() if group_by_block else None,
       await api.enum_virtual_ops(
-        self.__translate_filter( filter ),
+        self.__translate_filter( filter, lambda x : x + account_history_impl.VIRTUAL_OP_ID_OFFSET ),
         block_range_begin,
         block_range_end,
         operation_begin,
