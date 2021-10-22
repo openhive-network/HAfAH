@@ -82,7 +82,6 @@ def event_loop(port, runner):
     site = web.TCPSite(runner, 'localhost', port)
     loop.run_until_complete(site.start())
     loop.run_forever()
-    print('good')
 
 def run_server(db_url):
     """Configure and launch the API server."""
@@ -154,7 +153,6 @@ def run_server(db_url):
     # with ThreadPoolExecutor(max_workers=20) as executor:
     #     threads.append(executor.submit(app.router.add_post('/', jsonrpc_handler)))
     #     for task in as_completed(threads):
-    #         print('good')
     # web.run_app(app, port=port)
     app.router.add_post('/', jsonrpc_handler)
     runner = web.AppRunner(app)
