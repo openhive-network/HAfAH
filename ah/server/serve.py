@@ -74,16 +74,16 @@ def conf_stdout_custom_file_logger(logger, file_name):
     logger.addHandler(stdout_handler)
     logger.addHandler(file_handler)
 
-def event_loop(port, runner):
-    """Create an event loop in child thread."""
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(runner.setup())
-    site = web.TCPSite(runner, 'localhost', port)
-    loop.run_until_complete(site.start())
-    loop.run_forever()
+# def event_loop(port, runner):
+#     """Create an event loop in child thread."""
+#     loop = asyncio.new_event_loop()
+#     asyncio.set_event_loop(loop)
+#     loop.run_until_complete(runner.setup())
+#     site = web.TCPSite(runner, 'localhost', port)
+#     loop.run_until_complete(site.start())
+#     loop.run_forever()
 
-def run_server(db_url):
+def run_server(db_url, port):
     """Configure and launch the API server."""
     log = logging.getLogger(__name__)
     methods = build_methods()
@@ -153,8 +153,11 @@ def run_server(db_url):
     # with ThreadPoolExecutor(max_workers=20) as executor:
     #     threads.append(executor.submit(app.router.add_post('/', jsonrpc_handler)))
     #     for task in as_completed(threads):
-    # web.run_app(app, port=port)
+
     app.router.add_post('/', jsonrpc_handler)
-    runner = web.AppRunner(app)
-    return runner
+    app._set_loop(asyncio.get_event_loop())
+    app.loop.set_default_executor(ThreadPoolExecutor(max_workers=8))
+    web.run_app(app, port=port)
+    # runner = web.AppRunner(app)
+    # return runner
     
