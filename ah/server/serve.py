@@ -21,6 +21,8 @@ from ah.api.endpoints import build_methods as account_history
 import simplejson
 from ah.server.db import Db
 
+threads=[]
+
 # pylint: disable=too-many-lines
 
 def decimal_serialize(obj):
@@ -72,16 +74,17 @@ def conf_stdout_custom_file_logger(logger, file_name):
     logger.addHandler(stdout_handler)
     logger.addHandler(file_handler)
 
-# def event_loop(port, runner):
-#     """Create an event loop in child thread."""
-    # loop = asyncio.new_event_loop()
-    # asyncio.set_event_loop(loop)
-    # loop.run_until_complete(runner.setup())
-    # site = web.TCPSite(runner, 'localhost', port)
-    # loop.run_until_complete(site.start())
-    # loop.run_forever()
+def event_loop(port, runner):
+    """Create an event loop in child thread."""
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(runner.setup())
+    site = web.TCPSite(runner, 'localhost', port)
+    loop.run_until_complete(site.start())
+    loop.run_forever()
+    print('good')
 
-def run_server(db_url, port):
+def run_server(db_url):
     """Configure and launch the API server."""
     log = logging.getLogger(__name__)
     methods = build_methods()
@@ -101,16 +104,12 @@ def run_server(db_url, port):
 
     app.on_startup.append(init_db)
     app.on_cleanup.append(close_db)
-    threads=[]
 
     async def jsonrpc_handler(request):
         """Handles all hive jsonrpc API requests."""
         t_start = perf_counter()
         request = await request.text()
-        with ThreadPoolExecutor(max_workers=20) as executor:
-            threads.append(executor.submit()))
-            for task in as_completed(threads):
-                print('good')
+
         ctx = {
           "db": app["db"],
           "id": json.loads(request)['id']
@@ -152,7 +151,12 @@ def run_server(db_url, port):
         ret = web.Response()
         return ret
 
+    # with ThreadPoolExecutor(max_workers=20) as executor:
+    #     threads.append(executor.submit(app.router.add_post('/', jsonrpc_handler)))
+    #     for task in as_completed(threads):
+    #         print('good')
+    # web.run_app(app, port=port)
     app.router.add_post('/', jsonrpc_handler)
-    # runner = web.AppRunner(app)
-    # return runner
-    web.run_app(app, port=port)
+    runner = web.AppRunner(app)
+    return runner
+    

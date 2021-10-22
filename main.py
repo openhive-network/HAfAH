@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import threading
 
-from ah.server.serve import event_loop, run_server
+from ah.server.serve import run_server, event_loop
 from argparse import ArgumentParser
 from sys import argv
 
@@ -14,3 +14,4 @@ if __name__ == '__main__':
 
   t = threading.Thread(target=event_loop, args=(args.port ,run_server(args.psql), ))
   t.start()
+  # run_server(args.psql, args.port)
