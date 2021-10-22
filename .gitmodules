@@ -1,0 +1,4 @@
+[submodule "hive"]
+	path = hive
+	url = https://gitlab.syncad.com/hive/hive.git
+	branch = mi_shared_protocol_lib
