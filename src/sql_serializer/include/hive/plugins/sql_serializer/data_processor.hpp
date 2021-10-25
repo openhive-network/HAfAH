@@ -1,6 +1,6 @@
 #pragma once
 
-#include "transaction_controllers.hpp"
+#include <transactions_controller/transaction_controllers.hpp>
 #include <hive/plugins/sql_serializer/block_num_rendezvous_trigger.hpp>
 
 #include <fc/optional.hpp>
