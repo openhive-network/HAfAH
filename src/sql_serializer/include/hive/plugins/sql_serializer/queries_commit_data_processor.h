@@ -6,8 +6,8 @@ namespace hive::plugins::sql_serializer {
   class queries_commit_data_processor
     {
     public:
-      using transaction_ptr = transaction_controller::transaction_ptr;
-      using data_processing_fn = std::function<data_processor::data_processing_status(const data_processor::data_chunk_ptr& dataPtr, transaction& tx)>;
+      using transaction_ptr = transaction_controllers::transaction_controller::transaction_ptr;
+      using data_processing_fn = std::function<data_processor::data_processing_status(const data_processor::data_chunk_ptr& dataPtr, transaction_controllers::transaction& tx)>;
       using data_chunk_ptr = std::unique_ptr<data_processor::data_chunk>;
 
       /// pairs number of produced chunks and write status
@@ -29,7 +29,7 @@ namespace hive::plugins::sql_serializer {
       void join();
       void only_report_batch_finished( uint32_t _block_num );
     private:
-      transaction_controller_ptr _txController;
+      transaction_controllers::transaction_controller_ptr _txController;
       std::unique_ptr< data_processor > m_wrapped_processor;
     };
 } // namespace hive::plugins::sql_serializer

@@ -47,7 +47,7 @@ namespace hive::plugins::sql_serializer {
         using data_processing_status = data_processor::data_processing_status;
         using data_chunk_ptr = data_processor::data_chunk_ptr;
 
-        static data_processing_status flush_replayed_data(const data_chunk_ptr& dataPtr, transaction& tx);
+        static data_processing_status flush_replayed_data(const data_chunk_ptr& dataPtr, transaction_controllers::transaction& tx);
         static data_processing_status flush_scalar_live_data(const data_chunk_ptr& dataPtr, std::function< void(std::string&&) > callback);
 
 
@@ -97,7 +97,7 @@ namespace hive::plugins::sql_serializer {
 
   template <class DataContainer, class TupleConverter, const char* const TABLE_NAME, const char* const COLUMN_LIST, typename Processor>
   inline typename container_data_writer<DataContainer, TupleConverter, TABLE_NAME, COLUMN_LIST, Processor >::data_processing_status
-  container_data_writer<DataContainer, TupleConverter, TABLE_NAME, COLUMN_LIST, Processor >::flush_replayed_data(const data_chunk_ptr& dataPtr, transaction& tx)
+  container_data_writer<DataContainer, TupleConverter, TABLE_NAME, COLUMN_LIST, Processor >::flush_replayed_data(const data_chunk_ptr& dataPtr, transaction_controllers::transaction& tx)
   {
     const chunk* holder = static_cast<const chunk*>(dataPtr.get());
     data_processing_status processingStatus;

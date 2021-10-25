@@ -1,6 +1,6 @@
 #pragma once
 
-#include <hive/plugins/sql_serializer/transaction_controllers.hpp>
+#include <transactions_controller/transaction_controllers.hpp>
 #include <hive/plugins/sql_serializer/block_num_rendezvous_trigger.hpp>
 
 #include <fc/optional.hpp>
@@ -27,7 +27,7 @@ public:
     virtual ~data_chunk() = default;
   };
 
-  using transaction_ptr = transaction_controller::transaction_ptr;
+  using transaction_ptr =  transaction_controllers::transaction_controller::transaction_ptr;
 
   typedef std::unique_ptr<data_chunk> data_chunk_ptr;
 
