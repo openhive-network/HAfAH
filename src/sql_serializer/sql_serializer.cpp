@@ -191,7 +191,7 @@ using chain::reindex_notification;
           }
 
           auto get_switch_indexes_function( const std::string& query, bool mode, const std::string& objects_name ) {
-              auto function = [query, &objects_name, mode](const data_chunk_ptr&, transaction& tx) -> data_processing_status
+            auto function = [query, &objects_name, mode](const data_chunk_ptr&, transaction_controllers::transaction& tx) -> data_processing_status
               {
                 ilog("Attempting to execute query: `${query}`...", ("query", query ) );
                 const auto start_time = fc::time_point::now();
@@ -212,7 +212,7 @@ using chain::reindex_notification;
 
             std::string query = std::string("SELECT ") + sql_function_call + ";";
             std::string description = "Query processor: `" + query + "'";
-            auto processor=std::make_unique< queries_commit_data_processor >(db_url, description, [query, &objects_name, mode, description](const data_chunk_ptr&, transaction& tx) -> data_processing_status
+            auto processor=std::make_unique< queries_commit_data_processor >(db_url, description, [query, &objects_name, mode, description](const data_chunk_ptr&, transaction_controllers::transaction& tx) -> data_processing_status
                           {
                             ilog("Attempting to execute query: `${query}`...", ("query", query ) );
                             const auto start_time = fc::time_point::now();
@@ -286,7 +286,7 @@ using chain::reindex_notification;
 
             if(freshDb)
             {
-              auto get_type_definitions = [](const data_processor::data_chunk_ptr& dataPtr, transaction& tx){
+              auto get_type_definitions = [](const data_processor::data_chunk_ptr& dataPtr, transaction_controllers::transaction& tx){
                 auto types = PSQL::get_all_type_definitions();
                 if ( types.empty() )
                   return data_processing_status();;
@@ -309,7 +309,7 @@ using chain::reindex_notification;
             queries_commit_data_processor db_checker(
                   db_url
                 , "Check correctness"
-                , [&is_extension_created](const data_chunk_ptr&, transaction& tx) -> data_processing_status {
+                , [&is_extension_created](const data_chunk_ptr&, transaction_controllers::transaction& tx) -> data_processing_status {
                     pqxx::result data = tx.exec("select 1 as _result from pg_extension where extname='hive_fork_manager';");
                     is_extension_created = !data.empty();
                     return data_processing_status();
@@ -331,7 +331,7 @@ using chain::reindex_notification;
             psql_block_number = 0;
 
             queries_commit_data_processor block_loader(db_url, "Block loader",
-                                                       [this](const data_chunk_ptr&, transaction& tx) -> data_processing_status
+                                                       [this](const data_chunk_ptr&, transaction_controllers::transaction& tx) -> data_processing_status
               {
                 pqxx::result data = tx.exec("SELECT hb.num AS _max_block FROM hive.blocks hb ORDER BY hb.num DESC LIMIT 1;");
                 if( !data.empty() )
@@ -349,7 +349,7 @@ using chain::reindex_notification;
             block_loader.trigger(data_processor::data_chunk_ptr(), 0);
 
             queries_commit_data_processor sequence_loader(db_url, "Sequence loader",
-                                                          [this](const data_chunk_ptr&, transaction& tx) -> data_processing_status
+                                                          [this](const data_chunk_ptr&, transaction_controllers::transaction& tx) -> data_processing_status
               {
                 pqxx::result data = tx.exec("SELECT ho.id AS _max FROM hive.operations ho ORDER BY ho.id DESC LIMIT 1;");
                 if( !data.empty() )

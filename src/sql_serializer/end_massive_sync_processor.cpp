@@ -13,7 +13,7 @@ namespace sql_serializer {
 
     end_massive_sync_processor::end_massive_sync_processor( std::string psqlUrl )
     {
-      auto commiting_function = [this](const data_processor::data_chunk_ptr&, transaction& tx) -> data_processor::data_processing_status {
+      auto commiting_function = [this](const data_processor::data_chunk_ptr&, transaction_controllers::transaction& tx) -> data_processor::data_processing_status {
         tx.exec( "SELECT hive.end_massive_sync("s + std::to_string( _block_number ) + ")"s );
 
         return data_processor::data_processing_status();

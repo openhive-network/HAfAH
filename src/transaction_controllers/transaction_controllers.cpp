@@ -1,4 +1,4 @@
-#include <hive/plugins/sql_serializer/transaction_controllers.hpp>
+#include "transaction_controllers.hpp"
 
 #include <fc/exception/exception.hpp>
 
@@ -8,7 +8,7 @@
 #include <string>
 #include <thread>
 
-namespace hive { namespace plugins { namespace sql_serializer {
+namespace transaction_controllers {
 
 namespace {
 
@@ -340,5 +340,4 @@ transaction_controller_ptr build_single_transaction_controller(const std::string
   return std::make_shared<single_transaction_controller>(dbUrl);
 }
 
-} } } /// hive::plugins::sql_serializer
-
+} // namespace transaction_controllers

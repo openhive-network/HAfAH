@@ -65,7 +65,7 @@ namespace hive::plugins::sql_serializer {
 
     boost::signals2::connection _on_irreversible_block_conn;
     boost::signals2::connection _on_switch_fork_conn;
-    std::shared_ptr< transaction_controller > transactions_controller;
+    std::shared_ptr< transaction_controllers::transaction_controller > transactions_controller;
   };
 
 } // namespace hive::plugins::sql_serializer

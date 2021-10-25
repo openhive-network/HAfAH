@@ -11,7 +11,6 @@ IF (PostgreSQL_FOUND AND PQXX_LIB AND PQ_LIB)
   ADD_LIBRARY( sql_serializer_plugin
                sql_serializer.cpp
                data_processor.cpp
-               transaction_controllers.cpp
                end_massive_sync_processor.cpp
                block_num_rendezvous_trigger.cpp
                data_2_sql_tuple_base.cpp
@@ -32,13 +31,13 @@ ELSE()
   set (PostgreSQL_LIBRARIES "")
 ENDIF()
 
-target_link_libraries( sql_serializer_plugin chain_plugin hive_chain hive_protocol  ${PQXX_LIB} ${PostgreSQL_LIBRARIES} )
+target_link_libraries( sql_serializer_plugin chain_plugin hive_chain hive_protocol transaction_controllers ${PQXX_LIB} ${PostgreSQL_LIBRARIES} )
 
 target_include_directories( sql_serializer_plugin
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
-                            PRIVATE "${PostgreSQL_INCLUDE_DIRS}"
+                            PRIVATE "${PostgreSQL_INCLUDE_DIRS}" ${HAF_DIRECTORY}/src/transaction_controllers
                           )
-
+MESSAGE( "!!!!!!!!!!!!!!!!!!!!!! ${HAF_DIRECTORY}/src/transaction_controllers" )
 if( CLANG_TIDY_EXE )
    set_target_properties(
 		sql_serializer_plugin PROPERTIES
