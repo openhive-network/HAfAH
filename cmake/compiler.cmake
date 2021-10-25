@@ -9,5 +9,12 @@ ENDMACRO()
 
 MACRO( SETUP_COMPILER target_name )
     TARGET_COMPILE_OPTIONS( ${target_name}  PRIVATE -std=c++14 -Wall )
-    TARGET_INCLUDE_DIRECTORIES( ${target_name} PRIVATE ${PROJECT_SOURCE_DIR}/common_includes "." ${GENERATED_FILES_DIRECTORY_ROOT} )
+    TARGET_INCLUDE_DIRECTORIES( ${target_name}
+            PRIVATE
+            ${PROJECT_SOURCE_DIR}/common_includes
+            "."
+            ${GENERATED_FILES_DIRECTORY_ROOT}
+            # form hive project
+            ${HAF_DIRECTORY}/hive/libraries/fc/include
+    )
 ENDMACRO()
