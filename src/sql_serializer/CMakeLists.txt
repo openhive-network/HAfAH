@@ -37,7 +37,7 @@ target_include_directories( sql_serializer_plugin
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
                             PRIVATE "${PostgreSQL_INCLUDE_DIRS}" "${HAF_DIRECTORY}/common_includes/include"
                           )
-MESSAGE( "!!!!!!!!!!!!!!!!!!!!!! ${HAF_DIRECTORY}/common_includes/include" )
+
 if( CLANG_TIDY_EXE )
    set_target_properties(
 		sql_serializer_plugin PROPERTIES
