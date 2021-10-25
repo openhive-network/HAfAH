@@ -72,7 +72,10 @@ class ah_query:
     self.context_is_attached              = "SELECT * FROM hive.app_context_is_attached('{}')".format( self.application_context )
     self.context_detached_save_block_num  = "SELECT * FROM hive.app_context_detached_save_block_num('{}', {})"
     self.context_detached_get_block_num   = "SELECT * FROM hive.app_context_detached_get_block_num('{}')".format( self.application_context )
-
+    
+    #workaround!!! - mickiewicz is going to deliver proper method
+    self.context_current_block_num        = "SELECT current_block_num FROM hive.contexts WHERE NAME = '{}'".format( self.application_context )
+    
     self.next_block                       = "SELECT * FROM hive.app_next_block('{}');".format( self.application_context )
 
     self.get_bodies                       = """
@@ -341,10 +344,10 @@ class ah_loader(metaclass = singleton):
   def context_is_attached(self):
     return self.sql_executor.perform_query_one(sql_data.query.context_is_attached)
 
-  def context_detached_get_block_num(self):
+  def get_last_block_num(self):
     _result = self.sql_executor.perform_query_one(sql_data.query.context_detached_get_block_num)
     if _result is None:
-      _result = 0
+      _result = self.sql_executor.perform_query_one(sql_data.query.context_current_block_num)
     return _result
 
   def switch_context_internal(self, force_attach, last_block = 0):
@@ -355,7 +358,7 @@ class ah_loader(metaclass = singleton):
 
     if force_attach:
       if last_block == 0:
-        last_block = self.context_detached_get_block_num()
+        last_block = self.get_last_block_num()
 
       _attach_context_query = sql_data.query.attach_context.format(self.application_context, last_block)
       self.sql_executor.perform_query(_attach_context_query)
