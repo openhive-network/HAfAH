@@ -21,7 +21,7 @@ INSTALL( TARGETS
 
 INSTALL(
     DIRECTORY
-    ${CMAKE_BINARY_DIR}/hive/libraries/fc/vendor/secp256k1-zkp/src/project_secp256k1-build/.libs/
+    ${PROJECT_BINARY_DIR}/hive/libraries/fc/vendor/secp256k1-zkp/src/project_secp256k1-build/.libs/
     DESTINATION
     ${POSTGRES_LIBDIR}
 )
