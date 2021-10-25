@@ -182,8 +182,7 @@ class sql_executor:
 
     return res
 
-  @staticmethod
-  def receive_impacted_accounts(clone_sql_executor, first_block, last_block):
+  def receive_impacted_accounts(self, clone_sql_executor, first_block, last_block):
     _items = []
 
     try:
@@ -217,21 +216,27 @@ class sql_executor:
 
     self.perform_query(_total_query)
 
-  @staticmethod
-  def send_accounts(clone_sql_executor, accounts_queries):
-    if len(accounts_queries) == 0:
-      logger.info("Lack of accounts...")
-      return
+  def send_accounts(self, clone_sql_executor, accounts_queries):
+    try:
+      if len(accounts_queries) == 0:
+        logger.info("Lack of accounts...")
+        return
 
-    logger.info("INSERT INTO to `accounts`: {} records".format(len(accounts_queries)))
+      logger.info("INSERT INTO to `accounts`: {} records".format(len(accounts_queries)))
 
-    clone_sql_executor.execute_complex_query(accounts_queries, 0, len(accounts_queries) - 1, sql_data.query.insert_into_accounts)
+      clone_sql_executor.execute_complex_query(accounts_queries, 0, len(accounts_queries) - 1, sql_data.query.insert_into_accounts)
+    except Exception as ex:
+      logger.error("Exception during processing `send_accounts` method: {0}".format(ex))
+      raise ex
 
-  @staticmethod
-  def send_account_operations(clone_sql_executor, account_ops_queries, first_element, last_element):
-    logger.info("INSERT INTO to `account_operations`: first element: {} last element: {}".format(first_element, last_element))
+  def send_account_operations(self, clone_sql_executor, account_ops_queries, first_element, last_element):
+    try:
+      logger.info("INSERT INTO to `account_operations`: first element: {} last element: {}".format(first_element, last_element))
 
-    clone_sql_executor.execute_complex_query(account_ops_queries, first_element, last_element, sql_data.query.insert_into_account_ops)
+      clone_sql_executor.execute_complex_query(account_ops_queries, first_element, last_element, sql_data.query.insert_into_account_ops)
+    except Exception as ex:
+      logger.error("Exception during processing `send_account_operations` method: {0}".format(ex))
+      raise ex
 
 class sql_executor_pool:
   def __init__(self):
@@ -402,6 +407,10 @@ class ah_loader(metaclass = singleton):
   def is_interrupted(self):
     return self.interrupted
 
+  def raise_exception(self, source_exception):
+    self.interrupt()
+    raise source_exception
+
   def prepare(self):
     if self.is_interrupted():
       return
@@ -421,7 +430,7 @@ class ah_loader(metaclass = singleton):
     except Exception as ex:
       print(ex)
       logger.error("Exception during processing `prepare` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   def prepare_ranges(self, low_value, high_value, threads):
     assert threads > 0 and threads <= 64, "threads > 0 and threads <= 64"
@@ -459,6 +468,8 @@ class ah_loader(metaclass = singleton):
 
       with ThreadPoolExecutor(max_workers=len(_ranges)) as executor:
         for range in _ranges:
+          if self.is_interrupted():
+            break
           _futures.append(executor.submit(self.sql_executor.receive_impacted_accounts, self.sql_pool.get_item(), range.low, range.high))
 
       _elements = []
@@ -483,7 +494,7 @@ class ah_loader(metaclass = singleton):
           time.sleep(_sleep)
     except Exception as ex:
       logger.error("Exception during processing `receive_data` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   def receive(self):
     while len(self.block_ranges) > 0:
@@ -530,6 +541,7 @@ class ah_loader(metaclass = singleton):
               break
       except Exception as ex:
         logger.error("Exception during processing `prepare_sql` method: {0}".format(ex))
+        self.raise_exception(ex)
 
     if received_items_block is None:
       logger.info("Lack of impacted accounts...")
@@ -570,7 +582,7 @@ class ah_loader(metaclass = singleton):
       self.account_ops_queries.clear()
     except Exception as ex:
       logger.error("Exception during processing `send_data` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   def save_detached_block_num(self, block_num):
     try:
@@ -580,7 +592,7 @@ class ah_loader(metaclass = singleton):
       self.sql_executor.perform_query(_query)
     except Exception as ex:
       logger.error("Exception during processing `save_detached_block_num` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   def send(self):
     logger.info("Sending...")
@@ -672,7 +684,7 @@ class ah_loader(metaclass = singleton):
         return True
     except Exception as ex:
       logger.error("Exception during processing `process` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
 def allow_close_app(empty, declared_empty_results, cnt_empty_result):
   _res = False
