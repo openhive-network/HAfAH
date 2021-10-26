@@ -19,6 +19,7 @@ RUN \
             libssl-dev \
             libreadline-dev \
             libsnappy-dev \
+            libpqxx-dev \
     && \
         apt-get clean
 
