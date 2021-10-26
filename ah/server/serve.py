@@ -6,8 +6,11 @@ import logging
 import time
 import traceback
 import json
-import asyncio
-from concurrent.futures import ThreadPoolExecutor, as_completed
+# import asyncio
+from concurrent.futures import ThreadPoolExecutor
+from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from SocketServer import ThreadingMixIn
+import threading
 
 from datetime import datetime
 from time import perf_counter
@@ -21,9 +24,26 @@ from ah.api.endpoints import build_methods as account_history
 import simplejson
 from ah.server.db import Db
 
-threads=[]
-
 # pylint: disable=too-many-lines
+
+class Handler(BaseHTTPRequestHandler):
+
+    def do_POST(self):
+        """Process request."""
+        request = self.rfile.read(int(self.headers["Content-Length"])).decode()
+        response = dispatch(request)
+        """Return response."""
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        message =  threading.currentThread().getName()
+        self.wfile.write(message)
+        self.wfile.write(response.encode())
+        self.wfile.write('\n')
+        return
+
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    """Handle requests in a separate thread."""
 
 def decimal_serialize(obj):
     return simplejson.dumps(obj=obj, use_decimal=True, default=vars)
@@ -74,16 +94,12 @@ def conf_stdout_custom_file_logger(logger, file_name):
     logger.addHandler(stdout_handler)
     logger.addHandler(file_handler)
 
-# def event_loop(port, runner):
-#     """Create an event loop in child thread."""
-#     loop = asyncio.new_event_loop()
-#     asyncio.set_event_loop(loop)
-#     loop.run_until_complete(runner.setup())
-#     site = web.TCPSite(runner, 'localhost', port)
-#     loop.run_until_complete(site.start())
-#     loop.run_forever()
-
 def run_server(db_url, port):
+    """Starting threading server."""
+    server = ThreadedHTTPServer(('', port), Handler)
+    print('Starting server, use <Ctrl-C> to stop')
+    server.serve_forever()
+
     """Configure and launch the API server."""
     log = logging.getLogger(__name__)
     methods = build_methods()
@@ -150,14 +166,6 @@ def run_server(db_url, port):
         ret = web.Response()
         return ret
 
-    # with ThreadPoolExecutor(max_workers=20) as executor:
-    #     threads.append(executor.submit(app.router.add_post('/', jsonrpc_handler)))
-    #     for task in as_completed(threads):
-
-    app.router.add_post('/', jsonrpc_handler)
-    app._set_loop(asyncio.get_event_loop())
-    app.loop.set_default_executor(ThreadPoolExecutor(max_workers=8))
-    web.run_app(app, port=port)
-    # runner = web.AppRunner(app)
-    # return runner
+    # app.router.add_post('/', jsonrpc_handler)
+    # web.run_app(app, port=port)
     
