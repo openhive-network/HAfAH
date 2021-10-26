@@ -1,6 +1,6 @@
 
 How to do a synchronization:
-./ah-v5.py --url postgresql://LOGIN:PASSWORD@HOST/DATABASE_NAME --schema-dir ./queries --range-blocks-flush 40000 --allowed-empty-results 0 --threads-receive 7 --threads-send 7
+./ah-v4.py --url postgresql://LOGIN:PASSWORD@HOST/DATABASE_NAME --schema-dir ./queries --range-blocks-flush 40000 --allowed-empty-results 0 --threads-receive 7 --threads-send 7
 
 Scripts - a quick explanation:
 ah-v2.py - uses `multiprocessing.Pool`

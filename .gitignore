@@ -5,3 +5,12 @@ __workbook
 *.pyc
 tests/data/records.sql
 ah/api/tmp.py
+
+# Build directories
+build/
+build.*/
+build-*/
+build_*/
+
+
+*.log

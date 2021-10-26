@@ -111,7 +111,7 @@ def run_server(db_url, port):
 
         ctx = {
           "db": app["db"],
-          "id": json.loads(request)['id']
+          "id": json.loads(request)['id'] # TODO: remove this if additional logging is not required
         }
         # debug=True refs https://github.com/bcb/jsonrpcserver/issues/71
         response = None
@@ -138,7 +138,7 @@ def run_server(db_url, port):
             headers = {
                 'Access-Control-Allow-Origin': '*'
             }
-            
+
             return web.json_response(error_response, status=200, headers=headers, dumps=decimal_serialize)
 
         if response is not None and response.wanted:

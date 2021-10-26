@@ -45,6 +45,9 @@ class account_op:
     self.op_id  = op_id
     self.name   = name
 
+  def __repr__(self):
+    return "op_id: {} name: {}".format(self.op_id, self.name)
+
 class account_info:
 
   next_account_id = 1
@@ -58,8 +61,8 @@ class ah_query:
 
     self.application_context              = application_context
 
-    self.accounts                         = "SELECT id, name FROM accounts;"
-    self.account_ops                      = "SELECT ai.name, ai.id, ai.operation_count FROM account_operation_count_info_view ai;"
+    self.accounts                         = "SELECT id, name FROM hafah_python.accounts;"
+    self.account_ops                      = "SELECT ai.name, ai.id, ai.operation_count FROM hafah_python.account_operation_count_info_view ai;"
 
     self.create_context                   = "SELECT * FROM hive.app_create_context('{}');".format( self.application_context )
     self.detach_context                   = "SELECT * FROM hive.app_context_detach('{}');".format( self.application_context )
@@ -69,33 +72,28 @@ class ah_query:
     self.context_is_attached              = "SELECT * FROM hive.app_context_is_attached('{}')".format( self.application_context )
     self.context_detached_save_block_num  = "SELECT * FROM hive.app_context_detached_save_block_num('{}', {})"
     self.context_detached_get_block_num   = "SELECT * FROM hive.app_context_detached_get_block_num('{}')".format( self.application_context )
-
+    
+    #workaround!!! - mickiewicz is going to deliver proper method
+    self.context_current_block_num        = "SELECT current_block_num FROM hive.contexts WHERE NAME = '{}'".format( self.application_context )
+    
     self.next_block                       = "SELECT * FROM hive.app_next_block('{}');".format( self.application_context )
 
     self.get_bodies                       = """
-                                              SELECT T.id id, T.account get_impacted_accounts
-                                              FROM (
-                                                SELECT 
-                                                  ahov.id,
-                                                  get_impacted_accounts(body) as account,
-                                                  ( CASE WHEN trx_in_block = -1 THEN 4294967295 ELSE trx_in_block END ) AS helper_trx_in_block
-                                                FROM
-                                                  hive.account_history_operations_view ahov
-                                                JOIN
-                                                  hive.operation_types hot ON hot.id = ahov.op_type_id
-                                                WHERE 
-                                                  block_num >= {} AND block_num <= {}
-                                                ORDER BY
-                                                  block_num, helper_trx_in_block, op_pos ASC, hot.is_virtual DESC
-                                              ) T;"""
+SELECT ahov.id, hive.get_impacted_accounts(body) as account
+FROM
+  hive.account_history_python_operations_view ahov
+WHERE 
+  block_num >= {} AND block_num <= {}
+ORDER BY ahov.id
+    """
 
     self.insert_into_accounts             = []
-    self.insert_into_accounts.append( "INSERT INTO public.accounts( id, name ) VALUES" )
+    self.insert_into_accounts.append( "INSERT INTO hafah_python.accounts( id, name ) VALUES" )
     self.insert_into_accounts.append( " ( {}, '{}')" )
     self.insert_into_accounts.append( " ;" )
 
     self.insert_into_account_ops          = []
-    self.insert_into_account_ops.append( "INSERT INTO public.account_operations( account_id, account_op_seq_no, operation_id ) VALUES" )
+    self.insert_into_account_ops.append( "INSERT INTO hafah_python.account_operations( account_id, account_op_seq_no, operation_id ) VALUES" )
     self.insert_into_account_ops.append( " ( {}, {}, {} )" )
     self.insert_into_account_ops.append( " ;" )
 
@@ -187,8 +185,7 @@ class sql_executor:
 
     return res
 
-  @staticmethod
-  def receive_impacted_accounts(clone_sql_executor, first_block, last_block):
+  def receive_impacted_accounts(self, clone_sql_executor, first_block, last_block):
     _items = []
 
     try:
@@ -222,21 +219,27 @@ class sql_executor:
 
     self.perform_query(_total_query)
 
-  @staticmethod
-  def send_accounts(clone_sql_executor, accounts_queries):
-    if len(accounts_queries) == 0:
-      logger.info("Lack of accounts...")
-      return
+  def send_accounts(self, clone_sql_executor, accounts_queries):
+    try:
+      if len(accounts_queries) == 0:
+        logger.info("Lack of accounts...")
+        return
 
-    logger.info("INSERT INTO to `accounts`: {} records".format(len(accounts_queries)))
+      logger.info("INSERT INTO to `accounts`: {} records".format(len(accounts_queries)))
 
-    clone_sql_executor.execute_complex_query(accounts_queries, 0, len(accounts_queries) - 1, sql_data.query.insert_into_accounts)
+      clone_sql_executor.execute_complex_query(accounts_queries, 0, len(accounts_queries) - 1, sql_data.query.insert_into_accounts)
+    except Exception as ex:
+      logger.error("Exception during processing `send_accounts` method: {0}".format(ex))
+      raise ex
 
-  @staticmethod
-  def send_account_operations(clone_sql_executor, account_ops_queries, first_element, last_element):
-    logger.info("INSERT INTO to `account_operations`: first element: {} last element: {}".format(first_element, last_element))
+  def send_account_operations(self, clone_sql_executor, account_ops_queries, first_element, last_element):
+    try:
+      logger.info("INSERT INTO to `account_operations`: first element: {} last element: {}".format(first_element, last_element))
 
-    clone_sql_executor.execute_complex_query(account_ops_queries, first_element, last_element, sql_data.query.insert_into_account_ops)
+      clone_sql_executor.execute_complex_query(account_ops_queries, first_element, last_element, sql_data.query.insert_into_account_ops)
+    except Exception as ex:
+      logger.error("Exception during processing `send_account_operations` method: {0}".format(ex))
+      raise ex
 
 class sql_executor_pool:
   def __init__(self):
@@ -270,7 +273,9 @@ class ah_loader(metaclass = singleton):
     self.is_massive           = True
     self.interrupted          = False
 
-    self.application_context  = "account_history"
+    self.last_block_num       = 0
+
+    self.application_context  = "account_history_python"
 
     self.accounts_queries     = []
     self.account_ops_queries  = []
@@ -307,7 +312,7 @@ class ah_loader(metaclass = singleton):
       if _id > account_info.next_account_id:
         account_info.next_account_id = _id
 
-      account_cache[_name] = account_info( _id, 0 )
+      self.account_cache[_name] = account_info(_id, 0)
 
     if account_info.next_account_id:
       account_info.next_account_id += 1
@@ -325,9 +330,9 @@ class ah_loader(metaclass = singleton):
       _name             = str(_record["name"])
       _operation_count  = int(_record["operation_count"])
 
-      found = name in account_cache
+      found = _name in self.account_cache
       assert found, "found"
-      account_cache[_name] = _operation_count
+      self.account_cache[_name].operation_count = _operation_count
 
   def import_initial_data(self):
     self.import_accounts()
@@ -339,10 +344,10 @@ class ah_loader(metaclass = singleton):
   def context_is_attached(self):
     return self.sql_executor.perform_query_one(sql_data.query.context_is_attached)
 
-  def context_detached_get_block_num(self):
+  def get_last_block_num(self):
     _result = self.sql_executor.perform_query_one(sql_data.query.context_detached_get_block_num)
     if _result is None:
-      _result = 0
+      _result = self.sql_executor.perform_query_one(sql_data.query.context_current_block_num)
     return _result
 
   def switch_context_internal(self, force_attach, last_block = 0):
@@ -353,7 +358,7 @@ class ah_loader(metaclass = singleton):
 
     if force_attach:
       if last_block == 0:
-        last_block = self.context_detached_get_block_num()
+        last_block = self.get_last_block_num()
 
       _attach_context_query = sql_data.query.attach_context.format(self.application_context, last_block)
       self.sql_executor.perform_query(_attach_context_query)
@@ -362,10 +367,12 @@ class ah_loader(metaclass = singleton):
 
   def attach_context(self, last_block = 0):
     #True value of force_attach
+    logger.info("Attaching context... Last block:".format(last_block))
     self.switch_context_internal(True, last_block)
 
   def detach_context(self):
     #False value of force_attach
+    logger.info("Detaching context...")
     self.switch_context_internal(False)
 
   def gather_part_of_queries(self, operation_id, account_name):
@@ -403,6 +410,10 @@ class ah_loader(metaclass = singleton):
   def is_interrupted(self):
     return self.interrupted
 
+  def raise_exception(self, source_exception):
+    self.interrupt()
+    raise source_exception
+
   def prepare(self):
     if self.is_interrupted():
       return
@@ -412,19 +423,9 @@ class ah_loader(metaclass = singleton):
         tables_query    = self.read_file( sql_data.args.schema_path + "/ah_schema_tables.sql" )
         functions_query = self.read_file( sql_data.args.schema_path + "/ah_schema_functions.sql" )
 
-        if self.is_interrupted():
-          return
-
         self.sql_executor.perform_query(sql_data.query.create_context)
 
-        if self.is_interrupted():
-          return
-
         self.sql_executor.perform_query(tables_query)
-
-        if self.is_interrupted():
-          return
-
         self.sql_executor.perform_query(functions_query)
 
       self.import_initial_data()
@@ -432,7 +433,7 @@ class ah_loader(metaclass = singleton):
     except Exception as ex:
       print(ex)
       logger.error("Exception during processing `prepare` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   def prepare_ranges(self, low_value, high_value, threads):
     assert threads > 0 and threads <= 64, "threads > 0 and threads <= 64"
@@ -470,10 +471,12 @@ class ah_loader(metaclass = singleton):
 
       with ThreadPoolExecutor(max_workers=len(_ranges)) as executor:
         for range in _ranges:
+          if self.is_interrupted():
+            break
           _futures.append(executor.submit(self.sql_executor.receive_impacted_accounts, self.sql_pool.get_item(), range.low, range.high))
 
       _elements = []
-      for future in as_completed(_futures):
+      for future in _futures:
         _elements.append(future.result())
 
       if len(_elements) == 0:
@@ -494,10 +497,13 @@ class ah_loader(metaclass = singleton):
           time.sleep(_sleep)
     except Exception as ex:
       logger.error("Exception during processing `receive_data` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   def receive(self):
     while len(self.block_ranges) > 0:
+      if self.is_interrupted():
+        break
+
       start = datetime.datetime.now()
 
       _item = self.block_ranges.popleft()
@@ -520,22 +526,32 @@ class ah_loader(metaclass = singleton):
     received_items_block = None
     while not _received:
       try:
-        received_items_block = self.queue.get(True, _get_delay)
-        _received = True
-      except queue.Empty:
-        if self.finished:
-          if cnt < tries:
-            logger.info("Queue is probably empty... Try: {}/{}".format(cnt/tries))
-            cnt += 1
+        try:
+          received_items_block = self.queue.get(True, _get_delay)
+          _received = True
+        except queue.Empty:
+          if self.finished:
+            if cnt < tries:
+              logger.info("Queue is probably empty... Try: {}/{}".format(cnt/tries))
+              cnt += 1
+            else:
+              logger.info("Queue is empty... All data was received")
+              break
           else:
-            logger.info("Queue is empty... All data was received")
-            break
-        else:
-          logger.info("Queue is empty... Waiting {} seconds".format(_sleep))
-          time.sleep(_sleep)
+            logger.info("Queue is empty... Waiting {} seconds".format(_sleep))
+            time.sleep(_sleep)
+            if self.is_interrupted():
+              break
+      except Exception as ex:
+        logger.error("Exception during processing `prepare_sql` method: {0}".format(ex))
+        self.raise_exception(ex)
 
     if received_items_block is None:
       logger.info("Lack of impacted accounts...")
+      return None
+
+    if 'elements' not in received_items_block:
+      logger.info("Lack of impacted accounts - empty set...")
       return None
 
     for items in received_items_block['elements']:
@@ -569,7 +585,7 @@ class ah_loader(metaclass = singleton):
       self.account_ops_queries.clear()
     except Exception as ex:
       logger.error("Exception during processing `send_data` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   def save_detached_block_num(self, block_num):
     try:
@@ -579,29 +595,28 @@ class ah_loader(metaclass = singleton):
       self.sql_executor.perform_query(_query)
     except Exception as ex:
       logger.error("Exception during processing `save_detached_block_num` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   def send(self):
+    logger.info("Sending...")
     while True:
       start = datetime.datetime.now()
 
-      if self.is_interrupted():
-        return
-
-      _last_block_num = self.prepare_sql()
-
-      if self.is_interrupted():
-        return
+      self.last_block_num = self.prepare_sql()
 
       self.send_data()
 
-      if self.is_massive and _last_block_num is not None:
-        self.save_detached_block_num(_last_block_num)
+      if self.is_massive and self.last_block_num is not None:
+        self.save_detached_block_num(self.last_block_num)
 
       end = datetime.datetime.now()
       logger.info("send time[ms]: {}".format(helper.get_time(start, end)))
 
       if self.finished and self.queue.empty():
+        logger.info("Sending is finished...")
+        break
+      if self.is_interrupted():
+        logger.info("Sending is interrupted...")
         break
 
   def work(self):
@@ -662,7 +677,7 @@ class ah_loader(metaclass = singleton):
 
           self.work()
 
-          self.attach_context(_last_block)
+          self.attach_context(self.last_block_num if (self.last_block_num is not None) else 0)
         else:
           self.work()
 
@@ -672,7 +687,7 @@ class ah_loader(metaclass = singleton):
         return True
     except Exception as ex:
       logger.error("Exception during processing `process` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
 def allow_close_app(empty, declared_empty_results, cnt_empty_result):
   _res = False
@@ -715,6 +730,8 @@ def restore_handlers():
 def process_arguments():
   import argparse
   parser = argparse.ArgumentParser()
+
+# ./program --url postgresql://postgres:pass@127.0.0.1:5432/hafah --schema-dir /home/kmochocki/hf/HAfAH/ah/synchronization/queries --range-blocks-flush 40000 --allowed-empty-results 2 --threads-receive 6 --threads-send 6
 
   parser.add_argument("--url", type = str, help = "postgres connection string for AH database")
   parser.add_argument("--schema-dir", type = str, help = "directory where schemas are stored")

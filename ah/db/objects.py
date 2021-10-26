@@ -15,7 +15,7 @@ class operation:
     self.value = data["value"]
 
 class api_operation:
-  def __init__(self, block : int, obj):
+  def __init__(self, block : int, obj, *, include_op_id = False):
     assert obj is not None
     self.trx_id : str = obj["_trx_id"]
     self.block : int = obj['_block'] if block is None else block
@@ -24,13 +24,13 @@ class api_operation:
     self.virtual_op : int = int(obj["_virtual_op"])
     self.timestamp : str = obj["_timestamp"]
     self.op : operation = operation(obj["_value"])
-    self.operation_id : int = obj["_operation_id"]
+    self.operation_id = str(0x8000000000000000 | int(obj["_operation_id"])) if include_op_id else 0
 
 class api_operations_container:
   item = api_operation
-  def __init__(self, block, iterable : list):
+  def __init__(self, block, iterable : list, *, include_op_id = False):
       assert iterable is not None
-      self.ops : list = [ api_operations_container.item( block, row ) for row in iterable ]
+      self.ops : list = [ api_operations_container.item( block, row, include_op_id=include_op_id ) for row in iterable ]
 
 class transaction:
   def __init__(self, trx_id, obj):
@@ -40,7 +40,7 @@ class transaction:
     self.expiration : str = obj['_expiration']
     self.operations : list = obj['_value']
     self.extensions : list = []
-    self.signatures : list = obj['_signature']
+    self.signatures : list = [x for x in obj['_signature'] if x is not None]
     self.transaction_id : str = trx_id
     self.block_num : str = obj['_block_num']
     self.transaction_num : str = obj['_trx_in_block']
@@ -55,22 +55,22 @@ class ops_by_block_wrapper:
 
 class virtual_ops(api_operations_container):
 
-  def __init__(self, irreversible_block : int, iterable: list):
-    super().__init__(None, iterable)
+  def __init__(self, irreversible_block : int, iterable: list, last_block : int):
+    super().__init__(None, iterable, include_op_id=True)
     self.ops_by_block : list = []
     self.next_block_range_begin : int = 0
     self.next_operation_begin : int = 0
-    self.__setup_pagination()
+    self.__setup_pagination(last_block)
 
     if irreversible_block is not None:
       self.__group_by_block(irreversible_block)
       self.ops.clear()
 
-  def __setup_pagination(self):
+  def __setup_pagination(self, last_block):
     if len(self.ops):
       last_op : api_operation = self.ops[-1]
       self.next_block_range_begin = last_op.block
-      self.next_operation_begin = last_op.operation_id
+      self.next_operation_begin = int(last_op.operation_id) if last_block < last_op.block else 0
       self.ops.remove(last_op)
 
   def __group_by_block(self, irreversible_block):
@@ -84,8 +84,8 @@ class virtual_ops(api_operations_container):
     self.ops_by_block = []
     for block, items in supp.items():
       self.ops_by_block.append( ops_by_block_wrapper(
-        iterable=items, 
-        block=block, 
+        iterable=items,
+        block=block,
         timestamp=items[0].timestamp,
         irreversible=block > irreversible_block
       ))
