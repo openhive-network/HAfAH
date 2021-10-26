@@ -1,23 +1,15 @@
-# docker build -f Dockerfile.postgres13  -t psql-tools13 .
-FROM phusion/baseimage:0.11
+# docker build -f Dockerfile -t haf .
+FROM phusion/baseimage:focal-1.0.0
 
 ENV LANG=en_US.UTF-8
-
-RUN \
-    apt-get update \
-    && apt-get install -y wget \
-    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-    && echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" | tee /etc/apt/sources.list.d/postgresql-pgdg.list > /dev/null \
-    && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null \
-    && apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main"
 
 RUN \
     apt-get update \
     && apt-get install -y \
             systemd \
             autoconf \
-            postgresql-12 \
-            postgresql-contrib-12 \
+            postgresql \
+            postgresql-contrib \
             build-essential \
             cmake \
             libboost-all-dev \
@@ -27,6 +19,7 @@ RUN \
             libssl-dev \
             libreadline-dev \
             libsnappy-dev \
+            libpqxx-dev \
     && \
         apt-get clean
 
