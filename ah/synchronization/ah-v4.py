@@ -399,7 +399,7 @@ class ah_loader(metaclass = singleton):
 
     self.sql_executor.init()
 
-    self.queue  = queue.Queue(maxsize = 200)
+    self.queue  = queue.Queue(maxsize = 10)
 
     self.sql_pool.create_executors(self.sql_executor, sql_data.args.threads_receive + sql_data.args.threads_send + 1)
 
