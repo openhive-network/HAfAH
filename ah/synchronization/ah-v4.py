@@ -270,6 +270,13 @@ class sql_executor_pool:
 class ah_loader(metaclass = singleton):
 
   def __init__(self):
+
+    #actual number of operations that are stored in a queue
+    self.stored_ops_buf_len   = 0
+
+    #maximum number of operations that can be stored in a queue
+    self.max_ops_buf_len      = 1000000
+
     self.is_massive           = True
     self.interrupted          = False
 
@@ -476,13 +483,15 @@ class ah_loader(metaclass = singleton):
           _futures.append(executor.submit(self.sql_executor.receive_impacted_accounts, self.sql_pool.get_item(), range.low, range.high))
 
       _elements = []
+      _tmp_ops_buf_len = 0
       for future in _futures:
         _elements.append(future.result())
+        _tmp_ops_buf_len += len( _elements[ len(_elements) - 1 ] )
 
       if len(_elements) == 0:
         return
 
-      _result = {'block' : last_block, 'elements' : _elements}
+      _result = {'block' : last_block, 'elements' : _elements, 'sum' : _tmp_ops_buf_len}
 
       _inserted  = False
       _put_delay = 1#[s]
@@ -490,10 +499,15 @@ class ah_loader(metaclass = singleton):
 
       while not _inserted:
         try:
-          self.queue.put(_result, True, _put_delay)
-          _inserted = True
+          if (self.stored_ops_buf_len + _tmp_ops_buf_len < self.max_ops_buf_len) or self.queue.empty():
+            self.queue.put(_result, True, _put_delay)
+            _inserted = True
+            self.stored_ops_buf_len += _tmp_ops_buf_len
+          else:
+            logger.info("Queue is full. stored-ops:{} actual-ops:{} max-ops:{} ... Waiting {} seconds".format(self.stored_ops_buf_len, _tmp_ops_buf_len, self.max_ops_buf_len, _sleep))
+            time.sleep(_sleep)
         except queue.Full:
-          logger.info("Queue is full... Waiting {} seconds".format(_sleep))
+          logger.info("Queue is full( `queue.Full` exception ). stored-ops:{} actual-ops:{} max-ops:{} ... Waiting {} seconds".format(self.stored_ops_buf_len, _tmp_ops_buf_len, self.max_ops_buf_len, _sleep))
           time.sleep(_sleep)
     except Exception as ex:
       logger.error("Exception during processing `receive_data` method: {0}".format(ex))
@@ -529,6 +543,9 @@ class ah_loader(metaclass = singleton):
         try:
           received_items_block = self.queue.get(True, _get_delay)
           _received = True
+          self.stored_ops_buf_len -= received_items_block['sum']
+          assert self.stored_ops_buf_len >= 0, "Number of operations can't be less than zero"
+          logger.info("Number of elements retrieved from queue: {}".format(received_items_block['sum'], _sleep))
         except queue.Empty:
           if self.finished:
             if cnt < tries:
