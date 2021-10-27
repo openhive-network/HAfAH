@@ -20,14 +20,19 @@ hive_fork_manager:
   tags:
     - public-runner-docker
 
-# c++_unit_tests:
-#   stage: build_and_test
-#   image: "$CI_REGISTRY_IMAGE/builder$BUILDER_IMAGE_TAG"
-#   script:
-#     - mkdir -p "$CI_JOB_NAME"/build
-#     - cd "$CI_JOB_NAME"/build
-#     - cmake -DCMAKE_BUILD_TYPE=Release ../..
-#     - make
-#     - ctest --output-on-failure -R test.unit.*
-#   tags:
-#     - public-runner-docker
+hived:
+  stage: build_and_test
+  image: "$CI_REGISTRY_IMAGE/builder$BUILDER_IMAGE_TAG"
+  script:
+    - /etc/init.d/postgresql start
+    - mkdir -p "$CI_JOB_NAME"/build
+    - cd "$CI_JOB_NAME"/build
+    - cmake -DCMAKE_BUILD_TYPE=Release -DCLEAR_VOTES=ON -DENABLE_MIRA=OFF -DBUILD_HIVE_TESTNET=OFF -DHIVE_LINT=OFF ../..
+    - make hived -j10
+    # check if sql_serializer compiles with hived
+    - test -f hive/libraries/plugins/sql_serializer/libsql_serializer_plugin.a
+    # check if sql_serializer plugin is included in hived plugins
+    - cd ./hive/programs/hived
+    - ./hived --help | grep psql-url
+  tags:
+    - public-runner-docker
