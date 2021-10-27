@@ -27,11 +27,9 @@ while `block_ranges` is not empty:                            #the collection `b
   launch ThreadPoolExecutor(with `threads-receive` workers):  #here is getting data from a database in many threads.
     call `get_impacted_accounts` pear every thread            #there are returned all impacted accounts for every operation, f.e. for `transfer` operation 2 accounts are returned
     wait until all threads finish                             #waiting is necessary, because an order of operations is crucial. It's used in `account_operations` table
-    if limit of stored operations is reached:                 #the limit `1mln` operations is set directly in an application
-      wait 1 second                                           #better to wait than to store huge amount of data in RAM
-    else:                                                     #ok it's a room for new data
-      put result into BUFFER-QUEUE                            #`BUFFER-QUEUE -  collection needed in producer/consumer type algorithm.
-                                                              #Here is: producer(receiver from database), consumer(sender into database)
+    while limit of stored operations is reached:              #the limit `1mln` operations is set directly in an application
+        wait 1 second                                         #better to wait than to store huge amount of data in RAM
+    put result into BUFFER-QUEUE                              #`BUFFER-QUEUE -  collection needed in producer(receiver from database)/consumer(sender into database) type algorithm.
 
 #***********SEND-ALGORITHM***********
 while(True)                                                   #`forever` because reading is dependent on signal from a receiver. When it emits a signal about the end, then this loop finishes.
