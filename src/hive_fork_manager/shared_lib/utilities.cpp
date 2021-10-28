@@ -7,7 +7,19 @@
 using hive::protocol::account_name_type;
 using fc::string;
 
-#define CUSTOM_LOG(format, ... ) { FILE *pFile = fopen("get-impacted-accounts.log","a"); fprintf(pFile,format "\n",__VA_ARGS__); fclose(pFile); }
+#define CUSTOM_LOG(format, ... ) { FILE *pFile = fopen("get-impacted-accounts.log","ae"); fprintf(pFile,format "\n",__VA_ARGS__); fclose(pFile); }
+
+flat_set<account_name_type> get_accounts( const std::string& operation_body )
+{
+  hive::protocol::operation _op;
+  from_variant( fc::json::from_string( operation_body ), _op );
+
+  flat_set<account_name_type> _impacted;
+  hive::app::operation_get_impacted_accounts( _op, _impacted );
+
+  return _impacted;
+}
+
 
 extern "C"
 {
@@ -31,17 +43,6 @@ extern "C"
 PG_MODULE_MAGIC;
 
 PG_FUNCTION_INFO_V1(get_impacted_accounts);
-
-flat_set<account_name_type> get_accounts( const std::string& operation_body )
-{
-  hive::protocol::operation _op;
-  from_variant( fc::json::from_string( operation_body ), _op );
-
-  flat_set<account_name_type> _impacted;
-  hive::app::operation_get_impacted_accounts( _op, _impacted );
-
-  return _impacted;
-}
 
 Datum get_impacted_accounts(PG_FUNCTION_ARGS)
 {
@@ -68,8 +69,8 @@ Datum get_impacted_accounts(PG_FUNCTION_ARGS)
         oldcontext = MemoryContextSwitchTo(funcctx->multi_call_memory_ctx);
 
         /* total number of tuples to be returned */
-        VarChar* _arg0 = (VarChar*)PG_GETARG_VARCHAR_P(0);
-        char* _op_body = (char*)VARDATA(_arg0);
+        auto* _arg0 = (VarChar*)PG_GETARG_VARCHAR_P(0);
+        auto* _op_body = (char*)VARDATA(_arg0);
 
         flat_set<account_name_type> _accounts = get_accounts( _op_body );
 
@@ -84,7 +85,7 @@ Datum get_impacted_accounts(PG_FUNCTION_ARGS)
 
           if( _accounts.size() > 1 )
           {
-            Datum** _buffer = ( Datum** )palloc( ( _accounts.size() - 1 ) * sizeof( Datum* ) );
+            auto** _buffer = ( Datum** )palloc( ( _accounts.size() - 1 ) * sizeof( Datum* ) );
             for( size_t i = 1; i < _accounts.size(); ++i )
             {
               ++itr;
@@ -110,7 +111,7 @@ Datum get_impacted_accounts(PG_FUNCTION_ARGS)
     {
       if( !_first_call )
       {
-        Datum** _buffer = ( Datum** )funcctx->user_fctx;
+        auto** _buffer = ( Datum** )funcctx->user_fctx;
         current_account = *( _buffer[ call_cntr - 1 ] );
       }
 
@@ -118,12 +119,13 @@ Datum get_impacted_accounts(PG_FUNCTION_ARGS)
     }
     else    /* do when there is no more left */
     {
-      if( funcctx->user_fctx )
+      if( funcctx->user_fctx != nullptr )
       {
-        Datum** _buffer = ( Datum** )funcctx->user_fctx;
+        auto** _buffer = ( Datum** )funcctx->user_fctx;
 
-        for( auto i = 0; i < max_calls - 1; ++i )
+        for( auto i = 0; i < max_calls - 1; ++i ) {
           pfree( _buffer[i] );
+        }
 
         pfree( _buffer );
       }
@@ -135,8 +137,8 @@ Datum get_impacted_accounts(PG_FUNCTION_ARGS)
   {
     try
     {
-      VarChar* _arg0 = (VarChar*)PG_GETARG_VARCHAR_P(0);
-      char* _op_body = (char*)VARDATA(_arg0);
+      auto* _arg0 = (VarChar*)PG_GETARG_VARCHAR_P(0);
+      auto* _op_body = (char*)VARDATA(_arg0);
 
       CUSTOM_LOG( "An exception was raised during `get_impacted_accounts` call. Operation: %s", _op_body ? _op_body : "" )
     }
