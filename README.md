@@ -1,6 +1,7 @@
-# psql_tools
+# Hive Application Framework
 
-Contains implementations of Postgres specific tools providing functionalities required by other projects storing blockchain data in the Postrges database.
+Contains the implementation of Hive Application Framework which encompass hive node plugin and Postgres specific tools providing
+functionalities required by other projects storing blockchain data in the Postrges database.
 
 # Compilation
 ## Requirements
@@ -8,14 +9,17 @@ Contains implementations of Postgres specific tools providing functionalities re
 2. postgresql server dev package: `sudo apt-get install postgresql-dev-12`
 3. ssl dev package:               `sudo apt-get install libssl-dev`
 4. readline dev package:          `sudo apt-get install libreadline-dev`
-
+5. pqxx dev package:              `sudo apt-get install libpqxx-dev`
 
 ## CMake and make
-1. `git submodule update --init --recursive`
-2. create build directory, for exemple in sources root: `mkdir build`
-3. `cd build`
-4. `cmake -DCMAKE_BUILD_TYPE=Release ..`
-5. `make`
+This will build all the targets from the HAF repository and `hived` program from submodule `hive`. You can pass
+the same CMake parameters which are used to compile hived project ( for example: -DCLEAR_VOTES=ON -DBUILD_HIVE_TESTNET=OFF -DHIVE_LINT=OFF).
+
+2. `git submodule update --init --recursive`
+3. create build directory, for exemple in sources root: `mkdir build`
+4. `cd build`
+5. `cmake -DCMAKE_BUILD_TYPE=Release ..`
+6. `make`
 
 ### Choose version of the Postgres to compile with
 CMake variable `POSTGRES_INSTALLATION_DIR` is used to point the installation folder
@@ -30,51 +34,36 @@ is installed on Ubuntu. An example of choosing different version of Postgres:
 The project uses ctest to start tests, just execute in build directory `make test`
 
 Test are grouped in a tree by names and `.` as a branch separator where 'test' is the root.
-For example You can start all unit tests with command `ctest -R test.unit.*` 
+For example You can start all unit tests with command `ctest -R test.functional.*` 
 
 # Installation
 Postgres plugins has to be copied into postgres `$libdir/plugins directory`
 
 You can check postgres `$libdir` directory with: `pg_config --pkglibdir`
 
-The best option is to execute `make install` from build directory
+The best option is to execute `make install` from build directory (may required to have root privileges)
 
 # Architecture
 ## Directory structure
    ```
-   cmake                      Contains common functions used by cmake build
+   cmake                         Contains common functions used by cmake build
    common_includes
-        include               Constains library interfaces header files, to share them among the project items
-   doc                        Contains documentation
-   src                        Contains sources
-        pq_utils              C++ interface for PostgreSQL PQ interface
-        psql_utils            C++ utilities to PostgreSQL C interfaces
-        hive_fork_manager     Contains SQL extension which implements solution for hive forks 
-   tests                      Contains test
-        integration           Folder for non-unit tests like functional or system tests
-          functional          Contains functional tests
-        unit                  Contains unit tests and mocks
-            mockups           Contains mocks 
+        include                  Constains library interfaces header files, to share them among the project items
+   doc                           Contains documentation
+   hive                          Submodule of hive project: https://gitlab.syncad.com/hive/hive
+   src                           Contains sources
+        sql_serializer           C++ hived plugin which is compiled tohether with hived
+        transaction_controllers  library with C++ utilities to controll Postgres transactions 
+        hive_fork_manager        Contains SQL extension which implements solution for hive forks 
+   tests                         Contains test
+        integration              Folder for non-unit tests like functional or system tests
+          functional             Contains functional tests
+        unit                     Contains unit tests and mocks
+            mockups              Contains mocks 
    ```
 
 There is also a `generated` directory inside the build directory. It contains autmatically generated headers which can be included
 in the code whith ```#include "gen/header_file_name.hpp"```
-## Error handling in C++
-- Exceptions are used as an error handling method
-- Each PostgreSQL 'C' entry points have to catch all unhandled exceptions and logs them as errors using LOG_ERROR macro
-  what breaks pending transaction
-- RAII is in use - each our object contructors may throw PsqlTools::ObjectInitializationException
-
-## C++ coding standard
-1. use C++14
-2. class names start with upper case and use CamelCase __ClassName__
-3. method names start with lower case and use CamelCase __camelCase__
-4. all instations (objects, variables, attributes, class membert) use snake_case
-5. functions attribute start with underscore ___function_attribute_name__
-6. class members starts with 'm_' __m_class_member_name__
-7. global and static variable are written in upper case without prefixes __GLOBAL_VARIABLE_NAME__
-8. templete attributes use CamelCase started with underscore and lower case  _templeteAttribute
-9. file and directory names with snake_case: my_file.cpp
 
 ## PSQL extension based on sql script
 If there is a need to create psql extension ( to use CREATE EXTENSION psql command ) a cmake macro is added:
