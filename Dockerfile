@@ -20,6 +20,8 @@ RUN \
             libreadline-dev \
             libsnappy-dev \
             libpqxx-dev \
+            clang \
+            clang-tidy \
     && \
         apt-get clean
 
