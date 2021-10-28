@@ -79,13 +79,19 @@ class ah_query:
     self.next_block                       = "SELECT * FROM hive.app_next_block('{}');".format( self.application_context )
 
     self.get_bodies                       = """
-SELECT ahov.id, hive.get_impacted_accounts(body) as account
-FROM
-  hive.account_history_python_operations_view ahov
-WHERE 
-  block_num >= {} AND block_num <= {}
-ORDER BY ahov.id
-    """
+      SELECT ahov.id, hive.get_impacted_accounts(body) as account
+      FROM
+        hive.account_history_python_operations_view ahov
+      WHERE 
+        block_num >= {} AND block_num <= {}
+      ORDER BY ahov.id
+          """
+
+    #Sometimes at the beginning deleting records from `account_operations` is necessary,
+    #because an application can crash between writing new records and saving actual number processed records.
+    #This is an incoherent situation, so as a result an error: `account_operations_uniq2` a violation is triggered.
+    #After deleting records such problem is omitted.
+    self.delete_redundant_ops             ="select * from hafah_python.remove_redundant_operations('{}')".format( self.application_context )
 
     self.insert_into_accounts             = []
     self.insert_into_accounts.append( "INSERT INTO hafah_python.accounts( id, name ) VALUES" )
@@ -421,6 +427,14 @@ class ah_loader(metaclass = singleton):
     self.interrupt()
     raise source_exception
 
+  def remove_redundant_operations(self):
+    try:
+      logger.info("Removing redundant operations...")
+      self.sql_executor.perform_query(sql_data.query.delete_redundant_ops)
+    except Exception as ex:
+      logger.error("Exception during processing `remove_redundant_operations` method: {0}".format(ex))
+      self.raise_exception(ex)
+
   def prepare(self):
     if self.is_interrupted():
       return
@@ -434,6 +448,8 @@ class ah_loader(metaclass = singleton):
 
         self.sql_executor.perform_query(tables_query)
         self.sql_executor.perform_query(functions_query)
+      else:
+        self.remove_redundant_operations()
 
       self.import_initial_data()
 
