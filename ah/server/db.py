@@ -33,7 +33,7 @@ class Db:
         self.db = None
         self._prep_sql = {}
 
-    async def init(self, url):
+    async def init(self, url, maxsize=20, minsize=8):
         """Initialize the aiopg.sa engine."""
         conf = make_url(url)
         dsn = {}
@@ -49,7 +49,7 @@ class Db:
             dsn['port'] = conf.port
         if 'application_name' not in conf.query:
             dsn['application_name'] = 'hive_server'
-        self.db = await create_engine(**dsn, maxsize=20, minsize=8, **conf.query)
+        self.db = await create_engine(**dsn, maxsize=maxsize, minsize=minsize, **conf.query)
 
     def close(self):
         """Close pool."""
