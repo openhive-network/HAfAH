@@ -78,6 +78,8 @@ GRANT EXECUTE ON FUNCTION
     , hive.register_state_provider_tables( _context hive.context_name )
     , hive.app_state_providers_update( _first_block hive.blocks.num%TYPE, _last_block hive.blocks.num%TYPE, _context hive.context_name )
     , hive.app_state_provider_import( _state_provider hive.state_providers, _context hive.context_name )
+    , hive.connect( _git_sha TEXT, _block_num hive.blocks.num%TYPE )
+    , hive.remove_inconsistend_irreversible_data()
 TO hived_group;
 
 REVOKE EXECUTE ON FUNCTION

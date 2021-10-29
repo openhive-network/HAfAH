@@ -331,7 +331,14 @@ of blocks data by hived. The function drops and saves description of indexes and
 Hived nay use this function before start massive sync of blocks.
 
 #### hive.enable_indexes_of_irreversible()
-It restores indexes and FK constarint dropped and saved by the function above. 
+It restores indexes and FK constarint dropped and saved by the function above.
+
+#### hive.connect( _git_sha, _block_num )
+The Hive node (hived) call this function each time it starts synchronization with the database. The function
+clear irreversible data from inconsistent blocks (blocks which are not fully dumped during previous connection) and
+saves information about the connection occurence into table hived_connections.
+- **_git_sha** - is a GIT version of hived code
+- **_block_num** - head block number for which the hived is synchronized
 
 #### APP API
 The functions which should be used by an application

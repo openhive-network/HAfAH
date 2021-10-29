@@ -18,6 +18,7 @@ ADD_PSQL_EXTENSION(
             blocks_views_for_contexts.sql
             state_provider.sql
             state_providers/accounts.sql
+            hived_connections.sql
             hived_api_impl.sql
             app_api_impl.sql
             hived_api.sql
