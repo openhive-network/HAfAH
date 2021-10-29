@@ -121,6 +121,13 @@ inherits from`hive.trx_histogram` to register it into the context 'trx_histogram
 To switch from non-forking application to forking one all the applications' tables have to be registered in contexts using
 'hive.app_register_table' method.
 
+## Shared lib
+There are some functions that can be done efficiently only with low-level code as C/C++. Moreover, there is a need to
+get some code already working in hived, and execute it by Hive Fork Manager or its applications. One example is a parsing operation JSON to get the list
+of accounts impacted by the operation. Such functionality was already implemented in hived and there is no sense to implement its copy.
+The folder 'shared_lib' contains an implementation of a shared library which is loaded and used by Hive Fork Manger extension.
+The applications may call functions from this library with SQL interface prepared by the extension.
+
 ## States Providers Library
 There are examples of applications that are generic and theirs tables could be used by a wide range of more specific applications.
 The tables present in a more conviniet way some part of the blockchain state included in blocks data.
@@ -417,18 +424,23 @@ Moves a context to the next available block
 ##### hive.context_back_from_fork( context_name, block_num )
 Rewind only tables registered in given context to given block_num
 
-#### hive.registered_table
+##### hive.registered_table
 Registers an user table in the fork system, is used by the trigger for CREATE TABLE
 
-#### hive.create_shadow_table
+##### hive.create_shadow_table
 Creates shadow table for given table
 
-#### hive.attach_table( schema, table )
+##### hive.attach_table( schema, table )
 Enables triggers atatched to a register table.
 
-#### hive.detach_table( schema, table )
+##### hive.detach_table( schema, table )
 Disables triggers atatched to a register table. It is usefull for operation below irreversible block
 when fork is impossible, then we don't want have trigger overhead for each edition of a table.
+
+#### SHARED_LIB API
+
+##### hive.get_impacted_accounts( operation_body )
+Returns list of accounts ( their names ) impacted by the operation. 
 
 ## Known Problems
 1. Constraints FOREIGN KEY must be DEFERRABLE, otherwise we cannot guarnteen success or rewinding changes - the process may temporary violates tables constraints.
