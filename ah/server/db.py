@@ -6,6 +6,7 @@ from time import perf_counter as perf
 import sqlalchemy
 from sqlalchemy.engine.url import make_url
 from aiopg.sa import create_engine
+from aiopg.connection import TIMEOUT
 
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
@@ -33,7 +34,7 @@ class Db:
         self.db = None
         self._prep_sql = {}
 
-    async def init(self, url):
+    async def init(self, url, maxsize = 20, minsize = 8, timeout = TIMEOUT):
         """Initialize the aiopg.sa engine."""
         conf = make_url(url)
         dsn = {}
@@ -49,7 +50,7 @@ class Db:
             dsn['port'] = conf.port
         if 'application_name' not in conf.query:
             dsn['application_name'] = 'hive_server'
-        self.db = await create_engine(**dsn, maxsize=20, minsize=8, **conf.query)
+        self.db = await create_engine(**dsn, maxsize = maxsize, minsize = minsize, timeout = timeout, **conf.query)
 
     def close(self):
         """Close pool."""
@@ -100,14 +101,7 @@ class Db:
     async def _query(self, conn, sql, **kwargs):
         """Send a query off to SQLAlchemy."""
         try:
-            sql = str(sqlalchemy.text(sql).\
-              bindparams(**kwargs).\
-              execution_options(autocommit=False).\
-              compile(dialect=sqlalchemy.dialects.postgresql.dialect(), compile_kwargs={"literal_binds": True}))
-            before = perf()
-            result = await conn.execute(sql)
-            print(f'{perf() - before}|{sql}', flush=True)
-            return result
+            return await conn.execute(self._sql_text(sql), **kwargs)
         except Exception as e:
             log.warning("[SQL-ERR] %s in query %s (%s)",
                         e.__class__.__name__, sql, kwargs)

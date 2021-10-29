@@ -17,5 +17,4 @@ CREATE TABLE IF NOT EXISTS hafah_python.account_operations
 
 ALTER TABLE hafah_python.account_operations ADD CONSTRAINT account_operations_uniq1 UNIQUE ( account_id, account_op_seq_no );
 ALTER TABLE hafah_python.account_operations ADD CONSTRAINT account_operations_uniq2 UNIQUE ( account_id, operation_id );
-CREATE INDEX IF NOT EXISTS account_operations_operation_id_idx ON hafah_python.account_operations (operation_id);
 CREATE INDEX IF NOT EXISTS hive_operations_block_num_id_idx ON hive.operations USING btree(block_num, id); -- required by public.enum_virtual_ops_pagination

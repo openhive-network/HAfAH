@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS hafah_python.account_operations_operation_id_idx CASCADE;
