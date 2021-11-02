@@ -71,17 +71,26 @@ class ah_query:
     self.context_is_attached              = "SELECT * FROM hive.app_context_is_attached('{}')".format( self.application_context )
     self.context_detached_save_block_num  = "SELECT * FROM hive.app_context_detached_save_block_num('{}', {})"
     self.context_detached_get_block_num   = "SELECT * FROM hive.app_context_detached_get_block_num('{}')".format( self.application_context )
-
+    
+    #workaround!!! - mickiewicz is going to deliver proper method
+    self.context_current_block_num        = "SELECT current_block_num FROM hive.contexts WHERE NAME = '{}'".format( self.application_context )
+    
     self.next_block                       = "SELECT * FROM hive.app_next_block('{}');".format( self.application_context )
 
     self.get_bodies                       = """
-SELECT ahov.id, hive.get_impacted_accounts(body) as account
-FROM
-  hive.account_history_python_operations_view ahov
-WHERE 
-  block_num >= {} AND block_num <= {}
-ORDER BY ahov.id
-    """
+      SELECT ahov.id, hive.get_impacted_accounts(body) as account
+      FROM
+        hive.account_history_python_operations_view ahov
+      WHERE 
+        block_num >= {} AND block_num <= {}
+      ORDER BY ahov.id
+          """
+
+    #Sometimes at the beginning deleting records from `account_operations` is necessary,
+    #because an application can crash between writing new records and saving actual number processed records.
+    #This is an incoherent situation, so as a result an error: `account_operations_uniq2` a violation is triggered.
+    #After deleting records such problem is omitted.
+    self.delete_redundant_ops             ="select * from hafah_python.remove_redundant_operations('{}')".format( self.application_context )
 
     self.insert_into_accounts             = []
     self.insert_into_accounts.append( "INSERT INTO hafah_python.accounts( id, name ) VALUES" )
@@ -216,22 +225,37 @@ class sql_executor:
     await self.perform_query(_total_query, db)
 
   async def send_accounts(self, accounts_queries, db):
-    if len(accounts_queries) == 0:
-      logger.info("Lack of accounts...")
-      return
+    try:
+      if len(accounts_queries) == 0:
+        logger.info("Lack of accounts...")
+        return
 
-    logger.info("INSERT INTO to `accounts`: {} records".format(len(accounts_queries)))
+      logger.info("INSERT INTO to `accounts`: {} records".format(len(accounts_queries)))
 
-    await self.execute_complex_query(accounts_queries, 0, len(accounts_queries) - 1, sql_data.query.insert_into_accounts, db)
+      await self.execute_complex_query(accounts_queries, 0, len(accounts_queries) - 1, sql_data.query.insert_into_accounts, db)
+    except Exception as ex:
+      logger.error("Exception during processing `send_accounts` method: {0}".format(ex))
+      raise ex
 
   async def send_account_operations(self, account_ops_queries, first_element, last_element, db):
-    logger.info("INSERT INTO to `account_operations`: first element: {} last element: {}".format(first_element, last_element))
+    try:
+      logger.info("INSERT INTO to `account_operations`: first element: {} last element: {}".format(first_element, last_element))
 
-    await self.execute_complex_query(account_ops_queries, first_element, last_element, sql_data.query.insert_into_account_ops, db)
+      await self.execute_complex_query(account_ops_queries, first_element, last_element, sql_data.query.insert_into_account_ops, db)
+    except Exception as ex:
+      logger.error("Exception during processing `send_account_operations` method: {0}".format(ex))
+      raise ex
 
 class ah_loader(metaclass = singleton):
 
   def __init__(self):
+
+    #actual number of operations that are stored in a queue
+    self.stored_ops_buf_len   = 0
+
+    #maximum number of operations that can be stored in a queue
+    self.max_ops_buf_len      = 3000000
+
     self.is_massive           = True
     self.interrupted          = False
 
@@ -304,10 +328,10 @@ class ah_loader(metaclass = singleton):
   async def context_is_attached(self):
     return await self.sql_executor.perform_query_one(sql_data.query.context_is_attached, self.sql_executor.db)
 
-  async def context_detached_get_block_num(self):
+  async def get_last_block_num(self):
     _result = await self.sql_executor.perform_query_one(sql_data.query.context_detached_get_block_num, self.sql_executor.db)
     if _result is None:
-      _result = 0
+      _result = await self.sql_executor.perform_query_one(sql_data.query.context_current_block_num, self.sql_executor.db)
     return _result
 
   async def switch_context_internal(self, force_attach, last_block = 0):
@@ -318,7 +342,7 @@ class ah_loader(metaclass = singleton):
 
     if force_attach:
       if last_block == 0:
-        last_block = await self.context_detached_get_block_num()
+        last_block = await self.get_last_block_num()
 
       _attach_context_query = sql_data.query.attach_context.format(self.application_context, last_block)
       await self.sql_executor.perform_query(_attach_context_query, self.sql_executor.db)
@@ -359,6 +383,7 @@ class ah_loader(metaclass = singleton):
 
     await self.sql_executor.init()
 
+    #In fact maxsize of queue is a secondary issue. The most important thing is a maximum number operations that can be stored in this queue.
     self.queue  = queue.Queue(maxsize = 200)
 
   def interrupt(self):
@@ -367,6 +392,18 @@ class ah_loader(metaclass = singleton):
 
   def is_interrupted(self):
     return self.interrupted
+
+  def raise_exception(self, source_exception):
+    self.interrupt()
+    raise source_exception
+
+  async def remove_redundant_operations(self):
+    try:
+      logger.info("Removing redundant operations...")
+      await self.sql_executor.perform_query(sql_data.query.delete_redundant_ops)
+    except Exception as ex:
+      logger.error("Exception during processing `remove_redundant_operations` method: {0}".format(ex))
+      self.raise_exception(ex)
 
   async def prepare(self):
     if self.is_interrupted():
@@ -381,13 +418,15 @@ class ah_loader(metaclass = singleton):
 
         await self.sql_executor.perform_query(tables_query, self.sql_executor.db)
         await self.sql_executor.perform_query(functions_query, self.sql_executor.db)
+      else:
+        self.remove_redundant_operations()
 
       await self.import_initial_data()
 
     except Exception as ex:
       print(ex)
       logger.error("Exception during processing `prepare` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   def prepare_ranges(self, low_value, high_value, threads):
     assert threads > 0 and threads <= 64, "threads > 0 and threads <= 64"
@@ -416,6 +455,31 @@ class ah_loader(metaclass = singleton):
 
     return _ranges
 
+  def add_received_elements(self, last_block, elements):
+    if len(elements) == 0:
+      return
+
+    _elements_length = len(elements)
+
+    _result = {'block' : last_block, 'elements' : elements, 'length' : _elements_length}
+
+    _inserted  = False
+    _put_delay = 1#[s]
+    _sleep     = 1#[s]
+
+    while not _inserted:
+      try:
+        if (self.stored_ops_buf_len + _elements_length < self.max_ops_buf_len) or self.queue.empty():
+          self.queue.put(_result, True, _put_delay)
+          _inserted = True
+          self.stored_ops_buf_len += _elements_length
+        else:
+          logger.info("Queue is full. stored-ops:{} actual-ops:{} max-ops:{} ... Waiting {} seconds".format(self.stored_ops_buf_len, _elements_length, self.max_ops_buf_len, _sleep))
+          time.sleep(_sleep)
+      except queue.Full:
+        logger.info("Queue is full( `queue.Full` exception ). stored-ops:{} actual-ops:{} max-ops:{} ... Waiting {} seconds".format(self.stored_ops_buf_len, _elements_length, self.max_ops_buf_len, _sleep))
+        time.sleep(_sleep)
+
   async def receive_data(self, first_block, last_block, db):
     try:
       _loop = asyncio.get_event_loop()
@@ -430,25 +494,14 @@ class ah_loader(metaclass = singleton):
 
       _elements = await asyncio.gather(*_tasks)
 
-      if len(_elements) == 0:
-        return
+      for __elements in _elements:
+        self.add_received_elements(last_block, __elements)
 
-      _result = {'block' : last_block, 'elements' : _elements}
+      logger.info("Operations between {} and {} blocks were received".format(first_block, last_block))
 
-      _inserted  = False
-      _put_delay = 1#[s]
-      _sleep     = 1#[s]
-
-      while not _inserted:
-        try:
-          self.queue.put(_result, True, _put_delay)
-          _inserted = True
-        except queue.Full:
-          logger.info("Queue is full... Waiting {} seconds".format(_sleep))
-          time.sleep(_sleep)
     except Exception as ex:
       logger.error("Exception during processing `receive_data` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   async def receive(self):
     _thread_db = None
@@ -490,6 +543,9 @@ class ah_loader(metaclass = singleton):
         try:
           received_items_block = self.queue.get(True, _get_delay)
           _received = True
+          self.stored_ops_buf_len -= received_items_block['length']
+          assert self.stored_ops_buf_len >= 0, "Number of operations can't be less than zero"
+          logger.info("Number of elements retrieved from queue: {}".format(received_items_block['length'], _sleep))
         except queue.Empty:
           if self.finished:
             if cnt < tries:
@@ -505,6 +561,7 @@ class ah_loader(metaclass = singleton):
               break
       except Exception as ex:
         logger.error("Exception during processing `prepare_sql` method: {0}".format(ex))
+        self.raise_exception(ex)
 
     if received_items_block is None:
       logger.info("Lack of impacted accounts...")
@@ -514,9 +571,8 @@ class ah_loader(metaclass = singleton):
       logger.info("Lack of impacted accounts - empty set...")
       return None
 
-    for items in received_items_block['elements']:
-      for item in items:
-        self.gather_part_of_queries( item.op_id, item.name )
+    for item in received_items_block['elements']:
+      self.gather_part_of_queries( item.op_id, item.name )
 
     return received_items_block['block']
 
@@ -545,7 +601,7 @@ class ah_loader(metaclass = singleton):
       self.account_ops_queries.clear()
     except Exception as ex:
       logger.error("Exception during processing `send_data` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   async def save_detached_block_num(self, block_num, db):
     try:
@@ -555,7 +611,7 @@ class ah_loader(metaclass = singleton):
       await self.sql_executor.perform_query(_query, db)
     except Exception as ex:
       logger.error("Exception during processing `save_detached_block_num` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
   async def send(self):
     _thread_db = None
@@ -677,7 +733,7 @@ class ah_loader(metaclass = singleton):
         return True
     except Exception as ex:
       logger.error("Exception during processing `process` method: {0}".format(ex))
-      raise ex
+      self.raise_exception(ex)
 
 def allow_close_app(empty, declared_empty_results, cnt_empty_result):
   _res = False
