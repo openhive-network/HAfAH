@@ -140,3 +140,18 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.connect( _git_sha TEXT, _block_num hive.blocks.num%TYPE )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    PERFORM hive.remove_inconsistend_irreversible_data();
+    INSERT INTO hive.hived_connections( block_num, git_sha, time )
+    VALUES( _block_num, _git_sha, now() );
+END;
+$BODY$
+;
+
+

@@ -358,3 +358,27 @@ $function$
 LANGUAGE plpgsql VOLATILE
 ;
 
+CREATE OR REPLACE FUNCTION hive.remove_inconsistend_irreversible_data()
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+DECLARE
+    __consistent_block INTEGER := NULL;
+BEGIN
+    SELECT consistent_block INTO __consistent_block FROM hive.irreversible_data;
+
+    DELETE FROM hive.operations WHERE block_num > __consistent_block;
+
+    DELETE FROM hive.transactions_multisig htm
+    USING hive.transactions ht
+    WHERE ht.block_num > __consistent_block AND ht.trx_hash = htm.trx_hash;
+
+    DELETE FROM hive.transactions WHERE block_num > __consistent_block;
+
+    DELETE FROM hive.blocks WHERE num > __consistent_block;
+END;
+$BODY$
+;
+

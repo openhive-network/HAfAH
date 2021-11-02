@@ -15,6 +15,7 @@
 
 #include <hive/utilities/plugin_utilities.hpp>
 
+#include <fc/git_revision.hpp>
 #include <fc/io/json.hpp>
 #include <fc/io/sstream.hpp>
 #include <fc/crypto/hex.hpp>
@@ -156,6 +157,7 @@ using chain::reindex_notification;
           void on_post_apply_block(const block_notification& note);
 
           void handle_transactions(const vector<hive::protocol::signed_transaction>& transactions, const int64_t block_num);
+          void inform_hfm_about_starting();
 
           boost::signals2::connection _on_pre_apply_operation_con;
           boost::signals2::connection _on_post_apply_operation_con;
@@ -323,6 +325,21 @@ using chain::reindex_notification;
             return is_extension_created;
           }
 
+          void inform_hfm_about_starting(hive::chain::database& _chaindb) {
+            using namespace std::string_literals;
+            ilog( "Inform Hive Fork Manager about starting..." );
+
+            // inform the db about starting hivd
+            auto connect_to_the_db = [&_chaindb](const data_processor::data_chunk_ptr& dataPtr, transaction_controllers::transaction& tx){
+              const auto CONNECT_QUERY = "SELECT hive.connect("s + fc::git_revision_sha + ","s + std::to_string( _chaindb.head_block_num() ) + ")"s;
+              tx.exec( CONNECT_QUERY );
+              return data_processing_status();
+            };
+            queries_commit_data_processor processor( db_url, "Connect to the db", connect_to_the_db, nullptr );
+            processor.trigger( nullptr, 0 );
+            processor.join();
+          }
+
           void load_initial_db_data()
           {
             ilog("Loading operation's last id ...");
@@ -396,6 +413,21 @@ void sql_serializer_plugin_impl::wait_for_data_processing_finish()
   _dumper->wait_for_data_processing_finish();
 }
 
+void sql_serializer_plugin_impl::inform_hfm_about_starting() {
+  using namespace std::string_literals;
+  ilog( "Inform Hive Fork Manager about starting..." );
+
+  // inform the db about starting hivd
+  auto connect_to_the_db = [&](const data_processor::data_chunk_ptr& dataPtr, transaction_controllers::transaction& tx){
+    const auto CONNECT_QUERY = "SELECT hive.connect('"s + fc::git_revision_sha + "',"s + std::to_string( chain_db.head_block_num() ) + "::INTEGER);"s;
+    tx.exec( CONNECT_QUERY );
+    return data_processing_status();
+  };
+  queries_commit_data_processor processor( db_url, "Connect to the db", connect_to_the_db, nullptr );
+  processor.trigger( nullptr, 0 );
+  processor.join();
+}
+
 void sql_serializer_plugin_impl::connect_signals()
 {
   _on_pre_apply_operation_con = chain_db.add_pre_apply_operation_handler([&](const operation_notification& note) { on_pre_apply_operation(note); }, main_plugin);
@@ -429,6 +461,7 @@ void sql_serializer_plugin_impl::on_pre_apply_block(const block_notification& no
   ilog("Entering a resync data init for block: ${b}...", ("b", note.block_num));
 
   /// Let's init our database before applying first block (resync case)...
+  inform_hfm_about_starting();
   init_database(note.block_num == 1, note.block_num);
 
   /// And disconnect to avoid subsequent inits
@@ -564,6 +597,7 @@ void sql_serializer_plugin_impl::on_pre_reindex(const reindex_notification& note
 {
   ilog("Entering a reindex init...");
   /// Let's init our database before applying first block...
+  inform_hfm_about_starting();
   init_database(note.force_replay, note.max_block_number);
 
   /// Disconnect pre-apply-block handler to avoid another initialization (for resync case).
