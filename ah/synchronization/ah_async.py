@@ -254,7 +254,7 @@ class ah_loader(metaclass = singleton):
     self.stored_ops_buf_len   = 0
 
     #maximum number of operations that can be stored in a queue
-    self.max_ops_buf_len      = 3000000
+    self.max_ops_buf_len      = 2000000
 
     self.is_massive           = True
     self.interrupted          = False
