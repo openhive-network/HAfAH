@@ -19,17 +19,17 @@ namespace {
 class own_tx_controller final : public transaction_controller
 {
 public:
-  own_tx_controller(const std::string& dbUrl, const std::string& description) : _dbUrl(dbUrl), _description(description) {}
+  own_tx_controller(std::string dbUrl, std::string description) : _dbUrl(std::move(dbUrl)), _description(std::move(description)) {}
 
 /// transaction_controller:
-  virtual transaction_ptr openTx() override;
-  virtual void disconnect() override;
+  transaction_ptr openTx() override;
+  void disconnect() override;
 
 private:
   class own_transaction final : public transaction
   {
   public:
-    own_transaction(own_tx_controller* owner) : _owner(owner) 
+    explicit own_transaction(own_tx_controller* owner) : _owner(owner)
     {
       FC_ASSERT(_owner->_opened_tx == nullptr);
       _owner->_opened_tx = this;
@@ -41,14 +41,14 @@ private:
       );
     }
 
-    virtual ~own_transaction()
+    ~own_transaction() override
     {
       do_rollback();
     }
 
-    virtual void commit() override;
-    virtual pqxx::result exec(const std::string& query) override;
-    virtual void rollback() override;
+    void commit() override;
+    pqxx::result exec(const std::string& query) override;
+    void rollback() override;
 
   private:
     template <typename Executor>
@@ -68,7 +68,7 @@ private:
           }
 
           if ( _opened_tx == nullptr ) {
-            _opened_tx = std::make_unique<pqxx::work>(*_owner->_opened_connection.get());
+            _opened_tx = std::make_unique<pqxx::work>(*_owner->_opened_connection);
           }
           return ex();
         }
@@ -120,7 +120,7 @@ private:
 
     void finalize_transaction()
     {
-      if(_owner)
+      if(_owner != nullptr)
       {
         FC_ASSERT(_owner->_opened_tx == this);
         _owner->_opened_tx = nullptr;
@@ -189,8 +189,9 @@ void own_tx_controller::disconnect()
 {
   if(_opened_connection)
   {
-    if(_opened_tx)
+    if(_opened_tx != nullptr) {
       _opened_tx->rollback();
+    }
 
     _opened_connection->disconnect();
     _opened_connection.release();
@@ -210,8 +211,8 @@ public:
   }
 
 /// transaction_controller:
-  virtual transaction_ptr openTx() override;
-  virtual void disconnect() override;
+  transaction_ptr openTx() override;
+  void disconnect() override;
 
   void initialize_tx()
   {
@@ -226,18 +227,20 @@ public:
   unsigned int finalize_tx()
   {
     --_clientCount;
-    if(_clientCount == 0 && _own_tx)
+    if(_clientCount == 0 && _own_tx) {
       _own_tx.reset();
+    }
 
     return _clientCount;
   }
 
   pqxx::result do_query(const std::string& query)
   {
-    if(_own_tx)
+    if(_own_tx) {
       return _own_tx->exec(query);
+    }
 
-  return pqxx::result();
+    return pqxx::result();
   }
 
   void do_commit()
@@ -270,11 +273,11 @@ private:
         _owner.initialize_tx();
       }
 
-    virtual ~transaction_wrapper();
+    ~transaction_wrapper() override;
 
-    virtual void commit() override;
-    virtual pqxx::result exec(const std::string& query) override;
-    virtual void rollback() override;
+    void commit() override;
+    pqxx::result exec(const std::string& query) override;
+    void rollback() override;
 
   private:
     single_transaction_controller& _owner;
@@ -308,8 +311,9 @@ void single_transaction_controller::transaction_wrapper::rollback()
 
 single_transaction_controller::transaction_wrapper::~transaction_wrapper()
 {
-  if(_do_implicit_rollback)
+  if(_do_implicit_rollback) {
     _owner.do_rollback();
+  }
 
   _owner.finalize_tx();
 }
@@ -323,12 +327,13 @@ transaction_controller::transaction_ptr single_transaction_controller::openTx()
 void single_transaction_controller::disconnect()
 {
   /// If multiple clients use this controller, let them finish their work...
-  if(_clientCount == 0 && _own_contoller)
+  if(_clientCount == 0 && _own_contoller) {
     _own_contoller->disconnect();
+  }
 }
 
 
-} /// anonymous
+} // namespace
 
 transaction_controller_ptr build_own_transaction_controller(const std::string& dbUrl, const std::string& description)
 {

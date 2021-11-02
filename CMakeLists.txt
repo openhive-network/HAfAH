@@ -20,6 +20,7 @@ INCLUDE( ExternalProject )
 
 SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 
+INCLUDE( clangtidy )
 INCLUDE( compiler )
 INCLUDE( git )
 INCLUDE( libraries )
