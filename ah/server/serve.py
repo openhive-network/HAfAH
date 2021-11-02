@@ -19,7 +19,7 @@ from time import perf_counter
 from sqlalchemy.exc import OperationalError
 from aiohttp import web
 from jsonrpcserver.methods import Methods
-from jsonrpcserver import async_dispatch as dispatch
+from jsonrpcserver import dispatch
 
 from ah.api.endpoints import build_methods as account_history
 
@@ -28,6 +28,7 @@ from ah.server.db import Db
 
 # pylint: disable=too-many-lines
 
+app_config = dict()
 class Handler(BaseHTTPRequestHandler):
 
     def _set_headers(self):
@@ -37,36 +38,71 @@ class Handler(BaseHTTPRequestHandler):
         
     def do_HEAD(self):
         self._set_headers()
+
         
-    # POST echoes the message adding a JSON field
     def do_POST(self):
-        ctype, pdict = cgi.parse_header(self.headers.get('content-type'))
+        methods = build_methods()
+        request = self.rfile.read(int(self.headers["Content-Length"])).decode()
         
-        # refuse to receive non-json content
-        if ctype != 'application/json':
-            self.send_response(400)
-            self.end_headers()
-            return
+        # # refuse to receive non-json content
+        # if ctype != 'application/json':
+        #     self.send_response(400)
+        #     self.end_headers()
+        #     return
+
+        try:
+            response = dispatch(request, methods=methods, debug=True, serialize=decimal_serialize, deserialize=decimal_deserialize)
+        except Exception as ex:
+            # create and send error response
+            error_response = {
+                "jsonrpc":"2.0",
+                "error" : {
+                    "code": -32602,
+                    "data": "Invalid JSON in request: " + str(ex),
+                    "message": "Invalid parameters"
+                },
+                "id" : -1
+            }
             
-        # read the message and convert it into a python dictionary
-        length = int(self.headers.get('content-length'))
-        print(threading.currentThread().getName())
-        # self.wfile.write(message)
-        message_string = self.rfile.read(length).decode('utf-8')
-        message = json.loads(message_string) if message_string else None
+            self.send_response(200)
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            decimal_serialize(error_response)
+            self.wfile.write(json.dumps(error_response).encode('utf-8'))
         
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+        # response = response.deserialized()
+        response = decimal_serialize(response)
+        self.wfile.write(json.dumps(response).encode('utf-8'))
+
+
+
+        # # read the message and convert it into a python dictionary
+        # length = int(self.headers.get('content-length'))
+        # print(threading.currentThread().getName())
+        # # self.wfile.write(message)
+        # message_string = self.rfile.read(length).decode('utf-8')
+        # message = json.loads(message_string) if message_string else None
+
+    # async def jsonrpc_handler(request):
+    #     """Handles all hive jsonrpc API requests."""
+    
         
-        # add a property to the object, just to mess with data
-        message['received'] = 'ok'
+        # # add a property to the object, just to mess with data
+        # message['received'] = 'ok'
         
-        # send the message back
-        self._set_headers()
-        self.wfile.write(json.dumps(message).encode('utf-8'))
+        # # send the message back
+        # self._set_headers()
+        # self.wfile.write(json.dumps(message).encode('utf-8'))
 
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-    """Handle requests in a separate thread."""
-    pass
+    """An HTTP Server that handle each request in a new thread"""
+    daemon_threads = True
 
 def decimal_serialize(obj):
     return simplejson.dumps(obj=obj, use_decimal=True, default=vars)
@@ -125,9 +161,9 @@ def run_server(db_url, port):
 
     """Configure API."""
     log = logging.getLogger(__name__)
-    methods = build_methods()
+    # methods = build_methods()
 
-    app_config = dict()
+    # app_config = dict()
     app_config['hive.MAX_DB_ROW_RESULTS'] = 100000
 
     async def init_db(app):
