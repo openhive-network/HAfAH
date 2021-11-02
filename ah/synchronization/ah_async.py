@@ -492,10 +492,9 @@ class ah_loader(metaclass = singleton):
       for range in _ranges:
         _tasks.append(_loop.create_task(self.sql_executor.receive_impacted_accounts(range.low, range.high, db)))
 
-      _elements = await asyncio.gather(*_tasks)
-
-      for __elements in _elements:
-        self.add_received_elements(last_block, __elements)
+      for task in _tasks:
+        _elements = await asyncio.gather(task)
+        self.add_received_elements(last_block, _elements)
 
       logger.info("Operations between {} and {} blocks were received".format(first_block, last_block))
 
@@ -571,8 +570,9 @@ class ah_loader(metaclass = singleton):
       logger.info("Lack of impacted accounts - empty set...")
       return None
 
-    for item in received_items_block['elements']:
-      self.gather_part_of_queries( item.op_id, item.name )
+    for items in received_items_block['elements']:
+      for item in items:
+        self.gather_part_of_queries( item.op_id, item.name )
 
     return received_items_block['block']
 
