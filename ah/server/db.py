@@ -100,14 +100,7 @@ class Db:
     async def _query(self, conn, sql, **kwargs):
         """Send a query off to SQLAlchemy."""
         try:
-            sql = str(sqlalchemy.text(sql).\
-              bindparams(**kwargs).\
-              execution_options(autocommit=False).\
-              compile(dialect=sqlalchemy.dialects.postgresql.dialect(), compile_kwargs={"literal_binds": True}))
-            before = perf()
-            result = await conn.execute(sql)
-            print(f'{perf() - before}|{sql}', flush=True)
-            return result
+            return await conn.execute(self._sql_text(sql), **kwargs)
         except Exception as e:
             log.warning("[SQL-ERR] %s in query %s (%s)",
                         e.__class__.__name__, sql, kwargs)
