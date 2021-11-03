@@ -29,29 +29,21 @@ from ah.server.db import Db
 # pylint: disable=too-many-lines
 
 app_config = dict()
+
 class Handler(BaseHTTPRequestHandler):
-
-    def _set_headers(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
-        
-    def do_HEAD(self):
-        self._set_headers()
-
         
     def do_POST(self):
         methods = build_methods()
         request = self.rfile.read(int(self.headers["Content-Length"])).decode()
-        
-        # # refuse to receive non-json content
-        # if ctype != 'application/json':
-        #     self.send_response(400)
-        #     self.end_headers()
-        #     return
+
+        ctx = {
+            "db": app_config["db"],
+            "id": json.loads(request)['id']
+        }
+        response = None
 
         try:
-            response = dispatch(request, methods=methods, debug=True, serialize=decimal_serialize, deserialize=decimal_deserialize)
+            response = dispatch(request, methods=methods, debug=True, context=ctx, serialize=decimal_serialize, deserialize=decimal_deserialize)
         except Exception as ex:
             # create and send error response
             error_response = {
@@ -66,49 +58,31 @@ class Handler(BaseHTTPRequestHandler):
             
             self.send_response(200)
             self.send_header('Access-Control-Allow-Origin', '*')
-            self.send_header('Content-Type', 'application/json')
             self.end_headers()
-            decimal_serialize(error_response)
+            error_response = json.dumps(error_response)
             self.wfile.write(json.dumps(error_response).encode('utf-8'))
+            return
         
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Content-Type', 'application/json')
         self.end_headers()
-        # response = response.deserialized()
-        response = decimal_serialize(response)
+        response = response.deserialized()
         self.wfile.write(json.dumps(response).encode('utf-8'))
-
-
-
-        # # read the message and convert it into a python dictionary
-        # length = int(self.headers.get('content-length'))
-        # print(threading.currentThread().getName())
-        # # self.wfile.write(message)
-        # message_string = self.rfile.read(length).decode('utf-8')
-        # message = json.loads(message_string) if message_string else None
-
-    # async def jsonrpc_handler(request):
-    #     """Handles all hive jsonrpc API requests."""
-    
-        
-        # # add a property to the object, just to mess with data
-        # message['received'] = 'ok'
-        
-        # # send the message back
-        # self._set_headers()
-        # self.wfile.write(json.dumps(message).encode('utf-8'))
+        return
 
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """An HTTP Server that handle each request in a new thread"""
-    daemon_threads = True
+    pass
 
 def decimal_serialize(obj):
-    return simplejson.dumps(obj=obj, use_decimal=True, default=vars)
+    return json.dumps(dict(obj))
+    # return simplejson.dumps(obj=obj, use_decimal=True, default=vars)
 
 def decimal_deserialize(s):
-    return simplejson.loads(s=s, use_decimal=True)
+    return json.loads(dict(s))
+    # return simplejson.loads(s=s, use_decimal=True)
+
 
 async def db_head_state(context):
     return
@@ -154,23 +128,23 @@ def conf_stdout_custom_file_logger(logger, file_name):
     logger.addHandler(file_handler)
 
 def run_server(db_url, port):
+    """Configure API."""
+    app_config['hive.MAX_DB_ROW_RESULTS'] = 100000
+
+    def init_db(app):
+        """Initialize db adapter."""
+        app['db'] = Db.create(db_url)
+
+    init_db(app_config)
+
+    def init_db(app):
+        """Initialize db adapter."""
+        app['db'] = Db.create(db_url)
+
     """Starting threading server."""
     server = ThreadedHTTPServer(('', port), Handler)
     print('Starting server, use <Ctrl-C> to stop')
     server.serve_forever()
-
-    """Configure API."""
-    log = logging.getLogger(__name__)
-    # methods = build_methods()
-
-    # app_config = dict()
-    app_config['hive.MAX_DB_ROW_RESULTS'] = 100000
-
-    async def init_db(app):
-        """Initialize db adapter."""
-        app['db'] = await Db.create(db_url)
-
-    init_db(app_config)
 
     # """Configure and launch the API server."""
     # log = logging.getLogger(__name__)
