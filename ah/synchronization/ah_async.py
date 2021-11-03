@@ -136,6 +136,9 @@ class sql_data:
   args   = None
 
 class sql_executor:
+
+  timeout = 120
+
   def __init__(self):
     self.db = None
 
@@ -147,7 +150,7 @@ class sql_executor:
   async def clone(self, max_size):
     logger.info("Initialization of a pool of connection in thread")
     _db = Db()
-    await _db.init(sql_data.args.url, max_size, max_size)
+    await _db.init(sql_data.args.url, max_size, max_size, sql_executor.timeout)
     return _db
 
   async def perform_query(self, query, db):
