@@ -520,14 +520,24 @@ class ah_loader(metaclass = singleton):
 
       _futures = []
 
+      start = datetime.datetime.now()
+
       with ThreadPoolExecutor(max_workers=len(_ranges)) as executor:
         for range in _ranges:
           if self.is_interrupted():
             break
           _futures.append(executor.submit(self.sql_executor.receive_impacted_accounts, self.sql_pool.get_item(), range.low, range.high))
 
+      end = datetime.datetime.now()
+      logger.info("receive-thread time[ms]: {}".format(helper.get_time(start, end)))
+
+      start = datetime.datetime.now()
+
       for future in _futures:
         self.add_received_elements(last_block, future.result())
+
+      end = datetime.datetime.now()
+      logger.info("receive-future time[ms]: {}".format(helper.get_time(start, end)))
 
       logger.info("Operations between {} and {} blocks were received".format(first_block, last_block))
 
@@ -605,8 +615,13 @@ class ah_loader(metaclass = singleton):
 
       logger.info("Sending all data...")
 
+      start = datetime.datetime.now()
+
       with ThreadPoolExecutor(max_workers = 1) as executor:
         _futures.append(executor.submit(self.sql_executor.send_accounts, self.sql_pool.get_item(), self.accounts_queries))
+
+      end = datetime.datetime.now()
+      logger.info("send-thread-accounts time[ms]: {}".format(helper.get_time(start, end)))
 
       if len(self.account_ops_queries) == 0:
         logger.info("Lack of operations...")
@@ -614,12 +629,21 @@ class ah_loader(metaclass = singleton):
         _ranges = self.prepare_ranges(0, len(self.account_ops_queries) - 1, sql_data.args.threads_send)
         assert len(_ranges) > 0
 
+      start = datetime.datetime.now()
+
       with ThreadPoolExecutor(max_workers = len(_ranges)) as executor:
         for range in _ranges:
           _futures.append(executor.submit(self.sql_executor.send_account_operations, self.sql_pool.get_item(), self.account_ops_queries, range.low, range.high))
 
+      end = datetime.datetime.now()
+      logger.info("send-thread-ops time[ms]: {}".format(helper.get_time(start, end)))
+
+      start = datetime.datetime.now()
+
       for future in as_completed(_futures):
         future.result()
+
+      logger.info("send-future time[ms]: {}".format(helper.get_time(start, end)))
 
       self.accounts_queries.clear()
       self.account_ops_queries.clear()
@@ -790,6 +814,8 @@ def process_arguments():
 def main():
   try:
 
+    start = datetime.datetime.now()
+
     logger.info("Synchronization with account history database...")
 
     _url, _schema_dir, _allowed_empty_results, _threads_receive, _threads_send = process_arguments()
@@ -801,6 +827,9 @@ def main():
     set_handlers()
 
     _loader.prepare()
+
+    end = datetime.datetime.now()
+    logger.info("prepare time[ms]: {}".format(helper.get_time(start, end)))
 
     cnt_empty_result = 0
     declared_empty_results = _allowed_empty_results
