@@ -104,10 +104,10 @@ class ah_query:
     self.insert_into_account_ops.append( " ;" )
 
 class args_container:
-  def __init__(self, url = "", schema_dir = "", range_blocks_flush = 1000, threads_receive = 1, threads_send = 1):
+  def __init__(self, url = "", schema_dir = "", threads_receive = 1, threads_send = 1):
     self.url              = url
     self.schema_path      = schema_dir
-    self.flush_size       = range_blocks_flush
+    self.flush_size       = 20000
     self.threads_receive  = threads_receive
     self.threads_send     = threads_send
 
@@ -281,7 +281,7 @@ class ah_loader(metaclass = singleton):
     self.stored_ops_buf_len   = 0
 
     #maximum number of operations that can be stored in a queue
-    self.max_ops_buf_len      = 3000000
+    self.max_ops_buf_len      = 1000000
 
     self.is_massive           = True
     self.interrupted          = False
@@ -413,7 +413,7 @@ class ah_loader(metaclass = singleton):
     self.sql_executor.init()
 
     #In fact maxsize of queue is a secondary issue. The most important thing is a maximum number operations that can be stored in this queue.
-    self.queue  = queue.Queue(maxsize = 200)
+    self.queue  = queue.Queue(maxsize = 1000)
 
     self.sql_pool.create_executors(self.sql_executor, sql_data.args.threads_receive + sql_data.args.threads_send + 1)
 
@@ -500,6 +500,8 @@ class ah_loader(metaclass = singleton):
 
     while not _inserted:
       try:
+        if self.is_interrupted():
+          break
         if (self.stored_ops_buf_len + _elements_length < self.max_ops_buf_len) or self.queue.empty():
           self.queue.put(_result, True, _put_delay)
           _inserted = True
@@ -560,6 +562,8 @@ class ah_loader(metaclass = singleton):
     received_items_block = None
     while not _received:
       try:
+        if self.is_interrupted():
+          break
         try:
           received_items_block = self.queue.get(True, _get_delay)
           _received = True
@@ -577,8 +581,6 @@ class ah_loader(metaclass = singleton):
           else:
             logger.info("Queue is empty... Waiting {} seconds".format(_sleep))
             time.sleep(_sleep)
-            if self.is_interrupted():
-              break
       except Exception as ex:
         logger.error("Exception during processing `prepare_sql` method: {0}".format(ex))
         self.raise_exception(ex)
@@ -638,11 +640,16 @@ class ah_loader(metaclass = singleton):
   def send(self):
     logger.info("Sending...")
     while True:
+      if self.is_interrupted():
+        break
       start = datetime.datetime.now()
 
       self.last_block_num = self.prepare_sql()
 
       self.send_data()
+
+      if self.is_interrupted():
+        break
 
       if self.is_massive and self.last_block_num is not None:
         self.save_detached_block_num(self.last_block_num)
@@ -652,9 +659,6 @@ class ah_loader(metaclass = singleton):
 
       if self.finished and self.queue.empty():
         logger.info("Sending is finished...")
-        break
-      if self.is_interrupted():
-        logger.info("Sending is interrupted...")
         break
 
   def work(self):
@@ -677,6 +681,8 @@ class ah_loader(metaclass = singleton):
     _last_block = first_block
 
     while _last_block != last_block:
+      if self.is_interrupted():
+        break
       _last_block = min(_last_block + sql_data.args.flush_size, last_block)
       self.block_ranges.append(range_type(first_block, _last_block))
       first_block = _last_block + 1
@@ -769,29 +775,28 @@ def process_arguments():
   import argparse
   parser = argparse.ArgumentParser()
 
-# ./program --url postgresql://postgres:pass@127.0.0.1:5432/hafah --schema-dir /home/kmochocki/hf/HAfAH/ah/synchronization/queries --range-blocks-flush 40000 --allowed-empty-results 2 --threads-receive 6 --threads-send 6
+# ./program --url postgresql://postgres:pass@127.0.0.1:5432/hafah --schema-dir /home/kmochocki/hf/HAfAH/ah/synchronization/queries --allowed-empty-results 2 --threads-receive 6 --threads-send 6
 
   parser.add_argument("--url", type = str, help = "postgres connection string for AH database")
   parser.add_argument("--schema-dir", type = str, help = "directory where schemas are stored")
-  parser.add_argument("--range-blocks-flush", type = int, default = 1000, help = "Number of blocks processed at once")
   parser.add_argument("--allowed-empty-results", type = int, default = -1, help = "Allowed number of empty results from a database. After N tries, an application closes. A value `-1` means an infinite number of tries")
   parser.add_argument("--threads-receive", type = int, default = 1, help = "Number of threads that are used during retrieving `get_impacted_accounts` data")
   parser.add_argument("--threads-send", type = int, default = 1, help = "Number of threads that are used during sending data into database")
 
   _args = parser.parse_args()
 
-  return _args.url, _args.schema_dir, _args.range_blocks_flush, _args.allowed_empty_results, _args.threads_receive, _args.threads_send
+  return _args.url, _args.schema_dir, _args.allowed_empty_results, _args.threads_receive, _args.threads_send
 
 def main():
   try:
 
     logger.info("Synchronization with account history database...")
 
-    _url, _schema_dir, _range_blocks_flush, _allowed_empty_results, _threads_receive, _threads_send = process_arguments()
+    _url, _schema_dir, _allowed_empty_results, _threads_receive, _threads_send = process_arguments()
 
     _loader = ah_loader()
 
-    _loader.init( args_container(_url, _schema_dir, _range_blocks_flush, _threads_receive, _threads_send) )
+    _loader.init( args_container(_url, _schema_dir, _threads_receive, _threads_send) )
 
     set_handlers()
 
