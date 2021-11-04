@@ -1,16 +1,37 @@
 #!/usr/bin/python3
 
-import queue
+import queue, os, psutil
+from pickle import dumps as serialize
+
 from collections import deque
 
 import time
 
 import logging
 import sys
-import datetime
+from time import perf_counter
 from signal import signal, SIGINT, SIGTERM, getsignal
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+def log_size(obj : any):
+  """Handy tool to log size of any data"""
+  size = int( len( serialize(obj) ) / (1024 * 1024) )
+  return f"{size} MB"
+
+def log_memory_usage(memtypes=["rss", "vms", "shared"]) -> str:
+  """
+  Logs current memory types
+  
+  Available memtypes: rss, vms, shared, text, lib, data, dirty
+  """
+
+  def format_bytes(val : int):
+    assert isinstance(val, int) or isinstance(val, float), 'invalid data type, required int or float'
+    return f'{ val / 1024.0 / 1024.0 :.2f} MB'
+
+  human_readable = { "rss": "physical_memory", "vms": "virtual_memory", "shared": "shared_memory", "text": "used_by_executable", "lib": "used_by_shared_libraries" }
+  stats = psutil.Process(os.getpid()).memory_info() # docs: https://psutil.readthedocs.io/en/latest/#psutil.Process.memory_info
+  return f"{ ', '.join( [ f'{ human_readable.get(k, k) } = { format_bytes(getattr(stats, k)) }' for k in memtypes ] ) }"
 
 #from db import Db
 from adapter import Db
@@ -123,7 +144,10 @@ class singleton(type):
 class helper:
   @staticmethod
   def get_time(start, end):
-    return int((end - start).microseconds / 1000)
+    return round((end - start) * 1000)
+
+  def get_time_sec(start, end):
+    return round(end - start)
 
   @staticmethod
   def display_query(query):
@@ -151,16 +175,34 @@ class sql_executor:
 
     return new_sql_executor
 
+  def size(self):
+    #return log_size(self.db._engine.pool._pool.queue)
+    #return log_size(self.db._basic_connection._dbapi_connection._connection_record._ConnectionRecord__pool._pool.queue)
+    return log_size(self.db._basic_connection._dbapi_connection._pool._pool.queue)
+    #return str(len(self.db._engine.pool.logger.name))
+
+  def perform_prepared_query(self, query):
+    helper.display_query(query)
+
+    assert self.db is not None, "self.db is not None"
+
+    start = perf_counter()
+
+    self.db.query_prepared(query)
+
+    end = perf_counter()
+    logger.info("query time[ms]: {}".format(helper.get_time(start, end)))
+
   def perform_query(self, query):
     helper.display_query(query)
 
     assert self.db is not None, "self.db is not None"
 
-    start = datetime.datetime.now()
+    start = perf_counter()
 
     self.db.query_no_return(query)
 
-    end = datetime.datetime.now()
+    end = perf_counter()
     logger.info("query time[ms]: {}".format(helper.get_time(start, end)))
 
   def perform_query_all(self, query):
@@ -168,11 +210,11 @@ class sql_executor:
 
     assert self.db is not None, "self.db is not None"
 
-    start = datetime.datetime.now()
+    start = perf_counter()
 
     res = self.db.query_all(query)
 
-    end = datetime.datetime.now()
+    end = perf_counter()
     logger.info("query time[ms]: {}".format(helper.get_time(start, end)))
 
     return res
@@ -182,11 +224,11 @@ class sql_executor:
 
     assert self.db is not None, "self.db is not None"
 
-    start = datetime.datetime.now()
+    start = perf_counter()
 
     res = self.db.query_one(query)
 
-    end = datetime.datetime.now()
+    end = perf_counter()
     logger.info("query time[ms]: {}".format(helper.get_time(start, end)))
 
     return res
@@ -223,7 +265,7 @@ class sql_executor:
 
     _total_query += q_parts[2]
 
-    self.perform_query(_total_query)
+    self.perform_prepared_query(_total_query)
 
   def send_accounts(self, clone_sql_executor, accounts_queries):
     try:
@@ -273,6 +315,12 @@ class sql_executor_pool:
 
     return self.sql_executors[_current_idx]
 
+  def size(self):
+    result = ''
+    for item in self.sql_executors:
+      result += ' ' + item.size()
+    return result
+
 class ah_loader(metaclass = singleton):
 
   def __init__(self):
@@ -286,6 +334,8 @@ class ah_loader(metaclass = singleton):
     self.is_massive           = True
     self.interrupted          = False
 
+    self.memory_log_range     = 200000
+    self.memory_log_num       = 0
     self.last_block_num       = 0
 
     self.application_context  = "account_history_python"
@@ -303,6 +353,9 @@ class ah_loader(metaclass = singleton):
     self.sql_executor         = sql_executor()
 
     self.sql_pool             = sql_executor_pool()
+
+    self.receive_thread_executor  = None
+    self.send_thread_executor     = None
 
   def read_file(self, path):
     with open(path, 'r') as file:
@@ -417,6 +470,9 @@ class ah_loader(metaclass = singleton):
 
     self.sql_pool.create_executors(self.sql_executor, sql_data.args.threads_receive + sql_data.args.threads_send + 1)
 
+    self.receive_thread_executor = ThreadPoolExecutor(max_workers=sql_data.args.threads_receive)
+    self.send_thread_executor = ThreadPoolExecutor(max_workers=sql_data.args.threads_send)
+
   def interrupt(self):
     if not self.is_interrupted():
       self.interrupted = True
@@ -520,23 +576,22 @@ class ah_loader(metaclass = singleton):
 
       _futures = []
 
-      start = datetime.datetime.now()
+      start = perf_counter()
 
-      with ThreadPoolExecutor(max_workers=len(_ranges)) as executor:
-        for range in _ranges:
-          if self.is_interrupted():
-            break
-          _futures.append(executor.submit(self.sql_executor.receive_impacted_accounts, self.sql_pool.get_item(), range.low, range.high))
+      for range in _ranges:
+        if self.is_interrupted():
+          break
+        _futures.append(self.receive_thread_executor.submit(self.sql_executor.receive_impacted_accounts, self.sql_pool.get_item(), range.low, range.high))
 
-      end = datetime.datetime.now()
+      end = perf_counter()
       logger.info("receive-thread time[ms]: {}".format(helper.get_time(start, end)))
 
-      start = datetime.datetime.now()
+      start = perf_counter()
 
       for future in _futures:
         self.add_received_elements(last_block, future.result())
 
-      end = datetime.datetime.now()
+      end = perf_counter()
       logger.info("receive-future time[ms]: {}".format(helper.get_time(start, end)))
 
       logger.info("Operations between {} and {} blocks were received".format(first_block, last_block))
@@ -550,13 +605,13 @@ class ah_loader(metaclass = singleton):
       if self.is_interrupted():
         break
 
-      start = datetime.datetime.now()
+      start = perf_counter()
 
       _item = self.block_ranges.popleft()
 
       self.receive_data( _item.low, _item.high )
 
-      end = datetime.datetime.now()
+      end = perf_counter()
       logger.info("receive time[ms]: {}".format(helper.get_time(start, end)))
 
     self.finished = True
@@ -576,6 +631,7 @@ class ah_loader(metaclass = singleton):
           break
         try:
           received_items_block = self.queue.get(True, _get_delay)
+          self.queue.task_done()
           _received = True
           self.stored_ops_buf_len -= received_items_block['length']
           assert self.stored_ops_buf_len >= 0, "Number of operations can't be less than zero"
@@ -615,12 +671,12 @@ class ah_loader(metaclass = singleton):
 
       logger.info("Sending all data...")
 
-      start = datetime.datetime.now()
+      start = perf_counter()
 
       with ThreadPoolExecutor(max_workers = 1) as executor:
         _futures.append(executor.submit(self.sql_executor.send_accounts, self.sql_pool.get_item(), self.accounts_queries))
 
-      end = datetime.datetime.now()
+      end = perf_counter()
       logger.info("send-thread-accounts time[ms]: {}".format(helper.get_time(start, end)))
 
       if len(self.account_ops_queries) == 0:
@@ -629,20 +685,20 @@ class ah_loader(metaclass = singleton):
         _ranges = self.prepare_ranges(0, len(self.account_ops_queries) - 1, sql_data.args.threads_send)
         assert len(_ranges) > 0
 
-      start = datetime.datetime.now()
+      start = perf_counter()
 
-      with ThreadPoolExecutor(max_workers = len(_ranges)) as executor:
-        for range in _ranges:
-          _futures.append(executor.submit(self.sql_executor.send_account_operations, self.sql_pool.get_item(), self.account_ops_queries, range.low, range.high))
+      for range in _ranges:
+        _futures.append(self.send_thread_executor.submit(self.sql_executor.send_account_operations, self.sql_pool.get_item(), self.account_ops_queries, range.low, range.high))
 
-      end = datetime.datetime.now()
+      end = perf_counter()
       logger.info("send-thread-ops time[ms]: {}".format(helper.get_time(start, end)))
 
-      start = datetime.datetime.now()
+      start = perf_counter()
 
-      for future in as_completed(_futures):
+      for future in _futures:
         future.result()
 
+      end = perf_counter()
       logger.info("send-future time[ms]: {}".format(helper.get_time(start, end)))
 
       self.accounts_queries.clear()
@@ -661,14 +717,21 @@ class ah_loader(metaclass = singleton):
       logger.error("Exception during processing `save_detached_block_num` method: {0}".format(ex))
       self.raise_exception(ex)
 
+  def memory_log(self):
+    logger.info("Block: {} Queue: {} Memory usage: {}".format(self.last_block_num, log_size(self.queue.queue), log_memory_usage()))
+
   def send(self):
     logger.info("Sending...")
     while True:
       if self.is_interrupted():
         break
-      start = datetime.datetime.now()
+      start = perf_counter()
 
       self.last_block_num = self.prepare_sql()
+
+      if self.last_block_num >= self.memory_log_num + self.memory_log_range:
+        self.memory_log_num = self.last_block_num
+        self.memory_log()
 
       self.send_data()
 
@@ -678,7 +741,7 @@ class ah_loader(metaclass = singleton):
       if self.is_massive and self.last_block_num is not None:
         self.save_detached_block_num(self.last_block_num)
 
-      end = datetime.datetime.now()
+      end = perf_counter()
       logger.info("send time[ms]: {}".format(helper.get_time(start, end)))
 
       if self.finished and self.queue.empty():
@@ -814,7 +877,7 @@ def process_arguments():
 def main():
   try:
 
-    start = datetime.datetime.now()
+    start = perf_counter()
 
     logger.info("Synchronization with account history database...")
 
@@ -828,29 +891,31 @@ def main():
 
     _loader.prepare()
 
-    end = datetime.datetime.now()
+    end = perf_counter()
     logger.info("prepare time[ms]: {}".format(helper.get_time(start, end)))
 
     cnt_empty_result = 0
     declared_empty_results = _allowed_empty_results
 
-    total_start = datetime.datetime.now()
+    total_start = perf_counter()
 
     while not _loader.is_interrupted():
-      start = datetime.datetime.now()
+      start = perf_counter()
 
       empty = _loader.process()
 
-      end = datetime.datetime.now()
+      end = perf_counter()
       logger.info("time[ms]: {}\n".format(helper.get_time(start, end)))
  
       _allow_close, cnt_empty_result = allow_close_app( empty, declared_empty_results, cnt_empty_result )
       if _allow_close:
         break
 
-    total_end = datetime.datetime.now()
+    _loader.memory_log()
+
+    total_end = perf_counter()
     logger.info("*****Total time*****")
-    logger.info("total time[s]: {}".format((total_end - total_start).seconds))
+    logger.info("total time[ms]: {}".format(helper.get_time_sec(total_start, total_end)))
 
     if _loader.is_interrupted():
       logger.info("An application was interrupted...")
