@@ -243,7 +243,7 @@ class sql_executor:
       _result = clone_sql_executor.perform_query_all(_query)
 
       if _result is not None and len(_result) != 0:
-        logger.info("Found {} operations".format(len(_result)))
+        logger.info("Found {} pairs [impacted account;operation]".format(len(_result)))
         for _record in _result:
           _items.append( account_op( int(_record[0]), str(_record[1]) ) )
     except Exception as ex:
@@ -328,8 +328,8 @@ class ah_loader(metaclass = singleton):
     #actual number of operations that are stored in a queue
     self.stored_ops_buf_len   = 0
 
-    #maximum number of operations that can be stored in a queue
-    self.max_ops_buf_len      = 1000000
+    #maximum number of pairs [impacted account;operation] that can be stored in a queue
+    self.max_ops_buf_len      = 3000000
 
     self.is_massive           = True
     self.interrupted          = False
