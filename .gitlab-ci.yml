@@ -74,7 +74,7 @@ haf_system:
     PYTHONPATH: "$CI_PROJECT_DIR/hive/tests/test_tools/package"
     HIVE_BUILD_ROOT_PATH: "$CI_PROJECT_DIR/hived_testnet/build/hive"
   script:
-    - apt-get install sudo tox -y
+    - apt-get install tox -y
     # use newest libfaketime version, version 0.97 is not enough
     - git clone --branch master https://github.com/wolfcw/libfaketime.git
     - cd libfaketime && make
@@ -83,7 +83,7 @@ haf_system:
     - /etc/init.d/postgresql start
     - cd $CI_PROJECT_DIR/hive_fork_manager/build
     - make install
-    # prepare database user and run tests
+    # prepare environment and run tests
     - cd $CI_PROJECT_DIR/tests/integration/system/haf
     - source env.sh
     - tox

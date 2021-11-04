@@ -14,7 +14,7 @@ def test_compare_forked_node_database(world_with_witnesses_and_database, databas
     world, session, Base = world_with_witnesses_and_database
     node_under_test = world.network('Beta').node('NodeUnderTest')
 
-    session_ref, Base_ref = database('postgresql://myuser:mypassword@localhost/haf_block_log_ref')
+    session_ref, Base_ref = database('postgresql:///haf_block_log_ref')
 
     blocks = Base.classes.blocks
     transactions = Base.classes.transactions
