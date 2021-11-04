@@ -8,8 +8,7 @@
 import sys
 import json
 import os
-import shutil
-import locale
+from argparse import ArgumentParser
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import Future
@@ -32,46 +31,39 @@ def future_end_cb(future):
 
 
 def main():
-  if len( sys.argv ) < 4 or len( sys.argv ) > 6:
-    print( "Usage: __name__ jobs url1 url2 [working_dir [accounts_file]]" )
-    print( "  Example: __name__ 4 http://127.0.0.1:8090 http://127.0.0.1:8091 [get_account_history [accounts]]" )
-    print( "  set jobs to 0 if you want use all processors" )
-    print( "  url1 is reference url for list_accounts" )
-    exit ()
-
   global wdir
   global errors
 
-  jobs = int(sys.argv[1])
-  if jobs <= 0:
-    import multiprocessing
-    jobs = multiprocessing.cpu_count()
+  arg_engine = ArgumentParser()
+  arg_engine.add_argument('--ref', dest='ref_node', type=str, help='address to reference node (ex. http://127.0.0.1:8091)')
+  arg_engine.add_argument('--test', dest='test_node', type=str, help='address to tested node (ex. http://127.0.0.1:8095)')
+  arg_engine.add_argument('-f', dest='in_file', type=str, help='path to file with transaction hashes')
+  arg_engine.add_argument('-j', dest='jobs', type=int, default=4, help='amount of threads to use')
+  arg_engine.add_argument('-d', dest='wdir', type=str, default='workdir', help='path where output should be kept (ex. /path/to/workdir)')
+  args = arg_engine.parse_args(list(sys.argv[1:]))
 
-  url1 = sys.argv[2]
-  url2 = sys.argv[3]
+  jobs = args.jobs
+  url1 = args.ref_node
+  url2 = args.test_node
+  wdir = Path(args.wdir)
+  trx_file = args.in_file
 
-  if len( sys.argv ) > 4:
-    wdir = Path(sys.argv[4])
 
-  accounts_file = sys.argv[5] if len( sys.argv ) > 5 else ""
-
-  if accounts_file != "":
+  if trx_file != "":
     try:
-      with open(accounts_file, "rt") as file:
-        accounts = file.readlines()
+      with open(trx_file, "rt") as file:
+        hashes = file.readlines()
     except:
-      exit("Cannot open file: " + accounts_file)
-  else:
-    accounts = list_accounts(url1)
+      exit("Cannot open file: " + trx_file)
 
-  length = len(accounts)
+  length = len(hashes)
 
   if length == 0:
-    exit("There are no any account!")
+    exit("There are no any transaction!")
 
   create_wdir()
 
-  print( str(length) + " accounts" )
+  print( str(length) + " hashes" )
 
   if jobs > length:
     jobs = length
@@ -81,7 +73,7 @@ def main():
   print( "  url1: {}".format(url1) )
   print( "  url2: {}".format(url2) )
   print( "  wdir: {}".format(wdir) )
-  print( "  accounts_file: {}".format(accounts_file) )
+  print( "  trx hash file: {}".format(trx_file) )
 
   if jobs > 1:
     first = 0
@@ -90,13 +82,13 @@ def main():
 
     with ProcessPoolExecutor(max_workers=jobs) as executor:
       for i in range(jobs-1):
-        future = executor.submit(compare_results, url1, url2, accounts[first : first+accounts_per_job])
+        future = executor.submit(compare_results, url1, url2, hashes[first : first+accounts_per_job])
         future.add_done_callback(future_end_cb)
         first = first + accounts_per_job
-      future = executor.submit(compare_results, url1, url2, accounts[first : last])
+      future = executor.submit(compare_results, url1, url2, hashes[first : last])
       future.add_done_callback(future_end_cb)
   else:
-    errors = (compare_results(url1, url2, accounts) == False)
+    errors = (compare_results(url1, url2, hashes) == False)
 
   exit( errors )
 
@@ -112,30 +104,28 @@ def create_wdir():
     wdir.mkdir(parents=True)
 
 
-def compare_results(url1, url2, accounts, max_tries=10, timeout=0.1):
+def compare_results(url1, url2, transactions, max_tries=10, timeout=0.1):
   success = True
-  print("Compare accounts: [{}..{}]".format(accounts[0], accounts[-1]))
+  print("Compare transactions: [{}..{}]".format(transactions[0], transactions[-1]))
 
-  for account in accounts:
-    if get_account_history(url1, url2, account, max_tries, timeout) == False:
+  for trx in transactions:
+    if get_tramsacton(url1, url2, trx, max_tries, timeout) == False:
       success = False; break
 
-  print("Compare accounts: [{}..{}] {}".format(accounts[0], accounts[-1], "finished" if success else "break with error" ))
+  print("Compare transactions: [{}..{}] {}".format(transactions[0], transactions[-1], "finished" if success else "break with error" ))
   return success
 
 
-def get_account_history(url1, url2, account, max_tries=10, timeout=0.1):
+def get_tramsacton(url1, url2, trx : str, max_tries=10, timeout=0.1):
   global wdir
-  START = -1
   HARD_LIMIT = 1000
-  LIMIT = HARD_LIMIT
 
-  while True:
+  if True:
     request = {
       "jsonrpc": "2.0",
       "id": 0,
-      "method": "account_history_api.get_account_history",
-      "params": { "account": account, "start": START, "limit": LIMIT }
+      "method": "account_history_api.get_transaction",
+      "params": { "id": trx.strip(), "include_reversible": True }
       }
 
     with ThreadPoolExecutor(max_workers=2) as executor:
@@ -144,17 +134,16 @@ def get_account_history(url1, url2, account, max_tries=10, timeout=0.1):
 
     status1, json1 = future1.result()
     status2, json2 = future2.result()
+
     json1 = json.loads(json1)
     json2 = json.loads(json2)
-    #status1, json1 = hived_call(url1, data=request, max_tries=max_tries, timeout=timeout)
-    #status2, json2 = hived_call(url2, data=request, max_tries=max_tries, timeout=timeout)
 
     if status1 == False or status2 == False or json1 != json2:
-      print("Comparison failed for account: {}; start: {}; limit: {}".format(account, START, LIMIT))
+      print("Comparison failed for trx: {};".format(trx))
 
-      filename1 = wdir / (account.strip() + "_ref.json")
-      filename2 = wdir / (account.strip() + "_tested.json")
-      filename3 = wdir / (account.strip() + "_diff.json")
+      filename1 = wdir / (trx.strip() + "_ref.json")
+      filename2 = wdir / (trx.strip() + "_tested.json")
+      filename3 = wdir / (trx.strip() + "_diff.json")
       try:    file1 = filename1.open("w")
       except: print("Cannot open file:", filename1); return False
       try:    file2 = filename2.open("w")
@@ -174,17 +163,6 @@ def get_account_history(url1, url2, account, max_tries=10, timeout=0.1):
       json.dump(json_diff, file3, indent=2, sort_keys=True, default=vars)
       file3.close()
       return False
-
-    history = json1["result"]["history"]
-    last = history[0][0] if len(history) else 0
-
-    if last == 0 or last == 1:
-      break
-
-    last -= 1
-    START = last
-    LIMIT = last if last < HARD_LIMIT else HARD_LIMIT
-  # while True
 
   return True
 
