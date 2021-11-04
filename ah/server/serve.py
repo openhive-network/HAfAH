@@ -8,8 +8,8 @@ import traceback
 import json
 from socketserver  import ThreadingMixIn
 from http.server import BaseHTTPRequestHandler, HTTPServer
-# import asyncio
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 import threading
 
 from time import perf_counter
@@ -18,32 +18,36 @@ from sqlalchemy.exc import OperationalError
 from aiohttp import web
 from jsonrpcserver.methods import Methods
 from jsonrpcserver import dispatch
-import queue
 
 from ah.api.endpoints import build_methods as account_history
 
-import simplejson
 from ah.server.db import Db
 
 # pylint: disable=too-many-lines
 
 app_config = dict()
+
 class PoolMixIn(ThreadingMixIn):
+    """Custom threading server class."""
     def process_request(self, request, client_address):
         self.pool.submit(self.process_request_thread, request, client_address)
+
 class PoolHTTPServer(PoolMixIn, HTTPServer):
-        pool = ThreadPoolExecutor(max_workers=8)
+    """Pool of threads to execute calls asynchronously."""
+    pool = ThreadPoolExecutor(max_workers=8)
 
 class Handler(BaseHTTPRequestHandler):
+    """Handler class used to handle the HTTP requests that arrive at the server."""
+    def __init__(self, methods, *args, **kwargs):
+        self.foo = methods
+        super().__init__(*args, **kwargs)
 
     def do_POST(self):
-        # self._process_n=7  # if not set will default to number of CPU cores
-        # self._thread_n=8  # if not set will default to number of threads
-        methods = build_methods()
-        request = self.rfile.read(int(self.headers["Content-Length"])).decode()
-        message =  threading.currentThread().getName()
-        print(message)    
+        """Handling POST method."""
 
+        request = self.rfile.read(int(self.headers["Content-Length"])).decode()
+        # message =  threading.currentThread().getName() # debbuging number of threads
+        # print(message)    
         ctx = {
             "db": app_config["db"],
             "id": json.loads(request)['id']
@@ -51,7 +55,7 @@ class Handler(BaseHTTPRequestHandler):
         response = None
 
         try:
-            response = dispatch(request, methods=methods, debug=True, context=ctx, serialize=decimal_serialize, deserialize=decimal_deserialize)
+            response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=decimal_serialize, deserialize=decimal_deserialize)
         except Exception as ex:
             # create and send error response
             error_response = {
@@ -78,13 +82,6 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response).encode('utf-8'))
         return
 
-
-# class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-#     """An HTTP Server that handle requests in a threads"""
-#     deamon_threads = True
-#     max_workers=40
-#     pass
-
 def decimal_serialize(obj):
     return json.dumps(dict(obj))
     # return simplejson.dumps(obj=obj, use_decimal=True, default=vars)
@@ -92,7 +89,6 @@ def decimal_serialize(obj):
 def decimal_deserialize(s):
     return json.loads(dict(s))
     # return simplejson.loads(s=s, use_decimal=True)
-
 
 async def db_head_state(context):
     return
@@ -146,8 +142,10 @@ def run_server(db_url, port):
         app['db'] = Db.create(db_url)
 
     init_db(app_config)
+    methods = build_methods()
 
+    handler = partial(Handler, methods)
     """Starting threading server."""
-    server = PoolHTTPServer(('', port), Handler)
+    server = PoolHTTPServer(('', port), handler)
     print('Starting server, use <Ctrl-C> to stop')
     server.serve_forever()
