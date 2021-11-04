@@ -32,7 +32,7 @@ class PoolMixIn(ThreadingMixIn):
     def process_request(self, request, client_address):
         self.pool.submit(self.process_request_thread, request, client_address)
 class PoolHTTPServer(PoolMixIn, HTTPServer):
-        pool = ThreadPoolExecutor(max_workers=40)
+        pool = ThreadPoolExecutor(max_workers=8)
 
 class Handler(BaseHTTPRequestHandler):
 
