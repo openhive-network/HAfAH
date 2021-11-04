@@ -79,13 +79,19 @@ class ah_query:
     self.next_block                       = "SELECT * FROM hive.app_next_block('{}');".format( self.application_context )
 
     self.get_bodies                       = """
-SELECT ahov.id, hive.get_impacted_accounts(body) as account
-FROM
-  hive.account_history_python_operations_view ahov
-WHERE 
-  block_num >= {} AND block_num <= {}
-ORDER BY ahov.id
-    """
+      SELECT ahov.id, hive.get_impacted_accounts(body) as account
+      FROM
+        hive.account_history_python_operations_view ahov
+      WHERE 
+        block_num >= {} AND block_num <= {}
+      ORDER BY ahov.id
+          """
+
+    #Sometimes at the beginning deleting records from `account_operations` is necessary,
+    #because an application can crash between writing new records and saving actual number processed records.
+    #This is an incoherent situation, so as a result an error: `account_operations_uniq2` a violation is triggered.
+    #After deleting records such problem is omitted.
+    self.delete_redundant_ops             ="select * from hafah_python.remove_redundant_operations('{}')".format( self.application_context )
 
     self.insert_into_accounts             = []
     self.insert_into_accounts.append( "INSERT INTO hafah_python.accounts( id, name ) VALUES" )
@@ -270,6 +276,13 @@ class sql_executor_pool:
 class ah_loader(metaclass = singleton):
 
   def __init__(self):
+
+    #actual number of operations that are stored in a queue
+    self.stored_ops_buf_len   = 0
+
+    #maximum number of operations that can be stored in a queue
+    self.max_ops_buf_len      = 3000000
+
     self.is_massive           = True
     self.interrupted          = False
 
@@ -399,7 +412,8 @@ class ah_loader(metaclass = singleton):
 
     self.sql_executor.init()
 
-    self.queue  = queue.Queue(maxsize = 10)
+    #In fact maxsize of queue is a secondary issue. The most important thing is a maximum number operations that can be stored in this queue.
+    self.queue  = queue.Queue(maxsize = 200)
 
     self.sql_pool.create_executors(self.sql_executor, sql_data.args.threads_receive + sql_data.args.threads_send + 1)
 
@@ -414,6 +428,14 @@ class ah_loader(metaclass = singleton):
     self.interrupt()
     raise source_exception
 
+  def remove_redundant_operations(self):
+    try:
+      logger.info("Removing redundant operations...")
+      self.sql_executor.perform_query(sql_data.query.delete_redundant_ops)
+    except Exception as ex:
+      logger.error("Exception during processing `remove_redundant_operations` method: {0}".format(ex))
+      self.raise_exception(ex)
+
   def prepare(self):
     if self.is_interrupted():
       return
@@ -427,6 +449,8 @@ class ah_loader(metaclass = singleton):
 
         self.sql_executor.perform_query(tables_query)
         self.sql_executor.perform_query(functions_query)
+      else:
+        self.remove_redundant_operations()
 
       self.import_initial_data()
 
@@ -462,6 +486,31 @@ class ah_loader(metaclass = singleton):
 
     return _ranges
 
+  def add_received_elements(self, last_block, elements):
+    if len(elements) == 0:
+      return
+
+    _elements_length = len(elements)
+
+    _result = {'block' : last_block, 'elements' : elements, 'length' : _elements_length}
+
+    _inserted  = False
+    _put_delay = 1#[s]
+    _sleep     = 1#[s]
+
+    while not _inserted:
+      try:
+        if (self.stored_ops_buf_len + _elements_length < self.max_ops_buf_len) or self.queue.empty():
+          self.queue.put(_result, True, _put_delay)
+          _inserted = True
+          self.stored_ops_buf_len += _elements_length
+        else:
+          logger.info("Queue is full. stored-ops:{} actual-ops:{} max-ops:{} ... Waiting {} seconds".format(self.stored_ops_buf_len, _elements_length, self.max_ops_buf_len, _sleep))
+          time.sleep(_sleep)
+      except queue.Full:
+        logger.info("Queue is full( `queue.Full` exception ). stored-ops:{} actual-ops:{} max-ops:{} ... Waiting {} seconds".format(self.stored_ops_buf_len, _elements_length, self.max_ops_buf_len, _sleep))
+        time.sleep(_sleep)
+
   def receive_data(self, first_block, last_block):
     try:
       _ranges = self.prepare_ranges(first_block, last_block, sql_data.args.threads_receive)
@@ -475,26 +524,11 @@ class ah_loader(metaclass = singleton):
             break
           _futures.append(executor.submit(self.sql_executor.receive_impacted_accounts, self.sql_pool.get_item(), range.low, range.high))
 
-      _elements = []
       for future in _futures:
-        _elements.append(future.result())
+        self.add_received_elements(last_block, future.result())
 
-      if len(_elements) == 0:
-        return
+      logger.info("Operations between {} and {} blocks were received".format(first_block, last_block))
 
-      _result = {'block' : last_block, 'elements' : _elements}
-
-      _inserted  = False
-      _put_delay = 1#[s]
-      _sleep     = 1#[s]
-
-      while not _inserted:
-        try:
-          self.queue.put(_result, True, _put_delay)
-          _inserted = True
-        except queue.Full:
-          logger.info("Queue is full... Waiting {} seconds".format(_sleep))
-          time.sleep(_sleep)
     except Exception as ex:
       logger.error("Exception during processing `receive_data` method: {0}".format(ex))
       self.raise_exception(ex)
@@ -529,6 +563,9 @@ class ah_loader(metaclass = singleton):
         try:
           received_items_block = self.queue.get(True, _get_delay)
           _received = True
+          self.stored_ops_buf_len -= received_items_block['length']
+          assert self.stored_ops_buf_len >= 0, "Number of operations can't be less than zero"
+          logger.info("Number of elements retrieved from queue: {}".format(received_items_block['length'], _sleep))
         except queue.Empty:
           if self.finished:
             if cnt < tries:
@@ -554,9 +591,8 @@ class ah_loader(metaclass = singleton):
       logger.info("Lack of impacted accounts - empty set...")
       return None
 
-    for items in received_items_block['elements']:
-      for item in items:
-        self.gather_part_of_queries( item.op_id, item.name )
+    for item in received_items_block['elements']:
+      self.gather_part_of_queries( item.op_id, item.name )
 
     return received_items_block['block']
 
@@ -564,6 +600,8 @@ class ah_loader(metaclass = singleton):
     try:
 
       _futures = []
+
+      logger.info("Sending all data...")
 
       with ThreadPoolExecutor(max_workers = 1) as executor:
         _futures.append(executor.submit(self.sql_executor.send_accounts, self.sql_pool.get_item(), self.accounts_queries))

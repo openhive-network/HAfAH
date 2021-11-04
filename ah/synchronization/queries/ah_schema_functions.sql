@@ -466,3 +466,43 @@ FROM hafah_python.account_operations ao
 GROUP BY ao.account_id
 )T ON ha.id = T.account_id
 ;
+
+CREATE OR REPLACE FUNCTION hafah_python.remove_redundant_operations( in _CONTEXT_NAME VARCHAR )
+RETURNS VOID
+AS
+$function$
+DECLARE
+  __CURRENT_BLOCK_NUM INT := 0;
+  __DETACHED_BLOCK_NUM INT := 0;
+BEGIN
+
+  SELECT current_block_num, detached_block_num INTO __CURRENT_BLOCK_NUM, __DETACHED_BLOCK_NUM FROM hive.contexts WHERE name = _CONTEXT_NAME;
+
+  IF __CURRENT_BLOCK_NUM IS NOT NULL AND __CURRENT_BLOCK_NUM > 0 THEN
+    DELETE FROM hafah_python.account_operations
+          WHERE hive_rowid IN
+          (
+            SELECT ao.hive_rowid
+            FROM
+              hive.contexts c,
+              hafah_python.account_operations ao
+            JOIN hive.operations o ON ao.operation_id = o.id
+            WHERE o.block_num > c.current_block_num AND c.name = _CONTEXT_NAME
+          );
+  END IF;
+
+  IF __DETACHED_BLOCK_NUM IS NOT NULL AND __DETACHED_BLOCK_NUM > 0 THEN
+    DELETE FROM hafah_python.account_operations
+          WHERE hive_rowid IN
+          (
+            SELECT ao.hive_rowid
+            FROM
+              hive.contexts c,
+              hafah_python.account_operations ao
+            JOIN hive.operations o ON ao.operation_id = o.id
+            WHERE o.block_num > c.detached_block_num AND c.name = _CONTEXT_NAME
+          );
+  END IF;
+END
+$function$
+language plpgsql;
