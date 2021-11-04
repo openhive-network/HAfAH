@@ -11,7 +11,7 @@ import json
 import os
 import shutil
 from jsonsocket import JSONSocket
-from jsonsocket import hived_call
+from jsonsocket import universal_call as hived_call
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import Future
@@ -36,7 +36,7 @@ def main():
     print( "  set jobs to 0 if you want use all processors" )
     print("  if last_block == 0, it is read from url1 (as reference)")
     exit()
-    
+
   global wdir
   global errors
   first_block = 0
@@ -46,13 +46,13 @@ def main():
   if jobs <= 0:
     import multiprocessing
     jobs = multiprocessing.cpu_count()
-    
+
   url1 = sys.argv[2]
   url2 = sys.argv[3]
-  
+
   if len(sys.argv) > 4:
     wdir = Path(sys.argv[4])
-    
+
     if len(sys.argv) > 5:
       last_block = int(sys.argv[5])
     else:
@@ -61,10 +61,12 @@ def main():
       first_block = int(sys.argv[6])
     else:
       first_block = 0
-    
-  last_block1 = get_last_block(url1)
-  last_block2 = get_last_block(url2)
-  
+
+  # last_block1 = get_last_block(url1)
+  # last_block2 = get_last_block(url2)
+  last_block1 = last_block
+  last_block2 = last_block1
+
   if last_block1 != last_block2:
     exit("last block of {} ({}) is different then last block of {} ({})".format(url1, last_block1, url2, last_block2))
 
@@ -72,10 +74,10 @@ def main():
     last_block = last_block1
   elif last_block != last_block1:
     print("WARNING: last block from cmdline {} is different then from {} ({})".format(last_block, url1, last_block1))
-  
+
   if last_block == 0:
     exit("last block cannot be 0!")
-    
+
   create_wdir()
 
   blocks = last_block - first_block + 1
@@ -102,17 +104,17 @@ def main():
       future.add_done_callback(future_end_cb)
   else:
     errors = (compare_results(first_block, last_block, url1, url2) == False)
-    
+
   exit( errors )
 
 
 def create_wdir():
   global wdir
-  
+
   if wdir.exists():
     if wdir.is_file():
       os.remove(wdir)
-      
+
   if wdir.exists() == False:
     wdir.mkdir(parents=True)
 
@@ -124,9 +126,9 @@ def get_last_block(url, max_tries=10, timeout=0.1):
     "method": "database_api.get_dynamic_global_properties",
     "params": {}
     } ), "utf-8" ) + b"\r\n"
-    
+
   status, response = hived_call(url, data=request, max_tries=max_tries, timeout=timeout)
-  
+
   if status == False:
     return 0
   try:
@@ -137,16 +139,16 @@ def get_last_block(url, max_tries=10, timeout=0.1):
 
 def compare_results(f_block, l_block, url1, url2, max_tries=10, timeout=0.1):
   global wdir
-  
+
   print( "Compare blocks [{} : {}]".format(f_block, l_block) )
 
   for i in range(f_block, l_block+1):
-    request = bytes( json.dumps( {
+    request = {
       "jsonrpc": "2.0",
       "id": i,
       "method": "account_history_api.get_ops_in_block",
       "params": { "block_num": i, "only_virtual": False }
-      } ), "utf-8" ) + b"\r\n"
+      }
 
     with ThreadPoolExecutor(max_workers=2) as executor:
     #with ProcessPoolExecutor(max_workers=2) as executor:
@@ -155,25 +157,27 @@ def compare_results(f_block, l_block, url1, url2, max_tries=10, timeout=0.1):
 
     status1, json1 = future1.result()
     status2, json2 = future2.result()
-    
+    json1 = json.loads(json1)
+    json2 = json.loads(json2)
+
     #status1, json1 = hived_call(url1, data=request, max_tries=max_tries, timeout=timeout)
     #status2, json2 = hived_call(url2, data=request, max_tries=max_tries, timeout=timeout)
-      
+
     if status1 == False or status2 == False or json1 != json2:
       print("Difference @block: {}\n".format(i))
-      
+
       filename1 = wdir / Path(str(f_block) + "_" + str(l_block) + "_ref.log")
       filename2 = wdir / Path(str(f_block) + "_" + str(l_block) + "_tested.log")
       try:    file1 = filename1.open( "w" )
       except: print( "Cannot open file:", filename1 ); return
       try:    file2 = filename2.open( "w" )
       except: print( "Cannot open file:", filename2 ); return
-  
+
       file1.write("{} response:\n".format(url1))
-      json.dump(json1, file1, indent=2, sort_keys=True)
+      json.dump(json1, file1, indent=2, sort_keys=True, default=vars)
       file1.close
       file2.write("{} response:\n".format(url2))
-      json.dump(json2, file2, indent=2, sort_keys=True)
+      json.dump(json2, file2, indent=2, sort_keys=True, default=vars)
       file2.close()
       print( "Compare blocks [{} : {}] break with error".format(f_block, l_block) )
       return False
@@ -181,6 +185,6 @@ def compare_results(f_block, l_block, url1, url2, max_tries=10, timeout=0.1):
   print( "Compare blocks [{} : {}] finished".format(f_block, l_block) )
   return True
 
-  
+
 if __name__ == "__main__":
   main()
