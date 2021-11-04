@@ -11,15 +11,14 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 # import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import threading
-import cgi
 
-
-from datetime import datetime
 from time import perf_counter
+from sqlalchemy import exc
 from sqlalchemy.exc import OperationalError
 from aiohttp import web
 from jsonrpcserver.methods import Methods
 from jsonrpcserver import dispatch
+import queue
 
 from ah.api.endpoints import build_methods as account_history
 
@@ -29,12 +28,21 @@ from ah.server.db import Db
 # pylint: disable=too-many-lines
 
 app_config = dict()
+class PoolMixIn(ThreadingMixIn):
+    def process_request(self, request, client_address):
+        self.pool.submit(self.process_request_thread, request, client_address)
+class PoolHTTPServer(PoolMixIn, HTTPServer):
+        pool = ThreadPoolExecutor(max_workers=40)
 
 class Handler(BaseHTTPRequestHandler):
-        
+
     def do_POST(self):
+        # self._process_n=7  # if not set will default to number of CPU cores
+        # self._thread_n=8  # if not set will default to number of threads
         methods = build_methods()
         request = self.rfile.read(int(self.headers["Content-Length"])).decode()
+        message =  threading.currentThread().getName()
+        print(message)    
 
         ctx = {
             "db": app_config["db"],
@@ -71,9 +79,11 @@ class Handler(BaseHTTPRequestHandler):
         return
 
 
-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-    """An HTTP Server that handle each request in a new thread"""
-    pass
+# class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+#     """An HTTP Server that handle requests in a threads"""
+#     deamon_threads = True
+#     max_workers=40
+#     pass
 
 def decimal_serialize(obj):
     return json.dumps(dict(obj))
@@ -137,81 +147,7 @@ def run_server(db_url, port):
 
     init_db(app_config)
 
-    def init_db(app):
-        """Initialize db adapter."""
-        app['db'] = Db.create(db_url)
-
     """Starting threading server."""
-    server = ThreadedHTTPServer(('', port), Handler)
+    server = PoolHTTPServer(('', port), Handler)
     print('Starting server, use <Ctrl-C> to stop')
     server.serve_forever()
-
-    # """Configure and launch the API server."""
-    # log = logging.getLogger(__name__)
-    # methods = build_methods()
-
-    # app = web.Application()
-    # app['config'] = dict()
-    # app['config']['hive.MAX_DB_ROW_RESULTS'] = 100000
-
-    # async def init_db(app):
-    #     """Initialize db adapter."""
-    #     app['db'] = await Db.create(db_url)
-
-    # async def close_db(app):
-    #     """Teardown db adapter."""
-    #     app['db'].close()
-    #     await app['db'].wait_closed()
-
-    # app.on_startup.append(init_db)
-    # app.on_cleanup.append(close_db)
-
-    # async def jsonrpc_handler(request):
-    #     """Handles all hive jsonrpc API requests."""
-    #     t_start = perf_counter()
-    #     request = await request.text()
-
-    #     ctx = {
-    #       "db": app["db"],
-    #       "id": json.loads(request)['id'] # TODO: remove this if additional logging is not required
-    #     }
-    #     # debug=True refs https://github.com/bcb/jsonrpcserver/issues/71
-    #     response = None
-    #     try:
-    #         response = await dispatch(request, methods=methods, debug=True, context=ctx, serialize=decimal_serialize, deserialize=decimal_deserialize)
-    #     except Exception as ex:
-    #         # first log exception
-    #         # TODO: consider removing this log - potential log spam
-    #         log.exception(ex)
-    #         exc_type, exc_value, exc_traceback = sys.exc_info()
-    #         print("*** print_tb:")
-    #         traceback.print_tb(exc_traceback, limit=1000, file=sys.stdout)
-
-    #         # create and send error response
-    #         error_response = {
-    #             "jsonrpc":"2.0",
-    #             "error" : {
-    #                 "code": -32602,
-    #                 "data": "Invalid JSON in request: " + str(ex),
-    #                 "message": "Invalid parameters"
-    #             },
-    #             "id" : -1
-    #         }
-    #         headers = {
-    #             'Access-Control-Allow-Origin': '*'
-    #         }
-
-    #         return web.json_response(error_response, status=200, headers=headers, dumps=decimal_serialize)
-
-    #     if response is not None and response.wanted:
-    #         headers = {
-    #             'Access-Control-Allow-Origin': '*'
-    #         }
-    #         ret = web.json_response(response.deserialized(), status=200, headers=headers, dumps=decimal_serialize)
-    #         return ret
-    #     ret = web.Response()
-    #     return ret
-
-    # app.router.add_post('/', jsonrpc_handler)
-    # web.run_app(app, port=port)
-    
