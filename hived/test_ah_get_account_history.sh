@@ -32,7 +32,7 @@ get_account_history ()
 
    local account=$1
    local START=-1
-   local LIMIT=10000
+   local LIMIT=1000
 
    while true; do
 
