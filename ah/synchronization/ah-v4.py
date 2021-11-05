@@ -265,7 +265,7 @@ class sql_executor:
 
     _total_query += q_parts[2]
 
-    self.perform_prepared_query(_total_query)
+    self.perform_query(_total_query)
 
   def send_accounts(self, clone_sql_executor, accounts_queries):
     try:
