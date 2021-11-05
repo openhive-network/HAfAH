@@ -160,8 +160,14 @@ BEGIN
     ASSERT NOT EXISTS( SELECT * FROM hive.registered_tables WHERE origin_table_name='bob_table' ), 'Alice can see Bobs''s tables from hive.registered_tables';
 
     BEGIN
-        DROP VIEW IF EXISTS hive.bob_context_blocks_view;
-        ASSERT FALSE, 'Alice can drop Bob''s blocks views';
+        DROP VIEW IF EXISTS hive.bob_context_accounts_view;
+        ASSERT FALSE, 'Alice can drop Bob''s accounts views';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        DROP VIEW IF EXISTS hive.bob_context_account_operations_view;
+        ASSERT FALSE, 'Alice can drop Bob''s account_operations views';
     EXCEPTION WHEN OTHERS THEN
     END;
 
@@ -307,6 +313,18 @@ BEGIN
     BEGIN
         DROP VIEW IF EXISTS hive.alice_context_blocks_view;
         ASSERT FALSE, 'Bob can drop Alice''s blocks views';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        DROP VIEW IF EXISTS hive.alice_context_accounts_view;
+        ASSERT FALSE, 'Bob can drop Alice''s accounts views';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        DROP VIEW IF EXISTS hive.alice_context_account_operations_view;
+        ASSERT FALSE, 'Bob can drop Alice''s account_operations views';
     EXCEPTION WHEN OTHERS THEN
     END;
 

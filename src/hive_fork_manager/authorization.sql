@@ -18,6 +18,8 @@ ALTER TABLE hive.blocks OWNER TO hived_group;
 ALTER TABLE hive.transactions OWNER TO hived_group;
 ALTER TABLE hive.operations OWNER TO hived_group;
 ALTER TABLE hive.transactions_multisig OWNER TO hived_group;
+ALTER TABLE hive.accounts OWNER TO hived_group;
+ALTER TABLE hive.account_operations OWNER TO hived_group;
 ALTER TABLE hive.irreversible_data OWNER TO hived_group;
 
 -- generic protection for tables in hive schema
@@ -58,7 +60,7 @@ GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hive TO hive_applications_group;
 
 GRANT EXECUTE ON FUNCTION
       hive.back_from_fork( INT )
-    , hive.push_block( hive.blocks, hive.transactions[], hive.transactions_multisig[], hive.operations[] )
+    , hive.push_block( hive.blocks, hive.transactions[], hive.transactions_multisig[], hive.operations[], hive.accounts[], hive.account_operations[] )
     , hive.set_irreversible( INT )
     , hive.end_massive_sync( INTEGER )
     , disable_indexes_of_irreversible()
@@ -71,6 +73,8 @@ GRANT EXECUTE ON FUNCTION
     , hive.copy_transactions_to_irreversible( _head_block_of_irreversible_blocks INT, _new_irreversible_block INT )
     , hive.copy_operations_to_irreversible( _head_block_of_irreversible_blocks INT, _new_irreversible_block INT )
     , hive.copy_signatures_to_irreversible( _head_block_of_irreversible_blocks INT, _new_irreversible_block INT )
+    , hive.copy_accounts_to_irreversible( _head_block_of_irreversible_blocks INT, _new_irreversible_block INT )
+    , hive.copy_account_operations_to_irreversible( _head_block_of_irreversible_blocks INT, _new_irreversible_block INT )
     , hive.remove_obsolete_reversible_data( _new_irreversible_block INT )
     , hive.remove_unecessary_events( _new_irreversible_block INT )
     , hive.register_table( _table_schema TEXT,  _table_name TEXT, _context_name TEXT ) -- needs to alter tables when indexes are disabled
@@ -84,7 +88,7 @@ TO hived_group;
 
 REVOKE EXECUTE ON FUNCTION
       hive.back_from_fork( INT )
-    , hive.push_block( hive.blocks, hive.transactions[], hive.transactions_multisig[], hive.operations[] )
+    , hive.push_block( hive.blocks, hive.transactions[], hive.transactions_multisig[], hive.operations[], hive.accounts[], hive.account_operations[] )
     , hive.set_irreversible( INT )
     , hive.end_massive_sync( INTEGER )
     , hive.copy_blocks_to_irreversible( _head_block_of_irreversible_blocks INT, _new_irreversible_block INT )

@@ -13,7 +13,7 @@ BEGIN
            ( 3, 7, '2020-06-22 19:10:25-07'::timestamp );
 
     INSERT INTO hive.operation_types
-    VALUES (0, 'OP 0', FALSE )
+    VALUES ( 0, 'OP 0', FALSE )
          , ( 1, 'OP 1', FALSE )
          , ( 2, 'OP 2', FALSE )
          , ( 3, 'OP 3', TRUE )
@@ -33,6 +33,22 @@ BEGIN
          , ( 9, '\xBADD90', '\xCAFE90', '2016-06-22 19:10:31-07'::timestamp, 3 )
          , ( 10, '\xBADD1A', '\xCAFE1A', '2016-06-22 19:10:32-07'::timestamp, 3 )
     ;
+
+    INSERT INTO hive.accounts_reversible( block_num, name, id, fork_id)
+    VALUES
+           ( 4, 'u4_1',1 , 1 )
+         , ( 5, 'u5_1',2 , 1 )
+         , ( 6, 'u6_1',3 , 1 )
+         , ( 7, 'u7_1',4 , 1 )
+         , ( 10, 'u10_1',5 , 1 )
+         , ( 7, 'u7_2', 6 , 2 )
+         , ( 8, 'u8_2', 7 , 2 )
+         , ( 9, 'u9_2', 8 , 2 )
+         , ( 8, 'u8_2',9 , 3 )
+         , ( 9, 'u9_3',10 , 3 )
+         , ( 10, 'u10_3',11 , 3 )
+    ;
+
 
     INSERT INTO hive.transactions_reversible
     VALUES
@@ -84,6 +100,24 @@ BEGIN
          , ( 11, 10, 0, 0, 1, '2016-06-22 19:10:21-07'::timestamp, 'TEN OPERATION', 3 )
     ;
 
+    INSERT INTO hive.account_operations_reversible
+    VALUES
+       ( 4, 1, 4, 1 )
+     , ( 5, 1, 5, 1 )
+     , ( 6, 1, 6, 1 )
+     , ( 7, 1, 7, 1 ) -- must be overriden by fork 2
+     , ( 8, 1, 7, 1 ) -- must be overriden by fork 2
+     , ( 9, 1, 9, 1 ) -- must be overriden by fork 2
+     , ( 7, 2, 7, 2 )
+     , ( 8, 2, 8, 2 ) -- will be abandoned since fork 3 doesn not have this account operation
+     , ( 9, 2, 9, 2 )
+     , ( 9, 2, 8, 2 )
+     , ( 10, 2, 10, 2 )
+     , ( 9, 3, 9, 3 )
+     , ( 10, 3, 10, 3 )
+     , ( 11, 3, 10, 3 )
+;
+
     UPDATE hive.contexts SET fork_id = 2, irreversible_block = 8, current_block_num = 8;
     -- SUMMARY:
     --We have 3 forks: 1 (blocks: 4,5,6),2 (blocks: 7,8,9) ,3 (blocks: 8,9, 10), moreover block 1,2,3,4 are
@@ -130,6 +164,20 @@ BEGIN
         ) as pattern
     ) , 'Unexpected rows in hive.blocks_reversible';
 
+    ASSERT EXISTS( SELECT * FROM hive.accounts_reversible ), 'No reversible accounts';
+
+    ASSERT NOT EXISTS (
+        SELECT block_num, name, id, fork_id FROM hive.accounts_reversible
+        EXCEPT SELECT * FROM ( VALUES
+            ( 10, 'u10_1',5 , 1 )
+          , ( 8, 'u8_2', 7 , 2 )
+          , ( 9, 'u9_2', 8 , 2 )
+          , ( 8, 'u8_2',9 , 3 )
+          , ( 9, 'u9_3',10 , 3 )
+          , ( 10, 'u10_3',11 , 3 )
+        ) as pattern
+    ) , 'Unexpected rows in hive.accounts_reversible';
+
     ASSERT EXISTS( SELECT * FROM hive.transactions_reversible ), 'No reversible transactions';
 
     ASSERT NOT EXISTS (
@@ -171,6 +219,19 @@ BEGIN
          , ( 11, 10, 0, 0, 1, '2016-06-22 19:10:21-07'::timestamp, 'TEN OPERATION', 3 )
     ) as pattern
     ), 'Unexpected rows in hive.operations_reversible'
+    ;
+
+    ASSERT ( SELECT COUNT(*) FROM hive.account_operations_reversible ) = 5, 'Wrong number of account_operations';
+    ASSERT NOT EXISTS (
+    SELECT * FROM hive.account_operations_reversible
+    EXCEPT SELECT * FROM ( VALUES
+          ( 9, 2, 9, 2 )
+        , ( 10, 2, 10, 2 )
+        , ( 9, 3, 9, 3 )
+        , ( 10, 3, 10, 3 )
+        , ( 11, 3, 10, 3 )
+    ) as pattern
+    ), 'Unexpected rows in hive.account_operations_reversible'
     ;
 END;
 $BODY$

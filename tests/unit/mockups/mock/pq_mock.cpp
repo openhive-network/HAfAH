@@ -5,7 +5,7 @@
 
 namespace {
     std::weak_ptr< PqMock > PQ_MOCK;
-}
+} // namespace
 
 std::shared_ptr<PqMock> PqMock::create_and_get() {
   assert( PQ_MOCK.lock() == nullptr && "Use only one mock instance" );

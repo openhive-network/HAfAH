@@ -31,10 +31,14 @@ SELECT hive.push_block(
         , NULL
         , NULL
         , NULL
+        , NULL
+        , NULL
     );
 
 SELECT hive.push_block(
          ( 7, '\xBADD70', '\xCAFE70', '2016-06-22 19:10:25-07'::timestamp )
+        , NULL
+        , NULL
         , NULL
         , NULL
         , NULL
@@ -44,6 +48,8 @@ SELECT hive.set_irreversible( 6 );
 
 SELECT hive.push_block(
          ( 8, '\xBADD80', '\xCAFE80', '2016-06-22 19:10:25-07'::timestamp )
+        , NULL
+        , NULL
         , NULL
         , NULL
         , NULL
@@ -64,12 +70,16 @@ SELECT hive.push_block(
         , NULL
         , NULL
         , NULL
+        , NULL
+        , NULL
     );
 
 SELECT hive.back_from_fork( 7 );
 
 SELECT hive.push_block(
          ( 8, '\xBADD81', '\xCAFE81', '2016-06-22 19:10:25-07'::timestamp )
+        , NULL
+        , NULL
         , NULL
         , NULL
         , NULL
@@ -89,6 +99,8 @@ SELECT hive.push_block(
         , NULL
         , NULL
         , NULL
+        , NULL
+        , NULL
 );
 
 SELECT hive.back_from_fork( 8 );
@@ -98,10 +110,14 @@ SELECT hive.push_block(
         , NULL
         , NULL
         , NULL
+        , NULL
+        , NULL
     );
 
 SELECT hive.push_block(
          ( 10, '\xBADD1010', '\xCAFE1010', '2016-06-22 19:10:25-07'::timestamp )
+        , NULL
+        , NULL
         , NULL
         , NULL
         , NULL

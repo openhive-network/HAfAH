@@ -9,6 +9,7 @@
 #include <hive/plugins/sql_serializer/sql_serializer_objects.hpp>
 
 #include <hive/chain/util/impacted.hpp>
+#include <hive/chain/account_object.hpp>
 
 #include <hive/protocol/config.hpp>
 #include <hive/protocol/operations.hpp>
@@ -158,6 +159,8 @@ using chain::reindex_notification;
 
           void handle_transactions(const vector<hive::protocol::signed_transaction>& transactions, const int64_t block_num);
           void inform_hfm_about_starting();
+          void collect_account_operations(int64_t operation_id, const hive::protocol::operation& op, uint32_t block_num);
+          void import_all_builtin_accounts();
 
           boost::signals2::connection _on_pre_apply_operation_con;
           boost::signals2::connection _on_post_apply_operation_con;
@@ -179,6 +182,7 @@ using chain::reindex_notification;
           uint32_t psql_index_threshold = 0;
           uint32_t psql_transactions_threads_number = 2;
           uint32_t psql_operations_threads_number = 5;
+          uint32_t psql_account_operations_threads_number = 2;
           uint32_t head_block_number = 0;
 
           int64_t op_sequence_id = 0; 
@@ -299,6 +303,9 @@ using chain::reindex_notification;
               queries_commit_data_processor processor( db_url, "Get type definitions", get_type_definitions, nullptr );
               processor.trigger( nullptr, 0 );
               processor.join();
+            }
+            else {
+              import_all_builtin_accounts();
             }
 
             switch_db_items( false/*mode*/ );
@@ -499,6 +506,7 @@ void sql_serializer_plugin_impl::on_pre_apply_operation(const operation_notifica
     note.op
   );
 
+  collect_account_operations( op_sequence_id, note.op, note.block );
 }
 
 void sql_serializer_plugin_impl::on_post_apply_operation(const operation_notification& note)
@@ -524,6 +532,8 @@ void sql_serializer_plugin_impl::on_post_apply_operation(const operation_notific
     chain_db.head_block_time(),
     note.op
   );
+
+  collect_account_operations( op_sequence_id, note.op, note.block );
 }
 
 void sql_serializer_plugin_impl::on_post_apply_block(const block_notification& note)
@@ -604,7 +614,12 @@ void sql_serializer_plugin_impl::on_pre_reindex(const reindex_notification& note
   if(_on_pre_apply_block_con.connected())
     chain::util::disconnect_signal(_on_pre_apply_block_con);
 
-  _dumper = std::make_unique< reindex_data_dumper >( db_url, psql_operations_threads_number, psql_transactions_threads_number );
+  _dumper = std::make_unique< reindex_data_dumper >(
+      db_url
+    , psql_operations_threads_number
+    , psql_transactions_threads_number
+    , psql_account_operations_threads_number
+  );
 
   ilog("Leaving a reindex init...");
 }
@@ -647,6 +662,61 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
 
   return false;
 }
+      void sql_serializer_plugin_impl::import_all_builtin_accounts()
+      {
+        const auto& accounts = chain_db.get_index<hive::chain::account_index, hive::chain::by_id>();
+
+        auto* data = currently_caching_data.get();
+
+        int& next_account_id = data->_next_account_id;
+        auto& known_accounts = data->_account_cache;
+
+        for(const auto& account : accounts)
+        {
+          auto ii = known_accounts.emplace(std::string(account.name), account_info(next_account_id + 1, 0));
+          FC_ASSERT( ii.second, "Builtin account: `${a}' already exists.", ("a", account.name) );
+          ++next_account_id;
+        }
+      }
+
+
+
+      void sql_serializer_plugin_impl::collect_account_operations(
+          int64_t operation_id
+        , const hive::protocol::operation& op
+        , uint32_t block_num
+      )
+      {
+        flat_set<hive::protocol::account_name_type> impacted;
+        hive::app::operation_get_impacted_accounts(op, impacted);
+
+        impacted.erase(hive::protocol::account_name_type());
+
+        auto* data = currently_caching_data.get();
+        auto* account_cache = &data->_account_cache;
+        auto* account_operations = &data->account_operations;
+        auto* accounts = &data->accounts;
+
+        for(const auto& name : impacted)
+        {
+          auto accountI = account_cache->find(name);
+          if ( accountI == account_cache->end() ) {
+            // 1 because we know it is impacted by the operation
+            account_cache->emplace( std::string(name), account_info(data->_next_account_id, 1) );
+            accounts->emplace_back( data->_next_account_id, std::string(name), block_num);
+            // 0 becuase it is a first operation counted from 0
+            account_operations->emplace_back(operation_id, data->_next_account_id, 0);
+            ++data->_next_account_id;
+          } else {
+            account_info& aInfo = accountI->second;
+            account_operations->emplace_back(operation_id, aInfo._id, aInfo._operation_count);
+            ++aInfo._operation_count;
+          }
+        }
+      }
+
+
+
       } // namespace detail
 
       sql_serializer_plugin::sql_serializer_plugin() {}
@@ -658,7 +728,9 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
         cfg.add_options()("psql-url", boost::program_options::value<string>(), "postgres connection string")
                          ("psql-index-threshold", appbase::bpo::value<uint32_t>()->default_value( 1'000'000 ), "indexes/constraints will be recreated if `psql_block_number + psql_index_threshold >= head_block_number`")
                          ("psql-operations-threads-number", appbase::bpo::value<uint32_t>()->default_value( 5 ), "number of threads which dump operations to database during reindexing")
-                         ("psql-transactions-threads-number", appbase::bpo::value<uint32_t>()->default_value( 2 ), "number of threads which dump transactions to database during reindexing");
+                         ("psql-transactions-threads-number", appbase::bpo::value<uint32_t>()->default_value( 2 ), "number of threads which dump transactions to database during reindexing")
+                         ("psql-account-operations-threads-number", appbase::bpo::value<uint32_t>()->default_value( 2 ), "number of threads which dump account operations to database during reindexing")
+                         ;
       }
 
       void sql_serializer_plugin::plugin_initialize(const boost::program_options::variables_map &options)
@@ -674,6 +746,7 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
         my->psql_index_threshold = options["psql-index-threshold"].as<uint32_t>();
         my->psql_operations_threads_number = options["psql-operations-threads-number"].as<uint32_t>();
         my->psql_transactions_threads_number = options["psql-transactions-threads-number"].as<uint32_t>();
+        my->psql_account_operations_threads_number = options["psql-account-operations-threads-number"].as<uint32_t>();
 
         my->currently_caching_data = std::make_unique<cached_data_t>( default_reservation_size );
 

@@ -17,10 +17,14 @@ BEGIN
         , NULL
         , NULL
         , NULL
+        , NULL
+        , NULL
     );
 
     PERFORM hive.push_block(
          ( 3, '\xBADD30', '\xCAFE30', '2016-06-22 19:10:25-07'::timestamp )
+        , NULL
+        , NULL
         , NULL
         , NULL
         , NULL

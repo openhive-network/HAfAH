@@ -5,7 +5,7 @@
 
 namespace {
     std::weak_ptr< PostgresMock > POSTGRES_MOCK;
-}
+} // namespace
 
 int SPI_result = SPI_ERROR_NOATTRIBUTE;
 

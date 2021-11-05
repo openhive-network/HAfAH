@@ -35,6 +35,18 @@ BEGIN
          , ( 2, 2, 0, 0, 1, '2016-06-22 19:10:21-07'::timestamp, 'ONE OPERATION' )
     ;
 
+    INSERT INTO hive.accounts
+    VALUES
+          ( 1, 'userconsistent', 1)
+        , ( 2, 'user', 2)
+    ;
+
+    INSERT INTO hive.account_operations
+    VALUES
+          ( 1, 1, 1)
+        , ( 2, 1, 2)
+    ;
+
     -- here we simulate situation when hived claims recently only block 1
     -- block 2 was not claimed, and it is possible not all information about it was dumped - maybe hived crashes
     PERFORM hive.end_massive_sync( 1 );
@@ -67,11 +79,15 @@ BEGIN
     ASSERT ( SELECT COUNT(*) FROM hive.transactions ) = 1, 'Unexpected number of transactions';
     ASSERT ( SELECT COUNT(*) FROM hive.transactions_multisig ) = 1, 'Unexpected number of signatures';
     ASSERT ( SELECT COUNT(*) FROM hive.operations ) = 1, 'Unexpected number of operations';
+    ASSERT ( SELECT COUNT(*) FROM hive.accounts ) = 1, 'Unexpected number of accounts';
+    ASSERT ( SELECT COUNT(*) FROM hive.account_operations ) = 1, 'Unexpected number of account_operations';
 
     ASSERT ( SELECT COUNT(*) FROM hive.blocks WHERE num = 1 ) = 1, 'No blocks with num = 1';
     ASSERT ( SELECT COUNT(*) FROM hive.transactions WHERE block_num = 1 ) = 1, 'No transaction with block_num = 1';
     ASSERT ( SELECT COUNT(*) FROM hive.operations WHERE block_num = 1 ) = 1, 'No operations with block_num = 1';
     ASSERT ( SELECT COUNT(*) FROM hive.transactions_multisig WHERE trx_hash = '\xDEED10'::bytea ) = 1, 'No signatures with block_num = 1';
+    ASSERT ( SELECT COUNT(*) FROM hive.accounts WHERE block_num = 1 ) = 1, 'No account with block_num = 1';
+    ASSERT ( SELECT COUNT(*) FROM hive.account_operations WHERE account_id = 1 ) = 1, 'No account_operations with block_num = 1';
 
     ASSERT( SELECT COUNT(*) FROM hive.hived_connections ) = 1, 'No connection saved';
     ASSERT( SELECT COUNT(*) FROM hive.hived_connections WHERE block_num=100 AND git_sha='123456789' ) = 1, 'No expected connection saved';

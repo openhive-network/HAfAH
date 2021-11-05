@@ -16,7 +16,12 @@ namespace hive::plugins::sql_serializer {
 
   class reindex_data_dumper: public data_dumper {
   public:
-    reindex_data_dumper( const std::string& db_url, uint32_t operations_threads, uint32_t transactions_threads );
+    reindex_data_dumper(
+        const std::string& db_url
+      , uint32_t operations_threads
+      , uint32_t transactions_threads
+      , uint32_t account_operation_threads
+    );
 
     ~reindex_data_dumper() { join(); }
     reindex_data_dumper(reindex_data_dumper&) = delete;
@@ -49,11 +54,22 @@ namespace hive::plugins::sql_serializer {
         >
       >
     >;
+    using accounts_data_container_t_writer = table_data_writer< hive_accounts >;
+    using account_operations_data_container_t_writer = chunks_for_writers_splitter<
+      table_data_writer<
+        hive_account_operations<
+          container_view< std::vector< PSQL::processing_objects::account_operation_data_t >
+          >
+        >
+      >
+    >;
 
     std::unique_ptr< block_data_container_t_writer > _block_writer;
     std::unique_ptr< transaction_data_container_t_writer > _transaction_writer;
     std::unique_ptr< transaction_multisig_data_container_t_writer > _transaction_multisig_writer;
     std::unique_ptr< operation_data_container_t_writer > _operation_writer;
+    std::unique_ptr< accounts_data_container_t_writer > _account_writer;
+    std::unique_ptr< account_operations_data_container_t_writer > _account_operations_writer;
 
     std::unique_ptr<end_massive_sync_processor> _end_massive_sync_processor;
   };

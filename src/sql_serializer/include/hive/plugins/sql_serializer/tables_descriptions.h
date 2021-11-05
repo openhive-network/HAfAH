@@ -91,4 +91,44 @@ namespace hive::plugins::sql_serializer {
       }
       };
     };
+
+  struct hive_accounts
+    {
+    using container_t = std::vector<PSQL::processing_objects::account_data_t>;
+
+    static const char TABLE[];
+    static const char COLS[];
+
+    struct data2sql_tuple : public data2_sql_tuple_base
+      {
+      using data2_sql_tuple_base::data2_sql_tuple_base;
+
+      std::string operator()(typename container_t::const_reference data)
+      {
+        return std::to_string(data.id) + ',' + escape(data.name) + ',' + std::to_string( data.block_number );
+      }
+      };
+    };
+
+  template< typename Container >
+  struct hive_account_operations
+    {
+    using container_t = Container;
+
+    static const char TABLE[];
+    static const char COLS[];
+
+    struct data2sql_tuple : public data2_sql_tuple_base
+      {
+      using data2_sql_tuple_base::data2_sql_tuple_base;
+
+      std::string operator()(typename container_t::const_reference data) const
+      {
+        return std::to_string(data.account_id) + ',' + std::to_string(data.operation_seq_no) + ',' +
+        std::to_string(data.operation_id);
+      }
+      };
+    };
+
+
 } // namespace hive::plugins::sql_serializer

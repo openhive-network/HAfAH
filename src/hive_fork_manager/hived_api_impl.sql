@@ -137,6 +137,71 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.copy_accounts_to_irreversible(
+      _head_block_of_irreversible_blocks INT
+    , _new_irreversible_block INT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    INSERT INTO hive.accounts
+    SELECT
+           har.id
+         , har.name
+         , har.block_num
+    FROM
+        hive.accounts_reversible har
+        JOIN (
+            SELECT
+                  DISTINCT ON ( hbr.num ) hbr.num
+                , har2.fork_id
+            FROM hive.blocks_reversible hbr
+            LEFT JOIN hive.accounts_reversible har2 ON hbr.fork_id = har2.fork_id AND har2.block_num = hbr.num
+            WHERE
+                  hbr.num <= _new_irreversible_block
+              AND hbr.num > _head_block_of_irreversible_blocks
+            ORDER BY hbr.num ASC, hbr.fork_id DESC
+        ) as num_and_forks ON har.block_num = num_and_forks.num AND num_and_forks.fork_id IS NOT NULL AND har.fork_id = num_and_forks.fork_id
+    ;
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.copy_account_operations_to_irreversible(
+      _head_block_of_irreversible_blocks INT
+    , _new_irreversible_block INT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    INSERT INTO hive.account_operations
+    SELECT
+           haor.account_id
+         , haor.account_op_seq_no
+         , haor.operation_id
+    FROM
+        hive.account_operations_reversible haor
+        JOIN hive.operations_reversible hor1 ON hor1.id = haor.operation_id AND haor.fork_id = hor1.fork_id
+        JOIN (
+            SELECT
+                  DISTINCT ON ( hbr.num ) hbr.num
+                , hor.fork_id
+            FROM hive.blocks_reversible hbr
+                LEFT JOIN hive.operations_reversible hor ON hor.fork_id = hbr.fork_id AND hor.block_num = hbr.num
+            WHERE
+                hbr.num <= _new_irreversible_block
+              AND hbr.num > _head_block_of_irreversible_blocks
+            ORDER BY hbr.num ASC, hbr.fork_id DESC
+        ) as num_and_forks ON hor1.fork_id = num_and_forks.fork_id AND hor1.block_num = num_and_forks.num
+    ;
+END;
+$BODY$
+;
+
 CREATE OR REPLACE FUNCTION hive.remove_obsolete_reversible_data( _new_irreversible_block INT )
     RETURNS void
     LANGUAGE plpgsql
@@ -154,6 +219,14 @@ BEGIN
         __lowest_contexts_irreversible_block = _new_irreversible_block;
     END IF;
 
+    DELETE FROM hive.account_operations_reversible har
+    USING hive.operations_reversible hor
+    WHERE
+            har.operation_id = hor.id
+        AND har.fork_id = hor.fork_id
+        AND hor.block_num < __lowest_contexts_irreversible_block
+    ;
+
     DELETE FROM hive.operations_reversible hor
     WHERE hor.block_num < __lowest_contexts_irreversible_block;
 
@@ -167,6 +240,9 @@ BEGIN
 
     DELETE FROM hive.transactions_reversible htr
     WHERE htr.block_num < __lowest_contexts_irreversible_block;
+
+    DELETE FROM hive.accounts_reversible har
+    WHERE har.block_num < __lowest_contexts_irreversible_block;
 
     DELETE FROM hive.blocks_reversible hbr
     WHERE hbr.num < __lowest_contexts_irreversible_block;
@@ -369,6 +445,10 @@ DECLARE
 BEGIN
     SELECT consistent_block INTO __consistent_block FROM hive.irreversible_data;
 
+    DELETE FROM hive.account_operations hao
+    USING hive.operations ho
+    WHERE ho.block_num > __consistent_block AND ho.id = hao.operation_id;
+
     DELETE FROM hive.operations WHERE block_num > __consistent_block;
 
     DELETE FROM hive.transactions_multisig htm
@@ -376,6 +456,8 @@ BEGIN
     WHERE ht.block_num > __consistent_block AND ht.trx_hash = htm.trx_hash;
 
     DELETE FROM hive.transactions WHERE block_num > __consistent_block;
+
+    DELETE FROM hive.accounts WHERE block_num > __consistent_block;
 
     DELETE FROM hive.blocks WHERE num > __consistent_block;
 END;

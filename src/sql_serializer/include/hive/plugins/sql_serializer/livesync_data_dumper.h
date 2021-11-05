@@ -52,16 +52,25 @@ namespace hive::plugins::sql_serializer {
         hive_operations< std::vector<PSQL::processing_objects::process_operation_t> >
       , string_data_processor
     >;
+    using accounts_data_container_t_writer = table_data_writer< hive_accounts, string_data_processor >;
+    using account_operations_data_container_t_writer = table_data_writer<
+        hive_account_operations< std::vector<PSQL::processing_objects::account_operation_data_t> >
+      , string_data_processor
+    >;
 
     std::unique_ptr< block_data_container_t_writer > _block_writer;
     std::unique_ptr< transaction_data_container_t_writer > _transaction_writer;
     std::unique_ptr< transaction_multisig_data_container_t_writer > _transaction_multisig_writer;
     std::unique_ptr< operation_data_container_t_writer > _operation_writer;
+    std::unique_ptr< accounts_data_container_t_writer > _account_writer;
+    std::unique_ptr< account_operations_data_container_t_writer > _account_operations_writer;
 
     std::string _block;
     std::string _transactions;
     std::string _transactions_multisig;
     std::string _operations;
+    std::string _accounts;
+    std::string _account_operations;
 
     boost::signals2::connection _on_irreversible_block_conn;
     boost::signals2::connection _on_switch_fork_conn;

@@ -183,6 +183,18 @@ BEGIN
         ASSERT FALSE, 'Alice can drop hive.hived_connections';
     EXCEPTION WHEN OTHERS THEN
     END;
+
+    BEGIN
+        DELETE FROM hive.accounts;
+        ASSERT FALSE, 'Alice can delete irreversible accounts';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        DELETE FROM hive.account_operations;
+        ASSERT FALSE, 'Alice can delete irreversible account_operations';
+    EXCEPTION WHEN OTHERS THEN
+    END;
 END;
 $BODY$
 ;

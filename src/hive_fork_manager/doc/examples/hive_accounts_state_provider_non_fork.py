@@ -2,7 +2,7 @@
 
 import sqlalchemy
 
-APPLICATION_CONTEXT = "accounts"
+APPLICATION_CONTEXT = "accounts_ctx"
 
 def create_db_engine():
     return sqlalchemy.create_engine(
