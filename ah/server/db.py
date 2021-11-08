@@ -104,9 +104,9 @@ class Db:
               bindparams(**kwargs).\
               execution_options(autocommit=False).\
               compile(dialect=sqlalchemy.dialects.postgresql.dialect(), compile_kwargs={"literal_binds": True}))
-            before = perf()
+            # before = perf()
             result = await conn.execute(sql)
-            print(f'{perf() - before}|{sql}', flush=True)
+            # print(f'{perf() - before}|{sql}', flush=True)
             return result
         except Exception as e:
             log.warning("[SQL-ERR] %s in query %s (%s)",

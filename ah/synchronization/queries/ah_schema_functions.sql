@@ -243,17 +243,19 @@ BEGIN
       (
         CASE
           WHEN T.trx_in_block <= -1 THEN T.op_pos ::BIGINT
-          ELSE ( T.id - (
-            SELECT nahov.id
-            FROM hive.operations nahov
-            JOIN hive.operation_types nhot
-            ON nahov.op_type_id = nhot.id
-            WHERE nahov.block_num=T.block_num
-              AND nahov.trx_in_block=T.trx_in_block
-              AND nahov.op_pos=T.op_pos
-              AND nhot.is_virtual=FALSE
-            LIMIT 1
-          ) ) :: BIGINT
+          ELSE ( T.id - 
+            COALESCE(
+               SELECT nahov.id
+               FROM hive.operations nahov
+               JOIN hive.operation_types nhot
+               ON nahov.op_type_id = nhot.id
+               WHERE nahov.block_num=T.block_num
+                 AND nahov.trx_in_block=T.trx_in_block
+                 AND nahov.op_pos=T.op_pos
+                 AND nhot.is_virtual=FALSE
+               LIMIT 1
+            , 0 ) -- this COALESCE is related to MR: hive!296. In block 1 appears 4 vops in block without
+          ) :: BIGINT
         END
       ) _virtual_op,
       trim(both '"' from to_json(T.timestamp)::text) _timestamp,
@@ -406,21 +408,21 @@ BEGIN
         ) _trx_in_block,
         (
           CASE
-          WHEN ho.trx_in_block <= -1 THEN 0 ::BIGINT
-          ELSE abs(ho.op_pos::BIGINT)
+          WHEN T.trx_in_block <= -1 THEN 0 ::BIGINT
+          ELSE abs(T.op_pos::BIGINT)
           END
         ) AS _op_in_trx,
         (
           CASE
-          WHEN ho.trx_in_block <= -1 THEN ho.op_pos ::BIGINT
-          ELSE (ho.id - (
+          WHEN T.trx_in_block <= -1 THEN T.op_pos ::BIGINT
+          ELSE (T.id - (
             SELECT nahov.id
             FROM hive.operations nahov
             JOIN hive.operation_types nhot
             ON nahov.op_type_id = nhot.id
-            WHERE nahov.block_num=ho.block_num
-              AND nahov.trx_in_block=ho.trx_in_block
-              AND nahov.op_pos=ho.op_pos
+            WHERE nahov.block_num=T.block_num
+              AND nahov.trx_in_block=T.trx_in_block
+              AND nahov.op_pos=T.op_pos
               AND nhot.is_virtual=FALSE
             LIMIT 1
           ) ) :: BIGINT
@@ -433,7 +435,7 @@ BEGIN
         (
           --`abs` it's temporary, until position of operation is correctly saved
           SELECT
-            ho.id, ho.block_num, ho.trx_in_block, abs(ho.op_pos::BIGINT) op_pos, ho.body, ho.op_type_id, hao.account_op_seq_no as seq_no, timestamp, virtual_pos
+            ho.id, ho.block_num, ho.trx_in_block, abs(ho.op_pos::BIGINT) op_pos, ho.body, ho.op_type_id, hao.account_op_seq_no as seq_no, timestamp
             FROM hive.operations ho
             JOIN hafah_python.account_operations hao ON ho.id = hao.operation_id
             WHERE ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
