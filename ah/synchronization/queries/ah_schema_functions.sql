@@ -243,19 +243,17 @@ BEGIN
       (
         CASE
           WHEN T.trx_in_block <= -1 THEN T.op_pos ::BIGINT
-          ELSE ( T.id - 
-            COALESCE(
-               SELECT nahov.id
-               FROM hive.operations nahov
-               JOIN hive.operation_types nhot
-               ON nahov.op_type_id = nhot.id
-               WHERE nahov.block_num=T.block_num
-                 AND nahov.trx_in_block=T.trx_in_block
-                 AND nahov.op_pos=T.op_pos
-                 AND nhot.is_virtual=FALSE
-               LIMIT 1
-            , 0 ) -- this COALESCE is related to MR: hive!296. In block 1 appears 4 vops in block without
-          ) :: BIGINT
+          ELSE ( T.id - (
+            SELECT nahov.id
+            FROM hive.operations nahov
+            JOIN hive.operation_types nhot
+            ON nahov.op_type_id = nhot.id
+            WHERE nahov.block_num=T.block_num
+              AND nahov.trx_in_block=T.trx_in_block
+              AND nahov.op_pos=T.op_pos
+              AND nhot.is_virtual=FALSE
+            LIMIT 1
+          ) ) :: BIGINT
         END
       ) _virtual_op,
       trim(both '"' from to_json(T.timestamp)::text) _timestamp,
