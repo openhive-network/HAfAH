@@ -433,14 +433,21 @@ BEGIN
         (
           --`abs` it's temporary, until position of operation is correctly saved
           SELECT
-            ho.id, ho.block_num, ho.trx_in_block, abs(ho.op_pos::BIGINT) op_pos, ho.body, ho.op_type_id, hao.account_op_seq_no as seq_no, timestamp
+            ho.id, ho.block_num, ho.trx_in_block, abs(ho.op_pos::BIGINT) op_pos, ho.body, ho.op_type_id, WORKAROUND.seq_no, timestamp
+            FROM hive.operations ho
+          JOIN-- hived patterns related workaround, see more: https://gitlab.syncad.com/hive/HAfAH/-/issues/3
+          (
+            SELECT
+            ho.id, hao.account_op_seq_no as seq_no
             FROM hive.operations ho
             JOIN hafah_python.account_operations hao ON ho.id = hao.operation_id
             WHERE ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
               AND hao.account_id = __account_id
               AND hao.account_op_seq_no <= _START
-                AND hao.account_op_seq_no > (_START - 2000) -- hived patterns related workaround, see more: https://gitlab.syncad.com/hive/HAfAH/-/issues/3
-              AND ( ho.op_type_id = ANY( _FILTER ) )
+            ORDER BY seq_no DESC
+            LIMIT 2000
+          )WORKAROUND ON WORKAROUND.id = ho.id
+            WHERE ho.op_type_id = ANY( _FILTER )
             ORDER BY seq_no DESC
             LIMIT _LIMIT
         ) T
