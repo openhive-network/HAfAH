@@ -8,7 +8,7 @@ class account_history_impl:
   def __translate_filter(self, input : int, transform = lambda x : x):
     if input:
       result = []
-      for i in range(64):
+      for i in range(128):
         if input & (1 << i):
           result.append( transform(i) )
       return result
