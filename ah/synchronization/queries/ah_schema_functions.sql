@@ -439,6 +439,7 @@ BEGIN
             WHERE ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
               AND hao.account_id = __account_id
               AND hao.account_op_seq_no <= _START
+                AND hao.account_op_seq_no > (_START - 2000) -- hived patterns related workaround, see more: https://gitlab.syncad.com/hive/HAfAH/-/issues/3
               AND ( ho.op_type_id = ANY( _FILTER ) )
             ORDER BY seq_no DESC
             LIMIT _LIMIT
