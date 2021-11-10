@@ -21,15 +21,7 @@ class api_operation:
     self.block : int = obj['_block'] if block is None else block
     self.trx_in_block : int = obj["_trx_in_block"]
     self.op_in_trx : int = obj["_op_in_trx"]
-
-    vop = obj["_virtual_op"]
-    try:
-      self.virtual_op : int = int(vop)
-    except:
-      print(obj)
-      print(f'got: {vop} with type: {type(vop)}', flush=True)
-      raise
-
+    self.virtual_op : int = int(obj["_virtual_op"])
     self.timestamp : str = obj["_timestamp"]
     self.op : operation = operation(obj["_value"])
     self.operation_id = str(0x8000000000000000 | int(obj["_operation_id"])) if include_op_id else 0
