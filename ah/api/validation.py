@@ -11,7 +11,7 @@ def get_input_arguments( foo, kwargs ):
 
 
 
-def verify_types(*gloabal_actions, **additional_actions):
+def verify_types(*gloabal_actions, nullable : list = [], **additional_actions):
   '''
   Verifies is incoming arguments fits to annotations
 
@@ -29,6 +29,8 @@ def verify_types(*gloabal_actions, **additional_actions):
   def process_aditional_actions(argument, actions, valid_type : type, param_name : str):
     if actions is None:
       return argument
+    elif isinstance(actions, tuple):
+      actions = list(actions)
     elif not isinstance(actions, list):
       actions = [actions]
     for foo in actions:
@@ -40,11 +42,16 @@ def verify_types(*gloabal_actions, **additional_actions):
     def verify_types_impl(*args, **kwargs):
       annotations = dict(foo.__annotations__)
       kwargs = get_input_arguments( foo, kwargs )
-      for param_name, param_type in annotations.items():
-        incoming_param_value = process_global_actions(kwargs[param_name], param_type, param_name)
-        incoming_param_value = process_aditional_actions(incoming_param_value, additional_actions.get(param_name, None), param_type, param_name)
-        assert isinstance(incoming_param_value, param_type), f'`{param_name}` is `{type(incoming_param_value).__name__}` type, but should be `{param_type.__name__}` type'
-        kwargs[param_name] = incoming_param_value
+      try:
+        for param_name, param_type in annotations.items():
+          incoming_param_value = process_global_actions(kwargs[param_name], param_type, param_name)
+          incoming_param_value = process_aditional_actions(incoming_param_value, additional_actions.get(param_name, None), param_type, param_name)
+          if incoming_param_value is not None and param_name not in nullable:
+            assert isinstance(incoming_param_value, param_type), f'`{param_name}` is `{type(incoming_param_value).__name__}` type, but should be `{param_type.__name__}` type'
+          kwargs[param_name] = incoming_param_value
+      except Exception as e:
+        print(f'got exception: {e}')
+        print(kwargs)
 
       return foo(args=args[0], **kwargs)
     return verify_types_impl
