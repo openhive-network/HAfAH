@@ -4,10 +4,15 @@
 #include <fc/io/json.hpp>
 #include <fc/string.hpp>
 
+#include <vector>
+
 using hive::protocol::account_name_type;
-using fc::string;
+using hive::protocol::asset;
 
 #define CUSTOM_LOG(format, ... ) { FILE *pFile = fopen("get-impacted-accounts.log","ae"); fprintf(pFile,format "\n",__VA_ARGS__); fclose(pFile); }
+
+namespace /// anonymous
+{
 
 flat_set<account_name_type> get_accounts( const std::string& operation_body )
 {
@@ -20,6 +25,37 @@ flat_set<account_name_type> get_accounts( const std::string& operation_body )
   return _impacted;
 }
 
+typedef std::vector<std::pair<account_name_type, asset>> impacted_balance_data;
+
+impacted_balance_data collect_impacted_balances(const char* operation_body)
+{
+  impacted_balance_data retval;
+  hive::protocol::operation op;
+  from_variant(fc::json::from_string(operation_body), op);
+
+  /// to do use protocol::get_impacted_balances here
+
+  retval.emplace_back(account_name_type("blocktrades"), asset(12345, HIVE_SYMBOL));
+  retval.emplace_back(account_name_type("sender"), asset(-12345, HIVE_SYMBOL));
+
+  retval.emplace_back(account_name_type("blocktrades"), asset(54321, HBD_SYMBOL));
+  retval.emplace_back(account_name_type("receiver"), asset(-54321, HBD_SYMBOL));
+
+  retval.emplace_back(account_name_type("blocktrades"), asset(54321, VESTS_SYMBOL));
+  retval.emplace_back(account_name_type("receiver"), asset(-54321, VESTS_SYMBOL));
+
+  return retval;
+}
+
+extern "C" void issue_error(const char* msg);
+
+void issue_error(std::string msg)
+{
+  issue_error(msg.c_str());
+}
+
+
+} /// anonymous
 
 extern "C"
 {
@@ -40,7 +76,14 @@ extern "C"
 #include <funcapi.h>
 #include <miscadmin.h>
 
+
+void issue_error(const char* msg)
+{
+  ereport(ERROR, (errcode(ERRCODE_FEATURE_NOT_SUPPORTED), errmsg("%s", msg)));
+}
+
 #pragma pop_macro("elog")
+
 
 PG_MODULE_MAGIC;
 
@@ -82,7 +125,7 @@ Datum get_impacted_accounts(PG_FUNCTION_ARGS)
         if( !_accounts.empty() )
         {
           auto itr = _accounts.begin();
-          string _str = *(itr);
+          fc::string _str = *(itr);
           current_account = CStringGetTextDatum( _str.c_str() );
 
           if( _accounts.size() > 1 )
@@ -183,22 +226,47 @@ Datum get_impacted_balances(PG_FUNCTION_ARGS)
   Datum tuple_values[IMPACTED_BALANCES_RETURN_ATTRIBUTES] = {0};
   bool  nulls[IMPACTED_BALANCES_RETURN_ATTRIBUTES] = {false};
 
-  ReturnSetInfo* rsinfo = (ReturnSetInfo*)fcinfo->resultinfo;
+  ReturnSetInfo* rsinfo = reinterpret_cast<ReturnSetInfo*>(fcinfo->resultinfo);
 
   /* check to see if caller supports us returning a tuplestore */
-  if(rsinfo == NULL || !IsA(rsinfo, ReturnSetInfo))
+  if(rsinfo == nullptr || !IsA(rsinfo, ReturnSetInfo))
   {
-    ereport(ERROR, (errcode(ERRCODE_FEATURE_NOT_SUPPORTED), errmsg("set-valued function called in context that cannot accept a set")));
+    issue_error("set-valued function called in context that cannot accept a set");
   }
 
-  if(!(rsinfo->allowedModes & SFRM_Materialize))
+  if((rsinfo->allowedModes & SFRM_Materialize) == 0)
   {
-    ereport(ERROR, (errcode(ERRCODE_FEATURE_NOT_SUPPORTED), errmsg("materialize mode required, but it is not allowed in this context")));
+    issue_error("materialize mode required, but it is not allowed in this context");
   }
 
 /* Build a tuple descriptor for our result type */
-  if(get_call_result_type(fcinfo, NULL, &retvalDescription) != TYPEFUNC_COMPOSITE)
-    ereport(ERROR, (errcode(ERRCODE_FEATURE_NOT_SUPPORTED), errmsg("return type must be a row type")));
+  if(get_call_result_type(fcinfo, nullptr, &retvalDescription) != TYPEFUNC_COMPOSITE)
+  {
+    issue_error("return type must be a row type");
+  }
+
+  impacted_balance_data collected_data;
+  const char* operation_body = text_to_cstring(PG_GETARG_TEXT_PP(0));
+
+  try
+  {
+    collected_data = collect_impacted_balances(operation_body);
+  }
+  catch(const fc::exception& ex)
+  {
+    issue_error(std::string("Broken get_impacted_balances() input argument: `") + operation_body + std::string("'. Error: ") + ex.to_string().c_str());
+    return (Datum)0;
+  }
+  catch(const std::exception& ex)
+  {
+    issue_error(std::string("Broken get_impacted_balances() input argument: `") + operation_body + std::string("'. Error: ") + ex.what());
+    return (Datum)0;
+  }
+  catch(...)
+  {
+    issue_error(std::string("Unknown error during processing get_impacted_balances(") + operation_body + std::string(")"));
+    return (Datum)0;
+  }
 
   per_query_ctx = rsinfo->econtext->ecxt_per_query_memory;
   oldcontext = MemoryContextSwitchTo(per_query_ctx);
@@ -212,19 +280,20 @@ Datum get_impacted_balances(PG_FUNCTION_ARGS)
 
   MemoryContextSwitchTo(oldcontext);
 
-  tuple_values[ACCOUNT_NAME_IDX] = CStringGetTextDatum("blocktrades");
-  tuple_values[AMOUNT_IDX] = Int64GetDatum(int64_t(12345));
-  tuple_values[ASSET_PRECISION_IDX] = Int32GetDatum(int32_t(3));
-  tuple_values[ASSET_NAI_IDX] = Int32GetDatum(int32_t(13));
+  for(const auto& impacted_balance : collected_data)
+  {
+    fc::string account = impacted_balance.first;
+    const hive::protocol::asset& balance_change = impacted_balance.second;
+    const hive::protocol::asset_symbol_type& token_type = balance_change.symbol;
 
-  tuplestore_putvalues(tupstore, retvalDescription, tuple_values, nulls);
+    tuple_values[ACCOUNT_NAME_IDX] = CStringGetTextDatum(account.c_str());
 
-  tuple_values[ACCOUNT_NAME_IDX] = CStringGetTextDatum("sender");
-  tuple_values[AMOUNT_IDX] = Int64GetDatum(int64_t(-12345));
-  tuple_values[ASSET_PRECISION_IDX] = Int32GetDatum(int32_t(3));
-  tuple_values[ASSET_NAI_IDX] = Int32GetDatum(int32_t(13));
+    tuple_values[AMOUNT_IDX] = Int64GetDatum(balance_change.amount.value);
+    tuple_values[ASSET_PRECISION_IDX] = Int32GetDatum(int32_t(token_type.decimals()));
+    tuple_values[ASSET_NAI_IDX] = Int32GetDatum(int32_t(token_type.to_nai()));
 
-  tuplestore_putvalues(tupstore, retvalDescription, tuple_values, nulls);
+    tuplestore_putvalues(tupstore, retvalDescription, tuple_values, nulls);
+  }
 
 /* clean up and return the tuplestore */
   tuplestore_donestoring(tupstore);
