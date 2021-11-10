@@ -9,9 +9,11 @@
 using hive::protocol::account_name_type;
 using hive::protocol::asset;
 
+using hive::app::impacted_balance_data;
+
 #define CUSTOM_LOG(format, ... ) { FILE *pFile = fopen("get-impacted-accounts.log","ae"); fprintf(pFile,format "\n",__VA_ARGS__); fclose(pFile); }
 
-namespace /// anonymous
+namespace // anonymous
 {
 
 flat_set<account_name_type> get_accounts( const std::string& operation_body )
@@ -25,37 +27,23 @@ flat_set<account_name_type> get_accounts( const std::string& operation_body )
   return _impacted;
 }
 
-typedef std::vector<std::pair<account_name_type, asset>> impacted_balance_data;
-
 impacted_balance_data collect_impacted_balances(const char* operation_body)
 {
-  impacted_balance_data retval;
   hive::protocol::operation op;
   from_variant(fc::json::from_string(operation_body), op);
 
-  /// to do use protocol::get_impacted_balances here
-
-  retval.emplace_back(account_name_type("blocktrades"), asset(12345, HIVE_SYMBOL));
-  retval.emplace_back(account_name_type("sender"), asset(-12345, HIVE_SYMBOL));
-
-  retval.emplace_back(account_name_type("blocktrades"), asset(54321, HBD_SYMBOL));
-  retval.emplace_back(account_name_type("receiver"), asset(-54321, HBD_SYMBOL));
-
-  retval.emplace_back(account_name_type("blocktrades"), asset(54321, VESTS_SYMBOL));
-  retval.emplace_back(account_name_type("receiver"), asset(-54321, VESTS_SYMBOL));
-
-  return retval;
+  return hive::app::operation_get_impacted_balances(op);
 }
 
 extern "C" void issue_error(const char* msg);
 
-void issue_error(std::string msg)
+void issue_error(const std::string& msg)
 {
   issue_error(msg.c_str());
 }
 
 
-} /// anonymous
+} // namespace
 
 extern "C"
 {
@@ -79,7 +67,7 @@ extern "C"
 
 void issue_error(const char* msg)
 {
-  ereport(ERROR, (errcode(ERRCODE_FEATURE_NOT_SUPPORTED), errmsg("%s", msg)));
+  ereport(ERROR, (errcode(ERRCODE_FEATURE_NOT_SUPPORTED), errmsg("%s", msg))); //NOLINT
 }
 
 #pragma pop_macro("elog")
@@ -226,7 +214,7 @@ Datum get_impacted_balances(PG_FUNCTION_ARGS)
   Datum tuple_values[IMPACTED_BALANCES_RETURN_ATTRIBUTES] = {0};
   bool  nulls[IMPACTED_BALANCES_RETURN_ATTRIBUTES] = {false};
 
-  ReturnSetInfo* rsinfo = reinterpret_cast<ReturnSetInfo*>(fcinfo->resultinfo);
+  ReturnSetInfo* rsinfo = reinterpret_cast<ReturnSetInfo*>(fcinfo->resultinfo); //NOLINT
 
   /* check to see if caller supports us returning a tuplestore */
   if(rsinfo == nullptr || !IsA(rsinfo, ReturnSetInfo))
@@ -234,7 +222,7 @@ Datum get_impacted_balances(PG_FUNCTION_ARGS)
     issue_error("set-valued function called in context that cannot accept a set");
   }
 
-  if((rsinfo->allowedModes & SFRM_Materialize) == 0)
+  if((rsinfo->allowedModes & SFRM_Materialize) == 0) //NOLINT
   {
     issue_error("materialize mode required, but it is not allowed in this context");
   }
@@ -254,7 +242,8 @@ Datum get_impacted_balances(PG_FUNCTION_ARGS)
   }
   catch(const fc::exception& ex)
   {
-    issue_error(std::string("Broken get_impacted_balances() input argument: `") + operation_body + std::string("'. Error: ") + ex.to_string().c_str());
+    std::string exception_info = ex.to_string();
+    issue_error(std::string("Broken get_impacted_balances() input argument: `") + operation_body + std::string("'. Error: ") + exception_info);
     return (Datum)0;
   }
   catch(const std::exception& ex)
