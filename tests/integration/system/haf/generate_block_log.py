@@ -19,7 +19,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def prepare_block_log(world, outfile, length):
+def prepare_block_log(world, length):
     world.set_clean_up_policy(constants.WorldCleanUpPolicy.DO_NOT_REMOVE_FILES)
 
     all_witness_names = alpha_witness_names + beta_witness_names
@@ -102,8 +102,9 @@ def prepare_block_log(world, outfile, length):
         head = result["head_block_num"]
         logger.info(f'Generating block_log of length: {length}, current irreversible: {irreversible}, current head block: {head}')
 
-    os.remove(outfile)
-    init_node.get_block_log().truncate(outfile, length)
+    if os.path.exists('block_log'):
+        os.remove('block_log')
+    init_node.get_block_log().truncate('block_log', length)
     timestamp = init_node.api.block.get_block(block_num = length)['result']['block']['timestamp']
 
     return timestamp
@@ -111,12 +112,11 @@ def prepare_block_log(world, outfile, length):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--outfile', type=str, default='block_log', help='Output file for blocklog')
     parser.add_argument('--length', type=int, default=105, help='Desired blocklog length')
     args = parser.parse_args()
 
     world = World()
-    timestamp = prepare_block_log(world, args.outfile, args.length)
+    timestamp = prepare_block_log(world, args.length)
     logger.info(f'{bcolors.OKGREEN}timestamp: {timestamp}{bcolors.ENDC}')
 
     with open('timestamp', 'w') as f:
