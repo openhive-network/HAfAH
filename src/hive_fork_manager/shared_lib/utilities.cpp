@@ -36,7 +36,9 @@ extern "C"
 #include <utils/builtins.h>
 #include <utils/array.h>
 #include <utils/lsyscache.h>
+
 #include <funcapi.h>
+#include <miscadmin.h>
 
 #pragma pop_macro("elog")
 
@@ -148,6 +150,86 @@ Datum get_impacted_accounts(PG_FUNCTION_ARGS)
 
     SRF_RETURN_DONE(funcctx);
   }
+}
+
+PG_FUNCTION_INFO_V1(get_impacted_balances);
+
+/**
+* CREATE TYPE impacted_balances_return AS
+(
+	account_name VARCHAR, -- Name of the account impacted by given operation  
+	amount BIGINT, -- Amount of tokens changed by operation. Positive if account balance (specific to given asset_symbol_nai) should be incremented, negative if decremented
+	asset_precision INT, -- Precision of assets (probably only for future cases when custom tokens will be available)
+	asset_symbol_nai INT -- Type of asset symbol used in the operation
+);
+
+FUNCTION get_impacted_balances(_operation_body text) RETURNS SETOF impacted_balances_return
+*/
+
+Datum get_impacted_balances(PG_FUNCTION_ARGS)
+{
+  #define IMPACTED_BALANCES_RETURN_ATTRIBUTES 4
+  #define ACCOUNT_NAME_IDX 0
+  #define AMOUNT_IDX 1
+  #define ASSET_PRECISION_IDX 2
+  #define ASSET_NAI_IDX 3
+
+  TupleDesc            retvalDescription;
+  Tuplestorestate*     tupstore = nullptr;
+  
+  MemoryContext per_query_ctx;
+  MemoryContext oldcontext;
+
+  Datum tuple_values[IMPACTED_BALANCES_RETURN_ATTRIBUTES] = {0};
+  bool  nulls[IMPACTED_BALANCES_RETURN_ATTRIBUTES] = {false};
+
+  ReturnSetInfo* rsinfo = (ReturnSetInfo*)fcinfo->resultinfo;
+
+  /* check to see if caller supports us returning a tuplestore */
+  if(rsinfo == NULL || !IsA(rsinfo, ReturnSetInfo))
+  {
+    ereport(ERROR, (errcode(ERRCODE_FEATURE_NOT_SUPPORTED), errmsg("set-valued function called in context that cannot accept a set")));
+  }
+
+  if(!(rsinfo->allowedModes & SFRM_Materialize))
+  {
+    ereport(ERROR, (errcode(ERRCODE_FEATURE_NOT_SUPPORTED), errmsg("materialize mode required, but it is not allowed in this context")));
+  }
+
+/* Build a tuple descriptor for our result type */
+  if(get_call_result_type(fcinfo, NULL, &retvalDescription) != TYPEFUNC_COMPOSITE)
+    ereport(ERROR, (errcode(ERRCODE_FEATURE_NOT_SUPPORTED), errmsg("return type must be a row type")));
+
+  per_query_ctx = rsinfo->econtext->ecxt_per_query_memory;
+  oldcontext = MemoryContextSwitchTo(per_query_ctx);
+
+  tupstore = tuplestore_begin_heap(true, false, work_mem);
+
+  /* let the caller know we're sending back a tuplestore */
+  rsinfo->returnMode = SFRM_Materialize;
+  rsinfo->setResult = tupstore;
+  rsinfo->setDesc = retvalDescription;
+
+  MemoryContextSwitchTo(oldcontext);
+
+  tuple_values[ACCOUNT_NAME_IDX] = CStringGetTextDatum("blocktrades");
+  tuple_values[AMOUNT_IDX] = Int64GetDatum(int64_t(12345));
+  tuple_values[ASSET_PRECISION_IDX] = Int32GetDatum(int32_t(3));
+  tuple_values[ASSET_NAI_IDX] = Int32GetDatum(int32_t(13));
+
+  tuplestore_putvalues(tupstore, retvalDescription, tuple_values, nulls);
+
+  tuple_values[ACCOUNT_NAME_IDX] = CStringGetTextDatum("sender");
+  tuple_values[AMOUNT_IDX] = Int64GetDatum(int64_t(-12345));
+  tuple_values[ASSET_PRECISION_IDX] = Int32GetDatum(int32_t(3));
+  tuple_values[ASSET_NAI_IDX] = Int32GetDatum(int32_t(13));
+
+  tuplestore_putvalues(tupstore, retvalDescription, tuple_values, nulls);
+
+/* clean up and return the tuplestore */
+  tuplestore_donestoring(tupstore);
+
+  return (Datum)0;
 }
 
 }
