@@ -64,6 +64,10 @@ SELECT 'hive::protocol::limit_order_create_operation'
 UNION ALL
 SELECT 'hive::protocol::limit_order_create2_operation'
 UNION ALL
+SELECT 'hive::protocol::fill_order_operation'
+UNION ALL
+SELECT 'hive::protocol::limit_order_cancelled_operation'
+UNION ALL
 SELECT 'hive::protocol::transfer_to_savings_operation'
 UNION ALL
 SELECT 'hive::protocol::claim_reward_balance_operation'
