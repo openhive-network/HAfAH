@@ -38,13 +38,14 @@ class PoolHTTPServer(PoolMixIn, HTTPServer):
 
 class Handler(BaseHTTPRequestHandler):
     """Handler class used to handle the HTTP requests that arrive at the server."""
-    def __init__(self, methods, *args, **kwargs):
-        self.foo = methods
-        super().__init__(*args, **kwargs)
+    # def __init__(self, methods, *args, **kwargs):
+    #     self.foo = methods
+    #     super().__init__(*args, **kwargs)
 
     def do_POST(self):
         """Handling POST method."""
 
+        methods = build_methods()
         request = self.rfile.read(int(self.headers["Content-Length"])).decode()
         # message =  threading.currentThread().getName() # debbuging number of threads
         # print(message)    
@@ -55,7 +56,7 @@ class Handler(BaseHTTPRequestHandler):
         response = None
 
         try:
-            response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=decimal_serialize, deserialize=decimal_deserialize)
+            response = dispatch(request, methods=methods, debug=True, context=ctx, serialize=decimal_serialize, deserialize=decimal_deserialize)
         except Exception as ex:
             # create and send error response
             error_response = {
@@ -142,10 +143,11 @@ def run_server(db_url, port):
         app['db'] = Db.create(db_url)
 
     init_db(app_config)
-    methods = build_methods()
+    # commnet to prevent from 
+    # methods = build_methods()
 
-    handler = partial(Handler, methods)
+    # handler = partial(Handler, methods)
     """Starting threading server."""
-    server = PoolHTTPServer(('', port), handler)
+    server = PoolHTTPServer(('', port), Handler)
     print('Starting server, use <Ctrl-C> to stop')
     server.serve_forever()
