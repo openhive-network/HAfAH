@@ -115,7 +115,7 @@ class sql_executor_pool:
 
 class ServerManager:
   def __init__(self, db_url):
-    self.threads      = 1
+    self.threads      = 10
     self.sql_executor = sql_executor(db_url)
     self.sql_pool     = sql_executor_pool()
 
@@ -162,6 +162,10 @@ class DBHandler(BaseHTTPRequestHandler):
     response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
 
     _response = DBHandler.decimal_serialize(response)
+
+    self.send_response(200)
+    self.send_header("Content-type", "application/json")
+    self.end_headers()
     self.wfile.write(_response.encode())
 
   def do_POST(self):
