@@ -14,7 +14,7 @@ from aiohttp import web
 from jsonrpcserver.methods import Methods
 from jsonrpcserver import dispatch
 
-from ah.api.endpoints import build_methods as account_history
+from ah.api.endpoints2 import build_methods as account_history
 
 import simplejson
 from ah.server.adapter import Db
@@ -94,9 +94,14 @@ class DBHandler(BaseHTTPRequestHandler):
         "id": json.loads(request)['id'] # TODO: remove this if additional logging is not required
       }
       response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
+      #self.send_response(200)
+      #self.send_header("Content-Type", "application/json")
+      #self.end_headers()
+      _response = DBHandler.decimal_serialize(response)
+      self.wfile.write(_response.encode())
     except Exception as ex:
       logger.error("Exception in POST method: {0}".format(ex))
-      raise ex
+      self.send_response(500)
 
 def run_server(db_url, port):
   with DBServer(db_url) as db_server:
