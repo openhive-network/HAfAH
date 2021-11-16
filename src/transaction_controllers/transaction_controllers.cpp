@@ -75,8 +75,15 @@ private:
         catch(const pqxx::broken_connection& ex)
         {
           _opened_tx.reset();
-          _owner->_opened_connection->disconnect();
-          _owner->_opened_connection.release();
+          if(_owner->_opened_connection != nullptr)
+          {
+            _owner->_opened_connection->disconnect();
+            _owner->_opened_connection.release();
+          }
+          else
+          {
+            dlog("Not closing connection, because it was not set");
+          }
 
           wlog("Transaction controller: `${d}' lost connection to database: `${url}'. Retrying # ${r}...", ("d", _owner->_description)("url", _owner->_dbUrl)("r", retry));
           ++retry;
