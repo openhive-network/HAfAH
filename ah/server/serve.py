@@ -25,6 +25,8 @@ from functools import partial
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+from socketserver import ThreadingMixIn
+
 LOG_LEVEL = logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
 MAIN_LOG_PATH = "ah.log"
@@ -44,6 +46,8 @@ fh.setFormatter(logging.Formatter(LOG_FORMAT))
 if not logger.hasHandlers():
   logger.addHandler(ch)
   logger.addHandler(fh)
+
+nr_threads = 10
 
 class APIMethods:
   @staticmethod
@@ -115,11 +119,8 @@ class sql_executor_pool:
 
 class ServerManager:
   def __init__(self, db_url):
-    self.threads      = 10
     self.sql_executor = sql_executor(db_url)
     self.sql_pool     = sql_executor_pool()
-
-    self.receive_thread_executor = None
 
   def __enter__(self):
     logger.info("enter into server manager")
@@ -127,8 +128,7 @@ class ServerManager:
     if self.sql_executor is not None:
       self.sql_executor.create()
 
-    self.sql_pool.create_executors(self.sql_executor, self.threads)
-    self.receive_thread_executor = ThreadPoolExecutor(max_workers = self.threads)
+    self.sql_pool.create_executors(self.sql_executor, nr_threads)
 
     return self
 
@@ -139,6 +139,15 @@ class ServerManager:
 
     if self.sql_pool is not None:
       self.sql_pool.close()
+
+class PoolManager(ThreadingMixIn):
+  pool = ThreadPoolExecutor(max_workers = nr_threads)
+
+  def process_request(self, request, client_address) -> None:
+    PoolManager.pool.submit(self.process_request_thread, request, client_address)
+
+class PoolHTTPServer(PoolManager, HTTPServer):
+  pass
 
 class DBHandler(BaseHTTPRequestHandler):
   def __init__(self, methods, db_server, *args, **kwargs):
@@ -155,27 +164,27 @@ class DBHandler(BaseHTTPRequestHandler):
       return simplejson.loads(s=s, use_decimal=True)
 
   def send(self, clone_sql_executor, request):
-    ctx = {
-      "db": clone_sql_executor.db,
-      "id": json.loads(request)['id'] # TODO: remove this if additional logging is not required
-    }
-    response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
+    try:
+      ctx = {
+        "db": clone_sql_executor.db,
+        "id": json.loads(request)['id'] # TODO: remove this if additional logging is not required
+      }
+      response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
 
-    _response = DBHandler.decimal_serialize(response)
+      self.send_response(200)
+      self.send_header("Content-type", "application/json")
+      self.end_headers()
+      self.wfile.write(str(response).encode())
 
-    self.send_response(200)
-    self.send_header("Content-type", "application/json")
-    self.end_headers()
-    self.wfile.write(_response.encode())
+    except Exception as ex:
+      logger.info(ex)
 
   def do_POST(self):
     try:
       request = self.rfile.read(int(self.headers["Content-Length"])).decode()
       logger.info(request)
 
-      _future = self.db_server.receive_thread_executor.submit(self.send, self.db_server.sql_pool.get_item(), request)
-
-      _future.result()
+      self.send(self.db_server.sql_pool.get_item(), request)
 
     except Exception as ex:
       logger.error("Exception in POST method: {0}".format(ex))
@@ -187,5 +196,5 @@ def run_server(db_url, port):
     methods = APIMethods.build_methods()
     handler = partial(DBHandler, methods, mgr)
 
-    http_server = HTTPServer(('', port), handler)
+    http_server = PoolHTTPServer(('', port), handler)
     http_server.serve_forever()
