@@ -6,7 +6,7 @@ RETURNS TABLE(
     _virtual_op BIGINT,
     _timestamp TEXT,
     _value TEXT,
-    _operation_id INT
+    _operation_id BIGINT
 )
 AS
 $function$
@@ -20,7 +20,7 @@ BEGIN
       NULL::BIGINT,
       NULL::TEXT,
       NULL::TEXT,
-      NULL::INT
+      NULL::BIGINT
     LIMIT 0;
     RETURN;
   END IF;
@@ -63,7 +63,7 @@ BEGIN
       ) _virtual_op,
       trim(both '"' from to_json(T.timestamp)::text) _timestamp,
       T.body _value,
-      T.id::INT _operation_id
+      T.id::BIGINT _operation_id
     FROM
       (
         --`abs` it's temporary, until position of operation is correctly saved
