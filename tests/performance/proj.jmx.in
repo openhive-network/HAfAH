@@ -18,7 +18,7 @@
           <stringProp name="LoopController.loops">${LOOP_COUNT}</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">${THREAD_COUNT}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time"></stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${THREAD_COUNT}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">10</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -134,7 +134,7 @@
           <stringProp name="LoopController.loops">${LOOP_COUNT}</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">${THREAD_COUNT}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time"></stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${THREAD_COUNT}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">10</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -245,7 +245,7 @@
           <stringProp name="LoopController.loops">${LOOP_COUNT}</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">${THREAD_COUNT}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time"></stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${THREAD_COUNT}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">10</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -360,7 +360,7 @@
           <stringProp name="LoopController.loops">${LOOP_COUNT}</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">${THREAD_COUNT}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time"></stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${THREAD_COUNT}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">10</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
