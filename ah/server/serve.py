@@ -23,9 +23,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from functools import partial
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
-
-from socketserver import ThreadingMixIn
+from socketserver import ForkingMixIn
 
 LOG_LEVEL = logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
@@ -81,54 +79,16 @@ class sql_executor:
 
     return new_sql_executor
 
-class sql_executor_pool:
-  def __init__(self):
-    self.idx           = 0
-    self.sql_executors = []
-
-  def create_executors(self, src_sql_executor, size):
-    self.sql_executors.clear()
-
-    assert size > 0, "size > 0"
-
-    for i in range(size):
-      self.sql_executors.append(src_sql_executor.clone())
-
-  def get_item(self):
-    assert len(self.sql_executors) > 0, "len(self.sql_executors) > 0"
-
-    _current_idx  = self.idx
-    self.idx           += 1
-    if self.idx == len(self.sql_executors):
-      self.idx = 0
-
-    assert self.idx < len(self.sql_executors), "self.idx < len(self.sql_executors)"
-
-    return self.sql_executors[_current_idx]
-
-  def size(self):
-    result = ''
-    for item in self.sql_executors:
-      result += ' ' + item.size()
-    return result
-
-  def close(self):
-    for item in self.sql_executors:
-      if item is not None:
-        item.close()
-
 class ServerManager:
   def __init__(self, db_url):
-    self.sql_executor = sql_executor(db_url)
-    self.sql_pool     = sql_executor_pool()
+    self.db_url       = db_url
+    self.sql_executor = sql_executor(self.db_url)
 
   def __enter__(self):
     logger.info("enter into server manager")
 
     if self.sql_executor is not None:
       self.sql_executor.create()
-
-    self.sql_pool.create_executors(self.sql_executor, nr_threads)
 
     return self
 
@@ -137,17 +97,13 @@ class ServerManager:
     if self.sql_executor is not None:
       self.sql_executor.close()
 
-    if self.sql_pool is not None:
-      self.sql_pool.close()
+class ForkHTTPServer(ForkingMixIn, HTTPServer):
+    pass
 
-class PoolManager(ThreadingMixIn):
-  pool = ThreadPoolExecutor(max_workers = nr_threads)
-
-  def process_request(self, request, client_address) -> None:
-    PoolManager.pool.submit(self.process_request_thread, request, client_address)
-
-class PoolHTTPServer(PoolManager, HTTPServer):
-  pass
+class ProcessData:
+  sql_executor = {}
+  def __init__(self):
+    pass
 
 class DBHandler(BaseHTTPRequestHandler):
   def __init__(self, methods, db_server, *args, **kwargs):
@@ -163,10 +119,27 @@ class DBHandler(BaseHTTPRequestHandler):
   def decimal_deserialize(s):
       return simplejson.loads(s=s, use_decimal=True)
 
-  def send(self, clone_sql_executor, request):
+  def send(self, request):
     try:
+
+      _id = os.getpid()
+
+      _sql_executor = None
+
+      logger.info( "methods: is {}".format(self.methods) )
+
+      if _id in ProcessData.sql_executor:
+        logger.info( "process: is {}".format(os.getpid()) )
+        _sql_executor = ProcessData.sql_executor[_id]
+      else:
+        logger.info( "process: no {} {}".format(os.getpid(), self.db_server.db_url) )
+        _sql_executor = sql_executor(self.db_server.db_url)
+        _sql_executor.create()
+        ProcessData.sql_executor[_id] = _sql_executor
+
+      assert _sql_executor.db is not None, "lack of database"
       ctx = {
-        "db": clone_sql_executor.db,
+        "db": _sql_executor.db,
         "id": json.loads(request)['id'] # TODO: remove this if additional logging is not required
       }
       response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
@@ -183,8 +156,7 @@ class DBHandler(BaseHTTPRequestHandler):
     try:
       request = self.rfile.read(int(self.headers["Content-Length"])).decode()
       logger.info(request)
-
-      self.send(self.db_server.sql_pool.get_item(), request)
+      self.send(request)
 
     except Exception as ex:
       logger.error("Exception in POST method: {0}".format(ex))
@@ -196,5 +168,5 @@ def run_server(db_url, port):
     methods = APIMethods.build_methods()
     handler = partial(DBHandler, methods, mgr)
 
-    http_server = PoolHTTPServer(('', port), handler)
+    http_server = ForkHTTPServer(('', port), handler)
     http_server.serve_forever()
