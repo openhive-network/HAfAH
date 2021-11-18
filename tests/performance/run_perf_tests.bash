@@ -6,6 +6,10 @@ PATH_TO_INPUT_CSV="$PATH_TO_INPUT_DIR/config.csv"
 PATH_TO_INPUT_PROJECT_FILE="$PATH_TO_INPUT_DIR/proj.jmx.in"
 PATH_TO_PARSE_SCRIPT="$PATH_TO_INPUT_DIR/parse.py"
 
+if [ -z "$THREADS_COUNT" ]; then
+  THREADS_COUNT=10
+fi
+
 if [ ! -f $JMETER ]; then
 	echo "jmeter binary at given address: '$JMETER' not found!"
 	exit -1
@@ -19,7 +23,7 @@ fi
 if [[ ! "$PATH_TO_INPUT_DIR" = /* ]]; then
 	echo "paths should be absolute!"
 	exit -3
-fi 
+fi
 
 
 generate_output() {
@@ -30,7 +34,8 @@ generate_output() {
   OUTPUT_REPORT_FILE=result_$PORT.jtl
 
   echo "configuring test..."
-  sed "s/ENTER PORT NUMBER HERE/$PORT/g" $PATH_TO_INPUT_PROJECT_FILE > $OUTPUT_PROJECT_FILE.v0
+  sed "s/ENTER PORT NUMBER HERE/$PORT/g" $PATH_TO_INPUT_PROJECT_FILE > $OUTPUT_PROJECT_FILE.v00
+  sed "s/ENTER THREAD COUNT HERE/$THREADS_COUNT/g" $OUTPUT_PROJECT_FILE.v00 > $OUTPUT_PROJECT_FILE.v0
   sed "s|ENTER PATH TO CSV HERE|$PATH_TO_INPUT_CSV|g" $OUTPUT_PROJECT_FILE.v0 > $OUTPUT_PROJECT_FILE
   if [ $PORT == 5432 ]; then
     sed "s/ENTER POSTGRES USER HERE/$PSQL_USER/g" $OUTPUT_PROJECT_FILE > $OUTPUT_PROJECT_FILE.v2

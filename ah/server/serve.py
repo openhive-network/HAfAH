@@ -93,6 +93,10 @@ class DBHandler(BaseHTTPRequestHandler):
     self.end_headers()
     self.wfile.write(str(response).encode())
 
+  def log_request(self, *args, **kwargs) -> None:
+    # return super().log_request(code=code, size=size)
+    pass
+
   def process_request(self, request):
     try:
 
@@ -120,7 +124,7 @@ class DBHandler(BaseHTTPRequestHandler):
   def do_POST(self):
     try:
       request = self.rfile.read(int(self.headers["Content-Length"])).decode()
-      logger.info(request)
+      # logger.info(request)
 
       self.process_request(request)
 

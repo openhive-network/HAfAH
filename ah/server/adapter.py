@@ -1,7 +1,7 @@
 """Wrapper for sqlalchemy, providing a simple interface."""
 
 import logging
-from time import perf_counter as perf
+from ah.utils.performance import perf
 from collections import OrderedDict
 from funcy.seqs import first
 import sqlalchemy
@@ -10,6 +10,9 @@ import os
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 
 log = logging.getLogger(__name__)
+
+def extract(dinput : str):
+    return dinput.split('#')[-1].split(':')[-1].strip()
 
 class Db:
     """RDBMS adapter for hive. Handles connecting and querying."""
@@ -231,6 +234,7 @@ class Db:
           query = sqlalchemy.text(sql)
         return query
 
+    @perf(extract_identifier=lambda *args, **_ : extract(args[0][1]), record_name='SQL')
     def _query(self, sql, is_prepared, **kwargs):
         """Send a query off to SQLAlchemy."""
         if sql == 'START TRANSACTION':
@@ -241,7 +245,7 @@ class Db:
             self._trx_active = False
 
         try:
-            start = perf()
+            # start = perf()
             query = self._sql_text(sql, is_prepared)
             if 'log_query' in kwargs and kwargs['log_query']:
                 log.info("QUERY: {}".format(query))
