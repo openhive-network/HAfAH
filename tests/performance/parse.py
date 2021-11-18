@@ -7,7 +7,7 @@ def process_file(filename) -> dict:
 
     with open(filename, 'r') as file:
         for i, line in enumerate(file):
-            if i == 0:
+            if i == 0 or "Non HTTP" in line:
                 continue
             elements = line.split(',')
             if len(elements) > 5:
