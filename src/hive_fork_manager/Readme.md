@@ -1,6 +1,11 @@
 # HIVE_FORK_MANAGER
 The fork manager is composed of SQL scripts to create a Postgres extension that provides an API that simplifies reverting application data when a fork switch occurs on the Hive blockchain.
 
+## Requirements for postgres
+Extension is intended to run on postgres version 12 or higher, database used with extension should use parameters
+ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' and LC_CTYPE = 'en_US.UTF-8' (this is default for american english locale,
+it's not tested on other locale configurations).
+
 ## Installation
 It is possible to install the fork manager in two forms - as a regular Postgres extension or as a simple set of tables and functions.
 

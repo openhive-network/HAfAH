@@ -66,7 +66,7 @@ def database():
 @pytest.fixture(scope="function")
 def world_with_witnesses_and_database(world, database, witness_names):
     alpha_witness_names, beta_witness_names = witness_names
-    session, Base = database('postgresql://myuser:mypassword@localhost/haf_block_log')
+    session, Base = database('postgresql:///haf_block_log')
 
     alpha_net = world.create_network('Alpha')
     alpha_net.create_witness_node(witnesses=alpha_witness_names)
