@@ -78,8 +78,6 @@ class ServerManager:
 
   def __exit__(self, exc_type, exc_val, exc_tb):
     logger.info("exit from server manager")
-    if self.sql_executor is not None:
-      self.sql_executor.close()
 
 class ForkHTTPServer(ForkingMixIn, HTTPServer):
     pass
