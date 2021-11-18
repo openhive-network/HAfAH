@@ -19,13 +19,9 @@ from ah.api.endpoints2 import build_methods as account_history
 import simplejson
 from ah.server.adapter import Db
 
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from functools import partial
-
-from concurrent.futures import ThreadPoolExecutor, as_completed
-
-from socketserver import ThreadingMixIn
 
 LOG_LEVEL = logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
@@ -140,15 +136,6 @@ class ServerManager:
     if self.sql_pool is not None:
       self.sql_pool.close()
 
-class PoolManager(ThreadingMixIn):
-  pool = ThreadPoolExecutor(max_workers = nr_threads)
-
-  def process_request(self, request, client_address) -> None:
-    PoolManager.pool.submit(self.process_request_thread, request, client_address)
-
-class PoolHTTPServer(PoolManager, HTTPServer):
-  pass
-
 class DBHandler(BaseHTTPRequestHandler):
   def __init__(self, methods, db_server, *args, **kwargs):
       self.methods = methods
@@ -196,5 +183,5 @@ def run_server(db_url, port):
     methods = APIMethods.build_methods()
     handler = partial(DBHandler, methods, mgr)
 
-    http_server = PoolHTTPServer(('', port), handler)
+    http_server = ThreadingHTTPServer(('', port), handler)
     http_server.serve_forever()
