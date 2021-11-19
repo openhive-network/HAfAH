@@ -25,6 +25,8 @@ from functools import partial
 
 from socketserver import ForkingMixIn
 
+from ah.utils.performance import perf
+
 LOG_LEVEL = logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
 MAIN_LOG_PATH = "ah.log"
@@ -44,6 +46,12 @@ fh.setFormatter(logging.Formatter(LOG_FORMAT))
 if not logger.hasHandlers():
   logger.addHandler(ch)
   logger.addHandler(fh)
+
+def request_extractor(request) -> dict:
+  # "method": parsed_req['method'].split('.')[-1].strip()
+  parsed_req = json.loads(request)
+  return {"id": parsed_req['id']}
+
 
 class APIMethods:
   @staticmethod
@@ -97,19 +105,14 @@ class DBHandler(BaseHTTPRequestHandler):
     # return super().log_request(code=code, size=size)
     pass
 
-  def process_request(self, request):
+  @perf(extract_identifier=lambda _, kwargs: kwargs['id'])
+  def process_request(self, request, **ctx):
     try:
-
-      _id = os.getpid()
-
       with sql_executor(self.db_url) as _sql_executor:
 
         assert _sql_executor.db is not None, "lack of database"
+        ctx['db'] = _sql_executor.db
 
-        ctx = {
-          "db": _sql_executor.db,
-          "id": json.loads(request)['id'] # TODO: remove this if additional logging is not required
-        }
         _response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
 
         if self.log_responses:
@@ -124,9 +127,7 @@ class DBHandler(BaseHTTPRequestHandler):
   def do_POST(self):
     try:
       request = self.rfile.read(int(self.headers["Content-Length"])).decode()
-      # logger.info(request)
-
-      self.process_request(request)
+      self.process_request(request, **request_extractor(request))
 
     except Exception as ex:
       logger.error(ex)
@@ -138,7 +139,7 @@ def run_server(db_url, port, log_responses):
   methods = APIMethods.build_methods()
   handler = partial(DBHandler, methods, db_url, log_responses)
 
-  http_server = ForkHTTPServer(('', port), handler)
+  http_server = ForkHTTPServer(('0.0.0.0', port), handler)
 
   logger.info("http server is connected")
   http_server.serve_forever()
