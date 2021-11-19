@@ -19,7 +19,7 @@ def test_undo_transactions(world_with_witnesses_and_database):
     run_networks(world, Path().resolve())
     node_under_test.wait_for_block_with_number(START_TEST_BLOCK)
     wallet = Wallet(attach_to=node_under_test)
-    transaction = wallet.api.transfer_to_vesting('initminer', 'null', Asset.Test(1234), broadcast=False)['result']
+    transaction = wallet.api.transfer_to_vesting('initminer', 'null', Asset.Test(1234), broadcast=False)
 
     logger.info(f'Making fork at block {START_TEST_BLOCK}')
     after_fork_block = make_fork(

@@ -27,8 +27,8 @@ def test_compare_forked_node_database(world_with_witnesses_and_database, databas
     run_networks(world, Path().resolve())
     node_under_test.wait_for_block_with_number(START_TEST_BLOCK)
     wallet = Wallet(attach_to=node_under_test)
-    transaction1 = wallet.api.transfer('initminer', 'null', Asset.Test(1234), 'memo', broadcast=False)['result']
-    transaction2 = wallet.api.transfer_to_vesting('initminer', 'null', Asset.Test(1234), broadcast=False)['result']
+    transaction1 = wallet.api.transfer('initminer', 'null', Asset.Test(1234), 'memo', broadcast=False)
+    transaction2 = wallet.api.transfer_to_vesting('initminer', 'null', Asset.Test(1234), broadcast=False)
     after_fork_block = make_fork(
         world,
         main_chain_trxs = [transaction1],
