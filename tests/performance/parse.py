@@ -2,6 +2,8 @@
 from sys import argv
 from json import dumps, dump
 
+SCHEMA = 'hafah_python'
+
 def process_file(filename) -> dict:
     threads_with_records = {}
 
@@ -90,13 +92,13 @@ def generate_sql(endpoint, data):
     data = data.split(';')
     data = {"bn1": data[0], "bn2": data[1], "acc": data[2], "trx": data[3]}
     if endpoint == 'enum_virtual_ops':
-        return f"SELECT * FROM enum_virtual_ops( NULL ::INT[] , {data['bn1']}, {data['bn2']}, 0, 1000, true ) ORDER BY _operation_id"
+        return f"SELECT * FROM {SCHEMA}.enum_virtual_ops( NULL ::INT[] , {data['bn1']}, {data['bn2']}, 0, 1000, true ) ORDER BY _operation_id"
     elif endpoint == 'get_transaction':
-        return f"SELECT * FROM get_transaction( decode('{data['trx']}', 'hex'), true )" # in actual code, sqlalchemy prepares it to proper form without decode
+        return f"SELECT * FROM {SCHEMA}.get_transaction( decode('{data['trx']}', 'hex'), true )" # in actual code, sqlalchemy prepares it to proper form without decode
     elif endpoint == 'get_ops_in_block':
-        return f"SELECT * FROM get_ops_in_block( {data['bn1']},  true, true )"
+        return f"SELECT * FROM {SCHEMA}.get_ops_in_block( {data['bn1']},  true, true )"
     elif endpoint == 'get_account_history':
-        return f"SELECT * FROM ah_get_account_history( NULL, '{data['acc']}', 0, 1000, true )"
+        return f"SELECT * FROM {SCHEMA}.ah_get_account_history( NULL, '{data['acc']}', 0, 1000, true )"
     else:
         assert False, f"unknown endpoint: {endpoint}"
 
@@ -132,19 +134,22 @@ with open('parsed.csv', 'w') as file:
     with open('parsed.json', 'w') as jj:
         dump(comprasion, jj)
 
-    file.write("sample_id|body|sql")
+    file.write("sample_id")
     for i in range(2,len(argv)):
         file.write(f'|{argv[i]}')
-    file.write('\n')
+    file.write('|body|sql\n')
+
+    def order(value : list):
+        return [ *value[2:], value[0], value[1] ]
 
     counter = 0
     for key, values in comprasion.items():
         for value in values:
             if len(value) == len(argv):
-                file.write(f'{counter}|{"|".join(value)}' + '\n')
+                file.write(f'{counter}|{"|".join(order(value))}' + '\n')
                 counter += 1
             else:
-                break 
+                break
 
 
     # dump(compare_files('result.jtl', 'result.jtl'), file)
