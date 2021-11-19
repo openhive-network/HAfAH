@@ -45,8 +45,6 @@ if not logger.hasHandlers():
   logger.addHandler(ch)
   logger.addHandler(fh)
 
-nr_threads = 10
-
 class APIMethods:
   @staticmethod
   def build_methods():
@@ -75,9 +73,10 @@ class ForkHTTPServer(ForkingMixIn, HTTPServer):
     pass
 
 class DBHandler(BaseHTTPRequestHandler):
-  def __init__(self, methods, db_url, *args, **kwargs):
-      self.methods = methods
-      self.db_url = db_url
+  def __init__(self, methods, db_url, log_responses, *args, **kwargs):
+      self.methods        = methods
+      self.db_url         = db_url
+      self.log_responses  = log_responses
       super().__init__(*args, **kwargs)
 
   @staticmethod
@@ -109,10 +108,13 @@ class DBHandler(BaseHTTPRequestHandler):
         }
         _response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
 
+        if self.log_responses:
+          logger.info(_response)
+
         self.send_reponse(200, "application/json", _response)
 
     except Exception as ex:
-      logger.info(ex)
+      logger.error(ex)
       self.send_reponse(500, "text/html", ex)
 
   def do_POST(self):
@@ -123,14 +125,14 @@ class DBHandler(BaseHTTPRequestHandler):
       self.process_request(request)
 
     except Exception as ex:
-      logger.info(ex)
+      logger.error(ex)
       self.send_reponse(500, "text/html", ex)
 
-def run_server(db_url, port):
+def run_server(db_url, port, log_responses):
   logger.info("connecting into http server")
 
   methods = APIMethods.build_methods()
-  handler = partial(DBHandler, methods, db_url)
+  handler = partial(DBHandler, methods, db_url, log_responses)
 
   http_server = ForkHTTPServer(('', port), handler)
 
