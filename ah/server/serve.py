@@ -61,36 +61,23 @@ class APIMethods:
 
 class sql_executor:
   def __init__(self, db_url):
-    logger.info("database is created")
-    self.db = Db(db_url, "root db creation")
-
-  def close(self):
-    logger.info("database is closed")
-    self.db.close()
-
-class ServerManager:
-  def __init__(self, db_url):
-    self.db_url       = db_url
+    self.db_url = db_url
+    self.db     = None
 
   def __enter__(self):
-    logger.info("enter into server manager")
+    self.db = Db(self.db_url, "db creation")
     return self
 
   def __exit__(self, exc_type, exc_val, exc_tb):
-    logger.info("exit from server manager")
+    self.db.close()
 
 class ForkHTTPServer(ForkingMixIn, HTTPServer):
     pass
 
-class ProcessData:
-  sql_executor = {}
-  def __init__(self):
-    pass
-
 class DBHandler(BaseHTTPRequestHandler):
-  def __init__(self, methods, db_server, *args, **kwargs):
+  def __init__(self, methods, db_url, *args, **kwargs):
       self.methods = methods
-      self.db_server = db_server
+      self.db_url = db_url
       super().__init__(*args, **kwargs)
 
   @staticmethod
@@ -101,54 +88,51 @@ class DBHandler(BaseHTTPRequestHandler):
   def decimal_deserialize(s):
       return simplejson.loads(s=s, use_decimal=True)
 
-  def send(self, request):
+  def send_reponse(self, http_code, content_type, response):
+    self.send_response(http_code)
+    self.send_header("Content-type", content_type)
+    self.end_headers()
+    self.wfile.write(str(response).encode())
+
+  def process_request(self, request):
     try:
 
       _id = os.getpid()
 
-      _sql_executor = None
+      with sql_executor(self.db_url) as _sql_executor:
 
-      logger.info( "process id: {}".format(_id) )
+        assert _sql_executor.db is not None, "lack of database"
 
-      if _id in ProcessData.sql_executor:
-        _sql_executor = ProcessData.sql_executor[_id]
-      else:
-        _sql_executor = sql_executor(self.db_server.db_url)
-        ProcessData.sql_executor[_id] = _sql_executor
+        ctx = {
+          "db": _sql_executor.db,
+          "id": json.loads(request)['id'] # TODO: remove this if additional logging is not required
+        }
+        _response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
 
-      assert _sql_executor.db is not None, "lack of database"
-
-      ctx = {
-        "db": _sql_executor.db,
-        "id": json.loads(request)['id'] # TODO: remove this if additional logging is not required
-      }
-      response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
-
-      self.send_response(200)
-      self.send_header("Content-type", "application/json")
-      self.end_headers()
-      self.wfile.write(str(response).encode())
+        self.send_reponse(200, "application/json", _response)
 
     except Exception as ex:
       logger.info(ex)
+      self.send_reponse(500, "text/html", ex)
 
   def do_POST(self):
     try:
       request = self.rfile.read(int(self.headers["Content-Length"])).decode()
-
       logger.info(request)
 
-      self.send(request)
+      self.process_request(request)
 
     except Exception as ex:
-      logger.error("Exception in POST method: {0}".format(ex))
-      self.send_response(500)
+      logger.info(ex)
+      self.send_reponse(500, "text/html", ex)
 
 def run_server(db_url, port):
-  with ServerManager(db_url) as mgr:
+  logger.info("connecting into http server")
 
-    methods = APIMethods.build_methods()
-    handler = partial(DBHandler, methods, mgr)
+  methods = APIMethods.build_methods()
+  handler = partial(DBHandler, methods, db_url)
 
-    http_server = ForkHTTPServer(('', port), handler)
-    http_server.serve_forever()
+  http_server = ForkHTTPServer(('', port), handler)
+
+  logger.info("http server is connected")
+  http_server.serve_forever()
