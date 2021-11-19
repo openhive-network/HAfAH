@@ -43,6 +43,9 @@ You can check postgres `$libdir` directory with: `pg_config --pkglibdir`
 
 The best option is to execute `make install` from build directory (may required to have root privileges)
 
+Note: whenever you build a new version of the hive_fork_marnager extension, you have to create a new database.
+There is no way currently to upgrade the schema installed in your old HAF database.
+
 # Architecture
 ## Directory structure
    ```
