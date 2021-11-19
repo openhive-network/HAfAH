@@ -32,9 +32,9 @@ namespace hive{ namespace plugins{ namespace sql_serializer {
         auto transaction = transactions_controller->openTx();
 
         std::string block_to_dump = _block + "::hive.blocks";
-        std::string transactions_to_dump = "ARRAY[" + _transactions + "]::hive.transactions[]";
-        std::string signatures_to_dump = "ARRAY[" + _transactions_multisig + "]::hive.transactions_multisig[]";
-        std::string operations_to_dump = "ARRAY[" + _operations + "]::hive.operations[]";
+        std::string transactions_to_dump = "ARRAY[" + std::move( _transactions ) + "]::hive.transactions[]";
+        std::string signatures_to_dump = "ARRAY[" + std::move( _transactions_multisig ) + "]::hive.transactions_multisig[]";
+        std::string operations_to_dump = "ARRAY[" + std::move( _operations ) + "]::hive.operations[]";
         std::string sql_command = "SELECT hive.push_block(" + block_to_dump + "," + transactions_to_dump + "," + signatures_to_dump + "," + operations_to_dump + ")";
 
         transaction->exec( sql_command );
