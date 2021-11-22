@@ -250,11 +250,15 @@ using chain::reindex_notification;
                 auto restore_transactions_idxs = switch_db_items( create, "hive.restore_indexes_constraints( 'hive.transactions' )", "enable indexes" );
                 auto restore_transactions_sigs_idxs = switch_db_items( create, "hive.restore_indexes_constraints( 'hive.transactions_multisig' )", "enable indexes" );
                 auto restore_operations_idxs = switch_db_items( create, "hive.restore_indexes_constraints( 'hive.operations' )", "enable indexes" );
+                auto restore_accounts_idxs = switch_db_items( create, "hive.restore_indexes_constraints( 'hive.accounts' )", "enable indexes" );
+                auto restore_account_operations_idxs = switch_db_items( create, "hive.restore_indexes_constraints( 'hive.account_operations' )", "enable indexes" );
                 restore_blocks_idxs->join();
                 restore_irreversible_idxs->join();
                 restore_transactions_idxs->join();
                 restore_transactions_sigs_idxs->join();
                 restore_operations_idxs->join();
+                restore_account_operations_idxs->join();
+                restore_accounts_idxs->join();
 
                 ilog( "All irreversible blocks tables indexes are re-created" );
 
@@ -263,11 +267,15 @@ using chain::reindex_notification;
                 auto restore_transactions_fks = switch_db_items( create, "hive.restore_foreign_keys( 'hive.transactions' )", "enable indexes" );
                 auto restore_transactions_sigs_fks = switch_db_items( create, "hive.restore_foreign_keys( 'hive.transactions_multisig' )", "enable indexes" );
                 auto restore_operations_fks = switch_db_items( create, "hive.restore_foreign_keys( 'hive.operations' )", "enable indexes" );
+                auto restore_accounts_fks = switch_db_items( create, "hive.restore_foreign_keys( 'hive.accounts' )", "enable indexes" );
+                auto restore_account_operations_fks = switch_db_items( create, "hive.restore_foreign_keys( 'hive.account_operations' )", "enable indexes" );
                 restore_blocks_fks->join();
                 restore_irreversible_fks->join();
                 restore_transactions_fks->join();
                 restore_transactions_sigs_fks->join();
                 restore_operations_fks->join();
+                restore_accounts_fks->join();
+                restore_account_operations_fks->join();
 
                 ilog( "All irreversible blocks tables foreighn keys are re-created" );
               }
