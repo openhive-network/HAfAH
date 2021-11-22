@@ -183,6 +183,7 @@ using chain::reindex_notification;
           uint32_t psql_transactions_threads_number = 2;
           uint32_t psql_operations_threads_number = 5;
           uint32_t psql_account_operations_threads_number = 2;
+          bool     psql_dump_accounts = true;
           uint32_t head_block_number = 0;
 
           int64_t op_sequence_id = 0; 
@@ -687,6 +688,10 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
         , uint32_t block_num
       )
       {
+        if ( !psql_dump_accounts ) {
+          return;
+        }
+
         flat_set<hive::protocol::account_name_type> impacted;
         hive::app::operation_get_impacted_accounts(op, impacted);
 
@@ -730,6 +735,7 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
                          ("psql-operations-threads-number", appbase::bpo::value<uint32_t>()->default_value( 5 ), "number of threads which dump operations to database during reindexing")
                          ("psql-transactions-threads-number", appbase::bpo::value<uint32_t>()->default_value( 2 ), "number of threads which dump transactions to database during reindexing")
                          ("psql-account-operations-threads-number", appbase::bpo::value<uint32_t>()->default_value( 2 ), "number of threads which dump account operations to database during reindexing")
+                         ("psql-enable-accounts-dump", appbase::bpo::value<bool>()->default_value( true ), "enable collect data to accounts and account_operations table")
                          ;
       }
 
@@ -747,6 +753,7 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
         my->psql_operations_threads_number = options["psql-operations-threads-number"].as<uint32_t>();
         my->psql_transactions_threads_number = options["psql-transactions-threads-number"].as<uint32_t>();
         my->psql_account_operations_threads_number = options["psql-account-operations-threads-number"].as<uint32_t>();
+        my->psql_dump_accounts = options["psql-enable-accounts-dump"].as<bool>();
 
         my->currently_caching_data = std::make_unique<cached_data_t>( default_reservation_size );
 

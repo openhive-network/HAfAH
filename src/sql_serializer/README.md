@@ -14,6 +14,8 @@ psql-url = dbname=block_log user=postgres password=pass hostaddr=127.0.0.1 port=
 psql-index-threshold = 1000000
 psql-operations-threads-number = 5
 psql-transactions-threads-number = 2
+psql-account-operations-threads-number = 2
+psql-enable-accounts-dump = true
 ```
 
 ### Example command
