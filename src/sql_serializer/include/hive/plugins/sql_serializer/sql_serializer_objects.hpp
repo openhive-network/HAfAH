@@ -28,7 +28,6 @@ namespace hive
     {
       namespace PSQL
       {
-
         using operation_types_container_t = std::map<int64_t, std::pair<fc::string, bool>>;
 
         struct typename_gatherer
@@ -123,6 +122,25 @@ namespace hive
             op_in_trx{_op_in_trx}, timestamp(time), op{_op} {}
           };
 
+          /// Holds account information to be put into database
+          struct account_data_t{
+            account_data_t(int _id, std::string _n, int32_t _block_number)
+            : id{_id}, name{ std::move(_n) }, block_number(_block_number) {}
+
+            int32_t id;
+            std::string name;
+            int32_t block_number;
+          };
+
+          /// Holds association between account and its operations.
+          struct account_operation_data_t{
+            int64_t operation_id;
+            int32_t account_id;
+            int32_t operation_seq_no;
+
+            account_operation_data_t(int64_t _operation_id, int32_t _account_id, int32_t _operation_seq_no) : operation_id{ _operation_id },
+            account_id{ _account_id }, operation_seq_no{ _operation_seq_no } {}
+          };
         }; // namespace processing_objects
 
         inline fc::string generate(std::function<void(fc::string &)> fun)

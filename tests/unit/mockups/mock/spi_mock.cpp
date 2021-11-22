@@ -8,7 +8,7 @@ uint64 SPI_processed;
 
 namespace {
     std::weak_ptr< SpiMock > SPI_MOCK;
-}
+} // namespace
 
 std::shared_ptr<SpiMock> SpiMock::create_and_get() {
   assert( SPI_MOCK.lock() == nullptr && "Use only one mock instance" );

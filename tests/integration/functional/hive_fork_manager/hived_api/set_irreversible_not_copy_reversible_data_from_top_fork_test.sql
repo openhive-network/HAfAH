@@ -26,7 +26,14 @@ BEGIN
         , NULL
         , NULL
         , NULL
+        , NULL
+        , NULL
     );
+
+
+    INSERT INTO hive.accounts_reversible
+    VALUES ( 1, 'user', 2, 2 )
+    ;
 
     INSERT INTO hive.transactions_reversible
     VALUES
@@ -36,6 +43,10 @@ BEGIN
     INSERT INTO hive.operations_reversible
     VALUES
     ( 1, 2, 0, 0, 1, '2016-06-22 19:10:21-07'::timestamp, 'THREE OPERATION', 2 )
+    ;
+
+    INSERT INTO hive.account_operations_reversible
+    VALUES ( 1, 1, 1, 2 )
     ;
 
     INSERT INTO hive.transactions_multisig_reversible
@@ -70,6 +81,8 @@ BEGIN
     ASSERT EXISTS ( SELECT * FROM hive.transactions ), 'Transaction not landed in irreversible table';
     ASSERT EXISTS ( SELECT * FROM hive.operations ), 'Operations not landed in irreversible table';
     ASSERT EXISTS ( SELECT * FROM hive.transactions_multisig ), 'Signatures not landed in irreversible table';
+    ASSERT EXISTS ( SELECT * FROM hive.accounts ), 'Accounts not landed in irreversible table';
+    ASSERT EXISTS ( SELECT * FROM hive.account_operations ), 'Account operation not landed in irreversible table';
     ASSERT EXISTS ( SELECT * FROM hive.blocks WHERE hash = '\xBADD20'::bytea ), 'block not landed in irreversible table';
 END;
 $BODY$

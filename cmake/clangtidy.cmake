@@ -20,7 +20,9 @@ MACRO( SETUP_CLANG_TIDY target_name )
                 ,-cppcoreguidelines-*\
                 ,-google-readability-casting\
                 ,-readability-redundant-access-specifiers\
-                ,-misc-lambda-function-name"
+                ,-misc-lambda-function-name\
+                ,-readability-inconsistent-declaration-parameter-name\
+                ,-google-runtime-int"
         )
 
         IF ( NOT CLANG_TIDY_EXE )

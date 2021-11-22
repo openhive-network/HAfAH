@@ -31,6 +31,10 @@ DECLARE
     __operation2_1 hive.operations%ROWTYPE;
     __signatures1 hive.transactions_multisig%ROWTYPE;
     __signatures2 hive.transactions_multisig%ROWTYPE;
+    __account1 hive.accounts%ROWTYPE;
+    __account2 hive.accounts%ROWTYPE;
+    __account_operation1 hive.account_operations%ROWTYPE;
+    __account_operation2 hive.account_operations%ROWTYPE;
 BEGIN
     __block = ( 101, '\xBADD', '\xCAFE', '2016-06-22 19:10:25-07'::timestamp );
     __transaction1 = ( 101, 0::SMALLINT, '\xDEED', 101, 100, '2016-06-22 19:10:25-07'::timestamp, '\xBEEF' );
@@ -39,11 +43,17 @@ BEGIN
     __operation2_1 = ( 2, 101, 1, 0, 2, '2016-06-22 19:10:21-07'::timestamp, 'ONE OPERATION' );
     __signatures1 = ( '\xDEED', '\xFEED' );
     __signatures2 = ( '\xBEEF', '\xBABE' );
+    __account1 = ( 1, 'alice', 101 );
+    __account2 = ( 2, 'bob', 101 );
+    __account_operation1 = ( 1, 1, 1 );
+    __account_operation2 = ( 2, 1, 2 );
     PERFORM hive.push_block(
           __block
         , ARRAY[ __transaction1, __transaction2 ]
         , ARRAY[ __signatures1, __signatures2 ]
         , ARRAY[ __operation1_1, __operation2_1 ]
+        , ARRAY[ __account1, __account2 ]
+        , ARRAY[ __account_operation1, __account_operation2 ]
     );
 END
 $BODY$
@@ -134,6 +144,34 @@ BEGIN
            AND body = 'ONE OPERATION'
            AND fork_id = 1
      ) = 1, 'Wrong data of operation 2';
+
+    ASSERT ( SELECT COUNT(*) FROM hive.accounts_reversible
+        WHERE id = 1
+        AND name = 'alice'
+        AND block_num = 101
+        AND fork_id = 1
+    ) = 1, 'No alice account';
+
+    ASSERT ( SELECT COUNT(*) FROM hive.accounts_reversible
+         WHERE id = 2
+         AND name = 'bob'
+         AND block_num = 101
+         AND fork_id = 1
+    ) = 1, 'No bob account';
+
+    ASSERT ( SELECT COUNT(*) FROM hive.account_operations_reversible
+        WHERE account_id = 1
+        AND account_op_seq_no = 1
+        AND operation_id = 1
+        AND fork_id = 1
+    ) = 1 ,'No alice operation';
+
+    ASSERT ( SELECT COUNT(*) FROM hive.account_operations_reversible
+        WHERE account_id = 2
+        AND account_op_seq_no = 1
+        AND operation_id = 2
+        AND fork_id = 1
+    ) = 1 ,'No bob operation';
 
 END
 $BODY$

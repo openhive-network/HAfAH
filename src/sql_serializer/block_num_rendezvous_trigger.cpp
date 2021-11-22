@@ -7,6 +7,7 @@ namespace hive { namespace plugins { namespace sql_serializer {
   : m_number_of_threads( _number_of_threads )
   , m_triggered_function( std::move( _triggered_function ) )
   {
+    dlog( "rendezvous trigger will wait for ${thread}", ( "thread", m_number_of_threads ) );
     if ( m_number_of_threads < 1 ) {
       FC_THROW( "Incorrect number of threads" );
     }

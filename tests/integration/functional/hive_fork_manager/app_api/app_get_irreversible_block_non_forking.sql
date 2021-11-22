@@ -43,11 +43,15 @@ BEGIN
         , NULL
         , NULL
         , NULL
+        , NULL
+        , NULL
     );
     ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 1, 'hive.app_get_irreversible_block !=1 (4)';
 
     PERFORM hive.push_block(
         ( 3, '\xBADD30', '\xCAFE30', '2016-06-22 19:10:25-07'::timestamp )
+        , NULL
+        , NULL
         , NULL
         , NULL
         , NULL

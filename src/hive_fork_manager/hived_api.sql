@@ -22,6 +22,8 @@ CREATE OR REPLACE FUNCTION hive.push_block(
     , _transactions hive.transactions[]
     , _signatures hive.transactions_multisig[]
     , _operations hive.operations[]
+    , _accounts hive.accounts[]
+    , _account_operations hive.account_operations[]
 )
     RETURNS void
     LANGUAGE plpgsql
@@ -42,6 +44,8 @@ BEGIN
     INSERT INTO hive.transactions_reversible VALUES( ( unnest( _transactions ) ).*, __fork_id );
     INSERT INTO hive.transactions_multisig_reversible VALUES( ( unnest( _signatures ) ).*, __fork_id );
     INSERT INTO hive.operations_reversible VALUES( ( unnest( _operations ) ).*, __fork_id );
+    INSERT INTO hive.accounts_reversible VALUES( ( unnest( _accounts ) ).*, __fork_id );
+    INSERT INTO hive.account_operations_reversible VALUES( ( unnest( _account_operations ) ).*, __fork_id );
 END;
 $BODY$
 ;
@@ -67,6 +71,8 @@ BEGIN
     PERFORM hive.copy_transactions_to_irreversible( __irreversible_head_block, _block_num );
     PERFORM hive.copy_operations_to_irreversible( __irreversible_head_block, _block_num );
     PERFORM hive.copy_signatures_to_irreversible( __irreversible_head_block, _block_num );
+    PERFORM hive.copy_accounts_to_irreversible( __irreversible_head_block, _block_num );
+    PERFORM hive.copy_account_operations_to_irreversible( __irreversible_head_block, _block_num );
 
     -- remove unneeded blocks and events
     PERFORM hive.remove_obsolete_reversible_data( _block_num );
@@ -108,12 +114,16 @@ BEGIN
     PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'transactions' );
     PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'transactions_multisig' );
     PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'operations' );
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'accounts' );
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'account_operations' );
 
     PERFORM hive.save_and_drop_indexes_constraints( 'hive.irreversible_data' );
     PERFORM hive.save_and_drop_indexes_constraints( 'hive.blocks' );
     PERFORM hive.save_and_drop_indexes_constraints( 'hive.transactions' );
     PERFORM hive.save_and_drop_indexes_constraints( 'hive.transactions_multisig' );
     PERFORM hive.save_and_drop_indexes_constraints( 'hive.operations' );
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.accounts' );
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.account_operations' );
 END;
 $BODY$
 ;
@@ -130,12 +140,16 @@ BEGIN
     PERFORM hive.restore_indexes_constraints( 'hive.transactions_multisig' );
     PERFORM hive.restore_indexes_constraints( 'hive.operations' );
     PERFORM hive.restore_indexes_constraints( 'hive.irreversible_data' );
+    PERFORM hive.restore_indexes_constraints( 'hive.accounts' );
+    PERFORM hive.restore_indexes_constraints( 'hive.account_operations' );
 
     PERFORM hive.restore_foreign_keys( 'hive.blocks' );
     PERFORM hive.restore_foreign_keys( 'hive.transactions' );
     PERFORM hive.restore_foreign_keys( 'hive.transactions_multisig' );
     PERFORM hive.restore_foreign_keys( 'hive.operations' );
     PERFORM hive.restore_foreign_keys( 'hive.irreversible_data' );
+    PERFORM hive.restore_foreign_keys( 'hive.accounts' );
+    PERFORM hive.restore_foreign_keys( 'hive.account_operations' );
 END;
 $BODY$
 ;

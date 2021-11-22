@@ -2,7 +2,7 @@
 
 import sqlalchemy
 
-APPLICATION_CONTEXT = "accounts"
+APPLICATION_CONTEXT = "accounts_ctx"
 SQL_CREATE_AND_REGISTER_HISTOGRAM_TABLE = """
     CREATE TABLE IF NOT EXISTS public.trx_histogram(
           day DATE

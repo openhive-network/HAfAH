@@ -24,7 +24,13 @@ BEGIN
         , NULL
         , NULL
         , NULL
+        , NULL
+        , NULL
     );
+
+    INSERT INTO hive.accounts_reversible
+    VALUES ( 1, 'user', 2, 1 )
+    ;
 
     INSERT INTO hive.transactions_reversible
     VALUES
@@ -36,6 +42,10 @@ BEGIN
     ( 1, 2, 0, 0, 1, '2016-06-22 19:10:21-07'::timestamp, 'THREE OPERATION', 1 )
     ;
 
+    INSERT INTO hive.account_operations_reversible
+    VALUES ( 1, 1, 1, 1 )
+    ;
+
     INSERT INTO hive.transactions_multisig_reversible
     VALUES
     ( '\xDEED20', '\xBEEF20',  1 );
@@ -44,6 +54,8 @@ BEGIN
 
     PERFORM hive.push_block(
          ( 2, '\xBADD22', '\xCAFE22', '2016-06-22 19:10:25-07'::timestamp )
+        , NULL
+        , NULL
         , NULL
         , NULL
         , NULL
@@ -76,6 +88,8 @@ BEGIN
     ASSERT NOT EXISTS ( SELECT * FROM hive.transactions ), 'Transaction from abandoned block has landed in irreversible table';
     ASSERT NOT EXISTS ( SELECT * FROM hive.operations ), 'Operations from abandoned block has landed in irreversible table';
     ASSERT NOT EXISTS ( SELECT * FROM hive.transactions_multisig ), 'Signatures from abandoned block has landed in irreversible table';
+    ASSERT NOT EXISTS ( SELECT * FROM hive.accounts ), 'Accounts abandoned block has landed in irreversible table';
+    ASSERT NOT EXISTS ( SELECT * FROM hive.account_operations ), 'Account_operations is not empty';
     ASSERT NOT EXISTS ( SELECT * FROM hive.blocks WHERE hash = '\xBADD20'::bytea ), 'Abandoned block has landed in irreversible table';
 END;
 $BODY$

@@ -18,6 +18,8 @@ BEGIN
     PERFORM hive.create_transactions_view( _name );
     PERFORM hive.create_operations_view( _name );
     PERFORM hive.create_signatures_view( _name );
+    PERFORM hive.create_accounts_view( _name );
+    PERFORM hive.create_account_operations_view( _name );
 END;
 $BODY$
 ;
@@ -36,6 +38,8 @@ BEGIN
     PERFORM hive.drop_operations_view( _name );
     PERFORM hive.drop_transactions_view( _name );
     PERFORM hive.drop_blocks_view( _name );
+    PERFORM hive.drop_accounts_view( _name );
+    PERFORM hive.drop_account_operations_view( _name );
     PERFORM hive.drop_context_data_view( _name );
 END;
 $BODY$

@@ -25,6 +25,8 @@ BEGIN
         , NULL
         , NULL
         , NULL
+        , NULL
+        , NULL
     );
 
     PERFORM hive.app_create_context( 'context' );

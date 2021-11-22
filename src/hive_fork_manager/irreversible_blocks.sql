@@ -64,3 +64,25 @@ CREATE TABLE IF NOT EXISTS hive.operations (
 
 CREATE INDEX IF NOT EXISTS hive_transactions_block_num_trx_in_block_idx ON hive.transactions ( block_num, trx_in_block );
 CREATE INDEX IF NOT EXISTS hive_operations_block_num_type_trx_in_block_idx ON hive.operations ( block_num, op_type_id, trx_in_block );
+
+CREATE TABLE IF NOT EXISTS hive.accounts (
+      id INTEGER NOT NULL
+    , name VARCHAR(16) NOT NULL
+    , block_num INTEGER NOT NULL
+    , CONSTRAINT pk_hive_accounts_id PRIMARY KEY( id )
+    , CONSTRAINT uq_hive_accounst_name UNIQUE ( name )
+    , CONSTRAINT fk_1_hive_accounts FOREIGN KEY (block_num) REFERENCES hive.blocks (num)
+);
+
+CREATE TABLE IF NOT EXISTS hive.account_operations
+(
+      account_id INTEGER NOT NULL --- Identifier of account involved in given operation.
+    , account_op_seq_no INTEGER NOT NULL --- Operation sequence number specific to given account.
+    , operation_id BIGINT NOT NULL --- Id of operation held in hive_opreations table.
+    , CONSTRAINT hive_account_operations_fk_1 FOREIGN KEY (account_id) REFERENCES hive.accounts(id)
+    , CONSTRAINT hive_account_operations_fk_2 FOREIGN KEY (operation_id) REFERENCES hive.operations(id)
+);
+
+CREATE INDEX IF NOT EXISTS hive_account_operations_account_op_seq_no_id_idx ON hive.account_operations(account_id, account_op_seq_no, operation_id);
+CREATE INDEX IF NOT EXISTS hive_account_operations_operation_id_idx ON hive.account_operations(operation_id);
+
