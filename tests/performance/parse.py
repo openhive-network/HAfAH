@@ -5,21 +5,26 @@ from json import dumps, dump
 SCHEMA = 'hafah_python'
 
 def process_file(filename) -> dict:
+    UNIQ_THREADS = set()
     threads_with_records = {}
 
     with open(filename, 'r') as file:
         for i, line in enumerate(file):
-            if i == 0 or "Non HTTP" in line:
+            assert not "Non HTTP" in line, "jmeter got error while benchmarking, re-run test!"
+            if i == 0:
                 continue
             elements = line.split(',')
             if len(elements) > 5:
                 time = elements[1]
                 thread_name = elements[5]
+                thread_num = int(thread_name.split(' ')[1].split('-')[1])
+                UNIQ_THREADS.add(thread_num)
                 if not thread_name in threads_with_records:
                     threads_with_records[thread_name] = [int(time)]
                 else:
                     threads_with_records[thread_name].append(int(time))
 
+    THREAD_COUNT = float(len(UNIQ_THREADS))
     merged_threads = {}
 
     for key, values in threads_with_records.items():
@@ -28,7 +33,16 @@ def process_file(filename) -> dict:
             merged_threads[mkey] = values
         else:
             for i, value in enumerate(values):
-                merged_threads[mkey][i] = (merged_threads[mkey][i] + value) / 2.0
+                item = merged_threads[mkey][i]
+                if not isinstance(item, list):
+                    merged_threads[mkey][i] = [item, value]
+                else:
+                    merged_threads[mkey][i].append(value)
+
+    for key, thread_records in merged_threads.items():
+        for i, values in enumerate(thread_records):
+            item = merged_threads[key][i]
+            merged_threads[key][i] = sum(item) / len(item)
 
     return merged_threads
 
