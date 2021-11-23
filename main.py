@@ -13,4 +13,10 @@ if __name__ == '__main__':
   engine.add_argument('-r', '--log-responses', dest='log_responses', action='store_true', help='logging of responses (dev option, by default OFF)')
   args = engine.parse_args(argv[1:])
 
-  run_server(args.psql, args.port, args.log_responses)
+  try:
+    print("starting server, press ^C to stop server")
+    run_server(args.psql, args.port, args.log_responses)
+  except KeyboardInterrupt:
+    pass
+  except Exception as e:
+    print(f'got Exception: {e}')
