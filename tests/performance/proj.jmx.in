@@ -84,7 +84,7 @@
 	  &quot;operation_begin&quot;: 0,&#xd;
 	  &quot;limit&quot;: 1000&#xd;
 	},&#xd;
-  &quot;id&quot;: &quot;${__threadNum}/${__counter(TRUE)}&quot;&#xd;
+  &quot;id&quot;: &quot;${__threadNum}/${__counter(TRUE)}/enum_virtual_ops&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -196,7 +196,7 @@
     &quot;id&quot;: &quot;${hash}&quot;,&#xd;
     &quot;include_reversible&quot;: true&#xd;
   },&#xd;
-  &quot;id&quot;: &quot;${__threadNum}/${__counter(TRUE)}&quot;&#xd;
+  &quot;id&quot;: &quot;${__threadNum}/${__counter(TRUE)}/get_transaction&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -311,7 +311,7 @@
     &quot;operation_filter_high&quot;: 0,&#xd;
     &quot;include_reversible&quot;: true&#xd;
   },&#xd;
-  &quot;id&quot;: &quot;${__threadNum}/${__counter(TRUE)}&quot;&#xd;
+  &quot;id&quot;: &quot;${__threadNum}/${__counter(TRUE)}/get_account_history&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -423,7 +423,7 @@
     &quot;only_virtual&quot;: true,&#xd;
     &quot;include_reversible&quot;: true&#xd;
   },&#xd;
-  &quot;id&quot;: &quot;${__threadNum}/${__counter(TRUE)}&quot;&#xd;
+  &quot;id&quot;: &quot;${__threadNum}/${__counter(TRUE)}/get_ops_in_block&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>

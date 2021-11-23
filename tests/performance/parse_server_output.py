@@ -1,18 +1,24 @@
 #!/usr/bin/python3
 
+import enum
 from sys import argv
 from typing import Dict, Tuple, Union
+from re import compile
 
 PATH = argv[1]
 OUTPUT_PATH = argv[2]
-OUTPUT : Dict[str, Dict[int, Tuple[float, float, float]]] = { "enum_virtual_ops": dict() }
+OUTPUT : Dict[str, Dict[int, Tuple[float, float, float]]] = dict()
 UNIQ_THREADS = set()
+REGEX = '\[([0-9]+)/([0-9]+)/([a-z_]+)\] (.*) executed in ([0-9]+\.[0-9]+)ms'
 
 def is_sql_record(endpoint) -> bool:
 	return endpoint == 'SQL'
 
 def is_handling_record(endpoint) -> bool:
 	return endpoint == 'process_request'
+
+def is_backend_record(endpoint) -> bool:
+	return endpoint == 'backend'
 
 def add_to_average_calcualation(val1 : float, val2 : float) -> float:
 	if val1 is None:
@@ -21,40 +27,39 @@ def add_to_average_calcualation(val1 : float, val2 : float) -> float:
 		return val1
 	return val1 + val2
 
+regex = compile(REGEX)
 with open(PATH, 'rt') as file:
-	current_endpoint = list(OUTPUT.keys())[0]
-	for line in file:
-		line = line.strip().split(';')
-		thread_number = line[0]
-		probe_no = line[1]
-		endpoint = line[2]
-		value = float(line[3])
+	for line_no, line in enumerate(file):
+		match = regex.match(line.strip())
+		if match is None: continue
+		thread_number = int(match.group(1))
+		probe_no = int(match.group(2))
+		endpoint = match.group(3)
+		record_type = match.group(4)
+		value = float(match.group(5))
 
 		UNIQ_THREADS.add(thread_number)
-		if not is_sql_record(endpoint) and not is_handling_record(endpoint) and current_endpoint != endpoint:
-			current_endpoint = endpoint
-			OUTPUT[current_endpoint] = dict()
 
-		outter_key = current_endpoint
-		inner_key = probe_no
+		if not endpoint in OUTPUT:
+			OUTPUT[endpoint] = dict()
 
+		if not probe_no in OUTPUT[endpoint]:
+			OUTPUT[endpoint][probe_no] = (0, 0, 0)
 
-		item : Union[None, Tuple[float, float, float]] = OUTPUT[outter_key].get(inner_key, None)
+		item : Tuple[float, float, float] = OUTPUT[endpoint][probe_no]
 
-		if item is None:
-			OUTPUT[outter_key][inner_key] = (value, None, None)
+		if is_sql_record(record_type):
+			OUTPUT[endpoint][probe_no] = (add_to_average_calcualation(item[0], value), item[1], item[2])
+		elif is_backend_record(record_type):
+			OUTPUT[endpoint][probe_no] = (item[0], add_to_average_calcualation(item[1], value), item[2])
+		elif is_handling_record(record_type):
+			OUTPUT[endpoint][probe_no] = (item[0], item[1], add_to_average_calcualation(item[2], value))
 		else:
-			if is_sql_record(endpoint):
-				OUTPUT[outter_key][inner_key] = (add_to_average_calcualation(item[0], value), item[1], item[2])
-			else:
-				if is_handling_record(endpoint):
-					OUTPUT[outter_key][inner_key] = (item[0], item[1], add_to_average_calcualation(item[2], value))
-				else:
-					OUTPUT[outter_key][inner_key] = (item[0], add_to_average_calcualation(item[1], value), item[2])
+			assert False, f'invalid decision path! record_type == `{record_type}`'
 
 THREAD_COUNT = float(len(UNIQ_THREADS))
-def avg(total_sum : float) -> float:
-	return total_sum / THREAD_COUNT
+def avg(iterable : list) -> float:
+	return iterable / THREAD_COUNT
 
 with open(OUTPUT_PATH, 'wt') as file:
 	file.write('endpoint|probe no.|avg. total SQL time [ms]|avg. processing time [ms]|avg. total time [ms]\n')
