@@ -20,8 +20,8 @@ or use ready scipt, which runs program and after closing (^C) it run script that
 
 
 1. Download and extract [jmeter](https://jmeter.apache.org/download_jmeter.cgi)
-	- :warning: **before you run jmeter load tests** make sure to increase jvm heap size by setting env `JAVA_ARGS='-Xms4g  -Xmx4g'` or by editing jmeter (.../bin/jmeter:166)
-	- it's java based, so you'll probably need to install openjdk
+	- :warning: **before you run jmeter load tests** make sure to increase jvm heap size by setting env `JAVA_ARGS='-Xms4g -Xmx4g'` or by editing jmeter (.../bin/jmeter:166)
+	- it's java based, so you'll probably need to install openjdk (recomended: `openjdk-11-jre` and `openjdk-11-jdk`)
 
 
 2. Run HAfAH (in this example on port 8095)
