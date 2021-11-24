@@ -22,17 +22,20 @@ class helper:
       helper.logger.info("{}".format(query))
 
 class callback_handler:
-  def __init__(self, pre_none_ctx, pre_is_ctx, pre_always, run, post):
-    #a context doesn't exist
+  def __init__(self, pre_none_ctx = None, pre_is_ctx = None, pre_always = None, run = None, post = None):
+    #preprocessing: a context doesn't exist
     self.pre_none_ctx = pre_none_ctx
 
-    #a context exists
+    #preprocessing: a context exists
     self.pre_is_ctx   = pre_is_ctx
 
-    #it doesn't matter if a context exists or doesn't
+    #preprocessing: it doesn't matter if a context exists or doesn't
     self.pre_always   = pre_always
 
+    #processing all blocks retrieved from db
     self.run  = run
+
+    #postprocessing
     self.post = post
 
 class timer:
@@ -45,6 +48,6 @@ class timer:
     return self
 
   def __exit__(self, *args, **kwargs):
-    self.time = perf_counter() - self.start
+    self.time = int((perf_counter() - self.start)*1000)
     assert helper.logger is not None, "`helper.logger` should be initialized"
     helper.logger.info(self.message.format(self.time))

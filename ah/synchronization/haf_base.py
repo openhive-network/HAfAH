@@ -29,13 +29,15 @@ if not logger.hasHandlers():
 
 class haf_base:
   def __init__(self, sql, callbacks):
-    self.interrupted  = False
-    self.is_massive   = False
+    self.interrupted    = False
+    self.is_massive     = False
 
-    self.block_ranges = deque()
+    self.last_block_num = 0
 
-    self.sql          = sql
-    self.callbacks    = callbacks
+    self.block_ranges   = deque()
+
+    self.sql            = sql
+    self.callbacks      = callbacks
 
   def set_interrupted(self, value):
     self.interrupted = value
@@ -47,7 +49,7 @@ class haf_base:
     return _result
 
   def preprocess(self):
-    with timer("preprocess[ms]: {}") as tm:
+    with timer("TOTAL PREPROCESS[ms]: {}") as tm:
       if self.is_interrupted():
         return False
 
@@ -65,7 +67,7 @@ class haf_base:
       return True
 
   def get_blocks(self):
-    with timer("get_blocks[ms]: {}") as tm:
+    with timer("TOTAL GET BLOCKS[ms]: {}") as tm:
       if self.is_interrupted():
         return None, None
 
@@ -94,7 +96,7 @@ class haf_base:
         return None, None
 
   def fill_block_ranges(self, first_block, last_block):
-    with timer("fill_block_ranges[ms]: {}") as tm:
+    with timer("TOTAL FILLING BLOCKS[ms]: {}") as tm:
       if self.is_interrupted():
         return False
 
@@ -112,7 +114,7 @@ class haf_base:
       return True
 
   def work(self):
-    with timer("work[ms]: {}") as tm:
+    with timer("TOTAL WORK[ms]: {}") as tm:
       if self.is_interrupted():
         return False
 
@@ -125,10 +127,15 @@ class haf_base:
         if self.callbacks is not None and self.callbacks.run is not None:
           self.callbacks.run(_item.low, _item.high)
 
+        self.last_block_num = _item.high
+
+        if self.is_massive and self.last_block_num is not None:
+          self.sql.exec_context_detached_save_block_num(self.last_block_num)
+
       return True
 
   def run_impl(self):
-    with timer("run_impl[ms]: {}") as tm:
+    with timer("TOTAL RUN-IMPL[ms]: {}") as tm:
       if self.is_interrupted():
         return False
 
@@ -152,7 +159,7 @@ class haf_base:
       return True
 
   def postprocess(self):
-    with timer("postprocess[ms]: {}") as tm:
+    with timer("TOTAL POSTPROCESS[ms]: {}") as tm:
       if self.is_interrupted():
         return False
 
@@ -162,7 +169,7 @@ class haf_base:
       return True
 
   def run(self):
-    with timer("run[ms]: {}") as tm:
+    with timer("TOTAL RUN[ms]: {}") as tm:
       try:
         _result = self.preprocess()
         if not _result:
@@ -193,35 +200,36 @@ def process_arguments():
   return _args.url, _args.range_blocks
 
 def pre_none_ctx_test():
-  helper.logger.info("****PRE-NONE-CTX****")
+  helper.logger.info("*********************************************************************PRE-NONE-CTX")
 
 def pre_is_ctx_test():
-  helper.logger.info("****PRE-IS-CTX****")
+  helper.logger.info("*********************************************************************PRE-IS-CTX")
 
 def pre_always_test():
-  helper.logger.info("****PRE-ALWAYS****")
+  helper.logger.info("*********************************************************************PRE-ALWAYS")
 
 def run_test(low_block, high_block):
-  helper.logger.info("****RUN****{} {}".format(low_block, high_block))
+  helper.logger.info("*********************************************************************RUN {} {}".format(low_block, high_block))
 
 def post_test():
-  helper.logger.info("****POST****")
+  helper.logger.info("*********************************************************************POST")
 
 def main():
   try:
-    _app_context = "any_app"
+    with timer("TOTAL APPLICATION TIME[ms]: {}") as tm:
+      _app_context = "any_app"
 
-    _url, _range_blocks = process_arguments()
+      _url, _range_blocks = process_arguments()
 
-    helper.args     = args_container(_url, _range_blocks)
-    helper.logger   = logger
+      helper.args     = args_container(_url, _range_blocks)
+      helper.logger   = logger
 
-    _sql        = haf_sql(_app_context)
-    _callbacks  = callback_handler(pre_none_ctx_test, pre_is_ctx_test, pre_always_test, run_test, post_test)
+      _sql        = haf_sql(_app_context)
+      _callbacks  = callback_handler(pre_none_ctx_test, pre_is_ctx_test, pre_always_test, run_test, post_test)
 
-    _app = haf_base(_sql, _callbacks)
+      _app = haf_base(_sql, _callbacks)
 
-    result = _app.run()
+      result = _app.run()
 
   except Exception as ex:
     logger.error("`main` method exception: {0}".format(ex))

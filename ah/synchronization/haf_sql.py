@@ -22,8 +22,10 @@ class haf_query:
 
 class haf_sql:
   def __init__(self, application_context):
-    helper.logger.info("Initialization of a new database connection")
+    helper.logger.info("Initialization of a new database connection...")
     self.db         = Db(helper.args.url, "root db creation")
+    helper.logger.info("The database has been connected...")
+
     self.text_query = haf_query(application_context)
 
   def exec_query(self, query):
@@ -86,6 +88,7 @@ class haf_sql:
     _is_attached = self.exec_context_is_attached()
 
     if _is_attached == force_attach:
+      helper.logger.info("Context is {} already".format("attached" if _is_attached else "detached"))
       return
 
     if force_attach:
@@ -97,9 +100,7 @@ class haf_sql:
       self.exec_detach_context_impl()
 
   def attach_context(self, last_block = 0):
-    helper.logger.info("Attaching context... Last block: {}".format(last_block))
     self.switch_context_internal(True, last_block)
 
   def detach_context(self):
-    helper.logger.info("Detaching context...")
     self.switch_context_internal(False)
