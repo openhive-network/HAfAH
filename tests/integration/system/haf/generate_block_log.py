@@ -77,7 +77,7 @@ def prepare_block_log(world, length):
 
     logger.info("Witness state after voting")
     response = api_node.api.database.list_witnesses(start=0, limit=100, order='by_name')
-    active_witnesses = response["result"]["witnesses"]
+    active_witnesses = response["witnesses"]
     active_witnesses_names = [witness["owner"] for witness in active_witnesses]
     logger.info(active_witnesses_names)
     assert len(active_witnesses_names) == 21
@@ -88,7 +88,7 @@ def prepare_block_log(world, length):
 
     # Network should be set up at this time, with 21 active witnesses, enough participation rate
     # and irreversible block number lagging behind around 15-20 blocks head block number
-    result = wallet.api.info()["result"]
+    result = wallet.api.info()
     irreversible = result["last_irreversible_block_num"]
     head = result["head_block_num"]
     logger.info(f'Network prepared, irreversible block: {irreversible}, head block: {head}')
@@ -97,7 +97,7 @@ def prepare_block_log(world, length):
 
     while irreversible < length:
         init_node.wait_number_of_blocks(1)
-        result = wallet.api.info()["result"]
+        result = wallet.api.info()
         irreversible = result["last_irreversible_block_num"]
         head = result["head_block_num"]
         logger.info(f'Generating block_log of length: {length}, current irreversible: {irreversible}, current head block: {head}')
@@ -105,7 +105,7 @@ def prepare_block_log(world, length):
     if os.path.exists('block_log'):
         os.remove('block_log')
     init_node.get_block_log().truncate('block_log', length)
-    timestamp = init_node.api.block.get_block(block_num = length)['result']['block']['timestamp']
+    timestamp = init_node.api.block.get_block(block_num = length)['block']['timestamp']
 
     return timestamp
 
