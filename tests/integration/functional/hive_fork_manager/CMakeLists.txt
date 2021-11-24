@@ -207,6 +207,12 @@ ADD_SQL_FUNCTIONAL_TESTS( app_api/context_account_operations_view_detach_test.sq
 ADD_SQL_FUNCTIONAL_TESTS( app_api/context_account_operations_view_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/context_account_operations_view_nonforking_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/context_account_operations_view_nonforking_detach_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/account_operations_view_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/accounts_view_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/blocks_view_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/transactions_view_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/signatures_view_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/operations_view_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( scenarios/massive_sync_live_blocks_and_fork.sql )
 ADD_SQL_FUNCTIONAL_TESTS( scenarios/massive_sync_live_blocks_and_fork_non_forking_app.sql )

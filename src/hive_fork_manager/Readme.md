@@ -126,6 +126,17 @@ inherits from`hive.trx_histogram` to register it into the context 'trx_histogram
 To switch from non-forking application to forking one all the applications' tables have to be registered in contexts using
 'hive.app_register_table' method.
 
+### Applications without their own tables
+It turned out that some applications may not require to collect data into their own specific tables, because tables of the Hive Fork Manager
+contain all the data. Those applications do not require to create contexts and implement "the Application algorithm".
+It is enaught to read the data for the current HEAD BLOCK using the views:
+* hive.account_operations_view
+* hive.accounts_view
+* hive.blocks_view
+* hive.transactions_view
+* hive.operations_view
+* hive.transactions_multisig_view
+
 ## Shared lib
 There are some functions that can be done efficiently only with low-level code as C/C++. Moreover, there is a need to
 get some code already working in hived, and execute it by Hive Fork Manager or its applications. One example is a parsing operation JSON to get the list
