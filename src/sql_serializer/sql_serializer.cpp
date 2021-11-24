@@ -9,6 +9,7 @@
 #include <hive/plugins/sql_serializer/sql_serializer_objects.hpp>
 
 #include <hive/chain/util/impacted.hpp>
+#include <hive/chain/util/supplement_operations.hpp>
 #include <hive/chain/account_object.hpp>
 
 #include <hive/protocol/config.hpp>
@@ -128,7 +129,7 @@ using chain::reindex_notification;
         {
         public:
 
-          sql_serializer_plugin_impl(const std::string &url, hive::chain::database& _chain_db, const sql_serializer_plugin& _main_plugin) 
+          sql_serializer_plugin_impl(const std::string &url, hive::chain::database& _chain_db, const sql_serializer_plugin& _main_plugin)
             : db_url{url},
               chain_db{_chain_db},
               main_plugin{_main_plugin}
@@ -186,7 +187,7 @@ using chain::reindex_notification;
           bool     psql_dump_accounts = true;
           uint32_t head_block_number = 0;
 
-          int64_t op_sequence_id = 0; 
+          int64_t op_sequence_id = 0;
 
           cached_containter_t currently_caching_data;
           stats_group current_stats;
@@ -500,6 +501,8 @@ void sql_serializer_plugin_impl::on_pre_apply_operation(const operation_notifica
   if(skip_reversible_block(note.block))
     return;
 
+  hive::util::supplement_operation(note.op, chain_db);
+
   const bool is_virtual = hive::protocol::is_virtual_operation(note.op);
 
   cached_containter_t& cdtf = currently_caching_data; // alias
@@ -520,7 +523,7 @@ void sql_serializer_plugin_impl::on_pre_apply_operation(const operation_notifica
 
 void sql_serializer_plugin_impl::on_post_apply_operation(const operation_notification& note)
 {
-  if( note.op.which() != hive::protocol::operation::tag<hive::protocol::hardfork_operation>::value ) 
+  if( note.op.which() != hive::protocol::operation::tag<hive::protocol::hardfork_operation>::value )
     return;
 
   if(chain_db.is_producing())
@@ -647,7 +650,7 @@ void sql_serializer_plugin_impl::on_post_reindex(const reindex_notification& not
 }
 
 void sql_serializer_plugin_impl::process_cached_data()
-{  
+{
   // triggers only when there is something to flush
   if ( !currently_caching_data->blocks.empty() ) {
     _dumper->trigger_data_flush( *currently_caching_data, _last_block_num );
@@ -783,7 +786,7 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
 
         ilog("Done. Connection closed");
       }
-      
+
     } // namespace sql_serializer
   }    // namespace plugins
 } // namespace hive
