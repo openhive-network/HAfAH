@@ -405,8 +405,10 @@ Returns TRUE when context with given name exists
 Register not already registered table with name 'table_name' into context. It allow to move from 'non-forking application'
 to application which support forks.
 
-#### hive.app_get_irreversible_block( context_name )
-Returns last irreversible block number, or 0 if there is no irreversible block
+#### hive.app_get_irreversible_block( context_name DEFUALT '' )
+Returns last irreversible block number, or 0 if there is no irreversible block.
+When the defualt is passed (hive.app_get_irreversible_block() ), then it returns current top irreversible block num
+known by hive fork manager.
 
 #### hive.app_is_forking( context_name )
 Returns boolean information if a given context is forking ( returns TRUE ) or non-forking ( returns FALSE )
