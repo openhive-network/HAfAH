@@ -20,12 +20,12 @@ class account_history_impl:
     else:
       return None
 
-  @perf(extract_identifier=extractor)
+  @perf(extract_identifier=extractor, record_name='backend')
   def get_ops_in_block( self, args, block_num : int, only_virtual : bool, include_reversible : bool) -> ops_in_block:
     api = account_history_db_connector(args)
     return ops_in_block( block_num, api.get_ops_in_block(block_num, only_virtual, include_reversible) )
 
-  @perf(extract_identifier=extractor)
+  @perf(extract_identifier=extractor, record_name='backend')
   def get_transaction(self, args, trx_hash : str, include_reversible : bool ) -> transaction:
     api = account_history_db_connector(args)
 
@@ -46,7 +46,7 @@ class account_history_impl:
     return transaction(trx_hash, transaction_basic_info)
 
 
-  @perf(extract_identifier=extractor)
+  @perf(extract_identifier=extractor, record_name='backend')
   def enum_virtual_ops(self, args, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False ) -> virtual_ops:
     api = account_history_db_connector(args)
     if account_history_impl.VIRTUAL_OP_ID_OFFSET is None and filter is not None:
@@ -64,7 +64,7 @@ class account_history_impl:
       block_range_end
     )
 
-  @perf(extract_identifier=extractor)
+  @perf(extract_identifier=extractor, record_name='backend')
   def get_account_history(self, args, filter : int, account : str, start : int, limit : int, include_reversible : bool) -> account_history:
     api = account_history_db_connector(args)
     return account_history(

@@ -17,6 +17,5 @@ rm -f $OUTPUT_LOG $PERFORMANCE_OUTPUT
 echo 'runnning server...'
 $ROOT_DIR/main.py -p $DB_URL -n $PORT | tee -i $OUTPUT_LOG
 echo 'processing output...'
-cat $OUTPUT_LOG | grep 'executed in' | sed -E 's|\[([0-9]+)/([0-9]+)\] (.*) executed in ([0-9]+\.[0-9]+)ms|\1;\2;\3;\4|g' > $PERFORMANCE_OUTPUT
-$ROOT_DIR/tests/performance/parse_server_output.py $PERFORMANCE_OUTPUT $PROCESSED_PERFORMANCE_OUTPUT
+$ROOT_DIR/tests/performance/parse_server_output.py $OUTPUT_LOG $PROCESSED_PERFORMANCE_OUTPUT
 echo 'done.'

@@ -78,7 +78,8 @@ BEGIN
       ORDER BY _operation_id;
 END
 $function$
-language plpgsql STABLE;
+language plpgsql STABLE
+SET JIT=OFF;
 
 CREATE OR REPLACE FUNCTION hafah_python.get_transaction( in _TRX_HASH BYTEA, in _INCLUDE_REVERSIBLE BOOLEAN )
 RETURNS TABLE(
