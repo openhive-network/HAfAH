@@ -22,6 +22,7 @@ class helper:
       helper.logger.info("{}".format(query))
 
 #the simplest handler of callbacks
+#There is necessary to take all callbacks from the outside
 class callback_handler:
   def __init__(self, logger = None, pre_none_ctx = None, pre_is_ctx = None, pre_always = None, run = None, post = None):
 

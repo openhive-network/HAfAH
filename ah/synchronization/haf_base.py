@@ -209,10 +209,10 @@ class haf_base:
 
         while True:
           if not self.run_impl():
-            return False
+            break
 
         _result = self.postprocess()
-        if not result:
+        if not _result:
           return False
       except Exception as ex:
         logger.error("`run` method exception: {0}".format(ex))
@@ -222,6 +222,7 @@ def shutdown_properly(signal, frame):
   logger.info("Closing. Wait...")
 
   global app
+  assert app is not None, "an application must be initialized"
   app.interrupt()
 
   logger.info("Interrupted...")
@@ -239,31 +240,43 @@ def restore_handlers():
   signal(SIGINT, old_sig_int_handler)
   signal(SIGTERM, old_sig_term_handler)
 
-class db_processor:
+class application:
   def __init__(self, url, range_blocks, app_context, callback_handler):
     self.url              =  url
     self.range_blocks     =  range_blocks
     self.app_context      = app_context
     self.callback_handler = callback_handler
+    self.base             = haf_base()
+
+  def exec_query(self, query):
+    assert self.base is not None
+    self.base.sql.exec_query(query)
+
+  def exec_query_all(self, query):
+    assert self.base is not None
+    return self.base.sql.exec_query_all(query)
+
+  def exec_query_one(self, query):
+    assert self.base is not None
+    return self.base.sql.exec_query_one(query)
 
   def process(self):
     try:
       with timer("TOTAL APPLICATION TIME[ms]: {}") as tm:
-        global app
 
         set_handlers()
 
         helper.logger = logger
-        helper.args     = args_container(self.url, self.range_blocks)
+        helper.args   = args_container(self.url, self.range_blocks)
 
-        app           = haf_base()
-        app.sql       = haf_sql(self.app_context)
-        app.callbacks = self.callback_handler
+        self.base           = haf_base()
+        self.base.sql       = haf_sql(self.app_context)
+        self.base.callbacks = self.callback_handler
 
-        if app.callbacks is not None:
-          app.callbacks.logger = helper.logger
+        if self.base.callbacks is not None and helper.logger is not None:
+          self.base.callbacks.logger = helper.logger
 
-        result = app.run()
+        result = self.base.run()
 
         restore_handlers()
 
