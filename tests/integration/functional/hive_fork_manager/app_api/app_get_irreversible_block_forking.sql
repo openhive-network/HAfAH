@@ -30,6 +30,7 @@ __result INT;
 __blocks hive.blocks_range;
 __curent_block INT;
 BEGIN
+        ASSERT ( SELECT hive.app_get_irreversible_block() ) = 0, 'global irreversible block is not 0';
         ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 0, 'hive.app_get_irreversible_block !=0 (1)';
 
         ASSERT ( SELECT hc.current_block_num FROM hive.contexts hc WHERE name = 'context' ) = 0, 'Wrng current block != 0(1)';
@@ -41,6 +42,7 @@ BEGIN
         --hived ends massive sync - irreversible = 1
         PERFORM hive.end_massive_sync( 1 );
         ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 0, 'hive.app_get_irreversible_block !=0 (3)';
+        ASSERT ( SELECT hive.app_get_irreversible_block() ) = 1, 'global irreversible block is not 1';
 
         SELECT * FROM hive.app_next_block( 'context' ) INTO __blocks; -- massive sync event
         RAISE NOTICE 'Blocks range after MASSIVE_SYNC = %', __blocks;
@@ -69,6 +71,7 @@ BEGIN
 
         PERFORM hive.set_irreversible( 2 );
         ASSERT ( SELECT hive.app_get_irreversible_block( 'context' ) ) = 1, 'hive.app_get_irreversible_block !=1 (4)';
+        ASSERT ( SELECT hive.app_get_irreversible_block() ) = 2, 'global irreversible block is not 2';
 
         -- we are next after massive sync
         PERFORM hive.app_next_block( 'context' ); -- block 2
@@ -94,7 +97,7 @@ STABLE
 AS
 $BODY$
 BEGIN
-    --NOTHING TO CHECK HERE
+    ASSERT ( SELECT hive.app_get_irreversible_block() ) = 2, 'global irreversible block is not 2';
 END
 $BODY$
 ;

@@ -165,7 +165,7 @@ END;
 $BODY$
 ;
 
-CREATE OR REPLACE FUNCTION hive.app_get_irreversible_block( _context_name TEXT )
+CREATE OR REPLACE FUNCTION hive.app_get_irreversible_block( _context_name TEXT DEFAULT '' )
     RETURNS hive.contexts.irreversible_block%TYPE
     LANGUAGE plpgsql
     STABLE
@@ -174,6 +174,11 @@ $BODY$
 DECLARE
     __result hive.contexts.irreversible_block%TYPE;
 BEGIN
+    IF  _context_name = '' THEN
+        SELECT COALESCE( consistent_block, 0 ) INTO __result FROM hive.irreversible_data;
+        RETURN __result;
+    END IF;
+
     IF hive.app_is_forking( _context_name )
     THEN
         SELECT hc.irreversible_block INTO __result
@@ -186,6 +191,7 @@ BEGIN
     RETURN __result;
 END;
 $BODY$;
+
 
 CREATE OR REPLACE FUNCTION hive.app_context_is_attached( _context_name TEXT )
     RETURNS bool

@@ -15,6 +15,7 @@ ADD_PSQL_EXTENSION(
             app_context.sql
             irreversible_blocks.sql
             reversible_blocks.sql
+            block_views_for_head_block.sql
             blocks_views_for_contexts.sql
             state_provider.sql
             state_providers/accounts.sql
