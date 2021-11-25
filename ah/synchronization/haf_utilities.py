@@ -21,8 +21,12 @@ class helper:
     else:
       helper.logger.info("{}".format(query))
 
+#the simplest handler of callbacks
 class callback_handler:
-  def __init__(self, pre_none_ctx = None, pre_is_ctx = None, pre_always = None, run = None, post = None):
+  def __init__(self, logger = None, pre_none_ctx = None, pre_is_ctx = None, pre_always = None, run = None, post = None):
+
+    self.logger = logger
+
     #preprocessing: a context doesn't exist
     self.pre_none_ctx = pre_none_ctx
 
