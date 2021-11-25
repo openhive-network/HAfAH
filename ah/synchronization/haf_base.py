@@ -2,6 +2,8 @@
 import sys
 import logging
 
+from signal import signal, SIGINT, SIGTERM
+
 from collections import deque
 
 from haf_sql import haf_sql
@@ -28,7 +30,7 @@ if not logger.hasHandlers():
   logger.addHandler(fh)
 
 class haf_base:
-  def __init__(self, sql, callbacks):
+  def __init__(self, sql = None, callbacks = None):
     self.interrupted    = False
     self.is_massive     = False
 
@@ -39,13 +41,14 @@ class haf_base:
     self.sql            = sql
     self.callbacks      = callbacks
 
-  def set_interrupted(self, value):
-    self.interrupted = value
+  def interrupt(self):
+    if not self.is_interrupted():
+      self.interrupted = True
 
   def is_interrupted(self):
     _result = self.interrupted
     if _result:
-      helper.logger.info("An application was interrupted")
+      helper.logger.info("An application has been interrupted")
     return _result
 
   def preprocess(self):
@@ -186,6 +189,30 @@ class haf_base:
         logger.error("`main` method exception: {0}".format(ex))
         exit(1)
 
+helper.logger = logger
+app           = haf_base()
+
+def shutdown_properly(signal, frame):
+  logger.info("Closing. Wait...")
+
+  global app
+  app.interrupt()
+
+  logger.info("Interrupted...")
+
+old_sig_int_handler = None
+old_sig_term_handler = None
+
+def set_handlers():
+  global old_sig_int_handler
+  global old_sig_term_handler
+  old_sig_int_handler = signal(SIGINT, shutdown_properly)
+  old_sig_term_handler = signal(SIGTERM, shutdown_properly)
+
+def restore_handlers():
+  signal(SIGINT, old_sig_int_handler)
+  signal(SIGTERM, old_sig_term_handler)
+
 def process_arguments():
   import argparse
   parser = argparse.ArgumentParser()
@@ -217,19 +244,24 @@ def post_test():
 def main():
   try:
     with timer("TOTAL APPLICATION TIME[ms]: {}") as tm:
+      global app
       _app_context = "any_app"
+
+      set_handlers()
 
       _url, _range_blocks = process_arguments()
 
       helper.args     = args_container(_url, _range_blocks)
-      helper.logger   = logger
 
       _sql        = haf_sql(_app_context)
       _callbacks  = callback_handler(pre_none_ctx_test, pre_is_ctx_test, pre_always_test, run_test, post_test)
 
-      _app = haf_base(_sql, _callbacks)
+      app.sql       = _sql
+      app.callbacks = _callbacks
 
-      result = _app.run()
+      result = app.run()
+
+      restore_handlers()
 
   except Exception as ex:
     logger.error("`main` method exception: {0}".format(ex))
