@@ -12,8 +12,7 @@ class account_history_db_connector:
     self._conn : Db = args['db']
     assert self._conn is not None
     self._id : Any = args['id']
-    self._schema = 'hafah_python'
-    self._app_context_name = 'account_history_python'
+    self._schema = 'hive'
 
   def _get_db(self) -> Db:
     assert self._conn is not None
@@ -70,7 +69,7 @@ class account_history_db_connector:
     )
 
   def get_irreversible_block_num(self) -> int:
-    result = self._get_all(f"SELECT hive.app_get_irreversible_block( '{self._app_context_name}' ) as num")
+    result = self._get_all(f"SELECT hive.app_get_irreversible_block() as num")
     return result[0]['num']
 
   def get_operation_id_types(self):
