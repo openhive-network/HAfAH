@@ -40,7 +40,7 @@ class callback_handler_accounts:
     _query = self.get_accounts.format(low_block, high_block)
     _result = self.app.exec_query_all(_query)
 
-    self.logger.info("For blocks {} {} found {} accounts".format(low_block, high_block, len(_result)))
+    self.logger.info("For blocks {}:{} found {} accounts".format(low_block, high_block, len(_result)))
     with open(self.file_name, "a") as f:
       for record in _result:
         f.write('{}\n'.format(record[0]))
