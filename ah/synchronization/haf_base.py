@@ -166,7 +166,7 @@ class haf_base:
 
         _first_block, _last_block = self.get_blocks()
         if _first_block is None:
-          return False
+          return True
 
         self.fill_block_ranges(_first_block, _last_block)
 
