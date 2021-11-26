@@ -8,17 +8,16 @@ MACRO( ADD_PSQL_EXTENSION )
 
     SET( extension_control_script ${extension_path}/${EXTENSION_NAME}--${GIT_REVISION}.sql )
 
-    SET(PROXY_GIT_VER_DEC "PROXY--${GIT_VER_DEC}")
+    SET( PROXY_GIT_VER "PROXY--${GIT_REVISION}" )
 
-    MESSAGE( STATUS "DEC VERSION: ${GIT_VER_DEC}" )
-    # MATH( EXPR git_ver_dec "0x${GIT_REVISION}" OUTPUT_FORMAT DECIMAL)
+    MESSAGE( STATUS "VERSION: ${GIT_REVISION}" )
 
     ADD_CUSTOM_COMMAND(
             OUTPUT  ${extension_path}/${extension_control_file} ${extension_path}/${extension_control_script}
             COMMAND rm -rf ${extension_path}/*
-            COMMAND sed 's/@GIT_REVISION@/${GIT_VER_DEC}/g' ${extension_control_file}  > ${extension_path}/${extension_control_file}
-            COMMAND ${CMAKE_MODULE_PATH}/merge_sql.sh ${EXTENSION_SOURCES} > ${extension_path}/${EXTENSION_NAME}--${PROXY_GIT_VER_DEC}.sql
-            COMMAND sed 's/@GIT_REVISION@/${GIT_VER_DEC}/g' ${extension_path}/${EXTENSION_NAME}--${PROXY_GIT_VER_DEC}.sql  > ${extension_path}/${EXTENSION_NAME}--${GIT_VER_DEC}.sql
+            COMMAND sed 's/@GIT_REVISION@/${GIT_REVISION}/g' ${extension_control_file}  > ${extension_path}/${extension_control_file}
+            COMMAND ${CMAKE_MODULE_PATH}/merge_sql.sh ${EXTENSION_SOURCES} > ${extension_path}/${EXTENSION_NAME}--${PROXY_GIT_VER}.sql
+            COMMAND sed 's/@GIT_REVISION@/${GIT_REVISION}/g' ${extension_path}/${EXTENSION_NAME}--${PROXY_GIT_VER}.sql  > ${extension_path}/${EXTENSION_NAME}--${GIT_REVISION}.sql
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
             DEPENDS ${EXTENSION_SOURCES} ${extension_control_file}
             COMMENT "Generate ${EXTENSION_NAME} to ${extension_path}"

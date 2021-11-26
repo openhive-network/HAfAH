@@ -11,7 +11,6 @@ MACRO( GENERATE_GIT_VERSION_FILE )
                 OUTPUT_STRIP_TRAILING_WHITESPACE
         )
         MESSAGE( STATUS "GIT hash: ${GIT_REVISION}" )
-        EXECUTE_PROCESS( COMMAND printf %d 0x${GIT_REVISION} OUTPUT_VARIABLE GIT_VER_DEC )
     else()
         MESSAGE( STATUS "GIT not found" )
     endif()

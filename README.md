@@ -83,6 +83,6 @@ in separated build directory with making the only one target, for example: `make
 
 ### Versioning
 Postgres extensions are versioned - extension control file contains `default_version` configuration entry. The build system
-fills the entry with the repository git sha converted to decimal presentation (postgres accepts only digits in version string).
+fills the entry with the repository git sha.
 Also corresponding sql script file is named with the same version, as is required by the postgres.
 # Known problems
