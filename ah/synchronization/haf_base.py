@@ -248,17 +248,17 @@ class application:
     self.callback_handler = callback_handler
     self.base             = haf_base()
 
-  def exec_query(self, query):
+  def exec_query(self, query, **kwargs):
     assert self.base is not None
-    self.base.sql.exec_query(query)
+    self.base.sql.exec_query(query, **kwargs)
 
-  def exec_query_all(self, query):
+  def exec_query_all(self, query, **kwargs):
     assert self.base is not None
-    return self.base.sql.exec_query_all(query)
+    return self.base.sql.exec_query_all(query, **kwargs)
 
-  def exec_query_one(self, query):
+  def exec_query_one(self, query, **kwargs):
     assert self.base is not None
-    return self.base.sql.exec_query_one(query)
+    return self.base.sql.exec_query_one(query, **kwargs)
 
   def process(self):
     try:

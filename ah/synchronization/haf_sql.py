@@ -28,26 +28,26 @@ class haf_sql:
 
     self.text_query = haf_query(application_context)
 
-  def exec_query(self, query):
+  def exec_query(self, query, **kwargs):
     with timer("query time[ms]: {}") as tm:
-      helper.display_query(query)
+      helper.display_query(query, **kwargs)
 
       assert self.db is not None, "self.db is not None"
       self.db.query_no_return(query)
 
-  def exec_query_all(self, query):
+  def exec_query_all(self, query, **kwargs):
     with timer("query time[ms]: {}") as tm:
       helper.display_query(query)
 
       assert self.db is not None, "self.db is not None"
-      return self.db.query_all(query)
+      return self.db.query_all(query, **kwargs)
 
-  def exec_query_one(self, query):
+  def exec_query_one(self, query, **kwargs):
     with timer("query time[ms]: {}") as tm:
       helper.display_query(query)
 
       assert self.db is not None, "self.db is not None"
-      return self.db.query_one(query)
+      return self.db.query_one(query, **kwargs)
 
   def exec_create_context(self):
     self.exec_query(self.text_query.create_context)
