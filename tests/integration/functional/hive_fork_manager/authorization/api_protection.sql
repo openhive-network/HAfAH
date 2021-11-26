@@ -182,7 +182,6 @@ BEGIN
         ASSERT FALSE, 'An app can call hive.remove_unecessary_events';
     EXCEPTION WHEN OTHERS THEN
     END;
-
 END;
 $BODY$
 ;

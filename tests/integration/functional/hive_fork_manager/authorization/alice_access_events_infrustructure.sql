@@ -195,6 +195,42 @@ BEGIN
         ASSERT FALSE, 'Alice can delete irreversible account_operations';
     EXCEPTION WHEN OTHERS THEN
     END;
+
+    BEGIN
+        DROP VIEW hive.blocks_view;
+        ASSERT FALSE, 'Alice can drop hive.blocks_view';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        DROP VIEW hive.transactions_view;
+        ASSERT FALSE, 'Alice can drop transactions_view';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        DROP VIEW hive.transactions_multisig_view;
+        ASSERT FALSE, 'Alice can drop hive.transactions_multisig_view';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        DROP VIEW hive.operations_view;
+        ASSERT FALSE, 'Alice can drop hive.operations_view';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+    DROP VIEW hive.accounts_view;
+        ASSERT FALSE, 'Alice can drop hive.accounts_view';
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    BEGIN
+        DROP VIEW hive.account_operations_view;
+        ASSERT FALSE, 'Alice can drop hive.account_operations_view';
+    EXCEPTION WHEN OTHERS THEN
+    END;
 END;
 $BODY$
 ;

@@ -1,5 +1,4 @@
-DROP VIEW IF EXISTS hive.account_operations_view;
-CREATE VIEW hive.account_operations_view AS
+CREATE OR REPLACE VIEW hive.account_operations_view AS
 SELECT
     t.account_id,
     t.account_op_seq_no,
@@ -36,8 +35,7 @@ FROM (
 ) t
 ;
 
-DROP VIEW IF EXISTS hive.accounts_view;
-CREATE VIEW hive.accounts_view AS
+CREATE OR REPLACE VIEW hive.accounts_view AS
 SELECT
     t.block_num,
     t.id,
@@ -188,7 +186,7 @@ FROM
 ) t
 ;
 
-CREATE VIEW hive.TRANSACTIONS_MULTISIG_VIEW
+CREATE OR REPLACE VIEW hive.transactions_multisig_view
 AS
 SELECT
       t.trx_hash
