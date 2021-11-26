@@ -235,6 +235,7 @@ ADD_AUTHORIZATION_FUNCTIONAL_TESTS( authorization/api_protection.sql )
 ADD_AUTHORIZATION_FUNCTIONAL_TESTS( authorization/massive_sync_live_blocks_and_fork.sql )
 ADD_AUTHORIZATION_FUNCTIONAL_TESTS( authorization/alice_grant_to_hive_applications_group.sql )
 ADD_AUTHORIZATION_FUNCTIONAL_TESTS( authorization/hived_to_api_access.sql )
+ADD_AUTHORIZATION_FUNCTIONAL_TESTS( authorization/alice_access_to_head_block_views.sql )
 
 ADD_EXAMPLES_FUNCTIONAL_TESTS( examples/forking_application.py )
 ADD_EXAMPLES_FUNCTIONAL_TESTS( examples/non_forking_application.py )
