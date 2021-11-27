@@ -1,7 +1,7 @@
 #By default headers from `protocol`/`schema` are installed, therefore an installation should be blocked
 SET( CUSTOM_INSTALLATION ON )
 
-SET( target_name hfm-${GIT_VER_DEC} )
+SET( target_name hfm-${GIT_REVISION} )
 
 ADD_RUNTIME_LOADED_LIB( ${target_name} )
 
