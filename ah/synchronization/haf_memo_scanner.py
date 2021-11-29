@@ -11,31 +11,33 @@ from haf_base import application
 
 class callback_handler_memo_scanner():
 
-  def __init__(self, searched_item):
+  def __init__(self, searched_item, schema_name):
     self.app            = None
     self.searched_item  = searched_item
+    self.schema_name    = schema_name
 
+  def prepare_sql(self):
     #SQL queries
     self.create_memo_table = '''
-      CREATE SCHEMA IF NOT EXISTS memo_scanner;
-      CREATE TABLE IF NOT EXISTS memo_scanner.memos (
+      CREATE SCHEMA IF NOT EXISTS {};
+      CREATE TABLE IF NOT EXISTS {}.memos (
         block_num INTEGER NOT NULL,
         trx_in_block INTEGER NOT NULL,
         op_pos INTEGER NOT NULL,
         memo_content VARCHAR(512) NOT NULL
       )INHERITS( hive.{} );
 
-      ALTER TABLE memo_scanner.memos ADD CONSTRAINT memos_pkey PRIMARY KEY ( block_num, trx_in_block, op_pos );
-    '''
+      ALTER TABLE {}.memos ADD CONSTRAINT memos_pkey PRIMARY KEY ( block_num, trx_in_block, op_pos );
+    '''.format(self.schema_name, self.schema_name, self.app.app_context, self.schema_name)
 
     self.insert_into_memos             = []
-    self.insert_into_memos.append( "INSERT INTO memo_scanner.memos(block_num, trx_in_block, op_pos, memo_content) VALUES" )
+    self.insert_into_memos.append( "INSERT INTO {}.memos(block_num, trx_in_block, op_pos, memo_content) VALUES".format(self.schema_name) )
     self.insert_into_memos.append( " ({}, {}, {}, '{}')" )
     self.insert_into_memos.append( " ;" )
 
     self.get_transfers = '''
       SELECT block_num, trx_in_block, op_pos, body
-      FROM hive.memo_scanner_app_operations_view o
+      FROM hive.{}_operations_view o
       JOIN hive.operation_types ot ON o.op_type_id = ot.id
       WHERE ot.name = 'hive::protocol::transfer_operation' AND block_num >= {} and block_num <= {}
     '''
@@ -46,6 +48,8 @@ class callback_handler_memo_scanner():
   def pre_none_ctx(self):
     helper.info("Creation SQL tables: (PRE-NON-CTX phase)")
     self.checker()
+
+    self.prepare_sql()
     _result = self.app.exec_query(self.create_memo_table.format(self.app.app_context))
 
   def pre_is_ctx(self):
@@ -58,7 +62,7 @@ class callback_handler_memo_scanner():
     helper.info("processing incoming data: (RUN phase)")
     self.checker()
 
-    _query = self.get_transfers.format(low_block, high_block)
+    _query = self.get_transfers.format(self.app.app_context, low_block, high_block)
     _result = self.app.exec_query_all(_query)
 
     _values = []
@@ -93,8 +97,10 @@ def main():
 
   _url, _range_blocks, searched_item = process_arguments()
 
-  _callbacks      = callback_handler_memo_scanner(searched_item)
-  _app            = application(_url, _range_blocks, "memo_scanner_app", _callbacks)
+  _schema_name = "memo_scanner"
+
+  _callbacks      = callback_handler_memo_scanner(searched_item, _schema_name)
+  _app            = application(_url, _range_blocks, _schema_name + "_app", _callbacks)
   _callbacks.app  = _app
 
   _app.process()
