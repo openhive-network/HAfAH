@@ -49,7 +49,7 @@ class haf_base:
   def is_interrupted(self):
     _result = self.interrupted
     if _result:
-      helper.logger.info("An application has been interrupted")
+      helper.log("An application has been interrupted")
     return _result
 
   def raise_exception(self, source_exception):
@@ -102,10 +102,10 @@ class haf_base:
             _first_block  = int(_record[0])
             _last_block   = int(_record[1])
 
-          helper.logger.info("first block: {} last block: {}".format(_first_block, _last_block))
+          helper.log("first block: {} last block: {}", _first_block, _last_block)
           return _first_block, _last_block
         else:
-          helper.logger.info("Range blocks is returned empty")
+          helper.log("Range blocks is returned empty")
           return None, None
     except Exception as ex:
       logger.error("`get_blocks` method exception: {0}".format(ex))
