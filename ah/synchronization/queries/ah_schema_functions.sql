@@ -1,3 +1,37 @@
+DROP VIEW IF EXISTS hive.helper_operations_view;
+CREATE VIEW hive.helper_operations_view AS SELECT
+  id id,
+  block_num block_num,
+  trx_in_block trx_in_block,
+  (
+    CASE
+      WHEN hov.trx_in_block <= -1 THEN 0
+      ELSE abs(hov.op_pos)
+    END
+  ) ::BIGINT AS op_pos,
+  (
+    CASE
+      WHEN hov.trx_in_block <= -1 THEN hov.op_pos
+      ELSE (hov.id - (
+        SELECT nahov.id
+        FROM hive.operations_view nahov
+        JOIN hive.operation_types nhot
+        ON nahov.op_type_id = nhot.id
+        WHERE nahov.block_num=hov.block_num
+        AND nahov.trx_in_block=hov.trx_in_block
+        AND nahov.op_pos=hov.op_pos
+        AND nhot.is_virtual=FALSE
+        LIMIT 1
+        )
+      )
+    END
+  ) :: BIGINT AS virtual_op,
+  op_type_id op_type_id,
+        trim(both '"' from to_json(hov.timestamp)::text) formated_timestamp,
+        body body
+FROM
+  hive.operations_view hov;
+
 CREATE OR REPLACE FUNCTION hive.get_ops_in_block( in _BLOCK_NUM INT, in _ONLY_VIRTUAL BOOLEAN, in _INCLUDE_REVERSIBLE BOOLEAN )
 RETURNS TABLE(
     _trx_id TEXT,
@@ -39,37 +73,17 @@ BEGIN
         ELSE ht.trx_in_block
         END
       ) _trx_in_block,
-      (
-        CASE
-        WHEN T.trx_in_block <= -1 THEN 0 ::BIGINT
-        ELSE abs(T.op_pos::BIGINT)
-        END
-      ) AS _op_in_trx,
-      (
-        CASE
-        WHEN T.trx_in_block <= -1 THEN T.op_pos ::BIGINT
-        ELSE (T.id - (
-          SELECT nahov.id
-          FROM hive.operations_view nahov
-          JOIN hive.operation_types nhot
-          ON nahov.op_type_id = nhot.id
-          WHERE nahov.block_num=T.block_num
-            AND nahov.trx_in_block=T.trx_in_block
-            AND nahov.op_pos=T.op_pos
-            AND nhot.is_virtual=FALSE
-          LIMIT 1
-        ) ) :: BIGINT
-      END
-      ) _virtual_op,
-      trim(both '"' from to_json(T.timestamp)::text) _timestamp,
+      T.op_pos _op_in_trx,
+      T.virtual_op _virtual_op,
+      T._timestamp,
       T.body _value,
       T.id::BIGINT _operation_id
     FROM
       (
         --`abs` it's temporary, until position of operation is correctly saved
         SELECT
-          ho.id, ho.block_num, ho.trx_in_block, abs(ho.op_pos::BIGINT) op_pos, ho.body, ho.op_type_id, hot.is_virtual, ho.timestamp
-        FROM hive.operations_view ho
+          ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, hot.is_virtual, ho.formated_timestamp as _timestamp, ho.virtual_op
+        FROM hive.helper_operations_view ho
         JOIN hive.operation_types hot ON hot.id = ho.op_type_id
         WHERE ho.block_num = _BLOCK_NUM AND ( _ONLY_VIRTUAL = FALSE OR ( _ONLY_VIRTUAL = TRUE AND hot.is_virtual = TRUE ) )
       ) T
@@ -235,37 +249,17 @@ BEGIN
           ELSE T2.trx_in_block
         END
       ) _trx_in_block,
-      (
-        CASE
-          WHEN T.trx_in_block <= -1 THEN 0 ::BIGINT
-          ELSE abs(T.op_pos::BIGINT)
-        END
-      ) AS _op_in_trx,
-      (
-        CASE
-          WHEN T.trx_in_block <= -1 THEN T.op_pos ::BIGINT
-          ELSE ( T.id - (
-            SELECT nahov.id
-            FROM hive.operations_view nahov
-            JOIN hive.operation_types nhot
-            ON nahov.op_type_id = nhot.id
-            WHERE nahov.block_num=T.block_num
-              AND nahov.trx_in_block=T.trx_in_block
-              AND nahov.op_pos=T.op_pos
-              AND nhot.is_virtual=FALSE
-            LIMIT 1
-          ) ) :: BIGINT
-        END
-      ) _virtual_op,
-      trim(both '"' from to_json(T.timestamp)::text) _timestamp,
+      T.op_pos _op_in_trx,
+      T.virtual_op _virtual_op,
+      T._timestamp,
       T.body _value,
       T.id - 1 _operation_id -- 1 is substracted because ho.id start from 1, when it should start from 0
     FROM
     (
       --`abs` it's temporary, until position of operation is correctly saved
       SELECT
-      ho.id, ho.block_num, ho.trx_in_block, abs(ho.op_pos::BIGINT) op_pos, ho.body, ho.op_type_id, ho.timestamp
-      FROM hive.operations_view ho -- usage of hive.operations instead of `hive.operations_view` is ok, because range is always in proper range, thanks to `app_get_irreversible_block` call
+      ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.formated_timestamp as _timestamp, ho.virtual_op
+      FROM hive.helper_operations_view ho
       JOIN hive.operation_types hot ON hot.id = ho.op_type_id
       WHERE ho.block_num >= _BLOCK_RANGE_BEGIN AND ho.block_num < _BLOCK_RANGE_END
       AND hot.is_virtual = TRUE
@@ -294,10 +288,10 @@ BEGIN
     SELECT
       ho.block_num _next_block,
       ho.id - 1 _next_op_id -- 1 is substracted because ho.id start from 1, when it should start from 0
-    FROM 	hive.operations_view ho
-    JOIN 	hive.operation_types hot
-    ON 	ho.op_type_id=hot.id
-    WHERE 	hot.is_virtual = TRUE
+    FROM   hive.operations_view ho
+    JOIN   hive.operation_types hot
+    ON   ho.op_type_id=hot.id
+    WHERE   hot.is_virtual = TRUE
       AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id = ANY( _FILTER ) ) )
       AND ( _OPERATION_BEGIN = -1 OR ho.id >= _OPERATION_BEGIN )
     AND ho.block_num >= _BLOCK_RANGE_END -- this cannot be set to N+1 block because following block can be empty
@@ -309,14 +303,14 @@ language plpgsql STABLE;
 
 CREATE OR REPLACE FUNCTION hive.ah_get_account_history( in _FILTER INT[], in _ACCOUNT VARCHAR, _START BIGINT, _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN )
 RETURNS TABLE(
-    _trx_id TEXT,
-    _block INT,
-    _trx_in_block BIGINT,
-    _op_in_trx BIGINT,
-    _virtual_op BIGINT,
-    _timestamp TEXT,
-    _value TEXT,
-    _operation_id INT
+  _trx_id TEXT,
+  _block INT,
+  _trx_in_block BIGINT,
+  _op_in_trx BIGINT,
+  _virtual_op BIGINT,
+  _timestamp TEXT,
+  _value TEXT,
+  _operation_id INT
 )
 AS
 $function$
@@ -329,7 +323,7 @@ BEGIN
   SELECT INTO __filter_info ( select array_length( _FILTER, 1 ) );
 
   IF NOT _INCLUDE_REVERSIBLE THEN
-    SELECT hive.app_get_irreversible_block(  ) INTO __upper_block_limit;
+    SELECT hive.app_get_irreversible_block() INTO __upper_block_limit;
   END IF;
 
   SELECT INTO __account_id ( select id from hive.accounts where name = _ACCOUNT );
@@ -343,38 +337,21 @@ BEGIN
         ELSE encode( ht.trx_hash, 'escape')
         END
       ) AS _trx_id,
-      ho.block_num AS _block,
+    T.block_num AS _block,
       (
         CASE
         WHEN ht.trx_in_block IS NULL THEN 4294967295
         ELSE ht.trx_in_block
         END
       ) AS _trx_in_block,
-      (
-        CASE
-        WHEN ho.trx_in_block <= -1 THEN 0 ::BIGINT
-        ELSE abs(ho.op_pos::BIGINT)
-        END
-      ) AS _op_in_trx,
-      (
-        CASE
-        WHEN ho.trx_in_block <= -1 THEN ho.op_pos ::BIGINT
-        ELSE (ho.id - (
-          SELECT nahov.id
-          FROM hive.operations_view nahov
-          JOIN hive.operation_types nhot
-          ON nahov.op_type_id = nhot.id
-          WHERE nahov.block_num=ho.block_num
-            AND nahov.trx_in_block=ho.trx_in_block
-            AND nahov.op_pos=ho.op_pos
-            AND nhot.is_virtual=FALSE
-          LIMIT 1
-        ) ) :: BIGINT
-      END
-      ) AS _virtual_op,
-      trim(both '"' from to_json(ho.timestamp)::text) _timestamp,
-      ho.body _value,
-      T.seq_no AS _operation_id
+      T.op_pos _op_in_trx,
+      T.virtual_op _virtual_op,
+      T._timestamp,
+      T.body _value,
+      T.seq_no as _operation_id
+    FROM
+    (
+      SELECT ho.trx_in_block, ho.id as operation_id, ho.body, ho.op_pos, ho.block_num, X.seq_no, ho.virtual_op, ho.formated_timestamp as _timestamp
       FROM
       (
         SELECT hao.operation_id as operation_id, hao.account_op_seq_no as seq_no
@@ -382,13 +359,13 @@ BEGIN
         WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _START
         ORDER BY seq_no DESC
         LIMIT _LIMIT
-      ) T
-    JOIN hive.operations_view ho ON T.operation_id = ho.id
+      ) X
+    JOIN hive.helper_operations_view ho ON X.operation_id = ho.id
     JOIN hive.operation_types hot ON hot.id = ho.op_type_id
-    LEFT JOIN hive.transactions_view ht ON ho.block_num = ht.block_num AND ho.trx_in_block = ht.trx_in_block
     WHERE ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
-    ORDER BY _operation_id ASC
-    LIMIT _LIMIT;
+    ORDER BY X.seq_no ASC
+    LIMIT _LIMIT ) T
+    LEFT JOIN hive.transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block;
   ELSE
     RETURN QUERY
       SELECT
@@ -405,42 +382,22 @@ BEGIN
           ELSE ht.trx_in_block
           END
         ) _trx_in_block,
-        (
-          CASE
-          WHEN T.trx_in_block <= -1 THEN 0 ::BIGINT
-          ELSE abs(T.op_pos::BIGINT)
-          END
-        ) AS _op_in_trx,
-        (
-          CASE
-          WHEN T.trx_in_block <= -1 THEN T.op_pos ::BIGINT
-          ELSE (T.id - (
-            SELECT nahov.id
-            FROM hive.operations_view nahov
-            JOIN hive.operation_types nhot
-            ON nahov.op_type_id = nhot.id
-            WHERE nahov.block_num=T.block_num
-              AND nahov.trx_in_block=T.trx_in_block
-              AND nahov.op_pos=T.op_pos
-              AND nhot.is_virtual=FALSE
-            LIMIT 1
-          ) ) :: BIGINT
-          END
-        ) AS _virtual_op,
-        trim(both '"' from to_json(T.timestamp)::text) _timestamp,
+        T.op_pos _op_in_trx,
+        T.virtual_op _virtual_op,
+        T._timestamp,
         T.body _value,
         T.seq_no as _operation_id
       FROM
         (
           --`abs` it's temporary, until position of operation is correctly saved
           SELECT
-            ho.id, ho.block_num, ho.trx_in_block, abs(ho.op_pos::BIGINT) op_pos, ho.body, ho.op_type_id, WORKAROUND.seq_no, timestamp
-            FROM hive.operations_view ho
+            ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, WORKAROUND.seq_no, formated_timestamp as _timestamp, ho.virtual_op
+            FROM hive.helper_operations_view ho
           JOIN-- hived patterns related workaround, see more: https://gitlab.syncad.com/hive/HAfAH/-/issues/3
           (
             SELECT
             ho.id, hao.account_op_seq_no as seq_no
-            FROM hive.operations_view ho
+            FROM hive.helper_operations_view ho
             JOIN hive.account_operations hao ON ho.id = hao.operation_id
             WHERE ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
               AND hao.account_id = __account_id
@@ -461,8 +418,11 @@ BEGIN
 
 END
 $function$
-language plpgsql STABLE;
-
+language plpgsql STABLE
+SET JIT=OFF
+SET join_collapse_limit=16
+SET from_collapse_limit=16
+;
 DROP VIEW IF EXISTS hive.account_operation_count_info_view CASCADE;
 CREATE OR REPLACE VIEW hive.account_operation_count_info_view
 AS
