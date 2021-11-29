@@ -6,7 +6,7 @@ import os
 import json
 import re
 
-from haf_utilities import callback_handler
+from haf_utilities import helper
 from haf_base import application
 
 # convert special chars into their octal formats recognized by sql
@@ -102,24 +102,6 @@ class callback_handler_account_creation_fee_follower:
     self.checker()
     self.logger.info("Nothing to do: *****PRE-ALWAYS*****")
 
-  def execute_complex_query(self, values, q_parts):
-    if len(values) == 0:
-      return
-
-    cnt = 0
-    _total_query = q_parts[0]
-
-    for item in values:
-      _total_query += ( "," if cnt else "" ) + item
-      cnt += 1
-
-    _total_query += q_parts[2]
-
-    print("=============================")
-    print(_total_query)
-    print("=============================")
-    _result = self.app.exec_query(_total_query)
-
   def run(self, low_block, high_block):
     self.checker()
 
@@ -147,7 +129,7 @@ class callback_handler_account_creation_fee_follower:
         __account_creation_fee = escape_characters(json.dumps(_account_creation_fee))
         _values.append(self.insert_into_history[1].format(record[0], _owner, __account_creation_fee))
 
-    self.execute_complex_query(_values, self.insert_into_history)
+    helper.execute_complex_query(self.app, _values, self.insert_into_history)
   
   def post(self): 
     self.checker()

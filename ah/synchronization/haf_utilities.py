@@ -21,27 +21,21 @@ class helper:
     else:
       helper.logger.info("{}".format(query))
 
-#the simplest handler of callbacks
-#There is necessary to take all callbacks from the outside
-class callback_handler:
-  def __init__(self, logger = None, pre_none_ctx = None, pre_is_ctx = None, pre_always = None, run = None, post = None):
+  @staticmethod
+  def execute_complex_query(app, values, q_parts):
+    if len(values) == 0:
+      return
 
-    self.logger = logger
+    cnt = 0
+    _total_query = q_parts[0]
 
-    #preprocessing: a context doesn't exist
-    self.pre_none_ctx = pre_none_ctx
+    for item in values:
+      _total_query += ( "," if cnt else "" ) + item
+      cnt += 1
 
-    #preprocessing: a context exists
-    self.pre_is_ctx   = pre_is_ctx
+    _total_query += q_parts[2]
 
-    #preprocessing: it doesn't matter if a context exists or doesn't
-    self.pre_always   = pre_always
-
-    #processing all blocks retrieved from db
-    self.run  = run
-
-    #postprocessing
-    self.post = post
+    _result = app.exec_query(_total_query)
 
 class timer:
   def __init__(self, message):

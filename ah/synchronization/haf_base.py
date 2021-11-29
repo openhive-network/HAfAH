@@ -6,7 +6,7 @@ from signal import signal, SIGINT, SIGTERM
 from collections import deque
 
 from haf_sql import haf_sql
-from haf_utilities import range_type, args_container, helper, callback_handler, timer
+from haf_utilities import range_type, args_container, helper, timer
 
 LOG_LEVEL = logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
