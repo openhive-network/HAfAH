@@ -6,8 +6,10 @@ import os
 import json
 import re
 
-from haf_utilities import helper
+from haf_utilities import helper, range_type
 from haf_base import application
+
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # convert special chars into their octal formats recognized by sql
 SPECIAL_CHARS = {
@@ -56,15 +58,16 @@ def escape_characters(text):
     ret = ret + "'"
     return ret
 
-class callback_handler_account_creation_fee_follower:
+class callback_handler_account_creation_fee_follower_threads:
 
-  def __init__(self):
+  def __init__(self, threads):
     self.app            = None
+    self.threads        = threads
 
     #SQL queries
     self.create_history_table = '''
-      CREATE SCHEMA IF NOT EXISTS fee_follower;
-      CREATE TABLE IF NOT EXISTS fee_follower.fee_history
+      CREATE SCHEMA IF NOT EXISTS fee_follower_threads;
+      CREATE TABLE IF NOT EXISTS fee_follower_threads.fee_history
       (
         block_num INTEGER NOT NULL,
         witness_id INTEGER NOT NULL,
@@ -73,13 +76,13 @@ class callback_handler_account_creation_fee_follower:
     '''
 
     self.insert_into_history = []
-    self.insert_into_history.append( "INSERT INTO fee_follower.fee_history(block_num, witness_id, fee) SELECT T.block_num, A.id, T.fee FROM ( VALUES" )
+    self.insert_into_history.append( "INSERT INTO fee_follower_threads.fee_history(block_num, witness_id, fee) SELECT T.block_num, A.id, T.fee FROM ( VALUES" )
     self.insert_into_history.append( " ( {}, '{}', {} )" )
-    self.insert_into_history.append( " ) T(block_num, witness_name, fee) JOIN hive.fee_follower_app_accounts_view A ON T.witness_name = A.name;" )
+    self.insert_into_history.append( " ) T(block_num, witness_name, fee) JOIN hive.fee_follower_threads_app_accounts_view A ON T.witness_name = A.name;" )
 
     self.get_witness_updates = '''
       SELECT block_num, body
-      FROM hive.fee_follower_app_operations_view o
+      FROM hive.fee_follower_threads_app_operations_view o
       JOIN hive.operation_types ot ON o.op_type_id = ot.id
       WHERE ot.name = 'hive::protocol::witness_update_operation' AND block_num >= {} and block_num <= {}
     '''
@@ -98,10 +101,34 @@ class callback_handler_account_creation_fee_follower:
   def pre_always(self):
     pass
 
-  def run(self, low_block, high_block):
-    helper.info("processing incoming data: (RUN phase)")
-    self.checker()
+  def prepare_ranges(self, low_value, high_value, threads):
+    assert threads > 0 and threads <= 64, "threads > 0 and threads <= 64"
 
+    if threads == 1:
+      return [ range_type(low_value, high_value) ]
+
+    #It's better to send small amount of data in only 1 thread. More threads introduce unnecessary complexity.
+    #Beside, if (high_value - low_value) < threads, it's impossible to spread data amongst threads in reasonable way.
+    _thread_threshold = 500
+    if high_value - low_value + 1 <= _thread_threshold:
+      return [ range_type(low_value, high_value) ]
+
+    _ranges = []
+    _size = int(( high_value - low_value + 1 ) / threads)
+
+    for i in range(threads):
+      if i == 0:
+        _ranges.append(range_type(low_value, low_value + _size))
+      else:
+        _low = _ranges[i - 1].high + 1
+        _ranges.append(range_type(_low, _low + _size))
+
+    assert len(_ranges) > 0
+    _ranges[len(_ranges) - 1].high = high_value
+
+    return _ranges
+
+  def run_in_thread(self, low_block, high_block):
     _query = self.get_witness_updates.format(low_block, high_block)
     _result = self.app.exec_query_all(_query)
 
@@ -128,6 +155,21 @@ class callback_handler_account_creation_fee_follower:
 
     helper.execute_complex_query(self.app, _values, self.insert_into_history)
 
+  def run(self, low_block, high_block):
+    helper.info("processing incoming data: (RUN phase)")
+    self.checker()
+
+    _ranges = self.prepare_ranges(low_block, high_block, self.threads)
+
+    _futures = []
+    with ThreadPoolExecutor(max_workers=len(_ranges)) as executor:
+      for range in _ranges:
+        helper.info("new thread created for a range: {}:{}", range.low, range.high)
+        _futures.append(executor.submit(self.run_in_thread, range.low, range.high))
+
+    for future in as_completed(_futures):
+      future.result()
+
   def post(self): 
     pass
 
@@ -138,17 +180,18 @@ def process_arguments():
   #./haf_base.py -p postgresql://LOGIN:PASSWORD@127.0.0.1:5432/DB_NAME --range-blocks 40000
   parser.add_argument("--url", type = str, help = "postgres connection string for AH database")
   parser.add_argument("--range-blocks", type = int, default = 1000, help = "Number of blocks processed at once")
+  parser.add_argument("--threads", type = int, default = 2, help = "Number of threads used for processing")
 
   _args = parser.parse_args()
 
-  return _args.url, _args.range_blocks
+  return _args.url, _args.range_blocks, _args.threads
 
 def main():
 
-  _url, _range_blocks = process_arguments()
+  _url, _range_blocks, _threads = process_arguments()
 
-  _callbacks      = callback_handler_account_creation_fee_follower()
-  _app            = application(_url, _range_blocks, "fee_follower_app", _callbacks)
+  _callbacks      = callback_handler_account_creation_fee_follower_threads(_threads)
+  _app            = application(_url, _range_blocks, "fee_follower_threads_app", _callbacks)
   _callbacks.app  = _app
 
   _app.process()

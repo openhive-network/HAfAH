@@ -22,9 +22,9 @@ class haf_query:
 
 class haf_sql:
   def __init__(self, application_context):
-    helper.log("Initialization of a new database connection...")
+    helper.info("Initialization of a new database connection...")
     self.db         = Db(helper.args.url, "root db creation")
-    helper.log("The database has been connected...")
+    helper.info("The database has been connected...")
 
     self.text_query = haf_query(application_context)
 
@@ -88,7 +88,7 @@ class haf_sql:
     _is_attached = self.exec_context_is_attached()
 
     if _is_attached == force_attach:
-      helper.log("Context is {} already", "attached" if _is_attached else "detached")
+      helper.info("Context is {} already", "attached" if _is_attached else "detached")
       return
 
     if force_attach:

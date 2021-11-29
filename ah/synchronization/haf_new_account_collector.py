@@ -11,7 +11,6 @@ from haf_base import application
 class callback_handler_accounts:
   
   def __init__(self):
-    self.logger = None
     self.app    = None
 
     #SQL queries
@@ -42,11 +41,10 @@ class callback_handler_accounts:
     ''' )
 
   def checker(self):
-    assert self.logger is not None, "a logger must be initialized"
     assert self.app is not None, "an app must be initialized"
 
   def pre_none_ctx(self):
-    self.logger.info("Creation SQL tables: (PRE-NON-CTX phase)")
+    helper.info("Creation SQL tables: (PRE-NON-CTX phase)")
     self.checker()
     _result = self.app.exec_query(self.create_creator_account_table)
 
@@ -57,13 +55,13 @@ class callback_handler_accounts:
     pass
 
   def run(self, low_block, high_block):
-    self.logger.info("processing incoming data: (RUN phase)")
+    helper.info("processing incoming data: (RUN phase)")
     self.checker()
 
     _query = self.get_accounts.format(low_block, high_block)
     _result = self.app.exec_query_all(_query)
 
-    self.logger.info("For blocks {}:{} found {} new accounts".format(low_block, high_block, len(_result)))
+    helper.info("For blocks {}:{} found {} new accounts".format(low_block, high_block, len(_result)))
 
     _values = []
     for record in _result:

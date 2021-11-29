@@ -9,10 +9,9 @@ import re
 from haf_utilities import helper
 from haf_base import application
 
-class callback_handler_memo_scanner:
+class callback_handler_memo_scanner():
 
   def __init__(self, searched_item):
-    self.logger         = None
     self.app            = None
     self.searched_item  = searched_item
 
@@ -42,11 +41,10 @@ class callback_handler_memo_scanner:
     '''
 
   def checker(self):
-    assert self.logger is not None, "a logger must be initialized"
     assert self.app is not None, "an app must be initialized"
 
   def pre_none_ctx(self):
-    self.logger.info("Creation SQL tables: (PRE-NON-CTX phase)")
+    helper.info("Creation SQL tables: (PRE-NON-CTX phase)")
     self.checker()
     _result = self.app.exec_query(self.create_memo_table.format(self.app.app_context))
 
@@ -57,14 +55,14 @@ class callback_handler_memo_scanner:
     pass
 
   def run(self, low_block, high_block):
-    self.logger.info("processing incoming data: (RUN phase)")
+    helper.info("processing incoming data: (RUN phase)")
     self.checker()
 
     _query = self.get_transfers.format(low_block, high_block)
     _result = self.app.exec_query_all(_query)
 
     _values = []
-    self.logger.info("For blocks {}:{} found {} transfers".format(low_block, high_block, len(_result)))
+    helper.info("For blocks {}:{} found {} transfers".format(low_block, high_block, len(_result)))
     for record in _result:
       _op = json.loads(record[3])
       if 'value' in _op and 'memo' in _op['value']:
@@ -74,6 +72,9 @@ class callback_handler_memo_scanner:
           _values.append(self.insert_into_memos[1].format(record[0], record[1], record[2], _memo))
 
     helper.execute_complex_query(self.app, _values, self.insert_into_memos)
+
+  def post(self): 
+    pass
 
 def process_arguments():
   import argparse

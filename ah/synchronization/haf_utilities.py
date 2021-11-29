@@ -15,16 +15,21 @@ class helper:
   logger  = None
 
   @staticmethod
-  def log(info, *args):
+  def info(msg, *args):
     if helper.logger is not None:
-      helper.logger.info(info.format(*args))
+      helper.logger.info(msg.format(*args))
+
+  @staticmethod
+  def error(msg, *args):
+    if helper.logger is not None:
+      helper.logger.error(msg.format(*args))
 
   @staticmethod
   def display_query(query):
     if len(query) > 100:
-      helper.log("{}...", query[0:100])
+      helper.info("{}...", query[0:100])
     else:
-      helper.log("{}", query)
+      helper.info("{}", query)
 
   @staticmethod
   def execute_complex_query(app, values, q_parts):
@@ -53,4 +58,4 @@ class timer:
 
   def __exit__(self, *args, **kwargs):
     self.time = int((perf_counter() - self.start)*1000)
-    helper.log(self.message.format(self.time))
+    helper.info(self.message.format(self.time))

@@ -42,6 +42,8 @@ class haf_base:
     self.sql            = sql
     self.callbacks      = callbacks
 
+    helper.logger = logger
+
   def interrupt(self):
     if not self.is_interrupted():
       self.interrupted = True
@@ -49,7 +51,7 @@ class haf_base:
   def is_interrupted(self):
     _result = self.interrupted
     if _result:
-      helper.log("An application has been interrupted")
+      helper.info("An application has been interrupted")
     return _result
 
   def raise_exception(self, source_exception):
@@ -75,7 +77,7 @@ class haf_base:
           self.callbacks.pre_always()
         return True
     except Exception as ex:
-      logger.error("`preprocess` method exception: {0}".format(ex))
+      helper.error("`preprocess` method exception: {0}", ex)
       self.raise_exception(ex)
 
   def get_blocks(self):
@@ -96,19 +98,19 @@ class haf_base:
           _record = _range_blocks[0]
 
           if _record[0] is None or _record[1] is None:
-            logger.info("Values in range blocks have NULL")
+            helper.info("Values in range blocks have NULL")
             return None, None
           else:
             _first_block  = int(_record[0])
             _last_block   = int(_record[1])
 
-          helper.log("first block: {} last block: {}", _first_block, _last_block)
+          helper.info("first block: {} last block: {}", _first_block, _last_block)
           return _first_block, _last_block
         else:
-          helper.log("Range blocks is returned empty")
+          helper.info("Range blocks is returned empty")
           return None, None
     except Exception as ex:
-      logger.error("`get_blocks` method exception: {0}".format(ex))
+      helper.error("`get_blocks` method exception: {0}", ex)
       self.raise_exception(ex)
 
   def fill_block_ranges(self, first_block, last_block):
@@ -130,7 +132,7 @@ class haf_base:
 
         return True
     except Exception as ex:
-      logger.error("`fill_block_ranges` method exception: {0}".format(ex))
+      helper.error("`fill_block_ranges` method exception: {0}", ex)
       self.raise_exception(ex)
 
   def work(self):
@@ -155,7 +157,7 @@ class haf_base:
 
         return True
     except Exception as ex:
-      logger.error("`work` method exception: {0}".format(ex))
+      helper.error("`work` method exception: {0}", ex)
       self.raise_exception(ex)
 
   def run_impl(self):
@@ -183,7 +185,7 @@ class haf_base:
 
         return True
     except Exception as ex:
-      logger.error("`run_impl` method exception: {0}".format(ex))
+      helper.error("`run_impl` method exception: {0}", ex)
       self.raise_exception(ex)
 
   def postprocess(self):
@@ -197,7 +199,7 @@ class haf_base:
 
         return True
     except Exception as ex:
-      logger.error("`postprocess` method exception: {0}".format(ex))
+      helper.error("`postprocess` method exception: {0}", ex)
       self.raise_exception(ex)
 
   def run(self):
@@ -215,17 +217,17 @@ class haf_base:
         if not _result:
           return False
       except Exception as ex:
-        logger.error("`run` method exception: {0}".format(ex))
+        helper.error("`run` method exception: {0}", ex)
         self.raise_exception(ex)
 
 def shutdown_properly(signal, frame):
-  logger.info("Closing. Wait...")
+  helper.info("Closing. Wait...")
 
   global app
   assert app is not None, "an application must be initialized"
   app.interrupt()
 
-  logger.info("Interrupted...")
+  helper.info("Interrupted...")
 
 old_sig_int_handler = None
 old_sig_term_handler = None
@@ -266,20 +268,16 @@ class application:
 
         set_handlers()
 
-        helper.logger = logger
         helper.args   = args_container(self.url, self.range_blocks)
 
         self.base           = haf_base()
         self.base.sql       = haf_sql(self.app_context)
         self.base.callbacks = self.callback_handler
 
-        if self.base.callbacks is not None and helper.logger is not None:
-          self.base.callbacks.logger = helper.logger
-
         result = self.base.run()
 
         restore_handlers()
 
     except Exception as ex:
-      logger.error("`process` method exception: {0}".format(ex))
+      helper.error("`process` method exception: {0}", ex)
       exit(1)
