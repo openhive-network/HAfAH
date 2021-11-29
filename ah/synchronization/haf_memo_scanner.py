@@ -46,19 +46,18 @@ class callback_handler_memo_scanner:
     assert self.app is not None, "an app must be initialized"
 
   def pre_none_ctx(self):
+    self.logger.info("Creation SQL tables: (PRE-NON-CTX phase)")
     self.checker()
     _result = self.app.exec_query(self.create_memo_table.format(self.app.app_context))
-    self.logger.info("Nothing to do: *****PRE-NONE-CTX*****")
 
   def pre_is_ctx(self):
-    self.checker()
-    self.logger.info("Nothing to do: *****PRE-IS-CTX*****")
+    pass
 
   def pre_always(self):
-    self.checker()
-    self.logger.info("Nothing to do: *****PRE-ALWAYS*****")
+    pass
 
   def run(self, low_block, high_block):
+    self.logger.info("processing incoming data: (RUN phase)")
     self.checker()
 
     _query = self.get_transfers.format(low_block, high_block)
@@ -75,16 +74,12 @@ class callback_handler_memo_scanner:
           _values.append(self.insert_into_memos[1].format(record[0], record[1], record[2], _memo))
 
     helper.execute_complex_query(self.app, _values, self.insert_into_memos)
-  
-  def post(self):
-    self.checker()
-    self.logger.info("Nothing to do: *****POST*****")
 
 def process_arguments():
   import argparse
   parser = argparse.ArgumentParser()
 
-  #./haf_base.py -p postgresql://LOGIN:PASSWORD@127.0.0.1:5432/DB_NAME --range-blocks 40000
+  #./haf_base.py -p postgresql://LOGIN:PASSWORD@127.0.0.1:5432/DB_NAME --range-blocks 40000 --searched-item "bittrex"
   parser.add_argument("--url", type = str, help = "postgres connection string for AH database")
   parser.add_argument("--range-blocks", type = int, default = 1000, help = "Number of blocks processed at once")
   parser.add_argument("--searched-item", type = str, required = True, help = "Part of memo that should be found")

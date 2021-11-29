@@ -46,19 +46,18 @@ class callback_handler_accounts:
     assert self.app is not None, "an app must be initialized"
 
   def pre_none_ctx(self):
+    self.logger.info("Creation SQL tables: (PRE-NON-CTX phase)")
     self.checker()
     _result = self.app.exec_query(self.create_creator_account_table)
-    self.logger.info("Nothing to do: *****PRE-NONE-CTX*****")
 
   def pre_is_ctx(self):
-    self.checker()
-    self.logger.info("Nothing to do: *****PRE-IS-CTX*****")
+    pass
 
   def pre_always(self):
-    self.checker()
-    self.logger.info("Nothing to do: *****PRE-ALWAYS*****")
+    pass
 
   def run(self, low_block, high_block):
+    self.logger.info("processing incoming data: (RUN phase)")
     self.checker()
 
     _query = self.get_accounts.format(low_block, high_block)
@@ -83,9 +82,8 @@ class callback_handler_accounts:
 
     helper.execute_complex_query(self.app, _values, self.insert_into_history)
 
-  def post(self):
-    self.checker()
-    self.logger.info("Nothing to do: *****POST*****")
+  def post(self): 
+    pass
 
 def process_arguments():
   import argparse
