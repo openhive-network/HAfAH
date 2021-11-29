@@ -64,23 +64,23 @@ class callback_handler_account_creation_fee_follower:
 
     #SQL queries
     self.create_history_table = '''
-      CREATE SCHEMA IF NOT EXISTS account_creation_fee_follower;
-      CREATE TABLE IF NOT EXISTS account_creation_fee_follower.fee_history
+      CREATE SCHEMA IF NOT EXISTS fee_follower;
+      CREATE TABLE IF NOT EXISTS fee_follower.fee_history
       (
         block_num INTEGER NOT NULL,
         witness_id INTEGER NOT NULL,
         fee VARCHAR(200) NOT NULL
-      )INHERITS( hive.account_creation_fee_follower_app );
+      )INHERITS( hive.{} );
     '''
 
     self.insert_into_history = []
-    self.insert_into_history.append( "INSERT INTO account_creation_fee_follower.fee_history(block_num, witness_id, fee) SELECT T.block_num, A.id, T.fee FROM ( VALUES" )
+    self.insert_into_history.append( "INSERT INTO fee_follower.fee_history(block_num, witness_id, fee) SELECT T.block_num, A.id, T.fee FROM ( VALUES" )
     self.insert_into_history.append( " ( {}, '{}', {} )" )
-    self.insert_into_history.append( " ) T(block_num, witness_name, fee) JOIN hive.accounts A ON T.witness_name = A.name;" )
+    self.insert_into_history.append( " ) T(block_num, witness_name, fee) JOIN hive.fee_follower_app_accounts_view A ON T.witness_name = A.name;" )
 
     self.get_witness_updates = '''
       SELECT block_num, body
-      FROM hive.operations o
+      FROM hive.fee_follower_app_operations_view o
       JOIN hive.operation_types ot ON o.op_type_id = ot.id
       WHERE ot.name = 'hive::protocol::witness_update_operation' AND block_num >= {} and block_num <= {}
     '''
@@ -91,7 +91,7 @@ class callback_handler_account_creation_fee_follower:
 
   def pre_none_ctx(self):
     self.checker()
-    _result = self.app.exec_query(self.create_history_table)
+    _result = self.app.exec_query(self.create_history_table.format(self.app.app_context))
     self.logger.info("Nothing to do: *****PRE-NONE-CTX*****")
 
   def pre_is_ctx(self):
@@ -152,7 +152,7 @@ def main():
   _url, _range_blocks = process_arguments()
 
   _callbacks      = callback_handler_account_creation_fee_follower()
-  _app            = application(_url, _range_blocks, "account_creation_fee_follower_app", _callbacks)
+  _app            = application(_url, _range_blocks, "fee_follower_app", _callbacks)
   _callbacks.app  = _app
 
   _app.process()

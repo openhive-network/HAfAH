@@ -24,7 +24,7 @@ class callback_handler_memo_scanner:
         trx_in_block INTEGER NOT NULL,
         op_pos INTEGER NOT NULL,
         memo_content VARCHAR(512) NOT NULL
-      )INHERITS( hive.memo_scanner_app );
+      )INHERITS( hive.{} );
 
       ALTER TABLE memo_scanner.memos ADD CONSTRAINT memos_pkey PRIMARY KEY ( block_num, trx_in_block, op_pos );
     '''
@@ -36,7 +36,7 @@ class callback_handler_memo_scanner:
 
     self.get_transfers = '''
       SELECT block_num, trx_in_block, op_pos, body
-      FROM hive.operations o
+      FROM hive.memo_scanner_app_operations_view o
       JOIN hive.operation_types ot ON o.op_type_id = ot.id
       WHERE ot.name = 'hive::protocol::transfer_operation' AND block_num >= {} and block_num <= {}
     '''
@@ -47,7 +47,7 @@ class callback_handler_memo_scanner:
 
   def pre_none_ctx(self):
     self.checker()
-    _result = self.app.exec_query(self.create_memo_table)
+    _result = self.app.exec_query(self.create_memo_table.format(self.app.app_context))
     self.logger.info("Nothing to do: *****PRE-NONE-CTX*****")
 
   def pre_is_ctx(self):

@@ -16,8 +16,8 @@ class callback_handler_accounts:
 
     #SQL queries
     self.create_creator_account_table = '''
-      CREATE SCHEMA IF NOT EXISTS creator_account;
-      CREATE TABLE IF NOT EXISTS creator_account.creation_history
+      CREATE SCHEMA IF NOT EXISTS new_accounts;
+      CREATE TABLE IF NOT EXISTS new_accounts.creation_history
       (
         block_num INTEGER NOT NULL,
         creator_id INTEGER DEFAULT NULL,
@@ -27,18 +27,18 @@ class callback_handler_accounts:
 
     self.get_accounts = '''
       SELECT block_num, body
-      FROM hive.operations o
+      FROM hive.new_accounts_app_operations_view o
       JOIN hive.operation_types ot ON o.op_type_id = ot.id
       WHERE ot.name = 'hive::protocol::account_created_operation' AND block_num >= {} and block_num <= {}
     '''
 
     self.insert_into_history = []
-    self.insert_into_history.append( "INSERT INTO creator_account.creation_history(block_num, creator_id, account_id) SELECT T.block_num, C.id, A.id FROM ( VALUES" )
+    self.insert_into_history.append( "INSERT INTO new_accounts.creation_history(block_num, creator_id, account_id) SELECT T.block_num, C.id, A.id FROM ( VALUES" )
     self.insert_into_history.append( " ( {}, '{}', '{}' )" )
     self.insert_into_history.append( '''
       ) T(block_num, creator, new_account)
-      LEFT JOIN hive.accounts C ON T.creator = C.name
-      JOIN hive.accounts A ON T.new_account = A.name
+      LEFT JOIN hive.new_accounts_app_accounts_view C ON T.creator = C.name
+      JOIN hive.new_accounts_app_accounts_view A ON T.new_account = A.name
     ''' )
 
   def checker(self):
