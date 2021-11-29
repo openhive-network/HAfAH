@@ -58,28 +58,30 @@ def escape_characters(text):
 
 class callback_handler_account_creation_fee_follower:
 
-  def __init__(self):
-    self.app            = None
+  def __init__(self, schema_name):
+    self.app    = None
+    self.schema_name = schema_name
 
+  def prepare_sql(self):
     #SQL queries
     self.create_history_table = '''
-      CREATE SCHEMA IF NOT EXISTS fee_follower;
-      CREATE TABLE IF NOT EXISTS fee_follower.fee_history
+      CREATE SCHEMA IF NOT EXISTS {};
+      CREATE TABLE IF NOT EXISTS {}.fee_history
       (
         block_num INTEGER NOT NULL,
         witness_id INTEGER NOT NULL,
         fee VARCHAR(200) NOT NULL
       )INHERITS( hive.{} );
-    '''
+    '''.format(self.schema_name, self.schema_name, self.app.app_context)
 
     self.insert_into_history = []
-    self.insert_into_history.append( "INSERT INTO fee_follower.fee_history(block_num, witness_id, fee) SELECT T.block_num, A.id, T.fee FROM ( VALUES" )
+    self.insert_into_history.append( "INSERT INTO {}.fee_history(block_num, witness_id, fee) SELECT T.block_num, A.id, T.fee FROM ( VALUES".format(self.schema_name) )
     self.insert_into_history.append( " ( {}, '{}', {} )" )
-    self.insert_into_history.append( " ) T(block_num, witness_name, fee) JOIN hive.fee_follower_app_accounts_view A ON T.witness_name = A.name;" )
+    self.insert_into_history.append( " ) T(block_num, witness_name, fee) JOIN hive.{}_accounts_view A ON T.witness_name = A.name;".format(self.app.app_context) )
 
     self.get_witness_updates = '''
       SELECT block_num, body
-      FROM hive.fee_follower_app_operations_view o
+      FROM hive.{}_operations_view o
       JOIN hive.operation_types ot ON o.op_type_id = ot.id
       WHERE ot.name = 'hive::protocol::witness_update_operation' AND block_num >= {} and block_num <= {}
     '''
@@ -90,7 +92,9 @@ class callback_handler_account_creation_fee_follower:
   def pre_none_ctx(self):
     helper.info("Creation SQL tables: (PRE-NON-CTX phase)")
     self.checker()
-    _result = self.app.exec_query(self.create_history_table.format(self.app.app_context))
+
+    self.prepare_sql()
+    _result = self.app.exec_query(self.create_history_table)
 
   def pre_is_ctx(self):
     pass
@@ -98,11 +102,8 @@ class callback_handler_account_creation_fee_follower:
   def pre_always(self):
     pass
 
-  def run(self, low_block, high_block):
-    helper.info("processing incoming data: (RUN phase)")
-    self.checker()
-
-    _query = self.get_witness_updates.format(low_block, high_block)
+  def run_impl(self, low_block, high_block):
+    _query = self.get_witness_updates.format(self.app.app_context, low_block, high_block)
     _result = self.app.exec_query_all(_query)
 
     _values = []
@@ -128,6 +129,12 @@ class callback_handler_account_creation_fee_follower:
 
     helper.execute_complex_query(self.app, _values, self.insert_into_history)
 
+  def run(self, low_block, high_block):
+    helper.info("processing incoming data: (RUN phase)")
+    self.checker()
+
+    self.run_impl(low_block, high_block)
+
   def post(self): 
     pass
 
@@ -147,8 +154,10 @@ def main():
 
   _url, _range_blocks = process_arguments()
 
-  _callbacks      = callback_handler_account_creation_fee_follower()
-  _app            = application(_url, _range_blocks, "fee_follower_app", _callbacks)
+  _schema_name = "fee_follower"
+
+  _callbacks      = callback_handler_account_creation_fee_follower(_schema_name)
+  _app            = application(_url, _range_blocks, _schema_name + "_app", _callbacks)
   _callbacks.app  = _app
 
   _app.process()
