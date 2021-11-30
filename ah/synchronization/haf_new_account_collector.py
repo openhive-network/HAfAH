@@ -1,11 +1,9 @@
 #!/usr/bin/python3
 
-#Getting data [block_number;creator;new_account]
-
 import os
 import json
 
-from haf_utilities import helper
+from haf_utilities import helper, argument_parser
 from haf_base import application
 
 class callback_handler_accounts:
@@ -87,26 +85,14 @@ class callback_handler_accounts:
   def post(self): 
     pass
 
-def process_arguments():
-  import argparse
-  parser = argparse.ArgumentParser()
-
-  #./haf_base.py -p postgresql://LOGIN:PASSWORD@127.0.0.1:5432/DB_NAME --range-blocks 40000
-  parser.add_argument("--url", type = str, help = "postgres connection string for AH database")
-  parser.add_argument("--range-blocks", type = int, default = 1000, help = "Number of blocks processed at once")
-
-  _args = parser.parse_args()
-
-  return _args.url, _args.range_blocks
-
 def main():
-
-  _url, _range_blocks= process_arguments()
+  _parser = argument_parser()
+  _parser.parse()
 
   _schema_name = "new_accounts"
 
   _callbacks      = callback_handler_accounts(_schema_name)
-  _app            = application(_url, _range_blocks, _schema_name + "_app", _callbacks)
+  _app            = application(_parser.get_url(), _parser.get_range_blocks(), _schema_name + "_app", _callbacks)
   _callbacks.app  = _app
 
   _app.process()

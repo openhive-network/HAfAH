@@ -1,4 +1,19 @@
 from time import perf_counter
+import argparse
+
+# convert special chars into their octal formats recognized by sql
+SPECIAL_CHARS = {
+    "\x00" : " ", # nul char cannot be stored in string column (ABW: if we ever find the need to store nul chars we'll need bytea, not text)
+    "\r" : "\\015",
+    "\n" : "\\012",
+    "\v" : "\\013",
+    "\f" : "\\014",
+    "\\" : "\\134",
+    "'" : "\\047",
+    "%" : "\\045",
+    "_" : "\\137",
+    ":" : "\\072"
+}
 
 class range_type:
   def __init__(self, low, high):
@@ -47,6 +62,40 @@ class helper:
 
     _result = app.exec_query(_total_query)
 
+  @staticmethod
+  def escape_characters(text):
+      """ Escape special charactes """
+      assert isinstance(text, str), "Expected string got: {}".format(type(text))
+      if len(text.strip()) == 0:
+          return "'" + text + "'"
+
+      ret = "E'"
+
+      for ch in text:
+          if ch in SPECIAL_CHARS:
+              dw = SPECIAL_CHARS[ch]
+              ret = ret + dw
+          else:
+              ordinal = ord(ch)
+              if ordinal <= 0x80 and ch.isprintable():
+                  ret = ret + ch
+              else:
+                  hexstr = hex(ordinal)[2:]
+                  i = len(hexstr)
+                  max = 4
+                  escaped_value = '\\u'
+                  if i > max:
+                      max = 8
+                      escaped_value = '\\U'
+                  while i < max:
+                      escaped_value += '0'
+                      i += 1
+                  escaped_value += hexstr
+                  ret = ret + escaped_value
+
+      ret = ret + "'"
+      return ret
+
 class timer:
   def __init__(self, message):
     self.message  = message
@@ -59,3 +108,23 @@ class timer:
   def __exit__(self, *args, **kwargs):
     self.time = int((perf_counter() - self.start)*1000)
     helper.info(self.message.format(self.time))
+
+class argument_parser:
+  def __init__(self):
+    self.args   = None
+    self.parser = argparse.ArgumentParser()
+    self.add_basic_arguments()
+
+  def add_basic_arguments(self):
+    #./haf_base.py -p postgresql://LOGIN:PASSWORD@127.0.0.1:5432/DB_NAME --range-blocks 40000
+    self.parser.add_argument("--url", type = str, help = "postgres connection string for AH database")
+    self.parser.add_argument("--range-blocks", type = int, default = 1000, help = "Number of blocks processed at once")
+
+  def parse(self):
+    self.args = self.parser.parse_args()
+
+  def get_url(self):
+    return self.args.url
+
+  def get_range_blocks(self):
+    return self.args.range_blocks

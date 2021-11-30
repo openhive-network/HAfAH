@@ -6,7 +6,7 @@ import os
 import json
 import re
 
-from haf_utilities import helper
+from haf_utilities import helper, argument_parser
 from haf_base import application
 
 class callback_handler_memo_scanner():
@@ -80,27 +80,22 @@ class callback_handler_memo_scanner():
   def post(self): 
     pass
 
-def process_arguments():
-  import argparse
-  parser = argparse.ArgumentParser()
+class argument_parser_ex(argument_parser):
+  def __init__(self):
+    super().__init__()
+    self.parser.add_argument("--searched-item", type = str, required = True, help = "Part of memo that should be found")
 
-  #./haf_base.py -p postgresql://LOGIN:PASSWORD@127.0.0.1:5432/DB_NAME --range-blocks 40000 --searched-item "bittrex"
-  parser.add_argument("--url", type = str, help = "postgres connection string for AH database")
-  parser.add_argument("--range-blocks", type = int, default = 1000, help = "Number of blocks processed at once")
-  parser.add_argument("--searched-item", type = str, required = True, help = "Part of memo that should be found")
-
-  _args = parser.parse_args()
-
-  return _args.url, _args.range_blocks, _args.searched_item
+  def get_searched_item(self):
+    return self.args.searched_item
 
 def main():
-
-  _url, _range_blocks, searched_item = process_arguments()
+  _parser = argument_parser_ex()
+  _parser.parse()
 
   _schema_name = "memo_scanner"
 
-  _callbacks      = callback_handler_memo_scanner(searched_item, _schema_name)
-  _app            = application(_url, _range_blocks, _schema_name + "_app", _callbacks)
+  _callbacks      = callback_handler_memo_scanner(_parser.get_searched_item(), _schema_name)
+  _app            = application(_parser.get_url(), _parser.get_range_blocks(), _schema_name + "_app", _callbacks)
   _callbacks.app  = _app
 
   _app.process()

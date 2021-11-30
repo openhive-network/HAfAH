@@ -6,7 +6,7 @@ import os
 import json
 import re
 
-from haf_utilities import helper, range_type
+from haf_utilities import helper, range_type, argument_parser
 from haf_base import application
 
 from haf_account_creation_fee_follower import callback_handler_account_creation_fee_follower
@@ -74,27 +74,22 @@ class callback_handler_account_creation_fee_follower_threads(callback_handler_ac
   def post(self): 
     super().post()
 
-def process_arguments():
-  import argparse
-  parser = argparse.ArgumentParser()
+class argument_parser_ex(argument_parser):
+  def __init__(self):
+    super().__init__()
+    self.parser.add_argument("--threads", type = int, default = 2, help = "Number of threads used for processing")
 
-  #./haf_base.py -p postgresql://LOGIN:PASSWORD@127.0.0.1:5432/DB_NAME --range-blocks 40000
-  parser.add_argument("--url", type = str, help = "postgres connection string for AH database")
-  parser.add_argument("--range-blocks", type = int, default = 1000, help = "Number of blocks processed at once")
-  parser.add_argument("--threads", type = int, default = 2, help = "Number of threads used for processing")
-
-  _args = parser.parse_args()
-
-  return _args.url, _args.range_blocks, _args.threads
+  def get_threads(self):
+    return self.args.threads
 
 def main():
-
-  _url, _range_blocks, _threads = process_arguments()
+  _parser = argument_parser_ex()
+  _parser.parse()
 
   _schema_name = "fee_follower_threads"
 
-  _callbacks      = callback_handler_account_creation_fee_follower_threads(_threads, _schema_name)
-  _app            = application(_url, _range_blocks, _schema_name + "_app", _callbacks)
+  _callbacks      = callback_handler_account_creation_fee_follower_threads(_parser.get_threads(), _schema_name)
+  _app            = application(_parser.get_url(), _parser.get_range_blocks(), _schema_name + "_app", _callbacks)
   _callbacks.app  = _app
 
   _app.process()
