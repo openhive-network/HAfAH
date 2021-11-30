@@ -28,11 +28,10 @@ if not logger.hasHandlers():
   logger.addHandler(ch)
   logger.addHandler(fh)
 
-app = None
+INTERRUPTED = False
 
 class haf_base:
   def __init__(self, sql = None, callbacks = None):
-    self.interrupted    = False
     self.is_massive     = False
 
     self.last_block_num = 0
@@ -44,12 +43,8 @@ class haf_base:
 
     helper.logger = logger
 
-  def interrupt(self):
-    if not self.is_interrupted():
-      self.interrupted = True
-
   def is_interrupted(self):
-    _result = self.interrupted
+    _result = INTERRUPTED
     if _result:
       helper.info("An application has been interrupted")
     return _result
@@ -223,9 +218,8 @@ class haf_base:
 def shutdown_properly(signal, frame):
   helper.info("Closing. Wait...")
 
-  global app
-  assert app is not None, "an application must be initialized"
-  app.interrupt()
+  global INTERRUPTED
+  INTERRUPTED = True
 
   helper.info("Interrupted...")
 
