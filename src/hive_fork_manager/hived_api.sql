@@ -154,6 +154,58 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.disable_indexes_of_reversible()
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'blocks_reversible' );
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'transactions_reversible' );
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'transactions_multisig_reversible' );
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'operations_reversible' );
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'accounts_reversible' );
+    PERFORM hive.save_and_drop_indexes_foreign_keys( 'hive', 'account_operations_reversible' );
+
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.blocks_reversible' );
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.transactions_reversible' );
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.transactions_multisig_reversible' );
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.operations_reversible' );
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.accounts_reversible' );
+    PERFORM hive.save_and_drop_indexes_constraints( 'hive.account_operations_reversible' );
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.enable_indexes_of_reversible()
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+    PERFORM hive.restore_indexes_constraints( 'hive.blocks_reversible' );
+    PERFORM hive.restore_indexes_constraints( 'hive.transactions_reversible' );
+    PERFORM hive.restore_indexes_constraints( 'hive.transactions_multisig_reversible' );
+    PERFORM hive.restore_indexes_constraints( 'hive.operations_reversible' );
+    PERFORM hive.restore_indexes_constraints( 'hive.irreversible_data_reversible' );
+    PERFORM hive.restore_indexes_constraints( 'hive.accounts_reversible' );
+    PERFORM hive.restore_indexes_constraints( 'hive.account_operations_reversible' );
+
+    PERFORM hive.restore_foreign_keys( 'hive.blocks_reversible' );
+    PERFORM hive.restore_foreign_keys( 'hive.transactions_reversible' );
+    PERFORM hive.restore_foreign_keys( 'hive.transactions_multisig_reversible' );
+    PERFORM hive.restore_foreign_keys( 'hive.operations_reversible' );
+    PERFORM hive.restore_foreign_keys( 'hive.irreversible_data_reversible' );
+    PERFORM hive.restore_foreign_keys( 'hive.accounts_reversible' );
+    PERFORM hive.restore_foreign_keys( 'hive.account_operations_reversible' );
+END;
+$BODY$
+;
+
+
+
 CREATE OR REPLACE FUNCTION hive.connect( _git_sha TEXT, _block_num hive.blocks.num%TYPE )
     RETURNS void
     LANGUAGE plpgsql
