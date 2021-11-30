@@ -165,17 +165,18 @@ class haf_base:
         if _first_block is None:
           return True
 
-        self.fill_block_ranges(_first_block, _last_block)
-
-        self.is_massive = _last_block - _first_block > 0
+        self.is_massive = _last_block - _first_block + 1 > helper.args.massive_threshold
+        helper.info("an application is in '{}' mode", "massive" if self.is_massive else "live")
 
         if self.is_massive:
+          self.fill_block_ranges(_first_block, _last_block)
           self.sql.detach_context()
 
           self.work()
 
           self.sql.attach_context(self.last_block_num if (self.last_block_num is not None) else 0)
         else:
+          self.fill_block_ranges(_first_block, _first_block)
           self.work()
 
         return True
@@ -237,9 +238,9 @@ def restore_handlers():
   signal(SIGTERM, old_sig_term_handler)
 
 class application:
-  def __init__(self, url, range_blocks, app_context, callback_handler):
-    self.url              =  url
-    self.range_blocks     =  range_blocks
+  def __init__(self, args, app_context, callback_handler):
+    helper.args           = args
+
     self.app_context      = app_context
     self.callback_handler = callback_handler
     self.base             = haf_base()
@@ -261,8 +262,6 @@ class application:
       with timer("TOTAL APPLICATION TIME[ms]: {}") as tm:
 
         set_handlers()
-
-        helper.args   = args_container(self.url, self.range_blocks)
 
         self.base           = haf_base()
         self.base.sql       = haf_sql(self.app_context)

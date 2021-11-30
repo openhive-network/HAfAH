@@ -21,9 +21,10 @@ class range_type:
     self.high = high
 
 class args_container:
-  def __init__(self, url = "", range_blocks = 1000):
-    self.url          = url
-    self.range_blocks = range_blocks
+  def __init__(self, url = "", range_blocks = 1000, massive_threshold = 1):
+    self.url                = url
+    self.range_blocks       = range_blocks
+    self.massive_threshold  = massive_threshold
 
 class helper:
   args    = None
@@ -119,6 +120,7 @@ class argument_parser:
     #./haf_base.py -p postgresql://LOGIN:PASSWORD@127.0.0.1:5432/DB_NAME --range-blocks 40000
     self.parser.add_argument("--url", type = str, help = "postgres connection string for AH database")
     self.parser.add_argument("--range-blocks", type = int, default = 1000, help = "Number of blocks processed at once")
+    self.parser.add_argument("--massive-threshold", type = int, default = 1, help = "Number of blocks GREATER THAN a massive threshold activates a massive mode")
 
   def parse(self):
     self.args = self.parser.parse_args()
@@ -128,3 +130,6 @@ class argument_parser:
 
   def get_range_blocks(self):
     return self.args.range_blocks
+
+  def get_massive_threshold(self):
+    return self.args.massive_threshold

@@ -3,7 +3,7 @@
 import os
 import json
 
-from haf_utilities import helper, argument_parser
+from haf_utilities import helper, argument_parser, args_container
 from haf_base import application
 
 class callback_handler_accounts:
@@ -92,7 +92,7 @@ def main():
   _schema_name = "new_accounts"
 
   _callbacks      = callback_handler_accounts(_schema_name)
-  _app            = application(_parser.get_url(), _parser.get_range_blocks(), _schema_name + "_app", _callbacks)
+  _app            = application(args_container(_parser.get_url(), _parser.get_range_blocks(), _parser.get_massive_threshold()), _schema_name + "_app", _callbacks)
   _callbacks.app  = _app
 
   _app.process()
