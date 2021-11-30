@@ -165,9 +165,9 @@ class Db:
         return first(row) if row else None
 
     def engine_name(self):
-        """Get the name of the engine (e.g. `postgresql`, `mysql`)."""
+        """Get the name of the engine (e.g. `postgresql`)."""
         _engine_name = self.get_dialect().name
-        if _engine_name not in ['postgresql', 'mysql']:
+        if _engine_name not in ['postgresql']:
             raise Exception("db engine %s not supported" % _engine_name)
         return _engine_name
 
@@ -220,11 +220,6 @@ class Db:
         return (sql, values)
 
     def _sql_text(self, sql, is_prepared):
-#        if sql in self._prep_sql:
-#            query = self._prep_sql[sql]
-#        else:
-#            query = sqlalchemy.text(sql).execution_options(autocommit=False)
-#            self._prep_sql[sql] = query
         if is_prepared:
           query = sql
         else:
