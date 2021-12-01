@@ -44,10 +44,7 @@ class haf_base:
     helper.logger = logger
 
   def is_interrupted(self):
-    _result = INTERRUPTED
-    if _result:
-      helper.info("An application has been interrupted")
-    return _result
+    return INTERRUPTED
 
   def raise_exception(self, source_exception):
     self.interrupt()
@@ -57,6 +54,7 @@ class haf_base:
     try:
       with timer("TOTAL PREPROCESS[ms]: {}") as tm:
         if self.is_interrupted():
+          helper.info("preprocessing has been interrupted")
           return False
 
         if not self.sql.exec_exists_context():
@@ -79,6 +77,7 @@ class haf_base:
     try:
       with timer("TOTAL GET BLOCKS[ms]: {}") as tm:
         if self.is_interrupted():
+          helper.info("getting blocks has been interrupted")
           return None, None
 
         _first_block = 0
@@ -112,6 +111,7 @@ class haf_base:
     try:
       with timer("TOTAL FILLING BLOCKS[ms]: {}") as tm:
         if self.is_interrupted():
+          helper.info("filling block ranges has been interrupted")
           return False
 
         if first_block == last_block:
@@ -134,10 +134,12 @@ class haf_base:
     try:
       with timer("TOTAL WORK[ms]: {}") as tm:
         if self.is_interrupted():
+          helper.info("`work` method has been interrupted")
           return False
 
         while len(self.block_ranges) > 0:
           if self.is_interrupted():
+            helper.info("main loop in `work` method has been interrupted")
             return False
 
           _item = self.block_ranges.popleft()
@@ -159,6 +161,7 @@ class haf_base:
     try:
       with timer("TOTAL RUN-IMPL[ms]: {}") as tm:
         if self.is_interrupted():
+          helper.info("`run_impl` method has been interrupted")
           return False
 
         _first_block, _last_block = self.get_blocks()
@@ -187,6 +190,7 @@ class haf_base:
     try:
       with timer("TOTAL POSTPROCESS[ms]: {}") as tm:
         if self.is_interrupted():
+          helper.info("postprocessing has been interrupted")
           return False
 
         if self.callbacks is not None and self.callbacks.post is not None:
