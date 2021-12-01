@@ -10,7 +10,7 @@ class haf_query:
     self.create_context                   = "SELECT * FROM hive.app_create_context('{}');".format( self.application_context )
     self.detach_context                   = "SELECT * FROM hive.app_context_detach('{}');".format( self.application_context )
     self.attach_context                   = "SELECT * FROM hive.app_context_attach('{}', {});"
-    self.exists_context                    = "SELECT * FROM hive.app_context_exists('{}');".format( self.application_context )
+    self.exists_context                   = "SELECT * FROM hive.app_context_exists('{}');".format( self.application_context )
 
     self.context_is_attached              = "SELECT * FROM hive.app_context_is_attached('{}')".format( self.application_context )
     self.context_detached_save_block_num  = "SELECT * FROM hive.app_context_detached_save_block_num('{}', {})"
@@ -88,7 +88,7 @@ class haf_sql:
     _is_attached = self.exec_context_is_attached()
 
     if _is_attached == force_attach:
-      helper.info("Context is {} already", "attached" if _is_attached else "detached")
+      helper.info("Context is already {}", "attached" if _is_attached else "detached")
       return
 
     if force_attach:
@@ -104,3 +104,17 @@ class haf_sql:
 
   def detach_context(self):
     self.switch_context_internal(False)
+
+class haf_context_switcher:
+  def __init__(self, sql, last_block_num):
+    self.sql            = sql
+    self.last_block_num = last_block_num
+
+  def __enter__(self):
+    assert self.sql is not None, "a sql query manager must be initialized"
+    self.sql.detach_context()
+    return self
+
+  def __exit__(self, *args, **kwargs):
+    assert self.sql is not None, "a sql query manager must be initialized"
+    self.sql.attach_context(self.last_block_num if (self.last_block_num is not None) else 0)

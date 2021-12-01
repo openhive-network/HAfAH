@@ -5,7 +5,7 @@ from signal import signal, SIGINT, SIGTERM
 
 from collections import deque
 
-from haf_sql import haf_sql
+from haf_sql import haf_sql, haf_context_switcher
 from haf_utilities import range_type, args_container, helper, timer
 
 LOG_LEVEL = logging.INFO
@@ -170,11 +170,10 @@ class haf_base:
 
         if self.is_massive:
           self.fill_block_ranges(_first_block, _last_block)
-          self.sql.detach_context()
 
-          self.work()
+          with haf_context_switcher(self.sql, self.last_block_num):
+            self.work()
 
-          self.sql.attach_context(self.last_block_num if (self.last_block_num is not None) else 0)
         else:
           self.fill_block_ranges(_first_block, _first_block)
           self.work()
