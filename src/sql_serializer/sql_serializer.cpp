@@ -2,6 +2,7 @@
 
 #include <hive/plugins/sql_serializer/cached_data.h>
 #include <hive/plugins/sql_serializer/reindex_data_dumper.h>
+#include <hive/plugins/sql_serializer/fast_livesync_data_dumper.h>
 #include <hive/plugins/sql_serializer/livesync_data_dumper.h>
 
 #include <hive/plugins/sql_serializer/data_processor.hpp>
@@ -135,7 +136,14 @@ using chain::reindex_notification;
               main_plugin{_main_plugin}
           {
             FC_ASSERT( is_database_correct(), "SQL database is in invalid state" );
-            _dumper = std::make_unique< livesync_data_dumper >( url, main_plugin, chain_db );
+            _dumper = std::make_unique< fast_livesync_data_dumper >(
+                url
+              , main_plugin
+              , chain_db
+              , psql_operations_threads_number
+              , psql_transactions_threads_number
+              , psql_account_operations_threads_number
+              );
           }
 
           ~sql_serializer_plugin_impl()
@@ -152,6 +160,7 @@ using chain::reindex_notification;
 
           void on_pre_reindex(const reindex_notification& note);
           void on_post_reindex(const reindex_notification& note);
+          void on_end_of_syncing();
 
           void on_pre_apply_operation(const operation_notification& note);
           void on_post_apply_operation(const operation_notification& note);
@@ -169,6 +178,7 @@ using chain::reindex_notification;
           boost::signals2::connection _on_post_apply_block_con;
           boost::signals2::connection _on_starting_reindex;
           boost::signals2::connection _on_finished_reindex;
+          boost::signals2::connection _on_end_of_syncing_con;
 
           std::unique_ptr< data_dumper > _dumper;
 
@@ -370,7 +380,7 @@ using chain::reindex_notification;
                 pqxx::result data = tx.exec("SELECT hb.num AS _max_block FROM hive.blocks hb ORDER BY hb.num DESC LIMIT 1;");
                 if( !data.empty() )
                 {
-                  FC_ASSERT( data.size() == 1 );
+                  FC_ASSERT( data.size() == 1, "Data size 1" );
                   const auto& record = data[0];
                   psql_block_number = record["_max_block"].as<uint64_t>();
                   _last_block_num = psql_block_number;
@@ -388,7 +398,7 @@ using chain::reindex_notification;
                 pqxx::result data = tx.exec("SELECT ho.id AS _max FROM hive.operations ho ORDER BY ho.id DESC LIMIT 1;");
                 if( !data.empty() )
                 {
-                  FC_ASSERT( data.size() == 1 );
+                  FC_ASSERT( data.size() == 1, "Data size 2" );
                   const auto& record = data[0];
                   op_sequence_id = record["_max"].as<int64_t>();
                 }
@@ -450,6 +460,7 @@ void sql_serializer_plugin_impl::connect_signals()
   _on_post_apply_block_con = chain_db.add_post_apply_block_handler([&](const block_notification& note) { on_post_apply_block(note); }, main_plugin);
   _on_finished_reindex = chain_db.add_post_reindex_handler([&](const reindex_notification& note) { on_post_reindex(note); }, main_plugin);
   _on_starting_reindex = chain_db.add_pre_reindex_handler([&](const reindex_notification& note) { on_pre_reindex(note); }, main_plugin);
+  _on_end_of_syncing_con = chain_db.add_end_of_syncing_handler([&]() { on_end_of_syncing(); }, main_plugin);
 }
 
 void sql_serializer_plugin_impl::disconnect_signals()
@@ -468,6 +479,9 @@ void sql_serializer_plugin_impl::disconnect_signals()
   if(_on_finished_reindex.connected())
     chain::util::disconnect_signal(_on_finished_reindex);
 
+  if ( _on_end_of_syncing_con.connected() ) {
+    chain::util::disconnect_signal(_on_end_of_syncing_con);
+  }
 }
 
 void sql_serializer_plugin_impl::on_pre_apply_block(const block_notification& note)
@@ -547,7 +561,7 @@ void sql_serializer_plugin_impl::on_post_apply_operation(const operation_notific
 
 void sql_serializer_plugin_impl::on_post_apply_block(const block_notification& note)
 {
-  FC_ASSERT(chain_db.is_producing() == false);
+  FC_ASSERT(chain_db.is_producing() == false, "Post apply block");
 
   if(skip_reversible_block(note.block_num))
     return;
@@ -645,8 +659,35 @@ void sql_serializer_plugin_impl::on_post_reindex(const reindex_notification& not
     switch_db_items(true/*mode*/);
 
   _dumper.reset();
-  _dumper = std::make_unique< livesync_data_dumper >( db_url, main_plugin, chain_db );
+  _dumper = std::make_unique< fast_livesync_data_dumper >(
+      db_url
+    , main_plugin
+    , chain_db
+    , psql_operations_threads_number
+    , psql_transactions_threads_number
+    , psql_account_operations_threads_number
+  );
 }
+
+void sql_serializer_plugin_impl::on_end_of_syncing()
+{
+  ilog("finishing syncing...");
+
+  process_cached_data();
+  wait_for_data_processing_finish();
+
+  _dumper.reset();
+  _dumper = std::make_unique< livesync_data_dumper >(
+      db_url
+    , main_plugin
+    , chain_db
+    , psql_operations_threads_number
+    , psql_transactions_threads_number
+    , psql_account_operations_threads_number
+  );
+}
+
+
 
 void sql_serializer_plugin_impl::process_cached_data()
 {
@@ -660,7 +701,7 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
 {
   if(block_no <= psql_block_number)
   {
-    FC_ASSERT(block_no > chain_db.get_last_irreversible_block_num());
+    FC_ASSERT(block_no > chain_db.get_last_irreversible_block_num(), "Block irreversible");
 
     if(last_skipped_block < block_no)
     {

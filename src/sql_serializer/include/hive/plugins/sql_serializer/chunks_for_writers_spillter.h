@@ -17,6 +17,14 @@ namespace hive::plugins::sql_serializer {
        , std::string description
        , std::shared_ptr< block_num_rendezvous_trigger > _randezvous_trigger
        );
+
+      chunks_for_writers_splitter(
+          uint8_t number_of_writers
+        , std::function< void(std::string&&) > string_callback
+        , std::string description
+        , std::shared_ptr< block_num_rendezvous_trigger > _randezvous_trigger
+      );
+
       ~chunks_for_writers_splitter() = default;
 
       chunks_for_writers_splitter( chunks_for_writers_splitter& ) = delete;
@@ -36,7 +44,7 @@ namespace hive::plugins::sql_serializer {
   inline
   chunks_for_writers_splitter< TableWriter >::chunks_for_writers_splitter(
         uint8_t number_of_writers
-      , std::string psqlUrl
+      , std::function< void(std::string&&) > string_callback
       , std::string description
       , std::shared_ptr< block_num_rendezvous_trigger > _randezvous_trigger
   )
@@ -45,9 +53,26 @@ namespace hive::plugins::sql_serializer {
     FC_ASSERT( number_of_writers > 0 );
     for ( auto writer_num = 0; writer_num < number_of_writers; ++writer_num ) {
       auto writer_description = _description + "_" + std::to_string( writer_num );
-      writers.emplace_back( psqlUrl, writer_description, _randezvous_trigger );
+      writers.emplace_back( string_callback, writer_description, _randezvous_trigger );
     }
   }
+
+  template< typename TableWriter >
+  inline
+  chunks_for_writers_splitter< TableWriter >::chunks_for_writers_splitter(
+    uint8_t number_of_writers
+    , std::string psqlUrl
+    , std::string description
+    , std::shared_ptr< block_num_rendezvous_trigger > _randezvous_trigger
+    )
+    : _description( std::move(description) )
+    {
+      FC_ASSERT( number_of_writers > 0 );
+      for ( auto writer_num = 0; writer_num < number_of_writers; ++writer_num ) {
+        auto writer_description = _description + "_" + std::to_string( writer_num );
+        writers.emplace_back( psqlUrl, writer_description, _randezvous_trigger );
+      }
+    }
 
   template< typename TableWriter >
   inline void

@@ -8,7 +8,12 @@ namespace hive{ namespace plugins{ namespace sql_serializer {
       const std::string& db_url
     , const appbase::abstract_plugin& plugin
     , hive::chain::database& chain_db
-    ) {
+    , uint32_t operations_threads
+    , uint32_t transactions_threads
+    , uint32_t account_operation_threads
+    )
+  : _plugin( plugin )
+  , _chain_db( chain_db ) {
     auto blocks_callback = [this]( std::string&& _text ){
       _block = std::move( _text );
     };
@@ -34,7 +39,8 @@ namespace hive{ namespace plugins{ namespace sql_serializer {
     };
 
     transactions_controller = transaction_controllers::build_own_transaction_controller( db_url, "Livesync dumper" );
-    constexpr auto NUMBER_OF_PROCESSORS_THREADS = 6;
+    constexpr auto ONE_THREAD_WRITERS_NUMBER = 3;
+    auto NUMBER_OF_PROCESSORS_THREADS = ONE_THREAD_WRITERS_NUMBER + operations_threads + transactions_threads + account_operation_threads;
     auto execute_push_block = [this](block_num_rendezvous_trigger::BLOCK_NUM _block_num ){
       if ( !_block.empty() ) {
         auto transaction = transactions_controller->openTx();
@@ -63,39 +69,33 @@ namespace hive{ namespace plugins{ namespace sql_serializer {
     auto api_trigger = std::make_shared< block_num_rendezvous_trigger >( NUMBER_OF_PROCESSORS_THREADS, execute_push_block );
 
     _block_writer = std::make_unique<block_data_container_t_writer>(blocks_callback, "Block data writer", api_trigger);
-    _transaction_writer = std::make_unique<transaction_data_container_t_writer>(transactions_callback, "Transaction data writer", api_trigger);
+    _transaction_writer = std::make_unique<transaction_data_container_t_writer>(transactions_threads, transactions_callback, "Transaction data writer", api_trigger);
     _transaction_multisig_writer = std::make_unique<transaction_multisig_data_container_t_writer>(transactions_multisig_callback, "Transaction multisig data writer", api_trigger);
-    _operation_writer = std::make_unique<operation_data_container_t_writer>(operations_callback, "Operation data writer", api_trigger);
+    _operation_writer = std::make_unique<operation_data_container_t_writer>(operations_threads, operations_callback, "Operation data writer", api_trigger );
     _account_writer = std::make_unique<accounts_data_container_t_writer>(accounts_callback, "Accounts data writer", api_trigger);
-    _account_operations_writer = std::make_unique< account_operations_data_container_t_writer >(account_operations_callback, "Account operations data writer", api_trigger);
+    _account_operations_writer = std::make_unique< account_operations_data_container_t_writer >(account_operation_threads, account_operations_callback, "Account operations data writer", api_trigger);
 
-    _on_irreversible_block_conn = chain_db.add_irreversible_block_handler(
-      [this]( uint32_t block_num ){ on_irreversible_block( block_num ); }
-      , plugin
-    );
+    connect_irreversible_event();
+    connect_fork_event();
 
-    _on_switch_fork_conn = chain_db.add_switch_fork_handler(
-      [this]( uint32_t block_num ){ on_switch_fork( block_num ); }
-      , plugin
-    );
     ilog( "livesync dumper created" );
   }
 
   livesync_data_dumper::~livesync_data_dumper() {
     ilog( "livesync dumper is closing..." );
-    _on_irreversible_block_conn.disconnect();
-    _on_switch_fork_conn.disconnect();
+    disconnect_irreversible_event();
+    disconnect_fork_event();
     livesync_data_dumper::join();
     ilog( "livesync dumper closed" );
   }
 
   void livesync_data_dumper::trigger_data_flush( cached_data_t& cached_data, int last_block_num ) {
     _block_writer->trigger( std::move( cached_data.blocks ), false, last_block_num );
-    _operation_writer->trigger( std::move( cached_data.operations ), false, last_block_num );
-    _transaction_writer->trigger( std::move( cached_data.transactions ), false, last_block_num);
+    _operation_writer->trigger( std::move( cached_data.operations ), last_block_num );
+    _transaction_writer->trigger( std::move( cached_data.transactions ), last_block_num);
     _transaction_multisig_writer->trigger( std::move( cached_data.transactions_multisig ), false, last_block_num );
     _account_writer->trigger( std::move( cached_data.accounts ), false, last_block_num );
-    _account_operations_writer->trigger( std::move( cached_data.account_operations ), false, last_block_num );
+    _account_operations_writer->trigger( std::move( cached_data.account_operations ), last_block_num );
 
     _block_writer->complete_data_processing();
     _operation_writer->complete_data_processing();
@@ -138,6 +138,36 @@ namespace hive{ namespace plugins{ namespace sql_serializer {
     std::string command = "SELECT hive.back_from_fork(" + std::to_string(block_num) + ")";
     transaction->exec( command );
     transaction->commit();
+  }
+
+  void livesync_data_dumper::connect_irreversible_event() {
+    if ( _on_irreversible_block_conn.connected() ) {
+      return;
+    }
+
+    _on_irreversible_block_conn = _chain_db.add_irreversible_block_handler(
+      [this]( uint32_t block_num ){ on_irreversible_block( block_num ); }
+      , _plugin
+      );
+  }
+
+  void livesync_data_dumper::disconnect_irreversible_event() {
+    _on_irreversible_block_conn.disconnect();
+  }
+
+  void livesync_data_dumper::connect_fork_event() {
+    if ( _on_switch_fork_conn.connected() ) {
+      return;
+    }
+
+    _on_switch_fork_conn = _chain_db.add_switch_fork_handler(
+      [this]( uint32_t block_num ){ on_switch_fork( block_num ); }
+      , _plugin
+    );
+  }
+
+  void livesync_data_dumper::disconnect_fork_event() {
+    _on_switch_fork_conn.disconnect();
   }
 }}} // namespace hive::plugins::sql_serializer
 

@@ -78,7 +78,7 @@ namespace hive::plugins::sql_serializer {
       _processor->only_report_batch_finished( last_block_num );
     }
 
-    FC_ASSERT(data.empty());
+    FC_ASSERT(data.empty(), "DATA empty 1");
   }
 
   template <class DataContainer, class TupleConverter, const char* const TABLE_NAME, const char* const COLUMN_LIST, typename Processor>
@@ -106,7 +106,7 @@ namespace hive::plugins::sql_serializer {
 
     const DataContainer& data = holder->_data;
 
-    FC_ASSERT(data.empty() == false);
+    FC_ASSERT(data.empty() == false, "Data empty 2" );
 
     std::string query = "INSERT INTO ";
     query += TABLE_NAME;
@@ -144,7 +144,7 @@ namespace hive::plugins::sql_serializer {
 
     const DataContainer& data = holder->_data;
 
-    FC_ASSERT(data.empty() == false);
+    FC_ASSERT(data.empty() == false, "Data empty 3");
 
     std::string query = "";
 
