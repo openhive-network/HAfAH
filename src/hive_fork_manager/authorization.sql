@@ -71,7 +71,7 @@ GRANT EXECUTE ON FUNCTION
     , hive.end_massive_sync( INTEGER )
     , disable_indexes_of_irreversible()
     , enable_indexes_of_irreversible()
-    , hive.save_and_drop_indexes_constraints( in _table_name TEXT )
+    , hive.save_and_drop_indexes_constraints( in _schema TEXT, in _table TEXT )
     , hive.save_and_drop_indexes_foreign_keys( in _table_schema TEXT, in _table_name TEXT )
     , hive.restore_indexes_constraints( in _table_name TEXT )
     , hive.restore_foreign_keys( in _table_name TEXT )

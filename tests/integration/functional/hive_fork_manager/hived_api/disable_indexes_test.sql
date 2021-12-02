@@ -91,6 +91,15 @@ BEGIN
     ASSERT NOT ( SELECT is_any_fk_for_hive_table( 'irreversible_data') ), 'FK for hive.irreversible_data exists';
     ASSERT NOT ( SELECT is_any_fk_for_hive_table( 'accounts') ), 'FK for hive.accounts exists';
     ASSERT NOT ( SELECT is_any_fk_for_hive_table( 'account_operations') ), 'FK for hive.account_operations exists';
+
+    ASSERT EXISTS(
+        SELECT * FROM hive.indexes_constraints WHERE table_name='hive.operations' AND command LIKE 'CREATE INDEX hive_operations_block_num_id_idx ON hive.operations USING btree (block_num, id)'
+    ), 'No hive.operation index (block_num, id)';
+
+    ASSERT EXISTS(
+        SELECT * FROM hive.indexes_constraints WHERE table_name='hive.account_operations' AND command LIKE 'ALTER TABLE hive.account_operations ADD CONSTRAINT hive_account_operations_uq_1 UNIQUE (account_id, account_op_seq_no)'
+    ), 'No hive.account_operations unique (account_id, account_op_seq_no)';
+
 END;
 $BODY$
 ;

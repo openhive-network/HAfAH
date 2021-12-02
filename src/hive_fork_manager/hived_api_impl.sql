@@ -275,7 +275,7 @@ END;
 $BODY$
 ;
 
-CREATE OR REPLACE FUNCTION hive.save_and_drop_indexes_constraints( in _table_name TEXT )
+CREATE OR REPLACE FUNCTION hive.save_and_drop_indexes_constraints( in _schema TEXT, in _table TEXT )
     RETURNS VOID
     AS
 $function$
@@ -284,54 +284,37 @@ DECLARE
     __cursor REFCURSOR;
 BEGIN
 
-    INSERT INTO hive.indexes_constraints( table_name, index_constraint_name, command, is_constraint, is_index, is_foreign_key )
+    INSERT INTO hive.indexes_constraints( index_constraint_name, table_name, command, is_constraint, is_index, is_foreign_key )
     SELECT
-        T.table_name,
-        T.constraint_name,
-        (
-            CASE
-                WHEN T.is_primary = TRUE THEN 'ALTER TABLE ' || T.table_name || ' ADD CONSTRAINT ' || T.constraint_name || ' PRIMARY KEY ( ' || array_to_string(array_agg( T.column_name::TEXT ), ', ') || ' ) '
-                WHEN (T.is_unique = TRUE AND T.is_primary = FALSE ) THEN 'ALTER TABLE ' || T.table_name || ' ADD CONSTRAINT ' || T.constraint_name || ' UNIQUE ( ' || array_to_string(array_agg( T.column_name::TEXT ), ', ') || ' ) '
-                WHEN (T.is_unique = FALSE AND T.is_primary = FALSE ) THEN 'CREATE INDEX IF NOT EXISTS ' || T.constraint_name || ' ON ' || T.table_name || ' ( ' || array_to_string(array_agg( T.column_name::TEXT ), ', ') || ' ) '
-                END
-            ),
-        (T.is_unique = TRUE OR T.is_primary = TRUE ) is_constraint,
-        (T.is_unique = FALSE AND T.is_primary = FALSE ) is_index,
-        FALSE is_foreign_key
-    FROM
-        (
-            SELECT
-                _table_name table_name,
-                i.relname constraint_name,
-                a.attname column_name,
-                ix.indisunique is_unique,
-                ix.indisprimary is_primary,
-                a.attnum
-            FROM
-                pg_class i,
-                pg_index ix,
-                pg_attribute a
-            WHERE
-                ( _table_name )::regclass::oid = ix.indrelid
-              AND i.oid = ix.indexrelid
-              AND a.attrelid =  ( _table_name )::regclass::oid
-              AND a.attnum = ANY(ix.indkey)
-            ORDER BY i.relname, a.attnum
-        )T
-    GROUP BY T.table_name, T.constraint_name, T.is_unique, T.is_primary
+           indexname
+         , _schema || '.' || _table
+         , indexdef
+         , indexdef ~* '^CREATE\s+UNIQUE\s+INDEX' as is_constraint
+         , NOT indexdef ~* '^CREATE\s+UNIQUE\s+INDEX' as is_index
+         , FALSE as is_foreign_key
+    FROM pg_indexes
+    WHERE schemaname = _schema AND tablename = _table
     ON CONFLICT DO NOTHING;
 
     --dropping indexes
-    OPEN __cursor FOR ( SELECT ('DROP INDEX IF EXISTS '::TEXT || 'hive.' || index_constraint_name || ';') FROM hive.indexes_constraints WHERE table_name = _table_name AND is_index = TRUE );
-      LOOP
+    OPEN __cursor FOR (
+        SELECT ('DROP INDEX IF EXISTS '::TEXT || 'hive.' || index_constraint_name || ';')
+        FROM hive.indexes_constraints WHERE table_name = _schema || '.' || _table AND is_index = TRUE
+    );
+
+    LOOP
     FETCH __cursor INTO __command;
         EXIT WHEN NOT FOUND;
         EXECUTE __command;
     END LOOP;
-      CLOSE __cursor;
+    CLOSE __cursor;
 
     --dropping primary keys/unique contraints
-    OPEN __cursor FOR ( SELECT ('ALTER TABLE '::TEXT || _table_name || ' DROP CONSTRAINT IF EXISTS ' || index_constraint_name || ';') FROM hive.indexes_constraints WHERE table_name = _table_name AND is_constraint = TRUE );
+    OPEN __cursor FOR (
+        SELECT ('ALTER TABLE '::TEXT || _schema || '.' || _table || ' DROP CONSTRAINT IF EXISTS ' || index_constraint_name || ';')
+        FROM hive.indexes_constraints WHERE table_name = _schema || '.' || _table AND is_constraint = TRUE
+    );
+
     LOOP
     FETCH __cursor INTO __command;
         EXIT WHEN NOT FOUND;
@@ -351,22 +334,23 @@ DECLARE
     __command TEXT;
     __cursor REFCURSOR;
 BEGIN
-
-    INSERT INTO hive.indexes_constraints( table_name, index_constraint_name, command, is_constraint, is_index, is_foreign_key )
+    INSERT INTO hive.indexes_constraints( index_constraint_name, table_name, command, is_constraint, is_index, is_foreign_key )
     SELECT
-        _table_schema || '.' || _table_name,
-        tc.constraint_name,
-        'ALTER TABLE ' || _table_schema || '.' || _table_name || ' ADD CONSTRAINT ' || tc.constraint_name || ' FOREIGN KEY ( ' || kcu.column_name || ' ) REFERENCES ' || ccu.table_schema || '.' || ccu.table_name || ' ( ' || ccu.column_name || ' ) ',
-        FALSE is_constraint,
-        FALSE is_index,
-        TRUE is_foreign_key
-    FROM information_schema.table_constraints AS tc
-    JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema
-    JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema
-    WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name = _table_name AND tc.table_schema = _table_schema
-    ON CONFLICT DO NOTHING;
+          DISTINCT ON ( pgc.conname ) pgc.conname as constraint_name
+        , _table_schema || '.' || _table_name as table_name
+        , 'ALTER TABLE ' || tc.table_schema || '.' || tc.table_name || ' ADD CONSTRAINT ' || pgc.conname || ' ' || pg_get_constraintdef(pgc.oid) as command
+        , tc.constraint_type = 'PRIMARY KEY' OR tc.constraint_type = 'UNIQUE' as is_constraint
+        , FALSE AS is_index
+        , tc.constraint_type = 'FOREIGN KEY' as is_foreign_key
+    FROM pg_constraint pgc
+    JOIN pg_namespace nsp on nsp.oid = pgc.connamespace
+    JOIN information_schema.table_constraints tc ON pgc.conname = tc.constraint_name AND nsp.nspname = tc.constraint_schema
+    WHERE tc.table_schema = _table_schema AND tc.table_name = _table_name;
 
-    OPEN __cursor FOR ( SELECT ('ALTER TABLE '::TEXT || _table_schema || '.' || _table_name || ' DROP CONSTRAINT IF EXISTS ' || index_constraint_name || ';') FROM hive.indexes_constraints WHERE table_name = ( _table_schema || '.' || _table_name ) AND is_foreign_key = TRUE );
+    OPEN __cursor FOR (
+        SELECT ('ALTER TABLE '::TEXT || _table_schema || '.' || _table_name || ' DROP CONSTRAINT IF EXISTS ' || index_constraint_name || ';')
+        FROM hive.indexes_constraints WHERE table_name = ( _table_schema || '.' || _table_name ) AND is_foreign_key = TRUE
+    );
 
     LOOP
         FETCH __cursor INTO __command;
@@ -375,7 +359,6 @@ BEGIN
     END LOOP;
 
     CLOSE __cursor;
-
 END;
 $function$
 LANGUAGE plpgsql VOLATILE

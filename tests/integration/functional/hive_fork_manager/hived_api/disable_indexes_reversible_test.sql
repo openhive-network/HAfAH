@@ -90,6 +90,11 @@ BEGIN
     ASSERT NOT ( SELECT is_any_fk_for_hive_table( 'irreversible_data_reversible') ), 'FK for hive.irreversible_data exists';
     ASSERT NOT ( SELECT is_any_fk_for_hive_table( 'accounts_reversible') ), 'FK for hive.accounts exists';
     ASSERT NOT ( SELECT is_any_fk_for_hive_table( 'account_operations_reversible') ), 'FK for hive.account_operations exists';
+
+    ASSERT EXISTS(
+        SELECT * FROM hive.indexes_constraints WHERE table_name='hive.transactions_multisig_reversible'
+        AND command LIKE 'ALTER TABLE hive.transactions_multisig_reversible ADD CONSTRAINT fk_1_hive_transactions_multisig_reversible FOREIGN KEY (trx_hash, fork_id) REFERENCES hive.transactions_reversible(trx_hash, fork_id)'
+    ), 'No hive.operation index (block_num, id)';
 END;
 $BODY$
 ;
