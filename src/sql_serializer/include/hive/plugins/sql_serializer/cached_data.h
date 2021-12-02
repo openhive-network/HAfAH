@@ -1,14 +1,10 @@
 #pragma once
 
 #include <hive/plugins/sql_serializer/tables_descriptions.h>
-#include <hive/plugins/sql_serializer/accounts_collector.h>
 
 namespace hive::plugins::sql_serializer {
   struct cached_data_t
     {
-    account_cache_t _account_cache;
-    int             _next_account_id;
-
     hive_blocks::container_t blocks;
     std::vector<PSQL::processing_objects::process_transaction_t> transactions;
     hive_transactions_multisig::container_t transactions_multisig;
@@ -18,7 +14,7 @@ namespace hive::plugins::sql_serializer {
 
     size_t total_size;
 
-    explicit cached_data_t(const size_t reservation_size) : _next_account_id(0), total_size{ 0ul }
+    explicit cached_data_t(const size_t reservation_size) : total_size{ 0ul }
     {
       blocks.reserve(reservation_size);
       transactions.reserve(reservation_size);

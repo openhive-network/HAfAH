@@ -3,6 +3,7 @@
 #include <hive/plugins/sql_serializer/cached_data.h>
 #include <hive/plugins/sql_serializer/indexation_state.hpp>
 #include <hive/plugins/sql_serializer/queries_commit_data_processor.h>
+#include <hive/plugins/sql_serializer/accounts_collector.h>
 
 #include <hive/plugins/sql_serializer/data_processor.hpp>
 
@@ -10,7 +11,7 @@
 
 #include <hive/chain/util/impacted.hpp>
 #include <hive/chain/util/supplement_operations.hpp>
-#include <hive/chain/account_object.hpp>
+#include <hive/chain/index.hpp>
 
 #include <hive/protocol/config.hpp>
 #include <hive/protocol/operations.hpp>
@@ -151,6 +152,7 @@ using chain::reindex_notification;
               psql_account_operations_threads_number( _psql_account_operations_threads_number )
           {
             FC_ASSERT( is_database_correct(), "SQL database is in invalid state" );
+            HIVE_ADD_PLUGIN_INDEX(chain_db, account_ops_seq_index);
           }
 
           ~sql_serializer_plugin_impl()
@@ -173,7 +175,6 @@ using chain::reindex_notification;
           void handle_transactions(const vector<hive::protocol::signed_transaction>& transactions, const int64_t block_num);
           void inform_hfm_about_starting();
           void collect_account_operations(int64_t operation_id, const hive::protocol::operation& op, uint32_t block_num);
-          void import_all_builtin_accounts();
 
           boost::signals2::connection _on_pre_apply_operation_con;
           boost::signals2::connection _on_post_apply_operation_con;
@@ -203,6 +204,7 @@ using chain::reindex_notification;
           int64_t op_sequence_id = 0;
 
           cached_containter_t currently_caching_data;
+          std::unique_ptr<accounts_collector> collector;
           stats_group current_stats;
 
           void log_statistics()
@@ -312,7 +314,6 @@ using chain::reindex_notification;
             head_block_number = max_block_number;
 
             load_initial_db_data();
-
             if(freshDb)
             {
               auto get_type_definitions = [](const data_processor::data_chunk_ptr& dataPtr, transaction_controllers::transaction& tx){
@@ -326,9 +327,6 @@ using chain::reindex_notification;
               queries_commit_data_processor processor( db_url, "Get type definitions", get_type_definitions, nullptr );
               processor.trigger( nullptr, 0 );
               processor.join();
-            }
-            else {
-              import_all_builtin_accounts();
             }
 
             switch_db_items( false/*mode*/ );
@@ -659,64 +657,19 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
 
   return false;
 }
-      void sql_serializer_plugin_impl::import_all_builtin_accounts()
-      {
-        const auto& accounts = chain_db.get_index<hive::chain::account_index, hive::chain::by_id>();
 
-        auto* data = currently_caching_data.get();
-
-        int& next_account_id = data->_next_account_id;
-        auto& known_accounts = data->_account_cache;
-
-        for(const auto& account : accounts)
+        void sql_serializer_plugin_impl::collect_account_operations(
+            int64_t operation_id
+          , const hive::protocol::operation& op
+          , uint32_t block_num
+        )
         {
-          auto ii = known_accounts.emplace(std::string(account.name), account_info(next_account_id + 1, 0));
-          FC_ASSERT( ii.second, "Builtin account: `${a}' already exists.", ("a", account.name) );
-          ++next_account_id;
-        }
-      }
-
-
-
-      void sql_serializer_plugin_impl::collect_account_operations(
-          int64_t operation_id
-        , const hive::protocol::operation& op
-        , uint32_t block_num
-      )
-      {
-        if ( !psql_dump_accounts ) {
-          return;
-        }
-
-        flat_set<hive::protocol::account_name_type> impacted;
-        hive::app::operation_get_impacted_accounts(op, impacted);
-
-        impacted.erase(hive::protocol::account_name_type());
-
-        auto* data = currently_caching_data.get();
-        auto* account_cache = &data->_account_cache;
-        auto* account_operations = &data->account_operations;
-        auto* accounts = &data->accounts;
-
-        for(const auto& name : impacted)
-        {
-          auto accountI = account_cache->find(name);
-          if ( accountI == account_cache->end() ) {
-            // 1 because we know it is impacted by the operation
-            account_cache->emplace( std::string(name), account_info(data->_next_account_id, 1) );
-            accounts->emplace_back( data->_next_account_id, std::string(name), block_num);
-            // 0 becuase it is a first operation counted from 0
-            account_operations->emplace_back(block_num, operation_id, data->_next_account_id, 0);
-            ++data->_next_account_id;
-          } else {
-            account_info& aInfo = accountI->second;
-            account_operations->emplace_back(block_num, operation_id, aInfo._id, aInfo._operation_count);
-            ++aInfo._operation_count;
+          if ( !psql_dump_accounts ) {
+            return;
           }
+
+          collector->collect(operation_id, op, block_num);
         }
-      }
-
-
 
       } // namespace detail
 
@@ -756,6 +709,8 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
         my->psql_dump_accounts = options["psql-enable-accounts-dump"].as<bool>();
 
         my->currently_caching_data = std::make_unique<cached_data_t>( default_reservation_size );
+
+        my->collector = std::make_unique<accounts_collector>( db, *my->currently_caching_data );
 
         // signals
         my->connect_signals();
