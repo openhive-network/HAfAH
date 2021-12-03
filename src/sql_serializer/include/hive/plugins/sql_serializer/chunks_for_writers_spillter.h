@@ -81,7 +81,11 @@ namespace hive::plugins::sql_serializer {
     uint32_t length_of_batch = std::ceil( data_ptr->size() / double( writers.size() ) );
     uint32_t writer_num = 0;
     for ( auto& writer : writers ) {
-      auto begin_range_it = data_ptr->begin() + writer_num * length_of_batch;
+      auto begin_range_it = ( writer_num * length_of_batch ) < data_ptr->size()
+        ? data_ptr->begin() + writer_num * length_of_batch
+        : data_ptr->end()
+      ;
+
       auto end_range_it = ( ( ( writer_num + 1 ) * length_of_batch ) < data_ptr->size() )
         ? data_ptr->begin() + ( writer_num + 1 ) * length_of_batch
         : data_ptr->end()
