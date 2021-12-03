@@ -18,7 +18,7 @@ namespace hive::plugins::sql_serializer {
 
     size_t total_size;
 
-    explicit cached_data_t(const size_t reservation_size) : total_size{ 0ul }
+    explicit cached_data_t(const size_t reservation_size) : _next_account_id(0), total_size{ 0ul }
     {
       blocks.reserve(reservation_size);
       transactions.reserve(reservation_size);

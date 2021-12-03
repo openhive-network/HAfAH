@@ -57,15 +57,13 @@ namespace hive
 
             hash_t hash;
 
-            process_base_t() = default;
             process_base_t(const hash_t &_hash) : hash{_hash} {}
           };
 
           struct process_base_ex_t : public process_base_t
           {
-            int block_number;
+            int block_number = 0;
 
-            process_base_ex_t() = default;
             process_base_ex_t(const hash_t &_hash, const int _block_number) : process_base_t(_hash), block_number{_block_number} {}
           };
 
@@ -74,7 +72,6 @@ namespace hive
             fc::time_point_sec created_at;
             hash_t prev_hash;
 
-            process_block_t() = default;
             process_block_t(const hash_t &_hash, const int _block_number, const fc::time_point_sec _tp, const hash_t &_prev)
               : process_base_ex_t{_hash, _block_number}, created_at{_tp}, prev_hash{_prev} {}
           };
@@ -83,13 +80,12 @@ namespace hive
           {
             using process_base_t::hash_t;
 
-            int32_t trx_in_block;
-            uint16_t ref_block_num;
-            uint32_t ref_block_prefix;
+            int32_t trx_in_block = 0;
+            uint16_t ref_block_num = 0;
+            uint32_t ref_block_prefix = 0;
             fc::time_point_sec expiration;
             fc::optional<signature_type> signature;
 
-            process_transaction_t() = default;
             process_transaction_t(const hash_t& _hash, const int _block_number, const int32_t _trx_in_block,
                                   const uint16_t _ref_block_num, const uint32_t _ref_block_prefix, const fc::time_point_sec& _expiration, const fc::optional<signature_type>& _signature)
             : process_base_ex_t{_hash, _block_number}, trx_in_block{_trx_in_block},
@@ -110,10 +106,10 @@ namespace hive
 
           struct process_operation_t
           {
-            int64_t operation_id;
-            int32_t block_number;
-            int32_t trx_in_block;
-            int32_t op_in_trx;
+            int64_t operation_id = 0;
+            int32_t block_number = 0;
+            int32_t trx_in_block = 0;
+            int32_t op_in_trx = 0;
             fc::time_point_sec timestamp;
             operation op;
 
@@ -125,11 +121,11 @@ namespace hive
           /// Holds account information to be put into database
           struct account_data_t{
             account_data_t(int _id, std::string _n, int32_t _block_number)
-            : id{_id}, name{ std::move(_n) }, block_number(_block_number) {}
+            : id{_id}, block_number(_block_number), name{ std::move(_n) } {}
 
-            int32_t id;
+            int32_t id = 0;
+            int32_t block_number = 0;
             std::string name;
-            int32_t block_number;
           };
 
           /// Holds association between account and its operations.
