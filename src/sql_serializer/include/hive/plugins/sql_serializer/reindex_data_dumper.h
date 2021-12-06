@@ -36,7 +36,7 @@ namespace hive::plugins::sql_serializer {
     void join();
 
     using block_data_container_t_writer = table_data_writer<hive_blocks>;
-    using transaction_data_container_t_writer = chunks_for_writers_splitter<
+    using transaction_data_container_t_writer = chunks_for_sql_writers_splitter<
       table_data_writer<
         hive_transactions<
           container_view<
@@ -46,7 +46,7 @@ namespace hive::plugins::sql_serializer {
       >
     >;
     using transaction_multisig_data_container_t_writer = table_data_writer<hive_transactions_multisig>;
-    using operation_data_container_t_writer = chunks_for_writers_splitter<
+    using operation_data_container_t_writer = chunks_for_sql_writers_splitter<
       table_data_writer<
         hive_operations<
           container_view<
@@ -56,7 +56,7 @@ namespace hive::plugins::sql_serializer {
       >
     >;
     using accounts_data_container_t_writer = table_data_writer< hive_accounts >;
-    using account_operations_data_container_t_writer = chunks_for_writers_splitter<
+    using account_operations_data_container_t_writer = chunks_for_sql_writers_splitter<
       table_data_writer<
         hive_account_operations<
           container_view< std::vector< PSQL::processing_objects::account_operation_data_t >

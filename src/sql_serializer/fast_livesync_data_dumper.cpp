@@ -37,12 +37,7 @@ namespace hive { namespace plugins { namespace sql_serializer {
     ilog( "Reversible idexes disabled" );
   }
 
-<<<<<<< HEAD
   void fast_livesync_data_dumper::enable_reversible_indexes() {
-    return;
-=======
-  void fast_livesync_data_dumper::eqnable_reversible_indexes() {
->>>>>>> 99e6aa8... fix bugs with fasts live sync
     ilog( "Enabling reversible idexes..." );
     auto transaction = get_transaction_controller().openTx();
     std::string command = "SELECT hive.enable_indexes_of_reversible()";

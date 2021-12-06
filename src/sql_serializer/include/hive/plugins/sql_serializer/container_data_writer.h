@@ -22,6 +22,7 @@ namespace hive::plugins::sql_serializer {
       {
       public:
         using DataContainerType = DataContainer;
+        using DataProcessor = Processor;
 
         container_data_writer(
             std::string psqlUrl
@@ -39,7 +40,7 @@ namespace hive::plugins::sql_serializer {
           _processor = std::make_unique<Processor>(string_callback, description, flush_scalar_live_data, _randezvous_trigger);
         }
 
-        void trigger(DataContainer&& data, bool wait_for_data_completion, uint32_t last_block_num);
+        void trigger(DataContainer&& data, uint32_t last_block_num);
         void complete_data_processing();
         void join();
 
@@ -67,13 +68,11 @@ namespace hive::plugins::sql_serializer {
 
   template <class DataContainer, class TupleConverter, const char* const TABLE_NAME, const char* const COLUMN_LIST, typename Processor>
   inline void
-  container_data_writer<DataContainer, TupleConverter, TABLE_NAME, COLUMN_LIST, Processor >::trigger(DataContainer&& data, bool wait_for_data_completion, uint32_t last_block_num)
+  container_data_writer<DataContainer, TupleConverter, TABLE_NAME, COLUMN_LIST, Processor >::trigger(DataContainer&& data, uint32_t last_block_num)
   {
     if(data.empty() == false)
     {
       _processor->trigger(std::make_unique<chunk>(std::move(data)), last_block_num);
-      if(wait_for_data_completion)
-        _processor->complete_data_processing();
     } else {
       _processor->only_report_batch_finished( last_block_num );
     }

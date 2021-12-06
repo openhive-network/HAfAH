@@ -53,7 +53,6 @@ namespace hive::plugins::sql_serializer {
 
     transaction_controllers::transaction_controller& get_transaction_controller() { return *transactions_controller; };
 
-  private:
     void join();
     void on_irreversible_block( uint32_t block_num );
     void on_switch_fork( uint32_t block_num );
@@ -61,7 +60,7 @@ namespace hive::plugins::sql_serializer {
   private:
     using block_data_container_t_writer = table_data_writer<hive_blocks, string_data_processor>;
 
-    using transaction_data_container_t_writer = chunks_for_writers_splitter<
+    using transaction_data_container_t_writer = chunks_for_string_writers_splitter<
       table_data_writer<
             hive_transactions< container_view< std::vector<PSQL::processing_objects::process_transaction_t> > >
           , string_data_processor
@@ -69,7 +68,7 @@ namespace hive::plugins::sql_serializer {
     >;
 
     using transaction_multisig_data_container_t_writer = table_data_writer<hive_transactions_multisig, string_data_processor>;
-    using operation_data_container_t_writer = chunks_for_writers_splitter<
+    using operation_data_container_t_writer = chunks_for_string_writers_splitter<
         table_data_writer<
               hive_operations< container_view< std::vector<PSQL::processing_objects::process_operation_t> > >
             , string_data_processor
@@ -77,7 +76,7 @@ namespace hive::plugins::sql_serializer {
       >;
 
     using accounts_data_container_t_writer = table_data_writer< hive_accounts, string_data_processor >;
-    using account_operations_data_container_t_writer = chunks_for_writers_splitter<
+    using account_operations_data_container_t_writer = chunks_for_string_writers_splitter<
         table_data_writer<
             hive_account_operations< container_view< std::vector<PSQL::processing_objects::account_operation_data_t> > >
           , string_data_processor
@@ -95,11 +94,8 @@ namespace hive::plugins::sql_serializer {
     std::unique_ptr< account_operations_data_container_t_writer > _account_operations_writer;
 
     std::string _block;
-    std::string _transactions;
     std::string _transactions_multisig;
-    std::string _operations;
     std::string _accounts;
-    std::string _account_operations;
 
     boost::signals2::connection _on_irreversible_block_conn;
     boost::signals2::connection _on_switch_fork_conn;
