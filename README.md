@@ -47,15 +47,13 @@ grep SQL /path/to/log/from/HAfAH | cut -d '|' -f 2: | sort -r -n | head -n 20
 ```
 7. By passing one of port as `5432` jmeter will call SQL directly, but you need specify thoose envs:
 
-	PSQL_USER
-	PSQL_PASS
-	PSQL_DBNAME
+```
+PSQL_USER
+PSQL_PASS
+PSQL_DBNAME
+```
 
-and optionally:
-
-	PSQL_HOST
-
-which is defaulted to `127.0.0.1`.
+and optionally `PSQL_HOST`, which is defaulted to `127.0.0.1`.
 
 Example:
 
