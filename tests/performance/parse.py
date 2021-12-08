@@ -17,6 +17,8 @@ def process_file(filename) -> dict:
             if len(elements) > 5:
                 time = elements[1]
                 thread_name = elements[5]
+                if 'pre_check' in thread_name:
+                    continue
                 thread_num = int(thread_name.split(' ')[1].split('-')[1])
                 UNIQ_THREADS.add(thread_num)
                 if not thread_name in threads_with_records:
@@ -164,6 +166,3 @@ with open('parsed.csv', 'w') as file:
                 counter += 1
             else:
                 break
-
-
-    # dump(compare_files('result.jtl', 'result.jtl'), file)
