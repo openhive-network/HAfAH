@@ -48,3 +48,5 @@ ALTER TABLE hive.account_operations_reversible
     ADD CONSTRAINT fk_1_hive_account_operations_reversible FOREIGN KEY ( operation_id, fork_id ) REFERENCES hive.operations_reversible( id, fork_id ),
     ADD CONSTRAINT fk_2_hive_account_operations_reversible FOREIGN KEY ( fork_id ) REFERENCES hive.fork( id )
 ;
+
+CREATE INDEX IF NOT EXISTS hive_account_operations_reversible_operation_id_idx ON hive.account_operations_reversible(operation_id);
