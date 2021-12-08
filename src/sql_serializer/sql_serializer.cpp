@@ -136,7 +136,7 @@ using chain::reindex_notification;
               main_plugin{_main_plugin}
           {
             FC_ASSERT( is_database_correct(), "SQL database is in invalid state" );
-            _dumper = std::make_unique< fast_livesync_data_dumper >(
+            _dumper = std::make_unique< livesync_data_dumper >(
                 url
               , main_plugin
               , chain_db
@@ -659,7 +659,7 @@ void sql_serializer_plugin_impl::on_post_reindex(const reindex_notification& not
     switch_db_items(true/*mode*/);
 
   _dumper.reset();
-  _dumper = std::make_unique< fast_livesync_data_dumper >(
+  _dumper = std::make_unique< livesync_data_dumper >(
       db_url
     , main_plugin
     , chain_db
@@ -672,19 +672,6 @@ void sql_serializer_plugin_impl::on_post_reindex(const reindex_notification& not
 void sql_serializer_plugin_impl::on_end_of_syncing()
 {
   ilog("finishing syncing...");
-
-  process_cached_data();
-  wait_for_data_processing_finish();
-
-  _dumper.reset();
-  _dumper = std::make_unique< livesync_data_dumper >(
-      db_url
-    , main_plugin
-    , chain_db
-    , psql_operations_threads_number
-    , psql_transactions_threads_number
-    , psql_account_operations_threads_number
-  );
 }
 
 
