@@ -105,7 +105,6 @@ BEGIN
          , ( 9, 'alice91', 9, 2 ) -- must be overriden by fork 2
          , ( 7, 'alice72', 7, 2 )
          , ( 8, 'bob72', 7, 2 )
-         , ( 9, 'alice82', 8, 2 )
          , ( 10, 'alice92', 9, 2 )
          , ( 9, 'alice83', 8, 3 )
          , ( 10, 'alice93', 9, 3 )

@@ -15,6 +15,7 @@ ADD_LIBRARY(
     livesync_data_dumper.cpp
     queries_commit_data_processor.cpp
     string_data_processor.cpp
+    fast_livesync_data_dumper.cpp
     ${HEADERS}
 )
 

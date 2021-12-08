@@ -54,7 +54,6 @@ BEGIN
          , ( 7, 'alice71', 7, 1 ) -- must be overriden by fork 2
          , ( 8, 'bob71', 7, 1 )   -- must be overriden by fork 2
          , ( 9, 'alice81', 8, 1 ) -- must be overriden by fork 2
-         , ( 9, 'alice91', 9, 2 ) -- must be overriden by fork 2
          , ( 7, 'alice72', 7, 2 )
          , ( 8, 'bob72', 7, 2 )
          , ( 9, 'alice82', 8, 2 )

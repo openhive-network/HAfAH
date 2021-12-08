@@ -21,6 +21,12 @@ ALTER TABLE hive.transactions_multisig OWNER TO hived_group;
 ALTER TABLE hive.accounts OWNER TO hived_group;
 ALTER TABLE hive.account_operations OWNER TO hived_group;
 ALTER TABLE hive.irreversible_data OWNER TO hived_group;
+ALTER TABLE hive.blocks_reversible OWNER TO hived_group;
+ALTER TABLE hive.transactions_reversible OWNER TO hived_group;
+ALTER TABLE hive.operations_reversible OWNER TO hived_group;
+ALTER TABLE hive.transactions_multisig_reversible OWNER TO hived_group;
+ALTER TABLE hive.accounts_reversible OWNER TO hived_group;
+ALTER TABLE hive.account_operations_reversible OWNER TO hived_group;
 
 -- generic protection for tables in hive schema
 -- 1. hived_group allow to edit every table in hive schema
@@ -65,7 +71,7 @@ GRANT EXECUTE ON FUNCTION
     , hive.end_massive_sync( INTEGER )
     , disable_indexes_of_irreversible()
     , enable_indexes_of_irreversible()
-    , hive.save_and_drop_indexes_constraints( in _table_name TEXT )
+    , hive.save_and_drop_indexes_constraints( in _schema TEXT, in _table TEXT )
     , hive.save_and_drop_indexes_foreign_keys( in _table_schema TEXT, in _table_name TEXT )
     , hive.restore_indexes_constraints( in _table_name TEXT )
     , hive.restore_foreign_keys( in _table_name TEXT )
@@ -84,6 +90,8 @@ GRANT EXECUTE ON FUNCTION
     , hive.app_state_provider_import( _state_provider hive.state_providers, _context hive.context_name )
     , hive.connect( _git_sha TEXT, _block_num hive.blocks.num%TYPE )
     , hive.remove_inconsistend_irreversible_data()
+    , hive.disable_indexes_of_reversible()
+    , hive.enable_indexes_of_reversible()
 TO hived_group;
 
 REVOKE EXECUTE ON FUNCTION

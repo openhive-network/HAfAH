@@ -148,6 +148,8 @@ ADD_SQL_FUNCTIONAL_TESTS( hived_api/removing_inconsistent_irreversibele_data.sql
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/connect_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/copy_accounts_to_irreversible.sql )
 ADD_SQL_FUNCTIONAL_TESTS( hived_api/copy_account_operations_to_irreversible.sql )
+ADD_SQL_FUNCTIONAL_TESTS( hived_api/disable_indexes_reversible_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( hived_api/enable_indexes_reversible_test.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( app_api/create_context_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/app_context_remove_test.sql )

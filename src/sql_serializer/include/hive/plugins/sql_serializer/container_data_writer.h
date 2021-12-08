@@ -22,6 +22,7 @@ namespace hive::plugins::sql_serializer {
       {
       public:
         using DataContainerType = DataContainer;
+        using DataProcessor = Processor;
 
         container_data_writer(
             std::string psqlUrl
@@ -39,7 +40,7 @@ namespace hive::plugins::sql_serializer {
           _processor = std::make_unique<Processor>(string_callback, description, flush_scalar_live_data, _randezvous_trigger);
         }
 
-        void trigger(DataContainer&& data, bool wait_for_data_completion, uint32_t last_block_num);
+        void trigger(DataContainer&& data, uint32_t last_block_num);
         void complete_data_processing();
         void join();
 
@@ -67,18 +68,16 @@ namespace hive::plugins::sql_serializer {
 
   template <class DataContainer, class TupleConverter, const char* const TABLE_NAME, const char* const COLUMN_LIST, typename Processor>
   inline void
-  container_data_writer<DataContainer, TupleConverter, TABLE_NAME, COLUMN_LIST, Processor >::trigger(DataContainer&& data, bool wait_for_data_completion, uint32_t last_block_num)
+  container_data_writer<DataContainer, TupleConverter, TABLE_NAME, COLUMN_LIST, Processor >::trigger(DataContainer&& data, uint32_t last_block_num)
   {
     if(data.empty() == false)
     {
       _processor->trigger(std::make_unique<chunk>(std::move(data)), last_block_num);
-      if(wait_for_data_completion)
-        _processor->complete_data_processing();
     } else {
       _processor->only_report_batch_finished( last_block_num );
     }
 
-    FC_ASSERT(data.empty());
+    FC_ASSERT(data.empty(), "DATA empty 1");
   }
 
   template <class DataContainer, class TupleConverter, const char* const TABLE_NAME, const char* const COLUMN_LIST, typename Processor>
@@ -106,7 +105,7 @@ namespace hive::plugins::sql_serializer {
 
     const DataContainer& data = holder->_data;
 
-    FC_ASSERT(data.empty() == false);
+    FC_ASSERT(data.empty() == false, "Data empty 2" );
 
     std::string query = "INSERT INTO ";
     query += TABLE_NAME;
@@ -144,7 +143,7 @@ namespace hive::plugins::sql_serializer {
 
     const DataContainer& data = holder->_data;
 
-    FC_ASSERT(data.empty() == false);
+    FC_ASSERT(data.empty() == false, "Data empty 3");
 
     std::string query = "";
 
@@ -164,4 +163,35 @@ namespace hive::plugins::sql_serializer {
     return processingStatus;
   }
 
+  template< typename Writer >
+  inline std::exception_ptr
+  join_writers_impl( Writer& writer ) try {
+    try{
+      writer.join();
+    }
+    FC_CAPTURE_AND_RETHROW()
+    return nullptr;
+  } catch( ... ) {
+    return std::current_exception();
+  }
+
+  template< typename Writer, typename... Writers >
+  inline std::exception_ptr
+  join_writers_impl( Writer& writer, Writers& ...writers ) {
+    std::exception_ptr current_exception = join_writers_impl( writer );;
+    auto next_exception = join_writers_impl( writers... );
+    if ( current_exception != nullptr ) {
+      return current_exception;
+    }
+    return next_exception;
+  }
+
+  template< typename... Writers >
+  inline void
+  join_writers( Writers& ...writers ) {
+    auto exception = join_writers_impl( writers... );
+    if ( exception != nullptr ) {
+      std::rethrow_exception( exception );
+    }
+  }
 } // namespace hive::plugins::sql_serializer

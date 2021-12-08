@@ -23,19 +23,20 @@ namespace hive::plugins::sql_serializer {
       , uint32_t account_operation_threads
     );
 
-    ~reindex_data_dumper() { join(); }
+    ~reindex_data_dumper();
     reindex_data_dumper(reindex_data_dumper&) = delete;
     reindex_data_dumper(reindex_data_dumper&&) = delete;
     reindex_data_dumper& operator=(reindex_data_dumper&&) = delete;
     reindex_data_dumper& operator=(reindex_data_dumper&) = delete;
 
     void trigger_data_flush( cached_data_t& cached_data, int last_block_num ) override;
-    void join() override;
     void wait_for_data_processing_finish() override;
     uint32_t blocks_per_flush() const override { return 1000; }
   private:
+    void join();
+
     using block_data_container_t_writer = table_data_writer<hive_blocks>;
-    using transaction_data_container_t_writer = chunks_for_writers_splitter<
+    using transaction_data_container_t_writer = chunks_for_sql_writers_splitter<
       table_data_writer<
         hive_transactions<
           container_view<
@@ -45,7 +46,7 @@ namespace hive::plugins::sql_serializer {
       >
     >;
     using transaction_multisig_data_container_t_writer = table_data_writer<hive_transactions_multisig>;
-    using operation_data_container_t_writer = chunks_for_writers_splitter<
+    using operation_data_container_t_writer = chunks_for_sql_writers_splitter<
       table_data_writer<
         hive_operations<
           container_view<
@@ -55,7 +56,7 @@ namespace hive::plugins::sql_serializer {
       >
     >;
     using accounts_data_container_t_writer = table_data_writer< hive_accounts >;
-    using account_operations_data_container_t_writer = chunks_for_writers_splitter<
+    using account_operations_data_container_t_writer = chunks_for_sql_writers_splitter<
       table_data_writer<
         hive_account_operations<
           container_view< std::vector< PSQL::processing_objects::account_operation_data_t >
