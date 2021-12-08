@@ -20,7 +20,7 @@ or use ready scipt, which runs program and after closing (^C) it run script that
 
 
 1. Download and extract [jmeter](https://jmeter.apache.org/download_jmeter.cgi)
-	- :warning: **before you run jmeter load tests** make sure to increase jvm heap size by setting env `JAVA_ARGS='-Xms4g -Xmx4g'` or by editing jmeter (.../bin/jmeter:166)
+	- :rotating_light: **before you run jmeter load tests** make sure to increase jvm heap size by setting env `JAVA_ARGS='-Xms4g -Xmx4g'` or by editing jmeter (.../bin/jmeter:166)
 	- it's java based, so you'll probably need to install openjdk (recomended: `openjdk-11-jre` and `openjdk-11-jdk`)
 
 
@@ -37,7 +37,7 @@ Example:
 ./tests/performance/run_perf_tests.bash $JMETER $PWD/tests/performance 8091 8095
 ```
 
-`note`: paths should be absolute
+:memo: paths should be absolute
 
 5. When load tests are ready, path to `csv` file will be printed
 6. If you need worst execution times of SQL queries here is handy command:
@@ -45,6 +45,21 @@ Example:
 ```
 grep SQL /path/to/log/from/HAfAH | cut -d '|' -f 2: | sort -r -n | head -n 20
 ```
+7. By passing one of port as `5432` jmeter will call SQL directly, but you need specify thoose envs:
+
+	PSQL_USER
+	PSQL_PASS
+	PSQL_DBNAME
+
+and optionally:
+
+	PSQL_HOST
+
+which is defaulted to `127.0.0.1`.
+
+Example:
+
+	PSQL_USER=some_user PSQL_PASS=some_password PSQL_DBNAME=hafah ./tests/performance/run_perf_tests.bash $JMETER $PWD/tests/performance/ 5432 8090 8888
 
 ## Interpretting results in `parsed.csv`
 ---
