@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS hafah_python;
 
-DROP VIEW IF EXISTS hive.helper_operations_view;
-CREATE VIEW hive.helper_operations_view AS SELECT
+DROP VIEW IF EXISTS hafah_python.helper_operations_view;
+CREATE VIEW hafah_python.helper_operations_view AS SELECT
   id id,
   block_num block_num,
   trx_in_block trx_in_block,
@@ -34,7 +34,7 @@ CREATE VIEW hive.helper_operations_view AS SELECT
 FROM
   hive.operations_view hov;
 
-CREATE OR REPLACE FUNCTION hive.get_ops_in_block( in _BLOCK_NUM INT, in _ONLY_VIRTUAL BOOLEAN, in _INCLUDE_REVERSIBLE BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_block( in _BLOCK_NUM INT, in _ONLY_VIRTUAL BOOLEAN, in _INCLUDE_REVERSIBLE BOOLEAN )
 RETURNS TABLE(
     _trx_id TEXT,
     _trx_in_block BIGINT,
@@ -85,7 +85,7 @@ BEGIN
         --`abs` it's temporary, until position of operation is correctly saved
         SELECT
           ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, hot.is_virtual, ho.formated_timestamp as _timestamp, ho.virtual_op
-        FROM hive.helper_operations_view ho
+        FROM hafah_python.helper_operations_view ho
         JOIN hive.operation_types hot ON hot.id = ho.op_type_id
         WHERE ho.block_num = _BLOCK_NUM AND ( _ONLY_VIRTUAL = FALSE OR ( _ONLY_VIRTUAL = TRUE AND hot.is_virtual = TRUE ) )
       ) T
@@ -97,7 +97,7 @@ $function$
 language plpgsql STABLE
 SET JIT=OFF;
 
-CREATE OR REPLACE FUNCTION hive.get_transaction( in _TRX_HASH BYTEA, in _INCLUDE_REVERSIBLE BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.get_transaction( in _TRX_HASH BYTEA, in _INCLUDE_REVERSIBLE BOOLEAN )
 RETURNS TABLE(
     _ref_block_num INT,
     _ref_block_prefix BIGINT,
@@ -143,7 +143,7 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hive.get_multi_signatures_in_transaction( in _TRX_HASH BYTEA )
+CREATE OR REPLACE FUNCTION hafah_python.get_multi_signatures_in_transaction( in _TRX_HASH BYTEA )
 RETURNS TABLE(
     _signature TEXT
 )
@@ -160,7 +160,7 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hive.get_ops_in_transaction( in _BLOCK_NUM INT, in _TRX_IN_BLOCK INT )
+CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_transaction( in _BLOCK_NUM INT, in _TRX_IN_BLOCK INT )
 RETURNS TABLE(
     _value TEXT
 )
@@ -178,18 +178,18 @@ END
 $function$
 language plpgsql STABLE;
 
-DROP TYPE IF EXISTS hive.enum_virtual_ops_result CASCADE;
+DROP TYPE IF EXISTS hafah_python.enum_virtual_ops_result CASCADE;
 
-CREATE TYPE hive.enum_virtual_ops_result AS ( _trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BIGINT, _timestamp TEXT, _value TEXT, _operation_id BIGINT );
+CREATE TYPE hafah_python.enum_virtual_ops_result AS ( _trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BIGINT, _timestamp TEXT, _value TEXT, _operation_id BIGINT );
 
-CREATE OR REPLACE FUNCTION hive.enum_virtual_ops( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN )
-RETURNS SETOF hive.enum_virtual_ops_result
+CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN )
+RETURNS SETOF hafah_python.enum_virtual_ops_result
 AS
 $function$
 DECLARE
   __upper_block_limit INT;
   __filter_info INT;
-  __iterator hive.enum_virtual_ops_result;
+  __iterator hafah_python.enum_virtual_ops_result;
   __counter INT := 0;
 BEGIN
   SELECT INTO __filter_info ( select array_length( _FILTER, 1 ) );
@@ -213,7 +213,7 @@ BEGIN
   END IF;
 
   RETURN QUERY
-    SELECT * FROM hive.enum_virtual_ops_impl( _FILTER, _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, _OPERATION_BEGIN, _LIMIT, __filter_info )
+    SELECT * FROM hafah_python.enum_virtual_ops_impl( _FILTER, _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, _OPERATION_BEGIN, _LIMIT, __filter_info )
   UNION ALL
     SELECT
       '',
@@ -225,14 +225,14 @@ BEGIN
       '{"type":"","value":""}'::TEXT,
       _next_op_id _operation_id
     FROM
-      hive.enum_virtual_ops_pagination(_FILTER, _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, _OPERATION_BEGIN, _LIMIT, __filter_info)
+      hafah_python.enum_virtual_ops_pagination(_FILTER, _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, _OPERATION_BEGIN, _LIMIT, __filter_info)
   LIMIT _LIMIT + 1; -- if first query didn't returned _LIMIT + 1 results append additional record with data required to pagination
 END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hive.enum_virtual_ops_impl( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in __filter_info INT )
-RETURNS SETOF hive.enum_virtual_ops_result
+CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops_impl( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in __filter_info INT )
+RETURNS SETOF hafah_python.enum_virtual_ops_result
 AS
 $function$
 BEGIN
@@ -261,7 +261,7 @@ BEGIN
       --`abs` it's temporary, until position of operation is correctly saved
       SELECT
       ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.formated_timestamp as _timestamp, ho.virtual_op
-      FROM hive.helper_operations_view ho
+      FROM hafah_python.helper_operations_view ho
       JOIN hive.operation_types hot ON hot.id = ho.op_type_id
       WHERE ho.block_num >= _BLOCK_RANGE_BEGIN AND ho.block_num < _BLOCK_RANGE_END
       AND hot.is_virtual = TRUE
@@ -281,7 +281,7 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hive.enum_virtual_ops_pagination( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in __filter_info INT )
+CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops_pagination( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in __filter_info INT )
 RETURNS TABLE( _next_block INT, _next_op_id BIGINT )
 AS
 $function$
@@ -303,7 +303,7 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hive.ah_get_account_history( in _FILTER INT[], in _ACCOUNT VARCHAR, _START BIGINT, _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history( in _FILTER INT[], in _ACCOUNT VARCHAR, _START BIGINT, _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN )
 RETURNS TABLE(
   _trx_id TEXT,
   _block INT,
@@ -362,7 +362,7 @@ BEGIN
         ORDER BY seq_no DESC
         LIMIT _LIMIT
       ) X
-    JOIN hive.helper_operations_view ho ON X.operation_id = ho.id
+    JOIN hafah_python.helper_operations_view ho ON X.operation_id = ho.id
     JOIN hive.operation_types hot ON hot.id = ho.op_type_id
     WHERE ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
     ORDER BY X.seq_no ASC
@@ -394,12 +394,12 @@ BEGIN
           --`abs` it's temporary, until position of operation is correctly saved
           SELECT
             ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, WORKAROUND.seq_no, formated_timestamp as _timestamp, ho.virtual_op
-            FROM hive.helper_operations_view ho
+            FROM hafah_python.helper_operations_view ho
           JOIN-- hived patterns related workaround, see more: https://gitlab.syncad.com/hive/HAfAH/-/issues/3
           (
             SELECT
             ho.id, hao.account_op_seq_no as seq_no
-            FROM hive.helper_operations_view ho
+            FROM hafah_python.helper_operations_view ho
             JOIN hive.account_operations hao ON ho.id = hao.operation_id
             WHERE ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
               AND hao.account_id = __account_id
@@ -425,8 +425,8 @@ SET JIT=OFF
 SET join_collapse_limit=16
 SET from_collapse_limit=16
 ;
-DROP VIEW IF EXISTS hive.account_operation_count_info_view CASCADE;
-CREATE OR REPLACE VIEW hive.account_operation_count_info_view
+DROP VIEW IF EXISTS hafah_python.account_operation_count_info_view CASCADE;
+CREATE OR REPLACE VIEW hafah_python.account_operation_count_info_view
 AS
 SELECT ha.id, ha.name, COALESCE( T.operation_count, 0 ) operation_count
 FROM hive.accounts ha
@@ -438,7 +438,7 @@ GROUP BY ao.account_id
 )T ON ha.id = T.account_id
 ;
 
-CREATE OR REPLACE FUNCTION hive.remove_redundant_operations( in _CONTEXT_NAME VARCHAR )
+CREATE OR REPLACE FUNCTION hafah_python.remove_redundant_operations( in _CONTEXT_NAME VARCHAR )
 RETURNS VOID
 AS
 $function$

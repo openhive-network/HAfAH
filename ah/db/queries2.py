@@ -12,7 +12,7 @@ class account_history_db_connector:
     self._conn : Db = args['db']
     assert self._conn is not None
     self._id : Any = args['id']
-    self._schema = 'hive'
+    self._schema = 'hafah_python'
 
   def _get_db(self) -> Db:
     assert self._conn is not None
