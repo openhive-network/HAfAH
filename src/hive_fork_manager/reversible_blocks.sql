@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS hive.operations_reversible(
 );
 ALTER TABLE hive.operations_reversible
     ADD COLUMN IF NOT EXISTS fork_id BIGINT NOT NULL,
-    ADD CONSTRAINT pk_operations_reversible UNIQUE ( id, fork_id ),
+    ADD CONSTRAINT pk_operations_reversible PRIMARY KEY( id, block_num, fork_id ),
+    ADD CONSTRAINT uq_operations_reversible UNIQUE( id, fork_id ),
     ADD CONSTRAINT fk_1_hive_operations_reversible FOREIGN KEY (block_num, fork_id) REFERENCES hive.blocks_reversible(num, fork_id),
     ADD CONSTRAINT fk_2_hive_operations_reversible FOREIGN KEY (op_type_id) REFERENCES hive.operation_types (id)
 ;
@@ -77,8 +78,7 @@ CREATE TABLE IF NOT EXISTS hive.account_operations_reversible(
 ALTER TABLE hive.account_operations_reversible
     ADD COLUMN IF NOT EXISTS fork_id BIGINT NOT NULL,
     ADD CONSTRAINT fk_1_hive_account_operations_reversible FOREIGN KEY ( operation_id, fork_id ) REFERENCES hive.operations_reversible( id, fork_id ),
-    ADD CONSTRAINT uq_1_hive_account_operations_reversible UNIQUE( account_id, account_op_seq_no, fork_id ),
-    ADD CONSTRAINT uq_2_hive_account_operations_reversible UNIQUE( account_id, operation_id, fork_id )
+    ADD CONSTRAINT uq_1_hive_account_operations_reversible PRIMARY KEY( account_id, operation_id, fork_id, account_op_seq_no )
 ;
 
 CREATE INDEX IF NOT EXISTS hive_transactions_reversible_block_num_trx_in_block_fork_id_idx ON hive.transactions_reversible( block_num, trx_in_block, fork_id );
