@@ -125,7 +125,7 @@ BEGIN
          , ( 7, 2, 7, 2 )
          , ( 8, 2, 8, 2 )
          , ( 9, 2, 9, 2 )
-         , ( 9, 2, 8, 2 )
+         , ( 9, 3, 8, 2 )
          , ( 10, 2, 10, 2 )
          , ( 9, 3, 9, 3 )
          , ( 10, 3, 10, 3 )
@@ -168,7 +168,7 @@ BEGIN
                  , ( 6, 1, 6 )
                  , ( 7, 2, 7 )
                  , ( 8, 2, 8 )
-                 , ( 9, 2, 8 )
+                 , ( 9, 3, 8 )
                  ) as pattern
     ) , 'Unexpected rows in the account_operations1';
 
@@ -183,7 +183,7 @@ BEGIN
                  , ( 6, 1, 6 )
                  , ( 7, 2, 7 )
                  , ( 8, 2, 8 )
-                 , ( 9, 2, 8 )
+                 , ( 9, 3, 8 )
         ) as pattern
         EXCEPT SELECT * FROM hive.account_operations
     ) , 'Unexpected rows in the account_operations2';
