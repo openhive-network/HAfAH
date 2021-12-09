@@ -163,7 +163,7 @@ BEGIN
          , ( 9, 1, 9, 1 ) -- block 7(1), must be overriden by fork 2
          , ( 7, 2, 10, 2 ) -- block 9 (2)
          , ( 9, 2, 8, 2 ) -- block 7(2)
-         , ( 9, 2, 9, 2 ) -- block 8(2) -- block 8(3) has not operation
+         , ( 9, 3, 9, 2 ) -- block 8(2) -- block 8(3) has not operation
          , ( 4, 2, 8, 2 ) -- block 7(2)
          , ( 10, 2, 10, 2 ) -- block 9(2)
          , ( 10, 3, 10, 3 ) -- block 9(3)
