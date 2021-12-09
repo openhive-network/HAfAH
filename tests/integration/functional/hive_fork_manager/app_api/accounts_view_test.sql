@@ -37,28 +37,28 @@ BEGIN
 
     INSERT INTO hive.accounts
     VALUES
-           ( 1, 'alice1', 1 )
-         , ( 2, 'alice2', 2 )
-         , ( 3, 'alice3', 3 )
-         , ( 4, 'alice4', 4 )
-         , ( 5, 'alice5', 5 )
+           ( 100, 'alice1', 1 )
+         , ( 200, 'alice2', 2 )
+         , ( 300, 'alice3', 3 )
+         , ( 400, 'alice4', 4 )
+         , ( 500, 'alice5', 5 )
     ;
 
     INSERT INTO hive.accounts_reversible
     VALUES
-           ( 4, 'alice4', 4, 1 )
-         , ( 5, 'alice5', 5, 1 )
-         , ( 6, 'alice61', 6, 1 )
-         , ( 7, 'alice71', 7, 1 ) -- must be overriden by fork 2
-         , ( 8, 'bob71', 7, 1 )   -- must be overriden by fork 2
-         , ( 9, 'alice81', 8, 1 ) -- must be overriden by fork 2
-         , ( 9, 'alice91', 9, 2 ) -- must be overriden by fork 2
-         , ( 7, 'alice72', 7, 2 )
-         , ( 8, 'bob72', 7, 2 )
-         , ( 10, 'alice92', 9, 2 )
-         , ( 9, 'alice83', 8, 3 )
-         , ( 10, 'alice93', 9, 3 )
-         , ( 11, 'alice103', 10, 3 )
+           ( 400, 'alice4', 4, 1 )
+         , ( 500, 'alice5', 5, 1 )
+         , ( 600, 'alice61', 6, 1 )
+         , ( 700, 'alice71', 7, 1 ) -- must be overriden by fork 2
+         , ( 800, 'bob71', 7, 1 )   -- must be overriden by fork 2
+         , ( 900, 'alice81', 8, 1 ) -- must be overriden by fork 2
+         , ( 900, 'alice91', 9, 2 ) -- must be overriden by fork 2
+         , ( 700, 'alice72', 7, 2 )
+         , ( 800, 'bob72', 7, 2 )
+         , ( 1000, 'alice92', 9, 2 )
+         , ( 900, 'alice83', 8, 3 )
+         , ( 1000, 'alice93', 9, 3 )
+         , ( 1100, 'alice103', 10, 3 )
     ;
 
     UPDATE hive.irreversible_data SET consistent_block = 5;
@@ -92,17 +92,17 @@ BEGIN
     ASSERT NOT EXISTS (
         SELECT * FROM hive.accounts_view
         EXCEPT SELECT * FROM ( VALUES
-              ( 1, 1, 'alice1' )
-            , ( 2, 2, 'alice2' )
-            , ( 3, 3, 'alice3' )
-            , ( 4, 4, 'alice4' )
-            , ( 5, 5, 'alice5' )
-            , ( 6, 6, 'alice61' )
-            , ( 7, 7, 'alice72' )
-            , ( 7, 8, 'bob72' )
-            , ( 8, 9, 'alice83' )
-            , ( 9, 10, 'alice93' )
-            , ( 10, 11, 'alice103' )
+              ( 1, 100, 'alice1' )
+            , ( 2, 200, 'alice2' )
+            , ( 3, 300, 'alice3' )
+            , ( 4, 400, 'alice4' )
+            , ( 5, 500, 'alice5' )
+            , ( 6, 600, 'alice61' )
+            , ( 7, 700, 'alice72' )
+            , ( 7, 800, 'bob72' )
+            , ( 8, 900, 'alice83' )
+            , ( 9, 1000, 'alice93' )
+            , ( 10, 1100, 'alice103' )
         ) as pattern
     ) , 'Unexpected rows in the view';
 
