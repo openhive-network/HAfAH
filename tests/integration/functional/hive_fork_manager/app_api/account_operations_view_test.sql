@@ -70,54 +70,54 @@ BEGIN
 
     INSERT INTO hive.accounts
     VALUES
-           ( 1, 'alice1', 1 )
-         , ( 2, 'alice2', 2 )
-         , ( 3, 'alice3', 3 )
-         , ( 4, 'alice4', 4 )
+           ( 100, 'alice1', 1 )
+         , ( 200, 'alice2', 2 )
+         , ( 300, 'alice3', 3 )
+         , ( 400, 'alice4', 4 )
     ;
 
     INSERT INTO hive.accounts_reversible
     VALUES
-           ( 4, 'alice41', 4, 1 )
-         , ( 5, 'alice51', 5, 1 )
-         , ( 6, 'alice61', 6, 1 )
-         , ( 7, 'alice71', 7, 1 ) -- must be overriden by fork 2
-         , ( 8, 'bob71', 7, 1 )   -- must be overriden by fork 2
-         , ( 9, 'alice81', 8, 1 ) -- must be overriden by fork 2
-         , ( 9, 'alice91', 9, 2 ) -- must be overriden by fork 2
-         , ( 7, 'alice72', 7, 2 )
-         , ( 8, 'bob72', 7, 2 )
-         , ( 10, 'alice92', 9, 2 )
-         , ( 9, 'alice83', 8, 3 )
-         , ( 10, 'alice93', 9, 3 )
-         , ( 11, 'alice103', 10, 3 )
+           ( 400, 'alice41', 4, 1 )
+         , ( 500, 'alice51', 5, 1 )
+         , ( 600, 'alice61', 6, 1 )
+         , ( 700, 'alice71', 7, 1 ) -- must be overriden by fork 2
+         , ( 800, 'bob71', 7, 1 )   -- must be overriden by fork 2
+         , ( 900, 'alice81', 8, 1 ) -- must be overriden by fork 2
+         , ( 900, 'alice91', 9, 2 ) -- must be overriden by fork 2
+         , ( 700, 'alice72', 7, 2 )
+         , ( 800, 'bob72', 7, 2 )
+         , ( 1000, 'alice92', 9, 2 )
+         , ( 900, 'alice83', 8, 3 )
+         , ( 1000, 'alice93', 9, 3 )
+         , ( 1100, 'alice103', 10, 3 )
     ;
 
     INSERT INTO hive.account_operations(account_id, account_op_seq_no, operation_id)
     VALUES
-           ( 1, 1, 1 )
-         , ( 1, 2, 2 )
-         , ( 2, 1, 2 )
-         , ( 3, 1, 3 )
-         , ( 4, 1, 4 )
+           ( 100, 1, 1 )
+         , ( 100, 2, 2 )
+         , ( 200, 1, 2 )
+         , ( 300, 1, 3 )
+         , ( 400, 1, 4 )
     ;
 
     INSERT INTO hive.account_operations_reversible
     VALUES
-           ( 4, 1, 4, 1 ) -- it pretends that some slow app prevent to remove this
-         , ( 5, 1, 5, 1 )
-         , ( 6, 1, 6, 1 )
-         , ( 7, 1, 7, 1 ) -- must be overriden by fork 2
-         , ( 8, 1, 7, 1 ) -- must be overriden by fork 2
-         , ( 9, 1, 9, 1 ) -- must be overriden by fork 2
-         , ( 7, 2, 7, 2 )
-         , ( 8, 2, 8, 2 )
-         , ( 9, 2, 9, 2 )
-         , ( 9, 2, 8, 2 )
-         , ( 10, 2, 10, 2 )
-         , ( 9, 3, 9, 3 )
-         , ( 10, 3, 10, 3 )
-         , ( 11, 3, 10, 3 )
+           ( 400, 1, 4, 1 ) -- it pretends that some slow app prevent to remove this
+         , ( 500, 1, 5, 1 )
+         , ( 600, 1, 6, 1 )
+         , ( 700, 1, 7, 1 ) -- must be overriden by fork 2
+         , ( 800, 1, 7, 1 ) -- must be overriden by fork 2
+         , ( 900, 1, 9, 1 ) -- must be overriden by fork 2
+         , ( 700, 2, 7, 2 )
+         , ( 800, 2, 8, 2 )
+         , ( 900, 2, 9, 2 )
+         , ( 900, 2, 8, 2 )
+         , ( 1000, 2, 10, 2 )
+         , ( 900, 3, 9, 3 )
+         , ( 100, 3, 10, 3 )
+         , ( 1100, 3, 10, 3 )
     ;
 
     UPDATE hive.irreversible_data SET consistent_block = 4;
@@ -151,19 +151,19 @@ BEGIN
     ASSERT NOT EXISTS (
         SELECT * FROM hive.account_operations_view
         EXCEPT SELECT * FROM ( VALUES
-              ( 1, 1, 1 )
-            , ( 1, 2, 2 )
-            , ( 2, 1, 2 )
-            , ( 3, 1, 3 )
-            , ( 4, 1, 4 )
-            , ( 5, 1, 5 )
-            , ( 6, 1, 6 )
-            , ( 7, 2, 7 )
-            , ( 8, 2, 8 )
-            , ( 9, 2, 8 )
-            , ( 9, 3, 9 )
-            , ( 10, 3, 10 )
-            , ( 11, 3, 10 )
+              ( 100, 1, 1 )
+            , ( 100, 2, 2 )
+            , ( 200, 1, 2 )
+            , ( 300, 1, 3 )
+            , ( 400, 1, 4 )
+            , ( 500, 1, 5 )
+            , ( 600, 1, 6 )
+            , ( 700, 2, 7 )
+            , ( 800, 2, 8 )
+            , ( 900, 2, 8 )
+            , ( 900, 3, 9 )
+            , ( 100, 3, 10 )
+            , ( 1100, 3, 10 )
         ) as pattern
     ) , 'Unexpected rows in the view';
 

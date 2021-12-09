@@ -380,7 +380,7 @@ EXECUTE format(
                  ha.account_op_seq_no,
                  ha.operation_id
                 FROM hive.account_operations ha
-                JOIN hive.operations ho ON ho.id = ha.account_id
+                JOIN hive.operations ho ON ho.id = ha.operation_id
                 WHERE ho.block_num <= c.min_block
                 UNION ALL
                 SELECT
