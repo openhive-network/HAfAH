@@ -1,39 +1,29 @@
 CREATE OR REPLACE VIEW hive.account_operations_view AS
-SELECT
-    t.account_id,
-    t.account_op_seq_no,
-    t.operation_id
-FROM (
-        SELECT
-             ha.account_id,
-             ha.account_op_seq_no,
-             ha.operation_id
-        FROM hive.account_operations ha
-        JOIN hive.operations ho ON ho.id = ha.operation_id
-        UNION ALL
-        SELECT
-            reversible.account_id,
-            reversible.account_op_seq_no,
-            reversible.operation_id
-        FROM ( SELECT
-                har.account_id,
-                har.account_op_seq_no,
-                har.operation_id,
-                har.fork_id
-        FROM hive.account_operations_reversible har
-        JOIN (
-            SELECT hor.id, forks.max_fork_id
-            FROM hive.operations_reversible hor
-            JOIN (
-                SELECT hbr.num, MAX(hbr.fork_id) as max_fork_id
-                FROM hive.blocks_reversible hbr
-                WHERE hbr.num > ( SELECT COALESCE( hid.consistent_block, 0 ) FROM hive.irreversible_data hid )
-                GROUP by hbr.num
-            ) as forks ON forks.max_fork_id = hor.fork_id AND forks.num = hor.block_num
-        ) as arr ON arr.max_fork_id = har.fork_id AND arr.id = har.operation_id
-     ) reversible
-) t
-;
+ (
+  SELECT ha.account_id,
+         ha.account_op_seq_no,
+         ha.operation_id
+  FROM account_operations ha
+ )
+UNION ALL
+(
+WITH 
+consistent_block AS
+(SELECT COALESCE(hid.consistent_block, 0) AS consistent_block FROM irreversible_data hid LIMIT 1)
+,forks AS
+(
+  SELECT hbr.num, max(hbr.fork_id) AS max_fork_id
+  FROM blocks_reversible hbr, consistent_block cb
+  WHERE hbr.num > cb.consistent_block
+  GROUP BY hbr.num
+)
+SELECT har.account_id,
+       har.account_op_seq_no,
+       har.operation_id
+FROM forks 
+JOIN operations_reversible hor ON forks.max_fork_id = hor.fork_id AND forks.num = hor.block_num
+JOIN account_operations_reversible har ON forks.max_fork_id = har.fork_id AND har.operation_id = hor.id -- We can consider to extend account_operations_reversible by block_num column and eliminate need to join operations_reversible
+);
 
 CREATE OR REPLACE VIEW hive.accounts_view AS
 SELECT
