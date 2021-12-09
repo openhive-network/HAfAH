@@ -1,3 +1,5 @@
+CREATE SCHEMA IF NOT EXISTS hafah_python;
+
 DROP VIEW IF EXISTS hive.helper_operations_view;
 CREATE VIEW hive.helper_operations_view AS SELECT
   id id,

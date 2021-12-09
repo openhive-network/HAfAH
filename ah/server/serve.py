@@ -133,7 +133,39 @@ class DBHandler(BaseHTTPRequestHandler):
       logger.error(ex)
       self.send_reponse(500, "text/html", ex)
 
-def run_server(db_url, port, log_responses):
+class PreparationPhase:
+  def __init__(self, db_url, sql_src_path):
+    self.db_url       = db_url
+    self.sql_src_path = sql_src_path
+
+  def read_file(self):
+    with open(self.sql_src_path, 'r') as file:
+      return file.read()
+    return ""
+
+  def prepare_server(self):
+    logger.info("preparation of http server - loading SQL functions into a database")
+
+    try:
+      with sql_executor(self.db_url) as _sql_executor:
+        assert _sql_executor.db is not None, "lack of database"
+
+        _query = self.read_file()
+        if len(_query) > 0:
+          _sql_executor.db.query_no_return(_query)
+
+        logger.info("http server is prepared")
+        return True
+    except Exception as ex:
+      logger.error(ex)
+      logger.info("an error occurred during http server preparation")
+      return False
+
+def run_server(db_url, port, log_responses, sql_src_path):
+  _prep_phase = PreparationPhase(db_url, sql_src_path)
+  if not _prep_phase.prepare_server():
+    return
+
   logger.info("connecting into http server")
 
   methods = APIMethods.build_methods()
