@@ -14,7 +14,7 @@ namespace hive::plugins::sql_serializer {
       , uint32_t transactions_threads
       , uint32_t account_operation_threads
     );
-    ~fast_livesync_data_dumper();
+    ~fast_livesync_data_dumper() override;
 
   private:
     void disable_reversible_indexes();

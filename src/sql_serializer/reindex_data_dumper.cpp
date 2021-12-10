@@ -14,6 +14,9 @@ namespace hive{ namespace plugins{ namespace sql_serializer {
     constexpr auto ONE_THREAD_WRITERS_NUMBER = 3; // a thread for dumping blocks + a thread dumping multisignatures + a thread for accounts
     auto NUMBER_OF_PROCESSORS_THREADS = ONE_THREAD_WRITERS_NUMBER + operations_threads + transactions_threads + account_operation_threads;
     auto execute_end_massive_sync_callback = [this](block_num_rendezvous_trigger::BLOCK_NUM _block_num ){
+      if ( !_block_num ) {
+        return;
+      }
       _end_massive_sync_processor->trigger_block_number( _block_num );
     };
     auto api_trigger = std::make_shared< block_num_rendezvous_trigger >( NUMBER_OF_PROCESSORS_THREADS, execute_end_massive_sync_callback );
@@ -54,18 +57,6 @@ namespace hive{ namespace plugins{ namespace sql_serializer {
       , *_account_operations_writer
       , *_end_massive_sync_processor
     );
-  }
-
-  void reindex_data_dumper::wait_for_data_processing_finish()
-  {
-    _block_writer->complete_data_processing();
-    _transaction_writer->complete_data_processing();
-    _transaction_multisig_writer->complete_data_processing();
-    _operation_writer->complete_data_processing();
-    _account_writer->complete_data_processing();
-    _account_operations_writer->complete_data_processing();
-
-    _end_massive_sync_processor->complete_data_processing();
   }
 }}} // namespace hive::plugins::sql_serializer
 

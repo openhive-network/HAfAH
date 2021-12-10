@@ -1,9 +1,8 @@
 #include <hive/plugins/sql_serializer/sql_serializer_plugin.hpp>
 
 #include <hive/plugins/sql_serializer/cached_data.h>
-#include <hive/plugins/sql_serializer/reindex_data_dumper.h>
-#include <hive/plugins/sql_serializer/fast_livesync_data_dumper.h>
-#include <hive/plugins/sql_serializer/livesync_data_dumper.h>
+#include <hive/plugins/sql_serializer/indexation_state.hpp>
+#include <hive/plugins/sql_serializer/queries_commit_data_processor.h>
 
 #include <hive/plugins/sql_serializer/data_processor.hpp>
 
@@ -130,28 +129,34 @@ using chain::reindex_notification;
         {
         public:
 
-          sql_serializer_plugin_impl(const std::string &url, hive::chain::database& _chain_db, const sql_serializer_plugin& _main_plugin)
-            : db_url{url},
+          sql_serializer_plugin_impl(
+              const std::string &url
+            , hive::chain::database& _chain_db
+            , const sql_serializer_plugin& _main_plugin
+            , uint32_t _psql_operations_threads_number
+            , uint32_t _psql_transactions_threads_number
+            , uint32_t _psql_account_operations_threads_number
+          )
+          : _indexation_state( _main_plugin, _chain_db, url,
+                                  [this](){ switch_db_items(true); },
+                                 _psql_transactions_threads_number,
+                                 _psql_operations_threads_number,
+                                 _psql_account_operations_threads_number
+                                 ),
+              db_url{url},
               chain_db{_chain_db},
-              main_plugin{_main_plugin}
+              main_plugin{_main_plugin},
+              psql_transactions_threads_number( _psql_transactions_threads_number ),
+              psql_operations_threads_number( _psql_operations_threads_number ),
+              psql_account_operations_threads_number( _psql_account_operations_threads_number )
           {
             FC_ASSERT( is_database_correct(), "SQL database is in invalid state" );
-            _dumper = std::make_unique< livesync_data_dumper >(
-                url
-              , main_plugin
-              , chain_db
-              , psql_operations_threads_number
-              , psql_transactions_threads_number
-              , psql_account_operations_threads_number
-              );
           }
 
           ~sql_serializer_plugin_impl()
           {
             ilog("Serializer plugin is closing");
-
-            cleanup_sequence();
-
+            _indexation_state.end( *currently_caching_data, _last_block_num );
             ilog("Serializer plugin has been closed");
           }
 
@@ -179,8 +184,8 @@ using chain::reindex_notification;
           boost::signals2::connection _on_starting_reindex;
           boost::signals2::connection _on_finished_reindex;
           boost::signals2::connection _on_end_of_syncing_con;
-
-          std::unique_ptr< data_dumper > _dumper;
+          boost::signals2::connection _on_switch_fork_conn;
+          indexation_state _indexation_state;
 
           std::string db_url;
           hive::chain::database& chain_db;
@@ -416,26 +421,8 @@ using chain::reindex_notification;
               ("s", op_sequence_id + 1)("pbn", psql_block_number));
           }
 
-          void wait_for_data_processing_finish();
-
-          void process_cached_data();
-
           bool skip_reversible_block(uint32_t block);
-
-          void cleanup_sequence()
-          {
-            ilog("Flushing rest of data, wait a moment...");
-
-            process_cached_data();
-
-            ilog("Done, cleanup complete");
-          }
         };
-
-void sql_serializer_plugin_impl::wait_for_data_processing_finish()
-{
-  _dumper->wait_for_data_processing_finish();
-}
 
 void sql_serializer_plugin_impl::inform_hfm_about_starting() {
   using namespace std::string_literals;
@@ -461,6 +448,8 @@ void sql_serializer_plugin_impl::connect_signals()
   _on_finished_reindex = chain_db.add_post_reindex_handler([&](const reindex_notification& note) { on_post_reindex(note); }, main_plugin);
   _on_starting_reindex = chain_db.add_pre_reindex_handler([&](const reindex_notification& note) { on_pre_reindex(note); }, main_plugin);
   _on_end_of_syncing_con = chain_db.add_end_of_syncing_handler([&]() { on_end_of_syncing(); }, main_plugin);
+  _on_switch_fork_conn = chain_db.add_switch_fork_handler(
+    [&]( uint32_t block_num ){ _indexation_state.on_switch_fork( *currently_caching_data, block_num ); }, main_plugin );
 }
 
 void sql_serializer_plugin_impl::disconnect_signals()
@@ -481,6 +470,10 @@ void sql_serializer_plugin_impl::disconnect_signals()
 
   if ( _on_end_of_syncing_con.connected() ) {
     chain::util::disconnect_signal(_on_end_of_syncing_con);
+  }
+
+  if ( _on_switch_fork_conn.connected() ) {
+    chain::util::disconnect_signal(_on_switch_fork_conn);
   }
 }
 
@@ -576,10 +569,7 @@ void sql_serializer_plugin_impl::on_post_apply_block(const block_notification& n
     note.prev_block_id);
   _last_block_num = note.block_num;
 
-  if(note.block_num % _dumper->blocks_per_flush() == 0)
-  {
-    process_cached_data();
-  }
+  _indexation_state.trigger_data_flush( *currently_caching_data, _last_block_num );
 
   if(note.block_num % 100'000 == 0)
   {
@@ -616,6 +606,7 @@ void sql_serializer_plugin_impl::handle_transactions(const vector<hive::protocol
       {
         currently_caching_data->transactions_multisig.emplace_back(
           hash,
+          block_num,
           *itr
         );
         ++itr;
@@ -637,14 +628,7 @@ void sql_serializer_plugin_impl::on_pre_reindex(const reindex_notification& note
   if(_on_pre_apply_block_con.connected())
     chain::util::disconnect_signal(_on_pre_apply_block_con);
 
-  _dumper.reset();
-  _dumper = std::make_unique< reindex_data_dumper >(
-      db_url
-    , psql_operations_threads_number
-    , psql_transactions_threads_number
-    , psql_account_operations_threads_number
-  );
-
+  _indexation_state.on_pre_reindex( *currently_caching_data, _last_block_num );
   ilog("Leaving a reindex init...");
 }
 
@@ -652,36 +636,12 @@ void sql_serializer_plugin_impl::on_post_reindex(const reindex_notification& not
 {
   ilog("finishing from post reindex");
 
-  process_cached_data();
-  wait_for_data_processing_finish();
-
-  if(note.last_block_number >= note.max_block_number)
-    switch_db_items(true/*mode*/);
-
-  _dumper.reset();
-  _dumper = std::make_unique< livesync_data_dumper >(
-      db_url
-    , main_plugin
-    , chain_db
-    , psql_operations_threads_number
-    , psql_transactions_threads_number
-    , psql_account_operations_threads_number
-  );
+  _indexation_state.on_post_reindex( *currently_caching_data, _last_block_num );
 }
 
 void sql_serializer_plugin_impl::on_end_of_syncing()
 {
-  ilog("finishing syncing...");
-}
-
-
-
-void sql_serializer_plugin_impl::process_cached_data()
-{
-  // triggers only when there is something to flush
-  if ( !currently_caching_data->blocks.empty() ) {
-    _dumper->trigger_data_flush( *currently_caching_data, _last_block_num );
-  }
+  _indexation_state.on_end_of_syncing( *currently_caching_data, _last_block_num );
 }
 
 bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
@@ -748,11 +708,11 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
             account_cache->emplace( std::string(name), account_info(data->_next_account_id, 1) );
             accounts->emplace_back( data->_next_account_id, std::string(name), block_num);
             // 0 becuase it is a first operation counted from 0
-            account_operations->emplace_back(operation_id, data->_next_account_id, 0);
+            account_operations->emplace_back(block_num, operation_id, data->_next_account_id, 0);
             ++data->_next_account_id;
           } else {
             account_info& aInfo = accountI->second;
-            account_operations->emplace_back(operation_id, aInfo._id, aInfo._operation_count);
+            account_operations->emplace_back(block_num, operation_id, aInfo._id, aInfo._operation_count);
             ++aInfo._operation_count;
           }
         }
@@ -784,13 +744,17 @@ bool sql_serializer_plugin_impl::skip_reversible_block(uint32_t block_no)
 
         auto& db = appbase::app().get_plugin<hive::plugins::chain::chain_plugin>().db();
 
-        my = std::make_unique<detail::sql_serializer_plugin_impl>(options["psql-url"].as<fc::string>(), db, *this);
+        my = std::make_unique<detail::sql_serializer_plugin_impl>(
+          options["psql-url"].as<fc::string>()
+          , db
+          , *this
+          , options["psql-operations-threads-number"].as<uint32_t>()
+          , options["psql-transactions-threads-number"].as<uint32_t>()
+          , options["psql-account-operations-threads-number"].as<uint32_t>()
+        );
 
         // settings
         my->psql_index_threshold = options["psql-index-threshold"].as<uint32_t>();
-        my->psql_operations_threads_number = options["psql-operations-threads-number"].as<uint32_t>();
-        my->psql_transactions_threads_number = options["psql-transactions-threads-number"].as<uint32_t>();
-        my->psql_account_operations_threads_number = options["psql-account-operations-threads-number"].as<uint32_t>();
         my->psql_dump_accounts = options["psql-enable-accounts-dump"].as<bool>();
 
         my->currently_caching_data = std::make_unique<cached_data_t>( default_reservation_size );
