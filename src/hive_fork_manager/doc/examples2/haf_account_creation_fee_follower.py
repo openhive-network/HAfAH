@@ -7,11 +7,12 @@ import json
 import re
 
 from haf_utilities import helper, argument_parser, args_container
-from haf_base import application
+from haf_base import haf_base, application
 
-class callback_handler_account_creation_fee_follower:
+class sql_account_creation_fee_follower(haf_base):
 
   def __init__(self, schema_name):
+    super(sql_account_creation_fee_follower, self).__init__()
     self.app    = None
     self.schema_name = schema_name
 
@@ -55,7 +56,7 @@ class callback_handler_account_creation_fee_follower:
   def pre_always(self):
     pass
 
-  def run_impl(self, low_block, high_block):
+  def process_blocks(self, low_block, high_block):
     _query = self.get_witness_updates.format(self.app.app_context, low_block, high_block)
     _result = self.app.exec_query_all(_query)
 
@@ -86,7 +87,7 @@ class callback_handler_account_creation_fee_follower:
     helper.info("processing incoming data: (RUN phase)")
     self.checker()
 
-    self.run_impl(low_block, high_block)
+    self.process_blocks(low_block, high_block)
 
   def post(self): 
     pass
@@ -96,10 +97,8 @@ def main():
   _parser.parse()
 
   _schema_name = "fee_follower"
-
-  _callbacks      = callback_handler_account_creation_fee_follower(_schema_name)
-  _app            = application(args_container(_parser.get_url(), _parser.get_range_blocks(), _parser.get_massive_threshold()), _schema_name + "_app", _callbacks)
-  _callbacks.app  = _app
+  _sql_account_creation_fee_follower  = sql_account_creation_fee_follower(_schema_name)
+  _app                                = application(args_container(_parser.get_url(), _parser.get_range_blocks(), _parser.get_massive_threshold()), _schema_name + "_app", _sql_account_creation_fee_follower)
 
   _app.process()
 

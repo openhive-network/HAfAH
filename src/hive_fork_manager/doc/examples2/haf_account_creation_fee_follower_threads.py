@@ -7,16 +7,15 @@ import json
 import re
 
 from haf_utilities import helper, range_type, argument_parser, args_container
-from haf_base import application
+from haf_base import haf_base, application
 
-from haf_account_creation_fee_follower import callback_handler_account_creation_fee_follower
+from haf_account_creation_fee_follower import sql_account_creation_fee_follower
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-class callback_handler_account_creation_fee_follower_threads(callback_handler_account_creation_fee_follower):
+class sql_account_creation_fee_follower_threads(sql_account_creation_fee_follower):
 
   def __init__(self, threads, schema_name):
-
     super().__init__(schema_name)
     self.threads  = threads
 
@@ -66,7 +65,7 @@ class callback_handler_account_creation_fee_follower_threads(callback_handler_ac
     with ThreadPoolExecutor(max_workers=len(_ranges)) as executor:
       for range in _ranges:
         helper.info("new thread created for a range: {}:{}", range.low, range.high)
-        _futures.append(executor.submit(super().run_impl, range.low, range.high))
+        _futures.append(executor.submit(super().process_blocks, range.low, range.high))
 
     for future in as_completed(_futures):
       future.result()
@@ -87,10 +86,8 @@ def main():
   _parser.parse()
 
   _schema_name = "fee_follower_threads"
-
-  _callbacks      = callback_handler_account_creation_fee_follower_threads(_parser.get_threads(), _schema_name)
-  _app            = application(args_container(_parser.get_url(), _parser.get_range_blocks(), _parser.get_massive_threshold()), _schema_name + "_app", _callbacks)
-  _callbacks.app  = _app
+  _sql_account_creation_fee_follower_threads  = sql_account_creation_fee_follower_threads(_parser.get_threads(), _schema_name)
+  _app                                        = application(args_container(_parser.get_url(), _parser.get_range_blocks(), _parser.get_massive_threshold()), _schema_name + "_app", _sql_account_creation_fee_follower_threads)
 
   _app.process()
 

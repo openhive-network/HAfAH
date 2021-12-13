@@ -5,6 +5,8 @@ from signal import signal, SIGINT, SIGTERM
 
 from collections import deque
 
+from abc import ABC
+
 from haf_sql import haf_sql, haf_context_switcher
 from haf_utilities import range_type, args_container, helper, timer
 
@@ -30,8 +32,10 @@ if not logger.hasHandlers():
 
 INTERRUPTED = False
 
-class haf_base:
-  def __init__(self, sql = None, callbacks = None):
+class haf_base(ABC):
+  def __init__(self, sql = None):
+    super(haf_base, self).__init__()
+
     self.is_massive     = False
 
     self.last_block_num = 0
@@ -39,15 +43,29 @@ class haf_base:
     self.block_ranges   = deque()
 
     self.sql            = sql
-    self.callbacks      = callbacks
 
     helper.logger = logger
+
+  def pre_none_ctx(self):
+    pass
+
+  def pre_is_ctx(self):
+    pass
+
+  def pre_always(self):
+    pass
+
+  def run(self, low_block, high_block):
+    pass
+
+  def post(self): 
+    pass
 
   def is_interrupted(self):
     return INTERRUPTED
 
   def raise_exception(self, source_exception):
-    self.interrupt()
+    INTERRUPTED = True
     raise source_exception
 
   def preprocess(self):
@@ -60,14 +78,11 @@ class haf_base:
         if not self.sql.exec_exists_context():
           self.sql.exec_create_context()
 
-          if self.callbacks is not None and self.callbacks.pre_none_ctx is not None:
-            self.callbacks.pre_none_ctx()
+          self.pre_none_ctx()
         else:
-          if self.callbacks is not None and self.callbacks.pre_is_ctx is not None:
-            self.callbacks.pre_is_ctx()
+          self.pre_is_ctx()
 
-        if self.callbacks is not None and self.callbacks.pre_always is not None:
-          self.callbacks.pre_always()
+        self.pre_always()
         return True
     except Exception as ex:
       helper.error("`preprocess` method exception: {0}", ex)
@@ -144,8 +159,7 @@ class haf_base:
 
           _item = self.block_ranges.popleft()
 
-          if self.callbacks is not None and self.callbacks.run is not None:
-            self.callbacks.run(_item.low, _item.high)
+          self.run(_item.low, _item.high)
 
           self.last_block_num = _item.high
 
@@ -193,15 +207,14 @@ class haf_base:
           helper.info("postprocessing has been interrupted")
           return False
 
-        if self.callbacks is not None and self.callbacks.post is not None:
-          self.callbacks.post()
+        self.post()
 
         return True
     except Exception as ex:
       helper.error("`postprocess` method exception: {0}", ex)
       self.raise_exception(ex)
 
-  def run(self):
+  def total_run(self):
     with timer("TOTAL RUN[ms]: {}") as tm:
       try:
         _result = self.preprocess()
@@ -241,24 +254,25 @@ def restore_handlers():
   signal(SIGTERM, old_sig_term_handler)
 
 class application:
-  def __init__(self, args, app_context, callback_handler):
-    helper.args           = args
+  def __init__(self, args, app_context, sql_app):
+    helper.args       = args
 
-    self.app_context      = app_context
-    self.callback_handler = callback_handler
-    self.base             = haf_base()
+    self.app_context  = app_context
+    self.sql_app      = sql_app
+    self.sql_app.sql  = haf_sql(self.app_context)
+    self.sql_app.app  = self
 
   def exec_query(self, query, **kwargs):
-    assert self.base is not None
-    self.base.sql.exec_query(query, **kwargs)
+    assert self.sql_app is not None
+    self.sql_app.sql.exec_query(query, **kwargs)
 
   def exec_query_all(self, query, **kwargs):
-    assert self.base is not None
-    return self.base.sql.exec_query_all(query, **kwargs)
+    assert self.sql_app is not None
+    return self.sql_app.sql.exec_query_all(query, **kwargs)
 
   def exec_query_one(self, query, **kwargs):
-    assert self.base is not None
-    return self.base.sql.exec_query_one(query, **kwargs)
+    assert self.sql_app is not None
+    return self.sql_app.sql.exec_query_one(query, **kwargs)
 
   def process(self):
     try:
@@ -266,11 +280,7 @@ class application:
 
         set_handlers()
 
-        self.base           = haf_base()
-        self.base.sql       = haf_sql(self.app_context)
-        self.base.callbacks = self.callback_handler
-
-        result = self.base.run()
+        result = self.sql_app.total_run()
 
         restore_handlers()
 

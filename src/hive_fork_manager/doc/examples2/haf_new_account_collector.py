@@ -4,11 +4,12 @@ import os
 import json
 
 from haf_utilities import helper, argument_parser, args_container
-from haf_base import application
+from haf_base import haf_base, application
 
-class callback_handler_accounts:
+class sql_accounts(haf_base):
   
   def __init__(self, schema_name):
+    super(sql_accounts, self).__init__()
     self.app    = None
     self.schema_name = schema_name
 
@@ -89,11 +90,9 @@ def main():
   _parser = argument_parser()
   _parser.parse()
 
-  _schema_name = "new_accounts"
-
-  _callbacks      = callback_handler_accounts(_schema_name)
-  _app            = application(args_container(_parser.get_url(), _parser.get_range_blocks(), _parser.get_massive_threshold()), _schema_name + "_app", _callbacks)
-  _callbacks.app  = _app
+  _schema_name      = "new_accounts"
+  _sql_accounts     = sql_accounts(_schema_name)
+  _app              = application(args_container(_parser.get_url(), _parser.get_range_blocks(), _parser.get_massive_threshold()), _schema_name + "_app", _sql_accounts)
 
   _app.process()
 

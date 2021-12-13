@@ -7,11 +7,12 @@ import json
 import re
 
 from haf_utilities import helper, argument_parser, args_container
-from haf_base import application
+from haf_base import haf_base, application
 
-class callback_handler_memo_scanner():
+class sql_memo_scanner(haf_base):
 
   def __init__(self, searched_item, schema_name):
+    super(sql_memo_scanner, self).__init__()
     self.app            = None
     self.searched_item  = searched_item
     self.schema_name    = schema_name
@@ -92,11 +93,9 @@ def main():
   _parser = argument_parser_ex()
   _parser.parse()
 
-  _schema_name = "memo_scanner"
-
-  _callbacks      = callback_handler_memo_scanner(_parser.get_searched_item(), _schema_name)
-  _app            = application(args_container(_parser.get_url(), _parser.get_range_blocks(), _parser.get_massive_threshold()), _schema_name + "_app", _callbacks)
-  _callbacks.app  = _app
+  _schema_name      = "memo_scanner"
+  _sql_memo_scanner = sql_memo_scanner(_parser.get_searched_item(), _schema_name)
+  _app              = application(args_container(_parser.get_url(), _parser.get_range_blocks(), _parser.get_massive_threshold()), _schema_name + "_app", _sql_memo_scanner)
 
   _app.process()
 
