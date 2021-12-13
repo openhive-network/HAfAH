@@ -76,4 +76,9 @@ def world_with_witnesses_and_database(world, database, witness_names):
     node_under_test.config.plugin.append('sql_serializer')
     node_under_test.config.psql_url = str(session.get_bind().url)
 
+    for node in world.nodes():
+        node.config.log_logger = '{"name":"default","level":"info","appender":"stderr"} '\
+                                 '{"name":"user","level":"debug","appender":"stderr"} '\
+                                 '{"name":"p2p","level":"debug","appender":"p2p"}'
+
     yield world, session, Base
