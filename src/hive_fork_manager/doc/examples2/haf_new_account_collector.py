@@ -9,9 +9,12 @@ from haf_base import haf_base, application
 class sql_accounts(haf_base):
   
   def __init__(self, schema_name):
-    super(sql_accounts, self).__init__()
-    self.app    = None
-    self.schema_name = schema_name
+    super().__init__()
+    self.app                          = None
+    self.schema_name                  = schema_name
+    self.create_creator_account_table = ''
+    self.get_accounts                 = ''
+    self.insert_into_history          = []
 
   def prepare_sql(self):
     #SQL queries
@@ -32,7 +35,6 @@ class sql_accounts(haf_base):
       WHERE ot.name = 'hive::protocol::account_created_operation' AND block_num >= {} and block_num <= {}
     '''
 
-    self.insert_into_history = []
     self.insert_into_history.append( "INSERT INTO {}.creation_history(block_num, creator_id, account_id) SELECT T.block_num, C.id, A.id FROM ( VALUES".format(self.schema_name) )
     self.insert_into_history.append( " ( {}, '{}', '{}' )" )
     self.insert_into_history.append( '''

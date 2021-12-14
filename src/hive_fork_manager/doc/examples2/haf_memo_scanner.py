@@ -12,10 +12,13 @@ from haf_base import haf_base, application
 class sql_memo_scanner(haf_base):
 
   def __init__(self, searched_item, schema_name):
-    super(sql_memo_scanner, self).__init__()
-    self.app            = None
-    self.searched_item  = searched_item
-    self.schema_name    = schema_name
+    super().__init__()
+    self.app                = None
+    self.searched_item      = searched_item
+    self.schema_name        = schema_name
+    self.create_memo_table  = ''
+    self.get_transfers      = ''
+    self.insert_into_memos  = []
 
   def prepare_sql(self):
     #SQL queries
@@ -31,7 +34,6 @@ class sql_memo_scanner(haf_base):
       ALTER TABLE {}.memos ADD CONSTRAINT memos_pkey PRIMARY KEY ( block_num, trx_in_block, op_pos );
     '''.format(self.schema_name, self.schema_name, self.app.app_context, self.schema_name)
 
-    self.insert_into_memos             = []
     self.insert_into_memos.append( "INSERT INTO {}.memos(block_num, trx_in_block, op_pos, memo_content) VALUES".format(self.schema_name) )
     self.insert_into_memos.append( " ({}, {}, {}, '{}')" )
     self.insert_into_memos.append( " ;" )

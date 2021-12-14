@@ -12,9 +12,12 @@ from haf_base import haf_base, application
 class sql_account_creation_fee_follower(haf_base):
 
   def __init__(self, schema_name):
-    super(sql_account_creation_fee_follower, self).__init__()
-    self.app    = None
-    self.schema_name = schema_name
+    super().__init__()
+    self.app                  = None
+    self.schema_name          = schema_name
+    self.create_history_table = ''
+    self.get_witness_updates  = ''
+    self.insert_into_history  = []
 
   def prepare_sql(self):
     #SQL queries
@@ -28,7 +31,6 @@ class sql_account_creation_fee_follower(haf_base):
       )INHERITS( hive.{} );
     '''.format(self.schema_name, self.schema_name, self.app.app_context)
 
-    self.insert_into_history = []
     self.insert_into_history.append( "INSERT INTO {}.fee_history(block_num, witness_id, fee) SELECT T.block_num, A.id, T.fee FROM ( VALUES".format(self.schema_name) )
     self.insert_into_history.append( " ( {}, '{}', {} )" )
     self.insert_into_history.append( " ) T(block_num, witness_name, fee) JOIN hive.{}_accounts_view A ON T.witness_name = A.name;".format(self.app.app_context) )
