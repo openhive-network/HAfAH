@@ -17,8 +17,11 @@ class Timer:
     self.__start = perf_counter()
     return self
 
-  def __exit__(self, *args, **kwargs):
+  def __exit__(self, exception_type : type, exception_value : Exception, exception_traceback):
     self.time = perf_counter() - self.__start
+    if exception_type is not None:
+      print(f'got {exception_type.__name__} exception: `{exception_value}`, with traceback:' + '\n\n' + str(exception_traceback))
+      raise exception_type(exception_value)
 
 def perf(*, extract_identifier : FunctionType, record_name : Union[str, FunctionType] = None):
   def perf_impl(foo : FunctionType):
