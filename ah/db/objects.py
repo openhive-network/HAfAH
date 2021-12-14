@@ -88,7 +88,8 @@ def virtual_ops(irreversible_block : int, iterable: list, last_block : int):
 
   result["next_block_range_begin"] = last_op["block"]
   result["next_operation_begin"] = int(last_op["operation_id"]) if last_block < last_op["block"] else 0
-  result["ops"].remove(last_op)
+  if ops_length:
+    result["ops"].remove(last_op)
 
   if irreversible_block is not None:
     result["ops_by_block"] = group_by_block(irreversible_block)
