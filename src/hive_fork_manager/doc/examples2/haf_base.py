@@ -5,7 +5,7 @@ from signal import signal, SIGINT, SIGTERM
 
 from collections import deque
 
-from abc import ABC
+from abc import ABC, abstractmethod
 
 from haf_sql import haf_sql, haf_context_switcher
 from haf_utilities import range_type, args_container, helper, timer
@@ -49,24 +49,29 @@ class haf_base(ABC):
   #Every application written in python should inherit from `haf_base`. Following abstract methods are called during different stages.
 
   #Executed once: only when a context doesn't exist. Mainly used when new schema, new tables, new SQL functions must be created
+  @abstractmethod
   def pre_none_ctx(self):
     pass
 
   #Executed once: only when a context exists. It can be used f.e. so as to check data integrity.
+  @abstractmethod
   def pre_is_ctx(self):
     pass
 
   #Executed once: it's always executed after `pre_none_ctx`/`pre_is_ctx`. It doesn't matter if a context exists or doesn't
+  @abstractmethod
   def pre_always(self):
     pass
 
   #Executed many times when a new portion of blocks appears.
   #Parameters from command line: `range-blocks`, `massive-threshold` decide if given context is switched and how many blocks are processed at once
   #Here `low_block`, `high_block` depend on `range-blocks`
+  @abstractmethod
   def run(self, low_block, high_block):
     pass
 
   #Executed many times after processing a current portion of blocks.
+  @abstractmethod
   def post(self): 
     pass
 

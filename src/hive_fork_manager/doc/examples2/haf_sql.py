@@ -7,13 +7,13 @@ class haf_query:
 
     self.application_context              = application_context
 
-    self.create_context                   = "SELECT * FROM hive.app_create_context('{}');".format( self.application_context )
-    self.detach_context                   = "SELECT * FROM hive.app_context_detach('{}');".format( self.application_context )
-    self.attach_context                   = "SELECT * FROM hive.app_context_attach('{}', {});"
+    self.create_context                   = "SELECT hive.app_create_context('{}');".format( self.application_context )
+    self.detach_context                   = "SELECT hive.app_context_detach('{}');".format( self.application_context )
+    self.attach_context                   = "SELECT hive.app_context_attach('{}', {});"
     self.exists_context                   = "SELECT * FROM hive.app_context_exists('{}');".format( self.application_context )
 
     self.context_is_attached              = "SELECT * FROM hive.app_context_is_attached('{}')".format( self.application_context )
-    self.context_detached_save_block_num  = "SELECT * FROM hive.app_context_detached_save_block_num('{}', {})"
+    self.context_detached_save_block_num  = "SELECT hive.app_context_detached_save_block_num('{}', {})"
     self.context_detached_get_block_num   = "SELECT * FROM hive.app_context_detached_get_block_num('{}')".format( self.application_context )
     
     self.context_current_block_num        = "SELECT current_block_num FROM hive.contexts WHERE NAME = '{}'".format( self.application_context )
