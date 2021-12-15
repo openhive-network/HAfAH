@@ -1,0 +1,169 @@
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "history": [
+      [
+        15170,
+        {
+          "block": 2931600,
+          "op": {
+            "type": "liquidity_reward_operation",
+            "value": {
+              "owner": "adm",
+              "payout": {
+                "amount": "1200000",
+                "nai": "@@000000021",
+                "precision": 3
+              }
+            }
+          },
+          "op_in_trx": 0,
+          "operation_id": 0,
+          "timestamp": "2016-07-05T11:58:57",
+          "trx_id": "0000000000000000000000000000000000000000",
+          "trx_in_block": 4294967295,
+          "virtual_op": 2
+        }
+      ],
+      [
+        15280,
+        {
+          "block": 2932800,
+          "op": {
+            "type": "liquidity_reward_operation",
+            "value": {
+              "owner": "adm",
+              "payout": {
+                "amount": "1200000",
+                "nai": "@@000000021",
+                "precision": 3
+              }
+            }
+          },
+          "op_in_trx": 0,
+          "operation_id": 0,
+          "timestamp": "2016-07-05T13:06:51",
+          "trx_id": "0000000000000000000000000000000000000000",
+          "trx_in_block": 4294967295,
+          "virtual_op": 2
+        }
+      ],
+      [
+        15395,
+        {
+          "block": 2934000,
+          "op": {
+            "type": "liquidity_reward_operation",
+            "value": {
+              "owner": "adm",
+              "payout": {
+                "amount": "1200000",
+                "nai": "@@000000021",
+                "precision": 3
+              }
+            }
+          },
+          "op_in_trx": 0,
+          "operation_id": 0,
+          "timestamp": "2016-07-05T14:09:24",
+          "trx_id": "0000000000000000000000000000000000000000",
+          "trx_in_block": 4294967295,
+          "virtual_op": 2
+        }
+      ],
+      [
+        15509,
+        {
+          "block": 2935200,
+          "op": {
+            "type": "liquidity_reward_operation",
+            "value": {
+              "owner": "adm",
+              "payout": {
+                "amount": "1200000",
+                "nai": "@@000000021",
+                "precision": 3
+              }
+            }
+          },
+          "op_in_trx": 0,
+          "operation_id": 0,
+          "timestamp": "2016-07-05T15:09:48",
+          "trx_id": "0000000000000000000000000000000000000000",
+          "trx_in_block": 4294967295,
+          "virtual_op": 2
+        }
+      ],
+      [
+        15642,
+        {
+          "block": 2936400,
+          "op": {
+            "type": "liquidity_reward_operation",
+            "value": {
+              "owner": "adm",
+              "payout": {
+                "amount": "1200000",
+                "nai": "@@000000021",
+                "precision": 3
+              }
+            }
+          },
+          "op_in_trx": 0,
+          "operation_id": 0,
+          "timestamp": "2016-07-05T16:10:09",
+          "trx_id": "0000000000000000000000000000000000000000",
+          "trx_in_block": 4294967295,
+          "virtual_op": 2
+        }
+      ],
+      [
+        15781,
+        {
+          "block": 2937600,
+          "op": {
+            "type": "liquidity_reward_operation",
+            "value": {
+              "owner": "adm",
+              "payout": {
+                "amount": "1200000",
+                "nai": "@@000000021",
+                "precision": 3
+              }
+            }
+          },
+          "op_in_trx": 0,
+          "operation_id": 0,
+          "timestamp": "2016-07-05T17:10:30",
+          "trx_id": "0000000000000000000000000000000000000000",
+          "trx_in_block": 4294967295,
+          "virtual_op": 2
+        }
+      ],
+      [
+        15891,
+        {
+          "block": 2938800,
+          "op": {
+            "type": "liquidity_reward_operation",
+            "value": {
+              "owner": "adm",
+              "payout": {
+                "amount": "1200000",
+                "nai": "@@000000021",
+                "precision": 3
+              }
+            }
+          },
+          "op_in_trx": 0,
+          "operation_id": 0,
+          "timestamp": "2016-07-05T18:10:39",
+          "trx_id": "0000000000000000000000000000000000000000",
+          "trx_in_block": 4294967295,
+          "virtual_op": 2
+        }
+      ]
+    ]
+  }
+}
