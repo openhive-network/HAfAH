@@ -42,9 +42,8 @@ namespace hive::plugins::sql_serializer {
     livesync_data_dumper& operator=(livesync_data_dumper&) = delete;
 
     void trigger_data_flush( cached_data_t& cached_data, int last_block_num ) override;
-    uint32_t blocks_per_flush() const override { return 1; }
 
-  protected:
+  private:
     void connect_irreversible_event();
     void disconnect_irreversible_event();
     void connect_fork_event();
