@@ -36,7 +36,8 @@ class account_history_db_connector:
 
   def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool):
     return self._get_all(
-      f"SELECT * FROM {self._schema}.get_ops_in_block( :block_num,  :only_virt, :include_reversible )",
+      f"SELECT to_json( ARRAY ( SELECT  array_agg(z.*) FROM ( SELECT _trx_id, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value ::JSON, _operation_id FROM {self._schema}.get_ops_in_block( :block_num,  :only_virt, :include_reversible ) ) z ) ) as value",
+      # f"SELECT * FROM {self._schema}.get_ops_in_block( :block_num,  :only_virt, :include_reversible )",
       block_num=block_num,
       only_virt=only_virtual,
       include_reversible=include_reversible
@@ -51,7 +52,9 @@ class account_history_db_connector:
 
   def enum_virtual_ops(self, filter : list, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool):
     return self._get_all(
-      f"SELECT * FROM {self._schema}.enum_virtual_ops( {format_array(filter)}, :block_range_begin, :block_range_end, :operation_begin, :limit, :include_reversible )",
+      f"SELECT to_json( ARRAY ( SELECT  array_agg(z.*) FROM ( SELECT _trx_id, _block, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value ::JSON FROM {self._schema}.enum_virtual_ops({format_array(filter)}, :block_range_begin, :block_range_end, :operation_begin, :limit, :include_reversible) ) z ) ) as value",
+      # f"SELECT to_json( ARRAY(SELECT hafah_python.enum_virtual_ops( {format_array(filter)}, :block_range_begin, :block_range_end, :operation_begin, :limit, :include_reversible ) ) ) ::TEXT as value;",
+      # f"SELECT * FROM {self._schema}.enum_virtual_ops( {format_array(filter)}, :block_range_begin, :block_range_end, :operation_begin, :limit, :include_reversible )",
       block_range_begin=block_range_begin,
       block_range_end=block_range_end,
       operation_begin=operation_begin,
@@ -61,7 +64,8 @@ class account_history_db_connector:
 
   def get_account_history(self, filter : list, account : str, start : int, limit : int, include_reversible : bool):
     return self._get_all(
-      f"SELECT * FROM {self._schema}.ah_get_account_history( {format_array(filter)}, :account, :start ::BIGINT, :limit, :include_reversible )",
+      f"SELECT to_json( ARRAY ( SELECT  array_agg(z.*) FROM ( SELECT _trx_id, _block, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value ::JSON FROM {self._schema}.ah_get_account_history( {format_array(filter)}, :account, :start ::BIGINT, :limit, :include_reversible ) ) z ) ) as value",
+      # f"SELECT * FROM {self._schema}.ah_get_account_history( {format_array(filter)}, :account, :start ::BIGINT, :limit, :include_reversible )",
       account=account,
       start=start,
       limit=limit,

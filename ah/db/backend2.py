@@ -23,7 +23,8 @@ class account_history_impl:
   @perf(extract_identifier=extractor, record_name='backend')
   def get_ops_in_block( self, args, block_num : int, only_virtual : bool, include_reversible : bool) -> ops_in_block:
     api = account_history_db_connector(args)
-    return ops_in_block( block_num, api.get_ops_in_block(block_num, only_virtual, include_reversible) )
+    return api.get_ops_in_block(block_num, only_virtual, include_reversible)[0]['value']
+    # return ops_in_block( block_num, api.get_ops_in_block(block_num, only_virtual, include_reversible) )
 
   @perf(extract_identifier=extractor, record_name='backend')
   def get_transaction(self, args, trx_hash : str, include_reversible : bool ) -> transaction:
@@ -51,28 +52,29 @@ class account_history_impl:
     api = account_history_db_connector(args)
     if account_history_impl.VIRTUAL_OP_ID_OFFSET is None and filter is not None:
       account_history_impl.VIRTUAL_OP_ID_OFFSET = api.get_virtual_op_offset()
-    return virtual_ops(
-      api.get_irreversible_block_num() if group_by_block else None,
-      api.enum_virtual_ops(
+    # return virtual_ops(
+      # api.get_irreversible_block_num() if group_by_block else None,
+    return api.enum_virtual_ops(
         self.__translate_filter( filter, lambda x : x + account_history_impl.VIRTUAL_OP_ID_OFFSET ),
         block_range_begin,
         block_range_end,
         operation_begin,
         limit,
         include_reversible
-      ),
-      block_range_end
-    )
+      )[0]['value']
+      # ,
+      # block_range_end
+    # )
 
   @perf(extract_identifier=extractor, record_name='backend')
   def get_account_history(self, args, filter : int, account : str, start : int, limit : int, include_reversible : bool) -> account_history:
     api = account_history_db_connector(args)
-    return account_history(
-        api.get_account_history(
-        self.__translate_filter( filter ),
-        account,
-        start,
-        limit,
-        include_reversible
-      )
-    )
+    # return account_history(
+    return api.get_account_history(
+          self.__translate_filter( filter ),
+          account,
+          start,
+          limit,
+          include_reversible
+      )[0]['value']
+    # )

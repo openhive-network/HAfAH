@@ -9,6 +9,9 @@ import json
 
 from datetime import datetime
 from time import perf_counter
+from typing_extensions import OrderedDict
+from jsonrpcserver.response import Response
+from sqlalchemy.engine import default
 from sqlalchemy.exc import OperationalError
 from aiohttp import web
 from jsonrpcserver.methods import Methods
@@ -88,8 +91,19 @@ class DBHandler(BaseHTTPRequestHandler):
       super().__init__(*args, **kwargs)
 
   @staticmethod
-  def decimal_serialize(obj):
-      return simplejson.dumps(obj=obj, use_decimal=True, default=vars)
+  def decimal_serialize(obj : dict, *args, **kwargs) -> str:
+    # print(f'args={args} kwargs={kwargs}')
+    # print(f'class(obj)={type(obj).__name__} obj={obj}')
+    if isinstance(obj, str):
+      return obj
+    elif isinstance(obj, OrderedDict) or isinstance(obj, dict):
+      value = obj.get('result', None)
+      if value is None or not isinstance(value, str):
+        return simplejson.dumps(obj, use_decimal=True, default=vars)
+      obj['result'] = 638
+      return simplejson.dumps(obj, default=vars).replace('638', value, 1)
+    else:
+      return simplejson.dumps(obj, default=vars, use_decimal=True)
 
   @staticmethod
   def decimal_deserialize(s):
@@ -102,7 +116,7 @@ class DBHandler(BaseHTTPRequestHandler):
     self.wfile.write(str(response).encode())
 
   def log_request(self, *args, **kwargs) -> None:
-    # return super().log_request(code=code, size=size)
+    # return super().log_request(*args, **kwargs)
     pass
 
   @perf(extract_identifier=lambda _, kwargs: kwargs['id'])
