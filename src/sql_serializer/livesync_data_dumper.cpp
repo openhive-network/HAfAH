@@ -82,6 +82,7 @@ namespace hive{ namespace plugins{ namespace sql_serializer {
   }
 
   void livesync_data_dumper::trigger_data_flush( cached_data_t& cached_data, int last_block_num ) {
+    FC_ASSERT( cached_data.blocks.size() == 1, "LIVE sync can only process one block" );
     _block_writer->trigger( std::move( cached_data.blocks ), last_block_num );
     _operation_writer->trigger( std::move( cached_data.operations ), last_block_num );
     _transaction_writer->trigger( std::move( cached_data.transactions ), last_block_num);
@@ -106,16 +107,6 @@ namespace hive{ namespace plugins{ namespace sql_serializer {
       , *_account_writer
       , *_account_operations_writer
     );
-  }
-
-  void livesync_data_dumper::wait_for_data_processing_finish()
-  {
-    _block_writer->complete_data_processing();
-    _transaction_writer->complete_data_processing();
-    _transaction_multisig_writer->complete_data_processing();
-    _operation_writer->complete_data_processing();
-    _account_writer->complete_data_processing();
-    _account_operations_writer->complete_data_processing();
   }
 
   void livesync_data_dumper::on_irreversible_block( uint32_t block_num ) {

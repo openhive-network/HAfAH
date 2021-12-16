@@ -51,34 +51,36 @@ namespace hive
 
         namespace processing_objects
         {
-          struct process_base_t
+          struct block_data_base
+          {
+            block_data_base(const int _block_number) : block_number{_block_number} {}
+            int block_number = 0;
+          };
+
+          struct block_data_with_hash : public block_data_base
           {
             using hash_t = fc::ripemd160;
 
+            block_data_with_hash(const hash_t &_hash, const int block_number) : block_data_base(block_number), hash{_hash} {}
             hash_t hash;
-
-            process_base_t(const hash_t &_hash) : hash{_hash} {}
           };
 
-          struct process_base_ex_t : public process_base_t
-          {
-            int block_number = 0;
 
-            process_base_ex_t(const hash_t &_hash, const int _block_number) : process_base_t(_hash), block_number{_block_number} {}
-          };
-
-          struct process_block_t : public process_base_ex_t
+          struct process_block_t
+            : public block_data_with_hash
           {
+            using block_data_with_hash::hash_t;
             fc::time_point_sec created_at;
             hash_t prev_hash;
 
             process_block_t(const hash_t &_hash, const int _block_number, const fc::time_point_sec _tp, const hash_t &_prev)
-              : process_base_ex_t{_hash, _block_number}, created_at{_tp}, prev_hash{_prev} {}
+            : block_data_with_hash{_hash, _block_number}, created_at{_tp}, prev_hash{_prev} {}
           };
 
-          struct process_transaction_t : public process_base_ex_t
+          struct process_transaction_t
+            : public block_data_with_hash
           {
-            using process_base_t::hash_t;
+            using block_data_with_hash::hash_t;
 
             int32_t trx_in_block = 0;
             uint16_t ref_block_num = 0;
@@ -86,56 +88,73 @@ namespace hive
             fc::time_point_sec expiration;
             fc::optional<signature_type> signature;
 
-            process_transaction_t(const hash_t& _hash, const int _block_number, const int32_t _trx_in_block,
+            process_transaction_t(const block_data_with_hash::hash_t& _hash, const int _block_number, const int32_t _trx_in_block,
                                   const uint16_t _ref_block_num, const uint32_t _ref_block_prefix, const fc::time_point_sec& _expiration, const fc::optional<signature_type>& _signature)
-            : process_base_ex_t{_hash, _block_number}, trx_in_block{_trx_in_block},
+              : block_data_with_hash{_hash, _block_number}, trx_in_block{_trx_in_block},
               ref_block_num{_ref_block_num}, ref_block_prefix{_ref_block_prefix}, expiration{_expiration}, signature{_signature}
             {}
           };
 
-          struct process_transaction_multisig_t : public process_base_t
+          struct process_transaction_multisig_t : public block_data_with_hash
           {
-            using process_base_t::hash_t;
+            using block_data_with_hash::hash_t;
 
             signature_type signature;
 
-            process_transaction_multisig_t(const hash_t& _hash, const signature_type& _signature)
-            : process_base_t{_hash}, signature{_signature}
+            process_transaction_multisig_t(const block_data_with_hash::hash_t& _hash, const int _block_number, const signature_type& _signature)
+            : block_data_with_hash{_hash, _block_number}, signature{_signature}
             {}
           };
 
           struct process_operation_t
+            : public block_data_base
           {
             int64_t operation_id = 0;
-            int32_t block_number = 0;
             int32_t trx_in_block = 0;
             int32_t op_in_trx = 0;
             fc::time_point_sec timestamp;
             operation op;
 
-            process_operation_t(int64_t _operation_id, int32_t _block_number, const int32_t _trx_in_block, const int32_t _op_in_trx,
-            const fc::time_point_sec& time, const operation &_op) : operation_id{_operation_id }, block_number{_block_number}, trx_in_block{_trx_in_block},
-            op_in_trx{_op_in_trx}, timestamp(time), op{_op} {}
+            process_operation_t(
+                int64_t _operation_id
+              , int32_t _block_number
+              , const int32_t _trx_in_block
+              , const int32_t _op_in_trx
+              , const fc::time_point_sec& time, const operation &_op
+            )
+            : block_data_base( _block_number )
+            , operation_id{_operation_id }, trx_in_block{_trx_in_block}
+            , op_in_trx{_op_in_trx}, timestamp(time), op{_op} {}
           };
 
           /// Holds account information to be put into database
-          struct account_data_t{
+          struct account_data_t
+            : public block_data_base
+          {
             account_data_t(int _id, std::string _n, int32_t _block_number)
-            : id{_id}, block_number(_block_number), name{ std::move(_n) } {}
+            : block_data_base( _block_number )
+            , id{_id}
+            , name{ std::move(_n) }
+            {}
 
             int32_t id = 0;
-            int32_t block_number = 0;
             std::string name;
           };
 
           /// Holds association between account and its operations.
-          struct account_operation_data_t{
+          struct account_operation_data_t
+            : public block_data_base
+          {
             int64_t operation_id;
             int32_t account_id;
             int32_t operation_seq_no;
 
-            account_operation_data_t(int64_t _operation_id, int32_t _account_id, int32_t _operation_seq_no) : operation_id{ _operation_id },
-            account_id{ _account_id }, operation_seq_no{ _operation_seq_no } {}
+            account_operation_data_t(int32_t _block_number, int64_t _operation_id, int32_t _account_id, int32_t _operation_seq_no)
+            : block_data_base( _block_number )
+            , operation_id{ _operation_id }
+            , account_id{ _account_id }
+            , operation_seq_no{ _operation_seq_no }
+            {}
           };
         }; // namespace processing_objects
 
