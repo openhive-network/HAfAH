@@ -14,3 +14,7 @@ alter extension hive_fork_manager drop table hive.blocks_reversible;
 alter extension hive_fork_manager drop table hive.transactions_reversible;
 alter extension hive_fork_manager drop table hive.transactions_multisig_reversible;
 alter extension hive_fork_manager drop table hive.operations_reversible;
+alter extension hive_fork_manager drop table hive.accounts_reversible;
+alter extension hive_fork_manager drop table hive.account_operations_reversible;
+alter extension hive_fork_manager drop table hive.accounts;
+alter extension hive_fork_manager drop table hive.account_operations;
