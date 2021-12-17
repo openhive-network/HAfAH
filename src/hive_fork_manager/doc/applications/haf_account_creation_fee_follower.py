@@ -5,6 +5,9 @@
 import os
 import json
 import re
+import sys
+
+sys.path.append(os.path.dirname(__file__) + "/../../../applications/utils")
 
 from haf_utilities import helper, argument_parser, args_container
 from haf_base import haf_base, application
