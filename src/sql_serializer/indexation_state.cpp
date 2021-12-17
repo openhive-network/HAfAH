@@ -260,7 +260,6 @@ indexation_state::end( cached_data_t& cached_data, int last_block_num ) {
 
 void
 indexation_state::trigger_data_flush( cached_data_t& cached_data, int last_block_num ) {
-  ilog( "Trigger data flash, last block: ${b}", ("b", last_block_num) );
   _trigger->flush( cached_data, last_block_num, _irreversible_block_num );
 }
 
