@@ -212,6 +212,7 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.remove_inconsistend_irreversible_data();
+    PERFORM hive.back_from_fork( _block_num );
     INSERT INTO hive.hived_connections( block_num, git_sha, time )
     VALUES( _block_num, _git_sha, now() );
 END;
