@@ -8,6 +8,15 @@
 
 #include <exception>
 
+#include <signal.h>
+
+namespace {
+  void kill_node() {
+    elog( "An error occured and HAF is stopping synchronization..." );
+    kill( 0, SIGINT );
+  }
+}
+
 namespace hive { namespace plugins { namespace sql_serializer {
 
 class data_processing_status_notifier
@@ -94,30 +103,30 @@ data_processor::data_processor( std::string description, const data_processing_f
     catch(const pqxx::sql_error& ex)
     {
       elog("Data processor ${d} detected SQL statement execution failure. Failing statement: `${q}'.", ("d", _description)("q", ex.query()));
-      appbase::app().generate_interrupt_request();
+      kill_node();
       throw;
     }
     catch(const pqxx::pqxx_exception& ex)
     {
       elog("Data processor ${d} detected SQL execution failure: ${e}", ("d", _description)("e", ex.base().what()));
-      appbase::app().generate_interrupt_request();
+      kill_node();
       throw;
     }
     catch(const fc::exception& ex)
     {
       elog("Data processor ${d} execution failed: ${e}", ("d", _description)("e", ex.what()));
-      appbase::app().generate_interrupt_request();
+      kill_node();
       throw;
     }
     catch(const std::exception& ex)
     {
       elog("Data processor ${d} execution failed: ${e}", ("d", _description)("e", ex.what()));
-      appbase::app().generate_interrupt_request();
+      kill_node();
       throw;
     }
     catch(...) {
       elog("Data processor ${d} execution failed: unknown exception", ("d", _description));
-      appbase::app().generate_interrupt_request();
+      kill_node();
       throw;
     }
 

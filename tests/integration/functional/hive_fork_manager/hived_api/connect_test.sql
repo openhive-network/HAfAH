@@ -91,6 +91,8 @@ BEGIN
 
     ASSERT( SELECT COUNT(*) FROM hive.hived_connections ) = 1, 'No connection saved';
     ASSERT( SELECT COUNT(*) FROM hive.hived_connections WHERE block_num=100 AND git_sha='123456789' ) = 1, 'No expected connection saved';
+
+    ASSERT( SELECT COUNT(*) FROM hive.fork WHERE id = 2 AND block_num = 100 ) = 1, 'No fork added after connection';
 END
 $BODY$
 ;
