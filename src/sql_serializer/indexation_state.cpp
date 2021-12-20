@@ -247,18 +247,6 @@ indexation_state::update_state( INDEXATION state, cached_data_t& cached_data, ui
 }
 
 void
-indexation_state::end( cached_data_t& cached_data, int last_block_num ) {
-  ilog("Flushing rest of data...");
-  if ( _state == INDEXATION::P2P  ) {
-    auto irreversible_cached_data = move_irreveresible_blocks(cached_data, _irreversible_block_num );
-    force_trigger_flush_with_all_data( irreversible_cached_data, _irreversible_block_num );
-  } else {
-    force_trigger_flush_with_all_data( cached_data, last_block_num );
-  }
-  ilog("Flushing rest of data done");
-}
-
-void
 indexation_state::trigger_data_flush( cached_data_t& cached_data, int last_block_num ) {
   _trigger->flush( cached_data, last_block_num, _irreversible_block_num );
 }

@@ -49,9 +49,6 @@ namespace hive::plugins::sql_serializer {
       void on_post_reindex( cached_data_t& cached_data, int last_block_num );
       void on_end_of_syncing( cached_data_t& cached_data, int last_block_num );
 
-      // call when syncing is end - during closing the node
-      void end( cached_data_t& cached_data, int last_block_num );
-
       // call when fork occurs, block_num -> first abanoned block
       void on_switch_fork( cached_data_t& cached_data, uint32_t block_num );
 

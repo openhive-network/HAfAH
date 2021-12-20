@@ -156,8 +156,6 @@ using chain::reindex_notification;
           ~sql_serializer_plugin_impl()
           {
             ilog("Serializer plugin is closing");
-            _indexation_state.end( *currently_caching_data, _last_block_num );
-            ilog("Serializer plugin has been closed");
           }
 
           void connect_signals();
