@@ -22,7 +22,8 @@ BEGIN
         -- processing irreversible blocks or find next event after irreversible
         SELECT * INTO  __result
         FROM hive.events_queue heq
-        WHERE heq.block_num > __newest_irreversible_block_num AND heq.event != 'BACK_FROM_FORK'
+        WHERE heq.block_num > __newest_irreversible_block_num
+              AND heq.event != 'BACK_FROM_FORK'
         ORDER BY heq.id LIMIT 1;
 
         IF __result IS NULL THEN
@@ -374,10 +375,7 @@ BEGIN
 
     IF __next_block_to_process IS NULL THEN
         -- There is no new and expected block, needs to wait for a new block
-        SELECT MAX( heq.id ) INTO __max_events_id FROM hive.events_queue heq;
-        IF __max_events_id <= __next_event_id OR __max_events_id IS NULL OR __next_event_id IS NULL THEN
-            PERFORM pg_sleep( 1.5 );
-        END IF;
+        PERFORM pg_sleep( 1.5 );
         RETURN NULL;
     END IF;
 
