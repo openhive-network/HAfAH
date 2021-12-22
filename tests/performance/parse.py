@@ -2,22 +2,31 @@
 from sys import argv
 from json import dumps, dump
 
+SCHEMA = 'hafah_python'
+
 def process_file(filename) -> dict:
+    UNIQ_THREADS = set()
     threads_with_records = {}
 
     with open(filename, 'r') as file:
         for i, line in enumerate(file):
+            assert not "Non HTTP" in line, "jmeter got error while benchmarking, re-run test!"
             if i == 0:
                 continue
             elements = line.split(',')
             if len(elements) > 5:
                 time = elements[1]
                 thread_name = elements[5]
+                if 'pre_check' in thread_name:
+                    continue
+                thread_num = int(thread_name.split(' ')[1].split('-')[1])
+                UNIQ_THREADS.add(thread_num)
                 if not thread_name in threads_with_records:
                     threads_with_records[thread_name] = [int(time)]
                 else:
                     threads_with_records[thread_name].append(int(time))
 
+    THREAD_COUNT = float(len(UNIQ_THREADS))
     merged_threads = {}
 
     for key, values in threads_with_records.items():
@@ -26,7 +35,16 @@ def process_file(filename) -> dict:
             merged_threads[mkey] = values
         else:
             for i, value in enumerate(values):
-                merged_threads[mkey][i] = (merged_threads[mkey][i] + value) / 2.0
+                item = merged_threads[mkey][i]
+                if not isinstance(item, list):
+                    merged_threads[mkey][i] = [item, value]
+                else:
+                    merged_threads[mkey][i].append(value)
+
+    for key, thread_records in merged_threads.items():
+        for i, values in enumerate(thread_records):
+            item = merged_threads[key][i]
+            merged_threads[key][i] = sum(item) / len(item)
 
     return merged_threads
 
@@ -90,13 +108,13 @@ def generate_sql(endpoint, data):
     data = data.split(';')
     data = {"bn1": data[0], "bn2": data[1], "acc": data[2], "trx": data[3]}
     if endpoint == 'enum_virtual_ops':
-        return f"SELECT * FROM enum_virtual_ops( NULL ::INT[] , {data['bn1']}, {data['bn2']}, 0, 1000, true ) ORDER BY _operation_id"
+        return f"SELECT * FROM {SCHEMA}.enum_virtual_ops( NULL ::INT[] , {data['bn1']}, {data['bn2']}, 0, 1000, true ) ORDER BY _operation_id"
     elif endpoint == 'get_transaction':
-        return f"SELECT * FROM get_transaction( decode('{data['trx']}', 'hex'), true )" # in actual code, sqlalchemy prepares it to proper form without decode
+        return f"SELECT * FROM {SCHEMA}.get_transaction( decode('{data['trx']}', 'hex'), true )" # in actual code, sqlalchemy prepares it to proper form without decode
     elif endpoint == 'get_ops_in_block':
-        return f"SELECT * FROM get_ops_in_block( {data['bn1']},  true, true )"
+        return f"SELECT * FROM {SCHEMA}.get_ops_in_block( {data['bn1']},  true, true )"
     elif endpoint == 'get_account_history':
-        return f"SELECT * FROM ah_get_account_history( NULL, '{data['acc']}', 0, 1000, true )"
+        return f"SELECT * FROM {SCHEMA}.ah_get_account_history( NULL, '{data['acc']}', 0, 1000, true )"
     else:
         assert False, f"unknown endpoint: {endpoint}"
 
@@ -132,19 +150,19 @@ with open('parsed.csv', 'w') as file:
     with open('parsed.json', 'w') as jj:
         dump(comprasion, jj)
 
-    file.write("sample_id|body|sql")
+    file.write("sample_id")
     for i in range(2,len(argv)):
         file.write(f'|{argv[i]}')
-    file.write('\n')
+    file.write('|body|sql\n')
+
+    def order(value : list):
+        return [ *value[2:], value[0], value[1] ]
 
     counter = 0
     for key, values in comprasion.items():
         for value in values:
             if len(value) == len(argv):
-                file.write(f'{counter}|{"|".join(value)}' + '\n')
+                file.write(f'{counter}|{"|".join(order(value))}' + '\n')
                 counter += 1
             else:
-                break 
-
-
-    # dump(compare_files('result.jtl', 'result.jtl'), file)
+                break

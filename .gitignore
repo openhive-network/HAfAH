@@ -13,4 +13,10 @@ build-*/
 build_*/
 
 
-*.log
+# logs and output from JMETER
+**/*.log
+**/*.jtl
+**/*.jmx
+**/*out
+**/*csv
+**/workdir/**
