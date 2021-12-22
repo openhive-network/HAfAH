@@ -149,12 +149,12 @@ class PreparationPhase:
     try:
       with sql_executor(self.db_url) as _sql_executor:
         assert _sql_executor.db is not None, "lack of database"
+        backend().prepare_database_context({"db":_sql_executor.db, "id": "preparation phase"})
 
         _query = self.read_file()
         if len(_query) > 0:
           _sql_executor.db.query_no_return(_query)
 
-        backend().prepare_database_context({"db":_sql_executor.db, "id": "preparation phase"})
 
         logger.info("http server is prepared")
         return True
