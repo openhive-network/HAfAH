@@ -11,8 +11,9 @@ class account_history_db_connector:
   def __init__(self, args : dict) -> None:
     self._conn : Db = args['db']
     assert self._conn is not None
-    self._id : Any = args['id']
+    self._id : Any = args.get('id', 'NO ID PROVIDED')
     self._schema = 'hafah_python'
+    self._context = self._schema
 
   def _get_db(self) -> Db:
     assert self._conn is not None
@@ -80,3 +81,12 @@ class account_history_db_connector:
     result = self._get_all("SELECT MAX(id) as id FROM hive.operation_types WHERE is_virtual=False")
     return result[0]['id']
 
+  def context_exists(self) -> bool:
+    result = self._get_all(f"SELECT app_context_exists FROM hive.app_context_exists('{self._context}')")
+    return result[0]['app_context_exists']
+
+  def create_context(self) -> None:
+    _ = self._get_all(f"SELECT hive.app_create_context('{self._context}')")
+
+  def detach(self) -> None:
+    _ = self._get_all(f"SELECT hive.app_context_detach('{self._context}')")

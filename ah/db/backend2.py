@@ -1,6 +1,9 @@
+import logging
 from ah.db.objects import account_history, operation, ops_in_block, transaction, virtual_ops
 from ah.db.queries2 import account_history_db_connector
 from ah.utils.performance import perf
+
+logger = logging.getLogger('backend')
 
 
 def extractor(*args, **kwargs):
@@ -76,3 +79,13 @@ class account_history_impl:
         include_reversible
       )
     )
+
+  def prepare_database_context(self, args) -> None:
+    api = account_history_db_connector(args)
+    if not api.context_exists():
+
+      logger.info("setting up context")
+      api.create_context()
+
+      logger.info("detaching context")
+      api.detach()

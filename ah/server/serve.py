@@ -14,7 +14,7 @@ from aiohttp import web
 from jsonrpcserver.methods import Methods
 from jsonrpcserver import dispatch
 
-from ah.api.endpoints2 import build_methods as account_history
+from ah.api.endpoints2 import backend, build_methods as account_history
 
 import simplejson
 from ah.server.adapter import Db
@@ -153,6 +153,8 @@ class PreparationPhase:
         _query = self.read_file()
         if len(_query) > 0:
           _sql_executor.db.query_no_return(_query)
+
+        backend().prepare_database_context({"db":_sql_executor.db, "id": "preparation phase"})
 
         logger.info("http server is prepared")
         return True

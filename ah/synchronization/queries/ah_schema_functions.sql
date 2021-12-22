@@ -16,7 +16,7 @@ CREATE VIEW hafah_python.helper_operations_view AS SELECT
       WHEN hov.trx_in_block <= -1 THEN hov.op_pos
       ELSE (hov.id - (
         SELECT nahov.id
-        FROM hive.operations_view nahov
+        FROM hive.hafah_python_operations_view nahov
         JOIN hive.operation_types nhot
         ON nahov.op_type_id = nhot.id
         WHERE nahov.block_num=hov.block_num
@@ -32,7 +32,7 @@ CREATE VIEW hafah_python.helper_operations_view AS SELECT
         trim(both '"' from to_json(hov.timestamp)::text) formated_timestamp,
         body body
 FROM
-  hive.operations_view hov;
+  hive.hafah_python_operations_view hov;
 
 CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_block( in _BLOCK_NUM INT, in _ONLY_VIRTUAL BOOLEAN, in _INCLUDE_REVERSIBLE BOOLEAN )
 RETURNS TABLE(
@@ -89,8 +89,8 @@ BEGIN
         JOIN hive.operation_types hot ON hot.id = ho.op_type_id
         WHERE ho.block_num = _BLOCK_NUM AND ( _ONLY_VIRTUAL = FALSE OR ( _ONLY_VIRTUAL = TRUE AND hot.is_virtual = TRUE ) )
       ) T
-      JOIN hive.blocks_view hb ON hb.num = T.block_num
-      LEFT JOIN hive.transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block
+      JOIN hive.hafah_python_blocks_view hb ON hb.num = T.block_num
+      LEFT JOIN hive.hafah_python_transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block
       ORDER BY _operation_id;
 END
 $function$
@@ -110,11 +110,11 @@ RETURNS TABLE(
 AS
 $function$
 DECLARE
-  __result hive.transactions_view%ROWTYPE;
+  __result hive.hafah_python_transactions_view%ROWTYPE;
   __multisig_number SMALLINT;
 BEGIN
 
-  SELECT * INTO __result FROM hive.transactions_view ht WHERE ht.trx_hash = _TRX_HASH;
+  SELECT * INTO __result FROM hive.hafah_python_transactions_view ht WHERE ht.trx_hash = _TRX_HASH;
   IF NOT _INCLUDE_REVERSIBLE AND __result.block_num > hive.app_get_irreversible_block(  ) THEN
     RETURN QUERY SELECT
       NULL::INT,
@@ -128,7 +128,7 @@ BEGIN
     RETURN;
   END IF;
 
-  SELECT count(*) INTO __multisig_number FROM hive.transactions_multisig_view htm WHERE htm.trx_hash = _TRX_HASH;
+  SELECT count(*) INTO __multisig_number FROM hive.hafah_python_transactions_multisig_view htm WHERE htm.trx_hash = _TRX_HASH;
 
   RETURN QUERY
     SELECT
@@ -154,7 +154,7 @@ BEGIN
   RETURN QUERY
     SELECT
       encode(htm.signature, 'escape') _signature
-    FROM hive.transactions_multisig_view htm
+    FROM hive.hafah_python_transactions_multisig_view htm
     WHERE htm.trx_hash = _TRX_HASH;
 END
 $function$
@@ -170,7 +170,7 @@ BEGIN
   RETURN QUERY
     SELECT
       ho.body _value
-    FROM hive.operations_view ho
+    FROM hive.hafah_python_operations_view ho
     JOIN hive.operation_types hot ON ho.op_type_id = hot.id
     WHERE ho.block_num = _BLOCK_NUM AND ho.trx_in_block = _TRX_IN_BLOCK AND hot.is_virtual = FALSE
     ORDER BY ho.id;
@@ -273,7 +273,7 @@ BEGIN
     LEFT JOIN
     (
       SELECT block_num, trx_in_block, trx_hash
-      FROM hive.transactions_view ht
+      FROM hive.hafah_python_transactions_view ht
       WHERE ht.block_num >= _BLOCK_RANGE_BEGIN AND ht.block_num < _BLOCK_RANGE_END
     )T2 ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
     WHERE T.block_num >= _BLOCK_RANGE_BEGIN AND T.block_num < _BLOCK_RANGE_END;
@@ -290,7 +290,7 @@ BEGIN
     SELECT
       ho.block_num _next_block,
       ho.id - 1 _next_op_id -- 1 is substracted because ho.id start from 1, when it should start from 0
-    FROM   hive.operations_view ho
+    FROM   hive.hafah_python_operations_view ho
     JOIN   hive.operation_types hot
     ON   ho.op_type_id=hot.id
     WHERE   hot.is_virtual = TRUE
@@ -357,7 +357,7 @@ BEGIN
       FROM
       (
         SELECT hao.operation_id as operation_id, hao.account_op_seq_no as seq_no
-        FROM hive.account_operations_view hao
+        FROM hive.hafah_python_account_operations_view hao
         WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _START
         ORDER BY seq_no DESC
         LIMIT _LIMIT
@@ -367,7 +367,7 @@ BEGIN
     WHERE ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
     ORDER BY X.seq_no ASC
     LIMIT _LIMIT ) T
-    LEFT JOIN hive.transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block;
+    LEFT JOIN hive.hafah_python_transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block;
   ELSE
     RETURN QUERY
       SELECT
@@ -412,7 +412,7 @@ BEGIN
             LIMIT _LIMIT
         ) T
         JOIN hive.operation_types hot ON hot.id = T.op_type_id
-        LEFT JOIN hive.transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block
+        LEFT JOIN hive.hafah_python_transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block
         ORDER BY _operation_id ASC
         LIMIT _LIMIT;
 
