@@ -12,15 +12,10 @@ EXECUTE format(
         hc.irreversible_block,
         hc.is_attached,
         hc.fork_id,
-        CASE hc.is_attached
-          WHEN true THEN LEAST(hc.irreversible_block, hc.current_block_num)
-          ELSE 2147483647
-        END AS min_block,
-        CASE hc.is_attached
-          WHEN true THEN hc.current_block_num > hc.irreversible_block and exists (SELECT NULL::text FROM hive.registered_tables hrt
+        LEAST(hc.irreversible_block, hc.current_block_num) AS min_block,
+        hc.current_block_num > hc.irreversible_block and exists (SELECT NULL::text FROM hive.registered_tables hrt
                                               WHERE hrt.context_id = hc.id)
-          ELSE false
-        END AS reversible_range
+        AS reversible_range
         FROM hive.contexts hc
         WHERE hc.name::text = ''%s''::text
         limit 1
@@ -84,6 +79,27 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.create_all_irreversible_blocks_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+EXECUTE format(
+        'CREATE OR REPLACE VIEW hive.%s_blocks_view
+        AS
+        SELECT hb.num,
+            hb.hash,
+            hb.prev,
+            hb.created_at
+        FROM hive.blocks hb
+        ;', _context_name
+    );
+END;
+$BODY$
+;
+
 CREATE OR REPLACE FUNCTION hive.drop_blocks_view( _context_name TEXT )
     RETURNS void
     LANGUAGE plpgsql
@@ -104,8 +120,7 @@ AS
 $BODY$
 BEGIN
     EXECUTE format(
-        'DROP VIEW IF EXISTS hive.%s_transactions_view;
-        CREATE VIEW hive.%s_transactions_view AS
+        'CREATE OR REPLACE VIEW hive.%s_transactions_view AS
         SELECT t.block_num,
            t.trx_in_block,
            t.trx_hash,
@@ -153,6 +168,30 @@ BEGIN
         ) t
         ;'
     , _context_name, _context_name, _context_name
+    );
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.create_all_irreversible_transactions_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+EXECUTE format(
+        'CREATE OR REPLACE VIEW hive.%s_transactions_view AS
+        SELECT ht.block_num,
+           ht.trx_in_block,
+           ht.trx_hash,
+           ht.ref_block_num,
+           ht.ref_block_prefix,
+           ht.expiration,
+           ht.signature
+        FROM hive.transactions ht
+       ;'
+    , _context_name
     );
 END;
 $BODY$
@@ -226,6 +265,32 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.create_all_irreversible_operations_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+EXECUTE format(
+        'CREATE OR REPLACE VIEW hive.%s_operations_view
+         AS
+         SELECT
+            ho.id,
+            ho.block_num,
+            ho.trx_in_block,
+            ho.op_pos,
+            ho.op_type_id,
+            ho.timestamp,
+            ho.body
+        FROM hive.operations ho
+        ;', _context_name
+    );
+END;
+$BODY$
+;
+
+
 CREATE OR REPLACE FUNCTION hive.drop_operations_view( _context_name TEXT )
     RETURNS void
     LANGUAGE plpgsql
@@ -246,8 +311,7 @@ AS
 $BODY$
 BEGIN
 EXECUTE format(
-    'DROP VIEW IF EXISTS hive.%s_TRANSACTIONS_MULTISIG_VIEW;
-    CREATE VIEW hive.%s_TRANSACTIONS_MULTISIG_VIEW
+    'CREATE OR REPLACE VIEW hive.%s_TRANSACTIONS_MULTISIG_VIEW
     AS
     SELECT
           t.trx_hash
@@ -287,6 +351,27 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.create_all_irreversible_signatures_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+EXECUTE format(
+    'CREATE OR REPLACE VIEW hive.%s_TRANSACTIONS_MULTISIG_VIEW
+    AS
+    SELECT
+          htm.trx_hash
+        , htm.signature
+    FROM hive.transactions_multisig htm
+    ;'
+    , _context_name
+    );
+END;
+$BODY$
+;
+
 CREATE OR REPLACE FUNCTION hive.drop_signatures_view( _context_name TEXT )
     RETURNS void
     LANGUAGE plpgsql
@@ -307,8 +392,7 @@ AS
 $BODY$
 BEGIN
 EXECUTE format(
-        'DROP VIEW IF EXISTS hive.%s_accounts_view;
-        CREATE VIEW hive.%s_accounts_view AS
+        'CREATE OR REPLACE VIEW hive.%s_accounts_view AS
         SELECT
            t.block_num,
            t.id,
@@ -347,6 +431,27 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hive.create_all_irreversible_accounts_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+EXECUTE format(
+        'CREATE OR REPLACE VIEW hive.%s_accounts_view AS
+        SELECT
+           ha.block_num,
+           ha.id,
+           ha.name
+        FROM hive.accounts ha
+    ;', _context_name
+    );
+END;
+$BODY$
+;
+
+
 CREATE OR REPLACE FUNCTION hive.drop_accounts_view( _context_name TEXT )
     RETURNS void
     LANGUAGE plpgsql
@@ -367,8 +472,7 @@ AS
 $BODY$
 BEGIN
 EXECUTE format(
-        'DROP VIEW IF EXISTS hive.%s_account_operations_view;
-        CREATE VIEW hive.%s_account_operations_view AS
+        'CREATE OR REPLACE VIEW hive.%s_account_operations_view AS
         SELECT
            t.account_id,
            t.account_op_seq_no,
@@ -404,6 +508,27 @@ EXECUTE format(
                 ) as arr ON arr.max_fork_id = har.fork_id AND arr.id = har.operation_id
              ) reversible
         ) t
+        ;'
+    , _context_name, _context_name, _context_name
+    );
+END;
+$BODY$
+;
+
+CREATE OR REPLACE FUNCTION hive.create_all_irreversible_account_operations_view( _context_name TEXT )
+    RETURNS void
+    LANGUAGE plpgsql
+    VOLATILE
+AS
+$BODY$
+BEGIN
+EXECUTE format(
+        'CREATE OR REPLACE VIEW hive.%s_account_operations_view AS
+        SELECT
+           ha.account_id,
+           ha.account_op_seq_no,
+           ha.operation_id
+        FROM hive.account_operations ha
         ;'
     , _context_name, _context_name, _context_name
     );

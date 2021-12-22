@@ -124,6 +124,14 @@ BEGIN
         , irreversible_block = COALESCE( __head_of_irreversible_block, 0 )
     WHERE name = _context
     ;
+
+    -- re-create view which mixes irreversible and reversible data
+    PERFORM hive.create_blocks_view( _context );
+    PERFORM hive.create_transactions_view( _context );
+    PERFORM hive.create_operations_view( _context );
+    PERFORM hive.create_signatures_view( _context );
+    PERFORM hive.create_accounts_view( _context );
+    PERFORM hive.create_account_operations_view( _context );
 END;
 $BODY$
 ;
@@ -136,6 +144,14 @@ AS
 $BODY$
 BEGIN
     PERFORM hive.context_detach( _context );
+
+    -- create view which return all irreversible data
+    PERFORM hive.create_all_irreversible_blocks_view( _context );
+    PERFORM hive.create_all_irreversible_transactions_view( _context );
+    PERFORM hive.create_all_irreversible_operations_view( _context );
+    PERFORM hive.create_all_irreversible_signatures_view( _context );
+    PERFORM hive.create_all_irreversible_accounts_view( _context );
+    PERFORM hive.create_all_irreversible_account_operations_view( _context );
 END;
 $BODY$
 ;

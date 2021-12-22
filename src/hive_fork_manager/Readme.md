@@ -137,6 +137,14 @@ It is enaught to read the data for the current HEAD BLOCK using the views:
 * hive.operations_view
 * hive.transactions_multisig_view
 
+#### It is possible to get only irreversible blocks data
+The applications without their own tables may be interested only in irreversible blocks data. The views listed above return
+both reversible and irreversible blocks, and there is no method to distinguish which block is reversible and which is not. To get
+access only to irreversible block tha pplication has to:
+1. create its own context
+2. immediatly detach the context
+3. use the context's view -  they will return only all irreversible blocks up to the head block
+
 ## Shared lib
 There are some functions that can be done efficiently only with low-level code as C/C++. Moreover, there is a need to
 get some code already working in hived, and execute it by Hive Fork Manager or its applications. One example is a parsing operation JSON to get the list
@@ -382,11 +390,12 @@ hive.app_next_block cannot be used when context is detached - in such case an ex
 
 ##### hive.app_context_detach( context_name )
 Detaches triggers atatched to register tables in a given context, It allow to do a massive sync of irreversible
-blocks without triggers overhead.
+blocks without triggers overhead. The context's views are recreated to return only all irreversible data.
 
 ##### hive.app_context_attach( context_name, block_num )
 Enables triggers attached to registered tables in a given context and set current context block num. The `block_num` cannot
-be greater than top of irreversible block.
+be greater than top of irreversible block. The context's views are recreated to return both reversible and irreversible
+data limited to the context's current block.
 
 ##### hive.app_context_is_attached( context_name )
 Returns TRUE when a given context is attached. It may thrown an exception when there is no a context with the given context_name
