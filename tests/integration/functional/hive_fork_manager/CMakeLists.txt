@@ -215,6 +215,7 @@ ADD_SQL_FUNCTIONAL_TESTS( app_api/blocks_view_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/transactions_view_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/signatures_view_test.sql )
 ADD_SQL_FUNCTIONAL_TESTS( app_api/operations_view_test.sql )
+ADD_SQL_FUNCTIONAL_TESTS( app_api/app_next_block_after_attach_2.sql )
 
 ADD_SQL_FUNCTIONAL_TESTS( scenarios/massive_sync_live_blocks_and_fork.sql )
 ADD_SQL_FUNCTIONAL_TESTS( scenarios/massive_sync_live_blocks_and_fork_non_forking_app.sql )
