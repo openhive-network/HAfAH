@@ -15,10 +15,20 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/thread/sync_queue.hpp>
 #include <boost/spirit/include/karma.hpp>
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/mem_fun.hpp>
+#include <boost/multi_index/tag.hpp>
 
 // Internal
 #include <hive/chain/util/extractors.hpp>
+#include <hive/chain/hive_object_types.hpp>
+#include <hive/chain/account_object.hpp>
 #include "type_extractor_processor.hpp"
+
+#ifndef HIVE_SQL_SERIALIZER_SPACE_ID
+#define HIVE_SQL_SERIALIZER_SPACE_ID 20
+#endif
 
 namespace hive
 {
@@ -26,6 +36,7 @@ namespace hive
   {
     namespace sql_serializer
     {
+
       namespace PSQL
       {
         using operation_types_container_t = std::map<int64_t, std::pair<fc::string, bool>>;
@@ -213,6 +224,40 @@ namespace hive
         using cache_contatiner_t = std::set<fc::string>;
 
       } // namespace PSQL
+
+      enum sql_serializer_object_types
+      {
+        account_ops_seq_object_type = ( HIVE_SQL_SERIALIZER_SPACE_ID << 8 )
+      };
+
+      class account_ops_seq_object : public chainbase::object< account_ops_seq_object_type, account_ops_seq_object >
+      {
+        CHAINBASE_OBJECT( account_ops_seq_object );
+        public:
+          template< typename Allocator >
+          account_ops_seq_object( chainbase::allocator< Allocator > a, uint64_t _id,
+            const hive::chain::account_object& _account )
+          : id( _account.get_id() ), operation_count( 0 )
+          {}
+
+          uint32_t operation_count;
+
+          CHAINBASE_UNPACK_CONSTRUCTOR(account_ops_seq_object);
+      };
+      typedef chainbase::oid_ref< account_ops_seq_object > account_ops_seq_id_type;
+
+      typedef boost::multi_index_container<
+        account_ops_seq_object,
+        boost::multi_index::indexed_by<
+          boost::multi_index::ordered_unique< boost::multi_index::tag< hive::chain::by_id >,
+            boost::multi_index::const_mem_fun< account_ops_seq_object, account_ops_seq_object::id_type, &account_ops_seq_object::get_id > >
+          >,
+        chainbase::allocator< account_ops_seq_object >
+      > account_ops_seq_index;
+
     }    // namespace sql_serializer
   }      // namespace plugins
 } // namespace hive
+
+FC_REFLECT( hive::plugins::sql_serializer::account_ops_seq_object, (id)(operation_count) )
+CHAINBASE_SET_INDEX_TYPE( hive::plugins::sql_serializer::account_ops_seq_object, hive::plugins::sql_serializer::account_ops_seq_index )

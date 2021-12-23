@@ -16,6 +16,7 @@ ADD_LIBRARY(
     queries_commit_data_processor.cpp
     string_data_processor.cpp
     indexation_state.cpp
+    accounts_collector.cpp
     ${HEADERS}
 )
 
