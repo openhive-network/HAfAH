@@ -208,7 +208,8 @@ DECLARE
 BEGIN
     SELECT MIN( hac.irreversible_block )
     INTO __lowest_contexts_irreversible_block
-    FROM hive.contexts hac;
+    FROM hive.contexts hac
+    WHERE hac.is_attached = True;
 
     IF __lowest_contexts_irreversible_block IS NULL THEN
         __lowest_contexts_irreversible_block = _new_irreversible_block;
