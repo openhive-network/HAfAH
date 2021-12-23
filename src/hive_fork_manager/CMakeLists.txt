@@ -17,6 +17,8 @@ ADD_PSQL_EXTENSION(
             reversible_blocks.sql
             block_views_for_head_block.sql
             blocks_views_for_contexts.sql
+            block_day_stats_view.sql
+            block_day_stats_all_op_view.sql
             state_provider.sql
             state_providers/accounts.sql
             hived_connections.sql
