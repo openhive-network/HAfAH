@@ -17,7 +17,7 @@ It is possible to install the fork manager in two forms - as a regular Postgres 
 
 The extension will be installed in the directory `<postgres_shareddir>/extension`. You can check the directory with `pg_config --sharedir`.
 
-To start using the extension in a database, execute psql command: `CREATE EXTENSION hive_fork_manager`
+To start using the extension in a database, execute psql command: `CREATE EXTENSION hive_fork_manager CASCADE;`. The CASCADE phrase is needed, to automatically install extensions the hive_fork_manager depends on.
 
 ### Alternatively, you can manually execute the SQL scripts to directly install the fork manager
 The required ordering of the sql scripts is included in the cmake file [src/hive_fork_manager/CMakeLists.txt](./CMakeLists.txt).
