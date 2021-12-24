@@ -120,7 +120,7 @@ replay_node_with_haf:
     - cd $CI_PROJECT_DIR/hive_fork_manager/build
     - make install
     - psql -d postgres -c 'CREATE DATABASE haf_block_log'
-    - psql -d haf_block_log -c 'CREATE EXTENSION hive_fork_manager'
+    - psql -d haf_block_log -c 'CREATE EXTENSION hive_fork_manager CASCADE'
     # tests
     - cd $CI_PROJECT_DIR/tests/integration/replay
     - mkdir blockchain

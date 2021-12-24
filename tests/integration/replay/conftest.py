@@ -42,10 +42,10 @@ def database():
             for i in range(max_tries):
                 try:
                     time.sleep(0.3)
-                    connection.execute('CREATE EXTENSION hive_fork_manager')
+                    connection.execute('CREATE EXTENSION hive_fork_manager CASCADE')
                     break
                 except Exception:
-                    logger.info('retrying to execute query CREATE EXTENSION hive_fork_manager')
+                    logger.info('retrying to execute query CREATE EXTENSION hive_fork_manager CASCADE')
                     continue
 
         with engine.connect() as connection:
