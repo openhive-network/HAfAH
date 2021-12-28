@@ -174,6 +174,11 @@ using chain::reindex_notification;
           void on_pre_apply_block(const block_notification& note);
           void on_post_apply_block(const block_notification& note);
 
+          /// Dedicated signal handler to be used at LIVE sync.
+          void livesync_pre_apply_block(const block_notification& note);
+          /// Dedicated signal handler to be used at LIVE sync.
+          void livesync_post_apply_block(const block_notification& note);
+
           void handle_transactions(const vector<hive::protocol::signed_transaction>& transactions, const int64_t block_num);
           void inform_hfm_about_starting();
           void collect_account_operations(int64_t operation_id, const hive::protocol::operation& op, uint32_t block_num);
@@ -585,6 +590,29 @@ void sql_serializer_plugin_impl::on_post_apply_block(const block_notification& n
   }
 }
 
+void sql_serializer_plugin_impl::livesync_pre_apply_block(const block_notification& note)
+{
+  /// Here all what must be done is install of operation processing signals.
+  FC_ASSERT(_on_pre_apply_operation_con.connected() == false);
+  _on_pre_apply_operation_con = chain_db.add_pre_apply_operation_handler(
+    [&](const operation_notification& note) { on_pre_apply_operation(note); }, main_plugin);
+  
+  FC_ASSERT(_on_post_apply_operation_con.connected() == false);
+
+  _on_post_apply_operation_con = chain_db.add_post_apply_operation_handler(
+    [&](const operation_notification& note) { on_post_apply_operation(note); }, main_plugin);
+}
+
+void sql_serializer_plugin_impl::livesync_post_apply_block(const block_notification& note)
+{
+  /// Do the same as usually
+  on_post_apply_block(note);
+  
+  /// And disconnect operation processing signals.
+  chain::util::disconnect_signal(_on_pre_apply_operation_con);
+  chain::util::disconnect_signal(_on_post_apply_operation_con);
+}
+
 void sql_serializer_plugin_impl::handle_transactions(const vector<hive::protocol::signed_transaction>& transactions, const int64_t block_num)
 {
   uint trx_in_block = 0;
@@ -649,6 +677,17 @@ void sql_serializer_plugin_impl::on_post_reindex(const reindex_notification& not
 
 void sql_serializer_plugin_impl::on_end_of_syncing()
 {
+  /** Disconnect pre-apply-block/post-apply block handlers to enable runtime installation of pre/post aplly operation signals.
+  *   This way all operations being processed by "external" transactions (not included in block) will be silently ignored, without any need to special filtering.
+  */
+  chain::util::disconnect_signal(_on_pre_apply_block_con);
+  chain::util::disconnect_signal(_on_post_apply_block_con);
+  chain::util::disconnect_signal(_on_pre_apply_operation_con);
+  chain::util::disconnect_signal(_on_post_apply_operation_con);
+
+  _on_pre_apply_block_con = chain_db.add_pre_apply_block_handler([&](const block_notification& note) { livesync_pre_apply_block(note); }, main_plugin);
+  _on_post_apply_block_con = chain_db.add_post_apply_block_handler([&](const block_notification& note) { livesync_post_apply_block(note); }, main_plugin);
+
   _indexation_state.on_end_of_syncing( *currently_caching_data, _last_block_num );
 }
 
