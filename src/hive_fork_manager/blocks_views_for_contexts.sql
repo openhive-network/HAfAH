@@ -474,38 +474,39 @@ BEGIN
 EXECUTE format(
         'CREATE OR REPLACE VIEW hive.%s_account_operations_view AS
         SELECT
+           t.block_num,
            t.account_id,
            t.account_op_seq_no,
            t.operation_id
         FROM hive.%s_context_data_view c,
         LATERAL
         (
-          SELECT ha.account_id,
+          SELECT
+                 ha.block_num,
+                 ha.account_id,
                  ha.account_op_seq_no,
                  ha.operation_id
                 FROM hive.account_operations ha
-                JOIN hive.operations ho ON ho.id = ha.operation_id
-                WHERE ho.block_num <= c.min_block
+                WHERE ha.block_num <= c.min_block
                 UNION ALL
                 SELECT
+                    reversible.block_num,
                     reversible.account_id,
                     reversible.account_op_seq_no,
                     reversible.operation_id
                 FROM ( SELECT
+                    har.block_num,
                     har.account_id,
                     har.account_op_seq_no,
                     har.operation_id,
                     har.fork_id
                 FROM hive.account_operations_reversible har
-                JOIN (SELECT hor.id, forks.max_fork_id
-                    FROM hive.operations_reversible hor
-                    JOIN (
+                JOIN (
                         SELECT hbr.num, MAX(hbr.fork_id) as max_fork_id
                         FROM hive.blocks_reversible hbr
                         WHERE c.reversible_range AND hbr.num > c.irreversible_block AND hbr.fork_id <= c.fork_id AND hbr.num <= c.current_block_num
                         GROUP by hbr.num
-                    ) as forks ON forks.max_fork_id = hor.fork_id AND forks.num = hor.block_num
-                ) as arr ON arr.max_fork_id = har.fork_id AND arr.id = har.operation_id
+                ) as arr ON arr.max_fork_id = har.fork_id AND arr.num = har.block_num
              ) reversible
         ) t
         ;'
@@ -525,6 +526,7 @@ BEGIN
 EXECUTE format(
         'CREATE OR REPLACE VIEW hive.%s_account_operations_view AS
         SELECT
+           ha.block_num,
            ha.account_id,
            ha.account_op_seq_no,
            ha.operation_id
