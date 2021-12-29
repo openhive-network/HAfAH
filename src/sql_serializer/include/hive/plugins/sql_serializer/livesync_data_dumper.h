@@ -91,6 +91,9 @@ namespace hive::plugins::sql_serializer {
     std::unique_ptr< accounts_data_container_t_writer > _account_writer;
     std::unique_ptr< account_operations_data_container_t_writer > _account_operations_writer;
 
+    std::unique_ptr< queries_commit_data_processor > _set_irreversible_block_processor;
+    std::unique_ptr< queries_commit_data_processor > _notify_fork_block_processor;
+
     std::string _block;
     std::string _transactions_multisig;
     std::string _accounts;
@@ -98,6 +101,10 @@ namespace hive::plugins::sql_serializer {
     boost::signals2::connection _on_irreversible_block_conn;
     boost::signals2::connection _on_switch_fork_conn;
     std::shared_ptr< transaction_controllers::transaction_controller > transactions_controller;
+
+    uint32_t _irreversible_block_num = 0;
+    uint32_t _last_fork_block_num = 0;
+
   };
 
 } // namespace hive::plugins::sql_serializer
