@@ -90,34 +90,34 @@ BEGIN
          , ( 1000, 'alice92', 9, 2 )
          , ( 900, 'alice83', 8, 3 )
          , ( 1000, 'alice93', 9, 3 )
-         , ( 1100, 'alice103', 10, 3 )
+         , (  1100, 'alice103', 10, 3 )
     ;
 
-    INSERT INTO hive.account_operations(account_id, account_op_seq_no, operation_id)
+    INSERT INTO hive.account_operations(block_num, account_id, account_op_seq_no, operation_id)
     VALUES
-           ( 100, 1, 1 )
-         , ( 100, 2, 2 )
-         , ( 200, 1, 2 )
-         , ( 300, 1, 3 )
-         , ( 400, 1, 4 )
+           ( 1, 100, 1, 1 )
+         , ( 2, 100, 2, 2 )
+         , ( 2, 200, 1, 2 )
+         , ( 3, 300, 1, 3 )
+         , ( 4, 400, 1, 4 )
     ;
 
     INSERT INTO hive.account_operations_reversible
     VALUES
-           ( 400, 1, 4, 1 ) -- it pretends that some slow app prevent to remove this
-         , ( 500, 1, 5, 1 )
-         , ( 600, 1, 6, 1 )
-         , ( 700, 1, 7, 1 ) -- must be overriden by fork 2
-         , ( 800, 1, 7, 1 ) -- must be overriden by fork 2
-         , ( 900, 1, 9, 1 ) -- must be overriden by fork 2
-         , ( 700, 2, 7, 2 )
-         , ( 800, 2, 8, 2 )
-         , ( 900, 2, 9, 2 )
-         , ( 900, 3, 8, 2 )
-         , ( 1000, 2, 10, 2 )
-         , ( 900, 3, 9, 3 )
-         , ( 100, 3, 10, 3 )
-         , ( 1100, 3, 10, 3 )
+           ( 4, 400, 1, 4, 1 ) -- it pretends that some slow app prevent to remove this
+         , ( 5, 500, 1, 5, 1 )
+         , ( 6, 600, 1, 6, 1 )
+         , ( 7, 700, 1, 7, 1 ) -- must be overriden by fork 2
+         , ( 7, 800, 1, 7, 1 ) -- must be overriden by fork 2
+         , ( 7, 900, 1, 9, 1 ) -- must be overriden by fork 2
+         , ( 7, 700, 2, 7, 2 )
+         , ( 7, 800, 2, 8, 2 )
+         , ( 8, 900, 2, 9, 2 )
+         , ( 7, 900, 3, 8, 2 )
+         , ( 9, 1000, 2, 10, 2 )
+         , ( 9, 900, 3, 9, 3 )
+         , ( 10, 100, 3, 10, 3 )
+         , ( 10, 1100, 3, 10, 3 )
     ;
 
     UPDATE hive.irreversible_data SET consistent_block = 4;

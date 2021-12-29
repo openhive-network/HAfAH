@@ -176,12 +176,12 @@ $BODY$
 BEGIN
     INSERT INTO hive.account_operations
     SELECT
-           haor.account_id
+           haor.block_num
+         , haor.account_id
          , haor.account_op_seq_no
          , haor.operation_id
     FROM
         hive.account_operations_reversible haor
-        JOIN hive.operations_reversible hor1 ON hor1.id = haor.operation_id AND haor.fork_id = hor1.fork_id
         JOIN (
             SELECT
                   DISTINCT ON ( hbr.num ) hbr.num
@@ -191,7 +191,7 @@ BEGIN
                 hbr.num <= _new_irreversible_block
               AND hbr.num > _head_block_of_irreversible_blocks
             ORDER BY hbr.num ASC, hbr.fork_id DESC
-        ) as num_and_forks ON hor1.fork_id = num_and_forks.fork_id AND hor1.block_num = num_and_forks.num
+        ) as num_and_forks ON haor.fork_id = num_and_forks.fork_id AND haor.block_num = num_and_forks.num
     ;
 END;
 $BODY$

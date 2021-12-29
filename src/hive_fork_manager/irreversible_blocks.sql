@@ -73,7 +73,8 @@ CREATE TABLE IF NOT EXISTS hive.accounts (
 
 CREATE TABLE IF NOT EXISTS hive.account_operations
 (
-      account_id INTEGER NOT NULL --- Identifier of account involved in given operation.
+      block_num INTEGER NOT NULL
+    , account_id INTEGER NOT NULL --- Identifier of account involved in given operation.
     , account_op_seq_no INTEGER NOT NULL --- Operation sequence number specific to given account.
     , operation_id BIGINT NOT NULL --- Id of operation held in hive_opreations table.
     , CONSTRAINT hive_account_operations_fk_1 FOREIGN KEY (account_id) REFERENCES hive.accounts(id)
@@ -86,4 +87,5 @@ CREATE INDEX IF NOT EXISTS hive_transactions_block_num_trx_in_block_idx ON hive.
 CREATE INDEX IF NOT EXISTS hive_operations_block_num_type_trx_in_block_idx ON hive.operations ( block_num, op_type_id, trx_in_block );
 CREATE INDEX IF NOT EXISTS hive_operations_block_num_id_idx ON hive.operations USING btree(block_num, id);
 CREATE INDEX IF NOT EXISTS hive_account_operations_operation_id_idx ON hive.account_operations(operation_id);
+CREATE INDEX IF NOT EXISTS hive_account_operations_block_num_idx ON hive.account_operations(block_num);
 
