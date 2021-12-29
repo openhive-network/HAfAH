@@ -32,7 +32,6 @@
 #include <string>
 #include <vector>
 
-#include <signal.h>
 
 
 namespace hive
@@ -511,10 +510,7 @@ void sql_serializer_plugin_impl::on_pre_apply_operation(const operation_notifica
   hive::util::supplement_operation(note.op, chain_db);
 
   const bool is_virtual = hive::protocol::is_virtual_operation(note.op);
-  if ( !is_virtual && note.trx_in_block < 0 ) {
-    wlog("Non is_producing real operation with trx_in_block = -1");
-    raise(SIGABRT);
-  }
+  FC_ASSERT( is_virtual || note.trx_in_block >= 0,  "Non is_producing real operation with trx_in_block = -1" );
 
   cached_containter_t& cdtf = currently_caching_data; // alias
 
@@ -547,10 +543,7 @@ void sql_serializer_plugin_impl::on_post_apply_operation(const operation_notific
     return;
 
   const bool is_virtual = hive::protocol::is_virtual_operation(note.op);
-  if ( !is_virtual && note.trx_in_block < 0 ) {
-    wlog("Non is_producing real operation with trx_in_block = -1");
-    raise(SIGABRT);
-  }
+  FC_ASSERT( is_virtual || note.trx_in_block >= 0, "Non is_producing real operation with trx_in_block = -1" );
 
   ++op_sequence_id;
   currently_caching_data->operations.emplace_back(
