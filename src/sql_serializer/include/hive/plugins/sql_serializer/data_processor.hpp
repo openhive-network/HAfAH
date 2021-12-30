@@ -50,24 +50,26 @@ public:
   void complete_data_processing();
   void cancel();
   void join();
+private:
+  void handle_exception( std::exception_ptr exception_ptr );
 
-  private:
-    std::string _description;
-    std::atomic_bool _cancel;
-    std::atomic_bool _continue;
-    std::atomic_bool _is_processing_data;
+private:
+  std::string _description;
+  std::atomic_bool _cancel;
+  std::atomic_bool _continue;
+  std::atomic_bool _is_processing_data;
 
-    std::future<void> _future;
-    std::mutex _mtx;
-    std::mutex _data_processing_mtx;
-    std::condition_variable _cv;
-    std::condition_variable _data_processing_finished_cv;
-    fc::optional<data_chunk_ptr> _dataPtr;
-    uint32_t _last_block_num = 0;
+  std::future<void> _future;
+  std::mutex _mtx;
+  std::mutex _data_processing_mtx;
+  std::condition_variable _cv;
+  std::condition_variable _data_processing_finished_cv;
+  fc::optional<data_chunk_ptr> _dataPtr;
+  uint32_t _last_block_num = 0;
 
-    size_t _total_processed_records;
+  size_t _total_processed_records;
 
-    std::shared_ptr< block_num_rendezvous_trigger > _randezvous_trigger;
+  std::shared_ptr< block_num_rendezvous_trigger > _randezvous_trigger;
 };
 
 }}} /// hive::plugins::sql_serializer

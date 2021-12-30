@@ -67,6 +67,22 @@ namespace hive{ namespace plugins{ namespace sql_serializer {
     _account_writer = std::make_unique<accounts_data_container_t_writer>(accounts_callback, "Accounts data writer", api_trigger);
     _account_operations_writer = std::make_unique< account_operations_data_container_t_writer >(account_operation_threads, "Account operations data writer", api_trigger);
 
+    auto execute_set_irreversible
+      = [&](const data_processor::data_chunk_ptr& dataPtr, transaction_controllers::transaction& tx)->data_processor::data_processing_status{
+      std::string command = "SELECT hive.set_irreversible(" + std::to_string( _irreversible_block_num ) + ")";
+      tx.exec( command );
+      return data_processor::data_processing_status();
+    };
+    _set_irreversible_block_processor = std::make_unique< queries_commit_data_processor >( db_url, "hive.set_irreversible caller", execute_set_irreversible, nullptr );
+
+    auto execute_back_from_fork
+    = [&](const data_processor::data_chunk_ptr& dataPtr, transaction_controllers::transaction& tx)->data_processor::data_processing_status{
+      std::string command = "SELECT hive.back_from_fork(" + std::to_string( _last_fork_block_num ) + ")";
+      tx.exec( command );
+      return data_processor::data_processing_status();
+    };
+    _notify_fork_block_processor = std::make_unique< queries_commit_data_processor >( db_url, "hive.back_from_fork caller", execute_back_from_fork, nullptr );
+
     connect_irreversible_event();
     connect_fork_event();
 
@@ -106,21 +122,23 @@ namespace hive{ namespace plugins{ namespace sql_serializer {
       , *_operation_writer
       , *_account_writer
       , *_account_operations_writer
+      , *_set_irreversible_block_processor
+      , *_notify_fork_block_processor
     );
   }
 
   void livesync_data_dumper::on_irreversible_block( uint32_t block_num ) {
-    auto transaction = transactions_controller->openTx();
-    std::string command = "SELECT hive.set_irreversible(" + std::to_string(block_num) + ")";
-    transaction->exec( command );
-    transaction->commit();
+    _irreversible_block_num = block_num;
+    constexpr auto NUMBER_WITHOUT_MEANING = 0;
+    _set_irreversible_block_processor->trigger( nullptr, NUMBER_WITHOUT_MEANING );
+    _set_irreversible_block_processor->complete_data_processing();
   }
 
   void livesync_data_dumper::on_switch_fork( uint32_t block_num ) {
-    auto transaction = transactions_controller->openTx();
-    std::string command = "SELECT hive.back_from_fork(" + std::to_string(block_num) + ")";
-    transaction->exec( command );
-    transaction->commit();
+    _last_fork_block_num = block_num;
+    constexpr auto NUMBER_WITHOUT_MEANING = 0;
+    _notify_fork_block_processor->trigger( nullptr, NUMBER_WITHOUT_MEANING );
+    _notify_fork_block_processor->complete_data_processing();
   }
 
   void livesync_data_dumper::connect_irreversible_event() {

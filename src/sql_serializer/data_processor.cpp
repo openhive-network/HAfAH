@@ -100,36 +100,11 @@ data_processor::data_processor( std::string description, const data_processing_f
         dlog("${d} data processor finished processing a data chunk...", ("d", _description));
       }
     }
-    catch(const pqxx::sql_error& ex)
+    catch(...)
     {
-      elog("Data processor ${d} detected SQL statement execution failure. Failing statement: `${q}'.", ("d", _description)("q", ex.query()));
-      kill_node();
-      throw;
+      auto current_exception = std::current_exception();
+      handle_exception( current_exception );
     }
-    catch(const pqxx::pqxx_exception& ex)
-    {
-      elog("Data processor ${d} detected SQL execution failure: ${e}", ("d", _description)("e", ex.base().what()));
-      kill_node();
-      throw;
-    }
-    catch(const fc::exception& ex)
-    {
-      elog("Data processor ${d} execution failed: ${e}", ("d", _description)("e", ex.what()));
-      kill_node();
-      throw;
-    }
-    catch(const std::exception& ex)
-    {
-      elog("Data processor ${d} execution failed: ${e}", ("d", _description)("e", ex.what()));
-      kill_node();
-      throw;
-    }
-    catch(...) {
-      elog("Data processor ${d} execution failed: unknown exception", ("d", _description));
-      kill_node();
-      throw;
-    }
-
     ilog("Leaving data processor thread: ${d}", ("d", _description));
   };
 
@@ -143,6 +118,10 @@ data_processor::~data_processor()
 
 void data_processor::trigger(data_chunk_ptr dataPtr, uint32_t last_blocknum)
 {
+  if ( _cancel.load() ) {
+    wlog( "Trying to trigger data processor: ${d} but its execution is already canceled. The data are ignored.", ("d", _description) );
+    return;
+  }
   /// Set immediately data processing flag
   _is_processing_data = true;
 
@@ -166,11 +145,14 @@ void data_processor::trigger(data_chunk_ptr dataPtr, uint32_t last_blocknum)
 }
 
 void
-data_processor::only_report_batch_finished( uint32_t block_num ) {
+data_processor::only_report_batch_finished( uint32_t block_num ) try {
   if ( _randezvous_trigger ) {
     ilog( "${i} commited by ${d}",("i", block_num )("d", _description) );
     _randezvous_trigger->report_complete_thread_stage( block_num );
   }
+} catch(...) {
+  auto current_exception = std::current_exception();
+  handle_exception( current_exception );
 }
 
 void data_processor::complete_data_processing()
@@ -199,7 +181,7 @@ void data_processor::join()
   {
     ilog("Trying to resume data processor: ${d}...", ("d", _description));
     std::lock_guard<std::mutex> lk(_mtx);
-    ilog("Data processor: ${d} triggerred...", ("d", _description));
+    ilog("Data processor: ${d} resumed...", ("d", _description));
   }
   _cv.notify_one();
 
@@ -211,6 +193,46 @@ void data_processor::join()
   }
 
   ilog("Data processor: ${d} finished execution...", ("d", _description));
+}
+
+void
+data_processor::handle_exception( std::exception_ptr exception_ptr ) {
+  try {
+    if ( exception_ptr ) {
+      _cancel.store(true);
+      _continue.store(false);
+      std::rethrow_exception( exception_ptr );
+    }
+  }
+  catch(const pqxx::sql_error& ex)
+  {
+    elog("Data processor ${d} detected SQL statement execution failure. Failing statement: `${q}'.", ("d", _description)("q", ex.query()));
+    kill_node();
+    throw;
+  }
+  catch(const pqxx::pqxx_exception& ex)
+  {
+    elog("Data processor ${d} detected SQL execution failure: ${e}", ("d", _description)("e", ex.base().what()));
+    kill_node();
+    throw;
+  }
+  catch(const fc::exception& ex)
+  {
+    elog("Data processor ${d} execution failed: ${e}", ("d", _description)("e", ex.what()));
+    kill_node();
+    throw;
+  }
+  catch(const std::exception& ex)
+  {
+    elog("Data processor ${d} execution failed: ${e}", ("d", _description)("e", ex.what()));
+    kill_node();
+    throw;
+  }
+  catch(...) {
+    elog("Data processor ${d} execution failed: unknown exception", ("d", _description));
+    kill_node();
+    throw;
+  }
 }
 
 }}} /// hive::plugins::sql_serializer
