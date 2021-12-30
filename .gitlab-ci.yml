@@ -81,7 +81,8 @@ pattern_tests:
     # replay and prepare database
     - mkdir blockchain
     - $HIVE_BUILD_ROOT_PATH/programs/util/truncate_block_log $BLOCK_LOG_PATH blockchain/block_log 5000000
-    - $HIVE_BUILD_ROOT_PATH/programs/hived/hived --data-dir . --config config.ini --force-replay --exit-before-sync > node_logs.log 2>&1
+    - $HIVE_BUILD_ROOT_PATH/programs/hived/hived --data-dir . --config config.ini --force-replay  > node_logs.log 2>&1 &
+    - sleep 600
 
     - tox
 
