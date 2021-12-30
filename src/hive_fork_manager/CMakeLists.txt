@@ -28,6 +28,7 @@ ADD_PSQL_EXTENSION(
             app_api.sql
             authorization.sql
             get_impacted_accounts.sql
+            get_impacted_balances.sql
 )
 
 ADD_SUBDIRECTORY( shared_lib )
