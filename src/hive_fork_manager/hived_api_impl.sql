@@ -425,8 +425,7 @@ BEGIN
     SELECT consistent_block INTO __consistent_block FROM hive.irreversible_data;
 
     DELETE FROM hive.account_operations hao
-    USING hive.operations ho
-    WHERE ho.block_num > __consistent_block AND ho.id = hao.operation_id;
+    WHERE hao.block_num > __consistent_block;
 
     DELETE FROM hive.operations WHERE block_num > __consistent_block;
 
