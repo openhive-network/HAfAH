@@ -88,4 +88,5 @@ CREATE INDEX IF NOT EXISTS hive_operations_block_num_type_trx_in_block_idx ON hi
 CREATE INDEX IF NOT EXISTS hive_operations_block_num_id_idx ON hive.operations USING btree(block_num, id);
 CREATE INDEX IF NOT EXISTS hive_account_operations_operation_id_idx ON hive.account_operations(operation_id);
 CREATE INDEX IF NOT EXISTS hive_account_operations_block_num_idx ON hive.account_operations(block_num);
+CREATE INDEX IF NOT EXISTS hive_accounts_block_num_idx ON hive.accounts USING btree (block_num);
 
