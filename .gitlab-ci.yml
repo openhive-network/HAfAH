@@ -57,31 +57,35 @@ patterns_tests:
     HIVE_BUILD_ROOT_PATH: "$CI_PROJECT_DIR/hived/build/hive"
     EXTENSION_BUILD_ROOT_PATH: "$CI_PROJECT_DIR/hive_fork_manager/build"
     BLOCK_LOG_PATH: "/blockchain/block_log"
-    AH_ENDPOINT: ""
-    POSTGRESQL_URI: ""
   script:
     - apt-get install tox -y
     - pip3 install -r requirements.txt
 
     # install extension build in previous stage
     # replay and prepare database
-    - /etc/init.d/postgresql start
-    - cd $EXTENSION_BUILD_ROOT_PATH
-    - make install
-    - psql -d postgres -c 'CREATE DATABASE haf_block_log'
-    - psql -d haf_block_log -c 'CREATE EXTENSION hive_fork_manager CASCADE'
-    - mkdir $CI_PROJECT_DIR/tests/patterns/.hived/blockchain
-    - $HIVE_BUILD_ROOT_PATH/programs/util/truncate_block_log $BLOCK_LOG_PATH $CI_PROJECT_DIR/tests/patterns/.hived/blockchain/block_log 5000000
-    - $HIVE_BUILD_ROOT_PATH/programs/hived/hived --data-dir $CI_PROJECT_DIR/tests/patterns/.hived --config config.ini --force-replay --exit-before-sync > $CI_PROJECT_DIR/from_node.log 2>&1
-    - export POSTGRESQL_URI='postgresql:///haf_block_log'
+    - if [ ! "$POSTGRESQL_URI" ] && [ ! "$AH_ENDPOINT" ]; then
+        /etc/init.d/postgresql start ;
+        cd $EXTENSION_BUILD_ROOT_PATH ;
+        make install ;
+        psql -d postgres -c 'CREATE DATABASE haf_block_log' ;
+        psql -d haf_block_log -c 'CREATE EXTENSION hive_fork_manager CASCADE' ;
+        mkdir $CI_PROJECT_DIR/tests/patterns/.hived/blockchain ;
+        $HIVE_BUILD_ROOT_PATH/programs/util/truncate_block_log $BLOCK_LOG_PATH $CI_PROJECT_DIR/tests/patterns/.hived/blockchain/block_log 5000000 ;
+        $HIVE_BUILD_ROOT_PATH/programs/hived/hived --data-dir $CI_PROJECT_DIR/tests/patterns/.hived --config config.ini --force-replay --exit-before-sync > $CI_PROJECT_DIR/from_node.log 2>&1 ;
+        export POSTGRESQL_URI='postgresql:///haf_block_log' ;
+      fi
 
     # run account history
-    - cd $CI_PROJECT_DIR
-    - ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 &
-    - export AH_ENDPOINT=http://localhost:6543
+    - if [ ! "$AH_ENDPOINT" ]; then
+        cd $CI_PROJECT_DIR ;
+        ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 &
+        export AH_ENDPOINT=http://localhost:6543 ;
+      fi
 
     # run tests
     - cd $CI_PROJECT_DIR/tests/patterns
+    - echo $POSTGRESQL_URI
+    - echo $AH_ENDPOINT
     - tox
 
   artifacts:
