@@ -365,9 +365,10 @@ BEGIN
     JOIN hafah_python.helper_operations_view ho ON X.operation_id = ho.id
     JOIN hive.operation_types hot ON hot.id = ho.op_type_id
     WHERE ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
-    ORDER BY X.seq_no ASC
+    ORDER BY operation_id ASC
     LIMIT _LIMIT ) T
-    LEFT JOIN hive.transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block;
+    LEFT JOIN hive.transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block
+    ORDER BY _operation_id ASC;
   ELSE
     RETURN QUERY
       SELECT
@@ -425,6 +426,8 @@ SET JIT=OFF
 SET join_collapse_limit=16
 SET from_collapse_limit=16
 ;
+
+
 DROP VIEW IF EXISTS hafah_python.account_operation_count_info_view CASCADE;
 CREATE OR REPLACE VIEW hafah_python.account_operation_count_info_view
 AS
