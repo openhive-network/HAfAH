@@ -353,22 +353,16 @@ BEGIN
       T.seq_no as _operation_id
     FROM
     (
-      SELECT ho.trx_in_block, ho.id as operation_id, ho.body, ho.op_pos, ho.block_num, X.seq_no, ho.virtual_op, ho.formated_timestamp as _timestamp
-      FROM
-      (
-        SELECT hao.operation_id as operation_id, hao.account_op_seq_no as seq_no
-        FROM hive.account_operations_view hao
-        WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _START
-        ORDER BY seq_no DESC
-        LIMIT _LIMIT
-      ) X
-    JOIN hafah_python.helper_operations_view ho ON X.operation_id = ho.id
-    JOIN hive.operation_types hot ON hot.id = ho.op_type_id
-    WHERE ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
-    ORDER BY operation_id ASC
-    LIMIT _LIMIT ) T
+      SELECT ho.trx_in_block, ho.id as operation_id, ho.body, ho.op_pos, ho.block_num, hao.account_op_seq_no seq_no, ho.virtual_op, ho.formated_timestamp as _timestamp
+      FROM hive.account_operations_view hao
+      JOIN hafah_python.helper_operations_view ho ON hao.operation_id = ho.id
+      WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _START
+                                  AND ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
+      ORDER BY hao.account_op_seq_no DESC
+      LIMIT _LIMIT
+    ) T
     LEFT JOIN hive.transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block
-    ORDER BY _operation_id ASC;
+    ORDER BY T.seq_no ASC;
   ELSE
     RETURN QUERY
       SELECT
