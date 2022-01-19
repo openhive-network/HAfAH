@@ -330,7 +330,6 @@ BEGIN
 
   SELECT INTO __account_id ( select id from hive.accounts where name = _ACCOUNT );
 
-  IF __filter_info IS NULL THEN
   RETURN QUERY
     SELECT
       (
@@ -357,61 +356,13 @@ BEGIN
       FROM hive.account_operations_view hao
       JOIN hafah_python.helper_operations_view ho ON hao.operation_id = ho.id
       WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _START
-                                  AND ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
+                                  AND ( ( __upper_block_limit IS NULL ) OR ( ho.block_num <= __upper_block_limit ) )
+                                  AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id = ANY( _FILTER ) ) )
       ORDER BY hao.account_op_seq_no DESC
       LIMIT _LIMIT
     ) T
     LEFT JOIN hive.transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block
     ORDER BY T.seq_no ASC;
-  ELSE
-    RETURN QUERY
-      SELECT
-        (
-          CASE
-          WHEN ht.trx_hash IS NULL THEN '0000000000000000000000000000000000000000'
-          ELSE encode( ht.trx_hash, 'escape')
-          END
-        ) _trx_id,
-        T.block_num _block,
-        (
-          CASE
-          WHEN ht.trx_in_block IS NULL THEN 4294967295
-          ELSE ht.trx_in_block
-          END
-        ) _trx_in_block,
-        T.op_pos _op_in_trx,
-        T.virtual_op _virtual_op,
-        T._timestamp,
-        T.body _value,
-        T.seq_no as _operation_id
-      FROM
-        (
-          --`abs` it's temporary, until position of operation is correctly saved
-          SELECT
-            ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, WORKAROUND.seq_no, formated_timestamp as _timestamp, ho.virtual_op
-            FROM hafah_python.helper_operations_view ho
-          JOIN-- hived patterns related workaround, see more: https://gitlab.syncad.com/hive/HAfAH/-/issues/3
-          (
-            SELECT
-            ho.id, hao.account_op_seq_no as seq_no
-            FROM hafah_python.helper_operations_view ho
-            JOIN hive.account_operations hao ON ho.id = hao.operation_id
-            WHERE ( (__upper_block_limit IS NULL) OR ho.block_num <= __upper_block_limit )
-              AND hao.account_id = __account_id
-              AND hao.account_op_seq_no <= _START
-            ORDER BY seq_no DESC
-            LIMIT 2000
-          )WORKAROUND ON WORKAROUND.id = ho.id
-            WHERE ho.op_type_id = ANY( _FILTER )
-            ORDER BY seq_no DESC
-            LIMIT _LIMIT
-        ) T
-        JOIN hive.operation_types hot ON hot.id = T.op_type_id
-        LEFT JOIN hive.transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block
-        ORDER BY _operation_id ASC
-        LIMIT _LIMIT;
-
-  END IF;
 
 END
 $function$
