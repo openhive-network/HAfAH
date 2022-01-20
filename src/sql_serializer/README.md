@@ -18,6 +18,7 @@ psql-transactions-threads-number = 2
 psql-account-operations-threads-number = 2
 psql-enable-accounts-dump = true
 psql-force-open-inconsistent = false
+psql-livesync-threshold = 10000
 ```
 
 ## Parameters
@@ -38,6 +39,9 @@ The sql_serializer extends hived with these new parameters:
 * **psql-account-operations-threads-number**[default: 2] the number of threads used to dump account operations to the database.
 * **psql-enable-accounts-dump**[default: true] if true, account and account operations will be dumped to the database as part of the serialization process.
 * **psql-force-open-inconsistent**[default: false] if true, the plugin will connect and repair a HAF database when the database is in an inconsistent state. Motivation for this flag: Hived may crash while serializing blocks to the database, potentially leaving the database in an inconsistent state where the data from a block has only been partially written to the database. In this case, the database will contain sufficient information about the inconsistent data to enable the hive fork manager to repair the database so that hived can resume filling it, but the repair may take a very long time. Therefore, by default hived will abort its operation when it opens an inconsistent HAF datagbase instead of repairing it. To explicitly start the database repair action, set this flag to true.
+* **psql-livesync-threshold**[default: 10000] limit of number of blocks required to sync to reach the network HEAD_BLOCK. After starting the HAF, if the number of blocks to sync is 
+  greater than the limit, then synchronization process will move through massive sync states (reindex and p2p), otherwise it will imeddiatly moves to 'live' state what saves time to
+  disable and enable indexes and foreigh keys. 
 
 ### Example hived command
 
@@ -83,3 +87,15 @@ In each mode of indexation (serialization), there is a different combination of 
 - **p2_psync** : p2p_flush_trigger + reindex_data_dumper
 - **reindex** : reindex_flush_trigger + reindex_data_dumper
 - **live** : live_flush_trigger + livesync_data_dumper
+
+#### Indexes and Foreign Keys
+Idexes are very important to performance of the SQL queries, but they add significant overhead for inserting new rows to tables.
+Whole process of syncing blocks to HAF is a process of massively inserting new rows into SQL tables, so good managment of indexes is very important.
+Indexes and constrains are enabled or disabled depending on synchronization state:
+- **p2_psync** : indexes are disabled, FK are disabled
+        <p>Idexes drasicly slow down reindex process and have to be disabled, no indexes means also no FK.
+- **reindex** : indexes are disabled, FK are disabled
+        <p>Idexes drasicly slow down reindex process and have to be disabled, no indexes means also no FK.
+- **live** : indexes are enabled, FK are enabled
+        <p>Blocks are inserting for every 3s, so inserting speed is not important, instead queries performance is crucial
+        because tha applications need it during its normal work.
