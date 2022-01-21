@@ -89,7 +89,7 @@ class DBHandler(BaseHTTPRequestHandler):
 
   @staticmethod
   def decimal_serialize(obj):
-      return simplejson.dumps(obj=obj, use_decimal=True, default=vars)
+      return simplejson.dumps(obj=obj, use_decimal=True, default=vars, ensure_ascii=False, encoding='utf8')
 
   @staticmethod
   def decimal_deserialize(s):
