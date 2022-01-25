@@ -70,7 +70,7 @@ class virtual_ops(api_operations_container):
     if len(self.ops):
       last_op : api_operation = self.ops[-1]
       self.next_block_range_begin = last_op.block
-      self.next_operation_begin = int(last_op.operation_id) if last_block < last_op.block else 0
+      self.next_operation_begin = int(last_op.operation_id)
       self.ops.remove(last_op)
 
   def __group_by_block(self, irreversible_block):
