@@ -77,6 +77,6 @@ class account_history_db_connector:
     return self._get_all("SELECT name, id FROM hive.operation_types")
 
   def get_virtual_op_offset(self) -> int:
-    result = self._get_all("SELECT MAX(id) as id FROM hive.operation_types WHERE is_virtual=False")
+    result = self._get_all("SELECT MAX(id) + 1 as id FROM hive.operation_types WHERE is_virtual=False")
     return result[0]['id']
 

@@ -48,10 +48,10 @@ class transaction:
 class ops_in_block(api_operations_container): pass
 class ops_by_block_wrapper:
   def __init__(self, iterable: list, block : int, timestamp : str, irreversible : bool):
-      self.ops = iterable
       self.block = block
-      self.timestamp = timestamp
       self.irreversible = irreversible
+      self.timestamp = timestamp
+      self.ops = iterable
 
 class virtual_ops(api_operations_container):
 
@@ -70,7 +70,7 @@ class virtual_ops(api_operations_container):
     if len(self.ops):
       last_op : api_operation = self.ops[-1]
       self.next_block_range_begin = last_op.block
-      self.next_operation_begin = int(last_op.operation_id) if last_block < last_op.block else 0
+      self.next_operation_begin = last_op.operation_id
       self.ops.remove(last_op)
 
   def __group_by_block(self, irreversible_block):
@@ -87,7 +87,7 @@ class virtual_ops(api_operations_container):
         iterable=items,
         block=block,
         timestamp=items[0].timestamp,
-        irreversible=block > irreversible_block
+        irreversible=block <= irreversible_block
       ))
 
 
