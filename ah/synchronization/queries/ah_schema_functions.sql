@@ -2,44 +2,28 @@ CREATE SCHEMA IF NOT EXISTS hafah_python;
 
 DROP VIEW IF EXISTS hafah_python.helper_operations_view;
 CREATE VIEW hafah_python.helper_operations_view AS SELECT
-  id id,
+  hov.id id,
   block_num block_num,
   trx_in_block trx_in_block,
-  (
-    CASE
-      WHEN hov.trx_in_block <= -1 THEN 0
-      ELSE abs(hov.op_pos)
-    END
-  ) ::BIGINT AS op_pos,
-  (
-    CASE
-      WHEN hov.trx_in_block <= -1 THEN hov.op_pos
-      ELSE (hov.id - (
-        SELECT nahov.id
-        FROM hive.operations_view nahov
-        JOIN hive.operation_types nhot
-        ON nahov.op_type_id = nhot.id
-        WHERE nahov.block_num=hov.block_num
-        AND nahov.trx_in_block=hov.trx_in_block
-        AND nahov.op_pos=hov.op_pos
-        AND nhot.is_virtual=FALSE
-        LIMIT 1
-        )
-      )
-    END
-  ) :: BIGINT AS virtual_op,
+  hov.op_pos ::BIGINT AS op_pos,
+  hot.is_virtual AS virtual_op,
   op_type_id op_type_id,
-        trim(both '"' from to_json(hov.timestamp)::text) formated_timestamp,
-        body body
+  trim(both '"' from to_json(hov.timestamp)::text) formated_timestamp,
+  body body
 FROM
-  hive.operations_view hov;
+  hive.operations_view hov
+JOIN
+  hive.operation_types hot
+ON
+  hov.op_type_id=hot.id
+;
 
 CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_block( in _BLOCK_NUM INT, in _ONLY_VIRTUAL BOOLEAN, in _INCLUDE_REVERSIBLE BOOLEAN )
 RETURNS TABLE(
     _trx_id TEXT,
     _trx_in_block BIGINT,
     _op_in_trx BIGINT,
-    _virtual_op BIGINT,
+    _virtual_op BOOLEAN,
     _timestamp TEXT,
     _value TEXT,
     _operation_id BIGINT
@@ -50,13 +34,13 @@ BEGIN
 
   IF (NOT _INCLUDE_REVERSIBLE) AND _BLOCK_NUM > hive.app_get_irreversible_block(  ) THEN
     RETURN QUERY SELECT
-      NULL::TEXT,
-      NULL::BIGINT,
-      NULL::BIGINT,
-      NULL::BIGINT,
-      NULL::TEXT,
-      NULL::TEXT,
-      NULL::BIGINT
+      NULL::TEXT, -- _trx_id
+      NULL::BIGINT, -- _trx_in_block
+      NULL::BIGINT, -- _op_in_trx
+      NULL::BOOLEAN, -- _virtual_op
+      NULL::TEXT, -- _timestamp
+      NULL::TEXT, -- _value
+      NULL::BIGINT  -- _operation_id
     LIMIT 0;
     RETURN;
   END IF;
@@ -180,7 +164,7 @@ language plpgsql STABLE;
 
 DROP TYPE IF EXISTS hafah_python.enum_virtual_ops_result CASCADE;
 
-CREATE TYPE hafah_python.enum_virtual_ops_result AS ( _trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BIGINT, _timestamp TEXT, _value TEXT, _operation_id BIGINT );
+CREATE TYPE hafah_python.enum_virtual_ops_result AS ( _trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BOOLEAN, _timestamp TEXT, _value TEXT, _operation_id BIGINT );
 
 CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN )
 RETURNS SETOF hafah_python.enum_virtual_ops_result
@@ -197,14 +181,14 @@ BEGIN
     SELECT hive.app_get_irreversible_block(  ) INTO __upper_block_limit;
     IF _BLOCK_RANGE_BEGIN > __upper_block_limit THEN
       RETURN QUERY SELECT
-        NULL::TEXT,
-        NULL::INT,
-        NULL::BIGINT,
-        NULL::BIGINT,
-        NULL::BIGINT,
-        NULL::TEXT,
-        NULL::TEXT,
-        NULL::BIGINT
+        NULL::TEXT, -- _trx_id
+        NULL::INT, -- _block
+        NULL::BIGINT, -- _trx_in_block
+        NULL::BIGINT, -- _op_in_trx
+        NULL::BOOLEAN, -- _virtual_op
+        NULL::TEXT, -- _timestamp
+        NULL::TEXT, -- _value
+        NULL::BIGINT -- _operation_id
       LIMIT 0;
       RETURN;
     ELSIF __upper_block_limit <= _BLOCK_RANGE_END THEN
@@ -220,7 +204,7 @@ BEGIN
       _next_block _block,
       0::BIGINT,
       0::BIGINT,
-      0::BIGINT,
+      TRUE,
       ''::TEXT,
       '{"type":"","value":""}'::TEXT,
       _next_op_id _operation_id
@@ -309,7 +293,7 @@ RETURNS TABLE(
   _block INT,
   _trx_in_block BIGINT,
   _op_in_trx BIGINT,
-  _virtual_op BIGINT,
+  _virtual_op BOOLEAN,
   _timestamp TEXT,
   _value TEXT,
   _operation_id INT
