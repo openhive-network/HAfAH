@@ -51,7 +51,8 @@ class account_history_impl:
     api = account_history_db_connector(args)
     if account_history_impl.VIRTUAL_OP_ID_OFFSET is None and filter is not None:
       account_history_impl.VIRTUAL_OP_ID_OFFSET = api.get_virtual_op_offset()
-    return virtual_ops(
+
+    _result = virtual_ops(
       api.get_irreversible_block_num() if group_by_block else None,
       api.enum_virtual_ops(
         self.__translate_filter( filter, lambda x : x + account_history_impl.VIRTUAL_OP_ID_OFFSET ),
@@ -60,9 +61,16 @@ class account_history_impl:
         operation_begin,
         limit,
         include_reversible
-      ),
-      block_range_end
+      )
     )
+
+    _new_data_required, _last_block_num, _last_id = _result.get_pagination_data(block_range_end, limit)
+
+    if _new_data_required:
+      _next_block_range_begin, _next_operation_begin = api.get_pagination_data(_last_block_num, _last_id, block_range_end)
+      _result.update_pagination_data(_next_block_range_begin, _next_operation_begin)
+  
+    return _result
 
   @perf(extract_identifier=extractor, record_name='backend')
   def get_account_history(self, args, filter : int, account : str, start : int, limit : int, include_reversible : bool) -> account_history:

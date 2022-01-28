@@ -15,7 +15,10 @@ class operation:
     self.value = data["value"]
 
 class api_operation:
-  def __init__(self, block : int, obj, *, include_op_id = False):
+
+  vop_flag = 0x8000000000000000
+
+  def __init__(self, block : int, obj):
     assert obj is not None
     self.trx_id : str = obj["_trx_id"]
     self.block : int = obj['_block'] if block is None else block
@@ -24,13 +27,22 @@ class api_operation:
     self.virtual_op : bool = obj["_virtual_op"]
     self.timestamp : str = obj["_timestamp"]
     self.op : operation = operation(obj["_value"])
-    self.operation_id = str(0x8000000000000000 | int(obj["_operation_id"])) if include_op_id else 0
+    self.operation_id = api_operation.set_operation(obj["_operation_id"])
+
+  @staticmethod
+  def set_operation(op):
+    _op = int(op)
+    return str(api_operation.vop_flag | _op) if _op != 0 else _op
+
+  @staticmethod
+  def get_operation(op):
+    return (~api_operation.vop_flag) & int(op)
 
 class api_operations_container:
   item = api_operation
-  def __init__(self, block, iterable : list, *, include_op_id = False):
+  def __init__(self, block, iterable : list):
       assert iterable is not None
-      self.ops : list = [ api_operations_container.item( block, row, include_op_id=include_op_id ) for row in iterable ]
+      self.ops : list = [ api_operations_container.item( block, row ) for row in iterable ]
 
 class transaction:
   def __init__(self, trx_id, obj):
@@ -55,23 +67,37 @@ class ops_by_block_wrapper:
 
 class virtual_ops(api_operations_container):
 
-  def __init__(self, irreversible_block : int, iterable: list, last_block : int):
-    super().__init__(None, iterable, include_op_id=True)
+  def __init__(self, irreversible_block : int, iterable: list):
+    super().__init__(None, iterable)
     self.ops_by_block : list = []
     self.next_block_range_begin : int = 0
     self.next_operation_begin : int = 0
-    self.__setup_pagination(last_block)
 
     if irreversible_block is not None:
       self.__group_by_block(irreversible_block)
       self.ops.clear()
 
-  def __setup_pagination(self, last_block):
-    if len(self.ops):
-      last_op : api_operation = self.ops[-1]
-      self.next_block_range_begin = last_op.block
-      self.next_operation_begin = last_op.operation_id if len(last_op.trx_id) != 0 else 0
-      self.ops.remove(last_op)
+  def get_pagination_data(self, block_range_end, limit):
+    _len = max( len(self.ops), len(self.ops_by_block) )
+
+    if _len and _len == limit:
+      last_op : api_operation = None
+
+      if len(self.ops):
+        last_op = self.ops[-1]
+      else:
+        last_op_wrapper : ops_by_block_wrapper = self.ops_by_block[-1]
+        last_op = last_op_wrapper.ops[-1]
+
+      _op_id = api_operation.get_operation(last_op.operation_id)
+      return True, last_op.block, _op_id
+    else:
+      self.next_block_range_begin = block_range_end
+      return False, 0, 0
+
+  def update_pagination_data(self, next_block_range_begin, next_operation_begin):
+    self.next_block_range_begin = next_block_range_begin
+    self.next_operation_begin   = api_operation.set_operation(next_operation_begin)
 
   def __group_by_block(self, irreversible_block):
     supp = dict()
