@@ -18,7 +18,7 @@ class api_operation:
 
   vop_flag = 0x8000000000000000
 
-  def __init__(self, block : int, obj):
+  def __init__(self, block : int, obj, *, include_op_id = False):
     assert obj is not None
     self.trx_id : str = obj["_trx_id"]
     self.block : int = obj['_block'] if block is None else block
@@ -27,12 +27,12 @@ class api_operation:
     self.virtual_op : bool = obj["_virtual_op"]
     self.timestamp : str = obj["_timestamp"]
     self.op : operation = operation(obj["_value"])
-    self.operation_id = api_operation.set_operation(obj["_operation_id"])
+    self.operation_id = api_operation.set_operation(obj["_operation_id"], include_op_id)
 
   @staticmethod
-  def set_operation(op):
-    _op = int(op)
-    return str(api_operation.vop_flag | _op) if _op != 0 else _op
+  def set_operation(op, include_op_id):
+    _res = str(api_operation.vop_flag | int(op)) if include_op_id else 0
+    return _res
 
   @staticmethod
   def get_operation(op):
@@ -40,9 +40,9 @@ class api_operation:
 
 class api_operations_container:
   item = api_operation
-  def __init__(self, block, iterable : list):
+  def __init__(self, block, iterable : list, *, include_op_id = False):
       assert iterable is not None
-      self.ops : list = [ api_operations_container.item( block, row ) for row in iterable ]
+      self.ops : list = [ api_operations_container.item( block, row, include_op_id = include_op_id ) for row in iterable ]
 
 class transaction:
   def __init__(self, trx_id, obj):
@@ -68,7 +68,7 @@ class ops_by_block_wrapper:
 class virtual_ops(api_operations_container):
 
   def __init__(self, irreversible_block : int, iterable: list):
-    super().__init__(None, iterable)
+    super().__init__(None, iterable, include_op_id = True)
     self.ops_by_block : list = []
     self.next_block_range_begin : int = 0
     self.next_operation_begin : int = 0
@@ -97,7 +97,7 @@ class virtual_ops(api_operations_container):
 
   def update_pagination_data(self, next_block_range_begin, next_operation_begin):
     self.next_block_range_begin = next_block_range_begin
-    self.next_operation_begin   = api_operation.set_operation(next_operation_begin)
+    self.next_operation_begin   = api_operation.set_operation(next_operation_begin, True)
 
   def __group_by_block(self, irreversible_block):
     supp = dict()
