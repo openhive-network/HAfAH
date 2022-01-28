@@ -198,19 +198,7 @@ BEGIN
 
   RETURN QUERY
     SELECT * FROM hafah_python.enum_virtual_ops_impl( _FILTER, _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, _OPERATION_BEGIN, _LIMIT, __filter_info )
-  UNION ALL
-    SELECT
-      '',
-      _next_block _block,
-      0::BIGINT,
-      0::BIGINT,
-      TRUE,
-      ''::TEXT,
-      '{"type":"","value":""}'::TEXT,
-      _next_op_id _operation_id
-    FROM
-      hafah_python.enum_virtual_ops_pagination(_FILTER, _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, _OPERATION_BEGIN, _LIMIT, __filter_info)
-  LIMIT _LIMIT + 1; -- if first query didn't returned _LIMIT + 1 results append additional record with data required to pagination
+  LIMIT _LIMIT;
 END
 $function$
 language plpgsql STABLE;
@@ -239,7 +227,7 @@ BEGIN
       T.virtual_op _virtual_op,
       T._timestamp,
       T.body _value,
-      T.id - 1 _operation_id -- 1 is substracted because ho.id start from 1, when it should start from 0
+      T.id _operation_id
     FROM
     (
       --`abs` it's temporary, until position of operation is correctly saved

@@ -80,3 +80,20 @@ class account_history_db_connector:
     result = self._get_all("SELECT MIN(id) as id FROM hive.operation_types WHERE is_virtual=True")
     return result[0]['id']
 
+  def get_pagination_data(self, last_block_num, last_id, block_range_end):
+    _query = '''
+                SELECT o.block_num, o.id
+                FROM hive.operations o
+                JOIN hive.operation_types ot ON o.op_type_id = ot.id
+                WHERE ot.is_virtual=true AND o.block_num>={} AND o.id>{} ORDER BY o.block_num, o.id LIMIT 1
+            '''
+    _result = self._get_all(_query.format(last_block_num, last_id))
+    if len(_result) == 0:
+      return 0, 0
+    else:
+      _record = _result[0]
+      _new_block_num = _record['block_num']
+      _new_id = _record['id']
+      if _new_block_num >= block_range_end:
+        _new_id = 0
+      return _new_block_num, _new_id
