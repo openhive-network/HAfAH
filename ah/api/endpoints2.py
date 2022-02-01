@@ -15,7 +15,7 @@ def build_response( obj ):
   return obj
 
 @verify_types(convert_maybe, block_num=require_unsigned)
-def get_ops_in_block(*, args, block_num : int, only_virtual : bool, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE, **kwargs):
+def get_ops_in_block(*, args, block_num : int = 0, only_virtual : bool = False, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE, **kwargs):
   return build_response( backend().get_ops_in_block( args, block_num, only_virtual, include_reversible) )
 
 @verify_types(convert_maybe, nullable=['filter'], block_range_begin=require_unsigned, block_range_end=require_unsigned, limit=[require_unsigned])
