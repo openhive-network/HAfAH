@@ -2,9 +2,20 @@ from ah.db.objects import account_history, operation, ops_in_block, transaction,
 from ah.db.queries2 import account_history_db_connector
 from ah.utils.performance import perf
 
+from jsonrpcserver.exceptions import ApiError
 
 def extractor(*args, **kwargs):
   return args[0][1]['id']
+
+class CustomTransactionApiException(ApiError):
+  def __init__(self, trx_hash):
+    #because type of `trx_hash` is `ripemd160`
+    trx_hash_size = 40
+
+    if len(trx_hash) < trx_hash_size:
+      for i in range(trx_hash_size - len(trx_hash)):
+        trx_hash += '0'
+    super().__init__("Assert Exception:false: Unknown Transaction {}".format(trx_hash), -32003)
 
 class account_history_impl:
 
@@ -31,8 +42,14 @@ class account_history_impl:
 
     transaction_basic_info = api.get_transaction( trx_hash.encode('ascii'), include_reversible )
 
-    if len(transaction_basic_info) == 0: return dict()
-    else: transaction_basic_info = dict(transaction_basic_info[0])
+    if len(transaction_basic_info) == 0:
+      raise CustomTransactionApiException(trx_hash)
+    else:
+      _info = transaction_basic_info[0]
+      if len(_info) > 0 and _info[0] is None:
+        raise CustomTransactionApiException(trx_hash)
+      else:
+        transaction_basic_info = dict(_info)
 
     operations = api.get_ops_in_transaction( transaction_basic_info['_block_num'], transaction_basic_info['_trx_in_block'] )
 
