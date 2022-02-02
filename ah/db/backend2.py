@@ -4,6 +4,8 @@ from ah.utils.performance import perf
 
 from jsonrpcserver.exceptions import ApiError
 
+MAXINT =  2**31-1
+
 def extractor(*args, **kwargs):
   return args[0][1]['id']
 
@@ -16,6 +18,10 @@ class CustomTransactionApiException(ApiError):
       for i in range(trx_hash_size - len(trx_hash)):
         trx_hash += '0'
     super().__init__("Assert Exception:false: Unknown Transaction {}".format(trx_hash), -32003)
+
+class CustomAccountHistoryApiException(ApiError):
+  def __init__(self):
+    super().__init__("Assert Exception:args.start >= args.limit-1: start must be greater than or equal to limit-1 (start is 0-based index)", -32003)
 
 class account_history_impl:
 
@@ -91,13 +97,17 @@ class account_history_impl:
 
   @perf(extract_identifier=extractor, record_name='backend')
   def get_account_history(self, args, filter : int, account : str, start : int, limit : int, include_reversible : bool) -> account_history:
-    api = account_history_db_connector(args)
-    return account_history(
-        api.get_account_history(
-        self.__translate_filter( filter ),
-        account,
-        start,
-        limit,
-        include_reversible
+    _limit = MAXINT if limit == 0 else limit - 1
+    if start >= _limit:
+      api = account_history_db_connector(args)
+      return account_history(
+          api.get_account_history(
+          self.__translate_filter( filter ),
+          account,
+          start,
+          limit,
+          include_reversible
+        )
       )
-    )
+    else:
+      raise CustomAccountHistoryApiException()
