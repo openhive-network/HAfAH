@@ -92,7 +92,7 @@ class virtual_ops(api_operations_container):
       _op_id = api_operation.get_operation(last_op.operation_id)
       return True, last_op.block, _op_id
     else:
-      self.next_block_range_begin = block_range_end
+      self.next_block_range_begin = 0
       return False, 0, 0
 
   def update_pagination_data(self, next_block_range_begin, next_operation_begin):
