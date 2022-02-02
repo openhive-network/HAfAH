@@ -1,5 +1,5 @@
 from typing import Any
-from ah.server.db import Db
+
 from json import dumps
 
 def format_array(array, type = 'INT'):
@@ -9,12 +9,12 @@ def format_array(array, type = 'INT'):
 
 class account_history_db_connector:
   def __init__(self, args : dict) -> None:
-    self._conn : Db = args['db']
+    self._conn = args['db']
     assert self._conn is not None
     self._id : Any = args['id']
     self._schema = 'hafah_python'
 
-  def _get_db(self) -> Db:
+  def _get_db(self):
     assert self._conn is not None
     return self._conn
 
