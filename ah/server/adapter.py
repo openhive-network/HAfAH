@@ -21,7 +21,7 @@ class Db:
 
     #maximum number of connections that is required so as to execute some tasks concurrently
     necessary_connections = 15
-    max_connections = 1
+    max_connections = 10
 
     @classmethod
     def instance(cls):
@@ -44,7 +44,7 @@ class Db:
         else:
           log.info("A database offers maximum connections: {}. Required {} connections.".format(cls.max_connections, cls.necessary_connections))
 
-    def __init__(self, url, name):
+    def __init__(self, url, name, engine = None):
         """Initialize an instance.
 
         No work is performed here. Some modues might initialize an
@@ -54,7 +54,7 @@ class Db:
                      'e.g. postgresql://user:pass@localhost:5432/hive')
         self._url = url
         self._conn = []
-        self._engine = None
+        self._engine = engine
         self._trx_active = False
         self._prep_sql = {}
 
@@ -69,9 +69,7 @@ class Db:
         self._basic_connection.execute(sqlalchemy.text("COMMIT"))
 
     def clone(self, name):
-        cloned = Db(self._url, name)
-        cloned._engine = self._engine
-
+        cloned = Db(self._url, name, self._engine)
         return cloned
 
     def close(self):
@@ -116,9 +114,10 @@ class Db:
                 echo=False)
         return self._engine
 
-    def get_new_connection(self, name):
-        self._conn.append( { "connection" : self.engine().connect(), "name" : name } )
-        return self.get_connection(len(self._conn) - 1)
+    def get_new_connection(self, name = ''):
+        # self._conn.append( { "connection" : self.engine().connect(), "name" : name } )
+        # return self.get_connection(len(self._conn) - 1)
+        return self.engine().connect()
 
     def get_dialect(self):
         return self.get_connection(0).dialect

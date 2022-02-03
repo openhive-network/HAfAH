@@ -111,7 +111,7 @@ class DBHandler(BaseHTTPRequestHandler):
       with sql_executor(self.db_url) as _sql_executor:
 
         assert _sql_executor.db is not None, "lack of database"
-        ctx['db'] = _sql_executor.db
+        ctx['db'] = _sql_executor.db.clone('')
 
         _response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
 
