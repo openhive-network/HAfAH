@@ -31,23 +31,48 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_op_id BOOLEAN, _include_reversible BOOLEAN)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
   RETURN to_jsonb(result) FROM (
-    SELECT
-      json_agg(_trx_in_block) AS _trx_in_block,
-      json_agg(_op_in_trx) AS _op_in_trx,
-      json_agg(_virtual_op) AS _virtual_op,
-      json_agg(_timestamp) AS _timestamp,
-      json_agg(_value) AS _value,
-      json_agg(_operation_id) AS _operation_id
-    FROM (
-      SELECT * FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible)
-    ) obj
+    SELECT json_agg(ops::JSON) AS ops FROM (
+      SELECT ops FROM (
+        WITH cte AS (
+          SELECT
+            ''::TEXT AS ops
+          UNION ALL
+          SELECT
+            '{' ||
+            '"block": ' || _block_num || ', ' ||
+            '"op": ' || _value || ', ' ||
+            '"op_in_trx": ' || _op_in_trx || ', ' ||
+            -- TODO: Change _operation_id expression when _include_reversible is false
+            '"operation_id": ' || CASE WHEN _include_op_id IS TRUE THEN _operation_id ELSE 0 END || ', ' ||
+            '"timestamp": "' || _timestamp || '", ' ||
+            '"trx_id": "' || _trx_id || '", ' ||
+            '"trx_in_block": ' || _trx_in_block || ', ' ||
+            '"virtual_op": ' || _virtual_op || '' ||
+            '}'
+          FROM (
+            SELECT
+              _value,
+              _op_in_trx,
+              _operation_id,
+              _timestamp,
+              _trx_id,
+              _trx_in_block,
+              _virtual_op
+            FROM
+              hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible)
+          ) f_call
+        )
+        SELECT row_number() OVER () AS id, ops FROM cte
+      ) obj
+    WHERE id > 1
+    ) to_arr
   ) result;
 END
 $$

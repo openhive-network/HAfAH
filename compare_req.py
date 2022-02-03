@@ -1,6 +1,7 @@
 import requests as r
 import os
 import json
+import subprocess as sub
 
 
 def bool_to_str(param):
@@ -25,20 +26,31 @@ def save_res(url, res, method):
         f.write("%s" % json.dumps(res, indent=4, sort_keys=True))
 
 
+def compare_json(method):
+    py_f = os.path.join(json_dir, "%s_py.json" %method)
+    pstg_f = os.path.join(json_dir, "%s_pstg.json" %method)
+    p = sub.run('diff "%s" "%s"' %(py_f, pstg_f), shell=True, capture_output=True, text=True)
+    print(p.stdout)
+
+
 def get_ops_in_block(method="get_ops_in_block"):
-    block_num = 1
+    block_num = 0
     only_virtual = bool_to_str(True)
     include_reversible = bool_to_str(True)
+    include_op_id = bool_to_str(False)
 
     params_str = '"params": {"block_num": %d, "only_virtual": %s, "include_reversible": %s}'
     params_str = params_str % (block_num, only_virtual, include_reversible)
     res = send_req(py_url, method, params_str)
     save_res(py_url, res["result"], method)
 
-    params_str = '{"_block_num": "%d", "_only_virtual": "%s", "_include_reversible": "%s"}'
-    params_str = params_str % (block_num, only_virtual, include_reversible)
+    params_str = '{"_block_num": "%d", "_only_virtual": "%s", "_include_op_id": "%s", "_include_reversible": "%s"}'
+    params_str = params_str % (block_num, only_virtual, include_op_id, include_reversible)
     res = send_req(po_url, method, params_str)
+    #print(res)
     save_res(po_url, json.loads(res), method)
+
+    compare_json(method)
 
 
 def get_account_history(method="get_account_history"):
