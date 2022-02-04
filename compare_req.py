@@ -34,7 +34,7 @@ def compare_json(method):
 
 
 def get_ops_in_block(method="get_ops_in_block"):
-    block_num = 0
+    block_num = 45498
     only_virtual = bool_to_str(True)
     include_reversible = bool_to_str(True)
     include_op_id = bool_to_str(False)
@@ -90,8 +90,15 @@ def get_transaction(method="get_transaction"):
     params_str = '"params": {"id": "%s", "include_reversible": %s}'
     params_str = params_str % (id, include_reversible)
     res = send_req(py_url, method, params_str)
-    save_res(py_url, res, method)
+    save_res(py_url, res["result"], method)
 
+    params_str = '{"_trx_hash": "%s", "_include_reversible": "%s"}'
+    params_str = params_str % (id, include_reversible)
+    res = send_req(po_url, method, params_str)
+    print(res)
+    save_res(po_url, json.loads(res), method)
+
+    compare_json(method)
 
 if __name__ == "__main__":
     py_port = 8095
