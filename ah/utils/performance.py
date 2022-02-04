@@ -2,40 +2,33 @@ from types import FunctionType
 from time import perf_counter
 from typing import Union
 
-def log_time(record_name : str, time : float):
-    print(f'{record_name} executed in {time * 1_000 :.2f}ms', flush=True)
-
-def build_record_name(foo, extract_identifier : FunctionType, record_name : Union[str, FunctionType], *args, **kwargs):
-  if record_name is None:
-    record_name = foo.__name__
-  elif not isinstance(record_name, str):
-    record_name = record_name(args, kwargs)
-  return f'[{extract_identifier(args, kwargs)}] {record_name}'
-
 class Timer:
   def __enter__(self) -> "Timer":
     self.__start = perf_counter()
     return self
 
   def __exit__(self, *args, **kwargs):
-    self.time = perf_counter() - self.__start
+    self.time = (perf_counter() - self.__start) * 1_000.0
 
-def perf(*, extract_identifier : FunctionType, record_name : Union[str, FunctionType] = None):
+def default_handler(name, time, *_, **__):
+    print(f'`{name}` done in {time :.2f}ms', flush=True)
+
+def perf(*, record_name : Union[str, FunctionType] = None, handler : FunctionType = default_handler):
   def perf_impl(foo : FunctionType):
     def perf_impl_impl(*args, **kwargs):
       with Timer() as tm:
         result = foo(*args, **kwargs)
-      log_time(build_record_name(foo, extract_identifier, record_name, *args, **kwargs), tm.time)
+      handler(record_name, tm.time, *args, **kwargs)
       return result
     return perf_impl_impl
   return perf_impl
 
-def async_perf(*, extract_identifier : FunctionType, record_name : Union[str, FunctionType] = None):
+def async_perf(*, record_name : Union[str, FunctionType] = None, handler : FunctionType = default_handler):
   def perf_impl(foo : FunctionType):
     async def perf_impl_impl(*args, **kwargs):
       with Timer() as tm:
         result = await foo(*args, **kwargs)
-      log_time(build_record_name(foo, extract_identifier, record_name, *args, **kwargs), tm.time)
+      handler(record_name, tm.time, *args, **kwargs)
       return result
     return perf_impl_impl
   return perf_impl

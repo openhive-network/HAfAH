@@ -5,7 +5,10 @@ PORT=$2									# ex. 8095
 OUTPUT_LOG=dump.log
 PERFORMANCE_OUTPUT=raw_performance_data.csv
 PROCESSED_PERFORMANCE_OUTPUT=performance.csv
+STATS_CSV_OUTPUT=stats.csv
 ROOT_DIR=$PWD
+
+rm -f $STATS_CSV_OUTPUT $PROCESSED_PERFORMANCE_OUTPUT $OUTPUT_LOG
 
 if [ "$#" -gt 2 ]; then
     ROOT_DIR=$3
@@ -18,4 +21,5 @@ echo 'runnning server...'
 $ROOT_DIR/main.py -p $DB_URL -n $PORT | tee -i $OUTPUT_LOG
 echo 'processing output...'
 $ROOT_DIR/tests/performance/parse_server_output.py $OUTPUT_LOG $PROCESSED_PERFORMANCE_OUTPUT
+grep 'executed in' $OUTPUT_LOG | sed -E 's/.*DEBUG - \[(.*)\] (.*) executed in ([0-9\.,]+)ms/\1|\2|\3/g' > $STATS_CSV_OUTPUT
 echo 'done.'

@@ -2,24 +2,34 @@ from typing import Any
 
 from json import dumps
 
+from ah.server.adapter import Db
+from ah.utils.performance import perf
+
+def handler(name, time, ahdb : 'account_history_db_connector' , *_, **__):
+  ahdb.add_performance_record(name, time)
+
 def format_array(array, type = 'INT'):
   if array is None:
     return f'ARRAY[]::{type}[]'
   return "ARRAY" + dumps(array) + f"::{type}[]" # if len(array) else f'ARRAY[]::{type}[]'
 
 class account_history_db_connector:
-  def __init__(self, args : dict) -> None:
-    self._conn = args['db']
+  def __init__(self, db : Db) -> None:
+    self._conn = db
     assert self._conn is not None
-    self._id : Any = args['id']
     self._schema = 'hafah_python'
+    self.perf = {}
+
+  def add_performance_record(self, name, time):
+    self.perf[name] = time
 
   def _get_db(self):
     assert self._conn is not None
     return self._conn
 
+  @perf(record_name='SQL', handler=handler)
   def _get_all(self, query, **kwargs):
-    return self._get_db().query_all(query + f' -- ## ID: {self._id}', **kwargs)
+    return self._get_db().query_all(query, **kwargs)
 
   def get_multi_signatures_in_transaction(self, trx_hash : bytes ):
     return self._get_all(
