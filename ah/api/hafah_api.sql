@@ -38,6 +38,7 @@ AS
 $$
 BEGIN
   RETURN to_jsonb(result) FROM (
+    -- TODO: when NULL return empty list
     SELECT json_agg(ops::JSON) AS ops FROM (
       SELECT ops FROM (
         WITH cte AS (
@@ -102,25 +103,42 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_transaction(_trx_hash BYTEA,  _include_reversible BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.get_transaction(_trx_hash TEXT,  _include_reversible BOOLEAN)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  RETURN to_jsonb(result) FROM (
+  RETURN obj::JSON FROM (
     SELECT
-      json_agg(_ref_block_num) AS _ref_block_num,
-      json_agg(_ref_block_prefix) AS _ref_block_prefix,
-      json_agg(_expiration) AS _expiration,
-      json_agg(_block_num) AS _block_num,
-      json_agg(_trx_in_block) AS _trx_in_block,
-      json_agg(_signature) AS _signature,
-      json_agg(_multisig_number) AS _multisig_number
+      '{' ||
+      '"ref_block_num": ' || _ref_block_num || ', ' ||
+      '"ref_block_prefix": ' || _ref_block_prefix || ', ' ||
+      '"expiration": "' || _expiration || '", ' ||
+      '"operations": ' ||
+      (
+        SELECT json_agg(_value) FROM (
+          SELECT _value::JSON FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block)
+        ) f_call
+      ) || ', ' ||
+      '"extensions": [], ' ||
+      '"signatures": ' ||
+      (
+        SELECT CASE WHEN _multisig_number >= 1 THEN
+          '[]' -- TODO: return array for multiple signature transaction
+        ELSE
+          '["' || _signature || '"]'
+        END
+      )
+      || ', ' ||
+      '"transaction_id": "' || _trx_hash || '", ' ||
+      '"block_num": ' || _block_num || ', ' ||
+      '"transaction_num": ' || _trx_in_block || ' ' ||
+      '}'::TEXT AS obj
     FROM (
-      SELECT * FROM hafah_python.get_transaction(_trx_hash, _include_reversible)
-    ) obj
-  ) result;
+      SELECT * FROM hafah_python.get_transaction(_trx_hash::BYTEA, _include_reversible)
+    ) transaction_basic_info
+  ) to_json;
 END
 $$
 ;
