@@ -31,49 +31,63 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_op_id BOOLEAN, _include_reversible BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.convert_operation_id(_operation_id BIGINT, __include_op_id BOOLEAN)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
+    -- TODO: Change _operation_id expression when _include_reversible is false
+  RETURN CASE WHEN __include_op_id IS TRUE THEN
+    _operation_id 
+  ELSE 
+    0 
+  END;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN)
+RETURNS TEXT
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __include_op_id BOOLEAN = FALSE;
+BEGIN
   RETURN to_jsonb(result) FROM (
-    -- TODO: when NULL return empty list
-    SELECT json_agg(ops::JSON) AS ops FROM (
-      SELECT ops FROM (
-        WITH cte AS (
-          SELECT
-            ''::TEXT AS ops
-          UNION ALL
-          SELECT
-            '{' ||
-            '"trx_id": "' || _trx_id || '", ' ||
-            '"block": ' || _block_num || ', ' ||
-            '"trx_in_block": ' || _trx_in_block || ', ' ||
-            '"op_in_trx": ' || _op_in_trx || ', ' ||
-            '"virtual_op": ' || _virtual_op || ', ' ||
-            '"timestamp": "' || _timestamp || '", ' ||
-            '"op": ' || _value || ', ' ||
-            -- TODO: Change _operation_id expression when _include_reversible is false
-            '"operation_id": ' || CASE WHEN _include_op_id IS TRUE THEN _operation_id ELSE 0 END || ' ' ||
-            '}'
-          FROM (
+    SELECT CASE WHEN ops IS NULL THEN
+      '[]'::JSON
+    ELSE
+      ops
+    END AS ops
+    FROM (
+      SELECT json_agg(ops::JSON) AS ops FROM (
+        SELECT ops FROM (
+          WITH cte AS (
             SELECT
-              _value,
-              _op_in_trx,
-              _operation_id,
-              _timestamp,
-              _trx_id,
-              _trx_in_block,
-              _virtual_op
-            FROM
-              hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible)
-          ) f_call
-        )
-        SELECT row_number() OVER () AS id, ops FROM cte
-      ) obj
-    WHERE id > 1
-    ) to_arr
+              ''::TEXT AS ops
+            UNION ALL
+            SELECT
+              '{' ||
+              '"trx_id": "' || _trx_id || '", ' ||
+              '"block": ' || _block_num || ', ' ||
+              '"trx_in_block": ' || _trx_in_block || ', ' ||
+              '"op_in_trx": ' || _op_in_trx || ', ' ||
+              '"virtual_op": ' || _virtual_op || ', ' ||
+              '"timestamp": "' || _timestamp || '", ' ||
+              '"op": ' || _value || ', ' ||
+              '"operation_id": ' || (SELECT * FROM hafah_api.convert_operation_id(_operation_id, __include_op_id)) || ' ' ||
+              '}'
+            FROM (
+              SELECT * FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible)
+            ) f_call
+          )
+          SELECT row_number() OVER () AS id, ops FROM cte
+        ) obj
+      WHERE id > 1
+      ) to_arr
+    ) is_null
   ) result;
 END
 $$
@@ -137,7 +151,7 @@ BEGIN
       '}'::TEXT AS obj
     FROM (
       SELECT * FROM hafah_python.get_transaction(_trx_hash::BYTEA, _include_reversible)
-    ) transaction_basic_info
+    ) f_call
   ) to_json;
 END
 $$
