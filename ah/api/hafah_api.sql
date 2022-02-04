@@ -47,15 +47,15 @@ BEGIN
           UNION ALL
           SELECT
             '{' ||
-            '"block": ' || _block_num || ', ' ||
-            '"op": ' || _value || ', ' ||
-            '"op_in_trx": ' || _op_in_trx || ', ' ||
-            -- TODO: Change _operation_id expression when _include_reversible is false
-            '"operation_id": ' || CASE WHEN _include_op_id IS TRUE THEN _operation_id ELSE 0 END || ', ' ||
-            '"timestamp": "' || _timestamp || '", ' ||
             '"trx_id": "' || _trx_id || '", ' ||
+            '"block": ' || _block_num || ', ' ||
             '"trx_in_block": ' || _trx_in_block || ', ' ||
-            '"virtual_op": ' || _virtual_op || '' ||
+            '"op_in_trx": ' || _op_in_trx || ', ' ||
+            '"virtual_op": ' || _virtual_op || ', ' ||
+            '"timestamp": "' || _timestamp || '", ' ||
+            '"op": ' || _value || ', ' ||
+            -- TODO: Change _operation_id expression when _include_reversible is false
+            '"operation_id": ' || CASE WHEN _include_op_id IS TRUE THEN _operation_id ELSE 0 END || ' ' ||
             '}'
           FROM (
             SELECT
