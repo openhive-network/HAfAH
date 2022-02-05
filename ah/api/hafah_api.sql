@@ -93,12 +93,42 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_filter INT[], _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN)
-RETURNS TEXT
+CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_filter INT)
+RETURNS INT[]
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
+  IF _filter != 0 THEN
+    RETURN array_agg(val) FROM (
+      WITH RECURSIVE cte(i, val) AS (
+        VALUES(-1, 0)
+      UNION ALL
+        SELECT
+          i + 1,
+          CASE WHEN _filter & (1 << i + 1) != 0 THEN i + 1 END          
+        FROM cte 
+        WHERE i < 127 
+
+      )
+      SELECT i, val FROM cte WHERE val IS NOT NULL AND i != -1 AND val < 10
+    ) ints;
+  ELSE
+    RETURN NULL;
+  END IF;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_filter INT, _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN)
+RETURNS TEXT
+LANGUAGE 'plpgsql'
+AS
+$$
+
+BEGIN
+  --RETURN * FROM hafah_api.translate_filter(_filter);
+
   RETURN to_jsonb(result) FROM (
     SELECT
       json_agg(_trx_id) AS _trx_id,
@@ -110,7 +140,7 @@ BEGIN
       json_agg(_value) AS _value,
       json_agg(_operation_id) AS _operation_id
     FROM (
-      SELECT * FROM hafah_python.ah_get_account_history(_filter, _account, _start, _limit, _include_reversible)
+      SELECT * FROM hafah_python.ah_get_account_history((SELECT * FROM hafah_api.translate_filter(_filter)), _account, _start, _limit, _include_reversible)
     ) obj
   ) result;
 END
