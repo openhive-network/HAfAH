@@ -32,16 +32,15 @@ $$
 ;
 
 CREATE OR REPLACE FUNCTION hafah_api.convert_operation_id(_operation_id BIGINT, __include_op_id BOOLEAN)
-RETURNS TEXT
+RETURNS VARCHAR
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-    -- TODO: Change _operation_id expression when _include_reversible is false
-  RETURN CASE WHEN __include_op_id IS TRUE THEN
-    _operation_id 
+  RETURN CASE WHEN __include_op_id IS TRUE::BOOLEAN THEN
+    '"operation_id": "' || (9223372036854775808 + _operation_id)::VARCHAR || '" '
   ELSE 
-    0 
+    '"operation_id": 0'
   END;
 END
 $$
@@ -77,7 +76,7 @@ BEGIN
               '"virtual_op": ' || _virtual_op || ', ' ||
               '"timestamp": "' || _timestamp || '", ' ||
               '"op": ' || _value || ', ' ||
-              '"operation_id": ' || (SELECT * FROM hafah_api.convert_operation_id(_operation_id, __include_op_id)) || ' ' ||
+              (SELECT * FROM hafah_api.convert_operation_id(_operation_id, __include_op_id)) ||
               '}'
             FROM (
               SELECT * FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible)
@@ -93,25 +92,80 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_filter INT[], _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_filter INT, _endpoint_name TEXT, _transform INT = 0)
+RETURNS INT[]
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __operation_filter_high INT = 0;
+  __operation_filter_low INT =  0;
+BEGIN
+  IF _endpoint_name = 'get_account_history' THEN
+    _filter = ( __operation_filter_high << 64 ) | __operation_filter_low;
+  END IF;
+
+  IF _filter != 0 THEN
+    RETURN array_agg(val + _transform) FROM (
+      WITH RECURSIVE cte(i, val) AS (
+        VALUES(-1, 0)
+      UNION ALL
+        SELECT
+          i + 1,
+          CASE WHEN _filter & (1 << i + 1) != 0 THEN i + 1 END          
+        FROM cte 
+        WHERE i < 127 
+      )
+      SELECT i, val FROM cte WHERE val IS NOT NULL AND i != -1 AND val < 10
+    ) ints;
+  ELSE
+    RETURN NULL;
+  END IF;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_filter INT, _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
   RETURN to_jsonb(result) FROM (
-    SELECT
-      json_agg(_trx_id) AS _trx_id,
-      json_agg(_block) AS _block,
-      json_agg(_trx_in_block) AS _trx_in_block,
-      json_agg(_op_in_trx) AS _op_in_trx,
-      json_agg(_virtual_op) AS _virtual_op,
-      json_agg(_timestamp) AS _timestamp,
-      json_agg(_value) AS _value,
-      json_agg(_operation_id) AS _operation_id
+    SELECT CASE WHEN history IS NULL THEN
+      '[]'::JSON
+    ELSE
+      history
+    END AS history
     FROM (
-      SELECT * FROM hafah_python.ah_get_account_history(_filter, _account, _start, _limit, _include_reversible)
-    ) obj
+      SELECT json_agg(history::JSON) AS history FROM (
+        SELECT history FROM (
+          WITH cte AS (
+            SELECT
+              ''::TEXT AS history
+            UNION ALL
+            SELECT
+              '[' || _operation_id || ',' ||
+              '{' ||
+              '"trx_id": "' || _trx_id || '", ' ||
+              '"block": ' || _block || ', ' ||
+              '"trx_in_block": ' || _trx_in_block || ', ' ||
+              '"op_in_trx": ' || _op_in_trx || ', ' ||
+              '"virtual_op": ' || _virtual_op || ', ' ||
+              '"timestamp": "' || _timestamp || '", ' ||
+              '"op": ' || _value || ', ' ||
+              '"operation_id": 0' || ' ' ||
+              '}' ||
+              ']'
+            FROM (
+              SELECT * FROM hafah_python.ah_get_account_history((SELECT * FROM hafah_api.translate_filter(_filter, 'get_account_history')), _account, _start, _limit, _include_reversible)
+            ) f_call
+          )
+          SELECT row_number() OVER () AS id, history FROM cte
+        ) obj
+      WHERE id > 1
+      ) to_arr
+    ) is_null
   ) result;
 END
 $$
