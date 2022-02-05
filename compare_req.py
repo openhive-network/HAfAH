@@ -1,3 +1,4 @@
+from pickle import NONE
 import requests as r
 import os
 import json
@@ -34,38 +35,54 @@ def compare_json(method):
 
 
 def get_ops_in_block(method="get_ops_in_block"):
-    block_num = 45498
+    block_num = 0
     only_virtual = bool_to_str(True)
     include_reversible = bool_to_str(True)
-    include_op_id = bool_to_str(False)
 
     params_str = '"params": {"block_num": %d, "only_virtual": %s, "include_reversible": %s}'
     params_str = params_str % (block_num, only_virtual, include_reversible)
     res = send_req(py_url, method, params_str)
     save_res(py_url, res["result"], method)
 
-    params_str = '{"_block_num": "%d", "_only_virtual": "%s", "_include_op_id": "%s", "_include_reversible": "%s"}'
-    params_str = params_str % (block_num, only_virtual, include_op_id, include_reversible)
+    params_str = '{"_block_num": "%d", "_only_virtual": "%s", "_include_reversible": "%s"}'
+    params_str = params_str % (block_num, only_virtual, include_reversible)
     res = send_req(po_url, method, params_str)
-    #print(res)
+    print(res)
     save_res(po_url, json.loads(res), method)
 
     compare_json(method)
 
 
+def __translate_filter(input : int, transform = lambda x : x):
+  if input:
+    result = []
+    for i in range(128):
+      if input & (1 << i):
+        result.append( transform(i) )
+    return result
+  else:
+    return None
+
+
 def get_account_history(method="get_account_history"):
-    _filter = 10
+    _filter = 5
     account = "dantheman"
     start = 5000
-    limit = 5000000
+    limit = 5
     include_reversible = bool_to_str(True)
 
     params_str = '"params": {"filter": %d, "account": "%s", "start": %d, "limit": %d, "include_reversible": %s}'
-    params_str = params_str % (
-        _filter, account, start, limit, include_reversible)
-    res = send_req(py_url, method, params_str)
-    save_res(py_url, res, method)
+    params_str = params_str % (_filter, account, start, limit, include_reversible)
+    #res = send_req(py_url, method, params_str)
+    #save_res(py_url, res["result"], method)
 
+    params_str = '{"_filter": %d, "_account": "%s", "_start": %d, "_limit": %d, "_include_reversible": %s}'
+    params_str = params_str % (_filter, account, start, limit, include_reversible)
+    res = send_req(po_url, method, params_str)
+    print(res)
+    save_res(po_url, json.loads(res), method)
+
+    #compare_json(method)
 
 def enum_virtual_ops(method="enum_virtual_ops"):
     _filter = 0
@@ -117,7 +134,7 @@ if __name__ == "__main__":
     if os.path.isdir(json_dir) is False:
         os.mkdir(json_dir)
 
-    get_ops_in_block()
-    # get_account_history()
+    # get_ops_in_block()
+    get_account_history()
     # get_transaction()
     # enum_virtual_ops()
