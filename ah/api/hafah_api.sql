@@ -32,16 +32,15 @@ $$
 ;
 
 CREATE OR REPLACE FUNCTION hafah_api.convert_operation_id(_operation_id BIGINT, __include_op_id BOOLEAN)
-RETURNS TEXT
+RETURNS VARCHAR
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-    -- TODO: Change _operation_id expression when _include_reversible is false
-  RETURN CASE WHEN __include_op_id IS TRUE THEN
-    _operation_id 
+  RETURN CASE WHEN __include_op_id IS TRUE::BOOLEAN THEN
+    '"operation_id": "' || (9223372036854775808 + _operation_id)::VARCHAR || '" '
   ELSE 
-    0 
+    '"operation_id": 0'
   END;
 END
 $$
@@ -77,7 +76,7 @@ BEGIN
               '"virtual_op": ' || _virtual_op || ', ' ||
               '"timestamp": "' || _timestamp || '", ' ||
               '"op": ' || _value || ', ' ||
-              '"operation_id": ' || (SELECT * FROM hafah_api.convert_operation_id(_operation_id, __include_op_id)) || ' ' ||
+              (SELECT * FROM hafah_api.convert_operation_id(_operation_id, __include_op_id)) ||
               '}'
             FROM (
               SELECT * FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible)
@@ -93,12 +92,11 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_filter INT, _endpoint_name TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_filter INT, _endpoint_name TEXT, _transform INT = 0)
 RETURNS INT[]
 LANGUAGE 'plpgsql'
 AS
 $$
--- TODO: add transform option
 DECLARE
   __operation_filter_high INT = 0;
   __operation_filter_low INT =  0;
@@ -108,7 +106,7 @@ BEGIN
   END IF;
 
   IF _filter != 0 THEN
-    RETURN array_agg(val) FROM (
+    RETURN array_agg(val + _transform) FROM (
       WITH RECURSIVE cte(i, val) AS (
         VALUES(-1, 0)
       UNION ALL
@@ -117,7 +115,6 @@ BEGIN
           CASE WHEN _filter & (1 << i + 1) != 0 THEN i + 1 END          
         FROM cte 
         WHERE i < 127 
-
       )
       SELECT i, val FROM cte WHERE val IS NOT NULL AND i != -1 AND val < 10
     ) ints;
