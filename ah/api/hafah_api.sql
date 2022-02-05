@@ -93,12 +93,20 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_filter INT)
+CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_filter INT, _endpoint_name TEXT)
 RETURNS INT[]
 LANGUAGE 'plpgsql'
 AS
 $$
+-- TODO: add transform option
+DECLARE
+  __operation_filter_high INT = 0;
+  __operation_filter_low INT =  0;
 BEGIN
+  IF _endpoint_name = 'get_account_history' THEN
+    _filter = ( __operation_filter_high << 64 ) | __operation_filter_low;
+  END IF;
+
   IF _filter != 0 THEN
     RETURN array_agg(val) FROM (
       WITH RECURSIVE cte(i, val) AS (
@@ -125,23 +133,42 @@ RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
-
 BEGIN
-  --RETURN * FROM hafah_api.translate_filter(_filter);
-
   RETURN to_jsonb(result) FROM (
-    SELECT
-      json_agg(_trx_id) AS _trx_id,
-      json_agg(_block) AS _block,
-      json_agg(_trx_in_block) AS _trx_in_block,
-      json_agg(_op_in_trx) AS _op_in_trx,
-      json_agg(_virtual_op) AS _virtual_op,
-      json_agg(_timestamp) AS _timestamp,
-      json_agg(_value) AS _value,
-      json_agg(_operation_id) AS _operation_id
+    SELECT CASE WHEN history IS NULL THEN
+      '[]'::JSON
+    ELSE
+      history
+    END AS history
     FROM (
-      SELECT * FROM hafah_python.ah_get_account_history((SELECT * FROM hafah_api.translate_filter(_filter)), _account, _start, _limit, _include_reversible)
-    ) obj
+      SELECT json_agg(history::JSON) AS history FROM (
+        SELECT history FROM (
+          WITH cte AS (
+            SELECT
+              ''::TEXT AS history
+            UNION ALL
+            SELECT
+              '[' || _operation_id || ',' ||
+              '{' ||
+              '"trx_id": "' || _trx_id || '", ' ||
+              '"block": ' || _block || ', ' ||
+              '"trx_in_block": ' || _trx_in_block || ', ' ||
+              '"op_in_trx": ' || _op_in_trx || ', ' ||
+              '"virtual_op": ' || _virtual_op || ', ' ||
+              '"timestamp": "' || _timestamp || '", ' ||
+              '"op": ' || _value || ', ' ||
+              '"operation_id": 0' || ' ' ||
+              '}' ||
+              ']'
+            FROM (
+              SELECT * FROM hafah_python.ah_get_account_history((SELECT * FROM hafah_api.translate_filter(_filter, 'get_account_history')), _account, _start, _limit, _include_reversible)
+            ) f_call
+          )
+          SELECT row_number() OVER () AS id, history FROM cte
+        ) obj
+      WHERE id > 1
+      ) to_arr
+    ) is_null
   ) result;
 END
 $$
