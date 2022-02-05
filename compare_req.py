@@ -35,7 +35,7 @@ def compare_json(method):
 
 
 def get_ops_in_block(method="get_ops_in_block"):
-    block_num = 0
+    block_num = 5
     only_virtual = bool_to_str(True)
     include_reversible = bool_to_str(True)
 
@@ -53,19 +53,8 @@ def get_ops_in_block(method="get_ops_in_block"):
     compare_json(method)
 
 
-def __translate_filter(input : int, transform = lambda x : x):
-  if input:
-    result = []
-    for i in range(128):
-      if input & (1 << i):
-        result.append( transform(i) )
-    return result
-  else:
-    return None
-
-
 def get_account_history(method="get_account_history"):
-    _filter = 14
+    _filter = 2
     account = "dantheman"
     start = 5000
     limit = 100
@@ -79,10 +68,10 @@ def get_account_history(method="get_account_history"):
     params_str = '{"_filter": %d, "_account": "%s", "_start": %d, "_limit": %d, "_include_reversible": %s}'
     params_str = params_str % (_filter, account, start, limit, include_reversible)
     res = send_req(po_url, method, params_str)
-    #print(res)
+    print(res)
     save_res(po_url, json.loads(res), method)
 
-    compare_json(method)
+    #compare_json(method)
 
 def enum_virtual_ops(method="enum_virtual_ops"):
     _filter = 0
@@ -134,7 +123,7 @@ if __name__ == "__main__":
     if os.path.isdir(json_dir) is False:
         os.mkdir(json_dir)
 
-    # get_ops_in_block()
-    get_account_history()
+    get_ops_in_block()
+    # get_account_history()
     # get_transaction()
     # enum_virtual_ops()
