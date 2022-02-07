@@ -65,7 +65,7 @@ BEGIN
         SELECT ops FROM (
           WITH cte AS (
             SELECT
-              ''::TEXT AS ops
+                NULL::TEXT AS ops
             UNION ALL
             SELECT
               '{' ||
@@ -78,13 +78,11 @@ BEGIN
               '"op": ' || _value || ', ' ||
               (SELECT * FROM hafah_api.convert_operation_id(_operation_id, __include_op_id)) ||
               '}'
-            FROM (
-              SELECT * FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible)
-            ) f_call
+            FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible)
           )
-          SELECT row_number() OVER () AS id, ops FROM cte
+          SELECT ops FROM cte
         ) obj
-      WHERE id > 1
+      WHERE ops IS NOT NULL
       ) to_arr
     ) is_null
   ) result;
@@ -142,7 +140,7 @@ BEGIN
         SELECT history FROM (
           WITH cte AS (
             SELECT
-              ''::TEXT AS history
+              NULL::TEXT AS history
             UNION ALL
             SELECT
               '[' || _operation_id || ',' ||
@@ -157,13 +155,11 @@ BEGIN
               '"operation_id": 0' || ' ' ||
               '}' ||
               ']'
-            FROM (
-              SELECT * FROM hafah_python.ah_get_account_history((SELECT * FROM hafah_api.translate_filter(_filter, 'get_account_history')), _account, _start, _limit, _include_reversible)
-            ) f_call
+            FROM hafah_python.ah_get_account_history((SELECT * FROM hafah_api.translate_filter(_filter, 'get_account_history')), _account, _start, _limit, _include_reversible)
           )
-          SELECT row_number() OVER () AS id, history FROM cte
+          SELECT history FROM cte
         ) obj
-      WHERE id > 1
+      WHERE ops IS NOT NULL
       ) to_arr
     ) is_null
   ) result;
@@ -203,32 +199,111 @@ BEGIN
       '"block_num": ' || _block_num || ', ' ||
       '"transaction_num": ' || _trx_in_block || ' ' ||
       '}'::TEXT AS obj
-    FROM (
-      SELECT * FROM hafah_python.get_transaction(_trx_hash::BYTEA, _include_reversible)
-    ) f_call
+    FROM hafah_python.get_transaction(_trx_hash::BYTEA, _include_reversible)
   ) to_json;
 END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.enum_virtual_ops(_filter INT[], _block_range_begin INT, _block_range_end INT, _operation_begin BIGINT, _limit INT,  _include_reversible BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.remove_last_op(pos JSON, _n INT)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
+  RETURN
+    json_agg(value)
+  FROM
+    json_array_elements(pos)
+  WITH ordinality 
+    WHERE ordinality 
+    BETWEEN 0 AND _n;
+END
+$$
+;
+
+-- TODO: create group_by_block()
+CREATE OR REPLACE FUNCTION hafah_api.group_by_block(ops JSON, block_n_arr INT[], __irreversible_block INT)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN ops;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.enum_virtual_ops(_filter INT, _block_range_begin INT, _block_range_end INT, _operation_begin BIGINT, _limit INT,  _include_reversible BOOLEAN, _group_by_block BOOLEAN)
+RETURNS TEXT
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __include_op_id BOOLEAN = TRUE;
+  __upper_block_limit INT = (SELECT * FROM hive.app_get_irreversible_block());
+  __virtual_op_id_offset INT = (SELECT MAX(id) AS id FROM hive.operation_types WHERE is_virtual = False);
+  __irreversible_block INT;
+BEGIN
+  IF _group_by_block IS TRUE THEN
+    SELECT hive.app_get_irreversible_block() INTO __irreversible_block;
+  END IF;
+
   RETURN to_jsonb(result) FROM (
-    SELECT
-      json_agg(_trx_id) AS _trx_id,
-      json_agg(_trx_in_block) AS _trx_in_block,
-      json_agg(_op_in_trx) AS _op_in_trx,
-      json_agg(_virtual_op) AS _virtual_op,
-      json_agg(_timestamp) AS _timestamp,
-      json_agg(_value) AS _value,
-      json_agg(_operation_id) AS _operation_id
+    /*
+    SELECT CASE WHEN ops IS NULL THEN
+      '[]'::JSON
+    ELSE
+      ops
+    END AS ops
     FROM (
-      SELECT * FROM hafah_python.enum_virtual_ops(_filter, _block_range_begin, _block_range_end, _operation_begin, _limit, _include_reversible)
-    ) obj
+    */
+    SELECT
+      CASE WHEN _group_by_block IS TRUE THEN '[]'::JSON ELSE ops END AS ops,
+      next_block_range_begin,
+      next_operation_begin,
+      CASE WHEN _group_by_block IS FALSE THEN '[]'::JSON ELSE ops END AS ops_by_block
+    FROM (
+      SELECT
+        ops->-1->'block' AS next_block_range_begin,
+        ops->-1->'operation_id' AS next_operation_begin,
+        hafah_api.remove_last_op(
+          (SELECT CASE WHEN _group_by_block IS TRUE THEN hafah_api.group_by_block(ops, (SELECT DISTINCT block_n_arr), __irreversible_block) ELSE ops END),
+        n - 1)::JSON AS ops
+      FROM (
+        SELECT
+          json_agg(ops::JSON) AS ops,
+          array_agg(block_n) AS block_n_arr,
+          count(ops)::INT AS n
+        FROM (
+          SELECT ops, block_n FROM (
+            WITH cte AS (
+              SELECT
+                NULL::TEXT AS ops,
+                NULL::INT AS block_n
+              UNION ALL
+              SELECT
+                -- TODO: create body for api_operation, duplicate in get_ops_in_block()
+                '{' ||
+                '"trx_id": "' || _trx_id || '", ' ||
+                '"block": ' || _block || ', ' ||
+                '"trx_in_block": ' || _trx_in_block || ', ' ||
+                '"op_in_trx": ' || _op_in_trx || ', ' ||
+                '"virtual_op": ' || _virtual_op || ', ' ||
+                '"timestamp": "' || _timestamp || '", ' ||
+                '"op": ' || _value || ', ' ||
+                (SELECT * FROM hafah_api.convert_operation_id(_operation_id, __include_op_id)) ||
+                '}',
+                _block
+              FROM hafah_python.enum_virtual_ops((SELECT * FROM hafah_api.translate_filter(_filter, 'enum_virtual_ops', __virtual_op_id_offset)), _block_range_begin, _block_range_end, _operation_begin, _limit, _include_reversible)
+            )
+            SELECT ops, block_n FROM cte
+          ) obj
+        WHERE ops IS NOT NULL
+        ) to_arr
+      ) pagination
+    ) to_json
+    --) is_null
   ) result;
 END
 $$
