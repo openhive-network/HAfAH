@@ -1,4 +1,4 @@
-from pickle import NONE
+from pickle import FALSE, NONE
 import requests as r
 import os
 import json
@@ -74,19 +74,26 @@ def get_account_history(method="get_account_history"):
     #compare_json(method)
 
 def enum_virtual_ops(method="enum_virtual_ops"):
-    _filter = 0
-    block_range_begin = 0
-    block_range_end = 5000000
+    _filter = 2
+    block_range_begin = 3089794
+    block_range_end = 3089810
     operation_begin = 10
-    limit = 10
+    limit = 5
     include_reversible = bool_to_str(True)
     group_by_block = bool_to_str(True)
 
     params_str = '"params": {"filter": %d, "block_range_begin": %d, "block_range_end": %d, "operation_begin": %d, "limit": %d, "include_reversible": %s, "group_by_block": %s}'
-    params_str = params_str % (_filter, block_range_begin, block_range_end,
-                               operation_begin, limit, include_reversible, group_by_block)
+    params_str = params_str % (_filter, block_range_begin, block_range_end, operation_begin, limit, include_reversible, group_by_block)
     res = send_req(py_url, method, params_str)
-    save_res(py_url, res, method)
+    save_res(py_url, res["result"], method)
+
+    params_str = '{"_filter": %d, "_block_range_begin": %d, "_block_range_end": %d, "_operation_begin": %d, "_limit": %d, "_include_reversible": %s, "_group_by_block": %s}'
+    params_str = params_str % (_filter, block_range_begin, block_range_end, operation_begin, limit, include_reversible, group_by_block)
+    res = send_req(po_url, method, params_str)
+    print(res)
+    save_res(po_url, json.loads(res), method)
+
+    compare_json(method)
 
 
 def get_transaction(method="get_transaction"):
@@ -123,7 +130,7 @@ if __name__ == "__main__":
     if os.path.isdir(json_dir) is False:
         os.mkdir(json_dir)
 
-    get_ops_in_block()
+    # get_ops_in_block()
     # get_account_history()
     # get_transaction()
-    # enum_virtual_ops()
+    enum_virtual_ops()
