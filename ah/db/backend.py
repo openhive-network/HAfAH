@@ -1,4 +1,5 @@
-from ah.db.objects import account_history, operation, ops_in_block, transaction, virtual_ops
+from typing import Union
+from ah.db.objects import account_history_api, condenser_api, operation
 from ah.db.queries import account_history_db_connector
 from ah.utils.performance import perf
 
@@ -27,9 +28,10 @@ class CustomAccountHistoryApiException(ApiError):
 
 class account_history_impl:
 
-  def __init__(self, ctx : dict):
+  def __init__(self, ctx : dict, repr : Union[account_history_api, condenser_api]):
     self.api = account_history_db_connector(ctx['db'])
     self.ctx = ctx
+    self.repr = repr
 
   def add_performance_record(self, name, time):
     self.ctx['perf'] = self.api.perf
@@ -48,11 +50,11 @@ class account_history_impl:
       return None
 
   @perf(record_name=RECORD_NAME, handler=handler)
-  def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool) -> ops_in_block:
-    return ops_in_block( block_num, self.api.get_ops_in_block(block_num, only_virtual, include_reversible) )
+  def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool):
+    return self.repr.get_ops_in_block( block_num, self.api.get_ops_in_block(block_num, only_virtual, include_reversible) )
 
   @perf(record_name=RECORD_NAME, handler=handler)
-  def get_transaction(self, trx_hash : str, include_reversible : bool ) -> transaction:
+  def get_transaction(self, trx_hash : str, include_reversible : bool ):
     transaction_basic_info = self.api.get_transaction( trx_hash.encode('ascii'), include_reversible )
 
     if len(transaction_basic_info) == 0:
@@ -73,15 +75,15 @@ class account_history_impl:
 
     transaction_basic_info['_value'] = [ operation( op[0] ) for op in operations ]
 
-    return transaction(trx_hash, transaction_basic_info)
+    return self.repr.get_transaction(trx_hash, transaction_basic_info)
 
 
   @perf(record_name=RECORD_NAME, handler=handler)
-  def enum_virtual_ops(self, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False ) -> virtual_ops:
+  def enum_virtual_ops(self, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False ):
     if account_history_impl.VIRTUAL_OP_ID_OFFSET is None and filter is not None:
       account_history_impl.VIRTUAL_OP_ID_OFFSET = self.api.get_virtual_op_offset()
 
-    _result = virtual_ops(
+    _result = self.repr.enum_virtual_ops(
       self.api.get_irreversible_block_num() if group_by_block else None,
       self.api.enum_virtual_ops(
         self.__translate_filter( filter, lambda x : x + account_history_impl.VIRTUAL_OP_ID_OFFSET ),
@@ -101,10 +103,10 @@ class account_history_impl:
     return _result
 
   @perf(record_name=RECORD_NAME, handler=handler)
-  def get_account_history(self, filter : int, account : str, start : int, limit : int, include_reversible : bool) -> account_history:
+  def get_account_history(self, filter : int, account : str, start : int, limit : int, include_reversible : bool):
     _limit = MAXINT if limit == 0 else limit - 1
     if start >= _limit:
-      return account_history(
+      return self.repr.get_account_history(
           self.api.get_account_history(
           self.__translate_filter( filter ),
           account,
