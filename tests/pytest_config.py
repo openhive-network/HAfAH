@@ -1,5 +1,5 @@
 from typing import Dict, Tuple
-import ah.api.endpoints as api_t
+import ah.api.async.endpoints as api_t
 from ah.db.objects import virtual_ops
 import asyncio
 import pytest
