@@ -159,7 +159,7 @@ BEGIN
           )
           SELECT history FROM cte
         ) obj
-      WHERE ops IS NOT NULL
+      WHERE history IS NOT NULL
       ) to_arr
     ) is_null
   ) result;
