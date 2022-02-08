@@ -9,7 +9,7 @@ from jsonrpcserver.methods import Methods
 from jsonrpcserver import dispatch
 from jsonrpcserver.response import Response
 
-from ah.api.endpoints2 import build_methods as account_history
+from ah.api.endpoints import build_methods as account_history
 
 import simplejson
 from ah.server.adapter import Db

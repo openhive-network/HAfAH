@@ -1,4 +1,4 @@
-from ah.db.backend2 import account_history_impl
+from ah.db.backend import account_history_impl
 from ah.api.validation import verify_types, convert_maybe, require_unsigned, max_value
 
 MAX_INT_POSTGRES = 2_147_483_646
