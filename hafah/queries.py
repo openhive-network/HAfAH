@@ -22,6 +22,9 @@ class account_history_db_connector:
     self._schema = 'hafah_python'
     self.perf = {}
 
+  def legacy_foo(self, is_old_schema : bool):
+    return '' if is_old_schema else 'hive.get_legacy_style_operation'
+
   def add_performance_record(self, name, time):
     if name in self.perf:
       self.perf[name] += time

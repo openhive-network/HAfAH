@@ -168,7 +168,7 @@ class account_history_api: # namespace
 
   @staticmethod
   def is_old_schema():
-    return False
+    return True
 
 class condenser_api: # namespace
   operation = condenser_api_objects.operation
@@ -191,4 +191,4 @@ class condenser_api: # namespace
 
   @staticmethod
   def is_old_schema():
-    return True
+    return False
