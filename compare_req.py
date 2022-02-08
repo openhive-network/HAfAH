@@ -2,6 +2,7 @@ from pickle import FALSE, NONE
 import requests as r
 import os
 import json
+from tqdm import tqdm
 import subprocess as sub
 
 
@@ -71,14 +72,14 @@ def get_account_history(method="get_account_history"):
     print(res)
     save_res(po_url, json.loads(res), method)
 
-    #compare_json(method)
+    compare_json(method)
 
 def enum_virtual_ops(method="enum_virtual_ops"):
     _filter = 2
     block_range_begin = 3089794
-    block_range_end = 3089810
+    block_range_end = 5000000
     operation_begin = 10
-    limit = 5
+    limit = 100
     include_reversible = bool_to_str(True)
     group_by_block = bool_to_str(True)
 
@@ -90,7 +91,7 @@ def enum_virtual_ops(method="enum_virtual_ops"):
     params_str = '{"_filter": %d, "_block_range_begin": %d, "_block_range_end": %d, "_operation_begin": %d, "_limit": %d, "_include_reversible": %s, "_group_by_block": %s}'
     params_str = params_str % (_filter, block_range_begin, block_range_end, operation_begin, limit, include_reversible, group_by_block)
     res = send_req(po_url, method, params_str)
-    print(res)
+    #print(res)
     save_res(po_url, json.loads(res), method)
 
     compare_json(method)
@@ -98,6 +99,7 @@ def enum_virtual_ops(method="enum_virtual_ops"):
 
 def get_transaction(method="get_transaction"):
     id = "390464f5178defc780b5d1a97cb308edeb27f983"
+    #id = "bla"
     include_reversible = bool_to_str(True)
 
     params_str = '"params": {"id": "%s", "include_reversible": %s}'
@@ -130,7 +132,7 @@ if __name__ == "__main__":
     if os.path.isdir(json_dir) is False:
         os.mkdir(json_dir)
 
-    # get_ops_in_block()
-    # get_account_history()
-    # get_transaction()
+    #get_ops_in_block()
+    #get_account_history()
+    #get_transaction()
     enum_virtual_ops()
