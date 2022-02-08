@@ -1,5 +1,5 @@
 from ah.db.objects import account_history, operation, ops_in_block, transaction, virtual_ops
-from ah.db.queries2 import account_history_db_connector
+from ah.db.queries import account_history_db_connector
 from ah.utils.performance import perf
 
 from jsonrpcserver.exceptions import ApiError
