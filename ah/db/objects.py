@@ -1,4 +1,5 @@
 from typing import List, Tuple
+from json import loads
 
 
 class result:
@@ -6,13 +7,6 @@ class result:
     self.jsonrpc = jsonrpc
     self.result = result
     self.id = id
-
-class operation:
-  def __init__(self, obj : str):
-    from json import loads
-    data = loads(obj)
-    self.type = data["type"]
-    self.value = data["value"]
 
 class api_operations_container:
   def __init__(self, block, iterable : list, *, include_op_id = False, item_type : type):
@@ -34,6 +28,12 @@ class transaction:
 
 class condenser_api_objects: # namespace
 
+  def operation(obj):
+    obj = loads(obj)
+    return [
+      obj['type'],
+      obj['value']
+    ]
   class api_operation:
     def __init__(self, block : int, row : dict, **_):
       assert row is not None
@@ -44,7 +44,7 @@ class condenser_api_objects: # namespace
       self.op_in_trx : int = row["_op_in_trx"]
       self.virtual_op : bool = row["_virtual_op"]
       self.timestamp : str = row["_timestamp"]
-      self.op : operation = operation( row["_value"] )
+      self.op = condenser_api_objects.operation( row["_value"] )
 
   class account_history_item(api_operation):
     def __init__(self, row):
@@ -52,12 +52,20 @@ class condenser_api_objects: # namespace
       super().__init__(None, row)
 
 class account_history_api_objects: # namespace
+
+  class operation:
+    def __init__(self, obj : list):
+      assert len(obj) == 2, 'given array is not in proper format'
+      self.type = obj[0]
+      self.value = obj[1]
+
   class api_operation(condenser_api_objects.api_operation):
 
     vop_flag = 0x8000000000000000
 
     def __init__(self, block : int, obj, *, include_op_id = False):
       super().__init__(block, obj)
+      self.op = account_history_api_objects.operation(self.op)
       self.operation_id = account_history_api_objects.api_operation.set_operation(obj["_operation_id"], include_op_id)
 
     @staticmethod
@@ -144,6 +152,8 @@ class account_history:
     )
 
 class account_history_api: # namespace
+  operation = account_history_api_objects.operation
+
   @staticmethod
   def get_account_history(iterable):
     return account_history(iterable, item_type=account_history_api_objects.account_history_item)
@@ -165,6 +175,8 @@ class account_history_api: # namespace
     return False
 
 class condenser_api: # namespace
+  operation = condenser_api_objects.operation
+
   @staticmethod
   def get_account_history(iterable):
     return account_history(iterable, item_type=condenser_api_objects.account_history_item).history
