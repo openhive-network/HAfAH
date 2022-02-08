@@ -174,32 +174,53 @@ AS
 $$
 BEGIN
   RETURN obj::JSON FROM (
-    SELECT
-      '{' ||
-      '"ref_block_num": ' || _ref_block_num || ', ' ||
-      '"ref_block_prefix": ' || _ref_block_prefix || ', ' ||
-      '"expiration": "' || _expiration || '", ' ||
-      '"operations": ' ||
-      (
-        SELECT json_agg(_value) FROM (
-          SELECT _value::JSON FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block)
-        ) f_call
-      ) || ', ' ||
-      '"extensions": [], ' ||
-      '"signatures": ' ||
-      (
-        SELECT CASE WHEN _multisig_number >= 1 THEN
-          '[]' -- TODO: return array for multiple signature transaction
-        ELSE
-          '["' || _signature || '"]'
-        END
-      )
-      || ', ' ||
-      '"transaction_id": "' || _trx_hash || '", ' ||
-      '"block_num": ' || _block_num || ', ' ||
-      '"transaction_num": ' || _trx_in_block || ' ' ||
-      '}'::TEXT AS obj
-    FROM hafah_python.get_transaction(_trx_hash::BYTEA, _include_reversible)
+    SELECT CASE WHEN obj IS NULL THEN
+      '{
+      "block_num": null,
+      "expiration": null,
+      "extensions": [],
+      "operations": [],
+      "ref_block_num": null,
+      "ref_block_prefix": null,
+      "signatures": [],
+      "transaction_id": "' || _trx_hash || '", ' || '
+      "transaction_num": null
+      }'
+    ELSE
+      obj
+    END
+    FROM (
+      SELECT
+        '{' ||
+        '"ref_block_num": ' || _ref_block_num || ', ' ||
+        '"ref_block_prefix": ' || _ref_block_prefix || ', ' ||
+        '"expiration": "' || _expiration || '", ' ||
+        '"operations": ' ||
+        (
+          SELECT json_agg(_value) FROM (
+            SELECT _value::JSON FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block)
+          ) f_call
+        ) || ', ' ||
+        '"extensions": [], ' ||
+        '"signatures": ' ||
+        (
+          SELECT CASE WHEN _multisig_number >= 1 THEN
+            array_to_json(ARRAY(
+              SELECT _signature
+              UNION ALL
+              SELECT * FROM hafah_python.get_multi_signatures_in_transaction(_trx_hash::BYTEA)
+            ))::TEXT
+          ELSE
+            '["' || _signature || '"]'
+          END
+        )
+        || ', ' ||
+        '"transaction_id": "' || _trx_hash || '", ' ||
+        '"block_num": ' || _block_num || ', ' ||
+        '"transaction_num": ' || _trx_in_block || ' ' ||
+        '}'::TEXT AS obj
+      FROM hafah_python.get_transaction(_trx_hash::BYTEA, _include_reversible)
+    ) is_null
   ) to_json;
 END
 $$
