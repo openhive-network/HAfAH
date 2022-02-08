@@ -20,6 +20,9 @@ class account_history_db_connector:
     self._schema = 'hafah_python'
     self.perf = {}
 
+  def legacy_foo(self, is_old_schema : bool):
+    return '' if is_old_schema else 'hive.get_legacy_style_operation'
+
   def add_performance_record(self, name, time):
     self.perf[name] = time
 
@@ -37,16 +40,25 @@ class account_history_db_connector:
       trx_hash=trx_hash
     )
 
-  def get_ops_in_transaction(self, block_num : int, trx_in_block : int ):
+  def get_ops_in_transaction(self, block_num : int, trx_in_block : int, *, is_old_schema : bool ):
     return self._get_all(
-      f"SELECT * FROM {self._schema}.get_ops_in_transaction( :block_num, :trx_in_block )",
+      f"SELECT {self.legacy_foo(is_old_schema)}(_value) ::TEXT AS _value FROM {self._schema}.get_ops_in_transaction( :block_num, :trx_in_block )",
       block_num=block_num,
       trx_in_block=trx_in_block
     )
 
-  def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool):
-    return self._get_all(
-      f"SELECT * FROM {self._schema}.get_ops_in_block( :block_num,  :only_virt, :include_reversible )",
+  def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool, *, is_old_schema : bool):
+    return self._get_all( f"""
+SELECT
+  _trx_id,
+  _trx_in_block,
+  _op_in_trx,
+  _virtual_op,
+  _timestamp,
+  {self.legacy_foo(is_old_schema)}(_value) ::TEXT AS _value,
+  _operation_id
+FROM
+  {self._schema}.get_ops_in_block( :block_num,  :only_virt, :include_reversible )""",
       block_num=block_num,
       only_virt=only_virtual,
       include_reversible=include_reversible
@@ -69,9 +81,19 @@ class account_history_db_connector:
       include_reversible=include_reversible
     )
 
-  def get_account_history(self, filter : list, account : str, start : int, limit : int, include_reversible : bool):
-    return self._get_all(
-      f"SELECT * FROM {self._schema}.ah_get_account_history( {format_array(filter)}, :account, :start ::BIGINT, :limit, :include_reversible )",
+  def get_account_history(self, filter : list, account : str, start : int, limit : int, include_reversible : bool, *, is_old_schema : bool):
+    return self._get_all(f"""
+SELECT
+  _trx_id,
+  _block,
+  _trx_in_block,
+  _op_in_trx,
+  _virtual_op,
+  _timestamp,
+  {self.legacy_foo(is_old_schema)}(_value) ::TEXT AS _value,
+  _operation_id
+FROM
+  {self._schema}.ah_get_account_history( {format_array(filter)}, :account, :start ::BIGINT, :limit, :include_reversible )""",
       account=account,
       start=start,
       limit=limit,

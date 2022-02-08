@@ -29,6 +29,7 @@ class transaction:
 class condenser_api_objects: # namespace
 
   def operation(obj):
+    print("###################", type(obj), obj, flush=True)
     obj = loads(obj)
     return [
       obj['type'],
@@ -172,7 +173,7 @@ class account_history_api: # namespace
 
   @staticmethod
   def is_old_schema():
-    return False
+    return True
 
 class condenser_api: # namespace
   operation = condenser_api_objects.operation
@@ -195,4 +196,4 @@ class condenser_api: # namespace
 
   @staticmethod
   def is_old_schema():
-    return True
+    return False
