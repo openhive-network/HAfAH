@@ -1,5 +1,5 @@
 from typing import Union
-from ah.db.objects import account_history_api, condenser_api, operation
+from ah.db.objects import account_history_api, condenser_api
 from ah.db.queries import account_history_db_connector
 from ah.utils.performance import perf
 
@@ -73,7 +73,7 @@ class account_history_impl:
       additional_signatures = self.api.get_multi_signatures_in_transaction( trx_hash )
       transaction_basic_info['_signature'].extend( [x[0] for x in additional_signatures] )
 
-    transaction_basic_info['_value'] = [ operation( op[0] ) for op in operations ]
+    transaction_basic_info['_value'] = [ self.repr.operation( op[0] ) for op in operations ]
 
     return self.repr.get_transaction(trx_hash, transaction_basic_info)
 

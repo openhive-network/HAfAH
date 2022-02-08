@@ -35,14 +35,6 @@ def get_account_history(account : str, start : int = -1, limit : int = DEFAULT_L
   start = start if start >= 0 else MAX_BIGINT_POSTGRES
   return build_response( backend(context, kwargs).get_account_history( filter, account, start, limit, include_reversible ) )
 
-@verify_types(convert_maybe)
-def ping(data : str, some_def : int = 0, context : None = None, **kwargs : dict):
-  print(f'kwargs = {kwargs}')
-  print(f'context = {context}')
-  print(f'some_def = {some_def}')
-  print(f'data = {data}', flush=True)
-  return build_response({"pong": data})
-
 def build_methods():
   def ah_method( name, foo ):
     return (f'account_history_api.{name}', partial(foo, api_type=account_history_api))
@@ -51,8 +43,6 @@ def build_methods():
     return (f'condenser_api.{name}', partial(foo, api_type=condenser_api))
 
   return dict([
-    ("test.ping", ping),
-
     ah_method( 'get_ops_in_block', get_ops_in_block ),
     ah_method( 'enum_virtual_ops', enum_virtual_ops ),
     ah_method( 'get_transaction', get_transaction ),
