@@ -243,14 +243,37 @@ END
 $$
 ;
 
--- TODO: create group_by_block()
 CREATE OR REPLACE FUNCTION hafah_api.group_by_block(ops JSON, block_n_arr INT[], __irreversible_block INT)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  RETURN ops;
+  RETURN json_agg(ops_by_block::JSON)
+  FROM (
+    SELECT ops_by_block FROM (
+      WITH cte AS (
+        SELECT
+          NULL::TEXT AS ops_by_block
+        UNION ALL
+        SELECT
+          '{' ||
+          '"block": ' || block_n || ', ' ||
+          '"irreversible": ' ||
+          (SELECT CASE WHEN block_n > __irreversible_block IS TRUE THEN true ELSE false END) || ', ' ||
+          '"ops": ' ||
+          (SELECT json_agg(ops_elements) FROM (SELECT json_array_elements(ops) AS ops_elements) res WHERE (SELECT ops_elements->>'block')::INT = block_n)
+          || ', ' ||
+          '"timestamp": "' || 
+          (SELECT ops_elements->>'timestamp' FROM (SELECT json_array_elements(ops) AS ops_elements) res WHERE (SELECT ops_elements->>'block')::INT = block_n LIMIT 1)
+          || '" ' ||
+          '}'
+        FROM unnest(block_n_arr) AS block_n
+      )
+      SELECT ops_by_block FROM cte
+    ) obj
+  WHERE ops_by_block IS NOT NULL
+  ) result;
 END
 $$
 ;
@@ -271,30 +294,21 @@ BEGIN
   END IF;
 
   RETURN to_jsonb(result) FROM (
-    /*
-    SELECT CASE WHEN ops IS NULL THEN
-      '[]'::JSON
-    ELSE
-      ops
-    END AS ops
-    FROM (
-    */
     SELECT
-      CASE WHEN _group_by_block IS TRUE THEN '[]'::JSON ELSE ops END AS ops,
+      CASE WHEN _group_by_block IS TRUE OR ops IS NULL THEN '[]'::JSON ELSE ops END AS ops,
       next_block_range_begin,
       next_operation_begin,
-      CASE WHEN _group_by_block IS FALSE THEN '[]'::JSON ELSE ops END AS ops_by_block
+      CASE WHEN _group_by_block IS FALSE OR ops IS NULL THEN '[]'::JSON ELSE (SELECT * FROM hafah_api.group_by_block(ops, block_n_arr, __irreversible_block)) END AS ops_by_block
     FROM (
       SELECT
         ops->-1->'block' AS next_block_range_begin,
-        ops->-1->'operation_id' AS next_operation_begin,
-        hafah_api.remove_last_op(
-          (SELECT CASE WHEN _group_by_block IS TRUE THEN hafah_api.group_by_block(ops, (SELECT DISTINCT block_n_arr), __irreversible_block) ELSE ops END),
-        n - 1)::JSON AS ops
+        CASE WHEN _block_range_end < (SELECT ops->-1->>'block')::INT THEN ops->-1->'operation_id' ELSE '0'::JSON END AS next_operation_begin,
+        hafah_api.remove_last_op(ops, n - 1)::JSON AS ops,
+        block_n_arr
       FROM (
         SELECT
           json_agg(ops::JSON) AS ops,
-          array_agg(block_n) AS block_n_arr,
+          array_agg(DISTINCT block_n) AS block_n_arr,
           count(ops)::INT AS n
         FROM (
           SELECT ops, block_n FROM (
@@ -323,8 +337,7 @@ BEGIN
         WHERE ops IS NOT NULL
         ) to_arr
       ) pagination
-    ) to_json
-    --) is_null
+    ) next_begin
   ) result;
 END
 $$
