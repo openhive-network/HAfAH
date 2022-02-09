@@ -31,11 +31,8 @@ class transaction:
 class condenser_api_objects: # namespace
 
   def operation(obj):
-    obj = loads(obj)
-    return [
-      obj['type'],
-      obj['value']
-    ]
+    return loads(obj)
+
   class api_operation:
     def __init__(self, row : dict, block : int):
       assert row is not None, "row should not be None"
@@ -54,13 +51,7 @@ class condenser_api_objects: # namespace
 
 class account_history_api_objects: # namespace
 
-  class operation:
-    def __init__(self, obj):
-      if not isinstance(obj, list):
-        obj = condenser_api_objects.operation(obj)
-      assert len(obj) == 2, 'given array is not in proper format'
-      self.type = obj[0]
-      self.value = obj[1]
+  operation = condenser_api_objects.operation
 
   class api_operation(condenser_api_objects.api_operation):
 
@@ -68,7 +59,6 @@ class account_history_api_objects: # namespace
 
     def __init__(self, row, *, block : int, include_op_id = False):
       super().__init__(row=row, block=block)
-      self.op = account_history_api_objects.operation(self.op)
       self.operation_id = account_history_api_objects.api_operation.set_operation(row["_operation_id"], include_op_id)
 
     @staticmethod
@@ -141,7 +131,6 @@ class account_history_api_objects: # namespace
   class account_history_item(condenser_api_objects.account_history_item):
     def __init__(self, row):
       super().__init__(row)
-      self.op = account_history_api_objects.operation(self.op)
       self.operation_id : int = 0
 
 
@@ -176,7 +165,7 @@ class account_history_api: # namespace
 
   @staticmethod
   def is_old_schema():
-    return True
+    return False
 
 class condenser_api: # namespace
   operation = condenser_api_objects.operation
@@ -199,4 +188,4 @@ class condenser_api: # namespace
 
   @staticmethod
   def is_old_schema():
-    return False
+    return True
