@@ -31,7 +31,6 @@ class transaction:
 class condenser_api_objects: # namespace
 
   def operation(obj):
-    print("###################", type(obj), obj, flush=True)
     obj = loads(obj)
     return [
       obj['type'],
