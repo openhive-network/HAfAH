@@ -18,7 +18,7 @@ ON
   hov.op_type_id=hot.id
 ;
 
-CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_block( in _BLOCK_NUM INT, in _ONLY_VIRTUAL BOOLEAN, in _INCLUDE_REVERSIBLE BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_block( in _BLOCK_NUM INT, in _ONLY_VIRTUAL BOOLEAN, in _INCLUDE_REVERSIBLE BOOLEAN, in _IS_OLD_SCHEMA BOOLEAN )
 RETURNS TABLE(
     _trx_id TEXT,
     _trx_in_block BIGINT,
@@ -62,7 +62,15 @@ BEGIN
       T.op_pos _op_in_trx,
       T.virtual_op _virtual_op,
       T._timestamp,
-      T.body _value,
+      (
+        CASE
+          WHEN _IS_OLD_SCHEMA THEN
+          (
+            ( select body from hive.get_legacy_style_operation(T.body) )::text
+          )
+          ELSE T.body
+        END
+      ) AS _value,
       T.id::BIGINT _operation_id
     FROM
       (
@@ -144,7 +152,7 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_transaction( in _BLOCK_NUM INT, in _TRX_IN_BLOCK INT )
+CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_transaction( in _BLOCK_NUM INT, in _TRX_IN_BLOCK INT, in _IS_OLD_SCHEMA BOOLEAN )
 RETURNS TABLE(
     _value TEXT
 )
@@ -153,7 +161,15 @@ $function$
 BEGIN
   RETURN QUERY
     SELECT
-      ho.body _value
+      (
+        CASE
+          WHEN _IS_OLD_SCHEMA THEN
+          (
+            ( select body from hive.get_legacy_style_operation(ho.body) )::text
+          )
+          ELSE ho.body
+        END
+      ) AS _value
     FROM hive.operations_view ho
     JOIN hive.operation_types hot ON ho.op_type_id = hot.id
     WHERE ho.block_num = _BLOCK_NUM AND ho.trx_in_block = _TRX_IN_BLOCK AND hot.is_virtual = FALSE
@@ -275,7 +291,7 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history( in _FILTER INT[], in _ACCOUNT VARCHAR, _START BIGINT, _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history( in _FILTER INT[], in _ACCOUNT VARCHAR, _START BIGINT, _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN, in _IS_OLD_SCHEMA BOOLEAN )
 RETURNS TABLE(
   _trx_id TEXT,
   _block INT,
@@ -320,7 +336,15 @@ BEGIN
       T.op_pos _op_in_trx,
       T.virtual_op _virtual_op,
       T._timestamp,
-      T.body _value,
+      (
+        CASE
+          WHEN _IS_OLD_SCHEMA THEN
+          (
+            ( select body from hive.get_legacy_style_operation(T.body) )::text
+          )
+          ELSE T.body
+        END
+      ) AS _value,
       T.seq_no as _operation_id
     FROM
     (
