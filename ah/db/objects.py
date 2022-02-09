@@ -1,3 +1,5 @@
+from functools import partial
+from pyclbr import Function
 from typing import List, Tuple
 from json import loads
 
@@ -9,9 +11,9 @@ class result:
     self.id = id
 
 class api_operations_container:
-  def __init__(self, block, iterable : list, *, include_op_id = False, item_type : type):
-      assert iterable is not None
-      self.ops : list = [ item_type( block, row, include_op_id = include_op_id ) for row in iterable ]
+  def __init__(self, iterable : list, *, create_item : Function ):
+      assert iterable is not None, "iterable can not be none"
+      self.ops : list = [ create_item( row=row ) for row in iterable ]
 
 class transaction:
   def __init__(self, trx_id, obj):
@@ -36,8 +38,8 @@ class condenser_api_objects: # namespace
       obj['value']
     ]
   class api_operation:
-    def __init__(self, block : int, row : dict, **_):
-      assert row is not None
+    def __init__(self, row : dict, block : int):
+      assert row is not None, "row should not be None"
 
       self.trx_id : str = row["_trx_id"]
       self.block : int = row["_block"] if block is None else block
@@ -49,13 +51,14 @@ class condenser_api_objects: # namespace
 
   class account_history_item(api_operation):
     def __init__(self, row):
-      assert row is not None
-      super().__init__(None, row)
+      super().__init__(row=row, block=None)
 
 class account_history_api_objects: # namespace
 
   class operation:
-    def __init__(self, obj : list):
+    def __init__(self, obj):
+      if not isinstance(obj, list):
+        obj = condenser_api_objects.operation(obj)
       assert len(obj) == 2, 'given array is not in proper format'
       self.type = obj[0]
       self.value = obj[1]
@@ -64,10 +67,10 @@ class account_history_api_objects: # namespace
 
     vop_flag = 0x8000000000000000
 
-    def __init__(self, block : int, obj, *, include_op_id = False):
-      super().__init__(block, obj)
+    def __init__(self, row, *, block : int, include_op_id = False):
+      super().__init__(row=row, block=block)
       self.op = account_history_api_objects.operation(self.op)
-      self.operation_id = account_history_api_objects.api_operation.set_operation(obj["_operation_id"], include_op_id)
+      self.operation_id = account_history_api_objects.api_operation.set_operation(row["_operation_id"], include_op_id)
 
     @staticmethod
     def set_operation(op, include_op_id):
@@ -88,7 +91,7 @@ class account_history_api_objects: # namespace
   class virtual_ops(api_operations_container):
 
     def __init__(self, irreversible_block : int, iterable: list):
-      super().__init__(None, iterable, include_op_id = True)
+      super().__init__(iterable, create_item=partial(account_history_api_objects.api_operation, block=None, include_op_id=True))
       self.ops_by_block : list = []
       self.next_block_range_begin : int = 0
       self.next_operation_begin : int = 0
@@ -139,6 +142,7 @@ class account_history_api_objects: # namespace
   class account_history_item(condenser_api_objects.account_history_item):
     def __init__(self, row):
       super().__init__(row)
+      self.op = account_history_api_objects.operation(self.op)
       self.operation_id : int = 0
 
 
@@ -165,7 +169,7 @@ class account_history_api: # namespace
 
   @staticmethod
   def get_ops_in_block(block, iterable : list, *, include_op_id = False):
-    return api_operations_container(block, iterable, include_op_id=include_op_id, item_type=account_history_api_objects.api_operation)
+    return api_operations_container(iterable, create_item=partial(account_history_api_objects.api_operation, block=block, include_op_id=include_op_id))
 
   @staticmethod
   def enum_virtual_ops(irreversible_block : int, iterable: list):
@@ -188,7 +192,7 @@ class condenser_api: # namespace
 
   @staticmethod
   def get_ops_in_block(block, iterable: list):
-    return api_operations_container(block, iterable, item_type=condenser_api_objects.api_operation).ops
+    return api_operations_container(iterable, create_item=partial(condenser_api_objects.api_operation, block=block)).ops
 
   @staticmethod
   def enum_virtual_ops(irreversible_block : int, iterable: list):
