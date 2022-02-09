@@ -1,6 +1,5 @@
 from functools import partial
 from pyclbr import Function
-from typing import List, Tuple
 from json import loads
 
 
@@ -31,11 +30,8 @@ class transaction:
 class condenser_api_objects: # namespace
 
   def operation(obj):
-    obj = loads(obj)
-    return [
-      obj['type'],
-      obj['value']
-    ]
+    return loads(obj)
+
   class api_operation:
     def __init__(self, row : dict, block : int):
       assert row is not None, "row should not be None"
@@ -54,31 +50,22 @@ class condenser_api_objects: # namespace
 
 class account_history_api_objects: # namespace
 
-  class operation:
-    def __init__(self, obj):
-      if not isinstance(obj, list):
-        obj = condenser_api_objects.operation(obj)
-      assert len(obj) == 2, 'given array is not in proper format'
-      self.type = obj[0]
-      self.value = obj[1]
+  operation = condenser_api_objects.operation
 
   class api_operation(condenser_api_objects.api_operation):
 
-    vop_flag = 0x8000000000000000
-
-    def __init__(self, row, *, block : int, include_op_id = False):
+    def __init__(self, row, *, block : int, fill_operation_id : bool = False):
       super().__init__(row=row, block=block)
-      self.op = account_history_api_objects.operation(self.op)
-      self.operation_id = account_history_api_objects.api_operation.set_operation(row["_operation_id"], include_op_id)
+      self.operation_id = account_history_api_objects.api_operation.set_operation_id(row["_operation_id"]) if fill_operation_id else 0
 
     @staticmethod
-    def set_operation(op, include_op_id):
-      _res = str(account_history_api_objects.api_operation.vop_flag | int(op)) if include_op_id else 0
-      return _res
+    def set_operation_id(op_id):
+      assert op_id is not None, "op_id cannot be None"
+      return str(op_id) if op_id >= 0xffffffff else op_id
 
     @staticmethod
-    def get_operation(op):
-      return (~account_history_api_objects.api_operation.vop_flag) & int(op)
+    def get_opertaion_id(op_id):
+      return int(op_id) if isinstance(op_id, str) else op_id
 
   class ops_by_block_wrapper:
     def __init__(self, iterable: list, block : int, timestamp : str, irreversible : bool):
@@ -90,7 +77,7 @@ class account_history_api_objects: # namespace
   class virtual_ops(api_operations_container):
 
     def __init__(self, irreversible_block : int, iterable: list):
-      super().__init__(iterable, create_item=partial(account_history_api_objects.api_operation, block=None, include_op_id=True))
+      super().__init__(iterable, create_item=partial(account_history_api_objects.api_operation, block=None, fill_operation_id=True ))
       self.ops_by_block : list = []
       self.next_block_range_begin : int = 0
       self.next_operation_begin : int = 0
@@ -111,7 +98,7 @@ class account_history_api_objects: # namespace
           last_op_wrapper = self.ops_by_block[-1]
           last_op = last_op_wrapper.ops[-1]
 
-        _op_id = account_history_api_objects.api_operation.get_operation(last_op.operation_id)
+        _op_id = account_history_api_objects.api_operation.get_opertaion_id(last_op.operation_id)
         return True, last_op.block, _op_id
       else:
         self.next_block_range_begin = block_range_end
@@ -119,7 +106,7 @@ class account_history_api_objects: # namespace
 
     def update_pagination_data(self, next_block_range_begin, next_operation_begin):
       self.next_block_range_begin = next_block_range_begin
-      self.next_operation_begin   = account_history_api_objects.api_operation.set_operation(next_operation_begin, True)
+      self.next_operation_begin   = account_history_api_objects.api_operation.set_operation_id(next_operation_begin)
 
     def __group_by_block(self, irreversible_block):
       supp = dict()
@@ -141,7 +128,6 @@ class account_history_api_objects: # namespace
   class account_history_item(condenser_api_objects.account_history_item):
     def __init__(self, row):
       super().__init__(row)
-      self.op = account_history_api_objects.operation(self.op)
       self.operation_id : int = 0
 
 
@@ -167,8 +153,8 @@ class account_history_api: # namespace
     return transaction(trx_id, obj)
 
   @staticmethod
-  def get_ops_in_block(block, iterable : list, *, include_op_id = False):
-    return api_operations_container(iterable, create_item=partial(account_history_api_objects.api_operation, block=block, include_op_id=include_op_id))
+  def get_ops_in_block(block, iterable : list):
+    return api_operations_container(iterable, create_item=partial(account_history_api_objects.api_operation, block=block))
 
   @staticmethod
   def enum_virtual_ops(irreversible_block : int, iterable: list):
@@ -176,7 +162,7 @@ class account_history_api: # namespace
 
   @staticmethod
   def is_old_schema():
-    return True
+    return False
 
 class condenser_api: # namespace
   operation = condenser_api_objects.operation
@@ -199,4 +185,4 @@ class condenser_api: # namespace
 
   @staticmethod
   def is_old_schema():
-    return False
+    return True
