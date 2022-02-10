@@ -3,18 +3,13 @@
 import os
 import sys
 import logging
-import time
-import traceback
 import json
 
-from datetime import datetime
-from time import perf_counter
-from sqlalchemy.exc import OperationalError
-from aiohttp import web
 from jsonrpcserver.methods import Methods
 from jsonrpcserver import dispatch
+from jsonrpcserver.response import Response
 
-from ah.api.endpoints2 import build_methods as account_history
+from ah.api.endpoints import build_methods as account_history
 
 import simplejson
 from ah.server.adapter import Db
@@ -25,9 +20,9 @@ from functools import partial
 
 from socketserver import ForkingMixIn
 
-from ah.utils.performance import perf
+from ah.utils.performance import Timer
 
-LOG_LEVEL = logging.INFO
+LOG_LEVEL = logging.DEBUG if 'DEBUG' in os.environ else logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
 MAIN_LOG_PATH = "ah.log"
 
@@ -46,12 +41,6 @@ fh.setFormatter(logging.Formatter(LOG_FORMAT))
 if not logger.hasHandlers():
   logger.addHandler(ch)
   logger.addHandler(fh)
-
-def request_extractor(request) -> dict:
-  # "method": parsed_req['method'].split('.')[-1].strip()
-  parsed_req = json.loads(request)
-  return {"id": parsed_req['id']}
-
 
 class APIMethods:
   @staticmethod
@@ -80,6 +69,9 @@ class sql_executor:
 class ForkHTTPServer(ForkingMixIn, HTTPServer):
     pass
 
+def handler(name, time, self, req, ctx, *_, **__):
+  ctx[name] = time
+
 class DBHandler(BaseHTTPRequestHandler):
   def __init__(self, methods, db_url, log_responses, *args, **kwargs):
       self.methods        = methods
@@ -89,7 +81,7 @@ class DBHandler(BaseHTTPRequestHandler):
 
   @staticmethod
   def decimal_serialize(obj):
-      return simplejson.dumps(obj=obj, use_decimal=True, default=vars)
+      return simplejson.dumps(obj=obj, use_decimal=True, default=vars, ensure_ascii=False, encoding='utf8')
 
   @staticmethod
   def decimal_deserialize(s):
@@ -105,15 +97,15 @@ class DBHandler(BaseHTTPRequestHandler):
     # return super().log_request(code=code, size=size)
     pass
 
-  @perf(extract_identifier=lambda _, kwargs: kwargs['id'])
-  def process_request(self, request, **ctx):
+  def process_request(self, request, ctx):
     try:
       with sql_executor(self.db_url) as _sql_executor:
 
         assert _sql_executor.db is not None, "lack of database"
         ctx['db'] = _sql_executor.db
 
-        _response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
+        _response : Response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
+        ctx['id'] = _response.id
 
         if self.log_responses:
           logger.info(_response)
@@ -125,13 +117,22 @@ class DBHandler(BaseHTTPRequestHandler):
       self.send_reponse(500, "text/html", ex)
 
   def do_POST(self):
-    try:
-      request = self.rfile.read(int(self.headers["Content-Length"])).decode()
-      self.process_request(request, **request_extractor(request))
+    ctx = { 'perf' : {}, 'id': None }
+    with Timer() as timer:
+      try:
+        request = self.rfile.read(int(self.headers["Content-Length"])).decode()
+        self.process_request(request, ctx)
 
-    except Exception as ex:
-      logger.error(ex)
-      self.send_reponse(500, "text/html", ex)
+      except Exception as ex:
+        logger.error(ex)
+        self.send_reponse(500, "text/html", ex)
+
+    # logging times
+    perf : dict = ctx['perf']
+    perf['process_request'] = (timer.time - sum(perf.values()))
+    id = json.dumps(ctx['id']).strip('"')
+    for key, value in ctx['perf'].items():
+      logger.debug(f'[{id}] {key} executed in {value :.2f}ms')
 
 class PreparationPhase:
   def __init__(self, db_url, sql_src_path):

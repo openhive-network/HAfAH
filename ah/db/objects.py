@@ -1,4 +1,6 @@
-from typing import List, Tuple
+from functools import partial
+from pyclbr import Function
+from json import loads
 
 
 class result:
@@ -7,30 +9,10 @@ class result:
     self.result = result
     self.id = id
 
-class operation:
-  def __init__(self, obj : str):
-    from json import loads
-    data = loads(obj)
-    self.type = data["type"]
-    self.value = data["value"]
-
-class api_operation:
-  def __init__(self, block : int, obj, *, include_op_id = False):
-    assert obj is not None
-    self.trx_id : str = obj["_trx_id"]
-    self.block : int = obj['_block'] if block is None else block
-    self.trx_in_block : int = obj["_trx_in_block"]
-    self.op_in_trx : int = obj["_op_in_trx"]
-    self.virtual_op : int = int(obj["_virtual_op"])
-    self.timestamp : str = obj["_timestamp"]
-    self.op : operation = operation(obj["_value"])
-    self.operation_id = str(0x8000000000000000 | int(obj["_operation_id"])) if include_op_id else 0
-
 class api_operations_container:
-  item = api_operation
-  def __init__(self, block, iterable : list, *, include_op_id = False):
-      assert iterable is not None
-      self.ops : list = [ api_operations_container.item( block, row, include_op_id=include_op_id ) for row in iterable ]
+  def __init__(self, iterable : list, *, create_item : Function ):
+      assert iterable is not None, "iterable can not be none"
+      self.ops : list = [ create_item( row=row ) for row in iterable ]
 
 class transaction:
   def __init__(self, trx_id, obj):
@@ -45,69 +27,162 @@ class transaction:
     self.block_num : str = obj['_block_num']
     self.transaction_num : str = obj['_trx_in_block']
 
-class ops_in_block(api_operations_container): pass
-class ops_by_block_wrapper:
-  def __init__(self, iterable: list, block : int, timestamp : str, irreversible : bool):
-      self.ops = iterable
-      self.block = block
-      self.timestamp = timestamp
-      self.irreversible = irreversible
+class condenser_api_objects: # namespace
 
-class virtual_ops(api_operations_container):
+  def operation(obj):
+    return loads(obj)
 
-  def __init__(self, irreversible_block : int, iterable: list, last_block : int):
-    super().__init__(None, iterable, include_op_id=True)
-    self.ops_by_block : list = []
-    self.next_block_range_begin : int = 0
-    self.next_operation_begin : int = 0
-    self.__setup_pagination(last_block)
+  class api_operation:
+    def __init__(self, row : dict, block : int):
+      assert row is not None, "row should not be None"
 
-    if irreversible_block is not None:
-      self.__group_by_block(irreversible_block)
-      self.ops.clear()
+      self.trx_id : str = row["_trx_id"]
+      self.block : int = row["_block"] if block is None else block
+      self.trx_in_block : int = row["_trx_in_block"]
+      self.op_in_trx : int = row["_op_in_trx"]
+      self.virtual_op : bool = row["_virtual_op"]
+      self.timestamp : str = row["_timestamp"]
+      self.op = condenser_api_objects.operation( row["_value"] )
 
-  def __setup_pagination(self, last_block):
-    if len(self.ops):
-      last_op : api_operation = self.ops[-1]
-      self.next_block_range_begin = last_op.block
-      self.next_operation_begin = int(last_op.operation_id) if last_block < last_op.block else 0
-      self.ops.remove(last_op)
+  class account_history_item(api_operation):
+    def __init__(self, row):
+      super().__init__(row=row, block=None)
 
-  def __group_by_block(self, irreversible_block):
-    supp = dict()
-    for item in self.ops:
-      if item.block in supp:
-        supp[item.block].append(item)
+class account_history_api_objects: # namespace
+
+  operation = condenser_api_objects.operation
+
+  class api_operation(condenser_api_objects.api_operation):
+
+    def __init__(self, row, *, block : int, fill_operation_id : bool = False):
+      super().__init__(row=row, block=block)
+      self.operation_id = account_history_api_objects.api_operation.set_operation_id(row["_operation_id"]) if fill_operation_id else 0
+
+    @staticmethod
+    def set_operation_id(op_id):
+      assert op_id is not None, "op_id cannot be None"
+      return str(op_id) if op_id >= 0xffffffff else op_id
+
+    @staticmethod
+    def get_opertaion_id(op_id):
+      return int(op_id) if isinstance(op_id, str) else op_id
+
+  class ops_by_block_wrapper:
+    def __init__(self, iterable: list, block : int, timestamp : str, irreversible : bool):
+        self.block = block
+        self.irreversible = irreversible
+        self.timestamp = timestamp
+        self.ops = iterable
+
+  class virtual_ops(api_operations_container):
+
+    def __init__(self, irreversible_block : int, iterable: list):
+      super().__init__(iterable, create_item=partial(account_history_api_objects.api_operation, block=None, fill_operation_id=True ))
+      self.ops_by_block : list = []
+      self.next_block_range_begin : int = 0
+      self.next_operation_begin : int = 0
+
+      if irreversible_block is not None:
+        self.__group_by_block(irreversible_block)
+        self.ops.clear()
+
+    def get_pagination_data(self, block_range_end, limit):
+      _len = max( len(self.ops), len(self.ops_by_block) )
+
+      if _len and _len == limit:
+        last_op : account_history_api_objects.api_operation = None
+
+        if len(self.ops):
+          last_op = self.ops[-1]
+        else:
+          last_op_wrapper = self.ops_by_block[-1]
+          last_op = last_op_wrapper.ops[-1]
+
+        _op_id = account_history_api_objects.api_operation.get_opertaion_id(last_op.operation_id)
+        return True, last_op.block, _op_id
       else:
-        supp[item.block] = [item]
+        self.next_block_range_begin = block_range_end
+        return False, 0, 0
 
-    self.ops_by_block = []
-    for block, items in supp.items():
-      self.ops_by_block.append( ops_by_block_wrapper(
-        iterable=items,
-        block=block,
-        timestamp=items[0].timestamp,
-        irreversible=block > irreversible_block
-      ))
+    def update_pagination_data(self, next_block_range_begin, next_operation_begin):
+      self.next_block_range_begin = next_block_range_begin
+      self.next_operation_begin   = account_history_api_objects.api_operation.set_operation_id(next_operation_begin)
 
+    def __group_by_block(self, irreversible_block):
+      supp = dict()
+      for item in self.ops:
+        if item.block in supp:
+          supp[item.block].append(item)
+        else:
+          supp[item.block] = [item]
 
-class account_history_item:
-  def __init__(self, row):
-    self.trx_id : str = row["_trx_id"]
-    self.block : int = row["_block"]
-    self.trx_in_block : int = row["_trx_in_block"]
-    self.op_in_trx : int = row["_op_in_trx"]
-    self.virtual_op : int = int(row["_virtual_op"])
-    self.timestamp : str = row["_timestamp"]
-    self.op : operation = operation( row["_value"] )
-    self.operation_id : int = 0
+      self.ops_by_block = []
+      for block, items in supp.items():
+        self.ops_by_block.append( account_history_api_objects.ops_by_block_wrapper(
+          iterable=items,
+          block=block,
+          timestamp=items[0].timestamp,
+          irreversible=block <= irreversible_block
+        ))
+
+  class account_history_item(condenser_api_objects.account_history_item):
+    def __init__(self, row):
+      super().__init__(row)
+      self.operation_id : int = 0
+
 
 class account_history:
-  def __init__(self, iterable):
-      self.history : List[ Tuple[ int, account_history_item ] ] = [ self.__format_item( row ) for row in iterable ]
+  def __init__(self, iterable, *, item_type ):
+      self.history = [ self.__format_item( row, item_type ) for row in iterable ]
 
-  def __format_item( self, row ) -> Tuple[ int, account_history_item ]:
+  def __format_item( self, row, item_type ):
     return (
       row["_operation_id"],
-      account_history_item( row )
+      item_type( row )
     )
+
+class account_history_api: # namespace
+  operation = account_history_api_objects.operation
+
+  @staticmethod
+  def get_account_history(iterable):
+    return account_history(iterable, item_type=account_history_api_objects.account_history_item)
+
+  @staticmethod
+  def get_transaction(trx_id, obj):
+    return transaction(trx_id, obj)
+
+  @staticmethod
+  def get_ops_in_block(block, iterable : list):
+    return api_operations_container(iterable, create_item=partial(account_history_api_objects.api_operation, block=block))
+
+  @staticmethod
+  def enum_virtual_ops(irreversible_block : int, iterable: list):
+    return account_history_api_objects.virtual_ops(irreversible_block, iterable)
+
+  @staticmethod
+  def is_old_schema():
+    return False
+
+class condenser_api: # namespace
+  operation = condenser_api_objects.operation
+
+  @staticmethod
+  def get_account_history(iterable):
+    return account_history(iterable, item_type=condenser_api_objects.account_history_item).history
+
+  @staticmethod
+  def get_transaction(trx_id, obj):
+    return transaction(trx_id, obj)
+
+  @staticmethod
+  def get_ops_in_block(block, iterable: list):
+    return api_operations_container(iterable, create_item=partial(condenser_api_objects.api_operation, block=block)).ops
+
+  @staticmethod
+  def enum_virtual_ops(irreversible_block : int, iterable: list):
+    assert False, "not supported"
+
+  @staticmethod
+  def is_old_schema():
+    return True

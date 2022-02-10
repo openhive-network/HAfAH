@@ -9,7 +9,7 @@ PATH = argv[1]
 OUTPUT_PATH = argv[2]
 OUTPUT : Dict[str, Dict[int, Tuple[float, float, float]]] = dict()
 UNIQ_THREADS = set()
-REGEX = '\[([0-9]+)/([0-9]+)/([a-z_]+)\] (.*) executed in ([0-9]+\.[0-9]+)ms'
+REGEX = '.*DEBUG - \[([0-9]+)/([0-9]+)/([a-z_]+)\] (.*) executed in ([0-9]+\.[0-9]+)ms'
 
 def is_sql_record(endpoint) -> bool:
 	return endpoint == 'SQL'
