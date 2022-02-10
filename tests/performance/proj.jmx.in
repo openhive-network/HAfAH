@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.1">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.3">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="account_history" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -141,7 +141,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
   &quot;jsonrpc&quot;: &quot;2.0&quot;,&#xd;
   &quot;method&quot;: &quot;account_history_api.get_transaction&quot;,&#xd;
   &quot;params&quot;: {&#xd;
-    &quot;id&quot;: &quot;ef73d8fadf17e2590c6d96efc1ca868edd7dd613&quot;,&#xd;
+    &quot;id&quot;: &quot;390464f5178defc780b5d1a97cb308edeb27f983&quot;,&#xd;
     &quot;include_reversible&quot;: true&#xd;
   },&#xd;
   &quot;id&quot;: &quot;VALIDATION&quot;&#xd;
@@ -688,6 +688,11 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">port to test</stringProp>
           </elementProp>
+          <elementProp name="HTTP_PATH" elementType="Argument">
+            <stringProp name="Argument.name">HTTP_PATH</stringProp>
+            <stringProp name="Argument.value">ENTER HTTP PATH HERE</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
           <elementProp name="PATH_TO_DATASET" elementType="Argument">
             <stringProp name="Argument.name">PATH_TO_DATASET</stringProp>
             <stringProp name="Argument.value">ENTER PATH TO CSV HERE</stringProp>
@@ -753,11 +758,20 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
         <stringProp name="HTTPSampler.port">${PORT}</stringProp>
         <stringProp name="HTTPSampler.protocol">http</stringProp>
         <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-        <stringProp name="HTTPSampler.path"></stringProp>
+        <stringProp name="HTTPSampler.path">${HTTP_PATH}</stringProp>
         <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
         <stringProp name="HTTPSampler.connect_timeout"></stringProp>
         <stringProp name="HTTPSampler.response_timeout"></stringProp>
       </ConfigTestElement>
+      <hashTree/>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header config" enabled="true">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Content-Type</stringProp>
+            <stringProp name="Header.value">application/json</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
       <hashTree/>
       <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="summary" enabled="false">
         <boolProp name="ResultCollector.error_logging">false</boolProp>

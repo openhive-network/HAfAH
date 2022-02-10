@@ -25,18 +25,31 @@ if [[ ! "$PATH_TO_INPUT_DIR" = /* ]]; then
 	exit -3
 fi
 
-
 generate_output() {
   # JMETER=$1
-  PORT=$1
+  SERVER_VERSION=$1
+  PORT=$2
 
   OUTPUT_PROJECT_FILE=out_$PORT.jmx
   OUTPUT_REPORT_FILE=result_$PORT.jtl
+  
+  OUTPUT_PROJECT_FILE_PATH="${PWD}/${OUTPUT_PROJECT_FILE}"
+  OUTPUT_REPORT_FILE_PATH="${PWD}/${OUTPUT_REPORT_FILE}"
+  RESULT_REPORT_DIR="${PWD}/report_${PORT}"
 
   echo "configuring test..."
-  sed "s/ENTER PORT NUMBER HERE/$PORT/g" $PATH_TO_INPUT_PROJECT_FILE > $OUTPUT_PROJECT_FILE.v00
-  sed "s/ENTER THREAD COUNT HERE/$THREADS_COUNT/g" $OUTPUT_PROJECT_FILE.v00 > $OUTPUT_PROJECT_FILE.v0
-  sed "s|ENTER PATH TO CSV HERE|$PATH_TO_INPUT_CSV|g" $OUTPUT_PROJECT_FILE.v0 > $OUTPUT_PROJECT_FILE
+  sed "s/ENTER PORT NUMBER HERE/$PORT/g" $PATH_TO_INPUT_PROJECT_FILE > $OUTPUT_PROJECT_FILE.v000
+  sed "s/ENTER THREAD COUNT HERE/$THREADS_COUNT/g" $OUTPUT_PROJECT_FILE.v000 > $OUTPUT_PROJECT_FILE.v00
+  sed "s|ENTER PATH TO CSV HERE|$PATH_TO_INPUT_CSV|g" $OUTPUT_PROJECT_FILE.v00 > $OUTPUT_PROJECT_FILE.v0
+  
+  if [[ "$SERVER_VERSION" = "postgrest" ]]; then
+    HTTP_PATH="rpc/home"
+  else
+    HTTP_PATH=""
+  fi
+
+  sed "s|ENTER HTTP PATH HERE|$HTTP_PATH|g" $OUTPUT_PROJECT_FILE.v0 > $OUTPUT_PROJECT_FILE
+
   if [ $PORT == 5432 ]; then
 
     if [[ -z $"$PSQL_USER" ]]; then
@@ -68,11 +81,21 @@ generate_output() {
     PSQL_HOST=''
     rm $OUTPUT_PROJECT_FILE.v2 $OUTPUT_PROJECT_FILE.v3 $OUTPUT_PROJECT_FILE.v4
   fi
+  rm $OUTPUT_PROJECT_FILE.v000
+  rm $OUTPUT_PROJECT_FILE.v00
   rm $OUTPUT_PROJECT_FILE.v0
 
   echo "running test..."
   rm -f $OUTPUT_REPORT_FILE
-  $JMETER -n -t $OUTPUT_PROJECT_FILE -l $OUTPUT_REPORT_FILE 2>&1 | grep 'Warning' -v
+  $JMETER -n -t $OUTPUT_PROJECT_FILE_PATH -l $OUTPUT_REPORT_FILE_PATH 2>&1 | grep 'Warning' -v
+  if [ "$?" -ne "0" ]; then
+    echo "JMETER returned non-zero retcode while testing performing tests on $PORT port, exiting..."
+    exit -1
+  fi
+  
+  rm -rf $RESULT_REPORT_DIR
+  mkdir $RESULT_REPORT_DIR
+  $JMETER -g $OUTPUT_REPORT_FILE_PATH -o $RESULT_REPORT_DIR
   if [ "$?" -ne "0" ]; then
     echo "JMETER returned non-zero retcode while testing performing tests on $PORT port, exiting..."
     exit -1
@@ -83,10 +106,26 @@ mkdir -p workdir
 pushd workdir
 
 ARGUMENTS=""
-for ((i=3; i<=$#; i++))
+VERSIONS=("python" "hived" "postgrest" "postgres")
+for ((i=3; i<=$#; i+=2))
 do
-  PORT=${!i}
-  generate_output $PORT
+  j=$(($i + 1))
+  SERVER_VERSION=${!i}
+  
+  match=0
+  for version in "${VERSIONS[@]}"; do
+    if [[ $version = "$SERVER_VERSION" ]]; then
+      match=1
+      break
+    fi
+  done
+  if [[ $match = 0 ]]; then
+    echo "version must be 'python', 'hived', 'postgrest' or 'postgres'"
+    exit -4
+  fi
+
+	PORT=${!j}
+  generate_output $SERVER_VERSION $PORT
   ARGUMENTS="$ARGUMENTS result_$PORT.jtl"
 done
 
