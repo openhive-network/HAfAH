@@ -32,6 +32,10 @@ generate_output() {
 
   OUTPUT_PROJECT_FILE=out_$PORT.jmx
   OUTPUT_REPORT_FILE=result_$PORT.jtl
+  
+  OUTPUT_PROJECT_FILE_PATH="${PWD}/${OUTPUT_PROJECT_FILE}"
+  OUTPUT_REPORT_FILE_PATH="${PWD}/${OUTPUT_REPORT_FILE}"
+  RESULT_REPORT_DIR="${PWD}/result_report"
 
   echo "configuring test..."
   sed "s/ENTER PORT NUMBER HERE/$PORT/g" $PATH_TO_INPUT_PROJECT_FILE > $OUTPUT_PROJECT_FILE.v00
@@ -72,7 +76,15 @@ generate_output() {
 
   echo "running test..."
   rm -f $OUTPUT_REPORT_FILE
-  $JMETER -n -t $OUTPUT_PROJECT_FILE -l $OUTPUT_REPORT_FILE 2>&1 | grep 'Warning' -v
+  $JMETER -n -t $OUTPUT_PROJECT_FILE_PATH -l $OUTPUT_REPORT_FILE_PATH 2>&1 | grep 'Warning' -v
+  if [ "$?" -ne "0" ]; then
+    echo "JMETER returned non-zero retcode while testing performing tests on $PORT port, exiting..."
+    exit -1
+  fi
+  
+  rm -rf $RESULT_REPORT_DIR
+  mkdir $RESULT_REPORT_DIR
+  $JMETER -g $OUTPUT_REPORT_FILE_PATH -o $RESULT_REPORT_DIR
   if [ "$?" -ne "0" ]; then
     echo "JMETER returned non-zero retcode while testing performing tests on $PORT port, exiting..."
     exit -1
