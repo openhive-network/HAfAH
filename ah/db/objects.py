@@ -106,7 +106,7 @@ class account_history_api_objects: # namespace
 
     def update_pagination_data(self, next_block_range_begin, next_operation_begin):
       self.next_block_range_begin = next_block_range_begin
-      self.next_operation_begin   = account_history_api_objects.api_operation.set_operation_id(next_operation_begin, True)
+      self.next_operation_begin   = account_history_api_objects.api_operation.set_operation_id(next_operation_begin)
 
     def __group_by_block(self, irreversible_block):
       supp = dict()
