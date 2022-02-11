@@ -77,6 +77,8 @@ patterns_tests:
     - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel`
 
   artifacts:
+    reports:
+      junit: $CI_PROJECT_DIR/haf/hive/tests/api_tests/results.xml
     paths:
     - "$CI_JOB_NAME"
     - "**/from_node.log"
