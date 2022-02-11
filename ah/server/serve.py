@@ -87,7 +87,7 @@ class DBHandler(BaseHTTPRequestHandler):
   def decimal_deserialize(s):
       return simplejson.loads(s=s, use_decimal=True)
 
-  def send_reponse(self, http_code, content_type, response):
+  def process_response(self, http_code, content_type, response):
     self.send_response(http_code)
     self.send_header("Content-type", content_type)
     self.end_headers()
@@ -110,11 +110,11 @@ class DBHandler(BaseHTTPRequestHandler):
         if self.log_responses:
           logger.info(_response)
 
-        self.send_reponse(200, "application/json", _response)
+        self.process_response(200, "application/json", _response)
 
     except Exception as ex:
       logger.error(ex)
-      self.send_reponse(500, "text/html", ex)
+      self.process_response(500, "text/html", ex)
 
   def do_POST(self):
     ctx = { 'perf' : {}, 'id': None }
@@ -125,7 +125,7 @@ class DBHandler(BaseHTTPRequestHandler):
 
       except Exception as ex:
         logger.error(ex)
-        self.send_reponse(500, "text/html", ex)
+        self.process_response(500, "text/html", ex)
 
     # logging times
     perf : dict = ctx['perf']
