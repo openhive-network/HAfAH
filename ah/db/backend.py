@@ -6,6 +6,7 @@ from ah.utils.performance import perf
 from jsonrpcserver.exceptions import ApiError
 
 MAXINT =  2**31-1
+RANGEINT  = 2**32
 RECORD_NAME = 'backend'
 
 def handler(name, time, ahi_instance : 'account_history_impl', *_, **__):
@@ -25,6 +26,10 @@ class CustomTransactionApiException(ApiError):
 class CustomAccountHistoryApiException(ApiError):
   def __init__(self):
     super().__init__("Assert Exception:args.start >= args.limit-1: start must be greater than or equal to limit-1 (start is 0-based index)", -32003)
+
+class CustomAccountHistoryApiException2(ApiError):
+  def __init__(self, limit):
+    super().__init__("Assert Exception:args.limit <= 1000: limit of {} is greater than maxmimum allowed".format(limit), -32003)
 
 class account_history_impl:
 
@@ -105,16 +110,21 @@ class account_history_impl:
   @perf(record_name=RECORD_NAME, handler=handler)
   def get_account_history(self, filter : int, account : str, start : int, limit : int, include_reversible : bool):
     _limit = MAXINT if limit == 0 else limit - 1
-    if start >= _limit:
-      return self.repr.get_account_history(
-          self.api.get_account_history(
-          self.__translate_filter( filter ),
-          account,
-          start,
-          limit,
-          include_reversible,
-          is_old_schema=self.repr.is_old_schema()
-        )
-      )
-    else:
+    limit = (RANGEINT + limit) if limit < 0 else limit
+
+    if limit > 1000:
+      raise CustomAccountHistoryApiException2(limit)
+
+    if start < _limit:
       raise CustomAccountHistoryApiException()
+
+    return self.repr.get_account_history(
+        self.api.get_account_history(
+        self.__translate_filter( filter ),
+        account,
+        start,
+        limit,
+        include_reversible,
+        is_old_schema=self.repr.is_old_schema()
+      )
+    )
