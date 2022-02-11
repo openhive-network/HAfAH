@@ -1,4 +1,5 @@
 from pickle import FALSE, NONE
+import re
 import requests as r
 import os
 import json
@@ -55,41 +56,43 @@ def get_ops_in_block(method="get_ops_in_block"):
 
 
 def get_account_history(method="get_account_history"):
-    _filter = 2
     account = "dantheman"
-    start = 5000
-    limit = 100
-    include_reversible = bool_to_str(True)
+    start = -1
+    limit = 1000
+    operation_filter_low = 0
+    operation_filter_high = 0
+    include_reversible = bool_to_str(False)
 
-    params_str = '"params": {"filter": %d, "account": "%s", "start": %d, "limit": %d, "include_reversible": %s}'
-    params_str = params_str % (_filter, account, start, limit, include_reversible)
+    params_str = '"params": {"account": "%s", "start": %d, "limit": %d, "operation_filter_low": %d, "operation_filter_high": %d, "include_reversible": %s}'
+    params_str = params_str % (account, start, limit, operation_filter_low, operation_filter_high, include_reversible)
     res = send_req(py_url, method, params_str)
     save_res(py_url, res["result"], method)
 
-    params_str = '{"_filter": %d, "_account": "%s", "_start": %d, "_limit": %d, "_include_reversible": %s}'
-    params_str = params_str % (_filter, account, start, limit, include_reversible)
+    params_str = '{"_account": "%s", "_start": %d, "_limit": %d, "_operation_filter_low": %d, "_operation_filter_high": %d, "_include_reversible": %s}'
+    params_str = params_str % (account, start, limit, operation_filter_low, operation_filter_high, include_reversible)
     res = send_req(po_url, method, params_str)
-    print(res)
+    #print(res)
     save_res(po_url, json.loads(res), method)
 
     compare_json(method)
 
 def enum_virtual_ops(method="enum_virtual_ops"):
-    _filter = 2
     block_range_begin = 3089794
     block_range_end = 5000000
     operation_begin = 10
-    limit = 100
-    include_reversible = bool_to_str(True)
-    group_by_block = bool_to_str(True)
-
-    params_str = '"params": {"filter": %d, "block_range_begin": %d, "block_range_end": %d, "operation_begin": %d, "limit": %d, "include_reversible": %s, "group_by_block": %s}'
-    params_str = params_str % (_filter, block_range_begin, block_range_end, operation_begin, limit, include_reversible, group_by_block)
+    limit = 10
+    filter = 2
+    include_reversible = bool_to_str(False)
+    group_by_block = bool_to_str(False)
+    
+    params_str = '"params": {"block_range_begin": %d, "block_range_end": %d, "operation_begin": %d, "limit": %d, "filter": %d, "include_reversible": %s, "group_by_block": %s}'
+    params_str = params_str % (block_range_begin, block_range_end, operation_begin, limit, filter, include_reversible, group_by_block)
     res = send_req(py_url, method, params_str)
+    #print(res)
     save_res(py_url, res["result"], method)
 
-    params_str = '{"_filter": %d, "_block_range_begin": %d, "_block_range_end": %d, "_operation_begin": %d, "_limit": %d, "_include_reversible": %s, "_group_by_block": %s}'
-    params_str = params_str % (_filter, block_range_begin, block_range_end, operation_begin, limit, include_reversible, group_by_block)
+    params_str = '{"_block_range_begin": %d, "_block_range_end": %d, "_operation_begin": %d, "_limit": %d, "_filter": %d, "_include_reversible": %s, "_group_by_block": %s}'
+    params_str = params_str % (block_range_begin, block_range_end, operation_begin, limit, filter, include_reversible, group_by_block)
     res = send_req(po_url, method, params_str)
     #print(res)
     save_res(po_url, json.loads(res), method)
@@ -107,10 +110,10 @@ def get_transaction(method="get_transaction"):
     res = send_req(py_url, method, params_str)
     save_res(py_url, res["result"], method)
 
-    params_str = '{"_trx_hash": "%s", "_include_reversible": "%s"}'
+    params_str = '{"_id": "%s", "_include_reversible": "%s"}'
     params_str = params_str % (id, include_reversible)
     res = send_req(po_url, method, params_str)
-    print(res)
+    #print(res)
     save_res(po_url, json.loads(res), method)
 
     compare_json(method)
