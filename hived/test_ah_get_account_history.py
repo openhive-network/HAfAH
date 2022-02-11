@@ -5,6 +5,7 @@
     set jobs to 0 if you want use all processors
     url1 is reference url for list_accounts
 """
+from argparse import ArgumentParser
 import sys
 import json
 import os
@@ -32,33 +33,31 @@ def future_end_cb(future):
 
 
 def main():
-  if len( sys.argv ) < 4 or len( sys.argv ) > 6:
-    print( "Usage: __name__ jobs url1 url2 [working_dir [accounts_file]]" )
-    print( "  Example: __name__ 4 http://127.0.0.1:8090 http://127.0.0.1:8091 [get_account_history [accounts]]" )
-    print( "  set jobs to 0 if you want use all processors" )
-    print( "  url1 is reference url for list_accounts" )
-    exit ()
-
   global wdir
   global errors
 
-  jobs = int(sys.argv[1])
+  arg_engine = ArgumentParser()
+  arg_engine.add_argument('--ref', dest='ref_node', type=str, help='address to reference node (ex. http://127.0.0.1:8091)')
+  arg_engine.add_argument('--test', dest='test_node', type=str, help='address to tested node (ex. http://127.0.0.1:8095)')
+  arg_engine.add_argument('-f', dest='in_file', type=str, default=None, help='path to file with accounts to test')
+  arg_engine.add_argument('-j', dest='jobs', type=int, default=0, help='amount of threads to use, if 0 (default) use all CPUs')
+  arg_engine.add_argument('-d', dest='wdir', type=str, default='workdir', help='path where output should be kept (ex. /path/to/workdir)')
+  args = arg_engine.parse_args(list(sys.argv[1:]))
+
+  jobs = args.jobs
+  url1 = args.ref_node
+  url2 = args.test_node
+  wdir = Path(args.wdir)
+  accounts_file = args.in_file
+
   if jobs <= 0:
     import multiprocessing
     jobs = multiprocessing.cpu_count()
 
-  url1 = sys.argv[2]
-  url2 = sys.argv[3]
-
-  if len( sys.argv ) > 4:
-    wdir = Path(sys.argv[4])
-
-  accounts_file = sys.argv[5] if len( sys.argv ) > 5 else ""
-
-  if accounts_file != "":
+  if accounts_file is not None:
     try:
       with open(accounts_file, "rt") as file:
-        accounts = file.readlines()
+        accounts = [x.strip('\n') for x in file.readlines()]
     except:
       exit("Cannot open file: " + accounts_file)
   else:
@@ -154,25 +153,16 @@ def get_account_history(url1, url2, account, max_tries=10, timeout=0.1):
 
       filename1 = wdir / (account.strip() + "_ref.json")
       filename2 = wdir / (account.strip() + "_tested.json")
-      filename3 = wdir / (account.strip() + "_diff.json")
-      try:    file1 = filename1.open("w")
-      except: print("Cannot open file:", filename1); return False
-      try:    file2 = filename2.open("w")
-      except: print("Cannot open file:", filename2); return False
-      try:    file3 = filename3.open("w")
-      except: print("Cannot open file:", filename3); return False
 
-      file1.write("{} response:\n".format(url1))
-      json.dump(json1, file1, indent=2, sort_keys=True, default=vars)
-      file1.close()
-      file2.write("{} response:\n".format(url2))
-      json.dump(json2, file2, indent=2, sort_keys=True, default=vars)
-      file2.close()
+      req = json.dumps(request)
+      with filename1.open("w") as file:
+        file.write(f'{url1}|{req}' + '\n')
+        json.dump(json1, file, indent=2, sort_keys=True, default=vars)
 
-      file3.write("Differences:\n")
-      json_diff = deepdiff.DeepDiff(json1, json2)
-      json.dump(json_diff, file3, indent=2, sort_keys=True, default=vars)
-      file3.close()
+      with filename2.open("w") as file:
+        file.write(f'{url2}|{req}' + '\n')
+        json.dump(json2, file, indent=2, sort_keys=True, default=vars)
+
       return False
 
     history = json1["result"]["history"]

@@ -134,25 +134,16 @@ def enum_virtual_ops(url1, url2, bn : int, max_tries=10, timeout=0.1):
 
       filename1 = wdir / (bn_str + "_ref.json")
       filename2 = wdir / (bn_str + "_tested.json")
-      filename3 = wdir / (bn_str + "_diff.json")
-      try:    file1 = filename1.open("w")
-      except: print("Cannot open file:", filename1); return False
-      try:    file2 = filename2.open("w")
-      except: print("Cannot open file:", filename2); return False
-      # try:    file3 = filename3.open("w")
-      # except: print("Cannot open file:", filename3); return False
 
-      file1.write("{} response:\n".format(url1))
-      json.dump(json1, file1, indent=2, sort_keys=True, default=vars)
-      file1.close()
-      file2.write("{} response:\n".format(url2))
-      json.dump(json2, file2, indent=2, sort_keys=True, default=vars)
-      file2.close()
-      return False
-      file3.write("Differences:\n")
-      json_diff = deepdiff.DeepDiff(json1, json2)
-      json.dump(json_diff, file3, indent=2, sort_keys=True, default=vars)
-      file3.close()
+      req = json.dumps(request)
+      with filename1.open("w") as file:
+        file.write(f'{url1}|{req}' + '\n')
+        json.dump(json1, file, indent=2, sort_keys=True, default=vars)
+
+      with filename2.open("w") as file:
+        file.write(f'{url2}|{req}' + '\n')
+        json.dump(json2, file, indent=2, sort_keys=True, default=vars)
+
       return False
 
     start = json1['result']['next_operation_begin']

@@ -52,7 +52,7 @@ def main():
   if trx_file != "":
     try:
       with open(trx_file, "rt") as file:
-        hashes = file.readlines()
+        hashes = [x.strip('\n') for x in file.readlines()]
     except:
       exit("Cannot open file: " + trx_file)
 
@@ -143,25 +143,16 @@ def get_tramsacton(url1, url2, trx : str, max_tries=10, timeout=0.1):
 
       filename1 = wdir / (trx.strip() + "_ref.json")
       filename2 = wdir / (trx.strip() + "_tested.json")
-      filename3 = wdir / (trx.strip() + "_diff.json")
-      try:    file1 = filename1.open("w")
-      except: print("Cannot open file:", filename1); return False
-      try:    file2 = filename2.open("w")
-      except: print("Cannot open file:", filename2); return False
-      try:    file3 = filename3.open("w")
-      except: print("Cannot open file:", filename3); return False
 
-      file1.write("{} response:\n".format(url1))
-      json.dump(json1, file1, indent=2, sort_keys=True, default=vars)
-      file1.close()
-      file2.write("{} response:\n".format(url2))
-      json.dump(json2, file2, indent=2, sort_keys=True, default=vars)
-      file2.close()
+      req = json.dumps(request)
+      with filename1.open("w") as file:
+        file.write(f'{url1}|{req}' + '\n')
+        json.dump(json1, file, indent=2, sort_keys=True, default=vars)
 
-      file3.write("Differences:\n")
-      json_diff = deepdiff.DeepDiff(json1, json2)
-      json.dump(json_diff, file3, indent=2, sort_keys=True, default=vars)
-      file3.close()
+      with filename2.open("w") as file:
+        file.write(f'{url2}|{req}' + '\n')
+        json.dump(json2, file, indent=2, sort_keys=True, default=vars)
+
       return False
 
   return True
