@@ -46,13 +46,14 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN = FALSE)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
   __include_op_id BOOLEAN = FALSE;
+  __is_old_schema BOOLEAN = FALSE;
 BEGIN
   RETURN to_jsonb(result) FROM (
     SELECT CASE WHEN ops IS NULL THEN
@@ -78,7 +79,7 @@ BEGIN
               '"op": ' || _value || ', ' ||
               (SELECT * FROM hafah_api.convert_operation_id(_operation_id, __include_op_id)) ||
               '}'
-            FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible)
+            FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible, __is_old_schema)
           )
           SELECT ops FROM cte
         ) obj
@@ -95,14 +96,7 @@ RETURNS INT[]
 LANGUAGE 'plpgsql'
 AS
 $$
-DECLARE
-  __operation_filter_high INT = 0;
-  __operation_filter_low INT =  0;
 BEGIN
-  IF _endpoint_name = 'get_account_history' THEN
-    _filter = ( __operation_filter_high << 64 ) | __operation_filter_low;
-  END IF;
-
   IF _filter != 0 THEN
     RETURN array_agg(val + _transform) FROM (
       WITH RECURSIVE cte(i, val) AS (
@@ -123,12 +117,17 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_filter INT, _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_account VARCHAR, _start BIGINT = -1, _limit INT = 1000, _operation_filter_low INT = 0, _operation_filter_high INT = 0, _include_reversible BOOLEAN = FALSE)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
+DECLARE
+ __filter INT = ( _operation_filter_high << 64 ) | _operation_filter_low;
+ __is_old_schema BOOLEAN = FALSE;
 BEGIN
+  _start = (SELECT CASE WHEN _start >= 0 THEN _start ELSE "9223372036854775807"::BIGINT END);
+
   RETURN to_jsonb(result) FROM (
     SELECT CASE WHEN history IS NULL THEN
       '[]'::JSON
@@ -155,7 +154,7 @@ BEGIN
               '"operation_id": 0' || ' ' ||
               '}' ||
               ']'
-            FROM hafah_python.ah_get_account_history((SELECT * FROM hafah_api.translate_filter(_filter, 'get_account_history')), _account, _start, _limit, _include_reversible)
+            FROM hafah_python.ah_get_account_history((SELECT * FROM hafah_api.translate_filter(__filter, 'get_account_history')), _account, _start, _limit, _include_reversible, __is_old_schema)
           )
           SELECT history FROM cte
         ) obj
@@ -167,11 +166,13 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_transaction(_trx_hash TEXT,  _include_reversible BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.get_transaction(_id TEXT,  _include_reversible BOOLEAN = FALSE)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
+DECLARE
+ __is_old_schema BOOLEAN = FALSE;
 BEGIN
   RETURN obj::JSON FROM (
     SELECT CASE WHEN obj IS NULL THEN
@@ -183,7 +184,7 @@ BEGIN
       "ref_block_num": null,
       "ref_block_prefix": null,
       "signatures": [],
-      "transaction_id": "' || _trx_hash || '", ' || '
+      "transaction_id": "' || _id || '", ' || '
       "transaction_num": null
       }'
     ELSE
@@ -198,7 +199,7 @@ BEGIN
         '"operations": ' ||
         (
           SELECT json_agg(_value) FROM (
-            SELECT _value::JSON FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block)
+            SELECT _value::JSON FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block, __is_old_schema)
           ) f_call
         ) || ', ' ||
         '"extensions": [], ' ||
@@ -208,18 +209,18 @@ BEGIN
             array_to_json(ARRAY(
               SELECT _signature
               UNION ALL
-              SELECT * FROM hafah_python.get_multi_signatures_in_transaction(_trx_hash::BYTEA)
+              SELECT * FROM hafah_python.get_multi_signatures_in_transaction(_id::BYTEA)
             ))::TEXT
           ELSE
             '["' || _signature || '"]'
           END
         )
         || ', ' ||
-        '"transaction_id": "' || _trx_hash || '", ' ||
+        '"transaction_id": "' || _id || '", ' ||
         '"block_num": ' || _block_num || ', ' ||
         '"transaction_num": ' || _trx_in_block || ' ' ||
         '}'::TEXT AS obj
-      FROM hafah_python.get_transaction(_trx_hash::BYTEA, _include_reversible)
+      FROM hafah_python.get_transaction(_id::BYTEA, _include_reversible)
     ) is_null
   ) to_json;
 END
@@ -278,7 +279,18 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.enum_virtual_ops(_filter INT, _block_range_begin INT, _block_range_end INT, _operation_begin BIGINT, _limit INT,  _include_reversible BOOLEAN, _group_by_block BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.raise_exception(TEXT)
+RETURNS TEXT
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RAISE EXCEPTION '%', $1;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.enum_virtual_ops(_block_range_begin INT, _block_range_end INT, _operation_begin BIGINT = 0, _limit INT = 2147483646, _filter INT = NULL, _include_reversible BOOLEAN = FALSE, _group_by_block BOOLEAN = FALSE)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
@@ -289,6 +301,10 @@ DECLARE
   __virtual_op_id_offset INT = (SELECT MAX(id) AS id FROM hive.operation_types WHERE is_virtual = False);
   __irreversible_block INT;
 BEGIN
+  IF _block_range_begin > _block_range_end THEN
+    SELECT raise_exception('block range must be upward');
+  END IF;
+
   IF _group_by_block IS TRUE THEN
     SELECT hive.app_get_irreversible_block() INTO __irreversible_block;
   END IF;
