@@ -61,7 +61,7 @@ patterns_tests:
         $SETUP_SCRIPTS_PATH/setup_db.sh --haf-db-name="haf_block_log" --haf-db-owner="hive" ;
         mkdir $CI_PROJECT_DIR/tests/prepare_database/blockchain ;
         $HIVE_BUILD_ROOT_PATH/programs/util/truncate_block_log $BLOCK_LOG_PATH $CI_PROJECT_DIR/tests/prepare_database/blockchain/block_log 5000000 ;
-        ($HIVE_BUILD_ROOT_PATH/programs/hived/hived --data-dir $CI_PROJECT_DIR/tests/prepare_database --config config.ini --force-replay --stop-replay-at 5000000 > $CI_PROJECT_DIR/from_node.log 2>&1 | tee -i hived_output.log &) | grep -q "Entering application main loop";
+        ($HIVE_BUILD_ROOT_PATH/programs/hived/hived --data-dir $CI_PROJECT_DIR/tests/prepare_database --config config.ini --force-replay --stop-replay-at 5000000 2>&1 | tee -i $CI_PROJECT_DIR/from_node.log &) | grep -q "Entering application main loop";
         export POSTGRESQL_URI='postgresql:///haf_block_log' ;
       fi
 
@@ -96,9 +96,7 @@ patterns_tests:
     - "**/from_node.log"
     - "**/ah.log"
     - "**/*.out.json"
-    - "**/config.ini"
     - "$CI_PROJECT_DIR/haf/hive/tests/tests_api/hived/workdir_*"
-    - "**/hived_output.log"
     when: always
     expire_in: 6 hours
   tags:
