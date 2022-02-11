@@ -353,7 +353,7 @@ BEGIN
       JOIN hafah_python.helper_operations_view ho ON hao.operation_id = ho.id
       WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _START
                                   AND ( ( __upper_block_limit IS NULL ) OR ( ho.block_num <= __upper_block_limit ) )
-                                  AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id = ANY( _FILTER ) ) )
+                                  AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id IN (SELECT * FROM unnest( _FILTER ) ) ) )
       ORDER BY hao.account_op_seq_no DESC
       LIMIT _LIMIT
     ) T
