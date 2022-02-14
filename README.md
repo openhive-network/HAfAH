@@ -12,6 +12,12 @@ or use ready scipt, which runs program and after closing (^C) it run script that
 ./run_api.bash postgresql://<user>:<password>@127.0.0.1:5432/<db_name> 8095
 ```
 
+To start postgREST version, use
+
+```
+./run.sh re-api-start
+```
+
 <br><br>
 
 ## Running load tests
