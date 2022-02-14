@@ -124,6 +124,7 @@ def get_account_history(url1, url2, account, max_tries=10, timeout=0.1):
   HARD_LIMIT = 1000
   LIMIT = HARD_LIMIT
 
+  print(f'processing: {account}', flush=True)
   while True:
     request = {
       "jsonrpc": "2.0",
