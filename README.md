@@ -12,6 +12,12 @@ or use ready scipt, which runs program and after closing (^C) it run script that
 ./run_api.bash postgresql://<user>:<password>@127.0.0.1:5432/<db_name> 8095
 ```
 
+To start postgREST version, use
+
+```
+./run.sh re-api-start
+```
+
 <br><br>
 
 ## Running load tests
@@ -24,9 +30,10 @@ or use ready scipt, which runs program and after closing (^C) it run script that
 	- it's java based, so you'll probably need to install openjdk (recomended: `openjdk-11-jre` and `openjdk-11-jdk`)
 
 
-2. Run HAfAH (in this example on port 8095)
-3. Run hived (in this example on http port 8091)
-4. Start load tests by executting:
+2. Run python HAfAH (in this example on port 8095)
+3. Run postgREST HAfAH (in this example on port 3000)
+4. Run hived (in this example on http port 8091)
+5. Start load tests by executing:
 
 ```
 ./tests/performance/run_perf_tests.bash /path/to/extracted/apache-jmeter-*/bin/bin/jmeter /path/to/performance/directory <1'st port to benchmark> [<N port to benchmark> ... ]
@@ -34,18 +41,18 @@ or use ready scipt, which runs program and after closing (^C) it run script that
 
 Example:
 ```
-./tests/performance/run_perf_tests.bash $JMETER $PWD/tests/performance 8091 8095
+./tests/performance/run_perf_tests.bash $JMETER $PWD/tests/performance hived 8091 python 8095 postgrest 3000
 ```
 
 :memo: paths should be absolute
 
-5. When load tests are ready, path to `csv` file will be printed
-6. If you need worst execution times of SQL queries here is handy command:
+6. When load tests are ready, path to `csv` file will be printed
+7. If you need worst execution times of SQL queries here is handy command:
 
 ```
 grep SQL /path/to/log/from/HAfAH | cut -d '|' -f 2: | sort -r -n | head -n 20
 ```
-7. By passing one of port as `5432` jmeter will call SQL directly, but you need specify thoose envs:
+8. When passing `postgres 5432` as arguments, jmeter will call SQL directly, but you need specify those envs:
 
 ```
 PSQL_USER
@@ -57,7 +64,9 @@ and optionally `PSQL_HOST`, which is defaulted to `127.0.0.1`.
 
 Example:
 
-	PSQL_USER=some_user PSQL_PASS=some_password PSQL_DBNAME=hafah ./tests/performance/run_perf_tests.bash $JMETER $PWD/tests/performance/ 5432 8090 8888
+	PSQL_USER=some_user PSQL_PASS=some_password PSQL_DBNAME=hafah ./tests/performance/run_perf_tests.bash $JMETER $PWD/tests/performance/ postgres 5432 hived 8091 python 8095 postgrest 3000
+
+`run_perf_tests.bash` will generate Apache JMeter Dashboard with performance stats in `workdir/report_${PORT}/index.html`.
 
 ## Interpretting results in `parsed.csv`
 ---
@@ -76,6 +85,14 @@ Example:
 `avg. total SQL time [ms]` - average time thread spend executing sql for given probe<br>
 `avg. processing time [ms]` - average time thread spend processing data from SQL + time above<br>
 `avg. total time [ms]` - average time thread spend serializing and sending data + time above
+
+
+## Interpreting results in `index.html`
+---
+
+`APDEX` - application performance index for endpoint<br>
+`Statistics` - stats of response times (avg, min, max, median, percentiles)<br>
+`Charts` -> `Response Times` - charts of response time distribution, percentiles, relation to thread number<br>
 
 
 ## Parsing without `run_api.bash` script
