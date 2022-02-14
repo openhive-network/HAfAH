@@ -90,6 +90,7 @@ patterns_tests:
     - pkill hived
 
   artifacts:
+    when: always
     reports:
       junit: $CI_PROJECT_DIR/haf/hive/tests/api_tests/results.xml
     paths:
