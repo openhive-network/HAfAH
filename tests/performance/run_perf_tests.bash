@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# TODO: add option to run load tests for multiple instances
-
 JMETER=$1										# path to jmeter which is avaible here: https://jmeter.apache.org/download_jmeter.cgi
 PATH_TO_INPUT_DIR=$2				# located in: $PROJECT_ROOT_DIR/tests/performance
-SERVER_VERSION=$3
 PATH_TO_INPUT_CSV="$PATH_TO_INPUT_DIR/config.csv"
 PATH_TO_INPUT_PROJECT_FILE="$PATH_TO_INPUT_DIR/proj.jmx.in"
 PATH_TO_PARSE_SCRIPT="$PATH_TO_INPUT_DIR/parse.py"
@@ -28,36 +25,25 @@ if [[ ! "$PATH_TO_INPUT_DIR" = /* ]]; then
 	exit -3
 fi
 
-VERSIONS=("python" "postgrest")
-match=0
-for version in "${VERSIONS[@]}"; do
-  if [[ $version = "$SERVER_VERSION" ]]; then
-    match=1
-    break
-  fi
-done
-if [[ $match = 0 ]]; then
-  echo "version must be 'python' or 'postgrest'"
-  exit -4
-fi
-
 generate_output() {
   # JMETER=$1
-  PORT=$1
+  SERVER_VERSION=$1
+  PORT=$2
 
   OUTPUT_PROJECT_FILE=out_$PORT.jmx
   OUTPUT_REPORT_FILE=result_$PORT.jtl
   
   OUTPUT_PROJECT_FILE_PATH="${PWD}/${OUTPUT_PROJECT_FILE}"
   OUTPUT_REPORT_FILE_PATH="${PWD}/${OUTPUT_REPORT_FILE}"
-  RESULT_REPORT_DIR="${PWD}/result_report"
+  RESULT_REPORT_DIR="${PWD}/report_${PORT}"
 
   echo "configuring test..."
   sed "s/ENTER PORT NUMBER HERE/$PORT/g" $PATH_TO_INPUT_PROJECT_FILE > $OUTPUT_PROJECT_FILE.v000
   sed "s/ENTER THREAD COUNT HERE/$THREADS_COUNT/g" $OUTPUT_PROJECT_FILE.v000 > $OUTPUT_PROJECT_FILE.v00
   sed "s|ENTER PATH TO CSV HERE|$PATH_TO_INPUT_CSV|g" $OUTPUT_PROJECT_FILE.v00 > $OUTPUT_PROJECT_FILE.v0
   sed "s/ENTER SERVER VERSION HERE/$SERVER_VERSION/g" $OUTPUT_PROJECT_FILE.v0 > $OUTPUT_PROJECT_FILE
-  if [ $PORT == 5432 ]; then
+  
+  if [ $SERVER_VERSION == "postgres" ]; then
 
     if [[ -z $"$PSQL_USER" ]]; then
       echo "env PSQL_USER not set!"
@@ -113,10 +99,26 @@ mkdir -p workdir
 pushd workdir
 
 ARGUMENTS=""
-for ((i=4; i<=$#; i++))
+VERSIONS=("python" "hived" "postgrest" "postgres")
+for ((i=3; i<=$#; i+=2))
 do
-  PORT=${!i}
-  generate_output $PORT
+  j=$(($i + 1))
+  SERVER_VERSION=${!i}
+  
+  match=0
+  for version in "${VERSIONS[@]}"; do
+    if [[ $version = "$SERVER_VERSION" ]]; then
+      match=1
+      break
+    fi
+  done
+  if [[ $match = 0 ]]; then
+    echo "version must be 'python', 'hived', 'postgrest' or 'postgres'"
+    exit -4
+  fi
+
+	PORT=${!j}
+  generate_output $SERVER_VERSION $PORT
   ARGUMENTS="$ARGUMENTS result_$PORT.jtl"
 done
 

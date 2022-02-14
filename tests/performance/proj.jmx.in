@@ -62,8 +62,8 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If python" enabled="true">
-          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;python&quot;</stringProp>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If python or hived" enabled="true">
+          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;python&quot; || &quot;${SERVER_VERSION}&quot; == &quot;hived&quot;</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
@@ -454,7 +454,7 @@
           <hashTree/>
         </hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If postgres" enabled="true">
-          <stringProp name="IfController.condition">${PORT} == 5432</stringProp>
+          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;postgres&quot;</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
@@ -494,8 +494,8 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
         <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
       </ThreadGroup>
       <hashTree>
-        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If python" enabled="true">
-          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;python&quot;</stringProp>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If python or hived" enabled="true">
+          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;python&quot; || &quot;${SERVER_VERSION}&quot; == &quot;hived&quot;</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
@@ -613,7 +613,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <hashTree/>
         </hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If postgres" enabled="true">
-          <stringProp name="IfController.condition">${PORT} == 5432</stringProp>
+          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;postgres&quot;</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
@@ -684,8 +684,8 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If python" enabled="true">
-          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;python&quot;</stringProp>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If python or hived" enabled="true">
+          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;python&quot; || &quot;${SERVER_VERSION}&quot; == &quot;hived&quot;</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
@@ -767,7 +767,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <hashTree/>
         </hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If postgres" enabled="true">
-          <stringProp name="IfController.condition">${PORT} == 5432</stringProp>
+          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;postgres&quot;</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
@@ -837,8 +837,8 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If python" enabled="true">
-          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;python&quot;</stringProp>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If python or hived" enabled="true">
+          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;python&quot; || &quot;${SERVER_VERSION}&quot; == &quot;hived&quot;</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
@@ -956,7 +956,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <hashTree/>
         </hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If postgres" enabled="true">
-          <stringProp name="IfController.condition">${PORT} == 5432</stringProp>
+          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;postgres&quot;</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
@@ -1026,8 +1026,8 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If python" enabled="true">
-          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;python&quot;</stringProp>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If python or hived" enabled="true">
+          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;python&quot; || &quot;${SERVER_VERSION}&quot; == &quot;hived&quot;</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
@@ -1118,7 +1118,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <hashTree/>
         </hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If postgres" enabled="true">
-          <stringProp name="IfController.condition">${PORT} == 5432</stringProp>
+          <stringProp name="IfController.condition">&quot;${SERVER_VERSION}&quot; == &quot;postgres&quot;</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
