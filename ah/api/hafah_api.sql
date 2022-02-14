@@ -97,7 +97,7 @@ LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  IF _filter != 0 THEN
+  IF _filter != 0 AND _filter IS NOT NULL THEN
     RETURN array_agg(val + _transform) FROM (
       WITH RECURSIVE cte(i, val) AS (
         VALUES(-1, 0)
@@ -126,7 +126,7 @@ DECLARE
  __filter INT = ( _operation_filter_high << 64 ) | _operation_filter_low;
  __is_old_schema BOOLEAN = FALSE;
 BEGIN
-  _start = (SELECT CASE WHEN _start >= 0 THEN _start ELSE "9223372036854775807"::BIGINT END);
+  _start = (SELECT CASE WHEN _start >= 0 THEN _start ELSE '9223372036854775807'::BIGINT END);
 
   RETURN to_jsonb(result) FROM (
     SELECT CASE WHEN history IS NULL THEN
