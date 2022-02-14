@@ -65,7 +65,7 @@ def enum_virtual_ops(context : None, block_range_begin : int, block_range_end : 
   assert _block_range_end > _block_range_begin, 'block range must be upward'
 
   include_reversible = convert(include_reversible)
-  return build_response( backend(args).enum_virtual_ops( filter, _block_range_begin, _block_range_end, _operation_begin, _limit, include_reversible, group_by_block ) )
+  return build_response( backend(context, kwargs).enum_virtual_ops( filter, _block_range_begin, _block_range_end, _operation_begin, _limit, include_reversible, group_by_block ) )
 
 def get_transaction(context : None, id : str, include_reversible = None, **kwargs : dict):
   include_reversible = convert(include_reversible)
