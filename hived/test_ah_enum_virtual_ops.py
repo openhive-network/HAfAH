@@ -35,7 +35,7 @@ def main():
   arg_engine.add_argument('--test', dest='test_node', type=str, help='address to tested node (ex. http://127.0.0.1:8095)')
   arg_engine.add_argument('--start', dest='start', type=int, help='block range begin')
   arg_engine.add_argument('--stop', dest='stop', type=int, help='block range end')
-  arg_engine.add_argument('-j', dest='jobs', type=int, default=4, help='amount of threads to use')
+  arg_engine.add_argument('-j', dest='jobs', type=int, default=0, help='amount of threads to use, if 0 (default) use all CPUs')
   arg_engine.add_argument('-d', dest='wdir', type=str, default='workdir', help='path where output should be kept (ex. /path/to/workdir)')
   args = arg_engine.parse_args(list(sys.argv[1:]))
 
