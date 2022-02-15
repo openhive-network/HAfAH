@@ -20,10 +20,10 @@ class CustomBoolParserApiException(ApiError):
   def __init__(self):
     super().__init__("Bad Cast:Cannot convert string to bool (only \"true\" or \"false\" can be converted)", JSON_RPC_SERVER_ERROR)
 
-def convert(val):
+def convert(val, default_value):
   try:
     if val is None:
-      return DEFAULT_INCLUDE_IRREVERSIBLE
+      return default_value
 
     invalid_val = False
     if isinstance(val, str):
@@ -48,46 +48,53 @@ def build_response( obj ):
   '''proxy method, currently useless'''
   return obj
 
-def get_ops_in_block(context : None, block_num : int = 0, only_virtual : bool = False, include_reversible = None, **kwargs : dict):
-  include_reversible = convert(include_reversible)
+def get_ops_in_block(context : None, block_num = None, only_virtual = None, include_reversible = None, **kwargs : dict):
+  try:
+    block_num = 0 if block_num is None else int(block_num)
+  except Exception as ex:
+    raise CustomUInt64ParserApiException()
+
+  include_reversible  = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)
+  only_virtual        = convert(only_virtual, False)
+
   return build_response( backend(context, kwargs).get_ops_in_block( block_num, only_virtual, include_reversible) )
 
-def enum_virtual_ops(context : None, block_range_begin : int, block_range_end : int, operation_begin = "0", limit = str(MAX_POSITIVE_INT), filter : int = None, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE, group_by_block : bool = False, **kwargs : dict):
+def enum_virtual_ops(context : None, block_range_begin : str, block_range_end : str, operation_begin = None, limit = None, filter = None, include_reversible = None, group_by_block = None, **kwargs : dict):
   try:
     _block_range_begin  = int(block_range_begin)
     _block_range_end    = int(block_range_end)
-    _operation_begin    = int(operation_begin)
-    _limit              = int(limit)
+    _operation_begin    = 0                 if operation_begin is None  else int(operation_begin)
+    _limit              = MAX_POSITIVE_INT  if limit is None            else int(limit)
+    _filter             = filter            if filter is None           else int(filter)
   except Exception as ex:
     raise CustomUInt64ParserApiException()
 
   assert _block_range_end > _block_range_begin, 'block range must be upward'
 
-  include_reversible = convert(include_reversible)
-  return build_response( backend(context, kwargs).enum_virtual_ops( filter, _block_range_begin, _block_range_end, _operation_begin, _limit, include_reversible, group_by_block ) )
+  include_reversible  = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)
+  group_by_block      = convert(group_by_block, False)
+
+  return build_response( backend(context, kwargs).enum_virtual_ops( _filter, _block_range_begin, _block_range_end, _operation_begin, _limit, include_reversible, group_by_block ) )
 
 def get_transaction(context : None, id : str, include_reversible = None, **kwargs : dict):
-  include_reversible = convert(include_reversible)
+  include_reversible = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)
+
   return build_response( backend(context, kwargs).get_transaction( id, include_reversible ) )
 
-def get_account_history(context : None, account : str, start : int = "-1", limit = str(DEFAULT_LIMIT), operation_filter_low = "0", operation_filter_high = "0", include_reversible = None, **kwargs : dict):
-  _operation_filter_low   = None
-  _operation_filter_high  = None
-  _start                  = None
-  _limit                  = None
-
+def get_account_history(context : None, account : str, start = None, limit = None, operation_filter_low = None, operation_filter_high = None, include_reversible = None, **kwargs : dict):
   try:
-    _start                  = int(start)
-    _limit                  = int(limit)
-    _operation_filter_low   = int(operation_filter_low)
-    _operation_filter_high  = int(operation_filter_high)
+    _start                  = -1            if start is None                  else int(start)
+    _limit                  = DEFAULT_LIMIT if limit is None                  else int(limit)
+    _operation_filter_low   = 0             if operation_filter_low is None   else int(operation_filter_low)
+    _operation_filter_high  = 0             if operation_filter_high is None  else int(operation_filter_high)
   except Exception as ex:
     raise CustomUInt64ParserApiException()
 
-  include_reversible = convert(include_reversible)
+  include_reversible = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)
 
   filter = ( _operation_filter_high << 64 ) | _operation_filter_low
   _start = _start if _start >= 0 else MAX_BIGINT_POSTGRES
+
   return build_response( backend(context, kwargs).get_account_history( filter, account, _start, _limit, include_reversible ) )
 
 def build_methods():
