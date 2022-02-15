@@ -1,4 +1,4 @@
-from ah.db.backend import account_history_impl
+from ah.db.backend import account_history_impl, MAX_POSITIVE_INT
 from ah.db.objects import account_history_api, condenser_api
 from ah.api.validation import verify_types, convert_maybe, require_unsigned, max_value
 from functools import partial
@@ -7,7 +7,6 @@ from distutils import util
 
 JSON_RPC_SERVER_ERROR = -32000
 
-MAX_INT_POSTGRES = 2_147_483_646
 MAX_BIGINT_POSTGRES = 9_223_372_036_854_775_807
 DEFAULT_INCLUDE_IRREVERSIBLE = False
 DEFAULT_LIMIT = 1_000
@@ -53,7 +52,7 @@ def get_ops_in_block(context : None, block_num : int = 0, only_virtual : bool = 
   include_reversible = convert(include_reversible)
   return build_response( backend(context, kwargs).get_ops_in_block( block_num, only_virtual, include_reversible) )
 
-def enum_virtual_ops(context : None, block_range_begin : int, block_range_end : int, operation_begin = "0", limit = str(MAX_INT_POSTGRES), filter : int = None, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE, group_by_block : bool = False, **kwargs : dict):
+def enum_virtual_ops(context : None, block_range_begin : int, block_range_end : int, operation_begin = "0", limit = str(MAX_POSITIVE_INT), filter : int = None, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE, group_by_block : bool = False, **kwargs : dict):
   try:
     _block_range_begin  = int(block_range_begin)
     _block_range_end    = int(block_range_end)

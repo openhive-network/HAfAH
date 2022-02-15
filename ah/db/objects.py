@@ -86,27 +86,37 @@ class account_history_api_objects: # namespace
         self.__group_by_block(irreversible_block)
         self.ops.clear()
 
-    def get_pagination_data(self, block_range_end, limit):
-      _len = max( len(self.ops), len(self.ops_by_block) )
+    def prepare_pagination_params(self, block_range_end, limit, get_pagination_data_call ):
+      last_op : account_history_api_objects.api_operation = None
+      _new_data_required = True
+      _block_range_end = block_range_end
 
-      if _len and _len == limit:
-        last_op : account_history_api_objects.api_operation = None
-
-        if len(self.ops):
-          last_op = self.ops[-1]
-        else:
+      if len(self.ops):
+        last_op = self.ops[-1]
+        if len(self.ops) > limit:
+          self.ops.pop()
+          _new_data_required = False
+          _block_range_end = last_op.block
+      else:
+        if len(self.ops_by_block):
           last_op_wrapper = self.ops_by_block[-1]
           last_op = last_op_wrapper.ops[-1]
+          if len(self.ops_by_block) > limit:
+            self.ops_by_block.pop()
+            _new_data_required = False
+            _block_range_end = last_op.block
 
-        _op_id = account_history_api_objects.api_operation.get_opertaion_id(last_op.operation_id)
-        return True, last_op.block, _op_id
+      if last_op is None:
+        _op_id = 0
       else:
-        self.next_block_range_begin = block_range_end
-        return False, 0, 0
+        _op_id = account_history_api_objects.api_operation.get_opertaion_id(last_op.operation_id)
 
-    def update_pagination_data(self, next_block_range_begin, next_operation_begin):
-      self.next_block_range_begin = next_block_range_begin
-      self.next_operation_begin   = account_history_api_objects.api_operation.set_operation_id(next_operation_begin)
+
+      if _new_data_required:
+        _block_range_end, _op_id = get_pagination_data_call(_block_range_end, _op_id, block_range_end)
+
+      self.next_block_range_begin = _block_range_end
+      self.next_operation_begin   = account_history_api_objects.api_operation.set_operation_id(_op_id)
 
     def __group_by_block(self, irreversible_block):
       supp = dict()

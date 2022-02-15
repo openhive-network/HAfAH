@@ -5,7 +5,8 @@ from ah.utils.performance import perf
 
 from jsonrpcserver.exceptions import ApiError
 
-MAXINT =  2**31-1
+RANGE_POSITIVE_INT =  2**31-1
+MAX_POSITIVE_INT = RANGE_POSITIVE_INT - 1
 RANGEINT  = 2**32
 RECORD_NAME = 'backend'
 
@@ -95,21 +96,18 @@ class account_history_impl:
         block_range_begin,
         block_range_end,
         operation_begin,
-        limit,
+        limit if (limit == MAX_POSITIVE_INT) else limit + 1, #+1 because last record is used for paging
         include_reversible
       )
     )
 
-    _new_data_required, _last_block_num, _last_id = _result.get_pagination_data(block_range_end, limit)
+    _result.prepare_pagination_params(block_range_end, limit, self.api.get_pagination_data )
 
-    if _new_data_required:
-      _next_block_range_begin, _next_operation_begin = self.api.get_pagination_data(_last_block_num, _last_id, block_range_end)
-      _result.update_pagination_data(_next_block_range_begin, _next_operation_begin)
     return _result
 
   @perf(record_name=RECORD_NAME, handler=handler)
   def get_account_history(self, filter : int, account : str, start : int, limit : int, include_reversible : bool):
-    _limit = MAXINT if limit == 0 else limit - 1
+    _limit = RANGE_POSITIVE_INT if limit == 0 else limit - 1
     limit = (RANGEINT + limit) if limit < 0 else limit
 
     if limit > 1000:
