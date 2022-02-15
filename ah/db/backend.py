@@ -96,7 +96,7 @@ class account_history_impl:
         block_range_begin,
         block_range_end,
         operation_begin,
-        limit if (limit == MAX_POSITIVE_INT) else limit + 1, #+1 because last record is used for paging
+        limit,
         include_reversible
       )
     )
