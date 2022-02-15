@@ -65,7 +65,7 @@ patterns_tests:
         export POSTGRESQL_URI='postgresql:///haf_block_log' ;
       fi
 
-    # run account history
+    # run HAfAH
     - if [ ! "$AH_ENDPOINT" ]; then
         cd $CI_PROJECT_DIR ;
         ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 >> ah.log &
@@ -84,7 +84,6 @@ patterns_tests:
     - ./test_ah_get_ops_in_block.py --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT --start 4900000 --stop 4925000 -d workdir_ops -j $TJOBS
     - ./test_ah_get_account_history.py --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT -f ./input_data/accounts.csv -d workdir_acc -j $TJOBS
     - ./test_ah_get_transaction.py --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT -f ./input_data/hashes.csv -d workdir_trx -j $TJOBS
-
 
     # kill hived
     - pkill hived
