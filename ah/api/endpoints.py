@@ -1,24 +1,14 @@
-from ah.db.backend import account_history_impl, MAX_POSITIVE_INT
+from ah.db.backend import account_history_impl, MAX_POSITIVE_INT, CustomUInt64ParserApiException, CustomBoolParserApiException, CustomInvalidBlocksRangeException
 from ah.db.objects import account_history_api, condenser_api
 from ah.api.validation import verify_types, convert_maybe, require_unsigned, max_value
 from functools import partial
 from jsonrpcserver.exceptions import ApiError
 from distutils import util
 
-JSON_RPC_SERVER_ERROR = -32000
-
 MAX_BIGINT_POSTGRES = 9_223_372_036_854_775_807
 DEFAULT_INCLUDE_IRREVERSIBLE = False
 DEFAULT_LIMIT = 1_000
 limit_contraint = max_value(DEFAULT_LIMIT)
-
-class CustomUInt64ParserApiException(ApiError):
-  def __init__(self):
-    super().__init__("Parse Error:Couldn't parse uint64_t", JSON_RPC_SERVER_ERROR)
-
-class CustomBoolParserApiException(ApiError):
-  def __init__(self):
-    super().__init__("Bad Cast:Cannot convert string to bool (only \"true\" or \"false\" can be converted)", JSON_RPC_SERVER_ERROR)
 
 def convert(val, default_value):
   try:
@@ -69,7 +59,8 @@ def enum_virtual_ops(context : None, block_range_begin : str, block_range_end : 
   except Exception as ex:
     raise CustomUInt64ParserApiException()
 
-  assert block_range_end > block_range_begin, 'block range must be upward'
+  if block_range_end <= block_range_begin:
+    raise CustomInvalidBlocksRangeException()
 
   include_reversible  = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)
   group_by_block      = convert(group_by_block, False)
