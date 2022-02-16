@@ -54,6 +54,8 @@ class account_history_api_objects: # namespace
 
   class api_operation(condenser_api_objects.api_operation):
 
+    VIRTUAL_OP_FLAG = 0x8000000000000000
+
     def __init__(self, row, *, block : int, fill_operation_id : bool = False):
       super().__init__(row=row, block=block)
       self.operation_id = account_history_api_objects.api_operation.set_operation_id(row["_operation_id"]) if fill_operation_id else 0
@@ -109,6 +111,7 @@ class account_history_api_objects: # namespace
       _block_range_end, _op_id = get_pagination_data_call(_block_range_end, _op_id, block_range_end)
 
       self.next_block_range_begin = _block_range_end
+      _op_id = _op_id if _op_id == 0 else (_op_id | account_history_api_objects.api_operation.VIRTUAL_OP_FLAG)
       self.next_operation_begin   = account_history_api_objects.api_operation.set_operation_id(_op_id)
 
     def __group_by_block(self, irreversible_block):
