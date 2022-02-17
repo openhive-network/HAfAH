@@ -46,6 +46,10 @@ class CustomInvalidBlocksRangeException(ApiError):
   def __init__(self):
     super().__init__("Assert Exception:blockRangeEnd > blockRangeBegin: Block range must be upward", JSON_RPC_ERROR_DURING_CALL)
 
+class CustomBlocksRangeTooWideException(ApiError):
+  def __init__(self):
+    super().__init__("Assert Exception:blockRangeEnd - blockRangeBegin <= block_range_limit: Block range distance must be less than or equal to 2000", JSON_RPC_ERROR_DURING_CALL)
+
 class account_history_impl:
 
   def __init__(self, ctx : dict, repr : Union[account_history_api, condenser_api]):

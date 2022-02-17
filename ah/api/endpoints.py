@@ -1,13 +1,13 @@
-from ah.db.backend import account_history_impl, MAX_POSITIVE_INT, CustomUInt64ParserApiException, CustomBoolParserApiException, CustomInvalidBlocksRangeException
+from ah.db.backend import CustomBlocksRangeTooWideException, account_history_impl, MAX_POSITIVE_INT, CustomUInt64ParserApiException, CustomBoolParserApiException, CustomInvalidBlocksRangeException
 from ah.db.objects import account_history_api, condenser_api
 from ah.api.validation import verify_types, convert_maybe, require_unsigned, max_value
 from functools import partial
-from jsonrpcserver.exceptions import ApiError
 from distutils import util
 
 MAX_BIGINT_POSTGRES = 9_223_372_036_854_775_807
 DEFAULT_INCLUDE_IRREVERSIBLE = False
 DEFAULT_LIMIT = 1_000
+BLOCK_WIDTH_LIMIT = 2 * DEFAULT_LIMIT
 limit_contraint = max_value(DEFAULT_LIMIT)
 
 def convert(val, default_value):
@@ -61,6 +61,9 @@ def enum_virtual_ops(context : None, block_range_begin : str, block_range_end : 
 
   if block_range_end <= block_range_begin:
     raise CustomInvalidBlocksRangeException()
+
+  if block_range_end - block_range_begin > BLOCK_WIDTH_LIMIT:
+    raise CustomBlocksRangeTooWideException()
 
   include_reversible  = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)
   group_by_block      = convert(group_by_block, False)
