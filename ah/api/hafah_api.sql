@@ -304,12 +304,12 @@ BEGIN
     WHERE
       CASE WHEN _group_by_block IS TRUE THEN
         ot.is_virtual = TRUE AND
-        o.block_num >= (ops_json->'ops_by_block'->-1->'block') AND
-        o.id > (ops_json->'ops_by_block'->-1->'ops'->-1->'operation_id')
+        o.block_num >= (ops_json->'ops_by_block'->-1->'block')::INT AND
+        o.id > (ops_json->'ops_by_block'->-1->'ops'->-1->'operation_id')::BIGINT
       ELSE
         ot.is_virtual = TRUE AND
-        o.block_num >= (ops_json->'ops'->-1->>'block') AND
-        o.id > (ops_json->'ops'->-1->>'operation_id')
+        o.block_num >= (ops_json->'ops'->-1->>'block')::INT AND
+        o.id > (ops_json->'ops'->-1->>'operation_id')::BIGINT
       END
     ORDER BY o.block_num, o.id 
     LIMIT 1;
@@ -348,6 +348,10 @@ DECLARE
 BEGIN
   IF _block_range_begin > _block_range_end THEN
     SELECT raise_exception('block range must be upward');
+  END IF;
+
+  IF _block_range_end - _block_range_begin > 2000 THEN
+    SELECT raise_exception('block range distance must be less than or equal to 2000');
   END IF;
 
   IF _group_by_block IS TRUE THEN
