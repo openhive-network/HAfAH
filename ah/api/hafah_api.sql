@@ -42,70 +42,6 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.set_operation_id(_operation_id BIGINT, __fill_operation_id BOOLEAN)
-RETURNS VARCHAR
-LANGUAGE 'plpgsql'
-AS
-$$
-BEGIN
-  RETURN CASE WHEN __fill_operation_id IS TRUE THEN
-    CASE WHEN _operation_id >= 4294967295 THEN
-      '"operation_id": "' || _operation_id || '" ' 
-    ELSE
-      '"operation_id": ' || _operation_id || ' '
-    END
-  ELSE 
-    '"operation_id": 0'
-  END;
-END
-$$
-;
-
-CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN = FALSE)
-RETURNS TEXT
-LANGUAGE 'plpgsql'
-AS
-$$
-DECLARE
-  __fill_operation_id BOOLEAN = FALSE;
-  __is_old_schema BOOLEAN = FALSE;
-BEGIN
-  RETURN to_jsonb(result) FROM (
-    SELECT CASE WHEN ops IS NULL THEN
-      '[]'::JSON
-    ELSE
-      ops
-    END AS ops
-    FROM (
-      SELECT json_agg(ops::JSON) AS ops FROM (
-        SELECT ops FROM (
-          WITH cte AS (
-            SELECT
-                NULL::TEXT AS ops
-            UNION ALL
-            SELECT
-              '{' ||
-              '"trx_id": "' || _trx_id || '", ' ||
-              '"block": ' || _block_num || ', ' ||
-              '"trx_in_block": ' || _trx_in_block || ', ' ||
-              '"op_in_trx": ' || _op_in_trx || ', ' ||
-              '"virtual_op": ' || _virtual_op || ', ' ||
-              '"timestamp": "' || _timestamp || '", ' ||
-              '"op": ' || _value || ', ' ||
-              (SELECT * FROM hafah_api.set_operation_id(_operation_id, __fill_operation_id)) ||
-              '}'
-            FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible, __is_old_schema)
-          )
-          SELECT ops FROM cte
-        ) obj
-      WHERE ops IS NOT NULL
-      ) to_arr
-    ) is_null
-  ) result;
-END
-$$
-;
-
 CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_filter INT, _endpoint_name TEXT, _transform INT = 0)
 RETURNS INT[]
 LANGUAGE 'plpgsql'
@@ -132,6 +68,85 @@ END
 $$
 ;
 
+CREATE OR REPLACE FUNCTION hafah_api.set_operation_id(_operation_id BIGINT, __fill_operation_id BOOLEAN)
+RETURNS VARCHAR
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN CASE WHEN __fill_operation_id IS TRUE THEN
+    CASE WHEN _operation_id >= 4294967295 THEN
+      '"operation_id": "' || _operation_id || '" ' 
+    ELSE
+      '"operation_id": ' || _operation_id || ' '
+    END
+  ELSE 
+    '"operation_id": 0'
+  END;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.build_api_operation(_trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BOOLEAN, _timestamp TEXT, _value TEXT, _operation_id BIGINT, _fill_operation_id BOOLEAN)
+RETURNS TEXT
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN
+    '{' ||
+    '"trx_id": "' || _trx_id || '", ' ||
+    '"block": ' || _block || ', ' ||
+    '"trx_in_block": ' || _trx_in_block || ', ' ||
+    '"op_in_trx": ' || _op_in_trx || ', ' ||
+    '"virtual_op": ' || _virtual_op || ', ' ||
+    '"timestamp": "' || _timestamp || '", ' ||
+    '"op": ' || _value || ', ' ||
+    CASE WHEN _operation_id IS NULL THEN
+      hafah_api.raise_exception('_operation_id cannot be NULL')
+    ELSE
+      hafah_api.set_operation_id(_operation_id, _fill_operation_id)
+    END ||
+    '}';
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN = FALSE)
+RETURNS TEXT
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __fill_operation_id BOOLEAN = FALSE;
+  __is_old_schema BOOLEAN = FALSE;
+BEGIN
+  RETURN to_jsonb(result) FROM (
+    SELECT CASE WHEN ops IS NULL THEN
+      '[]'::JSON
+    ELSE
+      ops
+    END AS ops
+    FROM (
+      SELECT json_agg(ops::JSON) AS ops FROM (
+        SELECT ops FROM (
+          WITH cte AS (
+            SELECT
+                NULL::TEXT AS ops
+            UNION ALL
+            SELECT hafah_api.build_api_operation(_trx_id, _block_num, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, __fill_operation_id)
+            FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible, __is_old_schema)
+          )
+          SELECT ops FROM cte
+        ) obj
+      WHERE ops IS NOT NULL
+      ) to_arr
+    ) is_null
+  ) result;
+END
+$$
+;
+
 CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_account VARCHAR, _start BIGINT = -1, _limit INT = 1000, _operation_filter_low INT = 0, _operation_filter_high INT = 0, _include_reversible BOOLEAN = FALSE)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
@@ -148,7 +163,7 @@ BEGIN
       '[]'::JSON
     ELSE
       history
-    END AS history
+    END
     FROM (
       SELECT json_agg(history::JSON) AS history FROM (
         SELECT history FROM (
@@ -169,7 +184,7 @@ BEGIN
               '"operation_id": 0' || ' ' ||
               '}' ||
               ']'
-            FROM hafah_python.ah_get_account_history((SELECT * FROM hafah_api.translate_filter(__filter, 'get_account_history')), _account, _start, _limit, _include_reversible, __is_old_schema)
+            FROM hafah_python.ah_get_account_history((SELECT hafah_api.translate_filter(__filter, 'get_account_history')), _account, _start, _limit, _include_reversible, __is_old_schema)
           )
           SELECT history FROM cte
         ) obj
@@ -189,7 +204,7 @@ $$
 DECLARE
  __is_old_schema BOOLEAN = FALSE;
 BEGIN
-  RETURN obj::JSON FROM (
+  RETURN obj FROM (
     SELECT CASE WHEN obj IS NULL THEN
       '{
       "block_num": null,
@@ -212,10 +227,10 @@ BEGIN
         '"ref_block_prefix": ' || _ref_block_prefix || ', ' ||
         '"expiration": "' || _expiration || '", ' ||
         '"operations": ' ||
-        (
-          SELECT json_agg(_value) FROM (
-            SELECT _value::JSON FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block, __is_old_schema)
-          ) f_call
+        (SELECT json_agg(_value) FROM (
+          SELECT _value::JSON
+          FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block, __is_old_schema)
+        ) f_call
         ) || ', ' ||
         '"extensions": [], ' ||
         '"signatures": ' ||
@@ -270,7 +285,6 @@ BEGIN
 END
 $$
 ;
-
 
 CREATE OR REPLACE FUNCTION hafah_api.do_pagination(_block_range_end INT, _limit INT, _len INT, ops_json JSONB, _fill_operation_id BOOLEAN, _group_by_block BOOLEAN)
 RETURNS JSON
@@ -370,23 +384,9 @@ BEGIN
               NULL::INT AS block_n
             UNION ALL
             SELECT
-              -- TODO: create body for api_operation, duplicate in get_ops_in_block()
-              '{' ||
-              '"trx_id": "' || _trx_id || '", ' ||
-              '"block": ' || _block || ', ' ||
-              '"trx_in_block": ' || _trx_in_block || ', ' ||
-              '"op_in_trx": ' || _op_in_trx || ', ' ||
-              '"virtual_op": ' || _virtual_op || ', ' ||
-              '"timestamp": "' || _timestamp || '", ' ||
-              '"op": ' || _value || ', ' ||
-              CASE WHEN _operation_id IS NULL THEN
-                hafah_api.raise_exception('_operation_id cannot be NULL')
-              ELSE
-                hafah_api.set_operation_id(_operation_id, __fill_operation_id)
-              END ||
-              '}',
+              hafah_api.build_api_operation(_trx_id, _block, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, __fill_operation_id),
               _block
-            FROM hafah_python.enum_virtual_ops((SELECT * FROM hafah_api.translate_filter(_filter, 'enum_virtual_ops', __virtual_op_id_offset)), _block_range_begin, _block_range_end, _operation_begin, _limit, _include_reversible)
+            FROM hafah_python.enum_virtual_ops(hafah_api.translate_filter(_filter, 'enum_virtual_ops', __virtual_op_id_offset), _block_range_begin, _block_range_end, _operation_begin, _limit, _include_reversible)
           )
           SELECT ops, block_n FROM cte
         ) obj
@@ -399,70 +399,56 @@ $$
 ;
 
 /*
-DEVELOP BRANCH VERSION (OLD)
+VERY SLOW RESPONSES UNDER LOAD, NEEDS INVESTIGATION
 
-CREATE OR REPLACE FUNCTION hafah_api.remove_last_op(pos JSON, _n INT)
-RETURNS TEXT
+CREATE OR REPLACE FUNCTION hafah_api.do_pagination(_block_range_end INT, _limit INT, _len INT, ops_json JSONB, _fill_operation_id BOOLEAN, _group_by_block BOOLEAN)
+RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  RETURN
-    json_agg(value)
-  FROM
-    json_array_elements(pos)
-  WITH ordinality 
-    WHERE ordinality 
-    BETWEEN 0 AND _n;
+  IF _len > 0 AND _len = _limit THEN
+    RETURN
+      jsonb_set(ops, '{next_operation_begin}', to_jsonb(next_operation_begin))
+    FROM (
+      SELECT
+        (SELECT jsonb_set(ops_json, '{next_block_range_begin}', to_jsonb(next_block_range_begin))) AS ops,
+        next_operation_begin
+      FROM (
+        SELECT
+          (CASE WHEN o.block_num IS NULL THEN 0 ELSE
+            (CASE WHEN o.block_num >= _block_range_end THEN 0 ELSE o.block_num END)
+          END) AS next_block_range_begin,
+          (CASE WHEN o.id IS NULL THEN 0 ELSE
+          -- TODO: (SELECT hafah_api.set_operation_id(o.id, _fill_operation_id))
+          (SELECT o.id)
+          END) AS next_operation_begin
+        FROM
+          hive.operations o
+        JOIN hive.operation_types ot ON o.op_type_id = ot.id
+        WHERE
+          CASE WHEN _group_by_block IS TRUE THEN
+            ot.is_virtual = TRUE AND
+            o.block_num >= (ops_json->'ops_by_block'->-1->'block')::INT AND
+            o.id > (ops_json->'ops_by_block'->-1->'ops'->-1->'operation_id')::BIGINT
+          ELSE
+            ot.is_virtual = TRUE AND
+            o.block_num >= (ops_json->'ops'->-1->>'block')::INT AND
+            o.id > (ops_json->'ops'->-1->>'operation_id')::BIGINT
+          END
+        ORDER BY o.block_num, o.id 
+        LIMIT 1
+      ) result
+    ) insert_result;
+  ELSE
+    RETURN
+      jsonb_set(ops, '{next_operation_begin}', to_jsonb(0))
+    FROM (
+      SELECT
+        jsonb_set(ops_json, '{next_block_range_begin}', to_jsonb(_block_range_end)) AS ops
+      ) insert_result;
+  END IF;
 END
 $$
 ;
-
-RETURN to_jsonb(result) FROM (
-  SELECT
-    CASE WHEN _group_by_block IS TRUE OR ops IS NULL THEN '[]'::JSON ELSE ops END AS ops,
-    next_block_range_begin,
-    next_operation_begin,
-    CASE WHEN _group_by_block IS FALSE OR ops IS NULL THEN '[]'::JSON ELSE (SELECT * FROM hafah_api.group_by_block(ops, block_n_arr, __irreversible_block)) END AS ops_by_block
-  FROM (
-    SELECT
-      ops->-1->'block' AS next_block_range_begin,
-      CASE WHEN _block_range_end < (SELECT ops->-1->>'block')::INT THEN ops->-1->'operation_id' ELSE '0'::JSON END AS next_operation_begin,
-      hafah_api.remove_last_op(ops, n - 1)::JSON AS ops,
-      ops,
-      block_n_arr
-    FROM (
-      SELECT
-        json_agg(ops::JSON) AS ops,
-        array_agg(DISTINCT block_n) AS block_n_arr,
-        count(ops)::INT AS n
-      FROM (
-        SELECT ops, block_n FROM (
-          WITH cte AS (
-            SELECT
-              NULL::TEXT AS ops,
-              NULL::INT AS block_n
-            UNION ALL
-            SELECT
-              -- TODO: create body for api_operation, duplicate in get_ops_in_block()
-              '{' ||
-              '"trx_id": "' || _trx_id || '", ' ||
-              '"block": ' || _block || ', ' ||
-              '"trx_in_block": ' || _trx_in_block || ', ' ||
-              '"op_in_trx": ' || _op_in_trx || ', ' ||
-              '"virtual_op": ' || _virtual_op || ', ' ||
-              '"timestamp": "' || _timestamp || '", ' ||
-              '"op": ' || _value || ', ' ||
-              (SELECT * FROM hafah_api.set_operation_id(_operation_id, __fill_operation_id)) ||
-              '}',
-              _block
-            FROM hafah_python.enum_virtual_ops((SELECT * FROM hafah_api.translate_filter(_filter, 'enum_virtual_ops', __virtual_op_id_offset)), _block_range_begin, _block_range_end, _operation_begin, _limit, _include_reversible)
-          )
-          SELECT ops, block_n FROM cte
-        ) obj
-      WHERE ops IS NOT NULL
-      ) to_arr
-    ) pagination
-  ) next_begin
-) result;
 */
