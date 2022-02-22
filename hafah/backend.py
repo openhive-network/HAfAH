@@ -24,10 +24,10 @@ def translate_filter(input : int, *, offset : int = 0):
 class account_history_impl:
   VIRTUAL_OP_ID_OFFSET = None
 
-  def __init__(self, ctx : dict, is_condenser_style : bool):
+  def __init__(self, ctx : dict, is_legacy_style : bool):
     self.api = account_history_db_connector(ctx['db'])
     self.ctx = ctx
-    self.is_condenser_style = is_condenser_style
+    self.is_legacy_style = is_legacy_style
 
     if account_history_impl.VIRTUAL_OP_ID_OFFSET is None:
       account_history_impl.VIRTUAL_OP_ID_OFFSET = self.api.get_virtual_op_offset()
@@ -44,7 +44,7 @@ class account_history_impl:
       only_virtual,
       include_reversible,
 
-      is_condenser_style=self.is_condenser_style
+      is_legacy_style=self.is_legacy_style
     )
 
   @perf(record_name=RECORD_NAME, handler=handler)
@@ -52,8 +52,8 @@ class account_history_impl:
     return self.api.get_transaction(
       trx_hash.encode('ascii'),
       include_reversible,
-      
-      is_condenser_style=self.is_condenser_style
+
+      is_legacy_style=self.is_legacy_style
     )
 
   @perf(record_name=RECORD_NAME, handler=handler)
@@ -65,7 +65,7 @@ class account_history_impl:
       limit,
       include_reversible,
 
-      is_condenser_style=self.is_condenser_style
+      is_legacy_style=self.is_legacy_style
     )
 
   @perf(record_name=RECORD_NAME, handler=handler)
