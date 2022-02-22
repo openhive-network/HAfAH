@@ -182,15 +182,13 @@ DROP TYPE IF EXISTS hafah_python.enum_virtual_ops_result CASCADE;
 
 CREATE TYPE hafah_python.enum_virtual_ops_result AS ( _trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BOOLEAN, _timestamp TEXT, _value TEXT, _operation_id BIGINT );
 
-CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT BIGINT, in _INCLUDE_REVERSIBLE BOOLEAN )
 RETURNS SETOF hafah_python.enum_virtual_ops_result
 AS
 $function$
 DECLARE
   __upper_block_limit INT;
   __filter_info INT;
-  __iterator hafah_python.enum_virtual_ops_result;
-  __counter INT := 0;
 BEGIN
   SELECT INTO __filter_info ( select array_length( _FILTER, 1 ) );
   IF NOT _INCLUDE_REVERSIBLE THEN
@@ -212,18 +210,6 @@ BEGIN
     END IF;
   END IF;
 
-  RETURN QUERY
-    SELECT * FROM hafah_python.enum_virtual_ops_impl( _FILTER, _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, _OPERATION_BEGIN, _LIMIT, __filter_info )
-  LIMIT _LIMIT;
-END
-$function$
-language plpgsql STABLE;
-
-CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops_impl( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in __filter_info INT )
-RETURNS SETOF hafah_python.enum_virtual_ops_result
-AS
-$function$
-BEGIN
   RETURN QUERY
     SELECT
       (
@@ -256,7 +242,7 @@ BEGIN
       AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id = ANY( _FILTER ) ) )
       AND ( _OPERATION_BEGIN = -1 OR ho.id >= _OPERATION_BEGIN )
       ORDER BY ho.id
-      LIMIT _LIMIT + 1
+      LIMIT _LIMIT
     ) T
     LEFT JOIN
     (
@@ -265,29 +251,8 @@ BEGIN
       WHERE ht.block_num >= _BLOCK_RANGE_BEGIN AND ht.block_num < _BLOCK_RANGE_END
     )T2 ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
     WHERE T.block_num >= _BLOCK_RANGE_BEGIN AND T.block_num < _BLOCK_RANGE_END
-    ORDER BY T.id;
-END
-$function$
-language plpgsql STABLE;
-
-CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops_pagination( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in __filter_info INT )
-RETURNS TABLE( _next_block INT, _next_op_id BIGINT )
-AS
-$function$
-BEGIN
-  RETURN QUERY
-    SELECT
-      ho.block_num _next_block,
-      ho.id - 1 _next_op_id -- 1 is substracted because ho.id start from 1, when it should start from 0
-    FROM   hive.operations_view ho
-    JOIN   hive.operation_types hot
-    ON   ho.op_type_id=hot.id
-    WHERE   hot.is_virtual = TRUE
-      AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id = ANY( _FILTER ) ) )
-      AND ( _OPERATION_BEGIN = -1 OR ho.id >= _OPERATION_BEGIN )
-    AND ho.block_num >= _BLOCK_RANGE_END -- this cannot be set to N+1 block because following block can be empty
-    ORDER BY ho.block_num, ho.id
-    LIMIT 1;
+    ORDER BY T.id
+    LIMIT _LIMIT;
 END
 $function$
 language plpgsql STABLE;
