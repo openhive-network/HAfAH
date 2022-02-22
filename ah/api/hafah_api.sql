@@ -1,3 +1,7 @@
+-- TODO: add API ERROR from backend.py
+-- TODO: parse args from calls
+-- TODO: do arg validation
+
 DROP SCHEMA IF EXISTS hafah_api CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_api;
@@ -87,7 +91,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.build_api_operation(_trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BOOLEAN, _timestamp TEXT, _value TEXT, _operation_id BIGINT, _fill_operation_id BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.build_api_operation(_trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BOOLEAN, _timestamp TEXT, _value TEXT, _operation_id BIGINT, _fill_operation_id BOOLEAN, __is_old_schema BOOLEAN = FALSE)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
@@ -101,13 +105,17 @@ BEGIN
     '"op_in_trx": ' || _op_in_trx || ', ' ||
     '"virtual_op": ' || _virtual_op || ', ' ||
     '"timestamp": "' || _timestamp || '", ' ||
-    '"op": ' || _value || ', ' ||
-    CASE WHEN _operation_id IS NULL THEN
-      hafah_api.raise_exception('_operation_id cannot be NULL')
+    '"op": ' || _value ||
+    CASE WHEN __is_old_schema IS TRUE THEN
+      ''
     ELSE
-      hafah_api.set_operation_id(_operation_id, _fill_operation_id)
-    END ||
-    '}';
+      CASE WHEN _operation_id IS NULL THEN
+        hafah_api.raise_exception('_operation_id cannot be NULL')
+      ELSE
+        ', ' || hafah_api.set_operation_id(_operation_id, _fill_operation_id)
+      END
+    END
+    || '}';
 END
 $$
 ;
@@ -121,20 +129,25 @@ DECLARE
   __fill_operation_id BOOLEAN = FALSE;
   __is_old_schema BOOLEAN = FALSE;
 BEGIN
-  RETURN to_jsonb(result) FROM (
+  RETURN CASE WHEN __is_old_schema IS TRUE THEN
+    ops
+  ELSE
+    to_jsonb(result)
+  END
+  FROM (
     SELECT CASE WHEN ops IS NULL THEN
-      '[]'::JSON
+      '[]'::JSONB
     ELSE
       ops
     END AS ops
     FROM (
-      SELECT json_agg(ops::JSON) AS ops FROM (
+      SELECT jsonb_agg(ops::JSONB) AS ops FROM (
         SELECT ops FROM (
           WITH cte AS (
             SELECT
                 NULL::TEXT AS ops
             UNION ALL
-            SELECT hafah_api.build_api_operation(_trx_id, _block_num, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, __fill_operation_id)
+            SELECT hafah_api.build_api_operation(_trx_id, _block_num, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, __fill_operation_id, __is_old_schema)
             FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible, __is_old_schema)
           )
           SELECT ops FROM cte
@@ -158,14 +171,19 @@ DECLARE
 BEGIN
   _start = (CASE WHEN _start >= 0 THEN _start ELSE '9223372036854775807'::BIGINT END);
 
-  RETURN to_jsonb(result) FROM (
+  RETURN CASE WHEN __is_old_schema IS TRUE THEN
+    history
+  ELSE
+    to_jsonb(result)
+  END
+  FROM (
     SELECT CASE WHEN history IS NULL THEN
-      '[]'::JSON
+      '[]'::JSONB
     ELSE
       history
-    END
+    END AS history
     FROM (
-      SELECT json_agg(history::JSON) AS history FROM (
+      SELECT jsonb_agg(history::JSONB) AS history FROM (
         SELECT history FROM (
           WITH cte AS (
             SELECT
@@ -180,9 +198,13 @@ BEGIN
               '"op_in_trx": ' || _op_in_trx || ', ' ||
               '"virtual_op": ' || _virtual_op || ', ' ||
               '"timestamp": "' || _timestamp || '", ' ||
-              '"op": ' || _value || ', ' ||
-              '"operation_id": 0' || ' ' ||
-              '}' ||
+              '"op": ' || _value ||
+              CASE WHEN __is_old_schema IS TRUE THEN
+                ''
+              ELSE
+                ', ' || '"operation_id": 0'
+              END
+              || '}' ||
               ']'
             FROM hafah_python.ah_get_account_history((SELECT hafah_api.translate_filter(__filter, 'get_account_history')), _account, _start, _limit, _include_reversible, __is_old_schema)
           )
@@ -347,7 +369,12 @@ DECLARE
   __fill_operation_id BOOLEAN = TRUE;
   __virtual_op_id_offset INT = (SELECT MIN(id) FROM hive.operation_types WHERE is_virtual = True);
   __irreversible_block INT;
+  __is_old_schema BOOLEAN = FALSE;
 BEGIN
+  IF __is_old_schema IS TRUE THEN
+    SELECT raise_exception('not supported');
+  END IF;
+
   IF _block_range_begin > _block_range_end THEN
     SELECT raise_exception('block range must be upward');
   END IF;
