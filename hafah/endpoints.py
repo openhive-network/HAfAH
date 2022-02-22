@@ -33,7 +33,7 @@ def convert(val, default_value):
     return val
 
 def backend(context, options) -> standard_backend:
-  return standard_backend(context, options['is_condenser_style'])
+  return standard_backend(context, options['is_legacy_style'])
 
 def get_ops_in_block(context : None, block_num = None, only_virtual = None, include_reversible = None, **kwargs : dict):
   try:
@@ -92,10 +92,10 @@ def build_methods():
   CONDENSER_API = 'condenser_api'
 
   def ah_method(foo):
-    return (f'{ACCOUNT_HISTORY_API}.{foo.__name__}', partial(foo, is_condenser_style=False))
+    return (f'{ACCOUNT_HISTORY_API}.{foo.__name__}', partial(foo, is_legacy_style=False))
 
   def ca_method(foo):
-    return (f'{CONDENSER_API}.{foo.__name__}', partial(foo, is_condenser_style=True))
+    return (f'{CONDENSER_API}.{foo.__name__}', partial(foo, is_legacy_style=True))
 
   return dict([
     ah_method(get_ops_in_block),
