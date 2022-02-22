@@ -40,21 +40,21 @@ class account_history_db_connector:
       trx_hash=trx_hash
     )
 
-  def get_ops_in_transaction(self, block_num : int, trx_in_block : int, *, is_old_schema : bool ):
+  def get_ops_in_transaction(self, block_num : int, trx_in_block : int, *, is_legacy_style : bool ):
     return self._get_all(
-      f"SELECT * FROM {self._schema}.get_ops_in_transaction( :block_num, :trx_in_block, :is_old_schema )",
+      f"SELECT * FROM {self._schema}.get_ops_in_transaction( :block_num, :trx_in_block, :is_legacy_style )",
       block_num=block_num,
       trx_in_block=trx_in_block,
-      is_old_schema=is_old_schema
+      is_legacy_style=is_legacy_style
     )
 
-  def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool, *, is_old_schema : bool):
+  def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool, *, is_legacy_style : bool):
     return self._get_all(
-      f"SELECT * FROM {self._schema}.get_ops_in_block( :block_num,  :only_virt, :include_reversible, :is_old_schema )",
+      f"SELECT * FROM {self._schema}.get_ops_in_block( :block_num,  :only_virt, :include_reversible, :is_legacy_style )",
       block_num=block_num,
       only_virt=only_virtual,
       include_reversible=include_reversible,
-      is_old_schema=is_old_schema
+      is_legacy_style=is_legacy_style
     )
 
   def get_transaction(self, trx_hash : bytes, include_reversible : bool ):
@@ -74,14 +74,14 @@ class account_history_db_connector:
       include_reversible=include_reversible
     )
 
-  def get_account_history(self, filter : list, account : str, start : int, limit : int, include_reversible : bool, *, is_old_schema : bool):
+  def get_account_history(self, filter : list, account : str, start : int, limit : int, include_reversible : bool, *, is_legacy_style : bool):
     return self._get_all(
-      f"SELECT * FROM {self._schema}.ah_get_account_history( {format_array(filter)}, :account, :start ::BIGINT, :limit, :include_reversible, :is_old_schema )",
+      f"SELECT * FROM {self._schema}.ah_get_account_history( {format_array(filter)}, :account, :start ::BIGINT, :limit, :include_reversible, :is_legacy_style )",
       account=account,
       start=start,
       limit=limit,
       include_reversible=include_reversible,
-      is_old_schema=is_old_schema
+      is_legacy_style=is_legacy_style
     )
 
   def get_irreversible_block_num(self) -> int:

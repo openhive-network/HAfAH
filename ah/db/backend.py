@@ -83,7 +83,7 @@ class account_history_impl:
 
   @perf(record_name=RECORD_NAME, handler=handler)
   def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool):
-    return self.repr.get_ops_in_block( block_num, self.api.get_ops_in_block(block_num, only_virtual, include_reversible, is_old_schema=self.repr.is_old_schema()) )
+    return self.repr.get_ops_in_block( block_num, self.api.get_ops_in_block(block_num, only_virtual, include_reversible, is_legacy_style=self.repr.is_legacy_style()) )
 
   @perf(record_name=RECORD_NAME, handler=handler)
   def get_transaction(self, trx_hash : str, include_reversible : bool ):
@@ -98,7 +98,7 @@ class account_history_impl:
       else:
         transaction_basic_info = dict(_info)
 
-    operations = self.api.get_ops_in_transaction( transaction_basic_info['_block_num'], transaction_basic_info['_trx_in_block'], is_old_schema=self.repr.is_old_schema())
+    operations = self.api.get_ops_in_transaction( transaction_basic_info['_block_num'], transaction_basic_info['_trx_in_block'], is_legacy_style=self.repr.is_legacy_style())
 
     transaction_basic_info['_signature'] = [ transaction_basic_info['_signature'] ]
     if transaction_basic_info['_multisig_number'] >= 1:
@@ -149,6 +149,6 @@ class account_history_impl:
         start,
         limit,
         include_reversible,
-        is_old_schema=self.repr.is_old_schema()
+        is_legacy_style=self.repr.is_legacy_style()
       )
     )

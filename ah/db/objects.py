@@ -167,7 +167,7 @@ class account_history_api: # namespace
     return account_history_api_objects.virtual_ops(irreversible_block, iterable, block_range_end, limit, get_pagination_data_call)
 
   @staticmethod
-  def is_old_schema():
+  def is_legacy_style():
     return False
 
 class condenser_api: # namespace
@@ -190,5 +190,5 @@ class condenser_api: # namespace
     assert False, "not supported"
 
   @staticmethod
-  def is_old_schema():
+  def is_legacy_style():
     return True
