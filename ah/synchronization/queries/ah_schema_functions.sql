@@ -264,7 +264,8 @@ BEGIN
       FROM hive.transactions_view ht
       WHERE ht.block_num >= _BLOCK_RANGE_BEGIN AND ht.block_num < _BLOCK_RANGE_END
     )T2 ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
-    WHERE T.block_num >= _BLOCK_RANGE_BEGIN AND T.block_num < _BLOCK_RANGE_END;
+    WHERE T.block_num >= _BLOCK_RANGE_BEGIN AND T.block_num < _BLOCK_RANGE_END
+    ORDER BY T.id;
 END
 $function$
 language plpgsql STABLE;
