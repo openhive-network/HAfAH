@@ -13,7 +13,7 @@ def bool_to_str(param):
 
 def send_req(url, method, params_str):
     if str(py_port) in url:
-        data = "{%s}" % (", ".join([jsonrpc_str, method_str % method, params_str, id_str % method]))
+        data = "{%s}" % (", ".join([jsonrpc_str, method_str % (api_type, method), params_str, id_str % method]))
     elif str(po_port) in url:
         data = params_str
         url += method
@@ -49,7 +49,7 @@ def get_ops_in_block(method="get_ops_in_block"):
     params_str = '{"_block_num": "%d", "_only_virtual": "%s", "_include_reversible": "%s"}'
     params_str = params_str % (block_num, only_virtual, include_reversible)
     res = send_req(po_url, method, params_str)
-    print(res)
+    #print(res)
     save_res(po_url, json.loads(res), method)
 
     compare_json(method)
@@ -58,7 +58,7 @@ def get_ops_in_block(method="get_ops_in_block"):
 def get_account_history(method="get_account_history"):
     account = "dantheman"
     start = -1
-    limit = 1000
+    limit = 5
     operation_filter_low = 0
     operation_filter_high = 0
     include_reversible = bool_to_str(False)
@@ -78,18 +78,19 @@ def get_account_history(method="get_account_history"):
 
 def enum_virtual_ops(method="enum_virtual_ops"):
     block_range_begin = 3089794
-    block_range_end = 5000000
+    block_range_end = 3089794 + 2000
     operation_begin = 10
     limit = 10
     filter = 2
     include_reversible = bool_to_str(False)
     group_by_block = bool_to_str(False)
     
-    params_str = '"params": {"block_range_begin": %d, "block_range_end": %d, "operation_begin": %d, "limit": %d, "filter": %d, "include_reversible": %s, "group_by_block": %s}'
-    params_str = params_str % (block_range_begin, block_range_end, operation_begin, limit, filter, include_reversible, group_by_block)
-    res = send_req(py_url, method, params_str)
-    #print(res)
-    save_res(py_url, res["result"], method)
+    if api_type == "account_history_api":
+        params_str = '"params": {"block_range_begin": %d, "block_range_end": %d, "operation_begin": %d, "limit": %d, "filter": %d, "include_reversible": %s, "group_by_block": %s}'
+        params_str = params_str % (block_range_begin, block_range_end, operation_begin, limit, filter, include_reversible, group_by_block)
+        res = send_req(py_url, method, params_str)
+        #print(res)
+        save_res(py_url, res["result"], method)
 
     params_str = '{"_block_range_begin": %d, "_block_range_end": %d, "_operation_begin": %d, "_limit": %d, "_filter": %d, "_include_reversible": %s, "_group_by_block": %s}'
     params_str = params_str % (block_range_begin, block_range_end, operation_begin, limit, filter, include_reversible, group_by_block)
@@ -127,15 +128,18 @@ if __name__ == "__main__":
 
     headers = {"Content-Type": "application/json"}
 
+    api_type = "account_history_api"
+    #api_type = "condenser_api"
+
     jsonrpc_str = '"jsonrpc": "2.0"'
-    method_str = '"method": "account_history_api.%s"'
+    method_str = '"method": "%s.%s"'
     id_str = '"id": "${__threadNum}/${__counter(TRUE)}/%s"'
 
     json_dir = os.path.join(os.getcwd(), "responses")
     if os.path.isdir(json_dir) is False:
         os.mkdir(json_dir)
 
-    #get_ops_in_block()
-    #get_account_history()
-    #get_transaction()
+    get_ops_in_block()
+    get_account_history()
+    get_transaction()
     enum_virtual_ops()
