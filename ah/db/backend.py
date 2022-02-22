@@ -10,7 +10,6 @@ JSON_RPC_ERROR_DURING_CALL  = -32003
 
 RANGE_POSITIVE_INT =  2**31-1
 MAX_POSITIVE_INT = RANGE_POSITIVE_INT - 1
-RANGEINT  = 2**32
 RECORD_NAME = 'backend'
 
 def handler(name, time, ahi_instance : 'account_history_impl', *_, **__):
@@ -106,6 +105,7 @@ class account_history_impl:
   def enum_virtual_ops(self, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False ):
     if account_history_impl.VIRTUAL_OP_ID_OFFSET is None and filter is not None:
       account_history_impl.VIRTUAL_OP_ID_OFFSET = self.api.get_virtual_op_offset()
+    limit = (RANGE_POSITIVE_INT + limit) if limit < 0 else limit
 
     _result = self.repr.enum_virtual_ops(
       self.api.get_irreversible_block_num() if group_by_block else None,
@@ -126,7 +126,7 @@ class account_history_impl:
   @perf(record_name=RECORD_NAME, handler=handler)
   def get_account_history(self, filter : int, account : str, start : int, limit : int, include_reversible : bool):
     _limit = RANGE_POSITIVE_INT if limit == 0 else limit - 1
-    limit = (RANGEINT + limit) if limit < 0 else limit
+    limit = (RANGE_POSITIVE_INT + limit) if limit < 0 else limit
 
     if limit > 1000:
       raise CustomAccountHistoryApiException2(limit)
