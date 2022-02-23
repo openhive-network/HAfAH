@@ -1,7 +1,7 @@
 from typing import Union
-from ah.db.objects import account_history_api, condenser_api
-from ah.db.queries import account_history_db_connector
-from ah.utils.performance import perf
+from hafah.objects import account_history_api, condenser_api
+from hafah.queries import account_history_db_connector
+from hafah.performance import perf
 
 from jsonrpcserver.exceptions import ApiError
 
