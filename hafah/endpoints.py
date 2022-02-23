@@ -1,13 +1,18 @@
+from typing import Union
 from hafah.backend import CustomBlocksRangeTooWideException, account_history_impl, MAX_POSITIVE_INT, CustomUInt64ParserApiException, CustomBoolParserApiException, CustomInvalidBlocksRangeException
 from hafah.objects import account_history_api, condenser_api
 # from hafah.validation import verify_types, convert_maybe, require_unsigned, max_value
 from functools import partial
 from distutils import util
 
+from hafah.validation import convert_maybe, process_types, str2bool, uint, unsigned
+
 MAX_BIGINT_POSTGRES = 9_223_372_036_854_775_807
 DEFAULT_INCLUDE_IRREVERSIBLE = False
 DEFAULT_LIMIT = 1_000
 BLOCK_WIDTH_LIMIT = 2 * DEFAULT_LIMIT
+
+sint = Union[int, str] # int, if str convert to int
 
 def convert(val, default_value):
   try:
@@ -30,23 +35,17 @@ def convert(val, default_value):
   else:
     return val
 
-def backend(context, options):
-  return account_history_impl(context, options['api_type'])
+def backend(context, api_type):
+  return account_history_impl(context, api_type)
 
 def build_response( obj ):
   '''proxy method, currently useless'''
   return obj
 
-def get_ops_in_block(context : None, block_num = None, only_virtual = None, include_reversible = None, **kwargs : dict):
-  try:
-    block_num = 0 if block_num is None else int(block_num)
-  except Exception as ex:
-    raise CustomUInt64ParserApiException()
-
-  include_reversible  = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)
-  only_virtual        = convert(only_virtual, False)
-
-  return build_response( backend(context, kwargs).get_ops_in_block( block_num, only_virtual, include_reversible) )
+@process_types(convert_maybe)
+def get_ops_in_block(context, api_type, *, block_num : int = 0, only_virtual : bool = False, include_reversible : bool = DEFAULT_INCLUDE_IRREVERSIBLE, **kwargs):
+  print(only_virtual, flush=True)
+  return build_response( backend(context, api_type).get_ops_in_block( block_num, only_virtual, include_reversible) )
 
 def enum_virtual_ops(context : None, block_range_begin : str, block_range_end : str, operation_begin = None, limit = None, filter = None, include_reversible = None, group_by_block = None, **kwargs : dict):
   try:
@@ -90,14 +89,25 @@ def get_account_history(context : None, account : str, start = None, limit = Non
 
   return build_response( backend(context, kwargs).get_account_history( filter, account, start, limit, include_reversible ) )
 
+@process_types(a=str2bool, b=unsigned(uint.uint32_t))
+def ping(ctx, *, a : bool, b : sint = 1 , **_):
+  print(ctx)
+  print(a)
+  print(b)
+  print(_)
+  print('#####', flush=True)
+  return dict(done=1)
+
 def build_methods():
   def ah_method( name, foo ):
-    return (f'account_history_api.{name}', partial(foo, api_type=account_history_api))
+    return (f'account_history_api.{name}', partial(foo, account_history_api))
 
   def ca_method(name, foo ):
-    return (f'condenser_api.{name}', partial(foo, api_type=condenser_api))
+    return (f'condenser_api.{name}', partial(foo, condenser_api))
 
   return dict([
+    ("ping", ping),
+
     ah_method( 'get_ops_in_block', get_ops_in_block ),
     ah_method( 'enum_virtual_ops', enum_virtual_ops ),
     ah_method( 'get_transaction', get_transaction ),
