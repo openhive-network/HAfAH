@@ -239,7 +239,7 @@ BEGIN
       JOIN hive.operation_types hot ON hot.id = ho.op_type_id
       WHERE ho.block_num >= _BLOCK_RANGE_BEGIN AND ho.block_num < _BLOCK_RANGE_END
       AND hot.is_virtual = TRUE
-      AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id = ANY( _FILTER ) ) )
+      AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id IN (SELECT * FROM unnest( _FILTER ) ) ) )
       AND ( _OPERATION_BEGIN = -1 OR ho.id >= _OPERATION_BEGIN )
       ORDER BY ho.id
       LIMIT _LIMIT
