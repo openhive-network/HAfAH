@@ -4,7 +4,6 @@ import logging
 from collections import OrderedDict
 from funcy.seqs import first
 import sqlalchemy
-import os
 
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 

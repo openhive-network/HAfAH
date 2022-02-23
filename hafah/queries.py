@@ -2,8 +2,8 @@ from typing import Any
 
 from json import dumps
 
-from ah.server.adapter import Db
-from ah.utils.performance import perf
+from hafah.adapter import Db
+from hafah.performance import perf
 
 def handler(name, time, ahdb : 'account_history_db_connector' , *_, **__):
   ahdb.add_performance_record(name, time)

@@ -9,10 +9,10 @@ from jsonrpcserver.methods import Methods
 from jsonrpcserver import dispatch
 from jsonrpcserver.response import Response
 
-from ah.api.endpoints import build_methods as account_history
+from hafah.endpoints import build_methods as account_history
 
 import simplejson
-from ah.server.adapter import Db
+from hafah.adapter import Db
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -20,7 +20,7 @@ from functools import partial
 
 from socketserver import ForkingMixIn
 
-from ah.utils.performance import Timer
+from hafah.performance import Timer
 
 LOG_LEVEL = logging.DEBUG if 'DEBUG' in os.environ else logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
