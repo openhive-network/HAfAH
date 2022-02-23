@@ -3,6 +3,8 @@
 
 from ah.server.serve import run_server
 from argparse import ArgumentParser
+from os.path import dirname, realpath
+from pathlib import Path
 from sys import argv
 import os
 
@@ -16,11 +18,7 @@ if __name__ == '__main__':
 
   try:
     print("starting server, press ^C to stop server")
-
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    sql_src_path = dir_path + "/ah/synchronization/queries/ah_schema_functions.sql"
-
-    run_server(args.psql, args.port, args.log_responses, sql_src_path)
+    run_server(args.psql, args.port, args.log_responses, Path(dirname(realpath(__file__))) / 'queries' / 'ah_schema_functions.pgsql')
   except KeyboardInterrupt:
     pass
   except Exception as e:
