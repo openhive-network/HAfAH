@@ -35,6 +35,239 @@ END
 $$
 ;
 
+CREATE OR REPLACE FUNCTION hafah_api.home(jsonrpc TEXT, method TEXT, params JSON, id JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  _jsonrpc TEXT = jsonrpc;
+  _method TEXT = method;
+  _params JSON = params;
+  _id TEXT = id::TEXT;
+
+  __result JSON;
+  __input_assertion JSON;
+  __api_type TEXT;
+  __method_type TEXT;
+  __is_old_schema BOOLEAN;
+  __json_type TEXT;
+BEGIN
+  -- TODO: is json order important in errors and responses?
+  -- TODO: fix filters
+  SELECT hafah_api.assert_input_json(_jsonrpc, _method, _params, _id) INTO __input_assertion;
+  IF __input_assertion IS NOT NULL THEN
+    RETURN __input_assertion;
+  END IF;
+
+  SELECT substring(method FROM '^[^.]+') INTO __api_type;
+  SELECT substring(method FROM '[^.]+$') INTO __method_type;
+
+  SELECT json_typeof(_params) INTO __json_type;
+  
+  IF __api_type = 'account_history_api' THEN
+    __is_old_schema = FALSE;
+  ELSEIF __api_type = 'condenser_api' THEN
+    __is_old_schema = TRUE;
+  END IF;
+
+  IF __method_type = 'get_ops_in_block' THEN
+    SELECT '0' INTO __result;
+  ELSEIF __method_type = 'enum_virtual_ops' THEN
+    SELECT '0' INTO __result;
+  ELSEIF __method_type = 'get_transaction' THEN
+    SELECT '0' INTO __result;
+  ELSEIF __method_type = 'get_account_history' THEN
+    SELECT hafah_api.call_get_account_history(_params, _id, __is_old_schema, __json_type) INTO __result;
+  END IF;
+
+  IF __result->'error' IS NULL THEN
+    RETURN REPLACE(result::TEXT, ' :', ':')
+    FROM json_build_object(
+      'jsonrpc', '2.0',
+      'result', __result,
+      'id', id
+    ) result;
+  ELSE
+    RETURN __result;
+  END IF;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.call_get_account_history(_params JSON, _id TEXT, _is_old_schema BOOLEAN, _json_type TEXT)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __filter INT;
+  __account VARCHAR;
+  __start BIGINT = NULL;
+  __limit INT = NULL;
+  __operation_filter_low INT = NULL;
+  __operation_filter_high INT = NULL;
+  __include_reversible BOOLEAN = NULL;
+BEGIN
+  -- Assign function arguments and make assertions
+  -- 22P02 errors are handled separately for integers and booleans inside BEGIN EXCEPTION END
+
+  -- Required arguments
+  __account = hafah_api.parse_argument(_params, _json_type, 'account', 0);
+  IF __account IS NOT NULL THEN
+    __account = __account::VARCHAR;
+  ELSE
+    RETURN hafah_api.raise_missing_arg('account', _id);
+  END IF;
+
+  BEGIN
+    -- Optional arguments
+    __start = hafah_api.parse_argument(_params, _json_type, 'start', 1);
+    IF __start IS NOT NULL THEN
+      __start = __start::BIGINT;
+    ELSE
+      __start = -1;
+    END IF;
+    IF __start < 0 THEN
+      __start = '9223372036854775807'::BIGINT;
+    END IF;
+
+    __limit = hafah_api.parse_argument(_params, _json_type, 'limit', 2);
+    IF __limit IS NOT NULL THEN
+      __limit = __limit::INT;
+    ELSE
+      __limit = 1000;
+    END IF;
+    IF __limit > 1000 THEN
+      RETURN hafah_api.raise_error(-32003, format('Assert Exception:args.limit <= 1000: limit of %s is greater than maxmimum allowed', __limit), NULL, _id, TRUE);
+    ELSIF __start < __limit - 1  THEN
+      RETURN hafah_api.raise_error(-32003, 'Assert Exception:args.start >= args.limit-1: start must be greater than or equal to limit-1 (start is 0-based index)', NULL, _id, TRUE);
+    END IF;
+
+    __operation_filter_low = hafah_api.parse_argument(_params, _json_type, 'operation_filter_low', 3);
+    IF __operation_filter_low IS NOT NULL THEN
+      __operation_filter_low = __operation_filter_low::INT;
+    ELSE
+      __operation_filter_low = 0;
+    END IF;
+
+    __operation_filter_high = hafah_api.parse_argument(_params, _json_type, 'operation_filter_high', 4);
+    IF __operation_filter_high IS NOT NULL THEN
+      __operation_filter_high = __operation_filter_high::INT;
+    ELSE
+      __operation_filter_high = 0;
+    END IF;
+
+  EXCEPTION 
+    WHEN invalid_text_representation THEN
+      RETURN hafah_api.raise_error(
+        -32000,
+        'Parse Error:Couldn''t parse uint64_t',
+        NULL, _id, TRUE);
+  END;
+
+  BEGIN
+    __include_reversible = hafah_api.parse_argument(_params, _json_type, 'include_reversible', 5);
+    IF __include_reversible IS NOT NULL THEN
+      __include_reversible = __include_reversible::BOOLEAN;
+    ELSE
+      __include_reversible = FALSE;
+    END IF;
+
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_api.raise_error(
+        -32000,
+        'Bad Cast:Cannot convert string to bool (only "true" or "false" can be converted)',
+        NULL, _id, TRUE);
+  END;
+  
+  __filter = ( __operation_filter_high << 64 ) | __operation_filter_low;
+  RETURN hafah_api.get_account_history(__filter, __account, __start, __limit, __include_reversible, _is_old_schema);
+END;
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.parse_argument(_params JSON, _json_type TEXT, _arg_name TEXT, _arg_number INT)
+RETURNS TEXT
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN CASE WHEN _json_type = 'object' THEN
+    _params->>_arg_name
+  ELSE
+    _params->>_arg_number
+  END;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.assert_input_json(_jsonrpc TEXT, _method TEXT, _params JSON, _id TEXT)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  IF _method NOT SIMILAR TO
+    '(account_history_api|condenser_api)\.(get_ops_in_block|enum_virtual_ops|get_transaction|get_account_history)'
+  THEN
+    RETURN hafah_api.raise_error(-32601, 'Method not found', _method, _id);
+  END IF;
+
+  IF _jsonrpc != '2.0' OR
+    _jsonrpc IS NULL OR
+    _method IS NULL OR
+    _params IS NULL
+  THEN
+    RETURN hafah_api.raise_error(-32600, 'Invalid JSON-RPC');
+  END IF;
+
+  RETURN NULL;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.raise_error(_code INT, _message TEXT, _data TEXT = NULL, _id TEXT = NULL, _no_data BOOLEAN = FALSE)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN
+    REPLACE(error_json::TEXT, ' :', ':')
+  FROM json_build_object(
+    'jsonrpc', '2.0',
+    'error',
+    CASE WHEN _no_data IS TRUE THEN 
+      json_build_object(
+        'code', _code,
+        'message', _message
+      )
+    ELSE
+      json_build_object(
+        'code', _code,
+        'message', _message,
+        'data', _data
+      )
+    END,
+    'id', _id
+  ) error_json;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.raise_missing_arg(_arg_name TEXT, _id TEXT)
+RETURNS TEXT
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_api.raise_error(-32602, 'Invalid parameters', format('missing a required argument: ''%s''', _arg_name), _id);
+END
+$$
+;
+
 CREATE OR REPLACE FUNCTION hafah_api.raise_exception(TEXT)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
@@ -46,7 +279,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_filter INT, _endpoint_name TEXT, _transform INT = 0)
+CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_filter INT, _transform INT = 0)
 RETURNS INT[]
 LANGUAGE 'plpgsql'
 AS
@@ -72,21 +305,25 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.set_operation_id(_operation_id BIGINT, __fill_operation_id BOOLEAN)
-RETURNS VARCHAR
+CREATE OR REPLACE FUNCTION hafah_api.set_operation_id(_operation_id BIGINT, _fill_operation_id BOOLEAN)
+RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
+DECLARE
+  __operation_id JSON;
 BEGIN
-  RETURN CASE WHEN __fill_operation_id IS TRUE THEN
-    CASE WHEN _operation_id >= 4294967295 THEN
-      '"operation_id": "' || _operation_id || '" ' 
+  IF _fill_operation_id IS TRUE THEN
+    IF _operation_id >= 4294967295 THEN
+      __operation_id = to_json(_operation_id::TEXT);
     ELSE
-      '"operation_id": ' || _operation_id || ' '
-    END
+      __operation_id = to_json(_operation_id);
+    END IF;
   ELSE 
-    '"operation_id": 0'
-  END;
+    __operation_id = to_json(0);
+  END IF;
+
+  RETURN __operation_id;
 END
 $$
 ;
@@ -112,7 +349,7 @@ BEGIN
       CASE WHEN _operation_id IS NULL THEN
         hafah_api.raise_exception('_operation_id cannot be NULL')
       ELSE
-        ', ' || hafah_api.set_operation_id(_operation_id, _fill_operation_id)
+        ', ' || '"operation_id": ' || hafah_api.set_operation_id(_operation_id, _fill_operation_id)
       END
     END
     || '}';
@@ -160,30 +397,25 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_account VARCHAR, _start BIGINT = -1, _limit INT = 1000, _operation_filter_low INT = 0, _operation_filter_high INT = 0, _include_reversible BOOLEAN = FALSE)
-RETURNS TEXT
+CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_filter INT, _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN, _is_old_schema BOOLEAN)
+RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
-DECLARE
- __filter INT = ( _operation_filter_high << 64 ) | _operation_filter_low;
- __is_old_schema BOOLEAN = FALSE;
 BEGIN
-  _start = (CASE WHEN _start >= 0 THEN _start ELSE '9223372036854775807'::BIGINT END);
-
-  RETURN CASE WHEN __is_old_schema IS TRUE THEN
+  RETURN CASE WHEN _is_old_schema IS TRUE THEN
     history
   ELSE
-    to_jsonb(result)
+    to_json(result)
   END
   FROM (
     SELECT CASE WHEN history IS NULL THEN
-      '[]'::JSONB
+      '[]'::JSON
     ELSE
       history
     END AS history
     FROM (
-      SELECT jsonb_agg(history::JSONB) AS history FROM (
+      SELECT json_agg(history::JSON) AS history FROM (
         SELECT history FROM (
           WITH cte AS (
             SELECT
@@ -199,14 +431,14 @@ BEGIN
               '"virtual_op": ' || _virtual_op || ', ' ||
               '"timestamp": "' || _timestamp || '", ' ||
               '"op": ' || _value ||
-              CASE WHEN __is_old_schema IS TRUE THEN
+              CASE WHEN _is_old_schema IS TRUE THEN
                 ''
               ELSE
                 ', ' || '"operation_id": 0'
               END
               || '}' ||
               ']'
-            FROM hafah_python.ah_get_account_history((SELECT hafah_api.translate_filter(__filter, 'get_account_history')), _account, _start, _limit, _include_reversible, __is_old_schema)
+            FROM hafah_python.ah_get_account_history(hafah_api.translate_filter(_filter), _account, _start, _limit, _include_reversible, _is_old_schema)
           )
           SELECT history FROM cte
         ) obj
@@ -321,10 +553,7 @@ BEGIN
       CASE WHEN o.block_num IS NULL THEN 0 ELSE
         (CASE WHEN o.block_num >= _block_range_end THEN 0 ELSE o.block_num END)
       END AS next_block_range_begin,
-      CASE WHEN o.id IS NULL THEN 0 ELSE
-      -- TODO: (SELECT hafah_api.set_operation_id(o.id, _fill_operation_id))
-      o.id
-      END AS next_operation_begin
+      CASE WHEN o.id IS NULL THEN 0 ELSE o.id END AS next_operation_begin
     FROM
       hive.operations o
     JOIN hive.operation_types ot ON o.op_type_id = ot.id
@@ -345,7 +574,7 @@ BEGIN
       _block_range_end AS next_block_range_begin,
       0 AS next_operation_begin;
   END IF;
-  
+
   RETURN (
     SELECT jsonb_set(
       (
@@ -354,14 +583,16 @@ BEGIN
         to_jsonb((SELECT next_block_range_begin FROM result)))
       ),
     '{next_operation_begin}',
-    to_jsonb((SELECT next_operation_begin FROM result)))
+    to_jsonb(hafah_api.set_operation_id(
+      (SELECT next_operation_begin FROM result),
+      _fill_operation_id)))
   );
 END
 $$
 ;
 
 CREATE OR REPLACE FUNCTION hafah_api.enum_virtual_ops(_block_range_begin INT, _block_range_end INT, _operation_begin BIGINT = 0, _limit INT = 2147483646, _filter INT = NULL, _include_reversible BOOLEAN = FALSE, _group_by_block BOOLEAN = FALSE)
-RETURNS TEXT
+RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
@@ -413,7 +644,7 @@ BEGIN
             SELECT
               hafah_api.build_api_operation(_trx_id, _block, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, __fill_operation_id),
               _block
-            FROM hafah_python.enum_virtual_ops(hafah_api.translate_filter(_filter, 'enum_virtual_ops', __virtual_op_id_offset), _block_range_begin, _block_range_end, _operation_begin, _limit, _include_reversible)
+            FROM hafah_python.enum_virtual_ops(hafah_api.translate_filter(_filter, __virtual_op_id_offset), _block_range_begin, _block_range_end, _operation_begin, _limit, _include_reversible)
           )
           SELECT ops, block_n FROM cte
         ) obj
