@@ -36,7 +36,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.home(jsonrpc TEXT, method TEXT, params JSON, id TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.home(jsonrpc TEXT, method TEXT, params JSON, id JSON)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -45,7 +45,7 @@ DECLARE
   _jsonrpc TEXT = jsonrpc;
   _method TEXT = method;
   _params JSON = params;
-  _id TEXT = id;
+  _id TEXT = id::TEXT;
 
   __result JSON;
   __input_assertion JSON;
@@ -54,7 +54,6 @@ DECLARE
   __is_old_schema BOOLEAN;
   __json_type TEXT;
 BEGIN
-  -- TODO: convert id to int when called without " "
   -- TODO: is json order important in errors and responses?
   SELECT hafah_api.assert_input_json(_jsonrpc, _method, _params, _id) INTO __input_assertion;
   IF __input_assertion IS NOT NULL THEN
@@ -307,21 +306,25 @@ $$
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.set_operation_id(_operation_id BIGINT, __fill_operation_id BOOLEAN)
-RETURNS VARCHAR
+CREATE OR REPLACE FUNCTION hafah_api.set_operation_id(_operation_id BIGINT, _fill_operation_id BOOLEAN)
+RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
+DECLARE
+  __operation_id JSON;
 BEGIN
-  RETURN CASE WHEN __fill_operation_id IS TRUE THEN
-    CASE WHEN _operation_id >= 4294967295 THEN
-      '"operation_id": "' || _operation_id || '" ' 
+  IF _fill_operation_id IS TRUE THEN
+    IF _operation_id >= 4294967295 THEN
+      __operation_id = to_json(_operation_id::TEXT);
     ELSE
-      '"operation_id": ' || _operation_id || ' '
-    END
+      __operation_id = to_json(_operation_id);
+    END IF;
   ELSE 
-    '"operation_id": 0'
-  END;
+    __operation_id = to_json(0);
+  END IF;
+
+  RETURN __operation_id;
 END
 $$
 ;
@@ -347,7 +350,7 @@ BEGIN
       CASE WHEN _operation_id IS NULL THEN
         hafah_api.raise_exception('_operation_id cannot be NULL')
       ELSE
-        ', ' || hafah_api.set_operation_id(_operation_id, _fill_operation_id)
+        ', ' || '"operation_id": ' || hafah_api.set_operation_id(_operation_id, _fill_operation_id)
       END
     END
     || '}';
@@ -551,10 +554,7 @@ BEGIN
       CASE WHEN o.block_num IS NULL THEN 0 ELSE
         (CASE WHEN o.block_num >= _block_range_end THEN 0 ELSE o.block_num END)
       END AS next_block_range_begin,
-      CASE WHEN o.id IS NULL THEN 0 ELSE
-      -- TODO: (SELECT hafah_api.set_operation_id(o.id, _fill_operation_id))
-      o.id
-      END AS next_operation_begin
+      CASE WHEN o.id IS NULL THEN 0 ELSE o.id END AS next_operation_begin
     FROM
       hive.operations o
     JOIN hive.operation_types ot ON o.op_type_id = ot.id
@@ -575,7 +575,7 @@ BEGIN
       _block_range_end AS next_block_range_begin,
       0 AS next_operation_begin;
   END IF;
-  
+
   RETURN (
     SELECT jsonb_set(
       (
@@ -584,14 +584,16 @@ BEGIN
         to_jsonb((SELECT next_block_range_begin FROM result)))
       ),
     '{next_operation_begin}',
-    to_jsonb((SELECT next_operation_begin FROM result)))
+    to_jsonb(hafah_api.set_operation_id(
+      (SELECT next_operation_begin FROM result),
+      _fill_operation_id)))
   );
 END
 $$
 ;
 
 CREATE OR REPLACE FUNCTION hafah_api.enum_virtual_ops(_block_range_begin INT, _block_range_end INT, _operation_begin BIGINT = 0, _limit INT = 2147483646, _filter INT = NULL, _include_reversible BOOLEAN = FALSE, _group_by_block BOOLEAN = FALSE)
-RETURNS TEXT
+RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
