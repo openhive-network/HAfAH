@@ -1,7 +1,3 @@
--- TODO: add API ERROR from backend.py
--- TODO: parse args from calls
--- TODO: do arg validation
-
 DROP SCHEMA IF EXISTS hafah_api CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_api;
@@ -31,6 +27,11 @@ BEGIN
 
   -- add ability for admin to switch to hived role
   GRANT hived TO haf_admin;
+
+  -- python extension for operation filters
+  -- sudo apt-get update
+  -- sudo apt-get -y install python3 postgresql-plpython3-12
+  CREATE EXTENSION IF NOT EXISTS plpython3u SCHEMA pg_catalog;
 END
 $$
 ;
@@ -55,7 +56,6 @@ DECLARE
 BEGIN
   -- TODO: convert id to int when called without " "
   -- TODO: is json order important in errors and responses?
-  -- TODO: fix filters
   SELECT hafah_api.assert_input_json(_jsonrpc, _method, _params, _id) INTO __input_assertion;
   IF __input_assertion IS NOT NULL THEN
     RETURN __input_assertion;
@@ -102,7 +102,7 @@ LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
-  __filter INT;
+  __filter NUMERIC;
   __account VARCHAR;
   __start BIGINT = NULL;
   __limit INT = NULL;
@@ -183,7 +183,7 @@ BEGIN
         NULL, _id, TRUE);
   END;
   
-  __filter = ( __operation_filter_high << 64 ) | __operation_filter_low;
+  __filter = hafah_api.create_filter_numeric(__operation_filter_low, __operation_filter_high);
   RETURN hafah_api.get_account_history(__filter, __account, __start, __limit, __include_reversible, _is_old_schema);
 END;
 $$
@@ -280,29 +280,30 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_filter INT, _transform INT = 0)
+CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_input NUMERIC, _transform INT = 0)
 RETURNS INT[]
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpython3u'
+AS
+$$ 
+  global _input
+  _input = int(_input)
+  if _input:
+    __result = []
+    for i in range(128):
+      if _input & (1 << i):
+        __result.append(i + _transform)
+    return __result
+  else:
+    return None
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.create_filter_numeric(_operation_filter_low INT, _operation_filter_high INT)
+RETURNS NUMERIC
+LANGUAGE 'plpython3u'
 AS
 $$
-BEGIN
-  IF _filter != 0 AND _filter IS NOT NULL THEN
-    RETURN array_agg(val + _transform) FROM (
-      WITH RECURSIVE cte(i, val) AS (
-        VALUES(-1, 0)
-      UNION ALL
-        SELECT
-          i + 1,
-          CASE WHEN _filter & (1 << i + 1) != 0 THEN i + 1 END          
-        FROM cte 
-        WHERE i < 127 
-      )
-      SELECT i, val FROM cte WHERE val IS NOT NULL AND i != -1 AND val < 10
-    ) ints;
-  ELSE
-    RETURN NULL;
-  END IF;
-END
+  return (_operation_filter_high << 64) | _operation_filter_low
 $$
 ;
 
@@ -394,7 +395,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_filter INT, _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN, _is_old_schema BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_filter NUMERIC, _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN, _is_old_schema BOOLEAN)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
