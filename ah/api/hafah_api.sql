@@ -1,7 +1,3 @@
--- TODO: add API ERROR from backend.py
--- TODO: parse args from calls
--- TODO: do arg validation
-
 DROP SCHEMA IF EXISTS hafah_api CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_api;
@@ -31,6 +27,11 @@ BEGIN
 
   -- add ability for admin to switch to hived role
   GRANT hived TO haf_admin;
+
+  -- python extension for operation filters
+  -- sudo apt-get update
+  -- sudo apt-get -y install python3 postgresql-plpython3-12
+  CREATE EXTENSION IF NOT EXISTS plpython3u SCHEMA pg_catalog;
 END
 $$
 ;
@@ -44,7 +45,7 @@ DECLARE
   _jsonrpc TEXT = jsonrpc;
   _method TEXT = method;
   _params JSON = params;
-  _id TEXT = id::TEXT;
+  _id JSON = id;
 
   __result JSON;
   __input_assertion JSON;
@@ -54,7 +55,6 @@ DECLARE
   __json_type TEXT;
 BEGIN
   -- TODO: is json order important in errors and responses?
-  -- TODO: fix filters
   SELECT hafah_api.assert_input_json(_jsonrpc, _method, _params, _id) INTO __input_assertion;
   IF __input_assertion IS NOT NULL THEN
     RETURN __input_assertion;
@@ -70,13 +70,13 @@ BEGIN
   ELSEIF __api_type = 'condenser_api' THEN
     __is_old_schema = TRUE;
   END IF;
-
+  
   IF __method_type = 'get_ops_in_block' THEN
     SELECT '0' INTO __result;
   ELSEIF __method_type = 'enum_virtual_ops' THEN
     SELECT '0' INTO __result;
   ELSEIF __method_type = 'get_transaction' THEN
-    SELECT '0' INTO __result;
+    SELECT hafah_api.call_get_transaction(_params, _id, __is_old_schema, __json_type) INTO __result;
   ELSEIF __method_type = 'get_account_history' THEN
     SELECT hafah_api.call_get_account_history(_params, _id, __is_old_schema, __json_type) INTO __result;
   END IF;
@@ -95,13 +95,50 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_get_account_history(_params JSON, _id TEXT, _is_old_schema BOOLEAN, _json_type TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.call_get_transaction(_params JSON, _id JSON, _is_old_schema BOOLEAN, _json_type TEXT)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
-  __filter INT;
+  __id TEXT;
+  __include_reversible BOOLEAN = NULL;
+BEGIN
+  __id = hafah_api.parse_argument(_params, _json_type, 'id', 0);
+  IF __id IS NOT NULL THEN
+    __id = __id::TEXT;
+  ELSE
+    RETURN hafah_api.raise_missing_arg('id', _id);
+  END IF;
+
+  BEGIN
+    __include_reversible = hafah_api.parse_argument(_params, _json_type, 'include_reversible', 1);
+    IF __include_reversible IS NOT NULL THEN
+      __include_reversible = __include_reversible::BOOLEAN;
+    ELSE
+      __include_reversible = FALSE;
+    END IF;
+
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_api.raise_error(
+        -32000,
+        'Bad Cast:Cannot convert string to bool (only "true" or "false" can be converted)',
+        NULL, _id, TRUE);
+  END;
+
+  RETURN hafah_api.get_transaction(__id, __include_reversible, _is_old_schema, _id);
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.call_get_account_history(_params JSON, _id JSON, _is_old_schema BOOLEAN, _json_type TEXT)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __filter NUMERIC;
   __account VARCHAR;
   __start BIGINT = NULL;
   __limit INT = NULL;
@@ -182,7 +219,7 @@ BEGIN
         NULL, _id, TRUE);
   END;
   
-  __filter = ( __operation_filter_high << 64 ) | __operation_filter_low;
+  __filter = hafah_api.create_filter_numeric(__operation_filter_low, __operation_filter_high);
   RETURN hafah_api.get_account_history(__filter, __account, __start, __limit, __include_reversible, _is_old_schema);
 END;
 $$
@@ -203,7 +240,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.assert_input_json(_jsonrpc TEXT, _method TEXT, _params JSON, _id TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.assert_input_json(_jsonrpc TEXT, _method TEXT, _params JSON, _id JSON)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -228,7 +265,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.raise_error(_code INT, _message TEXT, _data TEXT = NULL, _id TEXT = NULL, _no_data BOOLEAN = FALSE)
+CREATE OR REPLACE FUNCTION hafah_api.raise_error(_code INT, _message TEXT, _data TEXT = NULL, _id JSON = NULL, _no_data BOOLEAN = FALSE)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -257,7 +294,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.raise_missing_arg(_arg_name TEXT, _id TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.raise_missing_arg(_arg_name TEXT, _id JSON)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
@@ -279,29 +316,30 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_filter INT, _transform INT = 0)
+CREATE OR REPLACE FUNCTION hafah_api.translate_filter(_input NUMERIC, _transform INT = 0)
 RETURNS INT[]
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpython3u'
+AS
+$$ 
+  global _input
+  _input = int(_input)
+  if _input:
+    __result = []
+    for i in range(128):
+      if _input & (1 << i):
+        __result.append(i + _transform)
+    return __result
+  else:
+    return None
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.create_filter_numeric(_operation_filter_low INT, _operation_filter_high INT)
+RETURNS NUMERIC
+LANGUAGE 'plpython3u'
 AS
 $$
-BEGIN
-  IF _filter != 0 AND _filter IS NOT NULL THEN
-    RETURN array_agg(val + _transform) FROM (
-      WITH RECURSIVE cte(i, val) AS (
-        VALUES(-1, 0)
-      UNION ALL
-        SELECT
-          i + 1,
-          CASE WHEN _filter & (1 << i + 1) != 0 THEN i + 1 END          
-        FROM cte 
-        WHERE i < 127 
-      )
-      SELECT i, val FROM cte WHERE val IS NOT NULL AND i != -1 AND val < 10
-    ) ints;
-  ELSE
-    RETURN NULL;
-  END IF;
-END
+  return (_operation_filter_high << 64) | _operation_filter_low
 $$
 ;
 
@@ -397,7 +435,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_filter INT, _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN, _is_old_schema BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_api.get_account_history(_filter NUMERIC, _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN, _is_old_schema BOOLEAN)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -450,29 +488,20 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_transaction(_id TEXT,  _include_reversible BOOLEAN = FALSE)
-RETURNS TEXT
+CREATE OR REPLACE FUNCTION hafah_api.get_transaction(_trx_hash TEXT,  _include_reversible BOOLEAN, _is_old_schema BOOLEAN, _id JSON)
+RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
-DECLARE
- __is_old_schema BOOLEAN = FALSE;
 BEGIN
   RETURN obj FROM (
-    SELECT CASE WHEN obj IS NULL THEN
-      '{
-      "block_num": null,
-      "expiration": null,
-      "extensions": [],
-      "operations": [],
-      "ref_block_num": null,
-      "ref_block_prefix": null,
-      "signatures": [],
-      "transaction_id": "' || _id || '", ' || '
-      "transaction_num": null
-      }'
+    SELECT CASE WHEN obj IS NULL OR _ref_block_num IS NULL THEN
+      hafah_api.raise_error(
+        -32003,
+        format('Assert Exception:false: Unknown Transaction %s', rpad(_trx_hash, 40, '0')),
+        NULL, _id, TRUE)
     ELSE
-      obj
+      obj::JSON
     END
     FROM (
       SELECT
@@ -483,7 +512,7 @@ BEGIN
         '"operations": ' ||
         (SELECT json_agg(_value) FROM (
           SELECT _value::JSON
-          FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block, __is_old_schema)
+          FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block, _is_old_schema)
         ) f_call
         ) || ', ' ||
         '"extensions": [], ' ||
@@ -492,17 +521,18 @@ BEGIN
           array_to_json(ARRAY(
             SELECT _signature
             UNION ALL
-            SELECT * FROM hafah_python.get_multi_signatures_in_transaction(_id::BYTEA)
+            SELECT * FROM hafah_python.get_multi_signatures_in_transaction(_trx_hash::BYTEA)
           ))::TEXT
         ELSE
           '["' || _signature || '"]'
         END
         || ', ' ||
-        '"transaction_id": "' || _id || '", ' ||
+        '"transaction_id": "' || _trx_hash || '", ' ||
         '"block_num": ' || _block_num || ', ' ||
         '"transaction_num": ' || _trx_in_block || ' ' ||
-        '}'::TEXT AS obj
-      FROM hafah_python.get_transaction(_id::BYTEA, _include_reversible)
+        '}'::TEXT AS obj,
+        _ref_block_num
+      FROM hafah_python.get_transaction(_trx_hash::BYTEA, _include_reversible)
     ) is_null
   ) to_json;
 END
