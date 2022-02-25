@@ -1,4 +1,4 @@
-from hafah.backend import CustomBlocksRangeTooWideException, account_history_impl, MAX_POSITIVE_INT, CustomUInt64ParserApiException, CustomBoolParserApiException, CustomInvalidBlocksRangeException
+from hafah.backend import CustomBlocksRangeTooWideException, CustomInt64ParserApiException, LimitOutOfRangeException, LimitZeroOrNegativeNumberException, account_history_impl, MAX_POSITIVE_INT, CustomUInt64ParserApiException, CustomBoolParserApiException, CustomInvalidBlocksRangeException
 from hafah.objects import account_history_api, condenser_api
 from functools import partial
 from distutils import util
