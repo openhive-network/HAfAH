@@ -55,6 +55,7 @@ DECLARE
   __json_type TEXT;
 BEGIN
   -- TODO: is json order important in errors and responses?
+  -- TODO: create functions for assertions
   SELECT hafah_api.assert_input_json(_jsonrpc, _method, _params, _id) INTO __input_assertion;
   IF __input_assertion IS NOT NULL THEN
     RETURN __input_assertion;
@@ -72,7 +73,7 @@ BEGIN
   END IF;
   
   IF __method_type = 'get_ops_in_block' THEN
-    SELECT '0' INTO __result;
+    SELECT hafah_api.call_get_ops_in_block(_params, _id, __is_old_schema, __json_type) INTO __result;
   ELSEIF __method_type = 'enum_virtual_ops' THEN
     SELECT '0' INTO __result;
   ELSEIF __method_type = 'get_transaction' THEN
@@ -91,6 +92,60 @@ BEGIN
   ELSE
     RETURN __result;
   END IF;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.call_get_ops_in_block(_params JSON, _id JSON, _is_old_schema BOOLEAN, _json_type TEXT)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __block_num INT = NULL;
+  __only_virtual BOOLEAN = NULL;
+  __include_reversible BOOLEAN = NULL;
+  __fill_operation_id BOOLEAN = FALSE;
+BEGIN
+  BEGIN
+    __block_num = hafah_api.parse_argument(_params, _json_type, 'block_num', 0);
+    IF __block_num IS NOT NULL THEN
+      __block_num = __block_num::INT;
+    ELSE
+      __block_num = 0;
+    END IF;
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_api.raise_error(
+        -32000,
+        'Parse Error:Couldn''t parse uint64_t',
+        NULL, _id, TRUE);
+  END;
+
+  BEGIN
+    __only_virtual = hafah_api.parse_argument(_params, _json_type, 'only_virtual', 1);
+    IF __only_virtual IS NOT NULL THEN
+      __only_virtual = __only_virtual::BOOLEAN;
+    ELSE
+      __only_virtual = FALSE;
+    END IF;
+
+    __include_reversible = hafah_api.parse_argument(_params, _json_type, 'include_reversible', 2);
+    IF __include_reversible IS NOT NULL THEN
+      __include_reversible = __include_reversible::BOOLEAN;
+    ELSE
+      __include_reversible = FALSE;
+    END IF;
+
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_api.raise_error(
+        -32000,
+        'Bad Cast:Cannot convert string to bool (only "true" or "false" can be converted)',
+        NULL, _id, TRUE);
+  END;
+
+  RETURN hafah_api.get_ops_in_block(__block_num, __only_virtual, __include_reversible, __fill_operation_id, _is_old_schema);
 END
 $$
 ;
@@ -395,16 +450,13 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN = FALSE)
+CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN, _fill_operation_id BOOLEAN, _is_old_schema BOOLEAN)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
-DECLARE
-  __fill_operation_id BOOLEAN = FALSE;
-  __is_old_schema BOOLEAN = FALSE;
 BEGIN
-  RETURN CASE WHEN __is_old_schema IS TRUE THEN
+  RETURN CASE WHEN _is_old_schema IS TRUE THEN
     ops
   ELSE
     to_jsonb(result)
@@ -422,8 +474,8 @@ BEGIN
             SELECT
                 NULL::TEXT AS ops
             UNION ALL
-            SELECT hafah_api.build_api_operation(_trx_id, _block_num, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, __fill_operation_id, __is_old_schema)
-            FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible, __is_old_schema)
+            SELECT hafah_api.build_api_operation(_trx_id, _block_num, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, _fill_operation_id, _is_old_schema)
+            FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible, _is_old_schema)
           )
           SELECT ops FROM cte
         ) obj
