@@ -444,3 +444,100 @@ BEGIN
 END
 $function$
 language plpgsql;
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION hafah_python.get_transaction_json( in _TRX_HASH BYTEA, in _INCLUDE_REVERSIBLE BOOLEAN, _IS_OLD_SCHEMA BOOLEAN )
+RETURNS JSON
+AS
+$function$
+BEGIN
+
+RETURN ( SELECT to_json(a) FROM (
+    SELECT
+      _ref_block_num as "ref_block_num",
+      _ref_block_prefix as "ref_block_prefix",
+      ARRAY[] ::INT[] as "extensions",
+      _expiration as "expiration",
+      (
+        SELECT ARRAY(
+          SELECT _value ::JSON FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block, _IS_OLD_SCHEMA)
+        )
+      ) as "operations",
+      (
+      CASE
+        WHEN _multisig_number = 0 THEN ARRAY[_signature]
+        ELSE (
+          array_prepend(
+            _signature,
+            (SELECT ARRAY(
+              SELECT encode(signature, 'escape') FROM hive.transactions_multisig WHERE trx_hash=_TRX_HASH
+            ))
+          )
+        )
+        END
+      ) as "signatures",
+      encode(_TRX_HASH, 'escape') as "transaction_id",
+      _block_num as "block_num",
+      _trx_in_block as "transaction_num"
+    FROM hafah_python.get_transaction(_TRX_HASH, _INCLUDE_REVERSIBLE)
+  ) a
+);
+
+END
+$function$
+language plpgsql STABLE;
+
+CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history_json( in _FILTER INT[], in _ACCOUNT VARCHAR, _START BIGINT, _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN, in _IS_OLD_SCHEMA BOOLEAN )
+RETURNS JSON
+AS
+$function$
+BEGIN
+  RETURN (
+    SELECT to_json(ARRAY(
+      SELECT json_build_array(ops.operation_id, to_jsonb(ops)-'operation_id') FROM (
+        SELECT
+          _block as "block",
+          _value ::json as "op",
+          _op_in_trx as "op_in_trx",
+          _timestamp as "timestamp",
+          _trx_id as "trx_id",
+          _trx_in_block as "trx_in_block",
+          _virtual_op as "virtual_op",
+          _operation_id as "operation_id"
+        FROM
+          hafah_python.ah_get_account_history( _FILTER, _ACCOUNT, _START, _LIMIT, _INCLUDE_REVERSIBLE, _IS_OLD_SCHEMA )
+      ) ops
+    )
+  ));
+END
+$function$
+language plpgsql STABLE;
+
+
+CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_block_json( in _BLOCK_NUM INT, in _ONLY_VIRTUAL BOOLEAN, in _INCLUDE_REVERSIBLE BOOLEAN, in _IS_OLD_SCHEMA BOOLEAN )
+RETURNS JSON
+AS
+$function$
+BEGIN
+  RETURN (
+    SELECT to_json(ARRAY(
+      SELECT to_json(ops) FROM (
+        SELECT
+          _BLOCK_NUM as "block",
+          _value ::json as "op",
+          _op_in_trx as "op_in_trx",
+          _timestamp as "timestamp",
+          _trx_id as "trx_id",
+          _trx_in_block as "trx_in_block",
+          _virtual_op as "virtual_op"
+        FROM
+          hafah_python.get_ops_in_block( _BLOCK_NUM, _ONLY_VIRTUAL, _INCLUDE_REVERSIBLE, _IS_OLD_SCHEMA )
+      ) ops
+    ))
+  );
+END
+$function$
+language plpgsql STABLE;

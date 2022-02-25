@@ -1,9 +1,8 @@
-from hafah.backend import (
-	CustomInt64ParserApiException,
-	account_history_impl,
-	CustomUInt64ParserApiException,
-	CustomBoolParserApiException
-)
+from typing import Union
+from hafah.backend import RANGE_POSITIVE_INT, RANGEINT
+from hafah.backend import account_history_impl as standard_backend
+from hafah.direct_sql_json.backend import account_history_impl as experimental_backend
+from hafah.exceptions import *
 from hafah.objects import account_history_api, condenser_api
 from functools import partial
 from distutils import util
@@ -35,8 +34,8 @@ def convert(val, default_value):
   else:
     return val
 
-def backend(context, options):
-  return account_history_impl(context, options['api_type'])
+def backend(context, options) -> Union[standard_backend, experimental_backend]:
+  return options['backend_type'](context, options['api_type'])
 
 def build_response( obj ):
   '''proxy method, currently useless'''
@@ -91,14 +90,23 @@ def get_account_history(context : None, account : str, start = None, limit = Non
   filter = ( operation_filter_high << 64 ) | operation_filter_low
   start = start if start >= 0 else MAX_BIGINT_POSTGRES
 
+  _limit = RANGE_POSITIVE_INT if limit == 0 else limit - 1
+  limit = (RANGEINT + limit) if limit < 0 else limit
+
+  if start < _limit:
+    raise CustomAccountHistoryApiException()
+
   return build_response( backend(context, kwargs).get_account_history( filter, account, start, limit, include_reversible ) )
 
 def build_methods():
   def ah_method( name, foo ):
-    return (f'account_history_api.{name}', partial(foo, api_type=account_history_api))
+    return (f'account_history_api.{name}', partial(foo, api_type=account_history_api, backend_type=standard_backend))
 
   def ca_method(name, foo ):
-    return (f'condenser_api.{name}', partial(foo, api_type=condenser_api))
+    return (f'condenser_api.{name}', partial(foo, api_type=condenser_api, backend_type=standard_backend))
+
+  def dj_method(name, foo):
+    return (f'direct_sql.{name}', partial(foo, api_type=condenser_api, backend_type=experimental_backend))
 
   return dict([
     ah_method( 'get_ops_in_block', get_ops_in_block ),
@@ -107,7 +115,10 @@ def build_methods():
     ah_method( 'get_account_history', get_account_history ),
 
     ca_method( 'get_ops_in_block', get_ops_in_block ),
-    ca_method( 'enum_virtual_ops', enum_virtual_ops ),
     ca_method( 'get_transaction', get_transaction ),
-    ca_method( 'get_account_history', get_account_history )
+    ca_method( 'get_account_history', get_account_history ),
+
+    dj_method( 'get_ops_in_block', get_ops_in_block ),
+    dj_method( 'get_transaction', get_transaction ),
+    dj_method( 'get_account_history', get_account_history )
   ])

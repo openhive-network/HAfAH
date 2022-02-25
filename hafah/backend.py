@@ -1,9 +1,9 @@
 from typing import Union
+from hafah.exceptions import CustomTransactionApiException
 from hafah.objects import account_history_api, condenser_api
 from hafah.queries import account_history_db_connector
 from hafah.performance import perf
 from hafah.exceptions import *
-
 
 RANGE_POSITIVE_INT =  2**31-1
 MAX_POSITIVE_INT = RANGE_POSITIVE_INT - 1
@@ -13,6 +13,15 @@ RECORD_NAME = 'backend'
 def handler(name, time, ahi_instance : 'account_history_impl', *_, **__):
   ahi_instance.add_performance_record(name, time)
 
+def translate_filter(input : int, transform = lambda x : x):
+  if input:
+    result = []
+    for i in range(128):
+      if input & (1 << i):
+        result.append( transform(i) )
+    return result
+  else:
+    return None
 
 class account_history_impl:
 
@@ -26,16 +35,6 @@ class account_history_impl:
     self.ctx['perf'][name] = (time - sum(self.api.perf.values()))
 
   VIRTUAL_OP_ID_OFFSET = None
-
-  def __translate_filter(self, input : int, transform = lambda x : x):
-    if input:
-      result = []
-      for i in range(128):
-        if input & (1 << i):
-          result.append( transform(i) )
-      return result
-    else:
-      return None
 
   @perf(record_name=RECORD_NAME, handler=handler)
   def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool):
@@ -74,7 +73,7 @@ class account_history_impl:
     _result = self.repr.enum_virtual_ops(
       self.api.get_irreversible_block_num() if group_by_block else None,
       self.api.enum_virtual_ops(
-        self.__translate_filter( filter, lambda x : x + account_history_impl.VIRTUAL_OP_ID_OFFSET ),
+        translate_filter( filter, lambda x : x + account_history_impl.VIRTUAL_OP_ID_OFFSET ),
         block_range_begin,
         block_range_end,
         operation_begin,
@@ -89,11 +88,9 @@ class account_history_impl:
 
   @perf(record_name=RECORD_NAME, handler=handler)
   def get_account_history(self, filter : int, account : str, start : int, limit : int, include_reversible : bool):
-    limit = (RANGEINT + limit) if limit < 0 else limit
-
     return self.repr.get_account_history(
         self.api.get_account_history(
-        self.__translate_filter( filter ),
+        translate_filter( filter ),
         account,
         start,
         limit,
