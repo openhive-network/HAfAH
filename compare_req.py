@@ -53,22 +53,16 @@ def get_ops_in_block(method="get_ops_in_block"):
     only_virtual = bool_to_str(True)
     include_reversible = bool_to_str(True)
 
-    api_type = "account_history_api"
+    for api_type in ["account_history_api", "condenser_api"]:
+        for port in [8095, 3000]:
+            url = get_url(port)
 
-    params_str = '"params": {"block_num": %d, "only_virtual": %s, "include_reversible": %s}'
-    params_str = params_str % (block_num, only_virtual, include_reversible)
-    py_url = get_url(py_port)
-    res = send_req(py_url, api_type, method, params_str)
-    save_res(py_url, res["result"], method, api_type)
+            params_str = '"params": {"block_num": %d, "only_virtual": %s, "include_reversible": %s}'
+            params_str = params_str % (block_num, only_virtual, include_reversible)
+            res = send_req(url, api_type, method, params_str)
+            save_res(url, res, method, api_type)
 
-    params_str = '{"_block_num": "%d", "_only_virtual": "%s", "_include_reversible": "%s"}'
-    params_str = params_str % (block_num, only_virtual, include_reversible)
-    po_url = get_url(po_port)
-    res = send_req(po_url, api_type, method, params_str)
-    #print(res)
-    save_res(po_url, json.loads(res), method, api_type)
-
-    compare_json(method, api_type)
+        compare_json(method, api_type)
 
 
 def get_account_history(method="get_account_history"):
@@ -146,7 +140,7 @@ if __name__ == "__main__":
     if os.path.isdir(json_dir) is False:
         os.mkdir(json_dir)
 
-    #get_ops_in_block()
+    get_ops_in_block()
     #get_account_history()
-    get_transaction()
+    #get_transaction()
     #enum_virtual_ops()
