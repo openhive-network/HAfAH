@@ -30,13 +30,21 @@ class CustomAccountHistoryApiException(ApiError):
   def __init__(self):
     super().__init__("Assert Exception:args.start >= args.limit-1: start must be greater than or equal to limit-1 (start is 0-based index)", JSON_RPC_ERROR_DURING_CALL)
 
-class CustomAccountHistoryApiException2(ApiError):
+class LimitOutOfRangeException(ApiError):
+  def __init__(self, limit, *, max_limit = 1_000):
+    super().__init__(f"Assert Exception:args.limit <= {max_limit}: limit of {limit} is greater than maxmimum allowed", JSON_RPC_ERROR_DURING_CALL)
+
+class LimitZeroOrNegativeNumberException(ApiError):
   def __init__(self, limit):
-    super().__init__("Assert Exception:args.limit <= 1000: limit of {} is greater than maxmimum allowed".format(limit), JSON_RPC_ERROR_DURING_CALL)
+    super().__init__(f"Assert Exception:limit > 0: limit of {limit} is lesser or equal 0", JSON_RPC_ERROR_DURING_CALL)
 
 class CustomUInt64ParserApiException(ApiError):
   def __init__(self):
     super().__init__("Parse Error:Couldn't parse uint64_t", JSON_RPC_SERVER_ERROR)
+
+class CustomInt64ParserApiException(ApiError):
+  def __init__(self):
+    super().__init__("Parse Error:Couldn't parse int64_t", JSON_RPC_SERVER_ERROR)
 
 class CustomBoolParserApiException(ApiError):
   def __init__(self):
@@ -106,7 +114,6 @@ class account_history_impl:
   def enum_virtual_ops(self, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False ):
     if account_history_impl.VIRTUAL_OP_ID_OFFSET is None and filter is not None:
       account_history_impl.VIRTUAL_OP_ID_OFFSET = self.api.get_virtual_op_offset()
-    limit = (RANGEINT + limit) if limit < 0 else limit
 
     _result = self.repr.enum_virtual_ops(
       self.api.get_irreversible_block_num() if group_by_block else None,
@@ -117,11 +124,11 @@ class account_history_impl:
         operation_begin,
         limit,
         include_reversible
-      )
+      ),
+      block_range_end,
+      limit,
+      self.api.get_pagination_data
     )
-
-    _result.prepare_pagination_params(block_range_end, limit, self.api.get_pagination_data )
-
     return _result
 
   @perf(record_name=RECORD_NAME, handler=handler)
@@ -130,7 +137,7 @@ class account_history_impl:
     limit = (RANGEINT + limit) if limit < 0 else limit
 
     if limit > 1000:
-      raise CustomAccountHistoryApiException2(limit)
+      raise LimitOutOfRangeException(limit)
 
     if start < _limit:
       raise CustomAccountHistoryApiException()

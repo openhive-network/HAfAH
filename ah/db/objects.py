@@ -1,6 +1,6 @@
 from functools import partial
-from pyclbr import Function
 from json import loads
+from typing import Callable
 
 
 class result:
@@ -10,7 +10,7 @@ class result:
     self.id = id
 
 class api_operations_container:
-  def __init__(self, iterable : list, *, create_item : Function ):
+  def __init__(self, iterable : list, *, create_item : Callable ):
       assert iterable is not None, "iterable can not be none"
       self.ops : list = [ create_item( row=row ) for row in iterable ]
 
@@ -76,30 +76,33 @@ class account_history_api_objects: # namespace
 
   class virtual_ops(api_operations_container):
 
-    def __init__(self, irreversible_block : int, iterable: list):
+    def __init__(self, irreversible_block : int, iterable: list, block_range_end : int, limit : int, get_pagination_data_call : Callable):
       super().__init__(iterable, create_item=partial(account_history_api_objects.api_operation, block=None, fill_operation_id=True ))
       self.ops_by_block : list = []
       self.next_block_range_begin : int = 0
       self.next_operation_begin : int = 0
 
+      ops_total_count = len(self.ops) # thanks to this var, there is no need to loop and count in `__prepare_pagination_params`, when representation mode is set group_by_block
       if irreversible_block is not None:
         self.__group_by_block(irreversible_block)
         self.ops.clear()
 
-    def prepare_pagination_params(self, block_range_end, limit, get_pagination_data_call ):
+      self.__prepare_pagination_params(block_range_end, limit, get_pagination_data_call, ops_total_count)
+
+    def __prepare_pagination_params(self, block_range_end, limit, get_pagination_data_call, ops_total_count):
       last_op : account_history_api_objects.api_operation = None
       _block_range_end = block_range_end
 
       if len(self.ops):
         last_op = self.ops[-1]
-        if len(self.ops) == limit:
+        if ops_total_count == limit:
           _block_range_end = last_op.block
-      else:
-        if len(self.ops_by_block):
-          last_op_wrapper = self.ops_by_block[-1]
+      elif len(self.ops_by_block):
+          last_op_wrapper : account_history_api_objects.ops_by_block_wrapper = self.ops_by_block[-1]
           last_op = last_op_wrapper.ops[-1]
-          if len(self.ops_by_block) == limit:
-            _block_range_end = last_op.block
+          total_length = ops_total_count
+          if total_length == limit:
+            _block_range_end = last_op_wrapper.block
 
       if last_op is None:
         _op_id = 0
@@ -160,8 +163,8 @@ class account_history_api: # namespace
     return api_operations_container(iterable, create_item=partial(account_history_api_objects.api_operation, block=block))
 
   @staticmethod
-  def enum_virtual_ops(irreversible_block : int, iterable: list):
-    return account_history_api_objects.virtual_ops(irreversible_block, iterable)
+  def enum_virtual_ops(irreversible_block : int, iterable: list, block_range_end : int, limit : int, get_pagination_data_call : Callable):
+    return account_history_api_objects.virtual_ops(irreversible_block, iterable, block_range_end, limit, get_pagination_data_call)
 
   @staticmethod
   def is_old_schema():
@@ -183,7 +186,7 @@ class condenser_api: # namespace
     return api_operations_container(iterable, create_item=partial(condenser_api_objects.api_operation, block=block)).ops
 
   @staticmethod
-  def enum_virtual_ops(irreversible_block : int, iterable: list):
+  def enum_virtual_ops(irreversible_block : int, iterable: list, block_range_end : int, limit : int, get_pagination_data_call : Callable):
     assert False, "not supported"
 
   @staticmethod

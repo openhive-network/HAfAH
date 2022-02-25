@@ -1,10 +1,11 @@
-from ah.db.backend import CustomBlocksRangeTooWideException, account_history_impl, MAX_POSITIVE_INT, CustomUInt64ParserApiException, CustomBoolParserApiException, CustomInvalidBlocksRangeException
+from ah.db.backend import CustomBlocksRangeTooWideException, CustomInt64ParserApiException, LimitZeroOrNegativeNumberException, LimitOutOfRangeException, account_history_impl, MAX_POSITIVE_INT, CustomUInt64ParserApiException, CustomBoolParserApiException, CustomInvalidBlocksRangeException
 from ah.db.objects import account_history_api, condenser_api
 from ah.api.validation import verify_types, convert_maybe, require_unsigned, max_value
 from functools import partial
 from distutils import util
 
 MAX_BIGINT_POSTGRES = 9_223_372_036_854_775_807
+ENUM_VIRTUAL_OPS_LIMIT = 150_000
 DEFAULT_INCLUDE_IRREVERSIBLE = False
 DEFAULT_LIMIT = 1_000
 BLOCK_WIDTH_LIMIT = 2 * DEFAULT_LIMIT
@@ -53,11 +54,21 @@ def enum_virtual_ops(context : None, block_range_begin : str, block_range_end : 
   try:
     block_range_begin  = int(block_range_begin)
     block_range_end    = int(block_range_end)
-    operation_begin    = 0                 if operation_begin is None  else int(operation_begin)
-    limit              = MAX_POSITIVE_INT  if limit is None            else int(limit)
-    filter             = filter            if filter is None           else int(filter)
-  except Exception as ex:
+    operation_begin    = 0       if operation_begin is None  else int(operation_begin)
+    filter             = filter  if filter is None           else int(filter)
+  except Exception:
     raise CustomUInt64ParserApiException()
+
+  try:
+    limit              = ENUM_VIRTUAL_OPS_LIMIT if limit is None            else int(limit)
+  except Exception:
+    raise CustomInt64ParserApiException()
+
+  if limit <= 0:
+    raise LimitZeroOrNegativeNumberException(limit)
+
+  if limit > ENUM_VIRTUAL_OPS_LIMIT:
+    raise LimitOutOfRangeException(limit, max_limit=ENUM_VIRTUAL_OPS_LIMIT)
 
   if block_range_end <= block_range_begin:
     raise CustomInvalidBlocksRangeException()
