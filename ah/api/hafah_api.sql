@@ -56,6 +56,7 @@ DECLARE
 BEGIN
   -- TODO: is json order important in errors and responses?
   -- TODO: create functions for assertions
+  -- TODO: add response statuses
   SELECT hafah_api.assert_input_json(_jsonrpc, _method, _params, _id) INTO __input_assertion;
   IF __input_assertion IS NOT NULL THEN
     RETURN __input_assertion;
@@ -75,7 +76,7 @@ BEGIN
   IF __method_type = 'get_ops_in_block' THEN
     SELECT hafah_api.call_get_ops_in_block(_params, _id, __is_old_schema, __json_type) INTO __result;
   ELSEIF __method_type = 'enum_virtual_ops' THEN
-    SELECT '0' INTO __result;
+    SELECT hafah_api.call_enum_virtual_ops(_params, _id, __is_old_schema, __json_type) INTO __result;
   ELSEIF __method_type = 'get_transaction' THEN
     SELECT hafah_api.call_get_transaction(_params, _id, __is_old_schema, __json_type) INTO __result;
   ELSEIF __method_type = 'get_account_history' THEN
@@ -92,6 +93,128 @@ BEGIN
   ELSE
     RETURN __result;
   END IF;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.call_enum_virtual_ops(_params JSON, _id JSON, _is_old_schema BOOLEAN, _json_type TEXT)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __block_range_begin INT;
+  __block_range_end INT;
+  __operation_begin BIGINT = NULL;
+  __limit INT = NULL;
+  __filter NUMERIC = NULL;
+  __include_reversible BOOLEAN = NULL;
+  __group_by_block BOOLEAN = NULL;
+  
+  __max_limit INT = 150000;
+  __fill_operation_id BOOLEAN = TRUE;
+BEGIN
+  BEGIN
+    -- Required arguments
+    __block_range_begin = hafah_api.parse_argument(_params, _json_type, 'block_range_begin', 0);
+    IF __block_range_begin IS NOT NULL THEN
+      __block_range_begin = __block_range_begin::INT;
+    ELSE
+      RETURN hafah_api.raise_missing_arg('block_range_begin', _id);
+    END IF;
+
+    __block_range_end = hafah_api.parse_argument(_params, _json_type, 'block_range_end', 1);
+    IF __block_range_end IS NOT NULL THEN
+      __block_range_end = __block_range_end::INT;
+    ELSE
+      RETURN hafah_api.raise_missing_arg('block_range_end', _id);
+    END IF;
+
+    -- Make arg assertions
+    IF __block_range_begin > __block_range_end THEN
+      RETURN hafah_api.raise_error(-32003, 'Assert Exception:blockRangeEnd > blockRangeBegin: Block range must be upward',  NULL, _id, TRUE);
+    END IF;
+
+    IF __block_range_end - __block_range_begin > 2000 THEN
+      RETURN hafah_api.raise_error(-32003, 'Assert Exception:blockRangeEnd - blockRangeBegin <= block_range_limit: Block range distance must be less than or equal to 2000',  NULL, _id, TRUE);
+    END IF;
+
+    -- Optional arguments
+    __operation_begin = hafah_api.parse_argument(_params, _json_type, 'operation_begin', 2);
+    IF __operation_begin IS NOT NULL THEN
+      __operation_begin = __operation_begin::BIGINT;
+    ELSE
+      __operation_begin = 0;
+    END IF;
+
+    __filter = hafah_api.parse_argument(_params, _json_type, 'filter', 4);
+    IF __filter IS NOT NULL THEN
+      __filter = __filter::NUMERIC;
+    ELSE
+      __filter = NULL;
+    END IF;
+
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_api.raise_error(
+        -32000,
+        'Parse Error:Couldn''t parse uint64_t',
+        NULL, _id, TRUE);
+  END;
+
+  BEGIN
+    -- 'limit' is parsed separately because of different exception (uint64_t vs int64_t)
+    __limit = hafah_api.parse_argument(_params, _json_type, 'limit', 3);
+    IF __limit IS NOT NULL THEN
+      __limit = __limit::INT;
+    ELSE
+      __limit = __max_limit;
+    END IF;
+
+    IF __limit <= 0 THEN
+      RETURN hafah_api.raise_error(-32003, format('Assert Exception:limit > 0: limit of %s is lesser or equal 0', __limit),  NULL, _id, TRUE);
+    END IF;
+
+    IF __limit > __max_limit THEN
+      RETURN hafah_api.raise_error(-32003, format('Assert Exception:args.limit <= %s: limit of %s is greater than maxmimum allowed', __max_limit, __limit),  NULL, _id, TRUE);
+    END IF;
+
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_api.raise_error(
+        -32000,
+        'Parse Error:Couldn''t parse int64_t',
+        NULL, _id, TRUE);
+  END;
+
+  BEGIN
+    __include_reversible = hafah_api.parse_argument(_params, _json_type, 'include_reversible', 5);
+    IF __include_reversible IS NOT NULL THEN
+      __include_reversible = __include_reversible::BOOLEAN;
+    ELSE
+      __include_reversible = FALSE;
+    END IF;
+
+    __group_by_block = hafah_api.parse_argument(_params, _json_type, 'group_by_block', 6);
+    IF __group_by_block IS NOT NULL THEN
+      __group_by_block = __group_by_block::BOOLEAN;
+    ELSE
+      __group_by_block = FALSE;
+    END IF;
+
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_api.raise_error(
+        -32000,
+        'Bad Cast:Cannot convert string to bool (only "true" or "false" can be converted)',
+        NULL, _id, TRUE);
+  END;
+
+  IF _is_old_schema IS TRUE THEN
+    RETURN hafah_api.raise_error(-32602, 'Invalid parameters', 'not supported', _id);
+  END IF;
+  
+  RETURN hafah_api.enum_virtual_ops(__block_range_begin, __block_range_end, __operation_begin, __limit, __filter, __include_reversible, __group_by_block, __fill_operation_id);
 END
 $$
 ;
@@ -377,8 +500,8 @@ LANGUAGE 'plpython3u'
 AS
 $$ 
   global _input
-  _input = int(_input)
   if _input:
+    _input = int(_input)
     __result = []
     for i in range(128):
       if _input & (1 << i):
@@ -597,27 +720,31 @@ LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  RETURN json_agg((SELECT ops_by_block WHERE ops_by_block IS NOT NULL)) FROM (
-    WITH cte AS (
-      SELECT
-        NULL::TEXT AS ops_by_block
-      UNION ALL
-      SELECT
-        '{' ||
-        '"block": ' || block_n || ', ' ||
-        '"irreversible": ' ||
-        CASE WHEN block_n <= __irreversible_block IS TRUE THEN true ELSE false END || ', ' ||
-        '"ops": ' ||
-        (SELECT json_agg(ops_elements) FROM (SELECT json_array_elements(ops) AS ops_elements) res WHERE (SELECT ops_elements->>'block')::INT = block_n)
-        || ', ' ||
-        '"timestamp": "' || 
-        (SELECT ops_elements->>'timestamp' FROM (SELECT json_array_elements(ops) AS ops_elements) res WHERE (SELECT ops_elements->>'block')::INT = block_n LIMIT 1)
-        || '" ' ||
-        '}'
-      FROM unnest(block_n_arr) AS block_n
-    )
-    SELECT ops_by_block FROM cte
-  ) obj;
+  RETURN json_agg(ops_by_block::JSON)
+  FROM (
+    SELECT ops_by_block FROM (
+      WITH cte AS (
+        SELECT
+          NULL::TEXT AS ops_by_block
+        UNION ALL
+        SELECT
+          '{' ||
+          '"block": ' || block_n || ', ' ||
+          '"irreversible": ' ||
+          CASE WHEN block_n <= __irreversible_block IS TRUE THEN true ELSE false END || ', ' ||
+          '"ops": ' ||
+          (SELECT json_agg(ops_elements) FROM (SELECT json_array_elements(ops) AS ops_elements) res WHERE (ops_elements->>'block')::INT = block_n)
+          || ', ' ||
+          '"timestamp": "' || 
+          (SELECT ops_elements->>'timestamp' FROM (SELECT json_array_elements(ops) AS ops_elements) res WHERE (ops_elements->>'block')::INT = block_n LIMIT 1)
+          || '" ' ||
+          '}'
+        FROM unnest(block_n_arr) AS block_n
+      )
+      SELECT ops_by_block FROM cte
+    ) obj
+  WHERE ops_by_block IS NOT NULL
+  ) result;
 END
 $$
 ;
@@ -673,35 +800,21 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.enum_virtual_ops(_block_range_begin INT, _block_range_end INT, _operation_begin BIGINT = 0, _limit INT = 2147483646, _filter INT = NULL, _include_reversible BOOLEAN = FALSE, _group_by_block BOOLEAN = FALSE)
+CREATE OR REPLACE FUNCTION hafah_api.enum_virtual_ops(_block_range_begin INT, _block_range_end INT, _operation_begin BIGINT, _limit INT, _filter NUMERIC, _include_reversible BOOLEAN, _group_by_block BOOLEAN, _fill_operation_id BOOLEAN)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
-  __fill_operation_id BOOLEAN = TRUE;
-  __virtual_op_id_offset INT = (SELECT MIN(id) FROM hive.operation_types WHERE is_virtual = True);
   __irreversible_block INT;
-  __is_old_schema BOOLEAN = FALSE;
+  __virtual_op_id_offset INT = (SELECT MIN(id) FROM hive.operation_types WHERE is_virtual = True);
 BEGIN
-  IF __is_old_schema IS TRUE THEN
-    SELECT raise_exception('not supported');
-  END IF;
-
-  IF _block_range_begin > _block_range_end THEN
-    SELECT raise_exception('block range must be upward');
-  END IF;
-
-  IF _block_range_end - _block_range_begin > 2000 THEN
-    SELECT raise_exception('block range distance must be less than or equal to 2000');
-  END IF;
-
   IF _group_by_block IS TRUE THEN
     SELECT hive.app_get_irreversible_block() INTO __irreversible_block;
   END IF;
 
   RETURN
-    (SELECT hafah_api.do_pagination(_block_range_end, _limit, _len, ops_json, __fill_operation_id, _group_by_block))
+    (SELECT hafah_api.do_pagination(_block_range_end, _limit, _len, ops_json, _fill_operation_id, _group_by_block))
   FROM (
     SELECT
       jsonb_build_object(
@@ -715,7 +828,7 @@ BEGIN
       SELECT
         json_agg(ops::JSON) AS ops,
         array_agg(DISTINCT block_n) AS block_n_arr,
-        CASE WHEN _group_by_block IS FALSE THEN count(ops)::INT ELSE 1 END AS _len
+        count(ops)::INT AS _len
       FROM (
         SELECT ops, block_n FROM (
           WITH cte AS (
@@ -724,7 +837,7 @@ BEGIN
               NULL::INT AS block_n
             UNION ALL
             SELECT
-              hafah_api.build_api_operation(_trx_id, _block, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, __fill_operation_id),
+              hafah_api.build_api_operation(_trx_id, _block, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, _fill_operation_id),
               _block
             FROM hafah_python.enum_virtual_ops(hafah_api.translate_filter(_filter, __virtual_op_id_offset), _block_range_begin, _block_range_end, _operation_begin, _limit, _include_reversible)
           )
