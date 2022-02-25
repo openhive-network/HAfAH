@@ -236,9 +236,8 @@ BEGIN
       SELECT
       ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.formated_timestamp as _timestamp, ho.virtual_op
       FROM hafah_python.helper_operations_view ho
-      JOIN hive.operation_types hot ON hot.id = ho.op_type_id
       WHERE ho.block_num >= _BLOCK_RANGE_BEGIN AND ho.block_num < _BLOCK_RANGE_END
-      AND hot.is_virtual = TRUE
+      AND ho.virtual_op = TRUE
       AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id IN (SELECT * FROM unnest( _FILTER ) ) ) )
       AND ( _OPERATION_BEGIN = -1 OR ho.id >= _OPERATION_BEGIN )
       ORDER BY ho.id
