@@ -21,7 +21,10 @@ class account_history_db_connector:
     self.perf = {}
 
   def add_performance_record(self, name, time):
-    self.perf[name] = time
+    if name in self.perf:
+      self.perf[name] += time
+    else:
+      self.perf[name] = time
 
   def _get_db(self):
     assert self._conn is not None
