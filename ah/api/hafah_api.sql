@@ -110,6 +110,8 @@ DECLARE
   __filter NUMERIC = NULL;
   __include_reversible BOOLEAN = NULL;
   __group_by_block BOOLEAN = NULL;
+  
+  __max_limit INT = 150000;
   __fill_operation_id BOOLEAN = TRUE;
 BEGIN
   BEGIN
@@ -145,13 +147,6 @@ BEGIN
       __operation_begin = 0;
     END IF;
 
-    __limit = hafah_api.parse_argument(_params, _json_type, 'limit', 3);
-    IF __limit IS NOT NULL THEN
-      __limit = __limit::INT;
-    ELSE
-      __limit = 2147483646;
-    END IF;
-
     __filter = hafah_api.parse_argument(_params, _json_type, 'filter', 4);
     IF __filter IS NOT NULL THEN
       __filter = __filter::NUMERIC;
@@ -164,6 +159,31 @@ BEGIN
       RETURN hafah_api.raise_error(
         -32000,
         'Parse Error:Couldn''t parse uint64_t',
+        NULL, _id, TRUE);
+  END;
+
+  BEGIN
+    -- 'limit' is parsed separately because of different exception (uint64_t vs int64_t)
+    __limit = hafah_api.parse_argument(_params, _json_type, 'limit', 3);
+    IF __limit IS NOT NULL THEN
+      __limit = __limit::INT;
+    ELSE
+      __limit = __max_limit;
+    END IF;
+
+    IF __limit <= 0 THEN
+      RETURN hafah_api.raise_error(-32003, format('Assert Exception:limit > 0: limit of %s is lesser or equal 0', __limit),  NULL, _id, TRUE);
+    END IF;
+
+    IF __limit > __max_limit THEN
+      RETURN hafah_api.raise_error(-32003, format('Assert Exception:args.limit <= %s: limit of %s is greater than maxmimum allowed', __max_limit, __limit),  NULL, _id, TRUE);
+    END IF;
+    
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_api.raise_error(
+        -32000,
+        'Parse Error:Couldn''t parse int64_t',
         NULL, _id, TRUE);
   END;
 
@@ -742,7 +762,8 @@ BEGIN
       CASE WHEN o.block_num IS NULL THEN 0 ELSE
         (CASE WHEN o.block_num >= _block_range_end THEN 0 ELSE o.block_num END)
       END AS next_block_range_begin,
-      CASE WHEN o.id IS NULL THEN 0 ELSE o.id END AS next_operation_begin
+      --CASE WHEN o.id IS NULL THEN 0 ELSE o.id END AS next_operation_begin
+      o.id AS next_operation_begin
     FROM
       hive.operations o
     JOIN hive.operation_types ot ON o.op_type_id = ot.id
@@ -763,7 +784,7 @@ BEGIN
       _block_range_end AS next_block_range_begin,
       0 AS next_operation_begin;
   END IF;
-
+  RETURN (SELECT next_operation_begin FROM result);
   RETURN (
     SELECT jsonb_set(
       (
