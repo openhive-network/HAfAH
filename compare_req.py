@@ -54,31 +54,11 @@ def get_ops_in_block(method="get_ops_in_block"):
         compare_json(method, api_type)
 
 
-def get_account_history(method="get_account_history"):
-    account = "dantheman"
-    start = 901
-    limit = 100
-    operation_filter_low = 0
-    operation_filter_high = 5
-    include_reversible = bool_to_str(False)
-
-    for api_type in ["account_history_api", "condenser_api"]:
-        for port in [8095, 3000]:
-            url = get_url(port)
-
-            params_str = '"params": {"account": "%s", "start": %d, "limit": %d, "operation_filter_low": %d, "operation_filter_high": %d, "include_reversible": %s}'
-            params_str = params_str % (account, start, limit, operation_filter_low, operation_filter_high, include_reversible)
-            res = send_req(url, api_type, method, params_str)
-            save_res(url, res, method, api_type)
-
-        compare_json(method, api_type)
-
-
 def enum_virtual_ops(method="enum_virtual_ops"):
     block_range_begin = 3089794
-    block_range_end = block_range_begin + 2000
+    block_range_end = block_range_begin + 2
     operation_begin = 10
-    limit = 10
+    limit = 1000
     filter = 0
     include_reversible = bool_to_str(True)
     group_by_block = bool_to_str(True)
@@ -111,6 +91,27 @@ def get_transaction(method="get_transaction"):
 
         compare_json(method, api_type)
 
+
+def get_account_history(method="get_account_history"):
+    account = "dantheman"
+    start = 901
+    limit = 45
+    operation_filter_low = 0
+    operation_filter_high = 5
+    include_reversible = bool_to_str(False)
+
+    for api_type in ["account_history_api", "condenser_api"]:
+        for port in [8095, 3000]:
+            url = get_url(port)
+
+            params_str = '"params": {"account": "%s", "start": %d, "limit": %d, "operation_filter_low": %d, "operation_filter_high": %d, "include_reversible": %s}'
+            params_str = params_str % (account, start, limit, operation_filter_low, operation_filter_high, include_reversible)
+            res = send_req(url, api_type, method, params_str)
+            save_res(url, res, method, api_type)
+
+        compare_json(method, api_type)
+
+
 if __name__ == "__main__":
     py_port, po_port = 8095, 3000
 
@@ -124,6 +125,7 @@ if __name__ == "__main__":
         os.mkdir(json_dir)
 
     #get_ops_in_block()
-    #get_account_history()
+    #enum_virtual_ops()
     #get_transaction()
-    enum_virtual_ops()
+    #get_account_history()
+    
