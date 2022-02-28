@@ -178,7 +178,7 @@ BEGIN
     IF __limit > __max_limit THEN
       RETURN hafah_api.raise_error(-32003, format('Assert Exception:args.limit <= %s: limit of %s is greater than maxmimum allowed', __max_limit, __limit),  NULL, _id, TRUE);
     END IF;
-    
+
   EXCEPTION
     WHEN invalid_text_representation THEN
       RETURN hafah_api.raise_error(
@@ -762,8 +762,7 @@ BEGIN
       CASE WHEN o.block_num IS NULL THEN 0 ELSE
         (CASE WHEN o.block_num >= _block_range_end THEN 0 ELSE o.block_num END)
       END AS next_block_range_begin,
-      --CASE WHEN o.id IS NULL THEN 0 ELSE o.id END AS next_operation_begin
-      o.id AS next_operation_begin
+      CASE WHEN o.id IS NULL THEN 0 ELSE o.id END AS next_operation_begin
     FROM
       hive.operations o
     JOIN hive.operation_types ot ON o.op_type_id = ot.id
@@ -784,7 +783,7 @@ BEGIN
       _block_range_end AS next_block_range_begin,
       0 AS next_operation_begin;
   END IF;
-  RETURN (SELECT next_operation_begin FROM result);
+
   RETURN (
     SELECT jsonb_set(
       (
@@ -829,7 +828,7 @@ BEGIN
       SELECT
         json_agg(ops::JSON) AS ops,
         array_agg(DISTINCT block_n) AS block_n_arr,
-        CASE WHEN _group_by_block IS FALSE THEN count(ops)::INT ELSE 1 END AS _len
+        count(ops)::INT AS _len
       FROM (
         SELECT ops, block_n FROM (
           WITH cte AS (
