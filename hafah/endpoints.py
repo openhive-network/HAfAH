@@ -1,4 +1,9 @@
-from hafah.backend import CustomBlocksRangeTooWideException, CustomInt64ParserApiException, LimitOutOfRangeException, LimitZeroOrNegativeNumberException, account_history_impl, MAX_POSITIVE_INT, CustomUInt64ParserApiException, CustomBoolParserApiException, CustomInvalidBlocksRangeException
+from hafah.backend import (
+	CustomInt64ParserApiException,
+	account_history_impl,
+	CustomUInt64ParserApiException,
+	CustomBoolParserApiException
+)
 from hafah.objects import account_history_api, condenser_api
 from functools import partial
 from distutils import util
@@ -40,7 +45,7 @@ def build_response( obj ):
 def get_ops_in_block(context : None, block_num = None, only_virtual = None, include_reversible = None, **kwargs : dict):
   try:
     block_num = 0 if block_num is None else int(block_num)
-  except Exception as ex:
+  except Exception:
     raise CustomUInt64ParserApiException()
 
   include_reversible  = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)
@@ -62,18 +67,6 @@ def enum_virtual_ops(context : None, block_range_begin : str, block_range_end : 
   except Exception:
     raise CustomInt64ParserApiException()
 
-  if limit <= 0:
-    raise LimitZeroOrNegativeNumberException(limit)
-
-  if limit > ENUM_VIRTUAL_OPS_LIMIT:
-    raise LimitOutOfRangeException(limit, max_limit=ENUM_VIRTUAL_OPS_LIMIT)
-
-  if block_range_end <= block_range_begin:
-    raise CustomInvalidBlocksRangeException()
-
-  if block_range_end - block_range_begin > BLOCK_WIDTH_LIMIT:
-    raise CustomBlocksRangeTooWideException()
-
   include_reversible  = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)
   group_by_block      = convert(group_by_block, False)
 
@@ -90,7 +83,7 @@ def get_account_history(context : None, account : str, start = None, limit = Non
     limit                  = DEFAULT_LIMIT if limit is None                  else int(limit)
     operation_filter_low   = 0             if operation_filter_low is None   else int(operation_filter_low)
     operation_filter_high  = 0             if operation_filter_high is None  else int(operation_filter_high)
-  except Exception as ex:
+  except Exception:
     raise CustomUInt64ParserApiException()
 
   include_reversible = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)

@@ -2,8 +2,10 @@ from typing import Any
 
 from json import dumps
 
+import sqlalchemy
 from hafah.adapter import Db
 from hafah.performance import perf
+from backend import SQLExceptionWrapper
 
 def handler(name, time, ahdb : 'account_history_db_connector' , *_, **__):
   ahdb.add_performance_record(name, time)
@@ -32,7 +34,18 @@ class account_history_db_connector:
 
   @perf(record_name='SQL', handler=handler)
   def _get_all(self, query, **kwargs):
-    return self._get_db().query_all(query, **kwargs)
+    try:
+      return self._get_db().query_all(query, **kwargs)
+    except sqlalchemy.exc.InternalError as e:
+      exception_raw = e.orig.args
+      if len(exception_raw) == 0:
+        raise SQLExceptionWrapper('error while processing exception')
+
+      exception_raw = exception_raw[0].splitlines()
+      if len(exception_raw) == 0:
+        raise SQLExceptionWrapper('error while extracting exception message')
+
+      raise SQLExceptionWrapper(exception_raw[0])
 
   def get_multi_signatures_in_transaction(self, trx_hash : bytes ):
     return self._get_all(
