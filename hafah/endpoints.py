@@ -98,27 +98,47 @@ def get_account_history(context : None, account : str, start = None, limit = Non
 
   return build_response( backend(context, kwargs).get_account_history( filter, account, start, limit, include_reversible ) )
 
-def build_methods():
-  def ah_method( name, foo ):
-    return (f'account_history_api.{name}', partial(foo, api_type=account_history_api, backend_type=standard_backend))
+def build_methods(replace_standard_with_direct : bool):
+  ACCOUNT_HISTORY_API = 'account_history_api'
+  CONDENSER_API = 'condenser_api'
+  DIRECT_SQL_AH = 'direct_sql_ah'
+  DIRECT_SQL_CONDENSER = 'direct_sql'
 
-  def ca_method(name, foo ):
-    return (f'condenser_api.{name}', partial(foo, api_type=condenser_api, backend_type=standard_backend))
+  if replace_standard_with_direct:
+    DIRECT_SQL_AH = ACCOUNT_HISTORY_API
+    DIRECT_SQL_CONDENSER = CONDENSER_API
 
-  def dj_method(name, foo):
-    return (f'direct_sql.{name}', partial(foo, api_type=condenser_api, backend_type=experimental_backend))
+  def ah_method(foo):
+    return (f'{ACCOUNT_HISTORY_API}.{foo.__name__}', partial(foo, api_type=account_history_api, backend_type=standard_backend))
+
+  def ca_method(foo):
+    return (f'{CONDENSER_API}.{foo.__name__}', partial(foo, api_type=condenser_api, backend_type=standard_backend))
+
+  def dja_method(foo):
+    return (f'{DIRECT_SQL_AH}.{foo.__name__}', partial(foo, api_type=account_history_api, backend_type=experimental_backend))
+
+  def dj_method(foo):
+    return (f'{DIRECT_SQL_CONDENSER}.{foo.__name__}', partial(foo, api_type=condenser_api, backend_type=experimental_backend))
+
 
   return dict([
-    ah_method( 'get_ops_in_block', get_ops_in_block ),
-    ah_method( 'enum_virtual_ops', enum_virtual_ops ),
-    ah_method( 'get_transaction', get_transaction ),
-    ah_method( 'get_account_history', get_account_history ),
+    ah_method(get_ops_in_block ),
+    ah_method(enum_virtual_ops ),
+    ah_method(get_transaction ),
+    ah_method(get_account_history ),
 
-    ca_method( 'get_ops_in_block', get_ops_in_block ),
-    ca_method( 'get_transaction', get_transaction ),
-    ca_method( 'get_account_history', get_account_history ),
+    ca_method(get_ops_in_block ),
+    ca_method(get_transaction ),
+    ca_method(get_account_history ),
 
-    dj_method( 'get_ops_in_block', get_ops_in_block ),
-    dj_method( 'get_transaction', get_transaction ),
-    dj_method( 'get_account_history', get_account_history )
+# Theese has to be below
+
+    dja_method(get_ops_in_block ),
+    dja_method(enum_virtual_ops ),
+    dja_method(get_transaction ),
+    dja_method(get_account_history ),
+
+    dj_method(get_ops_in_block ),
+    dj_method(get_transaction ),
+    dj_method(get_account_history )
   ])

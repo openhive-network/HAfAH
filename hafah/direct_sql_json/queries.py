@@ -67,3 +67,14 @@ class account_history_db_connector:
   def get_virtual_op_offset(self) -> int:
     result = self._get_all("SELECT MIN(id) as id FROM hive.operation_types WHERE is_virtual=True")
     return result[0]['id']
+
+  def enum_virtual_ops(self, filter : list, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool):
+    return self._get_all(
+      f"SELECT * FROM {self._schema}.enum_virtual_ops_json( {format_array(filter)}, :block_range_begin, :block_range_end, :operation_begin, :limit, :include_reversible, :group_by_block )",
+      block_range_begin=block_range_begin,
+      block_range_end=block_range_end,
+      operation_begin=operation_begin,
+      limit=limit,
+      include_reversible=include_reversible,
+      group_by_block=group_by_block
+    )[0]['enum_virtual_ops_json']

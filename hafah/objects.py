@@ -193,25 +193,23 @@ class condenser_api: # namespace
   def is_old_schema():
     return True
 
-class direct_sql_api: # namespace
+class direct_sql_api:
+  def __init__(self, pat : type):
+    self.__is_old_schema : bool = pat.is_old_schema()
+
   operation = condenser_api_objects.operation
 
-  @staticmethod
-  def get_account_history(obj):
+  def get_account_history(self, obj):
     return obj
 
-  @staticmethod
-  def get_transaction(trx_id, obj):
+  def get_transaction(self, trx_id, obj):
     return obj
 
-  @staticmethod
-  def get_ops_in_block(block, iterable: list):
+  def get_ops_in_block(self, block, iterable: list):
     return iterable
 
-  @staticmethod
-  def enum_virtual_ops(irreversible_block : int, iterable: list):
+  def enum_virtual_ops(self, irreversible_block : int, iterable: list):
     assert False, "not supported"
 
-  @staticmethod
-  def is_old_schema():
-    return True
+  def is_old_schema(self):
+    return self.__is_old_schema

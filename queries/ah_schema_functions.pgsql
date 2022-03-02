@@ -82,7 +82,7 @@ AS
 $function$
 BEGIN
 
-  IF (NOT _INCLUDE_REVERSIBLE) AND _BLOCK_NUM > hive.app_get_irreversible_block(  ) THEN
+  IF (NOT _INCLUDE_REVERSIBLE) AND _BLOCK_NUM > hive.app_get_irreversible_block() THEN
     RETURN QUERY SELECT
       NULL::TEXT, -- _trx_id
       NULL::BIGINT, -- _trx_in_block
@@ -139,16 +139,11 @@ $function$
 language plpgsql STABLE
 SET JIT=OFF;
 
+DROP TYPE IF EXISTS hafah_python.get_transaction_result CASCADE;
+CREATE TYPE hafah_python.get_transaction_result AS ( _ref_block_num INT, _ref_block_prefix BIGINT, _expiration TEXT, _block_num INT, _trx_in_block SMALLINT, _signature TEXT, _multisig_number SMALLINT );
+
 CREATE OR REPLACE FUNCTION hafah_python.get_transaction( in _TRX_HASH BYTEA, in _INCLUDE_REVERSIBLE BOOLEAN )
-RETURNS TABLE(
-    _ref_block_num INT,
-    _ref_block_prefix BIGINT,
-    _expiration TEXT,
-    _block_num INT,
-    _trx_in_block SMALLINT,
-    _signature TEXT,
-    _multisig_number SMALLINT
-)
+RETURNS SETOF hafah_python.get_transaction_result
 AS
 $function$
 DECLARE
@@ -453,38 +448,45 @@ CREATE OR REPLACE FUNCTION hafah_python.get_transaction_json( in _TRX_HASH BYTEA
 RETURNS JSON
 AS
 $function$
+DECLARE
+  pre_result hafah_python.get_transaction_result;
 BEGIN
 
-RETURN ( SELECT to_json(a) FROM (
-    SELECT
-      _ref_block_num as "ref_block_num",
-      _ref_block_prefix as "ref_block_prefix",
-      ARRAY[] ::INT[] as "extensions",
-      _expiration as "expiration",
-      (
-        SELECT ARRAY(
-          SELECT _value ::JSON FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block, _IS_OLD_SCHEMA)
-        )
-      ) as "operations",
-      (
-      CASE
-        WHEN _multisig_number = 0 THEN ARRAY[_signature]
-        ELSE (
-          array_prepend(
-            _signature,
-            (SELECT ARRAY(
-              SELECT encode(signature, 'escape') FROM hive.transactions_multisig WHERE trx_hash=_TRX_HASH
-            ))
+  SELECT * INTO pre_result FROM hafah_python.get_transaction(_TRX_HASH, _INCLUDE_REVERSIBLE);
+
+  IF NOT FOUND OR pre_result._block_num IS NULL THEN
+    RETURN '{}' ::JSON;
+  END IF;
+
+  RETURN ( SELECT to_json(a) FROM (
+      SELECT
+        pre_result._ref_block_num as "ref_block_num",
+        pre_result._ref_block_prefix as "ref_block_prefix",
+        ARRAY[] ::INT[] as "extensions",
+        pre_result._expiration as "expiration",
+        (
+          SELECT ARRAY(
+            SELECT _value ::JSON FROM hafah_python.get_ops_in_transaction(pre_result._block_num, pre_result._trx_in_block, _IS_OLD_SCHEMA)
           )
-        )
-        END
-      ) as "signatures",
-      encode(_TRX_HASH, 'escape') as "transaction_id",
-      _block_num as "block_num",
-      _trx_in_block as "transaction_num"
-    FROM hafah_python.get_transaction(_TRX_HASH, _INCLUDE_REVERSIBLE)
-  ) a
-);
+        ) as "operations",
+        (
+        CASE
+          WHEN pre_result._multisig_number = 0 THEN ARRAY[pre_result._signature]
+          ELSE (
+            array_prepend(
+              pre_result._signature,
+              (SELECT ARRAY(
+                SELECT encode(signature, 'escape') FROM hive.transactions_multisig WHERE trx_hash=_TRX_HASH
+              ))
+            )
+          )
+          END
+        ) as "signatures",
+        encode(_TRX_HASH, 'escape') as "transaction_id",
+        pre_result._block_num as "block_num",
+        pre_result._trx_in_block as "transaction_num"
+    ) a
+  );
 
 END
 $function$
@@ -496,8 +498,16 @@ AS
 $function$
 BEGIN
   RETURN (
-    SELECT to_json(ARRAY(
-      SELECT json_build_array(ops.operation_id, to_jsonb(ops)-'operation_id') FROM (
+    WITH result AS (SELECT ARRAY(
+      SELECT json_build_array(
+        ops.operation_id,
+        (
+          CASE
+            WHEN _IS_OLD_SCHEMA THEN to_jsonb(ops) - 'operation_id'
+            ELSE jsonb_set(to_jsonb(ops), ARRAY['operation_id']::TEXT[], '0'::JSONB, FALSE)
+          END
+        )
+        ) FROM (
         SELECT
           _block as "block",
           _value ::json as "op",
@@ -510,8 +520,16 @@ BEGIN
         FROM
           hafah_python.ah_get_account_history( _FILTER, _ACCOUNT, _START, _LIMIT, _INCLUDE_REVERSIBLE, _IS_OLD_SCHEMA )
       ) ops
+    ) as a)
+    SELECT
+    (
+      CASE
+        WHEN _IS_OLD_SCHEMA THEN to_json(result.a)
+        ELSE json_build_object('history', to_json(result.a))
+      END
     )
-  ));
+    FROM result
+  );
 END
 $function$
 language plpgsql STABLE;
@@ -523,8 +541,13 @@ AS
 $function$
 BEGIN
   RETURN (
-    SELECT to_json(ARRAY(
-      SELECT to_json(ops) FROM (
+    WITH result as (SELECT ARRAY(
+      SELECT
+        CASE
+          WHEN _IS_OLD_SCHEMA THEN to_jsonb(ops) - 'operation_id'
+          ELSE to_jsonb(ops)
+        END
+      FROM (
         SELECT
           _BLOCK_NUM as "block",
           _value ::json as "op",
@@ -532,12 +555,108 @@ BEGIN
           _timestamp as "timestamp",
           _trx_id as "trx_id",
           _trx_in_block as "trx_in_block",
-          _virtual_op as "virtual_op"
+          _virtual_op as "virtual_op",
+          0 as "operation_id"
         FROM
           hafah_python.get_ops_in_block( _BLOCK_NUM, _ONLY_VIRTUAL, _INCLUDE_REVERSIBLE, _IS_OLD_SCHEMA )
       ) ops
-    ))
+    ) AS a )
+    SELECT
+    (
+      CASE
+        WHEN _IS_OLD_SCHEMA THEN to_json(result.a)
+        ELSE json_build_object('ops', to_json(result.a))
+      END
+    )
+    FROM result
   );
+END
+$function$
+language plpgsql STABLE;
+
+
+CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops_json( in _FILTER INT[], in _BLOCK_RANGE_BEGIN INT, in _BLOCK_RANGE_END INT, _OPERATION_BEGIN BIGINT, in _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN, in _GROUP_BY_BLOCK BOOLEAN )
+RETURNS JSON
+AS
+$function$
+DECLARE
+  irr_num INT;
+BEGIN
+  irr_num := (x'7fffffff' :: BIGINT :: INT);
+  IF _INCLUDE_REVERSIBLE = TRUE AND _GROUP_BY_BLOCK = TRUE THEN
+    SELECT hive.app_get_irreversible_block() INTO irr_num;
+  END IF;
+
+  RETURN (
+    WITH
+      pre_result AS (
+        SELECT
+          _block AS "block",
+          _value ::json AS "op",
+          _op_in_trx AS "op_in_trx",
+          _operation_id AS "operation_id",
+          _timestamp AS "timestamp",
+          _trx_id AS "trx_id",
+          _trx_in_block AS "trx_in_block",
+          _virtual_op AS "virtual_op"
+        FROM hafah_python.enum_virtual_ops( _FILTER, _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, _OPERATION_BEGIN, _LIMIT, _INCLUDE_REVERSIBLE )
+      ),
+      pag AS (
+          WITH pre_result_in AS (SELECT MAX(pre_result.block) as a, MAX(pre_result.operation_id) as b FROM pre_result LIMIT 1)
+          SELECT o.block_num, o.id
+          FROM hive.operations o
+          JOIN hive.operation_types ot ON o.op_type_id = ot.id
+          WHERE
+            ot.is_virtual=true
+            AND o.block_num>=(SELECT a FROM pre_result_in)
+            AND o.id>(SELECT b FROM pre_result_in)
+          ORDER BY o.block_num, o.id
+          LIMIT 1
+      )
+
+    SELECT to_json(result)
+    FROM (
+      SELECT
+        (SELECT block_num FROM pag) as next_block_range_begin,
+        (
+          CASE
+            WHEN (SELECT block_num FROM pag) >= _BLOCK_RANGE_END THEN 0
+            ELSE (SELECT id FROM pag)
+          END
+        ) as next_operation_begin,
+        (
+          CASE
+            WHEN _GROUP_BY_BLOCK = FALSE THEN (
+              SELECT ARRAY(
+                SELECT to_json(res) FROM (
+                  SELECT * FROM pre_result
+                ) res
+              )
+            )
+            ELSE (SELECT ARRAY[] ::JSON[])
+          END
+        ) AS ops,
+        (
+          CASE
+            WHEN _GROUP_BY_BLOCK = TRUE THEN (
+              SELECT ARRAY(
+                SELECT to_json(grouped) FROM (
+                  SELECT
+                    pre_result.block AS "block",
+                    (pre_result.block <= irr_num) AS "irreversible",
+                    array_agg(pre_result) AS "ops"
+                  FROM pre_result
+                  GROUP BY pre_result.block
+                  ORDER BY pre_result.block ASC
+                ) AS grouped
+              )
+            )
+            ELSE (SELECT ARRAY[] ::JSON[])
+          END
+        ) AS ops_by_block
+    ) AS result
+  );
+
 END
 $function$
 language plpgsql STABLE;

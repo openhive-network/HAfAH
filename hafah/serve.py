@@ -44,29 +44,13 @@ if not logger.hasHandlers():
 
 class APIMethods:
   @staticmethod
-  def build_methods(swap_condenser_direct : bool):
+  def build_methods(swap_direct : bool):
       """Register all supported hive_api/condenser_api.calls."""
       # pylint: disable=expression-not-assigned, line-too-long
       methods = Methods()
 
       # account_history methods
-      account_history_methods = account_history()
-
-      if swap_condenser_direct:
-        new_methods = dict()
-        for key, value in account_history_methods.items():
-          key : str = key
-          namespace, endpoint = key.split('.')
-          if namespace == 'condenser_api':
-            new_methods[key] = account_history_methods[f'direct_sql.{endpoint}']
-          elif namespace == 'direct_sql':
-            continue
-          else:
-            new_methods[key] = value
-
-        account_history_methods = new_methods
-
-      methods.add(**account_history_methods)
+      methods.add(**account_history(swap_direct))
 
       return methods
 
@@ -180,14 +164,14 @@ class PreparationPhase:
       logger.info("an error occurred during http server preparation")
       return False
 
-def run_server(db_url, port, log_responses, sql_src_path, *, swap_condenser_direct : bool = False):
+def run_server(db_url, port, log_responses, sql_src_path, *, swap_direct : bool = False):
   _prep_phase = PreparationPhase(db_url, sql_src_path)
   if not _prep_phase.prepare_server():
     return
 
   logger.info("connecting into http server")
 
-  methods = APIMethods.build_methods(swap_condenser_direct)
+  methods = APIMethods.build_methods(swap_direct)
   logger.info('configured for endpoints: \n - ' + '\n - '.join(methods.items.keys()))
 
   handler = partial(DBHandler, methods, db_url, log_responses)
