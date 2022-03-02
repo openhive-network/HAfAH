@@ -53,16 +53,17 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.home(jsonrpc TEXT, method TEXT, params JSON, id JSON)
+CREATE OR REPLACE FUNCTION hafah_api.home(JSON)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
-  _jsonrpc TEXT = jsonrpc;
-  _method TEXT = method;
-  _params JSON = params;
-  _id JSON = id;
+  __request_data JSON = $1;
+  __jsonrpc TEXT;
+  __method TEXT;
+  __params JSON;
+  __id JSON;
 
   __result JSON;
   __input_assertion JSON;
@@ -72,16 +73,25 @@ DECLARE
   __json_type TEXT;
 BEGIN
   -- TODO: is json order important in errors and responses?
-  -- TODO: add response statuses
-  SELECT hafah_api.assert_input_json(_jsonrpc, _method, _params, _id) INTO __input_assertion;
+
+  __jsonrpc = (__request_data->>'jsonrpc');
+  __method = (__request_data->>'method');
+  __params = (__request_data->'params');
+  __id = (__request_data->'id');
+
+  IF __jsonrpc != '2.0' OR __jsonrpc IS NULL OR __params IS NULL OR __id IS NULL THEN
+    RETURN hafah_backend.raise_exception(-32600, 'Invalid JSON-RPC');
+  END IF;
+  
+  SELECT hafah_api.assert_input_json(__jsonrpc, __method, __params, __id) INTO __input_assertion;
   IF __input_assertion IS NOT NULL THEN
     RETURN __input_assertion;
   END IF;
 
-  SELECT substring(method FROM '^[^.]+') INTO __api_type;
-  SELECT substring(method FROM '[^.]+$') INTO __method_type;
+  SELECT substring(__method FROM '^[^.]+') INTO __api_type;
+  SELECT substring(__method FROM '[^.]+$') INTO __method_type;
 
-  SELECT json_typeof(_params) INTO __json_type;
+  SELECT json_typeof(__params) INTO __json_type;
   
   IF __api_type = 'account_history_api' THEN
     __is_old_schema = FALSE;
@@ -90,13 +100,13 @@ BEGIN
   END IF;
   
   IF __method_type = 'get_ops_in_block' THEN
-    SELECT hafah_api.call_get_ops_in_block(_params, _id, __is_old_schema, __json_type) INTO __result;
+    SELECT hafah_api.call_get_ops_in_block(__params, __id, __is_old_schema, __json_type) INTO __result;
   ELSEIF __method_type = 'enum_virtual_ops' THEN
-    SELECT hafah_api.call_enum_virtual_ops(_params, _id, __is_old_schema, __json_type) INTO __result;
+    SELECT hafah_api.call_enum_virtual_ops(__params, __id, __is_old_schema, __json_type) INTO __result;
   ELSEIF __method_type = 'get_transaction' THEN
-    SELECT hafah_api.call_get_transaction(_params, _id, __is_old_schema, __json_type) INTO __result;
+    SELECT hafah_api.call_get_transaction(__params, __id, __is_old_schema, __json_type) INTO __result;
   ELSEIF __method_type = 'get_account_history' THEN
-    SELECT hafah_api.call_get_account_history(_params, _id, __is_old_schema, __json_type) INTO __result;
+    SELECT hafah_api.call_get_account_history(__params, __id, __is_old_schema, __json_type) INTO __result;
   END IF;
 
   IF __result->'error' IS NULL THEN
@@ -104,7 +114,7 @@ BEGIN
     FROM json_build_object(
       'jsonrpc', '2.0',
       'result', __result,
-      'id', id
+      'id', __id
     ) result;
   ELSE
     RETURN __result;
@@ -406,14 +416,6 @@ BEGIN
     '(account_history_api|condenser_api)\.(get_ops_in_block|enum_virtual_ops|get_transaction|get_account_history)'
   THEN
     RETURN hafah_backend.raise_exception(-32601, 'Method not found', _method, _id);
-  END IF;
-
-  IF _jsonrpc != '2.0' OR
-    _jsonrpc IS NULL OR
-    _method IS NULL OR
-    _params IS NULL
-  THEN
-    RETURN hafah_backend.raise_exception(-32600, 'Invalid JSON-RPC');
   END IF;
 
   RETURN NULL;
