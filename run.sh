@@ -21,6 +21,61 @@ start_webserver() {
     postgrest webserver.conf
 }
 
+install_dependancies() {
+    install_postgrest
+    install_plpython
+    install_jmeter
+}
+
+install_postgrest() {
+    sudo apt-get update -y
+    sudo apt-get install wget -y
+
+    postgrest=postgrest-v$postgrest_v-linux-static-x64.tar.xz
+    wget https://github.com/PostgREST/postgrest/releases/download/v$postgrest_v/$postgrest
+
+    sudo tar xvf $postgrest -C '/usr/local/bin'
+    rm $postgrest
+}
+
+install_plpython() {
+    sudo apt-get update -y
+    sudo apt-get -y install python3 postgresql-plpython3-12
+}
+
+install_jmeter() {
+    sudo apt-get update -y
+    sudo apt-get install openjdk-8-jdk -y
+
+    wget "https://downloads.apache.org//jmeter/binaries/apache-jmeter-${jmeter_v}.zip"
+
+    jmeter_src="apache-jmeter-${jmeter_v}"
+    sudo unzip "${jmeter_src}.zip" -d '/usr/local/bin'
+    rm "${jmeter_src}.zip"
+
+    jmeter="jmeter-${jmeter_v}"
+    touch $jmeter
+    echo '#!/usr/bin/env bash' >> $jmeter
+    echo '' >> $jmeter
+    echo "cd '/usr/local/src/apache-jmeter-${jmeter_v}/bin'" >> $jmeter
+    echo './jmeter $@' >> $jmeter
+    sudo chmod +x $jmeter
+    sudo mv $jmeter "/usr/local/bin/${jmeter}"
+}
+
+test_performance() {
+    if [ $# -eq 0 ]; then
+        PORT=3000
+    else
+        PORT=$1
+    fi
+    
+    ./tests/performance/run_perf_tests.bash /usr/local/bin/jmeter-$jmeter_v $PWD/tests/performance $PORT
+}
+
+postgrest_v=9.0.0
+jmeter_v=5.4.3
+
 if [ "$1" = "start" ]; then
     start_webserver
 elif [ "$1" = "re-api" ]; then
@@ -32,4 +87,17 @@ elif [ "$1" = "re-api-start" ]; then
     create_user
     echo_success
     start_webserver
+elif [ "$1" =  "install-dependancies" ]; then
+    install_dependancies
+elif [ "$1" =  "install-postgrest" ]; then
+    install_postgrest
+elif [ "$1" =  "install-plpython" ]; then
+    install_plpython
+elif [ "$1" =  "install-jmeter" ]; then
+    install_jmeter
+elif [ "$1" =  "test-performance" ]; then
+    test_performance $2
+else
+    echo "job not found"
+    exit 1
 fi;
