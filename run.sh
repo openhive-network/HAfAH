@@ -69,7 +69,7 @@ test_performance() {
         PORT=$1
     fi
     
-    ./tests/performance/run_perf_tests.bash /usr/local/bin/jmeter-$jmeter_v $PWD/tests/performance postgrest $PORT
+    ./tests/performance/run_perf_tests.bash /usr/local/bin/jmeter-$jmeter_v $PWD/tests/performance $PORT
 }
 
 postgrest_v=9.0.0
