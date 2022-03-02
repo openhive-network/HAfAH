@@ -12,8 +12,6 @@ DROP SCHEMA IF EXISTS hafah_backend CASCADE;
 CREATE SCHEMA IF NOT EXISTS hafah_backend;
 
 -- python extension for operation filters
--- sudo apt-get update
--- sudo apt-get -y install python3 postgresql-plpython3-12
 CREATE EXTENSION IF NOT EXISTS plpython3u SCHEMA pg_catalog;
 
 CREATE OR REPLACE FUNCTION hafah_backend.parse_argument(_params JSON, _json_type TEXT, _arg_name TEXT, _arg_number INT)

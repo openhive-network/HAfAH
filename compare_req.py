@@ -65,7 +65,7 @@ if __name__ == "__main__":
     py_port, po_port = 8095, 3000
     py_url, po_url = get_url(py_port), get_url(po_port)
 
-    headers = {"Content-Type": "application/json", "Prefer": "params=single-object"}
+    headers = {"Content-Type": "application/json"}
     jsonrpc_str = '"jsonrpc": "2.0"'
     method_str = '"method": "%s.%s"'
     id_str = '"id": "1"'
