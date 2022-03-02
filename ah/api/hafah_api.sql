@@ -23,7 +23,9 @@ LANGUAGE 'plpgsql'
 AS $$
 BEGIN
   --recreate role for reading data
-  DROP OWNED BY hived;
+  IF (SELECT 1 FROM pg_roles WHERE rolname='hived') IS NOT NULL THEN
+    DROP OWNED BY hived;
+  END IF;
   DROP ROLE IF EXISTS hived;
   CREATE ROLE hived;
 
