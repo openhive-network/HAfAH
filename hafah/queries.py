@@ -5,7 +5,7 @@ from json import dumps
 import sqlalchemy
 from hafah.adapter import Db
 from hafah.performance import perf
-from backend import SQLExceptionWrapper
+from exceptions import SQLExceptionWrapper
 
 def handler(name, time, ahdb : 'account_history_db_connector' , *_, **__):
   ahdb.add_performance_record(name, time)
