@@ -14,6 +14,46 @@ CREATE SCHEMA IF NOT EXISTS hafah_backend;
 -- python extension for operation filters
 CREATE EXTENSION IF NOT EXISTS plpython3u SCHEMA pg_catalog;
 
+CREATE OR REPLACE PROCEDURE hafah_backend.create_api_user()
+LANGUAGE 'plpgsql'
+AS $$
+BEGIN
+  --recreate role for reading data
+  IF (SELECT 1 FROM pg_roles WHERE rolname='hafah_user') IS NOT NULL THEN
+    DROP OWNED BY hafah_user;
+  END IF;
+  DROP ROLE IF EXISTS hafah_user;
+  CREATE ROLE hafah_user;
+
+  GRANT USAGE ON SCHEMA hafah_api TO hafah_user;
+  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_api TO hafah_user;
+
+  GRANT USAGE ON SCHEMA hafah_backend TO hafah_user;
+  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_backend TO hafah_user;
+
+  GRANT USAGE ON SCHEMA hafah_objects TO hafah_user;
+  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_objects TO hafah_user;
+
+  GRANT USAGE ON SCHEMA hafah_python TO hafah_user;
+  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_python TO hafah_user;
+
+  GRANT USAGE ON SCHEMA hive TO hafah_user;
+  GRANT SELECT ON ALL TABLES IN SCHEMA hive TO hafah_user;
+  GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hive TO hafah_user;
+
+  -- add ability for admin to switch to hafah_user role
+  GRANT hafah_user TO haf_admin;
+
+  -- add hafah schemas owner
+  DROP ROLE IF EXISTS hafah_owner;
+  CREATE ROLE hafah_owner;
+  ALTER SCHEMA hafah_api OWNER TO hafah_owner;
+  ALTER SCHEMA hafah_backend OWNER TO hafah_owner;
+  ALTER SCHEMA hafah_objects OWNER TO hafah_owner;
+END
+$$
+;
+
 CREATE OR REPLACE FUNCTION hafah_backend.parse_argument(_params JSON, _json_type TEXT, _arg_name TEXT, _arg_number INT)
 RETURNS TEXT
 LANGUAGE 'plpgsql'

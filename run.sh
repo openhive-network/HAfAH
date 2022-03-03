@@ -8,7 +8,7 @@ echo_success() {
 }
 
 create_user() {
-    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -c '\timing' -c "call hafah_api.create_api_user();"
+    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -c '\timing' -c "call hafah_backend.create_api_user();"
 }
 
 create_api() {
@@ -18,7 +18,7 @@ create_api() {
 }
 
 start_webserver() {
-    postgrest webserver.conf
+    postgrest postgrest.conf
 }
 
 install_dependancies() {
@@ -78,11 +78,11 @@ jmeter_v=5.4.3
 
 if [ "$1" = "start" ]; then
     start_webserver
-elif [ "$1" = "re-api" ]; then
+elif [ "$1" = "re-all" ]; then
     create_api
     create_user
     echo_success
-elif [ "$1" = "re-api-start" ]; then
+elif [ "$1" = "re-all-start" ]; then
     create_api
     create_user
     echo_success
