@@ -18,43 +18,6 @@ DROP SCHEMA IF EXISTS hafah_api CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_api;
 
-CREATE OR REPLACE PROCEDURE hafah_api.create_api_user()
-LANGUAGE 'plpgsql'
-AS $$
-BEGIN
-  --recreate role for reading data
-  IF (SELECT 1 FROM pg_roles WHERE rolname='hived') IS NOT NULL THEN
-    DROP OWNED BY hived;
-  END IF;
-  DROP ROLE IF EXISTS hived;
-  CREATE ROLE hived;
-
-  GRANT USAGE ON SCHEMA hafah_api TO hived;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_api TO hived;
-
-  GRANT USAGE ON SCHEMA hafah_backend TO hived;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_backend TO hived;
-
-  GRANT USAGE ON SCHEMA hafah_objects TO hived;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_objects TO hived;
-
-  GRANT USAGE ON SCHEMA hafah_python TO hived;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_python TO hived;
-
-  GRANT USAGE ON SCHEMA hive TO hived;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hive TO hived;
-  GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hive TO hived;
-
-  -- recreate role for connecting to db
-  DROP ROLE IF EXISTS haf_admin;
-  CREATE ROLE haf_admin NOINHERIT LOGIN PASSWORD 'haf_admin';
-
-  -- add ability for admin to switch to hived role
-  GRANT hived TO haf_admin;
-END
-$$
-;
-
 CREATE OR REPLACE FUNCTION hafah_api.home(JSON)
 RETURNS JSON
 LANGUAGE 'plpgsql'
