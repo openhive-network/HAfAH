@@ -12,9 +12,10 @@ create_user() {
 }
 
 create_api() {
-    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $PWD/ah/db/hafah_backend.sql
-    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $PWD/ah/db/hafah_objects.sql
-    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $PWD/ah/api/hafah_api.sql
+    postgrest_dir=$PWD/postgrest
+    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_backend.sql
+    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_objects.sql
+    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_api.sql
 }
 
 start_webserver() {
