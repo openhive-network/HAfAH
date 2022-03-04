@@ -43,6 +43,13 @@ BEGIN
 
   -- add ability for admin to switch to hafah_user role
   GRANT hafah_user TO haf_admin;
+
+  -- add hafah schemas owner
+  DROP ROLE IF EXISTS hafah_owner;
+  CREATE ROLE hafah_owner;
+  ALTER SCHEMA hafah_api OWNER TO hafah_owner;
+  ALTER SCHEMA hafah_backend OWNER TO hafah_owner;
+  ALTER SCHEMA hafah_objects OWNER TO hafah_owner;
 END
 $$
 ;
