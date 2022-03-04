@@ -87,12 +87,12 @@ $$
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.create_filter_numeric(_operation_filter_low INT, _operation_filter_high INT)
+CREATE OR REPLACE FUNCTION hafah_backend.create_filter_numeric(_operation_filter_low NUMERIC, _operation_filter_high NUMERIC)
 RETURNS NUMERIC
 LANGUAGE 'plpython3u'
 AS
 $$
-  return (_operation_filter_high << 64) | _operation_filter_low
+  return (int(_operation_filter_high) << 64) | int(_operation_filter_low)
 $$
 ;
 

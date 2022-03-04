@@ -310,7 +310,7 @@ BEGIN
   WHERE
     ot.is_virtual = TRUE AND
     o.block_num >= (ops_json->-1->>'block')::INT AND
-    o.id > (ops_json->-1->'ops'->-1->>'operation_id')::BIGINT
+    o.id > (ops_json->-1->>'operation_id')::BIGINT
   ORDER BY o.block_num, o.id 
   LIMIT 1;
 END
