@@ -2,11 +2,8 @@ from typing import Union
 from hafah.objects import account_history_api, condenser_api
 from hafah.queries import account_history_db_connector
 from hafah.performance import perf
+from hafah.exceptions import *
 
-from jsonrpcserver.exceptions import ApiError
-
-JSON_RPC_SERVER_ERROR       = -32000
-JSON_RPC_ERROR_DURING_CALL  = -32003
 
 RANGE_POSITIVE_INT =  2**31-1
 MAX_POSITIVE_INT = RANGE_POSITIVE_INT - 1
@@ -16,47 +13,6 @@ RECORD_NAME = 'backend'
 def handler(name, time, ahi_instance : 'account_history_impl', *_, **__):
   ahi_instance.add_performance_record(name, time)
 
-class CustomTransactionApiException(ApiError):
-  def __init__(self, trx_hash):
-    #because type of `trx_hash` is `ripemd160`
-    trx_hash_size = 40
-
-    if len(trx_hash) < trx_hash_size:
-      for i in range(trx_hash_size - len(trx_hash)):
-        trx_hash += '0'
-    super().__init__("Assert Exception:false: Unknown Transaction {}".format(trx_hash), JSON_RPC_ERROR_DURING_CALL)
-
-class CustomAccountHistoryApiException(ApiError):
-  def __init__(self):
-    super().__init__("Assert Exception:args.start >= args.limit-1: start must be greater than or equal to limit-1 (start is 0-based index)", JSON_RPC_ERROR_DURING_CALL)
-
-class LimitOutOfRangeException(ApiError):
-  def __init__(self, limit, *, max_limit = 1_000):
-    super().__init__(f"Assert Exception:args.limit <= {max_limit}: limit of {limit} is greater than maxmimum allowed", JSON_RPC_ERROR_DURING_CALL)
-
-class LimitZeroOrNegativeNumberException(ApiError):
-  def __init__(self, limit):
-    super().__init__(f"Assert Exception:limit > 0: limit of {limit} is lesser or equal 0", JSON_RPC_ERROR_DURING_CALL)
-
-class CustomUInt64ParserApiException(ApiError):
-  def __init__(self):
-    super().__init__("Parse Error:Couldn't parse uint64_t", JSON_RPC_SERVER_ERROR)
-
-class CustomInt64ParserApiException(ApiError):
-  def __init__(self):
-    super().__init__("Parse Error:Couldn't parse int64_t", JSON_RPC_SERVER_ERROR)
-
-class CustomBoolParserApiException(ApiError):
-  def __init__(self):
-    super().__init__("Bad Cast:Cannot convert string to bool (only \"true\" or \"false\" can be converted)", JSON_RPC_SERVER_ERROR)
-
-class CustomInvalidBlocksRangeException(ApiError):
-  def __init__(self):
-    super().__init__("Assert Exception:blockRangeEnd > blockRangeBegin: Block range must be upward", JSON_RPC_ERROR_DURING_CALL)
-
-class CustomBlocksRangeTooWideException(ApiError):
-  def __init__(self):
-    super().__init__("Assert Exception:blockRangeEnd - blockRangeBegin <= block_range_limit: Block range distance must be less than or equal to 2000", JSON_RPC_ERROR_DURING_CALL)
 
 class account_history_impl:
 
@@ -133,14 +89,7 @@ class account_history_impl:
 
   @perf(record_name=RECORD_NAME, handler=handler)
   def get_account_history(self, filter : int, account : str, start : int, limit : int, include_reversible : bool):
-    _limit = RANGE_POSITIVE_INT if limit == 0 else limit - 1
     limit = (RANGEINT + limit) if limit < 0 else limit
-
-    if limit > 1000:
-      raise LimitOutOfRangeException(limit)
-
-    if start < _limit:
-      raise CustomAccountHistoryApiException()
 
     return self.repr.get_account_history(
         self.api.get_account_history(

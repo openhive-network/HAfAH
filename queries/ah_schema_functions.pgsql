@@ -18,6 +18,56 @@ ON
   hov.op_type_id=hot.id
 ;
 
+CREATE OR REPLACE FUNCTION hafah_python.validate_limit( in GIVEN_LIMIT BIGINT, in EXPECTED_LIMIT INT ) RETURNS VOID AS $function$
+BEGIN
+  IF GIVEN_LIMIT > EXPECTED_LIMIT THEN
+    RAISE 'Assert Exception:args.limit <= %: limit of % is greater than maxmimum allowed', EXPECTED_LIMIT, GIVEN_LIMIT;
+  END IF;
+
+  RETURN;
+END
+$function$
+language plpgsql STABLE;
+
+CREATE OR REPLACE FUNCTION hafah_python.validate_negative_limit( in _LIMIT BIGINT ) RETURNS VOID AS $function$
+BEGIN
+  IF _LIMIT <= 0 THEN
+    RAISE 'Assert Exception:limit > 0: limit of % is lesser or equal 0', _LIMIT;
+  END IF;
+
+  RETURN;
+END
+$function$
+language plpgsql STABLE;
+
+
+CREATE OR REPLACE FUNCTION hafah_python.validate_start_limit( in _START BIGINT, in _LIMIT BIGINT ) RETURNS VOID AS $function$
+BEGIN
+  IF _START < (_LIMIT - 1) OR _LIMIT = 0 THEN
+    RAISE 'Assert Exception:args.start >= args.limit-1: start must be greater than or equal to limit-1 (start is 0-based index)';
+  END IF;
+
+  RETURN;
+END
+$function$
+language plpgsql STABLE;
+
+
+CREATE OR REPLACE FUNCTION hafah_python.validate_block_range( in BLOCK_START INT, in BLOCK_STOP INT, in EXPECTED_DISTANCE INT ) RETURNS VOID AS $function$
+BEGIN
+  IF BLOCK_STOP - BLOCK_START > EXPECTED_DISTANCE THEN
+    RAISE 'Assert Exception:blockRangeEnd - blockRangeBegin <= block_range_limit: Block range distance must be less than or equal to 2000';
+  END IF;
+
+  IF BLOCK_STOP <= BLOCK_START THEN
+    RAISE 'Assert Exception:blockRangeEnd > blockRangeBegin: Block range must be upward';
+  END IF;
+
+  RETURN;
+END
+$function$
+language plpgsql STABLE;
+
 CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_block( in _BLOCK_NUM INT, in _ONLY_VIRTUAL BOOLEAN, in _INCLUDE_REVERSIBLE BOOLEAN, in _IS_OLD_SCHEMA BOOLEAN )
 RETURNS TABLE(
     _trx_id TEXT,
@@ -190,6 +240,11 @@ DECLARE
   __upper_block_limit INT;
   __filter_info INT;
 BEGIN
+
+  PERFORM hafah_python.validate_negative_limit( _LIMIT );
+  PERFORM hafah_python.validate_limit( _LIMIT, 150000 );
+  PERFORM hafah_python.validate_block_range( _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, 2000 );
+
   SELECT INTO __filter_info ( select array_length( _FILTER, 1 ) );
   IF NOT _INCLUDE_REVERSIBLE THEN
     SELECT hive.app_get_irreversible_block(  ) INTO __upper_block_limit;
@@ -256,7 +311,7 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history( in _FILTER INT[], in _ACCOUNT VARCHAR, _START BIGINT, _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN, in _IS_OLD_SCHEMA BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history( in _FILTER INT[], in _ACCOUNT VARCHAR, _START BIGINT, _LIMIT BIGINT, in _INCLUDE_REVERSIBLE BOOLEAN, in _IS_OLD_SCHEMA BOOLEAN )
 RETURNS TABLE(
   _trx_id TEXT,
   _block INT,
@@ -274,6 +329,9 @@ DECLARE
   __filter_info INT;
   __upper_block_limit INT;
 BEGIN
+
+  PERFORM hafah_python.validate_limit( _LIMIT, 1000 );
+  PERFORM hafah_python.validate_start_limit( _START, _LIMIT );
 
   SELECT INTO __filter_info ( select array_length( _FILTER, 1 ) );
 
