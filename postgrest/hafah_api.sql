@@ -146,7 +146,7 @@ DECLARE
   __block_range_end INT;
   __operation_begin BIGINT = NULL;
   __limit INT = NULL;
-  __filter NUMERIC = NULL;
+  __filter DECIMAL = NULL;
   __include_reversible BOOLEAN = NULL;
   __group_by_block BOOLEAN = NULL;
   
@@ -170,7 +170,7 @@ BEGIN
     END IF;
 
     -- Make arg assertions
-    IF __block_range_begin > __block_range_end THEN
+    IF __block_range_begin >= __block_range_end THEN
       RETURN hafah_backend.raise_exception(-32003, 'Assert Exception:blockRangeEnd > blockRangeBegin: Block range must be upward',  NULL, _id, TRUE);
     END IF;
 
@@ -188,7 +188,7 @@ BEGIN
 
     __filter = hafah_backend.parse_argument(_params, _json_type, 'filter', 4);
     IF __filter IS NOT NULL THEN
-      __filter = __filter::NUMERIC;
+      __filter = __filter::DECIMAL;
     ELSE
       __filter = NULL;
     END IF;
@@ -300,8 +300,8 @@ DECLARE
   __account VARCHAR;
   __start BIGINT = NULL;
   __limit INT = NULL;
-  __operation_filter_low INT = NULL;
-  __operation_filter_high INT = NULL;
+  __operation_filter_low NUMERIC = NULL;
+  __operation_filter_high NUMERIC = NULL;
   __include_reversible BOOLEAN = NULL;
 BEGIN
   -- Assign function arguments and make assertions
@@ -342,14 +342,14 @@ BEGIN
 
     __operation_filter_low = hafah_backend.parse_argument(_params, _json_type, 'operation_filter_low', 3);
     IF __operation_filter_low IS NOT NULL THEN
-      __operation_filter_low = __operation_filter_low::INT;
+      __operation_filter_low = __operation_filter_low::NUMERIC;
     ELSE
       __operation_filter_low = 0;
     END IF;
 
     __operation_filter_high = hafah_backend.parse_argument(_params, _json_type, 'operation_filter_high', 4);
     IF __operation_filter_high IS NOT NULL THEN
-      __operation_filter_high = __operation_filter_high::INT;
+      __operation_filter_high = __operation_filter_high::NUMERIC;
     ELSE
       __operation_filter_high = 0;
     END IF;
