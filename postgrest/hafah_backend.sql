@@ -54,17 +54,26 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.parse_argument(_params JSON, _json_type TEXT, _arg_name TEXT, _arg_number INT)
+CREATE OR REPLACE FUNCTION hafah_backend.parse_argument(_params JSON, _json_type TEXT, _arg_name TEXT, _arg_number INT, _is_bool BOOLEAN = FALSE)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
+DECLARE
+  __param TEXT;
 BEGIN
-  RETURN CASE WHEN _json_type = 'object' THEN
+  SELECT CASE WHEN _json_type = 'object' THEN
     _params->>_arg_name
   ELSE
     _params->>_arg_number
-  END;
+  END INTO __param;
+
+  -- TODO: this is done to replicate behaviour of HAfAH python, might remove
+  IF _is_bool IS TRUE AND __param ~ '([A-Z].+)' THEN
+    RAISE invalid_text_representation;
+  ELSE
+    RETURN __param;
+  END IF;
 END
 $$
 ;
@@ -87,12 +96,12 @@ $$
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.create_filter_numeric(_operation_filter_low INT, _operation_filter_high INT)
+CREATE OR REPLACE FUNCTION hafah_backend.create_filter_numeric(_operation_filter_low NUMERIC, _operation_filter_high NUMERIC)
 RETURNS NUMERIC
 LANGUAGE 'plpython3u'
 AS
 $$
-  return (_operation_filter_high << 64) | _operation_filter_low
+  return (int(_operation_filter_high) << 64) | int(_operation_filter_low)
 $$
 ;
 
@@ -121,6 +130,17 @@ BEGIN
     END,
     'id', _id
   ) error_json;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_backend.wrap_sql_exception(_exception_message TEXT, _id JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_backend.raise_exception(-32003, _exception_message, NULL, _id, TRUE);
 END
 $$
 ;
