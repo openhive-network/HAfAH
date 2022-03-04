@@ -257,6 +257,8 @@ $$
 DECLARE
   __id TEXT;
   __include_reversible BOOLEAN = NULL;
+
+  __result JSON;
 BEGIN
   __id = hafah_backend.parse_argument(_params, _json_type, 'id', 0);
   IF __id IS NOT NULL THEN
@@ -278,7 +280,12 @@ BEGIN
       RETURN hafah_backend.raise_bool_case_exception(_id);
   END;
 
-  RETURN hafah_objects.get_transaction(__id, __include_reversible, _is_old_schema, _id);
+  SELECT hafah_objects.get_transaction(__id, __include_reversible, _is_old_schema) INTO __result;
+  RETURN CASE WHEN __result IS NULL THEN
+    hafah_backend.raise_exception(-32003, format('Assert Exception:false: Unknown Transaction %s', rpad(__id, 40, '0')), NULL, _id, TRUE)
+  ELSE
+    __result
+  END;
 END
 $$
 ;
