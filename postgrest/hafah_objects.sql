@@ -216,20 +216,21 @@ BEGIN
   END IF;
 
   RETURN
-    CASE WHEN _len > 0 AND _len = _limit THEN
-      hafah_objects.do_pagination(_block_range_end, ops_json, _fill_operation_id, _group_by_block, _id)
-    ELSE
-      jsonb_set(ops_json, '{next_block_range_begin}', to_jsonb(_block_range_end))
-    END
+    jsonb_build_object(
+      'ops', CASE WHEN _group_by_block IS TRUE OR ops IS NULL THEN '[]'::JSON ELSE ops END,
+      'ops_by_block', CASE WHEN _group_by_block IS FALSE OR ops IS NULL THEN '[]'::JSON ELSE hafah_objects.group_by_block(ops, block_n_arr, __irreversible_block) END,
+      'next_block_range_begin', (pagination_json->'next_block_range_begin'),
+      'next_operation_begin', hafah_objects.set_operation_id((pagination_json->>'next_operation_begin')::BIGINT, _fill_operation_id, _id)
+    )
   FROM (
     SELECT
-      jsonb_build_object(
-        'ops', CASE WHEN _group_by_block IS TRUE OR ops IS NULL THEN '[]'::JSON ELSE ops END,
-        'ops_by_block', CASE WHEN _group_by_block IS FALSE OR ops IS NULL THEN '[]'::JSON ELSE (SELECT hafah_objects.group_by_block(ops, block_n_arr, __irreversible_block)) END,
-        'next_block_range_begin', 0,
-        'next_operation_begin', 0
-      ) AS ops_json,
-      _len
+      CASE WHEN _len > 0 AND _len = _limit THEN
+        hafah_objects.do_pagination(_block_range_end, ops) 
+      ELSE
+        jsonb_build_object('next_block_range_begin', _block_range_end, 'next_operation_begin', 0)
+      END AS pagination_json,
+      ops,
+      block_n_arr
     FROM (
       SELECT
         json_agg(ops::JSON) AS ops,
@@ -251,7 +252,7 @@ BEGIN
         ) obj
       WHERE ops IS NOT NULL
       ) to_arr
-    ) group_b
+    ) pagin
   ) result;
 END
 $$
@@ -292,47 +293,28 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.do_pagination(_block_range_end INT, ops_json JSONB, _fill_operation_id BOOLEAN, _group_by_block BOOLEAN, _id JSON)
+CREATE OR REPLACE FUNCTION hafah_objects.do_pagination(_block_range_end INT, ops_json JSON)
 RETURNS JSONB
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  DROP TABLE IF EXISTS result;
-
-  CREATE TEMP TABLE result AS SELECT
+  RETURN jsonb_build_object(
+    'next_block_range_begin',
     CASE WHEN o.block_num IS NULL THEN 0 ELSE
       (CASE WHEN o.block_num >= _block_range_end THEN 0 ELSE o.block_num END)
-    END AS next_block_range_begin,
-    CASE WHEN o.id IS NULL THEN 0 ELSE o.id END AS next_operation_begin
+    END,
+    'next_operation_begin',
+    CASE WHEN o.id IS NULL THEN 0 ELSE o.id END)
   FROM
     hive.operations o
   JOIN hive.operation_types ot ON o.op_type_id = ot.id
   WHERE
-    CASE WHEN _group_by_block IS TRUE THEN
-      ot.is_virtual = TRUE AND
-      o.block_num >= (ops_json->'ops_by_block'->-1->'block')::INT AND
-      o.id > (ops_json->'ops_by_block'->-1->'ops'->-1->'operation_id')::BIGINT
-    ELSE
-      ot.is_virtual = TRUE AND
-      o.block_num >= (ops_json->'ops'->-1->>'block')::INT AND
-      o.id > (ops_json->'ops'->-1->>'operation_id')::BIGINT
-    END
+    ot.is_virtual = TRUE AND
+    o.block_num >= (ops_json->-1->>'block')::INT AND
+    o.id > (ops_json->-1->'ops'->-1->>'operation_id')::BIGINT
   ORDER BY o.block_num, o.id 
   LIMIT 1;
-
-  RETURN (
-    SELECT jsonb_set(
-      (
-        SELECT jsonb_set(ops_json,
-        '{next_block_range_begin}',
-        to_jsonb((SELECT next_block_range_begin FROM result)))
-      ),
-    '{next_operation_begin}',
-    to_jsonb(hafah_objects.set_operation_id(
-      (SELECT next_operation_begin FROM result),
-      _fill_operation_id, _id)))
-  );
 END
 $$
 ;
