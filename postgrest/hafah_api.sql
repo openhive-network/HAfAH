@@ -75,7 +75,7 @@ BEGIN
   END IF;
 
   IF __result->'error' IS NULL THEN
-    RETURN REPLACE(result::TEXT, ' :', ':')
+    RETURN result
     FROM json_build_object(
       'jsonrpc', '2.0',
       'result', __result,
