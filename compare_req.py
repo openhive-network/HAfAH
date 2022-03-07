@@ -83,11 +83,12 @@ if __name__ == "__main__":
 
     params_tuple_dict = {
         "get_ops_in_block": ({"block_num": 5}, {"only_virtual": bool_to_str(True)}, {"include_reversible": bool_to_str(True)}),
-        "enum_virtual_ops": ({"block_range_begin": 3089794}, {"block_range_end": 3089796}, {"operation_begin": 0}, {"limit": 1000}, {"filter": 0}, {"include_reversible": bool_to_str(True)}, {"group_by_block": bool_to_str(True)}),
+        "enum_virtual_ops": ({"block_range_begin": 3744644}, {"block_range_end": 3744646}, {"operation_begin": 9844922}, {"limit": 1}, {"filter": 16384}, {"include_reversible": bool_to_str(False)}, {"group_by_block": bool_to_str(False)}),
         "get_transaction": ({"id": "390464f5178defc780b5d1a97cb308edeb27f983"}, {"include_reversible": bool_to_str(True)}),
-        "get_account_history": ({"account": "dantheman"}, {"start": 0}, {"limit": 10}, {"operation_filter_low": 0}, {"operation_filter_high": 0}, {"include_reversible": bool_to_str(True)})
+        "get_account_history": ({"account": "twenty_letters_wordd"}, {"start": 0}, {"limit": 0}, {"operation_filter_low": 0}, {"operation_filter_high": 0}, {"include_reversible": bool_to_str(False)})
     }
 
-    methods = ["get_ops_in_block", "enum_virtual_ops", "get_transaction", "get_account_history"]
+    #methods = ["get_ops_in_block", "enum_virtual_ops", "get_transaction", "get_account_history"]
+    methods = ["get_account_history"]
 
     compare_method_responses(methods, params_str_dict, params_tuple_dict)
