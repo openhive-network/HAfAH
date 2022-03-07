@@ -299,11 +299,11 @@ $$
 BEGIN
   RETURN jsonb_build_object(
     'next_block_range_begin',
-    CASE WHEN o.block_num IS NULL THEN 0 ELSE
-      (CASE WHEN o.block_num >= _block_range_end THEN 0 ELSE o.block_num END)
-    END,
+    CASE WHEN o.block_num IS NULL THEN 0 ELSE o.block_num END,
     'next_operation_begin',
-    CASE WHEN o.id IS NULL THEN 0 ELSE o.id END)
+    CASE WHEN o.id IS NULL THEN 0 ELSE
+    (CASE WHEN o.block_num >= _block_range_end THEN 0 ELSE o.id END)
+  END)
   FROM
     hive.operations o
   JOIN hive.operation_types ot ON o.op_type_id = ot.id
