@@ -222,10 +222,14 @@ BEGIN
     )
   FROM (
     SELECT
-      CASE WHEN _len > 0 AND _len = _limit THEN
-        hafah_objects.do_pagination(_block_range_end, ops) 
+      CASE WHEN _len > 0 THEN
+        CASE WHEN _len = _limit THEN
+          hafah_objects.do_pagination(_block_range_end, ops) 
+        ELSE
+          jsonb_build_object('next_block_range_begin', _block_range_end, 'next_operation_begin', 0)
+        END
       ELSE
-        jsonb_build_object('next_block_range_begin', _block_range_end, 'next_operation_begin', 0)
+        jsonb_build_object('next_block_range_begin', 0, 'next_operation_begin', 0)
       END AS pagination_json,
       ops,
       block_n_arr
