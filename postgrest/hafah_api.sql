@@ -208,7 +208,7 @@ BEGIN
     END IF;
 
     IF __limit <= 0 THEN
-      RETURN hhafah_backend.raise_exception(-32003, format('Assert Exception:limit > 0: limit of %s is lesser or equal 0', __limit),  NULL, _id, TRUE);
+      RETURN hafah_backend.raise_exception(-32003, format('Assert Exception:limit > 0: limit of %s is lesser or equal 0', __limit),  NULL, _id, TRUE);
     END IF;
 
     IF __limit > __max_limit THEN
@@ -330,16 +330,22 @@ BEGIN
 
     __limit = hafah_backend.parse_argument(_params, _json_type, 'limit', 2);
     IF __limit IS NOT NULL THEN
-      __limit = __limit::INT;
+      __limit = __limit::NUMERIC;
     ELSE
       __limit = 1000;
     END IF;
+
+    -- This is done to replicate behaviour of HAFAH python
+    IF __limit < 0 THEN
+      RETURN hafah_backend.raise_exception(-32003, format('Assert Exception:args.limit <= 1000: limit of %s is greater than maxmimum allowed', (SELECT 2 * 2^31 - 1)::NUMERIC), NULL, _id, TRUE);
+    END IF;
+    
     IF __limit > 1000 THEN
       RETURN hafah_backend.raise_exception(-32003, format('Assert Exception:args.limit <= 1000: limit of %s is greater than maxmimum allowed', __limit), NULL, _id, TRUE);
-    ELSIF __start < __limit - 1  THEN
+   ELSIF __start < (__limit - 1) OR __limit = 0 THEN
       RETURN hafah_backend.raise_exception(-32003, 'Assert Exception:args.start >= args.limit-1: start must be greater than or equal to limit-1 (start is 0-based index)', NULL, _id, TRUE);
     END IF;
-
+    
     __operation_filter_low = hafah_backend.parse_argument(_params, _json_type, 'operation_filter_low', 3);
     IF __operation_filter_low IS NOT NULL THEN
       __operation_filter_low = __operation_filter_low::NUMERIC;
