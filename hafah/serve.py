@@ -88,10 +88,12 @@ class DBHandler(BaseHTTPRequestHandler):
       return simplejson.loads(s=s, use_decimal=True)
 
   def process_response(self, http_code, content_type, response):
+    data = str(response).encode()
     self.send_response(http_code)
     self.send_header("Content-type", content_type)
+    self.send_header('Content-length', len(data))
     self.end_headers()
-    self.wfile.write(str(response).encode())
+    self.wfile.write(data)
 
   def log_request(self, *args, **kwargs) -> None:
     # return super().log_request(code=code, size=size)
