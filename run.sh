@@ -29,12 +29,11 @@ install_dependancies() {
 }
 
 install_postgrest() {
-    wget https://github.com/PostgREST/postgrest/releases/download/v$postgrest_v/postgrest-v$postgrest_v-linux-static-x64.tar.xz
+    postgrest=postgrest-v$postgrest_v-linux-static-x64.tar.xz
+    wget https://github.com/PostgREST/postgrest/releases/download/v$postgrest_v/$postgrest
 
-    POSTGREST=$(find . -name 'postgrest*')
-    tar xJf $POSTGREST
-    sudo mv 'postgrest' '/usr/local/bin/postgrest'
-    rm $POSTGREST
+    sudo tar xvf $postgrest -C '/usr/local/bin'
+    rm $postgrest
 }
 
 install_plpython() {
@@ -49,9 +48,8 @@ install_jmeter() {
     wget "https://downloads.apache.org//jmeter/binaries/apache-jmeter-${jmeter_v}.zip"
 
     jmeter_src="apache-jmeter-${jmeter_v}"
-    unzip "${jmeter_src}.zip"
+    sudo unzip "${jmeter_src}.zip" -d '/usr/local/bin'
     rm "${jmeter_src}.zip"
-    sudo mv $jmeter_src "/usr/local/src/${jmeter_src}"
 
     jmeter="jmeter-${jmeter_v}"
     touch $jmeter
