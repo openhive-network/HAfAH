@@ -73,6 +73,8 @@ def handler(name, time, self, req, ctx, *_, **__):
   ctx[name] = time
 
 class DBHandler(BaseHTTPRequestHandler):
+  protocol_version = 'HTTP/1.1'
+
   def __init__(self, methods, db_url, log_responses, *args, **kwargs):
       self.methods        = methods
       self.db_url         = db_url
