@@ -21,7 +21,7 @@ ON
 CREATE OR REPLACE FUNCTION hafah_python.validate_limit( in GIVEN_LIMIT BIGINT, in EXPECTED_LIMIT INT ) RETURNS VOID AS $function$
 BEGIN
   IF GIVEN_LIMIT > EXPECTED_LIMIT THEN
-    RAISE 'Assert Exception:args.limit <= %: limit of % is greater than maxmimum allowed', EXPECTED_LIMIT, GIVEN_LIMIT;
+    RAISE EXCEPTION 'Assert Exception:args.limit <= %: limit of % is greater than maxmimum allowed', EXPECTED_LIMIT, GIVEN_LIMIT;
   END IF;
 
   RETURN;
@@ -32,7 +32,7 @@ language plpgsql STABLE;
 CREATE OR REPLACE FUNCTION hafah_python.validate_negative_limit( in _LIMIT BIGINT ) RETURNS VOID AS $function$
 BEGIN
   IF _LIMIT <= 0 THEN
-    RAISE 'Assert Exception:limit > 0: limit of % is lesser or equal 0', _LIMIT;
+    RAISE EXCEPTION 'Assert Exception:limit > 0: limit of % is lesser or equal 0', _LIMIT;
   END IF;
 
   RETURN;
@@ -44,7 +44,7 @@ language plpgsql STABLE;
 CREATE OR REPLACE FUNCTION hafah_python.validate_start_limit( in _START BIGINT, in _LIMIT BIGINT ) RETURNS VOID AS $function$
 BEGIN
   IF _START < (_LIMIT - 1) OR _LIMIT = 0 THEN
-    RAISE 'Assert Exception:args.start >= args.limit-1: start must be greater than or equal to limit-1 (start is 0-based index)';
+    RAISE EXCEPTION 'Assert Exception:args.start >= args.limit-1: start must be greater than or equal to limit-1 (start is 0-based index)';
   END IF;
 
   RETURN;
@@ -56,11 +56,11 @@ language plpgsql STABLE;
 CREATE OR REPLACE FUNCTION hafah_python.validate_block_range( in BLOCK_START INT, in BLOCK_STOP INT, in EXPECTED_DISTANCE INT ) RETURNS VOID AS $function$
 BEGIN
   IF BLOCK_STOP - BLOCK_START > EXPECTED_DISTANCE THEN
-    RAISE 'Assert Exception:blockRangeEnd - blockRangeBegin <= block_range_limit: Block range distance must be less than or equal to 2000';
+    RAISE EXCEPTION 'Assert Exception:blockRangeEnd - blockRangeBegin <= block_range_limit: Block range distance must be less than or equal to 2000';
   END IF;
 
   IF BLOCK_STOP <= BLOCK_START THEN
-    RAISE 'Assert Exception:blockRangeEnd > blockRangeBegin: Block range must be upward';
+    RAISE EXCEPTION 'Assert Exception:blockRangeEnd > blockRangeBegin: Block range must be upward';
   END IF;
 
   RETURN;
@@ -126,7 +126,7 @@ BEGIN
       (
         --`abs` it's temporary, until position of operation is correctly saved
         SELECT
-          ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, hot.is_virtual, ho.formated_timestamp as _timestamp, ho.virtual_op
+          ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, hot.is_virtual, ho.formated_timestamp AS _timestamp, ho.virtual_op
         FROM hafah_python.helper_operations_view ho
         JOIN hive.operation_types hot ON hot.id = ho.op_type_id
         WHERE ho.block_num = _BLOCK_NUM AND ( _ONLY_VIRTUAL = FALSE OR ( _ONLY_VIRTUAL = TRUE AND hot.is_virtual = TRUE ) )
@@ -284,7 +284,7 @@ BEGIN
     (
       --`abs` it's temporary, until position of operation is correctly saved
       SELECT
-      ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.formated_timestamp as _timestamp, ho.virtual_op
+      ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.formated_timestamp AS _timestamp, ho.virtual_op
       FROM hafah_python.helper_operations_view ho
       WHERE ho.block_num >= _BLOCK_RANGE_BEGIN AND ho.block_num < _BLOCK_RANGE_END
       AND ho.virtual_op = TRUE
@@ -363,10 +363,10 @@ BEGIN
           ELSE T.body
         END
       ) AS _value,
-      T.seq_no as _operation_id
+      T.seq_no AS _operation_id
     FROM
     (
-      SELECT ho.trx_in_block, ho.id as operation_id, ho.body, ho.op_pos, ho.block_num, hao.account_op_seq_no seq_no, ho.virtual_op, ho.formated_timestamp as _timestamp
+      SELECT ho.trx_in_block, ho.id AS operation_id, ho.body, ho.op_pos, ho.block_num, hao.account_op_seq_no seq_no, ho.virtual_op, ho.formated_timestamp AS _timestamp
       FROM hive.account_operations_view hao
       JOIN hafah_python.helper_operations_view ho ON hao.operation_id = ho.id
       WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _START
@@ -455,20 +455,20 @@ BEGIN
   SELECT * INTO pre_result FROM hafah_python.get_transaction(_TRX_HASH, _INCLUDE_REVERSIBLE);
 
   IF NOT FOUND OR pre_result._block_num IS NULL THEN
-    RETURN '{}' ::JSON;
+    RAISE EXCEPTION 'Assert Exception:false: Unknown Transaction %', RPAD(encode(_TRX_HASH, 'escape'), 40, '0');
   END IF;
 
   RETURN ( SELECT to_json(a) FROM (
       SELECT
-        pre_result._ref_block_num as "ref_block_num",
-        pre_result._ref_block_prefix as "ref_block_prefix",
-        ARRAY[] ::INT[] as "extensions",
-        pre_result._expiration as "expiration",
+        pre_result._ref_block_num AS "ref_block_num",
+        pre_result._ref_block_prefix AS "ref_block_prefix",
+        ARRAY[] ::INT[] AS "extensions",
+        pre_result._expiration AS "expiration",
         (
           SELECT ARRAY(
             SELECT _value ::JSON FROM hafah_python.get_ops_in_transaction(pre_result._block_num, pre_result._trx_in_block, _IS_OLD_SCHEMA)
           )
-        ) as "operations",
+        ) AS "operations",
         (
         CASE
           WHEN pre_result._multisig_number = 0 THEN ARRAY[pre_result._signature]
@@ -481,10 +481,10 @@ BEGIN
             )
           )
           END
-        ) as "signatures",
-        encode(_TRX_HASH, 'escape') as "transaction_id",
-        pre_result._block_num as "block_num",
-        pre_result._trx_in_block as "transaction_num"
+        ) AS "signatures",
+        encode(_TRX_HASH, 'escape') AS "transaction_id",
+        pre_result._block_num AS "block_num",
+        pre_result._trx_in_block AS "transaction_num"
     ) a
   );
 
@@ -492,7 +492,7 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history_json( in _FILTER INT[], in _ACCOUNT VARCHAR, _START BIGINT, _LIMIT INT, in _INCLUDE_REVERSIBLE BOOLEAN, in _IS_OLD_SCHEMA BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history_json( in _FILTER INT[], in _ACCOUNT VARCHAR, _START BIGINT, _LIMIT BIGINT, in _INCLUDE_REVERSIBLE BOOLEAN, in _IS_OLD_SCHEMA BOOLEAN )
 RETURNS JSON
 AS
 $function$
@@ -509,18 +509,18 @@ BEGIN
         )
         ) FROM (
         SELECT
-          _block as "block",
-          _value ::json as "op",
-          _op_in_trx as "op_in_trx",
-          _timestamp as "timestamp",
-          _trx_id as "trx_id",
-          _trx_in_block as "trx_in_block",
-          _virtual_op as "virtual_op",
-          _operation_id as "operation_id"
+          _block AS "block",
+          _value ::json AS "op",
+          _op_in_trx AS "op_in_trx",
+          _timestamp AS "timestamp",
+          _trx_id AS "trx_id",
+          _trx_in_block AS "trx_in_block",
+          _virtual_op AS "virtual_op",
+          _operation_id AS "operation_id"
         FROM
           hafah_python.ah_get_account_history( _FILTER, _ACCOUNT, _START, _LIMIT, _INCLUDE_REVERSIBLE, _IS_OLD_SCHEMA )
       ) ops
-    ) as a)
+    ) AS a)
     SELECT
     (
       CASE
@@ -541,7 +541,7 @@ AS
 $function$
 BEGIN
   RETURN (
-    WITH result as (SELECT ARRAY(
+    WITH result AS (SELECT ARRAY(
       SELECT
         CASE
           WHEN _IS_OLD_SCHEMA THEN to_jsonb(ops) - 'operation_id'
@@ -549,14 +549,14 @@ BEGIN
         END
       FROM (
         SELECT
-          _BLOCK_NUM as "block",
-          _value ::json as "op",
-          _op_in_trx as "op_in_trx",
-          _timestamp as "timestamp",
-          _trx_id as "trx_id",
-          _trx_in_block as "trx_in_block",
-          _virtual_op as "virtual_op",
-          0 as "operation_id"
+          _BLOCK_NUM AS "block",
+          _value ::json AS "op",
+          _op_in_trx AS "op_in_trx",
+          _timestamp AS "timestamp",
+          _trx_id AS "trx_id",
+          _trx_in_block AS "trx_in_block",
+          _virtual_op AS "virtual_op",
+          0 AS "operation_id"
         FROM
           hafah_python.get_ops_in_block( _BLOCK_NUM, _ONLY_VIRTUAL, _INCLUDE_REVERSIBLE, _IS_OLD_SCHEMA )
       ) ops
@@ -602,35 +602,49 @@ BEGIN
         FROM hafah_python.enum_virtual_ops( _FILTER, _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, _OPERATION_BEGIN, _LIMIT, _INCLUDE_REVERSIBLE )
       ),
       pag AS (
-          WITH pre_result_in AS (SELECT MAX(pre_result.block) as a, MAX(pre_result.operation_id) as b FROM pre_result LIMIT 1)
-          SELECT o.block_num, o.id
-          FROM hive.operations o
-          JOIN hive.operation_types ot ON o.op_type_id = ot.id
-          WHERE
-            ot.is_virtual=true
-            AND o.block_num>=(SELECT a FROM pre_result_in)
-            AND o.id>(SELECT b FROM pre_result_in)
-          ORDER BY o.block_num, o.id
-          LIMIT 1
+        WITH pre_result_in AS (
+              SELECT
+                (
+                  CASE
+                    WHEN (SELECT COUNT(*) FROM pre_result) = _LIMIT THEN
+                      pre_result.block
+                    ELSE
+                      _BLOCK_RANGE_END
+                  END
+                ) AS blk,
+                pre_result.operation_id AS op_id
+              FROM pre_result
+              WHERE pre_result.operation_id = (SELECT MAX(pre_result.operation_id) FROM pre_result)
+              LIMIT 1
+        )
+        SELECT o.block_num, o.id
+        FROM hive.operations o
+        JOIN hive.operation_types ot ON o.op_type_id = ot.id
+        WHERE
+          ot.is_virtual=TRUE
+          AND o.block_num>=(SELECT blk FROM pre_result_in)
+          AND o.id>(SELECT op_id FROM pre_result_in)
+        ORDER BY o.block_num, o.id
+        LIMIT 1
       )
 
     SELECT to_json(result)
     FROM (
       SELECT
-        (SELECT block_num FROM pag) as next_block_range_begin,
-        (
+        COALESCE((SELECT block_num FROM pag), 0) AS next_block_range_begin,
+        COALESCE((
           CASE
             WHEN (SELECT block_num FROM pag) >= _BLOCK_RANGE_END THEN 0
             ELSE (SELECT id FROM pag)
           END
-        ) as next_operation_begin,
+        ), 0) AS next_operation_begin,
         (
           CASE
             WHEN _GROUP_BY_BLOCK = FALSE THEN (
               SELECT ARRAY(
                 SELECT to_json(res) FROM (
                   SELECT * FROM pre_result
-                ) res
+                ) AS res
               )
             )
             ELSE (SELECT ARRAY[] ::JSON[])
@@ -644,7 +658,8 @@ BEGIN
                   SELECT
                     pre_result.block AS "block",
                     (pre_result.block <= irr_num) AS "irreversible",
-                    array_agg(pre_result) AS "ops"
+                    array_agg(pre_result) AS "ops",
+                    (SELECT pr.timestamp FROM pre_result pr WHERE pr.block=pre_result.block ORDER BY pr.operation_id ASC LIMIT 1) AS "timestamp"
                   FROM pre_result
                   GROUP BY pre_result.block
                   ORDER BY pre_result.block ASC

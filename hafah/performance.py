@@ -7,7 +7,7 @@ class Timer:
     self.__start = perf_counter()
     return self
 
-  def __exit__(self, *args, **kwargs):
+  def __exit__(self, *_, **__):
     self.time = (perf_counter() - self.__start) * 1_000.0
 
 def default_handler(name, time, *_, **__):

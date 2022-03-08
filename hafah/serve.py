@@ -1,56 +1,31 @@
 # -*- coding: utf-8 -*-
 """Hive JSON-RPC API server."""
-import os
-import sys
-import logging
 import json
-
-from jsonrpcserver.methods import Methods
-from jsonrpcserver import dispatch
-from jsonrpcserver.response import Response
-
-from hafah.endpoints import build_methods as account_history
-
-import simplejson
-from hafah.adapter import Db
-
-from http.server import BaseHTTPRequestHandler, HTTPServer
-
 from functools import partial
-
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ForkingMixIn
 
+import simplejson
+from jsonrpcserver import dispatch
+from jsonrpcserver.methods import Methods
+from jsonrpcserver.response import Response
+
+from hafah.adapter import Db
+from hafah.endpoints import build_methods as account_history
+from hafah.logger import get_logger
 from hafah.performance import Timer
 
-LOG_LEVEL = logging.DEBUG if 'DEBUG' in os.environ else logging.INFO
-LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
-MAIN_LOG_PATH = "ah.log"
-
-MODULE_NAME = "AH synchronizer"
-logger = logging.getLogger(MODULE_NAME)
-logger.setLevel(LOG_LEVEL)
-
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(LOG_LEVEL)
-ch.setFormatter(logging.Formatter(LOG_FORMAT))
-
-fh = logging.FileHandler(MAIN_LOG_PATH)
-fh.setLevel(LOG_LEVEL)
-fh.setFormatter(logging.Formatter(LOG_FORMAT))
-
-if not logger.hasHandlers():
-  logger.addHandler(ch)
-  logger.addHandler(fh)
+logger = get_logger(module_name='AH synchronizer')
 
 class APIMethods:
   @staticmethod
-  def build_methods(swap_direct : bool):
+  def build_methods():
       """Register all supported hive_api/condenser_api.calls."""
       # pylint: disable=expression-not-assigned, line-too-long
       methods = Methods()
 
       # account_history methods
-      methods.add(**account_history(swap_direct))
+      methods.add(**account_history())
 
       return methods
 
@@ -164,14 +139,14 @@ class PreparationPhase:
       logger.info("an error occurred during http server preparation")
       return False
 
-def run_server(db_url, port, log_responses, sql_src_path, *, swap_direct : bool = False):
+def run_server(db_url, port, log_responses, sql_src_path):
   _prep_phase = PreparationPhase(db_url, sql_src_path)
   if not _prep_phase.prepare_server():
     return
 
   logger.info("connecting into http server")
 
-  methods = APIMethods.build_methods(swap_direct)
+  methods = APIMethods.build_methods()
   logger.info('configured for endpoints: \n - ' + '\n - '.join(methods.items.keys()))
 
   handler = partial(DBHandler, methods, db_url, log_responses)
