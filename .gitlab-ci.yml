@@ -117,7 +117,7 @@ patterns_tests_postgrest:
   script:
     # install dependancies
     - cd "$CI_PROJECT_DIR"
-    - /run.sh install-dependancies
+    - ./run.sh install-dependancies
 
     # run HAfAH
     - ./run.sh re-all-start
