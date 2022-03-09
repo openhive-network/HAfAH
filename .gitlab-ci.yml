@@ -115,10 +115,11 @@ patterns_tests_postgrest:
     HIVE_BUILD_ROOT_PATH: "$CI_PROJECT_DIR/hived/build/hive"
     BLOCK_LOG_PATH: "/blockchain/block_log"
   script:
-    - cd "$CI_PROJECT_DIR" && ./run.sh install-dependancies
+    - cd "$CI_PROJECT_DIR" ;
+    ./run.sh install-dependancies
 
     # run HAfAH
-    - cd "$CI_PROJECT_DIR" && ./run.sh re-all-start
+    - ./run.sh re-all-start
 
     # run pattern tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests

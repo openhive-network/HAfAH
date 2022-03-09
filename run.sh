@@ -47,6 +47,7 @@ install_plpython() {
 install_jmeter() {
     sudo apt-get update -y
     sudo apt-get install openjdk-8-jdk -y
+    sudo apt-get install unzip
 
     wget "https://downloads.apache.org//jmeter/binaries/apache-jmeter-${jmeter_v}.zip"
 
