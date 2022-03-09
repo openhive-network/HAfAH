@@ -29,6 +29,9 @@ install_dependancies() {
 }
 
 install_postgrest() {
+    sudo apt-get update -y
+    sudo apt-get install wget -y
+
     postgrest=postgrest-v$postgrest_v-linux-static-x64.tar.xz
     wget https://github.com/PostgREST/postgrest/releases/download/v$postgrest_v/$postgrest
 
