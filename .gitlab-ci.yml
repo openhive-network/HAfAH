@@ -86,7 +86,52 @@ patterns_tests_py:
     - python3 -m pytest -n 8 --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT --start 4900000 --stop 4915000 --junitxml=$CI_PROJECT_DIR/comparsion_tests.xml
     - popd
 
-    # kill hived and HAfAH
+  artifacts:
+    when: always
+    reports:
+      junit: $CI_PROJECT_DIR/haf/hive/tests/api_tests/results.xml
+    paths:
+    - "$CI_JOB_NAME"
+    - "**/from_node.log"
+    - "**/ah.log"
+    - "**/*.out.json"
+    - "$CI_PROJECT_DIR/haf/hive/tests/tests_api/hived/workdir_*"
+    when: always
+    expire_in: 6 hours
+  tags:
+    - public-runner-docker
+    - hived-for-tests
+
+patterns_tests_postgrest:
+  stage: build_and_test
+  needs:
+    - job: hive_fork_manager
+      artifacts: true
+    - job: hived
+      artifacts: true
+  image: "$CI_REGISTRY_IMAGE/ci-base-image$BUILDER_IMAGE_TAG"
+  variables:
+    HIVE_BUILD_ROOT_PATH: "$CI_PROJECT_DIR/hived/build/hive"
+    BLOCK_LOG_PATH: "/blockchain/block_log"
+  script:
+    - cd "$CI_PROJECT_DIR" && ./run.sh install-dependancies
+
+    # run HAfAH
+    - cd "$CI_PROJECT_DIR" && ./run.sh re-all-start
+
+    # run pattern tests
+    - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests
+    - export AH_ENDPOINT=localhost:3000
+    - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel`
+
+    # run comparsion tests
+    - cd $CI_PROJECT_DIR/haf/hive/tests/tests_api/hived
+    - ./test_ah_enum_virtual_ops.py --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT --start 4900000 --stop 4925000 -d workdir_enum -j $TJOBS
+    - ./test_ah_get_ops_in_block.py --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT --start 4900000 --stop 4925000 -d workdir_ops -j $TJOBS
+    - ./test_ah_get_account_history.py --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT -f ./input_data/accounts.csv -d workdir_acc -j $TJOBS
+    - ./test_ah_get_transaction.py --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT -f ./input_data/hashes.csv -d workdir_trx -j $TJOBS
+
+    # kill hived
     - pkill hived
     - pkill main.py
 
