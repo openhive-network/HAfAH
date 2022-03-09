@@ -244,7 +244,7 @@ DECLARE
 BEGIN
 
   PERFORM hafah_python.validate_negative_limit( _LIMIT );
-  PERFORM hafah_python.validate_limit( _LIMIT, 150000 );
+  PERFORM hafah_python.validate_limit( _LIMIT::BIGINT, 150000 );
   PERFORM hafah_python.validate_block_range( _BLOCK_RANGE_BEGIN, _BLOCK_RANGE_END, 2000 );
 
   SELECT INTO __filter_info ( select array_length( _FILTER, 1 ) );
