@@ -109,6 +109,8 @@ patterns_tests_postgrest:
       artifacts: true
     - job: hived
       artifacts: true
+    - job: patterns_tests_py
+      artifacts: true
   image: "$CI_REGISTRY_IMAGE/ci-base-image$BUILDER_IMAGE_TAG"
   variables:
     HIVE_BUILD_ROOT_PATH: "$CI_PROJECT_DIR/hived/build/hive"
