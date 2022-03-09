@@ -14,6 +14,8 @@ Every 'call_some_method()' function calls corresponding method in 'hafah_objects
 for generating object responses.
 */
 
+-- TODO: add null proof for new style
+-- TODO: add error capture to hafah_objects
 DROP SCHEMA IF EXISTS hafah_api CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_api;
@@ -93,10 +95,14 @@ LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
-  __block_num INT = NULL;
-  __only_virtual BOOLEAN = NULL;
-  __include_reversible BOOLEAN = NULL;
-  __fill_operation_id BOOLEAN = FALSE;
+  __block_num INT = NULL; -- default 0
+  __only_virtual BOOLEAN = NULL; -- default FALSE
+  __include_reversible BOOLEAN = NULL; -- default FALSE
+
+  __fill_operation_id BOOLEAN = FALSE; -- hardcoded. When changed, also change in hafah_objects.get_ops_in_block()!
+
+  __result JSON;
+  __exception_message TEXT;
 BEGIN
   BEGIN
     __block_num = hafah_backend.parse_argument(_params, _json_type, 'block_num', 0);
@@ -111,14 +117,14 @@ BEGIN
   END;
 
   BEGIN
-    __only_virtual = hafah_backend.parse_argument(_params, _json_type, 'only_virtual', 1);
+    __only_virtual = hafah_backend.parse_argument(_params, _json_type, 'only_virtual', 1, TRUE);
     IF __only_virtual IS NOT NULL THEN
       __only_virtual = __only_virtual::BOOLEAN;
     ELSE
       __only_virtual = FALSE;
     END IF;
 
-    __include_reversible = hafah_backend.parse_argument(_params, _json_type, 'include_reversible', 2);
+    __include_reversible = hafah_backend.parse_argument(_params, _json_type, 'include_reversible', 2, TRUE);
     IF __include_reversible IS NOT NULL THEN
       __include_reversible = __include_reversible::BOOLEAN;
     ELSE
@@ -130,7 +136,17 @@ BEGIN
       RETURN hafah_backend.raise_bool_case_exception(_id);
   END;
 
-  RETURN hafah_objects.get_ops_in_block(__block_num, __only_virtual, __include_reversible, __fill_operation_id, _is_legacy_style, _id);
+  BEGIN
+    SELECT hafah_objects.get_ops_in_block(__block_num, __only_virtual, __include_reversible, __fill_operation_id, _is_legacy_style) INTO __result;
+  EXCEPTION
+    WHEN raise_exception THEN
+      GET STACKED DIAGNOSTICS __exception_message = message_text;
+      IF __exception_message ~ 'op_id cannot be None' THEN
+        SELECT hafah_backend.raise_operation_id_exception(_id) INTO __result;
+      END IF;
+  END;
+
+  RETURN __result;
 END
 $$
 ;
@@ -141,15 +157,16 @@ LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
-  __block_range_begin INT;
-  __block_range_end INT;
-  __operation_begin BIGINT = NULL;
-  __limit INT = NULL;
-  __filter DECIMAL = NULL;
-  __include_reversible BOOLEAN = NULL;
-  __group_by_block BOOLEAN = NULL;
+  __block_range_begin INT; -- required
+  __block_range_end INT; -- required
+  __operation_begin BIGINT = NULL; -- default 0
+  __limit INT = NULL; -- default 150000
+  __filter DECIMAL = NULL; -- default NULL
+  __include_reversible BOOLEAN = NULL; -- default FALSE
+  __group_by_block BOOLEAN = NULL; -- default FALSE
   
-  __fill_operation_id BOOLEAN = TRUE;
+  __fill_operation_id BOOLEAN = TRUE; -- hardcoded. When changed, also change in hafah_objects.enum_virtual_ops()!
+
   __exception_message TEXT;
   __result JSON;
 BEGIN
@@ -224,11 +241,15 @@ BEGIN
   END;
 
   BEGIN
-    SELECT hafah_objects.enum_virtual_ops(__block_range_begin, __block_range_end, __operation_begin, __limit, __filter, __include_reversible, __group_by_block, __fill_operation_id, _id) INTO __result;
+    SELECT hafah_objects.enum_virtual_ops(__block_range_begin, __block_range_end, __operation_begin, __limit, __filter, __include_reversible, __group_by_block, __fill_operation_id) INTO __result;
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
-      SELECT hafah_backend.wrap_sql_exception(__exception_message, _id) INTO __result;
+      IF __exception_message ~ 'op_id cannot be None' THEN
+        SELECT hafah_backend.raise_operation_id_exception(_id) INTO __result;
+      ELSE
+        SELECT hafah_backend.wrap_sql_exception(__exception_message, _id) INTO __result;
+      END IF;
   END;
 
   -- TODO: might do this before calling hafah_objects.enum_virtual_ops(), only done to replicate HAfAH python
@@ -247,8 +268,8 @@ LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
-  __id TEXT;
-  __include_reversible BOOLEAN = NULL;
+  __id TEXT; -- required
+  __include_reversible BOOLEAN = NULL; -- default FALSE
 
   __result JSON;
 BEGIN
@@ -288,13 +309,13 @@ LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
-  __filter NUMERIC;
-  __account VARCHAR;
-  __start BIGINT = NULL;
-  __limit INT = NULL;
-  __operation_filter_low NUMERIC = NULL;
-  __operation_filter_high NUMERIC = NULL;
-  __include_reversible BOOLEAN = NULL;
+  __filter NUMERIC; -- assigned with hafah_backend.create_filter_numeric()
+  __account VARCHAR; -- required
+  __start BIGINT = NULL; -- default -1
+  __limit INT = NULL; -- default 1000
+  __operation_filter_low NUMERIC = NULL; -- default 0
+  __operation_filter_high NUMERIC = NULL; -- default 0
+  __include_reversible BOOLEAN = NULL; -- default FALSE
 
   __exception_message TEXT;
 BEGIN
@@ -329,17 +350,10 @@ BEGIN
       __limit = 1000;
     END IF;
 
-    -- TODO: this is done to replicate behaviour of HAFAH python, change when possible
-    BEGIN
-      IF __limit < 0 THEN
-        RAISE 'Assert Exception:args.limit <= 1000: limit of 4294967295 is greater than maxmimum allowed';
-      END IF;
-    EXCEPTION
-      WHEN raise_exception THEN
-        GET STACKED DIAGNOSTICS __exception_message = message_text;
-        RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
-    END;
-    
+    IF __limit < 0 THEN
+      RETURN hafah_backend.raise_below_zero_acc_hist(_id);
+    END IF;
+
     __operation_filter_low = hafah_backend.parse_argument(_params, _json_type, 'operation_filter_low', 3);
     IF __operation_filter_low IS NOT NULL THEN
       __operation_filter_low = __operation_filter_low::NUMERIC;
@@ -374,7 +388,7 @@ BEGIN
   
   BEGIN
     __filter = hafah_backend.create_filter_numeric(__operation_filter_low, __operation_filter_high);
-    RETURN hafah_objects.get_account_history(__filter, __account, __start, __limit, __include_reversible, _is_legacy_style);
+    RETURN hafah_objects.get_account_history(__account, __start, __limit, __include_reversible, __filter, _is_legacy_style);
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;

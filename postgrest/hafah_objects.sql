@@ -12,7 +12,7 @@ DROP SCHEMA IF EXISTS hafah_objects CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_objects;
 
-CREATE OR REPLACE FUNCTION hafah_objects.set_operation_id(_operation_id BIGINT, _fill_operation_id BOOLEAN, _id JSON)
+CREATE OR REPLACE FUNCTION hafah_objects.set_operation_id(_operation_id BIGINT, _fill_operation_id BOOLEAN)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -21,7 +21,7 @@ DECLARE
   __operation_id JSON;
 BEGIN
   IF _operation_id IS NULL THEN
-    RETURN hafah_backend.raise_operation_id_exception(_id);
+    RETURN hafah_backend.raise_operation_id_exception(NULL);
   END IF;
 
   IF _fill_operation_id IS TRUE THEN
@@ -39,7 +39,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.build_api_operation(_trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BOOLEAN, _timestamp TEXT, _value TEXT, _operation_id BIGINT, _fill_operation_id BOOLEAN, _id JSON, _is_legacy_style BOOLEAN = FALSE)
+CREATE OR REPLACE FUNCTION hafah_objects.build_api_operation(_trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BOOLEAN, _timestamp TEXT, _value TEXT, _operation_id BIGINT, _fill_operation_id BOOLEAN, _is_legacy_style BOOLEAN = FALSE)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
@@ -57,19 +57,21 @@ BEGIN
     CASE WHEN _is_legacy_style IS TRUE THEN
       ''
     ELSE
-      ', ' || '"operation_id": ' || hafah_objects.set_operation_id(_operation_id, _fill_operation_id, _id)
+      ', ' || '"operation_id": ' || hafah_objects.set_operation_id(_operation_id, _fill_operation_id)
     END
     || '}';
 END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN, _fill_operation_id BOOLEAN, _is_legacy_style BOOLEAN, _id JSON)
+CREATE OR REPLACE FUNCTION hafah_objects.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN, _fill_operation_id BOOLEAN = FALSE, _is_legacy_style BOOLEAN = NULL)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
+  SELECT hafah_backend.parse_is_legacy_style(_is_legacy_style) INTO _is_legacy_style;
+
   RETURN CASE WHEN _is_legacy_style IS TRUE THEN
     ops
   ELSE
@@ -88,7 +90,7 @@ BEGIN
             SELECT
                 NULL::TEXT AS ops
             UNION ALL
-            SELECT hafah_objects.build_api_operation(_trx_id, _block_num, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, _fill_operation_id, _id, _is_legacy_style)
+            SELECT hafah_objects.build_api_operation(_trx_id, _block_num, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, _fill_operation_id, _is_legacy_style)
             FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible, _is_legacy_style)
           )
           SELECT ops FROM cte
@@ -101,12 +103,23 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.get_account_history(_filter NUMERIC, _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN, _is_legacy_style BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_objects.get_account_history(_account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN, _filter NUMERIC = NULL, _is_legacy_style BOOLEAN = NULL, _operation_filter_low NUMERIC = 0, _operation_filter_high NUMERIC = 0)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
+  IF _limit < 0 THEN
+    RETURN hafah_backend.raise_below_zero_acc_hist();
+  END IF;
+
+  SELECT hafah_backend.parse_is_legacy_style(_is_legacy_style) INTO _is_legacy_style;
+  
+  -- _filter is created in 'hafah_api.call_get_account_history' for legacy style HAfAH server and here for new style
+  IF _filter IS NULL THEN
+    _filter = hafah_backend.create_filter_numeric(_operation_filter_low, _operation_filter_high);
+  END IF;
+
   RETURN CASE WHEN _is_legacy_style IS TRUE THEN
     history
   ELSE
@@ -154,12 +167,14 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.get_transaction(_trx_hash TEXT, _include_reversible BOOLEAN, _is_legacy_style BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_objects.get_transaction(_id TEXT, _include_reversible BOOLEAN, _is_legacy_style BOOLEAN = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
+  SELECT hafah_backend.parse_is_legacy_style(_is_legacy_style) INTO _is_legacy_style;
+
   RETURN CASE WHEN obj IS NULL OR _ref_block_num IS NULL THEN
     NULL::JSON
   ELSE
@@ -183,32 +198,40 @@ BEGIN
         array_to_json(ARRAY(
           SELECT _signature
           UNION ALL
-          SELECT * FROM hafah_python.get_multi_signatures_in_transaction(_trx_hash::BYTEA)
+          SELECT * FROM hafah_python.get_multi_signatures_in_transaction(_id::BYTEA)
         ))::TEXT
       ELSE
         '["' || _signature || '"]'
       END
       || ', ' ||
-      '"transaction_id": "' || _trx_hash || '", ' ||
+      '"transaction_id": "' || _id || '", ' ||
       '"block_num": ' || _block_num || ', ' ||
       '"transaction_num": ' || _trx_in_block || ' ' ||
       '}'::TEXT AS obj,
       _ref_block_num
-    FROM hafah_python.get_transaction(_trx_hash::BYTEA, _include_reversible)
+    FROM hafah_python.get_transaction(_id::BYTEA, _include_reversible)
   ) result;
 END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.enum_virtual_ops(_block_range_begin INT, _block_range_end INT, _operation_begin BIGINT, _limit INT, _filter NUMERIC, _include_reversible BOOLEAN, _group_by_block BOOLEAN, _fill_operation_id BOOLEAN, _id JSON)
+CREATE OR REPLACE FUNCTION hafah_objects.enum_virtual_ops(_block_range_begin INT, _block_range_end INT, _operation_begin BIGINT, _limit INT, _filter NUMERIC, _include_reversible BOOLEAN, _group_by_block BOOLEAN, _fill_operation_id BOOLEAN = TRUE)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
   __irreversible_block INT;
-  __virtual_op_id_offset INT = (SELECT MIN(id) FROM hive.operation_types WHERE is_virtual = True);
+  __virtual_op_id_offset INT;
+  __is_legacy_style BOOLEAN;
 BEGIN
+  SELECT hafah_backend.parse_is_legacy_style() INTO __is_legacy_style;
+  IF __is_legacy_style IS TRUE THEN
+    RETURN hafah_backend.raise_exception(-32602, 'Invalid parameters', 'not supported');
+  END IF;
+
+  SELECT MIN(id) FROM hive.operation_types WHERE is_virtual = True INTO __virtual_op_id_offset;
+
   IF _group_by_block IS TRUE THEN
     SELECT hive.app_get_irreversible_block() INTO __irreversible_block;
   END IF;
@@ -218,7 +241,7 @@ BEGIN
       'ops', CASE WHEN _group_by_block IS TRUE OR ops IS NULL THEN '[]'::JSON ELSE ops END,
       'ops_by_block', CASE WHEN _group_by_block IS FALSE OR ops IS NULL THEN '[]'::JSON ELSE hafah_objects.group_by_block(ops, block_n_arr, __irreversible_block) END,
       'next_block_range_begin', (pagination_json->'next_block_range_begin'),
-      'next_operation_begin', hafah_objects.set_operation_id((pagination_json->>'next_operation_begin')::BIGINT, _fill_operation_id, _id)
+      'next_operation_begin', hafah_objects.set_operation_id((pagination_json->>'next_operation_begin')::BIGINT, _fill_operation_id)
     )
   FROM (
     SELECT
@@ -246,7 +269,7 @@ BEGIN
               NULL::INT AS block_n
             UNION ALL
             SELECT
-              hafah_objects.build_api_operation(_trx_id, _block, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, _fill_operation_id, _id),
+              hafah_objects.build_api_operation(_trx_id, _block, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, _fill_operation_id),
               _block
             FROM hafah_python.enum_virtual_ops(hafah_backend.translate_filter(_filter, __virtual_op_id_offset), _block_range_begin, _block_range_end, _operation_begin, _limit, _include_reversible)
           )
