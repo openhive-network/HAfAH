@@ -1,10 +1,14 @@
 /*
-ah/api/hafah_backend.sql
+hafah_backend.sql
 
 Defined here are:
   - Function for parsing arguments
   - Functions for operation filters
-  - Repeated exception messages, used in ah/api/hafah_api.sql and ah/api/hafah_objects.sql
+  - Repeated exception messages, used in hafah_api.sql and hafah_objects.sql
+  - parse_is_legacy_style():
+    when making new style call to HAfAH server (with only params in data),
+    boolean for legacy style (condenser api) query must be set in header 'Is-Legacy-Style'.
+    Default is FALSE.
 */
 
 DROP SCHEMA IF EXISTS hafah_backend CASCADE;
@@ -50,6 +54,29 @@ BEGIN
   ALTER SCHEMA hafah_api OWNER TO hafah_owner;
   ALTER SCHEMA hafah_backend OWNER TO hafah_owner;
   ALTER SCHEMA hafah_objects OWNER TO hafah_owner;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_backend.parse_is_legacy_style(_is_legacy_style BOOLEAN = NULL)
+RETURNS BOOLEAN
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __is_legacy_style_header BOOLEAN;
+BEGIN
+  SELECT current_setting('request.header.Is-Legacy-Style', TRUE) INTO __is_legacy_style_header;
+  IF __is_legacy_style_header IS TRUE AND _is_legacy_style IS NULL THEN
+    RETURN TRUE;
+  ELSEIF __is_legacy_style_header IS FALSE AND _is_legacy_style IS NULL OR
+  __is_legacy_style_header IS NULL AND _is_legacy_style IS NULL THEN
+    RETURN FALSE;
+  ELSEIF __is_legacy_style_header IS NOT NULL AND _is_legacy_style IS NOT NULL THEN
+    RETURN __is_legacy_style_header;
+  ELSEIF __is_legacy_style_header IS NULL AND _is_legacy_style IS NOT NULL THEN
+    RETURN _is_legacy_style;
+  END IF;
 END
 $$
 ;
@@ -134,7 +161,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.wrap_sql_exception(_exception_message TEXT, _id JSON)
+CREATE OR REPLACE FUNCTION hafah_backend.wrap_sql_exception(_exception_message TEXT, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -196,6 +223,18 @@ AS
 $$
 BEGIN
   RETURN hafah_backend.raise_exception(-32000, 'Bad Cast:Cannot convert string to bool (only "true" or "false" can be converted)', NULL, _id, TRUE);
+END
+$$
+;
+
+-- TODO: this is done to replicate behaviour of HAFAH python, change when possible
+CREATE OR REPLACE FUNCTION hafah_backend.raise_below_zero_acc_hist(_id JSON = NULL)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_backend.wrap_sql_exception('Assert Exception:args.limit <= 1000: limit of 4294967295 is greater than maxmimum allowed', _id);
 END
 $$
 ;
