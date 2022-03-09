@@ -37,8 +37,6 @@ DECLARE
   __is_old_schema BOOLEAN;
   __json_type TEXT;
 BEGIN
-  -- TODO: is json order important in errors and responses?
-
   __jsonrpc = (__request_data->>'jsonrpc');
   __method = (__request_data->>'method');
   __params = (__request_data->'params');
@@ -150,8 +148,9 @@ DECLARE
   __include_reversible BOOLEAN = NULL;
   __group_by_block BOOLEAN = NULL;
   
-  __max_limit INT = 150000;
   __fill_operation_id BOOLEAN = TRUE;
+  __exception_message TEXT;
+  __result JSON;
 BEGIN
   BEGIN
     -- Required arguments
@@ -167,15 +166,6 @@ BEGIN
       __block_range_end = __block_range_end::INT;
     ELSE
       RETURN hafah_backend.raise_missing_arg('block_range_end', _id);
-    END IF;
-
-    -- Make arg assertions
-    IF __block_range_begin >= __block_range_end THEN
-      RETURN hafah_backend.raise_exception(-32003, 'Assert Exception:blockRangeEnd > blockRangeBegin: Block range must be upward',  NULL, _id, TRUE);
-    END IF;
-
-    IF __block_range_end - __block_range_begin > 2000 THEN
-      RETURN hafah_backend.raise_exception(-32003, 'Assert Exception:blockRangeEnd - blockRangeBegin <= block_range_limit: Block range distance must be less than or equal to 2000',  NULL, _id, TRUE);
     END IF;
 
     -- Optional arguments
@@ -204,15 +194,7 @@ BEGIN
     IF __limit IS NOT NULL THEN
       __limit = __limit::INT;
     ELSE
-      __limit = __max_limit;
-    END IF;
-
-    IF __limit <= 0 THEN
-      RETURN hafah_backend.raise_exception(-32003, format('Assert Exception:limit > 0: limit of %s is lesser or equal 0', __limit),  NULL, _id, TRUE);
-    END IF;
-
-    IF __limit > __max_limit THEN
-      RETURN hafah_backend.raise_exception(-32003, format('Assert Exception:args.limit <= %s: limit of %s is greater than maxmimum allowed', __max_limit, __limit),  NULL, _id, TRUE);
+      __limit = 150000;
     END IF;
 
   EXCEPTION
@@ -221,14 +203,14 @@ BEGIN
   END;
 
   BEGIN
-    __include_reversible = hafah_backend.parse_argument(_params, _json_type, 'include_reversible', 5);
+    __include_reversible = hafah_backend.parse_argument(_params, _json_type, 'include_reversible', 5, TRUE);
     IF __include_reversible IS NOT NULL THEN
       __include_reversible = __include_reversible::BOOLEAN;
     ELSE
       __include_reversible = FALSE;
     END IF;
 
-    __group_by_block = hafah_backend.parse_argument(_params, _json_type, 'group_by_block', 6);
+    __group_by_block = hafah_backend.parse_argument(_params, _json_type, 'group_by_block', 6, TRUE);
     IF __group_by_block IS NOT NULL THEN
       __group_by_block = __group_by_block::BOOLEAN;
     ELSE
@@ -240,11 +222,20 @@ BEGIN
       RETURN hafah_backend.raise_bool_case_exception(_id);
   END;
 
+  BEGIN
+    SELECT hafah_objects.enum_virtual_ops(__block_range_begin, __block_range_end, __operation_begin, __limit, __filter, __include_reversible, __group_by_block, __fill_operation_id, _id) INTO __result;
+  EXCEPTION
+    WHEN raise_exception THEN
+      GET STACKED DIAGNOSTICS __exception_message = message_text;
+      SELECT hafah_backend.wrap_sql_exception(__exception_message, _id) INTO __result;
+  END;
+
+  -- TODO: might do this before calling hafah_objects.enum_virtual_ops(), only done to replicate HAfAH python
   IF _is_old_schema IS TRUE THEN
     RETURN hafah_backend.raise_exception(-32602, 'Invalid parameters', 'not supported', _id);
+  ELSE
+    RETURN __result;
   END IF;
-  
-  RETURN hafah_objects.enum_virtual_ops(__block_range_begin, __block_range_end, __operation_begin, __limit, __filter, __include_reversible, __group_by_block, __fill_operation_id, _id);
 END
 $$
 ;
@@ -303,6 +294,8 @@ DECLARE
   __operation_filter_low NUMERIC = NULL;
   __operation_filter_high NUMERIC = NULL;
   __include_reversible BOOLEAN = NULL;
+
+  __exception_message TEXT;
 BEGIN
   -- Assign function arguments and make assertions
   -- 22P02 errors are handled separately for integers and booleans inside BEGIN EXCEPTION END
@@ -330,21 +323,21 @@ BEGIN
 
     __limit = hafah_backend.parse_argument(_params, _json_type, 'limit', 2);
     IF __limit IS NOT NULL THEN
-      __limit = __limit::NUMERIC;
+      __limit = __limit::INT;
     ELSE
       __limit = 1000;
     END IF;
 
-    -- This is done to replicate behaviour of HAFAH python
-    IF __limit < 0 THEN
-      RETURN hafah_backend.raise_exception(-32003, format('Assert Exception:args.limit <= 1000: limit of %s is greater than maxmimum allowed', (SELECT 2 * 2^31 - 1)::NUMERIC), NULL, _id, TRUE);
-    END IF;
-    
-    IF __limit > 1000 THEN
-      RETURN hafah_backend.raise_exception(-32003, format('Assert Exception:args.limit <= 1000: limit of %s is greater than maxmimum allowed', __limit), NULL, _id, TRUE);
-   ELSIF __start < (__limit - 1) OR __limit = 0 THEN
-      RETURN hafah_backend.raise_exception(-32003, 'Assert Exception:args.start >= args.limit-1: start must be greater than or equal to limit-1 (start is 0-based index)', NULL, _id, TRUE);
-    END IF;
+    -- TODO: this is done to replicate behaviour of HAFAH python, change when possible
+    BEGIN
+      IF __limit < 0 THEN
+        RAISE 'Assert Exception:args.limit <= 1000: limit of 4294967295 is greater than maxmimum allowed';
+      END IF;
+    EXCEPTION
+      WHEN raise_exception THEN
+        GET STACKED DIAGNOSTICS __exception_message = message_text;
+        RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
+    END;
     
     __operation_filter_low = hafah_backend.parse_argument(_params, _json_type, 'operation_filter_low', 3);
     IF __operation_filter_low IS NOT NULL THEN
@@ -366,7 +359,7 @@ BEGIN
   END;
 
   BEGIN
-    __include_reversible = hafah_backend.parse_argument(_params, _json_type, 'include_reversible', 5);
+    __include_reversible = hafah_backend.parse_argument(_params, _json_type, 'include_reversible', 5, TRUE);
     IF __include_reversible IS NOT NULL THEN
       __include_reversible = __include_reversible::BOOLEAN;
     ELSE
@@ -378,8 +371,14 @@ BEGIN
       RETURN hafah_backend.raise_bool_case_exception(_id);
   END;
   
-  __filter = hafah_backend.create_filter_numeric(__operation_filter_low, __operation_filter_high);
-  RETURN hafah_objects.get_account_history(__filter, __account, __start, __limit, __include_reversible, _is_old_schema);
+  BEGIN
+    __filter = hafah_backend.create_filter_numeric(__operation_filter_low, __operation_filter_high);
+    RETURN hafah_objects.get_account_history(__filter, __account, __start, __limit, __include_reversible, _is_old_schema);
+  EXCEPTION
+    WHEN raise_exception THEN
+      GET STACKED DIAGNOSTICS __exception_message = message_text;
+      RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
+  END;
 END;
 $$
 ;
