@@ -40,7 +40,7 @@ hived:
   tags:
     - public-runner-docker
 
-patterns_tests:
+patterns_tests_py:
   stage: build_and_test
   needs:
     - job: hive_fork_manager
