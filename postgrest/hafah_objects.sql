@@ -39,7 +39,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.build_api_operation(_trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BOOLEAN, _timestamp TEXT, _value TEXT, _operation_id BIGINT, _fill_operation_id BOOLEAN, _id JSON, _is_old_schema BOOLEAN = FALSE)
+CREATE OR REPLACE FUNCTION hafah_objects.build_api_operation(_trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BOOLEAN, _timestamp TEXT, _value TEXT, _operation_id BIGINT, _fill_operation_id BOOLEAN, _id JSON, _is_legacy_style BOOLEAN = FALSE)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
@@ -54,7 +54,7 @@ BEGIN
     '"virtual_op": ' || _virtual_op || ', ' ||
     '"timestamp": "' || _timestamp || '", ' ||
     '"op": ' || _value ||
-    CASE WHEN _is_old_schema IS TRUE THEN
+    CASE WHEN _is_legacy_style IS TRUE THEN
       ''
     ELSE
       ', ' || '"operation_id": ' || hafah_objects.set_operation_id(_operation_id, _fill_operation_id, _id)
@@ -64,13 +64,13 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN, _fill_operation_id BOOLEAN, _is_old_schema BOOLEAN, _id JSON)
+CREATE OR REPLACE FUNCTION hafah_objects.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN, _fill_operation_id BOOLEAN, _is_legacy_style BOOLEAN, _id JSON)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  RETURN CASE WHEN _is_old_schema IS TRUE THEN
+  RETURN CASE WHEN _is_legacy_style IS TRUE THEN
     ops
   ELSE
     to_jsonb(result)
@@ -88,8 +88,8 @@ BEGIN
             SELECT
                 NULL::TEXT AS ops
             UNION ALL
-            SELECT hafah_objects.build_api_operation(_trx_id, _block_num, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, _fill_operation_id, _id, _is_old_schema)
-            FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible, _is_old_schema)
+            SELECT hafah_objects.build_api_operation(_trx_id, _block_num, _trx_in_block, _op_in_trx, _virtual_op, _timestamp, _value, _operation_id, _fill_operation_id, _id, _is_legacy_style)
+            FROM hafah_python.get_ops_in_block(_block_num, _only_virtual, _include_reversible, _is_legacy_style)
           )
           SELECT ops FROM cte
         ) obj
@@ -101,13 +101,13 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.get_account_history(_filter NUMERIC, _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN, _is_old_schema BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_objects.get_account_history(_filter NUMERIC, _account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN, _is_legacy_style BOOLEAN)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  RETURN CASE WHEN _is_old_schema IS TRUE THEN
+  RETURN CASE WHEN _is_legacy_style IS TRUE THEN
     history
   ELSE
     to_json(result)
@@ -135,14 +135,14 @@ BEGIN
               '"virtual_op": ' || _virtual_op || ', ' ||
               '"timestamp": "' || _timestamp || '", ' ||
               '"op": ' || _value ||
-              CASE WHEN _is_old_schema IS TRUE THEN
+              CASE WHEN _is_legacy_style IS TRUE THEN
                 ''
               ELSE
                 ', ' || '"operation_id": 0'
               END
               || '}' ||
               ']'
-            FROM hafah_python.ah_get_account_history(hafah_backend.translate_filter(_filter), _account, _start, _limit, _include_reversible, _is_old_schema)
+            FROM hafah_python.ah_get_account_history(hafah_backend.translate_filter(_filter), _account, _start, _limit, _include_reversible, _is_legacy_style)
           )
           SELECT history FROM cte
         ) obj
@@ -154,7 +154,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.get_transaction(_trx_hash TEXT, _include_reversible BOOLEAN, _is_old_schema BOOLEAN)
+CREATE OR REPLACE FUNCTION hafah_objects.get_transaction(_trx_hash TEXT, _include_reversible BOOLEAN, _is_legacy_style BOOLEAN)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -174,7 +174,7 @@ BEGIN
       '"operations": ' ||
       (SELECT json_agg(_value) FROM (
         SELECT _value::JSON
-        FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block, _is_old_schema)
+        FROM hafah_python.get_ops_in_transaction(_block_num, _trx_in_block, _is_legacy_style)
       ) f_call
       ) || ', ' ||
       '"extensions": [], ' ||
