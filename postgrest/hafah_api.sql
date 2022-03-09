@@ -19,7 +19,7 @@ DROP SCHEMA IF EXISTS hafah_api CASCADE;
 CREATE SCHEMA IF NOT EXISTS hafah_api;
 
 CREATE OR REPLACE FUNCTION hafah_api.home(JSON)
-RETURNS JSON
+RETURNS JSONB
 LANGUAGE 'plpgsql'
 AS
 $$
@@ -34,7 +34,7 @@ DECLARE
   __input_assertion JSON;
   __api_type TEXT;
   __method_type TEXT;
-  __is_old_schema BOOLEAN;
+  __is_legacy_style BOOLEAN;
   __json_type TEXT;
 BEGIN
   __jsonrpc = (__request_data->>'jsonrpc');
@@ -57,36 +57,37 @@ BEGIN
   SELECT json_typeof(__params) INTO __json_type;
   
   IF __api_type = 'account_history_api' THEN
-    __is_old_schema = FALSE;
+    __is_legacy_style = FALSE;
   ELSEIF __api_type = 'condenser_api' THEN
-    __is_old_schema = TRUE;
+    __is_legacy_style = TRUE;
   END IF;
   
   IF __method_type = 'get_ops_in_block' THEN
-    SELECT hafah_api.call_get_ops_in_block(__params, __id, __is_old_schema, __json_type) INTO __result;
+    SELECT hafah_api.call_get_ops_in_block(__params, __id, __is_legacy_style, __json_type) INTO __result;
   ELSEIF __method_type = 'enum_virtual_ops' THEN
-    SELECT hafah_api.call_enum_virtual_ops(__params, __id, __is_old_schema, __json_type) INTO __result;
+    SELECT hafah_api.call_enum_virtual_ops(__params, __id, __is_legacy_style, __json_type) INTO __result;
   ELSEIF __method_type = 'get_transaction' THEN
-    SELECT hafah_api.call_get_transaction(__params, __id, __is_old_schema, __json_type) INTO __result;
+    SELECT hafah_api.call_get_transaction(__params, __id, __is_legacy_style, __json_type) INTO __result;
   ELSEIF __method_type = 'get_account_history' THEN
-    SELECT hafah_api.call_get_account_history(__params, __id, __is_old_schema, __json_type) INTO __result;
+    SELECT hafah_api.call_get_account_history(__params, __id, __is_legacy_style, __json_type) INTO __result;
   END IF;
 
   IF __result->'error' IS NULL THEN
-    RETURN result
-    FROM json_build_object(
+    SELECT jsonb_build_object(
       'jsonrpc', '2.0',
       'result', __result,
       'id', __id
-    ) result;
-  ELSE
-    RETURN __result;
+    ) INTO __result;
   END IF;
+
+  PERFORM set_config('response.headers', format('[{"Content-Length": "%s"}]', length(__result::TEXT)), TRUE);
+
+  RETURN __result;
 END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_get_ops_in_block(_params JSON, _id JSON, _is_old_schema BOOLEAN, _json_type TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.call_get_ops_in_block(_params JSON, _id JSON, _is_legacy_style BOOLEAN, _json_type TEXT)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -129,12 +130,12 @@ BEGIN
       RETURN hafah_backend.raise_bool_case_exception(_id);
   END;
 
-  RETURN hafah_objects.get_ops_in_block(__block_num, __only_virtual, __include_reversible, __fill_operation_id, _is_old_schema, _id);
+  RETURN hafah_objects.get_ops_in_block(__block_num, __only_virtual, __include_reversible, __fill_operation_id, _is_legacy_style, _id);
 END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_enum_virtual_ops(_params JSON, _id JSON, _is_old_schema BOOLEAN, _json_type TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.call_enum_virtual_ops(_params JSON, _id JSON, _is_legacy_style BOOLEAN, _json_type TEXT)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -231,7 +232,7 @@ BEGIN
   END;
 
   -- TODO: might do this before calling hafah_objects.enum_virtual_ops(), only done to replicate HAfAH python
-  IF _is_old_schema IS TRUE THEN
+  IF _is_legacy_style IS TRUE THEN
     RETURN hafah_backend.raise_exception(-32602, 'Invalid parameters', 'not supported', _id);
   ELSE
     RETURN __result;
@@ -240,7 +241,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_get_transaction(_params JSON, _id JSON, _is_old_schema BOOLEAN, _json_type TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.call_get_transaction(_params JSON, _id JSON, _is_legacy_style BOOLEAN, _json_type TEXT)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -271,7 +272,7 @@ BEGIN
       RETURN hafah_backend.raise_bool_case_exception(_id);
   END;
 
-  SELECT hafah_objects.get_transaction(__id, __include_reversible, _is_old_schema) INTO __result;
+  SELECT hafah_objects.get_transaction(__id, __include_reversible, _is_legacy_style) INTO __result;
   RETURN CASE WHEN __result IS NULL THEN
     hafah_backend.raise_exception(-32003, format('Assert Exception:false: Unknown Transaction %s', rpad(__id, 40, '0')), NULL, _id, TRUE)
   ELSE
@@ -281,7 +282,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_get_account_history(_params JSON, _id JSON, _is_old_schema BOOLEAN, _json_type TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.call_get_account_history(_params JSON, _id JSON, _is_legacy_style BOOLEAN, _json_type TEXT)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -373,7 +374,7 @@ BEGIN
   
   BEGIN
     __filter = hafah_backend.create_filter_numeric(__operation_filter_low, __operation_filter_high);
-    RETURN hafah_objects.get_account_history(__filter, __account, __start, __limit, __include_reversible, _is_old_schema);
+    RETURN hafah_objects.get_account_history(__filter, __account, __start, __limit, __include_reversible, _is_legacy_style);
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
