@@ -1,12 +1,17 @@
 from typing import Union
-from hafah.queries import account_history_db_connector
-from hafah.performance import perf
+
 from hafah.exceptions import *
+from hafah.logger import get_logger
+from hafah.performance import perf
+from hafah.queries import account_history_db_connector
+
+logger = get_logger(module_name='backend')
 
 RANGE_POSITIVE_INT =  2**31-1
 MAX_POSITIVE_INT = RANGE_POSITIVE_INT - 1
 RANGEINT = 2**32
 RECORD_NAME = 'backend'
+
 
 def handler(name, time, ahi_instance : 'account_history_impl', *_, **__):
   ahi_instance.add_performance_record(name, time)
@@ -20,6 +25,22 @@ def translate_filter(input : int, *, offset : int = 0):
     return result
   else:
     return None
+
+def recurse_browse_for_title(data):
+  if isinstance(data, (list, tuple)):
+    for val in data:
+      if recurse_browse_for_title(val):
+        return True
+  elif isinstance(data, dict):
+    if 'title' in data and 'author' in data and data['author'] == 'kalipo':
+      tit = data['title']
+      logger.info(f"{'#'*12}, {[(c, ord(c)) for c in tit]}, `{tit}`")
+      return True
+    else:
+      for val in data.values():
+        if recurse_browse_for_title(val):
+          return True
+  return False
 
 class account_history_impl:
   VIRTUAL_OP_ID_OFFSET = None
@@ -39,13 +60,17 @@ class account_history_impl:
 
   @perf(record_name=RECORD_NAME, handler=handler)
   def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool):
-    return self.api.get_ops_in_block(
+    ops = self.api.get_ops_in_block(
       block_num,
       only_virtual,
       include_reversible,
 
       is_legacy_style=self.is_legacy_style
     )
+    if block_num == 4910595:
+      recurse_browse_for_title(ops)
+    return ops
+
 
   @perf(record_name=RECORD_NAME, handler=handler)
   def get_transaction(self, trx_hash : str, include_reversible : bool):
