@@ -57,6 +57,7 @@ patterns_tests:
     # install hive_fork_manager extension built in previous stage
     # replay and prepare database
     - if [ ! "$POSTGRESQL_URI" ] && [ ! "$AH_ENDPOINT" ]; then
+        echo "replaying hived..."
         sudo $SETUP_SCRIPTS_PATH/setup_postgres.sh --haf-admin-account=haf_admin --haf-binaries-dir="$CI_PROJECT_DIR/hive_fork_manager/build" ;
         $SETUP_SCRIPTS_PATH/setup_db.sh --haf-db-name="haf_block_log" --haf-db-owner="hive" ;
         mkdir $CI_PROJECT_DIR/tests/prepare_database/blockchain ;
@@ -68,6 +69,7 @@ patterns_tests:
     # run HAfAH
     - if [ ! "$AH_ENDPOINT" ]; then
         cd $CI_PROJECT_DIR ;
+        echo "starting HAfAH..."
         ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 >> ah.log &
         export AH_ENDPOINT=localhost:6543 ;
       fi

@@ -10,7 +10,7 @@ from argparse import ArgumentParser
 import sys
 import simplejson as json
 import os
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
@@ -39,10 +39,12 @@ def hived_call(url, data, *args, **kwargs):
 wdir = Path()
 errors = 0
 
-def future_end_cb(future):
+def future_end_cb(future : Future):
   global errors
-  if future.result() == False:
+  exc = future.exception()
+  if exc is not None:
     errors += 1
+    print(f"got exception: {exc}", flush=True)
 
 
 def main():
