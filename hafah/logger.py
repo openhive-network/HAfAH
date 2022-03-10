@@ -6,7 +6,7 @@ LOG_LEVEL = logging.DEBUG if 'DEBUG' in os.environ else logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
 MAIN_LOG_PATH = "ah.log"
 
-def get_logger(*, module_name : str):
+def get_logger(*, module_name : str) -> logging.Logger:
     logger = logging.getLogger(module_name)
     logger.setLevel(LOG_LEVEL)
 
