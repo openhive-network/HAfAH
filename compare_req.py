@@ -19,12 +19,14 @@ def get_url(port):
 def get_res(url, api_type, method, params_str):
     __headers = headers.copy()
     if is_hafah_new_style and url == po_url:
-        for name in re.findall("[a-z_]+.(?=\":)", params_str): params_str = params_str.replace(name, "_%s" %name)
+        if switch_schema:
+            for name in re.findall("[a-z_]+.(?=\":)", params_str): params_str = params_str.replace(name, "_%s" %name)
+            __headers["Content-Profile"] = "hafah_objects"
+        if api_type == "condenser_api":
+            __headers["Is-Legacy-Style"] = "TRUE"
+
         data = params_str
         url = "%s/rpc/%s" %(url, method)
-        __headers["Content-Profile"] = "hafah_objects"
-        if api_type == "condenser_api":
-            __headers["Is-Legacy-Style"] = "True"
     else:
         params_str = '"params": %s' %params_str
         data = "{%s}" % (", ".join([jsonrpc_str, method_str % (api_type, method), params_str, id_str]))
@@ -65,7 +67,7 @@ def compare_method_responses(methods, params_str_dict, params_tuple_dict):
                     params_str_dict[method] % tuple([list(param.values())[0] for param in params_tuple_dict[method]])
                 )
                 res_status.append(res.status_code)
-                print(res.json())
+                print(res)
 
                 if is_hafah_new_style and url == py_url:
                     try:
@@ -106,16 +108,17 @@ if __name__ == "__main__":
     }
 
     params_tuple_dict = {
-        "get_ops_in_block": ({"block_num": 5}, {"only_virtual": bool_to_str(True)}, {"include_reversible": bool_to_str(True)}),
+        "get_ops_in_block": ({"block_num": 3476140}, {"only_virtual": bool_to_str(False)}, {"include_reversible": bool_to_str(False)}),
         "enum_virtual_ops": ({"block_range_begin": 3744644}, {"block_range_end": 3744646}, {"operation_begin": 9844922}, {"limit": 1}, {"filter": 16384}, {"include_reversible": bool_to_str(False)}, {"group_by_block": bool_to_str(False)}),
         "get_transaction": ({"id": "390464f5178defc780b5d1a97cb308edeb27f983"}, {"include_reversible": bool_to_str(True)}),
-        "get_account_history": ({"account": "twenty_letters_wordd"}, {"start": 5}, {"limit": 4}, {"operation_filter_low": 0}, {"operation_filter_high": 0}, {"include_reversible": bool_to_str(False)})
+        "get_account_history": ({"account": "hello"}, {"start": 1000}, {"limit": 1000}, {"operation_filter_low": 512}, {"operation_filter_high": 0}, {"include_reversible": bool_to_str(False)})
     }
 
-    #methods = ["get_ops_in_block", "enum_virtual_ops", "get_transaction", "get_account_history"]
-    methods = ["get_account_history"]
+    methods = ["get_ops_in_block", "enum_virtual_ops", "get_transaction", "get_account_history"]
+    methods = ["get_ops_in_block"]
 
-    is_hafah_new_style = True
-    #is_hafah_new_style = False
+    #is_hafah_new_style = True
+    #switch_schema = False
+    is_hafah_new_style = False
 
     compare_method_responses(methods, params_str_dict, params_tuple_dict)

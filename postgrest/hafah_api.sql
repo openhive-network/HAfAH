@@ -13,9 +13,6 @@ while repeated are in ah/api/hafah_backend.sql.
 Every 'call_some_method()' function calls corresponding method in 'hafah_objects' schema, which has utilities
 for generating object responses.
 */
-
--- TODO: add null proof for new style
--- TODO: add error capture to hafah_objects
 DROP SCHEMA IF EXISTS hafah_api CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_api;
@@ -89,7 +86,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_get_ops_in_block(_params JSON, _id JSON, _is_legacy_style BOOLEAN, _json_type TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.call_get_ops_in_block(_params JSON, _id JSON = NULL, _is_legacy_style BOOLEAN = NULL, _json_type TEXT = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -151,7 +148,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_enum_virtual_ops(_params JSON, _id JSON, _is_legacy_style BOOLEAN, _json_type TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.call_enum_virtual_ops(_params JSON, _id JSON = NULL, _is_legacy_style BOOLEAN = NULL, _json_type TEXT = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -262,7 +259,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_get_transaction(_params JSON, _id JSON, _is_legacy_style BOOLEAN, _json_type TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.call_get_transaction(_params JSON, _id JSON = NULL, _is_legacy_style BOOLEAN = NULL, _json_type TEXT = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -303,7 +300,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_get_account_history(_params JSON, _id JSON, _is_legacy_style BOOLEAN, _json_type TEXT)
+CREATE OR REPLACE FUNCTION hafah_api.call_get_account_history(_params JSON, _id JSON = NULL, _is_legacy_style BOOLEAN = NULL, _json_type TEXT = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -411,6 +408,58 @@ BEGIN
   END IF;
 
   RETURN NULL;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __params JSON = $1;
+BEGIN
+  RETURN hafah_api.call_get_ops_in_block(__params);
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.enum_virtual_ops(JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __params JSON = $1;
+BEGIN
+  RETURN hafah_api.call_enum_virtual_ops(__params);
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.get_transaction(JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __params JSON = $1;
+BEGIN
+  RETURN hafah_api.call_get_transaction(__params);
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_api.get_account_history(JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+  __params JSON = $1;
+BEGIN
+  RETURN hafah_api.call_get_account_history(__params);
 END
 $$
 ;

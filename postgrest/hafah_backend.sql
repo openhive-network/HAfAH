@@ -64,17 +64,21 @@ LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
+  __header_val TEXT;
   __is_legacy_style_header BOOLEAN;
 BEGIN
-  SELECT current_setting('request.header.Is-Legacy-Style', TRUE) INTO __is_legacy_style_header;
+  SELECT current_setting('request.header.Is-Legacy-Style', TRUE) INTO __header_val;
+  IF __header_val IS NULL OR length(__header_val) = 0 THEN
+    __is_legacy_style_header = FALSE;
+  ELSEIF __header_val::BOOLEAN IS TRUE THEN
+    __is_legacy_style_header = TRUE;
+  END IF;
+  
   IF __is_legacy_style_header IS TRUE AND _is_legacy_style IS NULL THEN
     RETURN TRUE;
-  ELSEIF __is_legacy_style_header IS FALSE AND _is_legacy_style IS NULL OR
-  __is_legacy_style_header IS NULL AND _is_legacy_style IS NULL THEN
+  ELSEIF __is_legacy_style_header IS FALSE AND _is_legacy_style IS NULL THEN
     RETURN FALSE;
   ELSEIF __is_legacy_style_header IS NOT NULL AND _is_legacy_style IS NOT NULL THEN
-    RETURN __is_legacy_style_header;
-  ELSEIF __is_legacy_style_header IS NULL AND _is_legacy_style IS NOT NULL THEN
     RETURN _is_legacy_style;
   END IF;
 END
@@ -89,7 +93,7 @@ $$
 DECLARE
   __param TEXT;
 BEGIN
-  SELECT CASE WHEN _json_type = 'object' THEN
+  SELECT CASE WHEN _json_type = 'object' OR _json_type IS NULL THEN
     _params->>_arg_name
   ELSE
     _params->>_arg_number
