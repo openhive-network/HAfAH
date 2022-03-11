@@ -10,25 +10,41 @@ variables:
 
 include:
   - project: 'hive/haf'
-    ref: bw_dockerized_haf_setup
+    ref: develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
 
-prepare_haf_instance:
+prepare_haf_image:
   extends: .prepare_haf_data_5m_image
   stage: build_and_test
+  artifacts:
+    paths:
+      - haf_docked_image.txt
+    expire_in: 6 hours
+
+  tags:
+    - public-runner-docker
+    - hived-for-tests
+
+prepare_hafah_image:
+  extends: .docker_image_builder_job
+  stage: build_and_test
+  script:
+  -  docker build --target=HafAH -t registry.gitlab.syncad.com/hive/hafah/hafah:$CI_COMMIT_SHORT_SHA -f Dockerfile . 
   tags:
     - public-runner-docker
     - hived-for-tests
 
 patterns_tests:
+  extends: .docker_image_builder_job
   stage: build_and_test
-  needs:
-    - job: prepare_haf_instance
-  image: "$CI_REGISTRY_IMAGE/ci-base-image$BUILDER_IMAGE_TAG"
-  script:
-    - pip3 install -r requirements.txt
-    - ./haf/scripts/run_hived_img.sh registry.gitlab.syncad.com/hive/haf/data:31dd6c9084fc63013f44425c9d39a1f2a20d66f4
 
+  needs:
+    - job: prepare_haf_image
+      artifacts: true
+    - job: prepare_hafah_image
+
+  script:
+    - cat haf_docked_image.txt
 
     # run HAfAH
     - if [ ! "$AH_ENDPOINT" ]; then
