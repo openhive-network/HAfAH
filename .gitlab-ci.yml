@@ -10,20 +10,38 @@ variables:
 
 include:
   - project: 'hive/haf'
-    ref: bw_dockerized_haf_setup
+    ref: develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
 
-prepare_haf_instance:
+prepare_haf_image:
   extends: .prepare_haf_data_5m_image
   stage: build_and_test
+  artifacts:
+    paths:
+      - haf_docked_image.txt
+    expire_in: 6 hours
+
+  tags:
+    - public-runner-docker
+    - hived-for-tests
+
+prepare_hafah_image:
+  extends: .docker_image_builder_job
+  stage: build_and_test
+  script:
+  -  docker build --target=HafAH -t registry.gitlab.syncad.com/hive/hafah/hafah:$CI_COMMIT_SHORT_SHA -f Dockerfile . 
   tags:
     - public-runner-docker
     - hived-for-tests
 
 patterns_tests:
+  extends: .docker_image_builder_job
   stage: build_and_test
+
   needs:
-    - job: prepare_haf_instance
+    - job: prepare_haf_image
+      artifacts: true
+    - job: prepare_hafah_image
   image: "$CI_REGISTRY_IMAGE/ci-base-image$BUILDER_IMAGE_TAG"
   variables:
     HIVE_BUILD_ROOT_PATH: "$CI_PROJECT_DIR/hived/build/hive"
