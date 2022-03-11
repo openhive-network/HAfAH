@@ -2,7 +2,8 @@
 
 import logging
 from collections import OrderedDict
-from funcy.seqs import first
+
+import simplejson
 import sqlalchemy
 
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
@@ -108,7 +109,9 @@ class Db:
                 isolation_level="READ UNCOMMITTED", # only supported in mysql
                 pool_size=self.max_connections,
                 pool_recycle=3600,
-                echo=False)
+                echo=False,
+                json_deserializer=simplejson.loads
+            )
         return self._engine
 
     def get_new_connection(self, name):

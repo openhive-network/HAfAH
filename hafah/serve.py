@@ -17,6 +17,18 @@ from hafah.performance import Timer
 
 logger = get_logger(module_name='AH synchronizer')
 
+OK_CODE = 200
+ERR_CODE = 500
+
+ENCODING='utf-8'
+
+CONTENT_LENGTH = 'Content-Length'
+CONTENT_TYPE = 'Content-Type'
+CONTENT_TYPE_JSON = 'application/json'
+CONTENT_TYPE_HTML = 'text/html'
+CONTENT_TYPE_ENCODING = f'charset={ENCODING}'
+
+
 class APIMethods:
   @staticmethod
   def build_methods():
@@ -63,10 +75,10 @@ class DBHandler(BaseHTTPRequestHandler):
       return simplejson.loads(s=s, use_decimal=True)
 
   def process_response(self, http_code, content_type, response):
-    data = str(response).encode()
+    data = str(response).encode(encoding=ENCODING)
     self.send_response(http_code)
-    self.send_header("Content-type", content_type)
-    self.send_header('Content-length', len(data))
+    self.send_header(CONTENT_TYPE, f'{content_type}; {CONTENT_TYPE_ENCODING}')
+    self.send_header(CONTENT_LENGTH, len(data))
     self.end_headers()
     self.wfile.write(data)
 
@@ -87,22 +99,22 @@ class DBHandler(BaseHTTPRequestHandler):
         if self.log_responses:
           logger.info(_response)
 
-        self.process_response(200, "application/json", _response)
+        self.process_response(OK_CODE, CONTENT_TYPE_JSON, _response)
 
     except Exception as ex:
       logger.error(ex)
-      self.process_response(500, "text/html", ex)
+      self.process_response(ERR_CODE, CONTENT_TYPE_HTML, ex)
 
   def do_POST(self):
     ctx = { 'perf' : {}, 'id': None }
     with Timer() as timer:
       try:
-        request = self.rfile.read(int(self.headers["Content-Length"])).decode()
+        request = self.rfile.read(int(self.headers[CONTENT_LENGTH])).decode()
         self.process_request(request, ctx)
 
       except Exception as ex:
         logger.error(ex)
-        self.process_response(500, "text/html", ex)
+        self.process_response(ERR_CODE, CONTENT_TYPE_HTML, ex)
 
     # logging times
     perf : dict = ctx['perf']
