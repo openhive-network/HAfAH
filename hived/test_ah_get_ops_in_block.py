@@ -8,15 +8,11 @@
 
 from argparse import ArgumentParser
 import sys
-import json
+import simplejson as json
 import os
-import shutil
-from jsonsocket import JSONSocket
 from jsonsocket import universal_call as hived_call
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from concurrent.futures import ProcessPoolExecutor
-from concurrent.futures import Future
-from concurrent.futures import wait
 from pathlib import Path
 
 
@@ -24,9 +20,10 @@ wdir = Path()
 errors = 0
 
 
-def future_end_cb(future):
+def future_end_cb(future : Future):
   global errors
-  if future.result() == False:
+  exc = future.exception()
+  if exc is not None or future.result() == False:
     errors += 1
 
 
@@ -138,9 +135,6 @@ def compare_results(f_block, l_block, url1, url2, max_tries=10, timeout=0.1):
     status2, json2 = future2.result()
     json1 = json.loads(json1)
     json2 = json.loads(json2)
-
-    #status1, json1 = hived_call(url1, data=request, max_tries=max_tries, timeout=timeout)
-    #status2, json2 = hived_call(url2, data=request, max_tries=max_tries, timeout=timeout)
 
     if status1 == False or status2 == False or json1 != json2:
       print("Difference @block: {}\n".format(i))

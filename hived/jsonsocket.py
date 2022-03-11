@@ -41,7 +41,7 @@ class JSONSocket(object):
     """
     data - complete binary form of json request (ends with '\r\n'
     json - json request as python dict
-    
+
     return value in form of json response as python dict
     """
     if data == None:
@@ -57,7 +57,7 @@ class JSONSocket(object):
     #if response == {}:
     #  print("response is empty for request:", request.decode("utf-8"))
     return status, response
-    
+
   def __call__(self, data=None, json=None):
     return self.request(data, json)
 
@@ -79,14 +79,14 @@ class JSONSocket(object):
           return True, r
         else:
           return False, r
-      
+
     return False, {}
-    
+
   def __del__(self):
     if self.__sock:
       self.__sock.close()
 
-      
+
 def hived_call(host, data=None, json=None, max_tries=10, timeout=0.1):
   """
   host - [http[s]://<ip_address>:<port>
@@ -97,7 +97,7 @@ def hived_call(host, data=None, json=None, max_tries=10, timeout=0.1):
 #  except:
 #    print("Cannot open socket for:", host)
 #    return False, {}
-    
+
   for i in range(max_tries):
     try:
        jsocket = JSONSocket(host, None, "/rpc", timeout)
@@ -121,4 +121,4 @@ def hived_call(host, data=None, json=None, max_tries=10, timeout=0.1):
 def universal_call(url, data, *args, **kwargs):
     from requests import post
     result = post(url, json=data)
-    return [result.status_code, result.text]
+    return [result.status_code, result.content.decode('utf-8')]

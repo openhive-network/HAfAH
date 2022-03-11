@@ -9,9 +9,8 @@ from argparse import ArgumentParser
 import sys
 import json
 import os
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from concurrent.futures import ProcessPoolExecutor
-from concurrent.futures import wait
 from jsonsocket import universal_call as hived_call
 from list_account import list_accounts
 from pathlib import Path
@@ -21,9 +20,10 @@ wdir = Path()
 errors = 0
 
 
-def future_end_cb(future):
+def future_end_cb(future : Future):
   global errors
-  if future.result() == False:
+  exc = future.exception()
+  if exc is not None or future.result() == False:
     errors += 1
 
 
