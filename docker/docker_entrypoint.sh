@@ -20,10 +20,23 @@ cleanup () {
 
 trap cleanup INT QUIT TERM
 
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --psql-db-path=*)
+        POSTGRES_URL="${1#*=}"
+        ;;
+    --port=*)
+        HTTP_PORT="${1#*=}"
+        ;;
+    esac
+    shift
+done
+
+
 pushd /home/hive/app
 
 {
-python3 ./main.py "$@"
+python3 ./main.py --psql-db-path=${POSTGRES_URL} --port=${HTTP_PORT} "$@"
 echo "HafAH process finished execution: $?"
 } &
 
