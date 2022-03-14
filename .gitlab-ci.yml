@@ -2,24 +2,25 @@ stages:
   - build_and_test
 
 variables:
+  FF_NETWORK_PER_BUILD: "1"
   GIT_DEPTH: "1"
   GIT_SUBMODULE_STRATEGY: "recursive"
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-3
   BUILDER_IMAGE_TAG: "@sha256:a701abca3cdd31bc3a5c7e58a8a2a9ea752e7f30e100aa41bcfe9c56b777883f"
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
+  REGISTRY: registry.gitlab.syncad.com/hive/hafah
+  HAFAH_IMAGE: $REGISTRY/instance:$CI_COMMIT_SHORT_SHA
+  HAFAH_PORT: 6543
+  HAF_POSTGRES_URL: postgresql://hive@haf-instance:5432/haf_block_log
 
 include:
   - project: 'hive/haf'
-    ref: develop
+    ref: bw_haf_dockerized_setup_supplement
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
 
 prepare_haf_image:
   extends: .prepare_haf_data_5m_image
   stage: build_and_test
-  artifacts:
-    paths:
-      - haf_docked_image.txt
-    expire_in: 6 hours
 
   tags:
     - public-runner-docker
@@ -28,8 +29,11 @@ prepare_haf_image:
 prepare_hafah_image:
   extends: .docker_image_builder_job
   stage: build_and_test
+
   script:
-  -  docker build --target=HafAH -t registry.gitlab.syncad.com/hive/hafah/hafah:$CI_COMMIT_SHORT_SHA -f Dockerfile . 
+    - docker build --build-arg HTTP_PORT=$HAFAH_PORT --build-arg POSTGRES_URL="$HAF_POSTGRES_URL" --target=instance -t $HAFAH_IMAGE -f Dockerfile . 
+    - echo $HAFAH_CI_IMG_BUILDER_PASSWORD | docker login -u $HAFAH_CI_IMG_BUILDER_USER $REGISTRY --password-stdin
+    - docker push $HAFAH_IMAGE
   tags:
     - public-runner-docker
     - hived-for-tests
@@ -37,21 +41,29 @@ prepare_hafah_image:
 patterns_tests:
   extends: .docker_image_builder_job
   stage: build_and_test
+  variables:
+    AH_ENDPOINT: hafah_app:$HAFAH_PORT
 
   needs:
+    - job: prepare_hafah_image
     - job: prepare_haf_image
       artifacts: true
-    - job: prepare_hafah_image
+
+  services:
+    - name: $HAF_IMAGE_NAME
+      alias: haf-instance
+
+    - name: $HAFAH_IMAGE
+      alias: hafah_app
+
+  before_script:
+    - apk update && apk add bash git ca-certificates curl build-base python3-dev
+    - python3 -m ensurepip
+    - pip3 install tox
 
   script:
-    - cat haf_docked_image.txt
-
-    # run HAfAH
-    - if [ ! "$AH_ENDPOINT" ]; then
-        cd $CI_PROJECT_DIR ;
-        ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 >> ah.log &
-        export AH_ENDPOINT=localhost:6543 ;
-      fi
+    - |
+      curl --retry 20 --retry-delay 3 --retry-max-time 100 --request POST --url http://haf-instance:8090/ --header 'Content-Type: application/json' --data '{"jsonrpc": "2.0", "method": "call", "params":["database_api","get_version", {} ], "id": 1}'
 
     # run pattern tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests

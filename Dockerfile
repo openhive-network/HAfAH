@@ -21,7 +21,13 @@ RUN apk update && DEBIAN_FRONTEND=noniteractive apk add  \
 
 SHELL ["/bin/bash", "-c"] 
 
-FROM $CI_REGISTRY_IMAGE/ci-base-image$CI_IMAGE_TAG AS HafAH
+FROM $CI_REGISTRY_IMAGE/ci-base-image$CI_IMAGE_TAG AS instance
+
+ARG HTTP_PORT=6543
+ENV HTTP_PORT=${HTTP_PORT}
+
+ARG POSTGRES_URL="postgresql://hive@localhost/haf_block_log"
+ENV POSTGRES_URL=${POSTGRES_URL}
 
 USER hive
 WORKDIR /home/hive
@@ -37,4 +43,10 @@ RUN chmod +x ./docker_entrypoint.sh && \
   cd ./app && \
   pip3 install --no-cache-dir -r requirements.txt
 
+# JSON rpc service
+EXPOSE ${HTTP_PORT}
+
+STOPSIGNAL SIGINT
+
 ENTRYPOINT [ "/home/hive/docker_entrypoint.sh" ]
+
