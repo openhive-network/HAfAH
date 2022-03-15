@@ -7,8 +7,8 @@ echo_success() {
     echo 'SUCCESS: Users and API recreated'
 }
 
-create_user() {
-    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -c '\timing' -c "call hafah_backend.create_api_user();"
+create_ah_schema(){
+    psql -d haf_block_log -f "queries/ah_schema_functions.pgsql"
 }
 
 create_api() {
@@ -51,7 +51,7 @@ install_jmeter() {
     wget "https://downloads.apache.org//jmeter/binaries/apache-jmeter-${jmeter_v}.zip"
 
     jmeter_src="apache-jmeter-${jmeter_v}"
-    sudo unzip "${jmeter_src}.zip" -d '/usr/local/bin'
+    sudo unzip "${jmeter_src}.zip" -d '/usr/local/src'
     rm "${jmeter_src}.zip"
 
     jmeter="jmeter-${jmeter_v}"
@@ -72,7 +72,7 @@ test_patterns() {
     port=$1
     cd $PWD/haf/hive
     
-    ./tests/api_tests/run_tests.sh $port $PWD
+    ./tests/api_tests/pattern_tests/run_tests.sh $port $PWD
 }
 
 postgrest_v=9.0.0
@@ -80,13 +80,9 @@ jmeter_v=5.4.3
 
 if [ "$1" = "start" ]; then
     start_webserver
-elif [ "$1" = "re-all" ]; then
+elif [ "$1" = "re-start" ]; then
+    create_ah_schema
     create_api
-    create_user
-    echo_success
-elif [ "$1" = "re-all-start" ]; then
-    create_api
-    create_user
     echo_success
     start_webserver
 elif [ "$1" =  "install-dependancies" ]; then
