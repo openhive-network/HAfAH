@@ -2,7 +2,7 @@ stages:
   - build_and_test
 
 variables:
-  FF_NETWORK_PER_BUILD: "1"
+  FF_NETWORK_PER_BUILD: 0
   GIT_DEPTH: "1"
   GIT_SUBMODULE_STRATEGY: "recursive"
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-3
@@ -43,6 +43,7 @@ patterns_tests:
   stage: build_and_test
   variables:
     AH_ENDPOINT: hafah_app:$HAFAH_PORT
+    FF_NETWORK_PER_BUILD: 0
 
   needs:
     - job: prepare_hafah_image
