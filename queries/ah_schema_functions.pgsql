@@ -1,3 +1,5 @@
+DROP SCHEMA IF EXISTS hafah_python CASCADE;
+
 CREATE SCHEMA IF NOT EXISTS hafah_python;
 
 DROP VIEW IF EXISTS hafah_python.helper_operations_view;
