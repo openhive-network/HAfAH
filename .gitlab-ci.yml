@@ -15,7 +15,7 @@ variables:
 
 include:
   - project: 'hive/haf'
-    ref: bw_haf_dockerized_setup_supplement
+    ref: emf_haf_dockerized_setup_supplement_tests
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
 
 prepare_haf_image:
