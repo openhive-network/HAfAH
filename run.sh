@@ -52,7 +52,7 @@ install_jmeter() {
     wget "https://downloads.apache.org//jmeter/binaries/apache-jmeter-${jmeter_v}.zip"
 
     jmeter_src="apache-jmeter-${jmeter_v}"
-    sudo unzip "${jmeter_src}.zip" -d '/usr/local/bin'
+    sudo unzip "${jmeter_src}.zip" -d '/usr/local/src'
     rm "${jmeter_src}.zip"
 
     jmeter="jmeter-${jmeter_v}"
