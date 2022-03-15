@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from types import FunctionType
 from time import perf_counter
 from typing import Union

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from jsonrpcserver.exceptions import ApiError
 
 JSON_RPC_SERVER_ERROR       = -32000

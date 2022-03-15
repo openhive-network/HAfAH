@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from distutils import util
 from functools import partial
 

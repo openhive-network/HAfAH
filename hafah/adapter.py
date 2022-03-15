@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Wrapper for sqlalchemy, providing a simple interface."""
 
 import logging
