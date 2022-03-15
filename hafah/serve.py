@@ -26,7 +26,6 @@ CONTENT_LENGTH = 'Content-Length'
 CONTENT_TYPE = 'Content-Type'
 CONTENT_TYPE_JSON = 'application/json'
 CONTENT_TYPE_HTML = 'text/html'
-CONTENT_TYPE_ENCODING = f'charset={ENCODING}'
 
 
 class APIMethods:
@@ -77,7 +76,7 @@ class DBHandler(BaseHTTPRequestHandler):
   def process_response(self, http_code, content_type, response):
     data = str(response).encode(encoding=ENCODING)
     self.send_response(http_code)
-    self.send_header(CONTENT_TYPE, f'{content_type}; {CONTENT_TYPE_ENCODING}')
+    self.send_header(CONTENT_TYPE, content_type)
     self.send_header(CONTENT_LENGTH, len(data))
     self.end_headers()
     self.wfile.write(data)
