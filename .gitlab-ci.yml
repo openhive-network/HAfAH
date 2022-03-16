@@ -51,8 +51,11 @@ patterns_tests:
   variables:
     HIVE_BUILD_ROOT_PATH: "$CI_PROJECT_DIR/hived/build/hive"
     BLOCK_LOG_PATH: "/blockchain/block_log"
+    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/test_tools/package"
   script:
+    # install required packages
     - pip3 install -r requirements.txt
+    - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt
 
     # install hive_fork_manager extension built in previous stage
     # replay and prepare database
@@ -68,7 +71,8 @@ patterns_tests:
     # run HAfAH
     - if [ ! "$AH_ENDPOINT" ]; then
         cd $CI_PROJECT_DIR ;
-        ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 >> ah.log &
+        export DEBUG=1 ;
+        ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 2>&1 >> ah.log &
         export AH_ENDPOINT=localhost:6543 ;
       fi
 
@@ -78,20 +82,20 @@ patterns_tests:
 
     # run comparsion tests
     - export AHRB_PORT=$(cat $CI_PROJECT_DIR/tests/prepare_database/config.ini | grep webserver-http-endpoint | cut -d ':' -f 2)
-    - export TJOBS=10
-    - cd $CI_PROJECT_DIR/haf/hive/tests/tests_api/hived
-    - ./test_ah_enum_virtual_ops.py --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT --start 4900000 --stop 4925000 -d workdir_enum -j $TJOBS
-    - ./test_ah_get_ops_in_block.py --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT --start 4900000 --stop 4925000 -d workdir_ops -j $TJOBS
-    - ./test_ah_get_account_history.py --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT -f ./input_data/accounts.csv -d workdir_acc -j $TJOBS
-    - ./test_ah_get_transaction.py --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT -f ./input_data/hashes.csv -d workdir_trx -j $TJOBS
+    - pushd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
+    - python3 -m pytest -n 8 --ref http://localhost:$AHRB_PORT --test http://$AH_ENDPOINT --start 4900000 --stop 4915000 --junitxml=$CI_PROJECT_DIR/comparsion_tests.xml
+    - popd
 
-    # kill hived
+    # kill hived and HAfAH
     - pkill hived
+    - pkill main.py
 
   artifacts:
     when: always
     reports:
-      junit: $CI_PROJECT_DIR/haf/hive/tests/api_tests/results.xml
+      junit:
+        - $CI_PROJECT_DIR/comparsion_tests.xml
+        - $CI_PROJECT_DIR/haf/hive/tests/api_tests/results.xml
     paths:
     - "$CI_JOB_NAME"
     - "**/from_node.log"
