@@ -51,15 +51,11 @@ patterns_tests:
   variables:
     HIVE_BUILD_ROOT_PATH: "$CI_PROJECT_DIR/hived/build/hive"
     BLOCK_LOG_PATH: "/blockchain/block_log"
+    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/test_tools/package"
   script:
     # install required packages
     - pip3 install -r requirements.txt
     - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt
-
-    # setup test_tools
-    - pushd $CI_PROJECT_DIR/haf/hive/tests/test_tools
-    - sudo pip3 install -e .
-    - popd
 
     # run tests
     - pushd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
