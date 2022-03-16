@@ -77,7 +77,7 @@ patterns_tests:
       fi
 
     # run pattern tests
-    - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests
+    - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests
     - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel`
 
     # run comparsion tests
