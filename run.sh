@@ -64,14 +64,15 @@ install_jmeter() {
     sudo mv $jmeter "/usr/local/bin/${jmeter}"
 }
 
-test_performance() {
-    if [ $# -eq 0 ]; then
-        PORT=3000
-    else
-        PORT=$1
-    fi
+test_performance() {    
+    ./tests/performance/run_perf_tests.bash /usr/local/bin/jmeter-$jmeter_v $PWD/tests/performance $@
+}
+
+test_patterns() {
+    port=$1
+    cd $PWD/haf/hive
     
-    ./tests/performance/run_perf_tests.bash /usr/local/bin/jmeter-$jmeter_v $PWD/tests/performance $PORT
+    ./tests/api_tests/run_tests.sh $port $PWD
 }
 
 postgrest_v=9.0.0
@@ -97,7 +98,9 @@ elif [ "$1" =  "install-plpython" ]; then
 elif [ "$1" =  "install-jmeter" ]; then
     install_jmeter
 elif [ "$1" =  "test-performance" ]; then
-    test_performance $2
+    test_performance ${@:2}
+elif [ "$1" =  "test-patterns" ]; then
+    test_patterns ${@:2}
 else
     echo "job not found"
     exit 1
