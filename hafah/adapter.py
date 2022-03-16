@@ -126,7 +126,7 @@ class Db:
             query = sql
         else:
             query = str(sqlalchemy.text(sql).bindparams(**kwargs).execution_options(autocommit=False).compile(dialect=self.get_dialect(), compile_kwargs={"literal_binds": True}))
-        log.debug(f'[SQL QUERY][{self.get_dialect()}] executing query: {query}')
+        log.debug(f'[SQL QUERY] executing query: {query}')
         return query
 
     def _query(self, sql, is_prepared, **kwargs):
