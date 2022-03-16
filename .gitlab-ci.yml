@@ -57,6 +57,9 @@ patterns_tests:
     - pip3 install -r requirements.txt
     - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt
 
+    # !workaround!
+    - cp tests/prepare_database/remote_node.py $CI_PROJECT_DIR/haf/hive/tests/test_tools/package/test_tools/private/remote_node.py
+
     # run tests
     - pushd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
     - python3 -m pytest -n 8 --ref localhost:8090 --test http://localhost:8095 --junitxml=$CI_PROJECT_DIR/comparsion_tests.xml
@@ -76,7 +79,8 @@ patterns_tests:
     # run HAfAH
     - if [ ! "$AH_ENDPOINT" ]; then
         cd $CI_PROJECT_DIR ;
-        ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 >> ah.log &
+        export DEBUG=1 ;
+        ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 2>&1 >> ah.log &
         export AH_ENDPOINT=localhost:6543 ;
       fi
 
