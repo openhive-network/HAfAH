@@ -42,17 +42,21 @@ hived:
 
 patterns_tests:
   stage: build_and_test
-  needs:
-    - job: hive_fork_manager
-      artifacts: true
-    - job: hived
-      artifacts: true
+  # needs:
+  #   - job: hive_fork_manager
+  #     artifacts: true
+  #   - job: hived
+  #     artifacts: true
   image: "$CI_REGISTRY_IMAGE/ci-base-image$BUILDER_IMAGE_TAG"
   variables:
     HIVE_BUILD_ROOT_PATH: "$CI_PROJECT_DIR/hived/build/hive"
     BLOCK_LOG_PATH: "/blockchain/block_log"
   script:
     - pip3 install -r requirements.txt
+    - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt
+    - pushd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
+    - pytest -n 8 --ref localhost:8090 --test http://localhost:8095 --junitxml=$CI_PROJECT_DIR/comparsion_tests.xml
+    - popd
 
     # install hive_fork_manager extension built in previous stage
     # replay and prepare database
@@ -91,7 +95,9 @@ patterns_tests:
   artifacts:
     when: always
     reports:
-      junit: $CI_PROJECT_DIR/haf/hive/tests/api_tests/results.xml
+      junit:
+        - $CI_PROJECT_DIR/comparsion_tests.xml
+        - $CI_PROJECT_DIR/haf/hive/tests/api_tests/results.xml
     paths:
     - "$CI_JOB_NAME"
     - "**/from_node.log"
