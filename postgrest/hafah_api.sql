@@ -79,7 +79,7 @@ BEGIN
     ) INTO __result;
   END IF;
 
-  PERFORM set_config('response.headers', format('[{"Content-Length": "%s"}]', length(__result::TEXT)), TRUE);
+  --PERFORM set_config('response.headers', format('[{"Content-Length": "%s"}]', length(__result::TEXT)), TRUE);
 
   RETURN __result;
 END
@@ -158,7 +158,7 @@ DECLARE
   __block_range_end INT; -- required
   __operation_begin BIGINT = NULL; -- default 0
   __limit INT = NULL; -- default 150000
-  __filter DECIMAL = NULL; -- default NULL
+  __filter NUMERIC = NULL; -- default NULL
   __include_reversible BOOLEAN = NULL; -- default FALSE
   __group_by_block BOOLEAN = NULL; -- default FALSE
   
@@ -193,7 +193,7 @@ BEGIN
 
     __filter = hafah_backend.parse_argument(_params, _json_type, 'filter', 4);
     IF __filter IS NOT NULL THEN
-      __filter = __filter::DECIMAL;
+      __filter = __filter::NUMERIC;
     ELSE
       __filter = NULL;
     END IF;
@@ -337,7 +337,7 @@ BEGIN
     END IF;
 
     IF __start < 0 THEN
-      __start = '9223372036854775807'::BIGINT;
+      __start = 9223372036854775807;
     END IF;
 
     __limit = hafah_backend.parse_argument(_params, _json_type, 'limit', 2);
@@ -385,7 +385,7 @@ BEGIN
   
   BEGIN
     __filter = hafah_backend.create_filter_numeric(__operation_filter_low, __operation_filter_high);
-    RETURN hafah_objects.get_account_history(__account, __start, __limit, __include_reversible, __filter, _is_legacy_style);
+    RETURN hafah_objects.get_account_history(__account, __filter, __start, __limit, __include_reversible, _is_legacy_style);
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
@@ -413,7 +413,7 @@ $$
 ;
 
 CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(JSON)
-RETURNS JSON
+RETURNS JSONB
 LANGUAGE 'plpgsql'
 AS
 $$
@@ -426,7 +426,7 @@ $$
 ;
 
 CREATE OR REPLACE FUNCTION hafah_api.enum_virtual_ops(JSON)
-RETURNS JSON
+RETURNS JSONB
 LANGUAGE 'plpgsql'
 AS
 $$
@@ -439,7 +439,7 @@ $$
 ;
 
 CREATE OR REPLACE FUNCTION hafah_api.get_transaction(JSON)
-RETURNS JSON
+RETURNS JSONB
 LANGUAGE 'plpgsql'
 AS
 $$
@@ -452,7 +452,7 @@ $$
 ;
 
 CREATE OR REPLACE FUNCTION hafah_api.get_account_history(JSON)
-RETURNS JSON
+RETURNS JSONB
 LANGUAGE 'plpgsql'
 AS
 $$
