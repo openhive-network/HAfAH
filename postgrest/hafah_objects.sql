@@ -64,7 +64,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.get_ops_in_block(_block_num INT, _only_virtual BOOLEAN, _include_reversible BOOLEAN, _fill_operation_id BOOLEAN = FALSE, _is_legacy_style BOOLEAN = NULL)
+CREATE OR REPLACE FUNCTION hafah_objects.get_ops_in_block(_block_num INT = 0, _only_virtual BOOLEAN = FALSE, _include_reversible BOOLEAN = FALSE, _fill_operation_id BOOLEAN = FALSE, _is_legacy_style BOOLEAN = NULL)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
@@ -103,7 +103,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.get_account_history(_account VARCHAR, _start BIGINT, _limit INT, _include_reversible BOOLEAN, _filter NUMERIC = NULL, _is_legacy_style BOOLEAN = NULL, _operation_filter_low NUMERIC = 0, _operation_filter_high NUMERIC = 0)
+CREATE OR REPLACE FUNCTION hafah_objects.get_account_history(_account VARCHAR, _filter NUMERIC = NULL, _start BIGINT = 9223372036854775807, _limit INT = 1000, _include_reversible BOOLEAN = FALSE, _is_legacy_style BOOLEAN = NULL, _operation_filter_low NUMERIC = 0, _operation_filter_high NUMERIC = 0)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -167,7 +167,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.get_transaction(_id TEXT, _include_reversible BOOLEAN, _is_legacy_style BOOLEAN = NULL)
+CREATE OR REPLACE FUNCTION hafah_objects.get_transaction(_id TEXT, _include_reversible BOOLEAN = FALSE, _is_legacy_style BOOLEAN = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -215,7 +215,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_objects.enum_virtual_ops(_block_range_begin INT, _block_range_end INT, _operation_begin BIGINT, _limit INT, _filter NUMERIC, _include_reversible BOOLEAN, _group_by_block BOOLEAN, _fill_operation_id BOOLEAN = TRUE)
+CREATE OR REPLACE FUNCTION hafah_objects.enum_virtual_ops(_block_range_begin INT, _block_range_end INT, _operation_begin BIGINT = 0, _limit INT = 150000, _filter NUMERIC = NULL, _include_reversible BOOLEAN = FALSE, _group_by_block BOOLEAN = FALSE, _fill_operation_id BOOLEAN = TRUE)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS

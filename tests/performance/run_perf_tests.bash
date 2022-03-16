@@ -27,21 +27,23 @@ fi
 
 generate_output() {
   # JMETER=$1
-  PORT=$1
+  CALL_STYLE=$1
+  PORT=$2
 
-  OUTPUT_PROJECT_FILE=out_$PORT.jmx
-  OUTPUT_REPORT_FILE=result_$PORT.jtl
+  OUTPUT_PROJECT_FILE="out_${CALL_STYLE}_${PORT}.jmx"
+  OUTPUT_REPORT_FILE="result_${CALL_STYLE}_${PORT}.jtl"
   
   OUTPUT_PROJECT_FILE_PATH="${PWD}/${OUTPUT_PROJECT_FILE}"
   OUTPUT_REPORT_FILE_PATH="${PWD}/${OUTPUT_REPORT_FILE}"
-  RESULT_REPORT_DIR="${PWD}/report_${PORT}"
+  RESULT_REPORT_DIR="${PWD}/report_${CALL_STYLE}_${PORT}"
 
   echo "configuring test..."
-  sed "s/ENTER PORT NUMBER HERE/$PORT/g" $PATH_TO_INPUT_PROJECT_FILE > $OUTPUT_PROJECT_FILE.v00
-  sed "s/ENTER THREAD COUNT HERE/$THREADS_COUNT/g" $OUTPUT_PROJECT_FILE.v00 > $OUTPUT_PROJECT_FILE.v0
-  sed "s|ENTER PATH TO CSV HERE|$PATH_TO_INPUT_CSV|g" $OUTPUT_PROJECT_FILE.v0 > $OUTPUT_PROJECT_FILE
+  sed "s/ENTER PORT NUMBER HERE/$PORT/g" $PATH_TO_INPUT_PROJECT_FILE > $OUTPUT_PROJECT_FILE.v000
+  sed "s/ENTER THREAD COUNT HERE/$THREADS_COUNT/g" $OUTPUT_PROJECT_FILE.v000 > $OUTPUT_PROJECT_FILE.v00
+  sed "s|ENTER PATH TO CSV HERE|$PATH_TO_INPUT_CSV|g" $OUTPUT_PROJECT_FILE.v00 > $OUTPUT_PROJECT_FILE.v0
+  sed "s/ENTER CALL STYLE HERE/$CALL_STYLE/g" $OUTPUT_PROJECT_FILE.v0 > $OUTPUT_PROJECT_FILE
   
-  if [ $PORT == 5432 ]; then
+  if [ $CALL_STYLE == "postgres" ]; then
 
     if [[ -z $"$PSQL_USER" ]]; then
       echo "env PSQL_USER not set!"
@@ -72,6 +74,7 @@ generate_output() {
     PSQL_HOST=''
     rm $OUTPUT_PROJECT_FILE.v2 $OUTPUT_PROJECT_FILE.v3 $OUTPUT_PROJECT_FILE.v4
   fi
+  rm $OUTPUT_PROJECT_FILE.v000
   rm $OUTPUT_PROJECT_FILE.v00
   rm $OUTPUT_PROJECT_FILE.v0
 
@@ -96,11 +99,27 @@ mkdir -p workdir
 pushd workdir
 
 ARGUMENTS=""
-for ((i=3; i<=$#; i++))
+VERSIONS=("old-style" "new-style" "pure" "postgres")
+for ((i=3; i<=$#; i+=2))
 do
-  PORT=${!i}
-  generate_output $PORT
-  ARGUMENTS="$ARGUMENTS result_$PORT.jtl"
+  j=$(($i + 1))
+  CALL_STYLE=${!i}
+  
+  match=0
+  for version in "${VERSIONS[@]}"; do
+    if [[ $version = "$CALL_STYLE" ]]; then
+      match=1
+      break
+    fi
+  done
+  if [[ $match = 0 ]]; then
+    echo "call type must be 'old-style', 'new-style', 'pure' or 'postgres'"
+    exit -4
+  fi
+
+	PORT=${!j}
+  generate_output $CALL_STYLE $PORT
+  ARGUMENTS="$ARGUMENTS result_${CALL_STYLE}_${PORT}.jtl"
 done
 
 $PATH_TO_PARSE_SCRIPT $PATH_TO_INPUT_CSV $ARGUMENTS && echo "summary: $PWD/parsed.csv"
