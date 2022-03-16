@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 """Wrapper for sqlalchemy, providing a simple interface."""
 
-import logging
-from collections import OrderedDict
-
 import simplejson
 import sqlalchemy
 
-logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
+from hafah.logger import get_logger
 
-log = logging.getLogger(__name__)
+log = get_logger(module_name=__name__)
 
 class Db:
     """RDBMS adapter for hive. Handles connecting and querying."""
