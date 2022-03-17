@@ -318,7 +318,7 @@ $function$
 DECLARE
   __account_id INT;
   __filter_info INT;
-  __upper_block_limit INT;
+  __upper_block_limit INT := 2147483647; --- Use max int value as always present upper bound to simplify query
 BEGIN
 
   PERFORM hafah_python.validate_limit( _limit, 1000 );
@@ -333,7 +333,7 @@ BEGIN
   SELECT INTO __account_id ( select id from hive.accounts where name = _account );
 
   RETURN QUERY
-    SELECT
+    SELECT -- hafah_python.ah_get_account_history
       (
         CASE
         WHEN ht.trx_hash IS NULL THEN '0000000000000000000000000000000000000000'
@@ -361,10 +361,13 @@ BEGIN
     (
       SELECT ho.trx_in_block, ho.id AS operation_id, ho.body, ho.op_pos, ho.block_num, hao.account_op_seq_no seq_no, ho.virtual_op, ho.formated_timestamp AS _timestamp
       FROM hive.account_operations_view hao
-      JOIN hafah_python.helper_operations_view ho ON hao.operation_id = ho.id
+      JOIN
+      (
+        SELECT hov.* from hafah_python.helper_operations_view hov
+        WHERE hov.block_num <= __upper_block_limit AND ( __filter_info IS NULL OR hov.op_type_id IN (SELECT * FROM unnest(_filter ) ))
+      ) ho ON hao.operation_id = ho.id
+
       WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _start
-                                  AND ( ( __upper_block_limit IS NULL ) OR ( ho.block_num <= __upper_block_limit ) )
-                                  AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id IN (SELECT * FROM unnest( _filter ) ) ) )
       ORDER BY hao.account_op_seq_no DESC
       LIMIT _limit
     ) T
