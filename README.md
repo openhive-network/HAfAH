@@ -15,7 +15,7 @@ or use ready scipt, which runs program and after closing (^C) it run script that
 To start postgREST version, use
 
 ```
-./run.sh re-api-start
+./run.sh re-start
 ```
 
 <br><br>
