@@ -15,26 +15,11 @@ RECORD_NAME = 'backend'
 def handler(name, time, ahi_instance : 'account_history_impl', *_, **__):
   ahi_instance.add_performance_record(name, time)
 
-def translate_filter(input : int, *, offset : int = 0):
-  if input:
-    result = []
-    for i in range(128):
-      if input & (1 << i):
-        result.append( i + offset )
-    return result
-  else:
-    return None
-
 class account_history_impl:
-  VIRTUAL_OP_ID_OFFSET = None
-
   def __init__(self, ctx : dict, is_legacy_style : bool):
     self.api = account_history_db_connector(ctx['db'])
     self.ctx = ctx
     self.is_legacy_style = is_legacy_style
-
-    if account_history_impl.VIRTUAL_OP_ID_OFFSET is None:
-      account_history_impl.VIRTUAL_OP_ID_OFFSET = self.api.get_virtual_op_offset()
 
   def add_performance_record(self, name, time):
     self.ctx['perf'] = self.api.perf
@@ -61,9 +46,10 @@ class account_history_impl:
     )
 
   @perf(record_name=RECORD_NAME, handler=handler)
-  def get_account_history(self, filter : int, account : str, start : int, limit : int, include_reversible : bool):
+  def get_account_history(self, filter_low : int, filter_high : int, account : str, start : int, limit : int, include_reversible : bool):
     return self.api.get_account_history(
-      translate_filter( filter ),
+      filter_low,
+      filter_high,
       account,
       start,
       limit,
@@ -74,11 +60,8 @@ class account_history_impl:
 
   @perf(record_name=RECORD_NAME, handler=handler)
   def enum_virtual_ops(self, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False):
-    if account_history_impl.VIRTUAL_OP_ID_OFFSET is None and filter is not None:
-      account_history_impl.VIRTUAL_OP_ID_OFFSET = self.api.get_virtual_op_offset()
-
     return self.api.enum_virtual_ops(
-      translate_filter( filter, offset=account_history_impl.VIRTUAL_OP_ID_OFFSET ),
+      filter,
       block_range_begin,
       block_range_end,
       operation_begin,

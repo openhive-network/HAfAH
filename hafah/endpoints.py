@@ -82,11 +82,10 @@ def get_account_history(context : None, account : str, start = None, limit = Non
 
   include_reversible = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)
 
-  filter = ( operation_filter_high << 64 ) | operation_filter_low
   start = start if start >= 0 else MAX_BIGINT_POSTGRES
   limit = (RANGEINT + limit) if limit < 0 else limit
 
-  return backend(context, kwargs).get_account_history( filter, account, start, limit, include_reversible )
+  return backend(context, kwargs).get_account_history( operation_filter_low, operation_filter_high, account, start, limit, include_reversible )
 
 def build_methods():
   ACCOUNT_HISTORY_API = 'account_history_api'

@@ -14,11 +14,6 @@ logger = get_logger(module_name='SQL')
 def handler(name, time, ahdb : 'account_history_db_connector' , *_, **__):
   ahdb.add_performance_record(name, time)
 
-def format_array(array, type = 'INT'):
-  if array is None:
-    return f'ARRAY[]::{type}[]'
-  return "ARRAY" + dumps(array) + f"::{type}[]" # if len(array) else f'ARRAY[]::{type}[]'
-
 class account_history_db_connector:
   def __init__(self, db : Db) -> None:
     self._conn = db
@@ -77,9 +72,11 @@ class account_history_db_connector:
       is_legacy_style=is_legacy_style
     )[0]['get_transaction_json']
 
-  def get_account_history(self, filter : list, account : str, start : int, limit : int, include_reversible : bool, *, is_legacy_style : bool):
+  def get_account_history(self, filter_low : int, filter_high : int, account : str, start : int, limit : int, include_reversible : bool, *, is_legacy_style : bool):
     return self._get_all(
-      f"SELECT * FROM hafah_python.ah_get_account_history_json( {format_array(filter)}, :account, :start ::BIGINT, :limit, :include_reversible, :is_legacy_style )",
+      f"SELECT * FROM hafah_python.ah_get_account_history_json( :filter_low, :filter_high, :account, :start ::BIGINT, :limit, :include_reversible, :is_legacy_style )",
+      filter_low=filter_low,
+      filter_high=filter_high,
       account=account,
       start=start,
       limit=limit,
@@ -87,21 +84,10 @@ class account_history_db_connector:
       is_legacy_style=is_legacy_style
     )[0]['ah_get_account_history_json']
 
-  def get_irreversible_block_num(self) -> int:
-    result = self._get_all(f"SELECT hive.app_get_irreversible_block() as num")
-    return result[0]['num']
-
-  def get_operation_id_types(self):
-    ''' for tests only '''
-    return self._get_all("SELECT name, id FROM hive.operation_types")
-
-  def get_virtual_op_offset(self) -> int:
-    result = self._get_all("SELECT MIN(id) as id FROM hive.operation_types WHERE is_virtual=True")
-    return result[0]['id']
-
-  def enum_virtual_ops(self, filter : list, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool):
+  def enum_virtual_ops(self, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool):
     return self._get_all(
-      f"SELECT * FROM {self._schema}.enum_virtual_ops_json( {format_array(filter)}, :block_range_begin, :block_range_end, :operation_begin, :limit, :include_reversible, :group_by_block )",
+      f"SELECT * FROM {self._schema}.enum_virtual_ops_json( :filter, :block_range_begin, :block_range_end, :operation_begin, :limit, :include_reversible, :group_by_block )",
+      filter=filter,
       block_range_begin=block_range_begin,
       block_range_end=block_range_end,
       operation_begin=operation_begin,
