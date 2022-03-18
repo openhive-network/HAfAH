@@ -20,6 +20,76 @@ ON
   hov.op_type_id=hot.id
 ;
 
+-- credits: https://stackoverflow.com/a/50119025/11738218
+CREATE OR REPLACE FUNCTION hafah_python.numeric_to_bit(NUMERIC)
+  RETURNS BIT(64) AS $$
+DECLARE
+  num ALIAS FOR $1;
+  -- 1 + largest positive BIGINT --
+  max_bigint NUMERIC := '9223372036854775808' :: NUMERIC(19, 0);
+  result BIT VARYING;
+BEGIN
+  WITH
+      chunks (exponent, chunk) AS (
+        SELECT
+          exponent,
+          floor((num / (max_bigint ^ exponent) :: NUMERIC(300, 20)) % max_bigint) :: BIGINT
+        FROM generate_series(0, 5) exponent
+    )
+  SELECT bit_or(chunk :: BIT(64) :: BIT VARYING << (63 * (exponent))) :: BIT VARYING
+  FROM chunks INTO result;
+  RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION hafah_python.get_bit_positions_64(_in NUMERIC, _offset SMALLINT) RETURNS SMALLINT[] AS
+$function$
+DECLARE
+  __bit_in BIT(64);
+BEGIN
+  IF _in IS NULL OR _in < 0 :: NUMERIC THEN
+    RETURN ( SELECT NULL::SMALLINT[] );
+  END IF;
+  IF _in = 0 :: NUMERIC THEN
+    RETURN ( SELECT ARRAY[]::SMALLINT[] );
+  END IF;
+  __bit_in := hafah_python.numeric_to_bit(_in);
+
+  RETURN (
+    SELECT array_agg(bit_pos :: SMALLINT + _offset)
+    FROM generate_series(0, 64) AS bit_pos
+    WHERE ((__bit_in >> (bit_pos)) & (1 :: BIT(64))) = (1 :: BIT(64))
+  );
+END;
+$function$
+LANGUAGE plpgsql IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION hafah_python.get_bit_positions_128(_low NUMERIC, _high NUMERIC) RETURNS SMALLINT[] AS
+$function$
+BEGIN
+  RETURN (
+    SELECT ( (SELECT hafah_python.get_bit_positions_64(_low, 0 :: SMALLINT)) || (SELECT hafah_python.get_bit_positions_64(_high, 64 :: SMALLINT)) )
+  );
+END;
+$function$
+LANGUAGE plpgsql IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION hafah_python.translate_enum_virtual_ops_filter(_in NUMERIC) RETURNS SMALLINT[] AS
+$function$
+BEGIN
+  RETURN ( SELECT hafah_python.get_bit_positions_64(_in, (SELECT id FROM hive.operation_types WHERE is_virtual=TRUE ORDER BY id ASC LIMIT 1) ) );
+END;
+$function$
+LANGUAGE plpgsql IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION hafah_python.translate_get_account_history_filter(_low NUMERIC, _high NUMERIC) RETURNS SMALLINT[] AS
+$function$
+BEGIN
+  RETURN ( SELECT hafah_python.get_bit_positions_128(_low, _high ) );
+END;
+$function$
+LANGUAGE plpgsql IMMUTABLE;
+
 CREATE OR REPLACE FUNCTION hafah_python.validate_limit( in GIVEN_LIMIT BIGINT, in EXPECTED_LIMIT INT ) RETURNS VOID AS $function$
 BEGIN
   IF GIVEN_LIMIT > EXPECTED_LIMIT THEN
@@ -223,11 +293,12 @@ DROP TYPE IF EXISTS hafah_python.enum_virtual_ops_result CASCADE;
 
 CREATE TYPE hafah_python.enum_virtual_ops_result AS ( _trx_id TEXT, _block INT, _trx_in_block BIGINT, _op_in_trx BIGINT, _virtual_op BOOLEAN, _timestamp TEXT, _value TEXT, _operation_id BIGINT );
 
-CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops( in _filter INT[], in _block_range_begin INT, in _block_range_end INT, _operation_begin BIGINT, in _limit INT, in _include_reversible BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops( in _filter NUMERIC, in _block_range_begin INT, in _block_range_end INT, _operation_begin BIGINT, in _limit INT, in _include_reversible BOOLEAN )
 RETURNS SETOF hafah_python.enum_virtual_ops_result
 AS
 $function$
 DECLARE
+  __resolved_filter SMALLINT[];
   __upper_block_limit INT;
   __filter_info INT;
 BEGIN
@@ -236,7 +307,9 @@ BEGIN
   PERFORM hafah_python.validate_limit( _limit, 150000 );
   PERFORM hafah_python.validate_block_range( _block_range_begin, _block_range_end, 2000 );
 
-  SELECT INTO __filter_info ( select array_length( _filter, 1 ) );
+  SELECT hafah_python.translate_enum_virtual_ops_filter( _filter ) INTO __resolved_filter;
+  SELECT INTO __filter_info ( select array_length( __resolved_filter, 1 ) );
+
   IF NOT _include_reversible THEN
     SELECT hive.app_get_irreversible_block(  ) INTO __upper_block_limit;
     IF _block_range_begin > __upper_block_limit THEN
@@ -284,7 +357,7 @@ BEGIN
       FROM hafah_python.helper_operations_view ho
       WHERE ho.block_num >= _block_range_begin AND ho.block_num < _block_range_end
       AND ho.virtual_op = TRUE
-      AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id IN (SELECT * FROM unnest( _filter ) ) ) )
+      AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id IN (SELECT * FROM unnest( __resolved_filter ) ) ) )
       AND ( _operation_begin = -1 OR ho.id >= _operation_begin )
       ORDER BY ho.id
       LIMIT _limit
@@ -302,7 +375,7 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history( in _filter INT[], in _account VARCHAR, _start BIGINT, _limit BIGINT, in _include_reversible BOOLEAN, in _is_legacy_style BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history( in _filter_low NUMERIC, in _filter_high NUMERIC, in _account VARCHAR, _start BIGINT, _limit BIGINT, in _include_reversible BOOLEAN, in _is_legacy_style BOOLEAN )
 RETURNS TABLE(
   _trx_id TEXT,
   _block INT,
@@ -316,6 +389,7 @@ RETURNS TABLE(
 AS
 $function$
 DECLARE
+  __resolved_filter SMALLINT[];
   __account_id INT;
   __filter_info INT;
   __upper_block_limit INT := 2147483647; --- Use max int value as always present upper bound to simplify query
@@ -324,7 +398,8 @@ BEGIN
   PERFORM hafah_python.validate_limit( _limit, 1000 );
   PERFORM hafah_python.validate_start_limit( _start, _limit );
 
-  SELECT INTO __filter_info ( select array_length( _filter, 1 ) );
+  SELECT hafah_python.translate_get_account_history_filter(_filter_low, _filter_high) INTO __resolved_filter;
+  SELECT INTO __filter_info ( select array_length( __resolved_filter, 1 ) );
 
   IF NOT _include_reversible THEN
     SELECT hive.app_get_irreversible_block() INTO __upper_block_limit;
@@ -364,7 +439,7 @@ BEGIN
       JOIN
       (
         SELECT hov.* from hafah_python.helper_operations_view hov
-        WHERE hov.block_num <= __upper_block_limit AND ( __filter_info IS NULL OR hov.op_type_id IN (SELECT * FROM unnest(_filter ) ))
+        WHERE hov.block_num <= __upper_block_limit AND ( __filter_info IS NULL OR hov.op_type_id IN (SELECT * FROM unnest(__resolved_filter) ))
       ) ho ON hao.operation_id = ho.id
 
       WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _start
@@ -488,7 +563,7 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history_json( in _filter INT[], in _account VARCHAR, _start BIGINT, _limit BIGINT, in _include_reversible BOOLEAN, in _is_legacy_style BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history_json( in _filter_low NUMERIC, in _filter_high NUMERIC, in _account VARCHAR, _start BIGINT, _limit BIGINT, in _include_reversible BOOLEAN, in _is_legacy_style BOOLEAN )
 RETURNS JSON
 AS
 $function$
@@ -514,7 +589,7 @@ BEGIN
           _virtual_op AS "virtual_op",
           _operation_id AS "operation_id"
         FROM
-          hafah_python.ah_get_account_history( _filter, _account, _start, _limit, _include_reversible, _is_legacy_style )
+          hafah_python.ah_get_account_history( _filter_low, _filter_high, _account, _start, _limit, _include_reversible, _is_legacy_style )
       ) ops
     ) AS a)
     SELECT
@@ -571,7 +646,7 @@ $function$
 language plpgsql STABLE;
 
 
-CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops_json( in _filter INT[], in _block_range_begin INT, in _block_range_end INT, _operation_begin BIGINT, in _limit INT, in _include_reversible BOOLEAN, in _group_by_block BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops_json( in _filter NUMERIC, in _block_range_begin INT, in _block_range_end INT, _operation_begin BIGINT, in _limit INT, in _include_reversible BOOLEAN, in _group_by_block BOOLEAN )
 RETURNS JSON
 AS
 $function$
