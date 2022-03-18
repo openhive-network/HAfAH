@@ -3,6 +3,7 @@
 import json
 from functools import partial
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from logging import DEBUG
 from socketserver import ForkingMixIn
 
 import simplejson
@@ -116,11 +117,12 @@ class DBHandler(BaseHTTPRequestHandler):
         self.process_response(ERR_CODE, CONTENT_TYPE_HTML, ex)
 
     # logging times
-    perf : dict = ctx['perf']
-    perf['process_request'] = (timer.time - sum(perf.values()))
-    id = json.dumps(ctx['id']).strip('"')
-    for key, value in ctx['perf'].items():
-      logger.debug(f'[{id}] {key} executed in {value :.2f}ms')
+    if logger.isEnabledFor(DEBUG):
+      perf : dict = ctx['perf']
+      perf['process_request'] = (timer.time - sum(perf.values()))
+      id = json.dumps(ctx['id']).strip('"')
+      for key, value in ctx['perf'].items():
+        logger.debug(f'[{id}] {key} executed in {value :.2f}ms')
 
 class PreparationPhase:
   def __init__(self, db_url, sql_src_path):
