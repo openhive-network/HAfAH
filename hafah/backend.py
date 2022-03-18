@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from typing import Union
-
 from hafah.exceptions import *
 from hafah.performance import perf
 from hafah.queries import account_history_db_connector
@@ -26,15 +24,11 @@ def translate_filter(input : int, *, offset : int = 0):
     return None
 
 class account_history_impl:
-  VIRTUAL_OP_ID_OFFSET = None
-
   def __init__(self, ctx : dict, is_legacy_style : bool):
     self.api = account_history_db_connector(ctx['db'])
     self.ctx = ctx
     self.is_legacy_style = is_legacy_style
-
-    if account_history_impl.VIRTUAL_OP_ID_OFFSET is None:
-      account_history_impl.VIRTUAL_OP_ID_OFFSET = self.api.get_virtual_op_offset()
+    self.virtual_op_id_offset = ctx['virtual_op_id_offset']
 
   def add_performance_record(self, name, time):
     self.ctx['perf'] = self.api.perf
@@ -74,11 +68,8 @@ class account_history_impl:
 
   @perf(record_name=RECORD_NAME, handler=handler)
   def enum_virtual_ops(self, filter : int, block_range_begin : int, block_range_end : int, operation_begin : int, limit : int, include_reversible : bool, group_by_block : bool = False):
-    if account_history_impl.VIRTUAL_OP_ID_OFFSET is None and filter is not None:
-      account_history_impl.VIRTUAL_OP_ID_OFFSET = self.api.get_virtual_op_offset()
-
     return self.api.enum_virtual_ops(
-      translate_filter( filter, offset=account_history_impl.VIRTUAL_OP_ID_OFFSET ),
+      translate_filter( filter, offset=self.virtual_op_id_offset ),
       block_range_begin,
       block_range_end,
       operation_begin,

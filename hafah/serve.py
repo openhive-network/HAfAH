@@ -14,6 +14,7 @@ from hafah.adapter import Db
 from hafah.endpoints import build_methods as account_history
 from hafah.logger import get_logger
 from hafah.performance import Timer
+from hafah.queries import account_history_db_connector
 
 logger = get_logger(module_name='AH synchronizer')
 
@@ -59,10 +60,11 @@ def handler(name, time, self, req, ctx, *_, **__):
   ctx[name] = time
 
 class DBHandler(BaseHTTPRequestHandler):
-  def __init__(self, methods, db_url, log_responses, *args, **kwargs):
+  def __init__(self, methods, db_url, log_responses, virtual_op_id_offset, *args, **kwargs):
       self.methods        = methods
       self.db_url         = db_url
       self.log_responses  = log_responses
+      self.virtual_op_id_offset = virtual_op_id_offset
       super().__init__(*args, **kwargs)
 
   @staticmethod
@@ -90,6 +92,7 @@ class DBHandler(BaseHTTPRequestHandler):
       with sql_executor(self.db_url) as _sql_executor:
 
         assert _sql_executor.db is not None, "lack of database"
+        assert self.virtual_op_id_offset is not None, 'virtual op offset is not set'
         ctx['db'] = _sql_executor.db
 
         _response : Response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
@@ -105,7 +108,7 @@ class DBHandler(BaseHTTPRequestHandler):
       self.process_response(ERR_CODE, CONTENT_TYPE_HTML, ex)
 
   def do_POST(self):
-    ctx = { 'perf' : {}, 'id': None }
+    ctx = { 'perf' : {}, 'id': None, 'virtual_op_id_offset': self.virtual_op_id_offset }
     with Timer() as timer:
       try:
         request = self.rfile.read(int(self.headers[CONTENT_LENGTH])).decode()
@@ -126,6 +129,7 @@ class PreparationPhase:
   def __init__(self, db_url, sql_src_path):
     self.db_url       = db_url
     self.sql_src_path = sql_src_path
+    self.virtual_op_id_offset = None
 
   def read_file(self):
     with open(self.sql_src_path, 'r') as file:
@@ -142,6 +146,8 @@ class PreparationPhase:
         _query = self.read_file()
         if len(_query) > 0:
           _sql_executor.db.query_no_return(_query)
+
+        self.virtual_op_id_offset = account_history_db_connector(_sql_executor.db).get_virtual_op_offset()
 
         logger.info("http server is prepared")
         return True
@@ -160,7 +166,7 @@ def run_server(db_url, port, log_responses, sql_src_path):
   methods = APIMethods.build_methods()
   logger.info('configured for endpoints: \n - ' + '\n - '.join(methods.items.keys()))
 
-  handler = partial(DBHandler, methods, db_url, log_responses)
+  handler = partial(DBHandler, methods, db_url, log_responses, _prep_phase.virtual_op_id_offset)
   http_server = ForkHTTPServer(('0.0.0.0', port), handler)
 
   logger.info("http server is connected")
