@@ -18,74 +18,132 @@ CREATE SCHEMA IF NOT EXISTS hafah_backend;
 -- python extension for operation filters
 CREATE EXTENSION IF NOT EXISTS plpython3u SCHEMA pg_catalog;
 
-CREATE OR REPLACE PROCEDURE hafah_backend.create_api_user()
+CREATE PROCEDURE hafah_backend.create_api_user()
 LANGUAGE 'plpgsql'
 AS $$
 BEGIN
   --recreate role for reading data
   IF (SELECT 1 FROM pg_roles WHERE rolname='hafah_user') IS NOT NULL THEN
-    DROP OWNED BY hafah_user;
+    DROP OWNED BY hafah_user CASCADE;
   END IF;
   DROP ROLE IF EXISTS hafah_user;
   CREATE ROLE hafah_user;
 
-  GRANT USAGE ON SCHEMA hafah_api TO hafah_user;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_api TO hafah_user;
-
   GRANT USAGE ON SCHEMA hafah_backend TO hafah_user;
   GRANT SELECT ON ALL TABLES IN SCHEMA hafah_backend TO hafah_user;
 
-  GRANT USAGE ON SCHEMA hafah_objects TO hafah_user;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_objects TO hafah_user;
+  GRANT USAGE ON SCHEMA hafah_api_v1 TO hafah_user;
+  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_api_v1 TO hafah_user;
+
+  GRANT USAGE ON SCHEMA hafah_api_v2 TO hafah_user;
+  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_api_v2 TO hafah_user;
+
+  GRANT USAGE ON SCHEMA hafah_endpoints TO hafah_user;
+  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_endpoints TO hafah_user;
 
   GRANT USAGE ON SCHEMA hafah_python TO hafah_user;
   GRANT SELECT ON ALL TABLES IN SCHEMA hafah_python TO hafah_user;
+  GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hafah_python TO hafah_user;
 
   GRANT USAGE ON SCHEMA hive TO hafah_user;
   GRANT SELECT ON ALL TABLES IN SCHEMA hive TO hafah_user;
   GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hive TO hafah_user;
-
+  
   -- add ability for admin to switch to hafah_user role
   GRANT hafah_user TO haf_admin;
 
   -- add hafah schemas owner
+  IF (SELECT 1 FROM pg_roles WHERE rolname='hafah_owner') IS NOT NULL THEN
+    DROP OWNED BY hafah_owner CASCADE;
+  END IF;
   DROP ROLE IF EXISTS hafah_owner;
   CREATE ROLE hafah_owner;
-  ALTER SCHEMA hafah_api OWNER TO hafah_owner;
+  
   ALTER SCHEMA hafah_backend OWNER TO hafah_owner;
-  ALTER SCHEMA hafah_objects OWNER TO hafah_owner;
+  ALTER SCHEMA hafah_api_v1 OWNER TO hafah_owner;
+  ALTER SCHEMA hafah_api_v2 OWNER TO hafah_owner;  
+  ALTER SCHEMA hafah_endpoints OWNER TO hafah_owner;
 END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.parse_is_legacy_style(_is_legacy_style BOOLEAN = NULL)
+CREATE FUNCTION hafah_backend.assert_input_json(_jsonrpc TEXT, _method TEXT, _params JSON, _id JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  IF _method NOT SIMILAR TO
+    '(account_history_api|condenser_api)\.(get_ops_in_block|enum_virtual_ops|get_transaction|get_account_history)'
+  THEN
+    RETURN hafah_backend.raise_exception(-32601, 'Method not found', _method, _id);
+  END IF;
+
+  RETURN NULL;
+END
+$$
+;
+
+CREATE FUNCTION hafah_backend.parse_is_legacy_style()
 RETURNS BOOLEAN
 LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
   __header_val TEXT;
-  __is_legacy_style_header BOOLEAN;
 BEGIN
-  SELECT current_setting('request.header.Is-Legacy-Style', TRUE) INTO __header_val;
-  IF __header_val IS NULL OR length(__header_val) = 0 THEN
-    __is_legacy_style_header = FALSE;
-  ELSEIF __header_val::BOOLEAN IS TRUE THEN
-    __is_legacy_style_header = TRUE;
-  END IF;
-  
-  IF __is_legacy_style_header IS TRUE AND _is_legacy_style IS NULL THEN
-    RETURN TRUE;
-  ELSEIF __is_legacy_style_header IS FALSE AND _is_legacy_style IS NULL THEN
+  SELECT NULLIF(current_setting('request.header.Is-Legacy-Style', TRUE), '') INTO __header_val;
+  IF __header_val IS NULL OR __header_val::BOOLEAN IS FALSE THEN
     RETURN FALSE;
-  ELSEIF __is_legacy_style_header IS NOT NULL AND _is_legacy_style IS NOT NULL THEN
-    RETURN _is_legacy_style;
+  ELSEIF __header_val::BOOLEAN IS TRUE THEN
+    RETURN TRUE;
   END IF;
 END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.parse_argument(_params JSON, _json_type TEXT, _arg_name TEXT, _arg_number INT, _is_bool BOOLEAN = FALSE)
+CREATE FUNCTION hafah_backend.get_virtual_op_offset()
+RETURNS INT
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN MIN(id) FROM hive.operation_types WHERE is_virtual = True;
+END
+$$
+;
+
+CREATE FUNCTION hafah_backend.parse_acc_hist_start(_start BIGINT)
+RETURNS BIGINT
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN CASE WHEN _start < 0 THEN
+    9223372036854775807
+  ELSE
+    _start
+  END;
+END
+$$
+;
+
+CREATE FUNCTION hafah_backend.parse_acc_hist_limit(_limit BIGINT)
+RETURNS BIGINT
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN CASE WHEN _limit < 0 THEN
+    (2^32) + _limit
+  ELSE
+    _limit
+  END;
+END
+$$
+;
+
+CREATE FUNCTION hafah_backend.parse_argument(_params JSON, _json_type TEXT, _arg_name TEXT, _arg_number INT, _is_bool BOOLEAN = FALSE)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
@@ -109,7 +167,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.translate_filter(_input NUMERIC, _transform INT = 0)
+CREATE FUNCTION hafah_backend.translate_filter(_input NUMERIC, _transform INT = 0)
 RETURNS INT[]
 LANGUAGE 'plpython3u'
 AS
@@ -127,7 +185,7 @@ $$
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.create_filter_numeric(_operation_filter_low NUMERIC, _operation_filter_high NUMERIC)
+CREATE FUNCTION hafah_backend.create_filter_numeric(_operation_filter_low NUMERIC, _operation_filter_high NUMERIC)
 RETURNS NUMERIC
 LANGUAGE 'plpython3u'
 AS
@@ -136,7 +194,7 @@ $$
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.raise_exception(_code INT, _message TEXT, _data TEXT = NULL, _id JSON = NULL, _no_data BOOLEAN = FALSE)
+CREATE FUNCTION hafah_backend.raise_exception(_code INT, _message TEXT, _data TEXT = NULL, _id JSON = NULL, _no_data BOOLEAN = FALSE)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -165,7 +223,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.wrap_sql_exception(_exception_message TEXT, _id JSON = NULL)
+CREATE FUNCTION hafah_backend.wrap_sql_exception(_exception_message TEXT, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -176,7 +234,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.raise_missing_arg(_arg_name TEXT, _id JSON)
+CREATE FUNCTION hafah_backend.raise_missing_arg(_arg_name TEXT, _id JSON)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
@@ -187,7 +245,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.raise_operation_id_exception(_id JSON)
+CREATE FUNCTION hafah_backend.raise_operation_id_exception(_id JSON)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -198,7 +256,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.raise_uint_exception(_id JSON)
+CREATE FUNCTION hafah_backend.raise_uint_exception(_id JSON)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -209,7 +267,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.raise_int_exception(_id JSON)
+CREATE FUNCTION hafah_backend.raise_int_exception(_id JSON)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -220,7 +278,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.raise_bool_case_exception(_id JSON)
+CREATE FUNCTION hafah_backend.raise_bool_case_exception(_id JSON)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -232,7 +290,7 @@ $$
 ;
 
 -- TODO: this is done to replicate behaviour of HAFAH python, change when possible
-CREATE OR REPLACE FUNCTION hafah_backend.raise_below_zero_acc_hist(_id JSON = NULL)
+CREATE FUNCTION hafah_backend.raise_below_zero_acc_hist(_id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS

@@ -1,23 +1,23 @@
 /*
-ah/api/hafah_api.sql
+ah/api/hafah_endpoints.sql
 
-'hafah_api.home(jsonrpc TEXT, method TEXT, params JSON, id JSON)' sends and receives requests via 'call_some_method()':
-  - call_get_ops_in_block
-  - call_enum_virtual_ops
-  - call_get_transaction
-  - call_get_account_history
+'hafah_endpoints.home(jsonrpc TEXT, method TEXT, params JSON, id JSON)' sends and receives requests via 'some_method()':
+  - get_ops_in_block
+  - enum_virtual_ops
+  - get_transaction
+  - get_account_history
 Inside these functions, arguments are parsed from 'params', their values validated and set or set to default.
-Argument value assertions are made during parsing. Unique assertions are defined here, in 'call_some_method()',
+Argument value assertions are made during parsing. Unique assertions are defined here, in 'some_method()',
 while repeated are in ah/api/hafah_backend.sql.
 
-Every 'call_some_method()' function calls corresponding method in 'hafah_objects' schema, which has utilities
+Every 'some_method()' function calls corresponding method in 'hafah_objects' schema, which has utilities
 for generating object responses.
 */
-DROP SCHEMA IF EXISTS hafah_api CASCADE;
+DROP SCHEMA IF EXISTS hafah_endpoints CASCADE;
 
-CREATE SCHEMA IF NOT EXISTS hafah_api;
+CREATE SCHEMA IF NOT EXISTS hafah_endpoints;
 
-CREATE OR REPLACE FUNCTION hafah_api.home(JSON)
+CREATE FUNCTION hafah_endpoints.home(JSON)
 RETURNS JSONB
 LANGUAGE 'plpgsql'
 AS
@@ -45,7 +45,7 @@ BEGIN
     RETURN hafah_backend.raise_exception(-32600, 'Invalid JSON-RPC');
   END IF;
   
-  SELECT hafah_api.assert_input_json(__jsonrpc, __method, __params, __id) INTO __input_assertion;
+  SELECT hafah_backend.assert_input_json(__jsonrpc, __method, __params, __id) INTO __input_assertion;
   IF __input_assertion IS NOT NULL THEN
     RETURN __input_assertion;
   END IF;
@@ -62,13 +62,13 @@ BEGIN
   END IF;
   
   IF __method_type = 'get_ops_in_block' THEN
-    SELECT hafah_api.call_get_ops_in_block(__params, __id, __is_legacy_style, __json_type) INTO __result;
+    SELECT hafah_endpoints.get_ops_in_block(__params, __is_legacy_style, __id, __json_type) INTO __result;
   ELSEIF __method_type = 'enum_virtual_ops' THEN
-    SELECT hafah_api.call_enum_virtual_ops(__params, __id, __is_legacy_style, __json_type) INTO __result;
+    SELECT hafah_endpoints.enum_virtual_ops(__params, __is_legacy_style, __id, __json_type) INTO __result;
   ELSEIF __method_type = 'get_transaction' THEN
-    SELECT hafah_api.call_get_transaction(__params, __id, __is_legacy_style, __json_type) INTO __result;
+    SELECT hafah_endpoints.get_transaction(__params, __is_legacy_style, __id, __json_type) INTO __result;
   ELSEIF __method_type = 'get_account_history' THEN
-    SELECT hafah_api.call_get_account_history(__params, __id, __is_legacy_style, __json_type) INTO __result;
+    SELECT hafah_endpoints.get_account_history(__params, __is_legacy_style, __id, __json_type) INTO __result;
   END IF;
 
   IF __result->'error' IS NULL THEN
@@ -86,7 +86,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_get_ops_in_block(_params JSON, _id JSON = NULL, _is_legacy_style BOOLEAN = NULL, _json_type TEXT = NULL)
+CREATE FUNCTION hafah_endpoints.get_ops_in_block(_params JSON, _is_legacy_style BOOLEAN, _id JSON = NULL, _json_type TEXT = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -95,8 +95,6 @@ DECLARE
   __block_num INT = NULL; -- default 0
   __only_virtual BOOLEAN = NULL; -- default FALSE
   __include_reversible BOOLEAN = NULL; -- default FALSE
-
-  __fill_operation_id BOOLEAN = FALSE; -- hardcoded. When changed, also change in hafah_objects.get_ops_in_block()!
 
   __result JSON;
   __exception_message TEXT;
@@ -134,7 +132,7 @@ BEGIN
   END;
 
   BEGIN
-    SELECT hafah_objects.get_ops_in_block(__block_num, __only_virtual, __include_reversible, __fill_operation_id, _is_legacy_style) INTO __result;
+    SELECT hafah_python.get_ops_in_block_json(__block_num, __only_virtual, __include_reversible, _is_legacy_style) INTO __result;
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
@@ -148,7 +146,7 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_enum_virtual_ops(_params JSON, _id JSON = NULL, _is_legacy_style BOOLEAN = NULL, _json_type TEXT = NULL)
+CREATE FUNCTION hafah_endpoints.enum_virtual_ops(_params JSON, _is_legacy_style BOOLEAN, _id JSON = NULL, _json_type TEXT = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -162,8 +160,6 @@ DECLARE
   __include_reversible BOOLEAN = NULL; -- default FALSE
   __group_by_block BOOLEAN = NULL; -- default FALSE
   
-  __fill_operation_id BOOLEAN = TRUE; -- hardcoded. When changed, also change in hafah_objects.enum_virtual_ops()!
-
   __exception_message TEXT;
   __result JSON;
 BEGIN
@@ -238,7 +234,11 @@ BEGIN
   END;
 
   BEGIN
-    SELECT hafah_objects.enum_virtual_ops(__block_range_begin, __block_range_end, __operation_begin, __limit, __filter, __include_reversible, __group_by_block, __fill_operation_id) INTO __result;
+    SELECT hafah_python.enum_virtual_ops_json(
+      hafah_backend.translate_filter(
+        __filter,
+        hafah_backend.get_virtual_op_offset() ),
+      __block_range_begin, __block_range_end, __operation_begin, __limit, __include_reversible, __group_by_block) INTO __result;
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
@@ -251,7 +251,7 @@ BEGIN
 
   -- TODO: might do this before calling hafah_objects.enum_virtual_ops(), only done to replicate HAfAH python
   IF _is_legacy_style IS TRUE THEN
-    RETURN hafah_backend.raise_exception(-32602, 'Invalid parameters', 'not supported', _id);
+    RETURN hafah_backend.raise_exception(-32601, 'Method not found', 'condenser_api.enum_virtual_ops', _id);
   ELSE
     RETURN __result;
   END IF;
@@ -259,20 +259,20 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_get_transaction(_params JSON, _id JSON = NULL, _is_legacy_style BOOLEAN = NULL, _json_type TEXT = NULL)
+CREATE FUNCTION hafah_endpoints.get_transaction(_params JSON, _is_legacy_style BOOLEAN, _id JSON = NULL, _json_type TEXT = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
-  __id TEXT; -- required
+  __id BYTEA; -- required
   __include_reversible BOOLEAN = NULL; -- default FALSE
 
-  __result JSON;
+  __exception_message TEXT;
 BEGIN
   __id = hafah_backend.parse_argument(_params, _json_type, 'id', 0);
   IF __id IS NOT NULL THEN
-    __id = __id::TEXT;
+    __id = __id::BYTEA;
   ELSE
     RETURN hafah_backend.raise_missing_arg('id', _id);
   END IF;
@@ -290,17 +290,18 @@ BEGIN
       RETURN hafah_backend.raise_bool_case_exception(_id);
   END;
 
-  SELECT hafah_objects.get_transaction(__id, __include_reversible, _is_legacy_style) INTO __result;
-  RETURN CASE WHEN __result IS NULL THEN
-    hafah_backend.raise_exception(-32003, format('Assert Exception:false: Unknown Transaction %s', rpad(__id, 40, '0')), NULL, _id, TRUE)
-  ELSE
-    __result
+  BEGIN
+    RETURN hafah_python.get_transaction_json(__id, __include_reversible, _is_legacy_style);
+  EXCEPTION
+    WHEN raise_exception THEN
+      GET STACKED DIAGNOSTICS __exception_message = message_text;
+      RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
   END;
 END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_api.call_get_account_history(_params JSON, _id JSON = NULL, _is_legacy_style BOOLEAN = NULL, _json_type TEXT = NULL)
+CREATE FUNCTION hafah_endpoints.get_account_history(_params JSON, _is_legacy_style BOOLEAN, _id JSON = NULL, _json_type TEXT = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -309,7 +310,7 @@ DECLARE
   __filter NUMERIC; -- assigned with hafah_backend.create_filter_numeric()
   __account VARCHAR; -- required
   __start BIGINT = NULL; -- default -1
-  __limit INT = NULL; -- default 1000
+  __limit BIGINT = NULL; -- default 1000
   __operation_filter_low NUMERIC = NULL; -- default 0
   __operation_filter_high NUMERIC = NULL; -- default 0
   __include_reversible BOOLEAN = NULL; -- default FALSE
@@ -336,13 +337,9 @@ BEGIN
       __start = -1;
     END IF;
 
-    IF __start < 0 THEN
-      __start = 9223372036854775807;
-    END IF;
-
     __limit = hafah_backend.parse_argument(_params, _json_type, 'limit', 2);
     IF __limit IS NOT NULL THEN
-      __limit = __limit::INT;
+      __limit = __limit::BIGINT;
     ELSE
       __limit = 1000;
     END IF;
@@ -384,82 +381,21 @@ BEGIN
   END;
   
   BEGIN
-    __filter = hafah_backend.create_filter_numeric(__operation_filter_low, __operation_filter_high);
-    RETURN hafah_objects.get_account_history(__account, __filter, __start, __limit, __include_reversible, _is_legacy_style);
+    RETURN hafah_python.ah_get_account_history_json(
+      hafah_backend.translate_filter(
+        hafah_backend.create_filter_numeric(__operation_filter_low, __operation_filter_high)
+      ),
+      __account,
+      hafah_backend.parse_acc_hist_start(__start),
+      hafah_backend.parse_acc_hist_limit(__limit),
+      __include_reversible,
+      _is_legacy_style
+    );
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
       RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
   END;
 END;
-$$
-;
-
-CREATE OR REPLACE FUNCTION hafah_api.assert_input_json(_jsonrpc TEXT, _method TEXT, _params JSON, _id JSON)
-RETURNS JSON
-LANGUAGE 'plpgsql'
-AS
-$$
-BEGIN
-  IF _method NOT SIMILAR TO
-    '(account_history_api|condenser_api)\.(get_ops_in_block|enum_virtual_ops|get_transaction|get_account_history)'
-  THEN
-    RETURN hafah_backend.raise_exception(-32601, 'Method not found', _method, _id);
-  END IF;
-
-  RETURN NULL;
-END
-$$
-;
-
-CREATE OR REPLACE FUNCTION hafah_api.get_ops_in_block(JSON)
-RETURNS JSONB
-LANGUAGE 'plpgsql'
-AS
-$$
-DECLARE
-  __params JSON = $1;
-BEGIN
-  RETURN hafah_api.call_get_ops_in_block(__params);
-END
-$$
-;
-
-CREATE OR REPLACE FUNCTION hafah_api.enum_virtual_ops(JSON)
-RETURNS JSONB
-LANGUAGE 'plpgsql'
-AS
-$$
-DECLARE
-  __params JSON = $1;
-BEGIN
-  RETURN hafah_api.call_enum_virtual_ops(__params);
-END
-$$
-;
-
-CREATE OR REPLACE FUNCTION hafah_api.get_transaction(JSON)
-RETURNS JSONB
-LANGUAGE 'plpgsql'
-AS
-$$
-DECLARE
-  __params JSON = $1;
-BEGIN
-  RETURN hafah_api.call_get_transaction(__params);
-END
-$$
-;
-
-CREATE OR REPLACE FUNCTION hafah_api.get_account_history(JSON)
-RETURNS JSONB
-LANGUAGE 'plpgsql'
-AS
-$$
-DECLARE
-  __params JSON = $1;
-BEGIN
-  RETURN hafah_api.call_get_account_history(__params);
-END
 $$
 ;
