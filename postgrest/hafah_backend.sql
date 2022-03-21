@@ -15,9 +15,6 @@ DROP SCHEMA IF EXISTS hafah_backend CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_backend;
 
--- python extension for operation filters
-CREATE EXTENSION IF NOT EXISTS plpython3u SCHEMA pg_catalog;
-
 CREATE PROCEDURE hafah_backend.create_api_user()
 LANGUAGE 'plpgsql'
 AS $$
@@ -164,33 +161,6 @@ BEGIN
     RETURN __param;
   END IF;
 END
-$$
-;
-
-CREATE FUNCTION hafah_backend.translate_filter(_input NUMERIC, _transform INT = 0)
-RETURNS INT[]
-LANGUAGE 'plpython3u'
-AS
-$$ 
-  global _input
-  if _input:
-    _input = int(_input)
-    __result = []
-    for i in range(128):
-      if _input & (1 << i):
-        __result.append(i + _transform)
-    return __result
-  else:
-    return None
-$$
-;
-
-CREATE FUNCTION hafah_backend.create_filter_numeric(_operation_filter_low NUMERIC, _operation_filter_high NUMERIC)
-RETURNS NUMERIC
-LANGUAGE 'plpython3u'
-AS
-$$
-  return (int(_operation_filter_high) << 64) | int(_operation_filter_low)
 $$
 ;
 

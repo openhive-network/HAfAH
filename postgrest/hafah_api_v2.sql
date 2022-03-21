@@ -19,10 +19,8 @@ LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  RETURN hafah_python.enum_virtual_ops_json(hafah_backend.translate_filter(
-      _filter,
-      hafah_backend.get_virtual_op_offset()
-    ),
+  RETURN hafah_python.enum_virtual_ops_json(
+    hafah_python.translate_enum_virtual_ops_filter(_filter),
     _block_range_begin, _block_range_end, _operation_begin, _limit, _include_reversible, _group_by_block
   );
 END
@@ -47,9 +45,7 @@ AS
 $$
 BEGIN
   RETURN hafah_python.ah_get_account_history_json(
-    hafah_backend.translate_filter(
-      hafah_backend.create_filter_numeric(_operation_filter_low, _operation_filter_high)
-    ),
+    hafah_python.translate_get_account_history_filter(_operation_filter_low, _operation_filter_high),
     _account,
     hafah_backend.parse_acc_hist_start(_start),
     hafah_backend.parse_acc_hist_limit(_limit),
