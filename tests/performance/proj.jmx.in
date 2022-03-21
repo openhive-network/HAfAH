@@ -67,19 +67,6 @@
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="enum_virtual_ops" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -251,13 +238,9 @@
         <hashTree>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
+              <elementProp name="Content-Profile" elementType="Header">
+                <stringProp name="Header.name">Content-Profile</stringProp>
+                <stringProp name="Header.value">hafah_api_v1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -396,66 +379,27 @@
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Profile</stringProp>
-                <stringProp name="Header.value">hafah_objects</stringProp>
+                <stringProp name="Header.value">hafah_api_v2</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="enum_virtual_ops" enabled="true">
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="_block_range_begin" elementType="HTTPArgument">
+                <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">1</stringProp>
+                  <stringProp name="Argument.value">{&#xd;
+	&quot;_block_range_begin&quot;: 1,&#xd;
+	&quot;_block_range_end&quot;: 2,&#xd;
+	&quot;_include_reversible&quot;: true,&#xd;
+	&quot;_group_by_block&quot;: false,&#xd;
+	&quot;_operation_begin&quot;: 0,&#xd;
+	&quot;_limit&quot;: 1000&#xd;
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_block_range_begin</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_block_range_end" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">2</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_block_range_end</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_include_reversible" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">true</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_include_reversible</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_group_by_block" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">false</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_group_by_block</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_operation_begin" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">0</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_operation_begin</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_limit" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">1000</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_limit</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -475,23 +419,16 @@
           </HTTPSamplerProxy>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get_transaction" enabled="true">
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="_id" elementType="HTTPArgument">
+                <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">&apos;390464f5178defc780b5d1a97cb308edeb27f983&apos;</stringProp>
+                  <stringProp name="Argument.value">{&#xd;
+	&quot;_id&quot;: &quot;390464f5178defc780b5d1a97cb308edeb27f983&quot;,&#xd;
+	&quot;_include_reversible&quot;: true&#xd;
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_id</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_include_reversible" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">true</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_include_reversible</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -511,55 +448,20 @@
           </HTTPSamplerProxy>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get_account_history" enabled="true">
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="_account" elementType="HTTPArgument">
+                <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">initminer</stringProp>
+                  <stringProp name="Argument.value">{&#xd;
+	&quot;_account&quot;: &quot;initminer&quot;,&#xd;
+	&quot;_limit&quot;: 1,&#xd;
+	&quot;_start&quot;:-1,&#xd;
+	&quot;_operation_filter_low&quot;: 0,&#xd;
+	&quot;_operation_filter_high&quot;: 0,&#xd;
+	&quot;_include_reversible&quot;: true&#xd;
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_account</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_limit" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">1</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_limit</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_start" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">9223372036854775807</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_start</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_operation_filter_low" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">0</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_operation_filter_low</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_operation_filter_high" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">0</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_operation_filter_high</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_include_reversible" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">true</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_include_reversible</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -579,31 +481,17 @@
           </HTTPSamplerProxy>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get_ops_in_block" enabled="true">
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="_block_num" elementType="HTTPArgument">
+                <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">1092</stringProp>
+                  <stringProp name="Argument.value">{&#xd;
+	&quot;_block_num&quot;: 1092,&#xd;
+	&quot;_only_virtual&quot;: true,&#xd;
+	&quot;_include_reversible&quot;: true&#xd;
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_block_num</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_only_virtual" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">true</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_only_virtual</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_include_reversible" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">true</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_include_reversible</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -706,19 +594,6 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="enum_virtual_ops" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -765,13 +640,9 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
         <hashTree>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
+              <elementProp name="Content-Profile" elementType="Header">
+                <stringProp name="Header.name">Content-Profile</stringProp>
+                <stringProp name="Header.value">hafah_api_v1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -818,66 +689,27 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Profile</stringProp>
-                <stringProp name="Header.value">hafah_objects</stringProp>
+                <stringProp name="Header.value">hafah_api_v2</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="enum_virtual_ops" enabled="true">
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="_block_range_begin" elementType="HTTPArgument">
+                <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">${block_no_1}</stringProp>
+                  <stringProp name="Argument.value">{&#xd;
+  &quot;_block_range_begin&quot;: ${block_no_1},&#xd;
+  &quot;_block_range_end&quot;: ${block_no_2},&#xd;
+  &quot;_include_reversible&quot;: true,&#xd;
+  &quot;_group_by_block&quot;: false,&#xd;
+  &quot;_operation_begin&quot;: 0,&#xd;
+  &quot;_limit&quot;: 1000&#xd;
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_block_range_begin</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_block_range_end" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">${block_no_2}</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_block_range_end</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_include_reversible" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">true</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_include_reversible</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_group_by_block" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">false</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_group_by_block</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_operation_begin" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">0</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_operation_begin</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_limit" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">1000</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_limit</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -974,19 +806,6 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get_transaction" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -1029,13 +848,9 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
         <hashTree>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
+              <elementProp name="Content-Profile" elementType="Header">
+                <stringProp name="Header.name">Content-Profile</stringProp>
+                <stringProp name="Header.value">hafah_api_v1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1078,34 +893,23 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Profile</stringProp>
-                <stringProp name="Header.value">hafah_objects</stringProp>
+                <stringProp name="Header.value">hafah_api_v2</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get_transaction" enabled="true">
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="_id" elementType="HTTPArgument">
+                <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">&apos;${hash}&apos;</stringProp>
+                  <stringProp name="Argument.value">{&#xd;
+	&quot;_id&quot;: &quot;${hash}&quot;,&#xd;
+	&quot;_include_reversible&quot;: true&#xd;
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_id</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_include_reversible" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">true</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_include_reversible</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -1123,6 +927,16 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
           </HTTPSamplerProxy>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="-1447182358">200|400</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">true</boolProp>
+            <intProp name="Assertion.test_type">1</intProp>
+          </ResponseAssertion>
           <hashTree/>
         </hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If postgres" enabled="true">
@@ -1201,19 +1015,6 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get_account_history" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -1260,13 +1061,9 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
         <hashTree>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
+              <elementProp name="Content-Profile" elementType="Header">
+                <stringProp name="Header.name">Content-Profile</stringProp>
+                <stringProp name="Header.value">hafah_api_v1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1313,66 +1110,27 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Profile</stringProp>
-                <stringProp name="Header.value">hafah_objects</stringProp>
+                <stringProp name="Header.value">hafah_api_v2</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get_account_history" enabled="true">
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="_account" elementType="HTTPArgument">
+                <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">&quot;${account_name}&quot;</stringProp>
+                  <stringProp name="Argument.value">{&#xd;
+	&quot;_account&quot;: &quot;${account_name}&quot;,&#xd;
+	&quot;_limit&quot;: 1000,&#xd;
+	&quot;_start&quot;:-1,&#xd;
+	&quot;_operation_filter_low&quot;: 0,&#xd;
+	&quot;_operation_filter_high&quot;: 0,&#xd;
+	&quot;_include_reversible&quot;: true&#xd;
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_account</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json </stringProp>
-                </elementProp>
-                <elementProp name="_limit" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">1000</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_limit</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json </stringProp>
-                </elementProp>
-                <elementProp name="_start" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">9223372036854775807</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_start</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json </stringProp>
-                </elementProp>
-                <elementProp name="_operation_filter_low" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">0</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_operation_filter_low</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json </stringProp>
-                </elementProp>
-                <elementProp name="_operation_filter_high" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">0</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_operation_filter_high</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json </stringProp>
-                </elementProp>
-                <elementProp name="_include_reversible" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">true</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_include_reversible</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json </stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -1468,19 +1226,6 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get_ops_in_block" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -1524,13 +1269,9 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
         <hashTree>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
+              <elementProp name="Content-Profile" elementType="Header">
+                <stringProp name="Header.name">Content-Profile</stringProp>
+                <stringProp name="Header.value">hafah_api_v1</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -1574,42 +1315,24 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
-                <stringProp name="Header.name"></stringProp>
-                <stringProp name="Header.value"></stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Profile</stringProp>
-                <stringProp name="Header.value">hafah_objects</stringProp>
+                <stringProp name="Header.value">hafah_api_v2</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get_ops_in_block" enabled="true">
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="_block_num" elementType="HTTPArgument">
+                <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">${block_no_1}</stringProp>
+                  <stringProp name="Argument.value">{&#xd;
+	&quot;_block_num&quot;: ${block_no_1},&#xd;
+	&quot;_only_virtual&quot;: true,&#xd;
+	&quot;_include_reversible&quot;: true&#xd;
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_block_num</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_only_virtual" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">true</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_only_virtual</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
-                </elementProp>
-                <elementProp name="_include_reversible" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">true</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">_include_reversible</stringProp>
-                  <stringProp name="HTTPArgument.content_type">application/json</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -1797,6 +1520,15 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
         <stringProp name="trimInterval">60000</stringProp>
         <stringProp name="username">${PSQL_USER}</stringProp>
       </JDBCDataSource>
+      <hashTree/>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="header manager" enabled="true">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="Content-Type" elementType="Header">
+            <stringProp name="Header.name">Content-Type</stringProp>
+            <stringProp name="Header.value">application/json</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
       <hashTree/>
     </hashTree>
   </hashTree>
