@@ -235,9 +235,7 @@ BEGIN
 
   BEGIN
     SELECT hafah_python.enum_virtual_ops_json(
-      hafah_backend.translate_filter(
-        __filter,
-        hafah_backend.get_virtual_op_offset() ),
+      hafah_python.translate_enum_virtual_ops_filter(__filter),
       __block_range_begin, __block_range_end, __operation_begin, __limit, __include_reversible, __group_by_block) INTO __result;
   EXCEPTION
     WHEN raise_exception THEN
@@ -382,9 +380,7 @@ BEGIN
   
   BEGIN
     RETURN hafah_python.ah_get_account_history_json(
-      hafah_backend.translate_filter(
-        hafah_backend.create_filter_numeric(__operation_filter_low, __operation_filter_high)
-      ),
+      hafah_python.translate_get_account_history_filter(__operation_filter_low, __operation_filter_high),
       __account,
       hafah_backend.parse_acc_hist_start(__start),
       hafah_backend.parse_acc_hist_limit(__limit),

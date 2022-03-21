@@ -27,12 +27,6 @@ start_webserver() {
     postgrest postgrest.conf
 }
 
-install_dependancies() {
-    install_postgrest
-    install_plpython
-    install_jmeter
-}
-
 install_postgrest() {
     sudo apt-get update -y
     sudo apt-get install wget -y
@@ -42,11 +36,6 @@ install_postgrest() {
 
     sudo tar xvf $postgrest -C '/usr/local/bin'
     rm $postgrest
-}
-
-install_plpython() {
-    sudo apt-get update -y
-    sudo apt-get -y install python3 postgresql-plpython3-12
 }
 
 install_jmeter() {
@@ -93,11 +82,10 @@ elif [ "$1" = "re-start" ]; then
     echo_success
     start_webserver
 elif [ "$1" =  "install-dependancies" ]; then
-    install_dependancies
+    install_postgrest
+    install_jmeter
 elif [ "$1" =  "install-postgrest" ]; then
     install_postgrest
-elif [ "$1" =  "install-plpython" ]; then
-    install_plpython
 elif [ "$1" =  "install-jmeter" ]; then
     install_jmeter
 elif [ "$1" =  "test-performance" ]; then
