@@ -14,8 +14,9 @@ create_ah_schema(){
 create_api() {
     postgrest_dir=$PWD/postgrest
     psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_backend.sql
-    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_objects.sql
-    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_api.sql
+    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_endpoints.sql
+    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_api_v1.sql
+    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_api_v2.sql
 }
 
 start_webserver() {
