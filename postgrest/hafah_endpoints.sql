@@ -234,9 +234,7 @@ BEGIN
   END;
 
   BEGIN
-    SELECT hafah_python.enum_virtual_ops_json(
-      hafah_python.translate_enum_virtual_ops_filter(__filter),
-      __block_range_begin, __block_range_end, __operation_begin, __limit, __include_reversible, __group_by_block) INTO __result;
+    SELECT hafah_python.enum_virtual_ops_json(__filter, __block_range_begin, __block_range_end, __operation_begin, __limit, __include_reversible, __group_by_block) INTO __result;
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
@@ -380,7 +378,7 @@ BEGIN
   
   BEGIN
     RETURN hafah_python.ah_get_account_history_json(
-      hafah_python.translate_get_account_history_filter(__operation_filter_low, __operation_filter_high),
+      __operation_filter_low, __operation_filter_high,
       __account,
       hafah_backend.parse_acc_hist_start(__start),
       hafah_backend.parse_acc_hist_limit(__limit),
