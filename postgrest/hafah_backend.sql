@@ -1,12 +1,9 @@
 /*
-hafah_backend.sql
-
 Defined here are:
   - Function for parsing arguments
-  - Functions for operation filters
-  - Repeated exception messages, used in hafah_api.sql and hafah_objects.sql
+  - Repeated exception messages, used in hafah_endpoints.sql
   - parse_is_legacy_style():
-    when making new style call to HAfAH server (with only params in data),
+    when making new style call or pure API call to HAfAH server (with only params in data),
     boolean for legacy style (condenser api) query must be set in header 'Is-Legacy-Style'.
     Default is FALSE.
 */
@@ -64,35 +61,18 @@ END
 $$
 ;
 
-CREATE FUNCTION hafah_backend.assert_input_json(_jsonrpc TEXT, _method TEXT, _params JSON, _id JSON)
-RETURNS JSON
-LANGUAGE 'plpgsql'
-AS
-$$
-BEGIN
-  IF _method NOT SIMILAR TO
-    '(account_history_api|condenser_api)\.(get_ops_in_block|enum_virtual_ops|get_transaction|get_account_history)'
-  THEN
-    RETURN hafah_backend.raise_exception(-32601, 'Method not found', _method, _id);
-  END IF;
-
-  RETURN NULL;
-END
-$$
-;
-
 CREATE FUNCTION hafah_backend.parse_is_legacy_style()
 RETURNS BOOLEAN
 LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
-  __header_val TEXT;
+  __header_val BOOLEAN;
 BEGIN
   SELECT NULLIF(current_setting('request.header.Is-Legacy-Style', TRUE), '') INTO __header_val;
-  IF __header_val IS NULL OR __header_val::BOOLEAN IS FALSE THEN
+  IF __header_val IS NULL OR __header_val IS FALSE THEN
     RETURN FALSE;
-  ELSEIF __header_val::BOOLEAN IS TRUE THEN
+  ELSEIF __header_val IS TRUE THEN
     RETURN TRUE;
   END IF;
 END

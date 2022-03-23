@@ -1,17 +1,18 @@
 /*
-ah/api/hafah_endpoints.sql
-
-'hafah_endpoints.home(jsonrpc TEXT, method TEXT, params JSON, id JSON)' sends and receives requests via 'some_method()':
+'hafah_endpoints.home()' forwards call to 'hafah_python' schema to 'some_method()' and returns requests via:
   - get_ops_in_block
   - enum_virtual_ops
   - get_transaction
   - get_account_history
-Inside these functions, arguments are parsed from 'params', their values validated and set or set to default.
-Argument value assertions are made during parsing. Unique assertions are defined here, in 'some_method()',
-while repeated are in ah/api/hafah_backend.sql.
+Inside these functions, arguments are parsed from 'params', their types asserted and set or set to default.
 
-Every 'some_method()' function calls corresponding method in 'hafah_objects' schema, which has utilities
-for generating object responses.
+'hafah_endpoints' also serves as API for old style (like python's version of HAfAH) calls:
+curl -X POST http://localhost:3000/ \
+	-H 'Content-Type: application/json' \
+	-d '{"jsonrpc": "2.0",
+  "method": "account_history_api.get_transaction",
+  "params": {"id": "390464f5178defc780b5d1a97cb308edeb27f983", "include_reversible": true},
+  "id": 0}'
 */
 DROP SCHEMA IF EXISTS hafah_endpoints CASCADE;
 
@@ -30,7 +31,6 @@ DECLARE
   __id JSON;
 
   __result JSON;
-  __input_assertion JSON;
   __api_type TEXT;
   __method_type TEXT;
   __is_legacy_style BOOLEAN;
@@ -45,9 +45,10 @@ BEGIN
     RETURN hafah_backend.raise_exception(-32600, 'Invalid JSON-RPC');
   END IF;
   
-  SELECT hafah_backend.assert_input_json(__jsonrpc, __method, __params, __id) INTO __input_assertion;
-  IF __input_assertion IS NOT NULL THEN
-    RETURN __input_assertion;
+  IF __method NOT SIMILAR TO
+    '(account_history_api|condenser_api)\.(get_ops_in_block|enum_virtual_ops|get_transaction|get_account_history)'
+  THEN
+    RETURN hafah_backend.raise_exception(-32601, 'Method not found', __method, __id);
   END IF;
 
   SELECT substring(__method FROM '^[^.]+') INTO __api_type;
@@ -55,11 +56,7 @@ BEGIN
 
   SELECT json_typeof(__params) INTO __json_type;
   
-  IF __api_type = 'account_history_api' THEN
-    __is_legacy_style = FALSE;
-  ELSEIF __api_type = 'condenser_api' THEN
-    __is_legacy_style = TRUE;
-  END IF;
+  SELECT CASE WHEN __api_type = 'account_history_api' THEN FALSE ELSE TRUE END INTO __is_legacy_style;
   
   IF __method_type = 'get_ops_in_block' THEN
     SELECT hafah_endpoints.get_ops_in_block(__params, __is_legacy_style, __id, __json_type) INTO __result;
@@ -71,17 +68,15 @@ BEGIN
     SELECT hafah_endpoints.get_account_history(__params, __is_legacy_style, __id, __json_type) INTO __result;
   END IF;
 
-  IF __result->'error' IS NULL THEN
-    SELECT jsonb_build_object(
+  RETURN CASE WHEN __result->'error' IS NULL THEN
+    jsonb_build_object(
       'jsonrpc', '2.0',
       'result', __result,
       'id', __id
-    ) INTO __result;
-  END IF;
-
-  --PERFORM set_config('response.headers', format('[{"Content-Length": "%s"}]', length(__result::TEXT)), TRUE);
-
-  RETURN __result;
+    )
+  ELSE
+    __result::JSONB
+  END;
 END
 $$
 ;
@@ -96,7 +91,6 @@ DECLARE
   __only_virtual BOOLEAN = NULL; -- default FALSE
   __include_reversible BOOLEAN = NULL; -- default FALSE
 
-  __result JSON;
   __exception_message TEXT;
 BEGIN
   BEGIN
@@ -132,16 +126,14 @@ BEGIN
   END;
 
   BEGIN
-    SELECT hafah_python.get_ops_in_block_json(__block_num, __only_virtual, __include_reversible, _is_legacy_style) INTO __result;
+    RETURN hafah_python.get_ops_in_block_json(__block_num, __only_virtual, __include_reversible, _is_legacy_style);
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
       IF __exception_message ~ 'op_id cannot be None' THEN
-        SELECT hafah_backend.raise_operation_id_exception(_id) INTO __result;
+        RETURN hafah_backend.raise_operation_id_exception(_id);
       END IF;
   END;
-
-  RETURN __result;
 END
 $$
 ;
@@ -161,7 +153,6 @@ DECLARE
   __group_by_block BOOLEAN = NULL; -- default FALSE
   
   __exception_message TEXT;
-  __result JSON;
 BEGIN
   BEGIN
     -- Required arguments
@@ -234,23 +225,16 @@ BEGIN
   END;
 
   BEGIN
-    SELECT hafah_python.enum_virtual_ops_json(__filter, __block_range_begin, __block_range_end, __operation_begin, __limit, __include_reversible, __group_by_block) INTO __result;
+    RETURN hafah_python.enum_virtual_ops_json(__filter, __block_range_begin, __block_range_end, __operation_begin, __limit, __include_reversible, __group_by_block);
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
       IF __exception_message ~ 'op_id cannot be None' THEN
-        SELECT hafah_backend.raise_operation_id_exception(_id) INTO __result;
+        RETURN hafah_backend.raise_operation_id_exception(_id);
       ELSE
-        SELECT hafah_backend.wrap_sql_exception(__exception_message, _id) INTO __result;
+        RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
       END IF;
   END;
-
-  -- TODO: might do this before calling hafah_objects.enum_virtual_ops(), only done to replicate HAfAH python
-  IF _is_legacy_style IS TRUE THEN
-    RETURN hafah_backend.raise_exception(-32601, 'Method not found', 'condenser_api.enum_virtual_ops', _id);
-  ELSE
-    RETURN __result;
-  END IF;
 END
 $$
 ;
