@@ -68,20 +68,18 @@ patterns_tests:
         export POSTGRESQL_URI='postgresql:///haf_block_log' ;
       fi
 
-    # run HAfAH
+    # run HAfAH python and postgREST version instances
     - if [ ! "$AH_ENDPOINT" ]; then
         cd $CI_PROJECT_DIR ;
         export DEBUG=1 ;
         ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 2>&1 >> ah.log &
         export AH_ENDPOINT=localhost:6543 ;
 
-        # run postgREST version instance
         ./run.sh re-start ;
       fi
 
     # run pattern tests
-    - cd $CI_PROJECT_DIR
-    - ./run.sh test-patterns 6543 3000
+    - cd $CI_PROJECT_DIR ; ./run.sh test-patterns 6543 3000
 
     # run comparsion tests
     - export AHRB_PORT=$(cat $CI_PROJECT_DIR/tests/prepare_database/config.ini | grep webserver-http-endpoint | cut -d ':' -f 2)
