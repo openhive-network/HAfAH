@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Hive JSON-RPC API server."""
+import collections
 import json
 from functools import partial
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -93,13 +94,17 @@ class DBHandler(BaseHTTPRequestHandler):
         assert _sql_executor.db is not None, "lack of database"
         ctx['db'] = _sql_executor.db
 
-        _response : Response = dispatch(request, methods=self.methods, debug=True, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
+        with Timer() as dispatch_timer:
+          _response : Response = dispatch(request, methods=self.methods, debug=False, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
+        ctx['perf']['3.dispatch'] = (dispatch_timer.time - sum(ctx['perf'].values()))
         ctx['id'] = _response.id
 
         if self.log_responses:
           logger.info(_response)
 
-        self.process_response(OK_CODE, CONTENT_TYPE_JSON, _response)
+        with Timer() as timer:
+          self.process_response(OK_CODE, CONTENT_TYPE_JSON, _response)
+        ctx['perf']['4.sending_response'] = timer.time
 
     except Exception as ex:
       logger.error(ex)
@@ -107,22 +112,36 @@ class DBHandler(BaseHTTPRequestHandler):
 
   def do_POST(self):
     ctx = { 'perf' : {}, 'id': None }
-    with Timer() as timer:
-      try:
+    try:
+      with Timer() as rcv_timer:
         request = self.rfile.read(int(self.headers[CONTENT_LENGTH])).decode()
+
+      with Timer() as pr_timer:
         self.process_request(request, ctx)
 
-      except Exception as ex:
-        logger.error(ex)
-        self.process_response(ERR_CODE, CONTENT_TYPE_HTML, ex)
+    except Exception as ex:
+      logger.error(ex)
+      self.process_response(ERR_CODE, CONTENT_TYPE_HTML, ex)
 
     # logging times
     if logger.isEnabledFor(DEBUG):
       perf : dict = ctx['perf']
-      perf['process_request'] = (timer.time - sum(perf.values()))
+      perf['5.process_request'] = (pr_timer.time - sum(perf.values()))
+      perf['0.receiving_request'] = rcv_timer.time
+
+      print(perf.keys())
+
+      ordered = {}
+      for k, v in perf.items():
+        splitted_key = k.split('.')
+        ordered[ int(splitted_key[0]) ] = (splitted_key[1], v)
+      ordered = [ ordered[k] for k in sorted(list(ordered.keys())) ]
+
       id = json.dumps(ctx['id']).strip('"')
-      for key, value in ctx['perf'].items():
-        logger.debug(f'[{id}] {key} executed in {value :.2f}ms')
+      performance_log = ('#' * 10) + '\n' + f'[{id}] QUERY: `{ctx["query"]}`' + '\n'
+      for key, value in ordered:
+        performance_log += f'[{id}] {key} executed in {value :.2f}ms' + '\n'
+      logger.debug(performance_log)
 
 class PreparationPhase:
   def __init__(self, db_url, sql_src_path):
