@@ -74,11 +74,14 @@ patterns_tests:
         export DEBUG=1 ;
         ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 2>&1 >> ah.log &
         export AH_ENDPOINT=localhost:6543 ;
+
+        # run postgREST version instance
+        ./run.sh re-start
       fi
 
     # run pattern tests
-    - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests
-    - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel`
+    - cd $CI_PROJECT_DIR ;
+    ./run.sh test-patterns 6543 3000
 
     # run comparsion tests
     - export AHRB_PORT=$(cat $CI_PROJECT_DIR/tests/prepare_database/config.ini | grep webserver-http-endpoint | cut -d ':' -f 2)
