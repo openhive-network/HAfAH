@@ -20,6 +20,7 @@ class account_history_db_connector:
     assert self._conn is not None
     self._schema = 'hafah_python'
     self.perf = {}
+    self.last_query = str()
 
   def add_performance_record(self, name, time):
     if name in self.perf:
@@ -31,10 +32,12 @@ class account_history_db_connector:
     assert self._conn is not None
     return self._conn
 
-  @perf(record_name='SQL', handler=handler)
+  @perf(record_name='1.SQL', handler=handler)
   def _get_all(self, query, **kwargs):
     try:
-      return self._get_db().query_all(query, **kwargs)
+      query, result = self._get_db().query_all(query, **kwargs)
+      self.last_query = query
+      return result
     except sqlalchemy.exc.InternalError as e:
       logger.debug(f'got expeced exception from SQL: {type(e).__name__} {e}')
       exception_raw = e.orig.args

@@ -118,16 +118,14 @@ class Db:
 
     def query_all(self, sql, **kwargs):
         """Perform a `SELECT n*m`"""
-        res = self._query(sql, False, **kwargs)
-        return res.fetchall()
+        query, res = self._query(sql, False, **kwargs)
+        return query, res.fetchall()
 
     def _sql_text(self, sql, is_prepared, **kwargs):
         if is_prepared:
-            query = sql
+            return sql
         else:
-            query = str(sqlalchemy.text(sql).bindparams(**kwargs).execution_options(autocommit=False).compile(dialect=self.get_dialect(), compile_kwargs={"literal_binds": True}))
-        log.debug(f'[SQL QUERY] executing query: {query}')
-        return query
+            return str(sqlalchemy.text(sql).bindparams(**kwargs).execution_options(autocommit=False).compile(dialect=self.get_dialect(), compile_kwargs={"literal_binds": True}))
 
     def _query(self, sql, is_prepared, **kwargs):
         """Send a query off to SQLAlchemy."""
@@ -140,7 +138,7 @@ class Db:
 
         try:
             query : str = self._sql_text(sql, is_prepared, **kwargs)
-            return self._basic_connection.execute(query)
+            return query, self._basic_connection.execute(query)
         except Exception as e:
             log.warning(f"[SQL-ERR] `{type(e).__name__}` in query `{query}`")
             raise e
