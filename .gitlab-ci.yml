@@ -79,7 +79,7 @@ patterns_tests:
       fi
 
     # run pattern tests
-    - cd $CI_PROJECT_DIR ; ./run.sh test-patterns 6543 3000
+    - cd $CI_PROJECT_DIR ; ./run.sh test-patterns 6543 ; ./run.sh test-patterns 3000
 
     # run comparsion tests
     - export AHRB_PORT=$(cat $CI_PROJECT_DIR/tests/prepare_database/config.ini | grep webserver-http-endpoint | cut -d ':' -f 2)
