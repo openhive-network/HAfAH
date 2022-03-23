@@ -1,3 +1,10 @@
+/*
+API for pure API calls:
+curl -X POST http://localhost:3000/rpc/get_transaction \
+	-H 'Content-Type: application/json' \
+	-H 'Content-Profile: hafah_api_v2' \
+	-d  '{"_id": "390464f5178defc780b5d1a97cb308edeb27f983", "_include_reversible": true}'
+*/
 DROP SCHEMA IF EXISTS hafah_api_v2 CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_api_v2;
