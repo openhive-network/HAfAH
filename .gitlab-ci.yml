@@ -75,6 +75,7 @@ patterns_tests:
         ./main.py --psql-db-path $POSTGRESQL_URI --port 6543 2>&1 >> ah.log &
         export AH_ENDPOINT=localhost:6543 ;
 
+        ./run.sh install-postgrest ;
         ./run.sh re-start ;
       fi
 
