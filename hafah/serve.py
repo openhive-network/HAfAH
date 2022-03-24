@@ -10,7 +10,7 @@ from socketserver import ForkingMixIn
 import simplejson
 from jsonrpcserver import dispatch
 from jsonrpcserver.methods import Methods
-from jsonrpcserver.response import Response
+from jsonrpcserver.response import Response, sort_dict_response
 
 from hafah.adapter import Db
 from hafah.endpoints import build_methods as account_history
@@ -68,20 +68,33 @@ class DBHandler(BaseHTTPRequestHandler):
       super().__init__(*args, **kwargs)
 
   @staticmethod
-  def decimal_serialize(obj):
-      return simplejson.dumps(obj=obj, use_decimal=True, default=vars, ensure_ascii=False, encoding='utf8')
+  def decimal_serialize_dummy(_):
+      return ''
+
+  @staticmethod
+  def jsonrpc_response_decimal_serialize(obj):
+      val = sort_dict_response(obj.deserialized())
+      return simplejson.dumps(obj=val, use_decimal=True, default=vars, ensure_ascii=False, encoding='utf8')
 
   @staticmethod
   def decimal_deserialize(s):
       return simplejson.loads(s=s, use_decimal=True)
 
   def process_response(self, http_code, content_type, response):
-    data = str(response).encode(encoding=ENCODING)
+    str_data = DBHandler.jsonrpc_response_decimal_serialize(response)
+    data = str_data.encode(encoding=ENCODING)
+    data_length = len(data)
+
     self.send_response(http_code)
     self.send_header(CONTENT_TYPE, content_type)
-    self.send_header(CONTENT_LENGTH, len(data))
+    self.send_header(CONTENT_LENGTH, data_length)
     self.end_headers()
     self.wfile.write(data)
+
+    if self.log_responses:
+      logger.info(str_data)
+
+    return data_length
 
   def log_request(self, *args, **kwargs) -> None:
     # return super().log_request(code=code, size=size)
@@ -95,15 +108,12 @@ class DBHandler(BaseHTTPRequestHandler):
         ctx['db'] = _sql_executor.db
 
         with Timer() as dispatch_timer:
-          _response : Response = dispatch(request, methods=self.methods, debug=False, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
+          _response : Response = dispatch(request, methods=self.methods, debug=False, context=ctx, serialize=DBHandler.decimal_serialize_dummy, deserialize=DBHandler.decimal_deserialize)
         ctx['perf']['3.dispatch'] = (dispatch_timer.time - sum(ctx['perf'].values()))
         ctx['id'] = _response.id
 
-        if self.log_responses:
-          logger.info(_response)
-
         with Timer() as timer:
-          self.process_response(OK_CODE, CONTENT_TYPE_JSON, _response)
+          ctx['data_length'] = self.process_response(OK_CODE, CONTENT_TYPE_JSON, _response)
         ctx['perf']['4.sending_response'] = timer.time
 
     except Exception as ex:
@@ -129,8 +139,6 @@ class DBHandler(BaseHTTPRequestHandler):
       perf['5.process_request'] = (pr_timer.time - sum(perf.values()))
       perf['0.receiving_request'] = rcv_timer.time
 
-      print(perf.keys())
-
       ordered = {}
       for k, v in perf.items():
         splitted_key = k.split('.')
@@ -141,6 +149,7 @@ class DBHandler(BaseHTTPRequestHandler):
       performance_log = ('#' * 10) + '\n' + f'[{id}] QUERY: `{ctx["query"]}`' + '\n'
       for key, value in ordered:
         performance_log += f'[{id}] {key} executed in {value :.2f}ms' + '\n'
+      performance_log += f'[{id}] content length: {ctx["data_length"]}' + '\n'
       logger.debug(performance_log)
 
 class PreparationPhase:
