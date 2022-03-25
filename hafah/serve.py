@@ -125,6 +125,22 @@ class DBHandler(BaseHTTPRequestHandler):
       logger.error(ex)
       self.process_response(ERR_CODE, CONTENT_TYPE_HTML, ex)
 
+  def log_request_summary(self, ctx : dict):
+    perf = ctx['perf']
+    ordered = [ (k[1], perf[k]) for k in sorted(list(perf.keys()), key=lambda x: x[0]) ]
+
+    id = decimal_serialize(ctx['id']).strip('"')
+    pid = os.getpid()
+
+    performance_log = '##########\n' + f'[pid={pid}] [id={id}] QUERY: `{ctx.get("query", "-- query failed or not executed --")}`' + '\n'
+    for key, value in ordered:
+      performance_log += f'[pid={pid}] {key} executed in {value :.2f}ms' + '\n'
+    performance_log += f'[pid={pid}] content length: {ctx["data_length"]}'
+
+    logger.debug(performance_log)
+
+
+
   def do_POST(self):
     ctx = { 'perf' : {}, 'id': None }
     try:
@@ -143,14 +159,7 @@ class DBHandler(BaseHTTPRequestHandler):
       perf : dict = ctx['perf']
       perf[(5,'process_request')] = (pr_timer.time - sum(perf.values()))
       perf[(0,'receiving_request')] = rcv_timer.time
-      ordered = [ (k[1], perf[k]) for k in sorted(list(perf.keys()), key=lambda x: x[0]) ]
-      id = decimal_serialize(ctx['id']).strip('"')
-      pid = os.getpid()
-      performance_log = '##########\n' + f'[pid={pid}] [id={id}] QUERY: `{ctx.get("query", "-- query failed or not executed --")}`' + '\n'
-      for key, value in ordered:
-        performance_log += f'[pid={pid}] {key} executed in {value :.2f}ms' + '\n'
-      performance_log += f'[pid={pid}] content length: {ctx["data_length"]}'
-      logger.debug(performance_log)
+      self.log_request_summary(ctx)
 
 class PreparationPhase:
   def __init__(self, db_url, sql_src_path):
