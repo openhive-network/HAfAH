@@ -9,7 +9,7 @@ from hafah.queries import account_history_db_connector
 RANGE_POSITIVE_INT =  2**31-1
 MAX_POSITIVE_INT = RANGE_POSITIVE_INT - 1
 RANGEINT = 2**32
-RECORD_NAME = 'backend'
+RECORD_NAME = (2, 'backend')
 
 
 def handler(name, time, ahi_instance : 'account_history_impl', *_, **__):
@@ -24,6 +24,7 @@ class account_history_impl:
   def add_performance_record(self, name, time):
     self.ctx['perf'] = self.api.perf
     self.ctx['perf'][name] = (time - sum(self.api.perf.values()))
+    self.ctx['query'] = self.api.last_query
 
 
   @perf(record_name=RECORD_NAME, handler=handler)

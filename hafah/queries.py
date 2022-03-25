@@ -32,7 +32,7 @@ class account_history_db_connector:
     assert self._conn is not None
     return self._conn
 
-  @perf(record_name='1.SQL', handler=handler)
+  @perf(record_name=(1, 'SQL'), handler=handler)
   def _get_all(self, query, **kwargs):
     try:
       query, result = self._get_db().query_all(query, **kwargs)
