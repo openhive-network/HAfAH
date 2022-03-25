@@ -75,11 +75,15 @@ class DBHandler(BaseHTTPRequestHandler):
 
   def process_response(self, http_code, content_type, response):
     data = str(response).encode(encoding=ENCODING)
+    data_length = len(data)
+
     self.send_response(http_code)
     self.send_header(CONTENT_TYPE, content_type)
-    self.send_header(CONTENT_LENGTH, len(data))
+    self.send_header(CONTENT_LENGTH, data_length)
     self.end_headers()
     self.wfile.write(data)
+
+    return data_length
 
   def log_request(self, *args, **kwargs) -> None:
     # return super().log_request(code=code, size=size)
@@ -101,7 +105,7 @@ class DBHandler(BaseHTTPRequestHandler):
           logger.info(_response)
 
         with Timer() as timer:
-          self.process_response(OK_CODE, CONTENT_TYPE_JSON, _response)
+          ctx['data_length'] = self.process_response(OK_CODE, CONTENT_TYPE_JSON, _response)
         ctx['perf'][(4, 'sending_response')] = timer.time
 
     except Exception as ex:
@@ -132,6 +136,7 @@ class DBHandler(BaseHTTPRequestHandler):
       performance_log = ('#' * 10) + '\n' + f'[{id}] QUERY: `{ctx["query"]}`' + '\n'
       for key, value in ordered:
         performance_log += f'[{id}] {key} executed in {value :.2f}ms' + '\n'
+      performance_log += f'[{id}] content length: {ctx["data_length"]}'
       logger.debug(performance_log)
 
 class PreparationPhase:
