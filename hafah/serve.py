@@ -74,7 +74,8 @@ class DBHandler(BaseHTTPRequestHandler):
       return simplejson.loads(s=s, use_decimal=True)
 
   def process_response(self, http_code, content_type, response):
-    data = str(response).encode(encoding=ENCODING)
+    str_data = decimal_serialize(response)
+    data = str_data.encode(encoding=ENCODING)
     data_length = len(data)
 
     self.send_response(http_code)
@@ -82,6 +83,9 @@ class DBHandler(BaseHTTPRequestHandler):
     self.send_header(CONTENT_LENGTH, data_length)
     self.end_headers()
     self.wfile.write(data)
+
+    if self.log_responses:
+      logger.info(str_data)
 
     return data_length
 
@@ -100,9 +104,6 @@ class DBHandler(BaseHTTPRequestHandler):
           _response : Response = dispatch(request, methods=self.methods, debug=False, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
         ctx['perf'][(3, 'dispatch')] = (dispatch_timer.time - sum(ctx['perf'].values()))
         ctx['id'] = _response.id
-
-        if self.log_responses:
-          logger.info(_response)
 
         with Timer() as timer:
           ctx['data_length'] = self.process_response(OK_CODE, CONTENT_TYPE_JSON, _response)
