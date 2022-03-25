@@ -394,17 +394,20 @@ DECLARE
 BEGIN
   __use_filter := array_length( _filter, 1 );
     RETURN query 
-    SELECT ho.trx_in_block, ho.id, ho.op_type_id, ho.body, ho.op_pos::BIGINT, ho.block_num, hao.account_op_seq_no, btrim(to_json(ho."timestamp")::TEXT, '"'::TEXT) AS formated_timestamp
+    WITH account_ops AS MATERIALIZED
+    (
+      SELECT hao.operation_id, hao.account_op_seq_no
       FROM hive.account_operations_view hao
-      JOIN
-      (
-        SELECT hov.* FROM hive.operations_view hov
-        WHERE hov.block_num <= _upper_block_limit AND (__use_filter IS NULL OR hov.op_type_id=ANY(_filter))
-      ) ho ON hao.operation_id = ho.id
-
       WHERE hao.account_id = _account_id AND hao.account_op_seq_no <= _start
       ORDER BY hao.account_op_seq_no DESC
       LIMIT _limit
+  )
+    SELECT ho.trx_in_block, ho.id, ho.op_type_id, ho.body, ho.op_pos::BIGINT, ho.block_num, ao.account_op_seq_no, btrim(to_json(ho."timestamp")::TEXT, '"'::TEXT) AS formated_timestamp
+    FROM hive.operations_view ho
+    JOIN account_ops ao ON ho.id = ao.operation_id
+    WHERE ho.block_num <= _upper_block_limit AND (__use_filter IS NULL OR ho.op_type_id=ANY(_filter))
+    ORDER BY ao.account_op_seq_no DESC
+    LIMIT _limit
   ;
 
 END
@@ -440,7 +443,7 @@ BEGIN
   SELECT hafah_python.translate_get_account_history_filter(_filter_low, _filter_high) INTO __resolved_filter;
 
   IF _include_reversible THEN
-  	SELECT num from hive.blocks order by num desc limit 1 INTO __upper_block_limit;
+    SELECT num from hive.blocks order by num desc limit 1 INTO __upper_block_limit;
   else 
     SELECT hive.app_get_irreversible_block() INTO __upper_block_limit;
   END IF;
