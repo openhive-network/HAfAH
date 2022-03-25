@@ -146,7 +146,7 @@ class DBHandler(BaseHTTPRequestHandler):
       ordered = [ (k[1], perf[k]) for k in sorted(list(perf.keys()), key=lambda x: x[0]) ]
       id = decimal_serialize(ctx['id']).strip('"')
       pid = os.getpid()
-      performance_log = '##########\n' + f'[pid={pid}] [id={id}] QUERY: `{ctx["query"]}`' + '\n'
+      performance_log = '##########\n' + f'[pid={pid}] [id={id}] QUERY: `{ctx.get("query", "-- query failed or not executed --")}`' + '\n'
       for key, value in ordered:
         performance_log += f'[pid={pid}] {key} executed in {value :.2f}ms' + '\n'
       performance_log += f'[pid={pid}] content length: {ctx["data_length"]}'
