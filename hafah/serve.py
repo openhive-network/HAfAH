@@ -29,12 +29,23 @@ CONTENT_TYPE_JSON = 'application/json'
 CONTENT_TYPE_HTML = 'text/html'
 
 
-
 def decimal_serialize(obj):
-  return simplejson.dumps(obj=obj, use_decimal=True, default=vars, ensure_ascii=False, encoding='utf8')
+    if isinstance(obj, Response):
+      obj = obj.deserialized()
+    return simplejson.dumps(obj=obj, use_decimal=True, default=vars, ensure_ascii=False, encoding='utf8')
 
 def decimal_deserialize(s):
     return simplejson.loads(s=s, use_decimal=True)
+
+def mock_serialize(_):
+    '''
+    This prevents jsonrpcserver library to serialize return object more than once,
+    which takes place underneath to verify is response given from user is serializable
+
+    Instead serialization is performed once in decimal_derialize, without dict sorting
+    because input from postgres is already in proper format
+    '''
+    return ''
 
 class APIMethods:
   @staticmethod
@@ -102,7 +113,7 @@ class DBHandler(BaseHTTPRequestHandler):
         ctx['db'] = _sql_executor.db
 
         with Timer() as dispatch_timer:
-          _response : Response = dispatch(request, methods=self.methods, debug=False, context=ctx, serialize=decimal_serialize, deserialize=decimal_deserialize)
+          _response : Response = dispatch(request, methods=self.methods, debug=False, context=ctx, serialize=mock_serialize, deserialize=decimal_deserialize)
         ctx['perf'][(3, 'dispatch')] = (dispatch_timer.time - sum(ctx['perf'].values()))
         ctx['id'] = _response.id
 
