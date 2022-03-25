@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Wrapper for sqlalchemy, providing a simple interface."""
 
+import os
 import simplejson
 import sqlalchemy
 
@@ -140,5 +141,5 @@ class Db:
             query : str = self._sql_text(sql, is_prepared, **kwargs)
             return query, self._basic_connection.execute(query)
         except Exception as e:
-            log.warning(f"[SQL-ERR] `{type(e).__name__}` in query `{query}`")
+            log.error(f"[pid={os.getpid()}] Got exception `{type(e).__name__}` in query `{query}`")
             raise e
