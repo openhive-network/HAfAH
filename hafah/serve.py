@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Hive JSON-RPC API server."""
+import os
 from functools import partial
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from logging import DEBUG
@@ -132,12 +133,12 @@ class DBHandler(BaseHTTPRequestHandler):
       perf[(5,'process_request')] = (pr_timer.time - sum(perf.values()))
       perf[(0,'receiving_request')] = rcv_timer.time
       ordered = [ (k[1], perf[k]) for k in sorted(list(perf.keys()), key=lambda x: x[0]) ]
-
       id = simplejson.dumps(ctx['id']).strip('"')
-      performance_log = ('#' * 10) + '\n' + f'[{id}] QUERY: `{ctx["query"]}`' + '\n'
+      pid = os.getpid()
+      performance_log = '##########\n' + f'[pid={pid}] [id={id}] QUERY: `{ctx["query"]}`' + '\n'
       for key, value in ordered:
-        performance_log += f'[{id}] {key} executed in {value :.2f}ms' + '\n'
-      performance_log += f'[{id}] content length: {ctx["data_length"]}'
+        performance_log += f'[pid={pid}] {key} executed in {value :.2f}ms' + '\n'
+      performance_log += f'[pid={pid}] content length: {ctx["data_length"]}'
       logger.debug(performance_log)
 
 class PreparationPhase:
