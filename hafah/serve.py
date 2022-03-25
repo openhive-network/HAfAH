@@ -29,6 +29,13 @@ CONTENT_TYPE_JSON = 'application/json'
 CONTENT_TYPE_HTML = 'text/html'
 
 
+
+def decimal_serialize(obj):
+  return simplejson.dumps(obj=obj, use_decimal=True, default=vars, ensure_ascii=False, encoding='utf8')
+
+def decimal_deserialize(s):
+    return simplejson.loads(s=s, use_decimal=True)
+
 class APIMethods:
   @staticmethod
   def build_methods():
@@ -66,13 +73,6 @@ class DBHandler(BaseHTTPRequestHandler):
       self.log_responses  = log_responses
       super().__init__(*args, **kwargs)
 
-  @staticmethod
-  def decimal_serialize(obj):
-      return simplejson.dumps(obj=obj, use_decimal=True, default=vars, ensure_ascii=False, encoding='utf8')
-
-  @staticmethod
-  def decimal_deserialize(s):
-      return simplejson.loads(s=s, use_decimal=True)
 
   def process_response(self, http_code, content_type, response):
     str_data = decimal_serialize(response)
@@ -102,7 +102,7 @@ class DBHandler(BaseHTTPRequestHandler):
         ctx['db'] = _sql_executor.db
 
         with Timer() as dispatch_timer:
-          _response : Response = dispatch(request, methods=self.methods, debug=False, context=ctx, serialize=DBHandler.decimal_serialize, deserialize=DBHandler.decimal_deserialize)
+          _response : Response = dispatch(request, methods=self.methods, debug=False, context=ctx, serialize=decimal_serialize, deserialize=decimal_deserialize)
         ctx['perf'][(3, 'dispatch')] = (dispatch_timer.time - sum(ctx['perf'].values()))
         ctx['id'] = _response.id
 
@@ -133,7 +133,7 @@ class DBHandler(BaseHTTPRequestHandler):
       perf[(5,'process_request')] = (pr_timer.time - sum(perf.values()))
       perf[(0,'receiving_request')] = rcv_timer.time
       ordered = [ (k[1], perf[k]) for k in sorted(list(perf.keys()), key=lambda x: x[0]) ]
-      id = simplejson.dumps(ctx['id']).strip('"')
+      id = decimal_serialize(ctx['id']).strip('"')
       pid = os.getpid()
       performance_log = '##########\n' + f'[pid={pid}] [id={id}] QUERY: `{ctx["query"]}`' + '\n'
       for key, value in ordered:
