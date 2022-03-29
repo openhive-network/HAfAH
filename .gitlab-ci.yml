@@ -14,12 +14,32 @@ variables:
 
 include:
   - project: 'hive/haf'
-    ref: develop
+    ref: bw_hived_dockerized_deployment
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
+
+  - project: 'hive/hive'
+    ref: bw_hived_dockerized_deployment
+    file: '/scripts/ci-helpers/prepare_data_image_job.yml'
+
+prepare_hived_image:
+  extends: .prepare_hived_data_5m_image
+  stage: build_and_test
+  variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
+    REGISTRY_USER: "$HIVED_CI_IMGBUILDER_USER"
+    REGISTRY_PASS: $HIVED_CI_IMGBUILDER_PASSWORD
+
+  tags:
+    - public-runner-docker
+    - hived-for-tests
 
 prepare_haf_image:
   extends: .prepare_haf_data_5m_image
   stage: build_and_test
+  variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
+    REGISTRY_USER: "$CI_IMG_BUILDER_USER"
+    REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
 
   tags:
     - public-runner-docker
@@ -93,6 +113,8 @@ comparison_tests:
   needs:
     - job: prepare_hafah_image
     - job: prepare_haf_image
+      artifacts: true
+    - job: prepare_hived_image
       artifacts: true
 
   services:
