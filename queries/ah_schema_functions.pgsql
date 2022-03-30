@@ -20,46 +20,49 @@ ON
   hov.op_type_id=hot.id
 ;
 
--- credits: https://stackoverflow.com/a/50119025/11738218
-CREATE OR REPLACE FUNCTION hafah_python.numeric_to_bit(NUMERIC)
-  RETURNS BIT(64) AS $$
+CREATE OR REPLACE FUNCTION hafah_python.numeric_to_bigint(NUMERIC)
+  RETURNS BIGINT AS $$
 DECLARE
-  num ALIAS FOR $1;
-  -- 1 + largest positive BIGINT --
-  max_bigint NUMERIC := '9223372036854775808' :: NUMERIC(19, 0);
-  result BIT VARYING;
+  MAX_BIGINT BIGINT := x'7fffffffffffffff'::BIGINT;
 BEGIN
-  WITH
-      chunks (exponent, chunk) AS (
-        SELECT
-          exponent,
-          floor((num / (max_bigint ^ exponent) :: NUMERIC(300, 20)) % max_bigint) :: BIGINT
-        FROM generate_series(0, 5) exponent
-    )
-  SELECT bit_or(chunk :: BIT(64) :: BIT VARYING << (63 * (exponent))) :: BIT VARYING
-  FROM chunks INTO result;
-  RETURN result;
+  IF $1 > MAX_BIGINT THEN
+    RETURN (1 :: BIGINT << 63) | ($1 - MAX_BIGINT) :: BIGINT;
+  ELSE
+    RETURN $1 :: BIGINT;
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION hafah_python.get_bit_positions_64(_in NUMERIC, _offset SMALLINT) RETURNS SMALLINT[] AS
+CREATE OR REPLACE FUNCTION hafah_python.find_positive_bit(in _N BIGINT, in _START SMALLINT) RETURNS SMALLINT AS $function$
+BEGIN
+  FOR i IN GREATEST(_START, 0)..63 LOOP
+    IF _N & (1 ::BIGINT << i) != 0 THEN
+      RETURN i;
+    END IF;
+  END LOOP;
+  RETURN NULL;
+END
+$function$
+language plpgsql STABLE;
+
+CREATE OR REPLACE FUNCTION hafah_python.get_bit_positions_64(in _in BIGINT, in _offset SMALLINT) RETURNS SMALLINT[] AS
 $function$
 DECLARE
-  __bit_in BIT(64);
+  temp_value BIGINT := 0;
+  input_data BIGINT := _in;
+  last_found_pos SMALLINT := 0;
+  result SMALLINT[] := ARRAY[] ::SMALLINT[];
 BEGIN
-  IF _in IS NULL OR _in < 0 :: NUMERIC THEN
-    RETURN ( SELECT NULL::SMALLINT[] );
-  END IF;
-  IF _in = 0 :: NUMERIC THEN
-    RETURN ( SELECT ARRAY[]::SMALLINT[] );
-  END IF;
-  __bit_in := hafah_python.numeric_to_bit(_in);
 
-  RETURN (
-    SELECT array_agg(bit_pos :: SMALLINT + _offset)
-    FROM generate_series(0, 64) AS bit_pos
-    WHERE ((__bit_in >> (bit_pos)) & (1 :: BIT(64))) = (1 :: BIT(64))
-  );
+  WHILE input_data != 0 LOOP
+    temp_value := input_data - 1;
+    input_data := input_data & temp_value;
+    last_found_pos := hafah_python.find_positive_bit(input_data # (temp_value + 1), last_found_pos);
+    result := array_append(result, last_found_pos + _offset );
+  END LOOP;
+
+  RETURN result;
+
 END;
 $function$
 LANGUAGE plpgsql IMMUTABLE;
