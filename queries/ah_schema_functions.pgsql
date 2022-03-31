@@ -24,9 +24,12 @@ CREATE OR REPLACE FUNCTION hafah_python.numeric_to_bigint(NUMERIC)
   RETURNS BIGINT AS $$
 DECLARE
   MAX_BIGINT BIGINT := x'7fffffffffffffff'::BIGINT;
+  MIN_BIGINT BIGINT := (1 :: BIGINT << 63);
 BEGIN
-  IF $1 > MAX_BIGINT THEN
-    RETURN (1 :: BIGINT << 63) | ($1 - MAX_BIGINT) :: BIGINT;
+  IF $1 < 0 THEN
+    RETURN NULL;
+  ELSEIF $1 > MAX_BIGINT THEN
+    RETURN (MIN_BIGINT | ((($1 + MIN_BIGINT) :: BIGINT ))) :: BIGINT;
   ELSE
     RETURN $1 :: BIGINT;
   END IF;
@@ -52,12 +55,20 @@ DECLARE
   input_data BIGINT := _in;
   last_found_pos SMALLINT := 0;
   result SMALLINT[] := ARRAY[] ::SMALLINT[];
+  MIN_BIGINT_VALUE BIGINT := (1 :: BIGINT << 63);
 BEGIN
 
   WHILE input_data != 0 LOOP
-    temp_value := input_data - 1;
-    input_data := input_data & temp_value;
-    last_found_pos := hafah_python.find_positive_bit(input_data # (temp_value + 1), last_found_pos);
+    IF input_data = MIN_BIGINT_VALUE THEN
+      -- substraction from MIN_BIGINT_VALUE will raise exception, that's why
+      -- custom behaivior is performed
+      input_data := 0;
+      last_found_pos := 63;
+    ELSE
+      temp_value := input_data - 1;
+      input_data := input_data & temp_value;
+      last_found_pos := hafah_python.find_positive_bit(input_data # (temp_value + 1), last_found_pos);
+    END IF;
     result := array_append(result, last_found_pos + _offset );
   END LOOP;
 
