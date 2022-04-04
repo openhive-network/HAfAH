@@ -375,46 +375,6 @@ END
 $function$
 language plpgsql STABLE;
 
-DROP FUNCTION IF EXISTS hafah_python.ah_get_account_history_helper;
-CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history_helper(in _filter INT[], _account_id INT, _upper_block_limit INT, _start BIGINT, _limit BIGINT)
-RETURNS TABLE (
-  trx_in_block SMALLINT,
-  operation_id BIGINT,
-  op_type_id SMALLINT,
-  body TEXT,
-  op_pos BIGINT,
-  block_num INT,
-  seq_no INT,
-  formated_timestamp TEXT
-)
-AS
-$function$
-DECLARE
-  __use_filter INT;
-BEGIN
-  __use_filter := array_length( _filter, 1 );
-    RETURN query 
-    SELECT ho.trx_in_block, ho.id, ho.op_type_id, ho.body, ho.op_pos::BIGINT, ho.block_num, hao.account_op_seq_no, btrim(to_json(ho."timestamp")::TEXT, '"'::TEXT) AS formated_timestamp
-      FROM hive.account_operations_view hao
-      JOIN
-      (
-        SELECT hov.* FROM hive.operations_view hov
-        WHERE hov.block_num <= _upper_block_limit AND (__use_filter IS NULL OR hov.op_type_id=ANY(_filter))
-      ) ho ON hao.operation_id = ho.id
-
-      WHERE hao.account_id = _account_id AND hao.account_op_seq_no <= _start
-      ORDER BY hao.account_op_seq_no DESC
-      LIMIT _limit
-  ;
-
-END
-$function$
-LANGUAGE plpgsql STABLE
-SET JIT=OFF
-SET join_collapse_limit=16
-SET from_collapse_limit=16
-;
-
 CREATE OR REPLACE FUNCTION hafah_python.ah_get_account_history( in _filter_low NUMERIC, in _filter_high NUMERIC, in _account VARCHAR, _start BIGINT, _limit BIGINT, in _include_reversible BOOLEAN, in _is_legacy_style BOOLEAN )
 RETURNS TABLE(
   _trx_id TEXT,
@@ -432,6 +392,7 @@ DECLARE
   __resolved_filter SMALLINT[];
   __account_id INT;
   __upper_block_limit INT;
+  __use_filter INT;
 BEGIN
 
   PERFORM hafah_python.validate_limit( _limit, 1000 );
@@ -447,43 +408,50 @@ BEGIN
 
   SELECT INTO __account_id ( select id from hive.accounts where name = _account );
 
+  __use_filter := array_length( __resolved_filter, 1 );
+
   RETURN QUERY
-    SELECT -- hafah_python.ah_get_account_history
+SELECT -- hafah_python.ah_get_account_history
       (
         CASE
-        WHEN ht.trx_hash IS NULL THEN '0000000000000000000000000000000000000000'
-        ELSE encode( ht.trx_hash, 'escape')
+        WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000'
+        ELSE encode( (SELECT htv.trx_hash FROM hive.transactions_view htv WHERE ho.trx_in_block >= 0 AND ds.block_num = htv.block_num AND ho.trx_in_block = htv.trx_in_block), 'escape')
         END
       ) AS _trx_id,
-    T.block_num AS _block,
+    ds.block_num AS _block,
       (
         CASE
-        WHEN ht.trx_in_block IS NULL THEN 4294967295
-        ELSE ht.trx_in_block
+        WHEN ho.trx_in_block < 0 THEN 4294967295
+        ELSE ho.trx_in_block
         END
       ) AS _trx_in_block,
-      T.op_pos _op_in_trx,
+      ho.op_pos::BIGINT AS _op_in_trx,
       hot.is_virtual AS virtual_op,
-      T.formated_timestamp,
+      btrim(to_json(ho."timestamp")::TEXT, '"'::TEXT) AS formated_timestamp,
       (
         CASE
-          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(T.body)::TEXT
-          ELSE T.body
+          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body)::TEXT
+          ELSE ho.body
         END
       ) AS _value,
-      T.seq_no AS _operation_id
+      ds.account_op_seq_no AS _operation_id
     FROM
     (
-      SELECT * from hafah_python.ah_get_account_history_helper(__resolved_filter, __account_id, __upper_block_limit, _start, _limit) hao
-      ORDER BY hao.seq_no DESC
+      SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
+      FROM hive.account_operations_view hao
+      WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit AND (__use_filter IS NULL OR hao.op_type_id=ANY(__resolved_filter))
+      ORDER BY hao.account_op_seq_no DESC
       LIMIT _limit
-    ) T
-    JOIN hive.operation_types hot ON T.op_type_id = hot.id
-    LEFT JOIN hive.transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block
-    ORDER BY T.seq_no ASC;
+    ) ds
+    JOIN LATERAL (SELECT hov.body, hov.op_pos, hov.timestamp, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
+    JOIN LATERAL (select ot.is_virtual FROM hive.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
+    ORDER BY ds.account_op_seq_no ASC
+
+    ;
+
 END
 $function$
-language plpgsql STABLE
+LANGUAGE plpgsql STABLE
 SET JIT=OFF
 SET join_collapse_limit=16
 SET from_collapse_limit=16
