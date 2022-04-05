@@ -177,9 +177,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
   &quot;params&quot;: {&#xd;
     &quot;account&quot;: &quot;initminer&quot;,&#xd;
     &quot;limit&quot;: 1,&#xd;
-    &quot;start&quot;:-1,&#xd;
-    &quot;operation_filter_low&quot;: 0,&#xd;
-    &quot;operation_filter_high&quot;: 0,&#xd;
+    &quot;start&quot;: 1,&#xd;
     &quot;include_reversible&quot;: true&#xd;
   },&#xd;
   &quot;id&quot;: &quot;VALIDATION&quot;&#xd;
