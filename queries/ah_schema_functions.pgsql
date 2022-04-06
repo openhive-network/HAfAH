@@ -209,10 +209,9 @@ BEGIN
       (
         --`abs` it's temporary, until position of operation is correctly saved
         SELECT
-          ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, hot.is_virtual, ho.formated_timestamp AS _timestamp, ho.virtual_op
+          ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.virtual_op, ho.formated_timestamp AS _timestamp
         FROM hafah_python.helper_operations_view ho
-        JOIN hive.operation_types hot ON hot.id = ho.op_type_id
-        WHERE ho.block_num = _block_num AND ( _only_virtual = FALSE OR ( _only_virtual = TRUE AND hot.is_virtual = TRUE ) )
+        WHERE ho.block_num = _block_num AND ( _only_virtual = FALSE OR ( _only_virtual = TRUE AND ho.virtual_op = TRUE ) )
       ) T
       JOIN hive.blocks_view hb ON hb.num = T.block_num
       LEFT JOIN hive.transactions_view ht ON T.block_num = ht.block_num AND T.trx_in_block = ht.trx_in_block
