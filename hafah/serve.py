@@ -7,6 +7,7 @@ from logging import DEBUG
 from socketserver import ForkingMixIn
 
 import simplejson
+from simplejson import JSONEncoder
 from jsonrpcserver import dispatch
 from jsonrpcserver.methods import Methods
 from jsonrpcserver.response import Response
@@ -28,11 +29,22 @@ CONTENT_TYPE = 'Content-Type'
 CONTENT_TYPE_JSON = 'application/json'
 CONTENT_TYPE_HTML = 'text/html'
 
+class CompactSerializer(JSONEncoder):
+  def __init__(self, *_, **__) -> None:
+      super().__init__(
+        use_decimal=True,
+        default=vars,
+        ensure_ascii=False,
+        encoding='utf8'
+      )
+
+  def encode(self, o):
+      if isinstance(o, Response):
+        o = o.deserialized()
+      return super().encode(o)
 
 def decimal_serialize(obj):
-    if isinstance(obj, Response):
-      obj = obj.deserialized()
-    return simplejson.dumps(obj=obj, use_decimal=True, default=vars, ensure_ascii=False, encoding='utf8')
+    return simplejson.dumps(obj=obj, cls=CompactSerializer)
 
 def decimal_deserialize(s):
     return simplejson.loads(s=s, use_decimal=True)
