@@ -35,7 +35,8 @@ class CompactSerializer(JSONEncoder):
         use_decimal=True,
         default=vars,
         ensure_ascii=False,
-        encoding='utf8'
+        encoding='utf8',
+        separators=(',', ':')
       )
 
   def encode(self, o):
