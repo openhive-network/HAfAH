@@ -5,8 +5,8 @@ stages:
 variables:
   GIT_DEPTH: "1"
   GIT_SUBMODULE_STRATEGY: "recursive"
-  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-5 
-  BUILDER_IMAGE_TAG: "@sha256:a22b174d15ad9878f878e798e297d2134da132174802abff0923ea214e2f4543"
+  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-3
+  BUILDER_IMAGE_TAG: "sha256:73919a10ae505ba0489b7b05e004ffecd9ab6b6ae0686ab8a93132cd1f5c7c31"
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
   HAFAH_PORT: 6543
@@ -53,7 +53,7 @@ prepare_haf_image:
     USE_POSTGREST: 0
 
   script:
-    - docker build --build-arg USE_POSTGREST=$USE_POSTGREST --build-arg HTTP_PORT=$HAFAH_PORT --build-arg POSTGRES_URL="$HAF_POSTGRES_URL" --target=instance -t $HAFAH_IMAGE_NAME -f Dockerfile . 
+    - docker build --build-arg USE_POSTGREST=$USE_POSTGREST --build-arg HTTP_PORT=$HAFAH_PORT --build-arg POSTGRES_URL="$HAF_POSTGRES_URL" --target=instance -t $HAFAH_IMAGE_NAME -f Dockerfile .
     - echo $HAFAH_CI_IMG_BUILDER_PASSWORD | docker login -u $HAFAH_CI_IMG_BUILDER_USER $REGISTRY --password-stdin
     - docker push $HAFAH_IMAGE_NAME
     - echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
@@ -183,7 +183,8 @@ postgrest_patterns_tests:
 
   script:
     - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt "$CI_PROJECT_DIR/haf/hive/tests/test_tools"
-      # run comparsion tests
+
+    # run comparsion tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
     - python3 -m pytest -n 8 --ref http://$HIVED_ENDPOINT --test http://$AH_ENDPOINT --start 4900000 --stop 4915000 --junitxml=$CI_PROJECT_DIR/comparsion_tests.xml
 
@@ -199,6 +200,48 @@ postgrest_patterns_tests:
     - "**/ah.log"
     - "**/*.out.json"
     - "$CI_PROJECT_DIR/haf/hive/tests/tests_api/hived/workdir_*"
+    - "$CI_PROJECT_DIR/tests/wdir"
+    when: always
+    expire_in: 6 hours
+  tags:
+    - public-runner-docker
+    - hived-for-tests
+
+.performance_tests:
+  extends: .docker_image_builder_job
+  stage: test
+  variables:
+    FF_NETWORK_PER_BUILD: 1
+    PERF_WORKDIR: $CI_PROJECT_DIR/docker_output
+    HAFAH_IMAGE: ""
+
+  needs:
+    - job: prepare_haf_image
+      artifacts: true
+
+  services:
+    - name: $HAF_IMAGE_NAME
+      alias: haf-instance
+
+    - name: $HAFAH_IMAGE
+      alias: hafah_app
+      entrypoint:
+        - /home/hive/performance_tests.bash
+
+  before_script:
+    - apk update && apk add ca-certificates unzip
+    - mkdir $PERF_WORKDIR
+
+  script: |
+    unzip /builds/artiffacts.zip -d $PERF_WORKDIR
+
+  artifacts:
+    when: always
+    reports:
+      junit: $PERF_WORKDIR/wdir/jmeter_junit_report.xml
+    paths:
+    - "$CI_JOB_NAME"
+    - "$PERF_WORKDIR"
     when: always
     expire_in: 6 hours
   tags:
@@ -221,6 +264,28 @@ postgrest_comparison_tests:
 
   needs:
     - !reference [.comparison_tests, needs]
+    - job: prepare_postgrest_hafah_image
+      artifacts: true
+
+  variables:
+    HAFAH_IMAGE: $HAFAH_IMAGE_NAME
+
+python_performance_tests:
+  extends: .performance_tests
+
+  needs:
+    - !reference [.performance_tests, needs]
+    - job: prepare_python_hafah_image
+      artifacts: true
+
+  variables:
+    HAFAH_IMAGE: $HAFAH_IMAGE_NAME
+
+postgrest_performance_tests:
+  extends: .performance_tests
+
+  needs:
+    - !reference [.performance_tests, needs]
     - job: prepare_postgrest_hafah_image
       artifacts: true
 

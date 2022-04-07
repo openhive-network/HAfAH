@@ -64,7 +64,7 @@ class Db:
         try:
             for item in self._conn:
                 if item is not None:
-                    log.info("Closing database connection: '{}'".format(item['name']))
+                    log.debug("Closing database connection: '{}'".format(item['name']))
                     item['connection'].close()
                     item = None
             self._conn = []
