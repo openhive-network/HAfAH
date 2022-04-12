@@ -86,12 +86,12 @@ patterns_tests:
     - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt
     # run pattern tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests
-    - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel`
+    - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel` && mv $CI_PROJECT_DIR/haf/hive/tests/api_tests/results.xml $CI_PROJECT_DIR/results.xml
 
   artifacts:
     when: always
     reports:
-      junit: $CI_PROJECT_DIR/haf/hive/tests/api_tests/results.xml
+      junit: $CI_PROJECT_DIR/results.xml
     paths:
     - "$CI_JOB_NAME"
     - "**/from_node.log"
