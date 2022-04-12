@@ -1,5 +1,6 @@
 stages:
-  - build_and_test
+  - build
+  - test
 
 variables:
   GIT_DEPTH: "1"
@@ -23,7 +24,7 @@ include:
 
 prepare_hived_image:
   extends: .prepare_hived_data_5m_image
-  stage: build_and_test
+  stage: build
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
     REGISTRY_USER: "$HIVED_CI_IMGBUILDER_USER"
@@ -35,7 +36,7 @@ prepare_hived_image:
 
 prepare_haf_image:
   extends: .prepare_haf_data_5m_image
-  stage: build_and_test
+  stage: build
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     REGISTRY_USER: "$CI_IMG_BUILDER_USER"
@@ -47,7 +48,7 @@ prepare_haf_image:
 
 prepare_hafah_image:
   extends: .docker_image_builder_job
-  stage: build_and_test
+  stage: build
 
   script:
     - docker build --build-arg HTTP_PORT=$HAFAH_PORT --build-arg POSTGRES_URL="$HAF_POSTGRES_URL" --target=instance -t $HAFAH_IMAGE -f Dockerfile . 
@@ -59,7 +60,7 @@ prepare_hafah_image:
 
 patterns_tests:
   extends: .docker_image_builder_job
-  stage: build_and_test
+  stage: test
   variables:
     AH_ENDPOINT: hafah_app:$HAFAH_PORT
     FF_NETWORK_PER_BUILD: 1
@@ -86,12 +87,12 @@ patterns_tests:
     - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt
     # run pattern tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests
-    - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel` && mv $CI_PROJECT_DIR/haf/hive/tests/api_tests/results.xml $CI_PROJECT_DIR/results.xml
+    - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel`
 
   artifacts:
     when: always
     reports:
-      junit: $CI_PROJECT_DIR/results.xml
+      junit: $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests/results.xml
     paths:
     - "$CI_JOB_NAME"
     - "**/from_node.log"
@@ -106,7 +107,7 @@ patterns_tests:
 
 comparison_tests:
   extends: .docker_image_builder_job
-  stage: build_and_test
+  stage: test
   variables:
     AH_ENDPOINT: hafah_app:$HAFAH_PORT
     HIVED_ENDPOINT: hived-instance:8090
