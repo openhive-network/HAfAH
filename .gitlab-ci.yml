@@ -15,11 +15,11 @@ variables:
 
 include:
   - project: 'hive/haf'
-    ref: bw_hived_dockerized_deployment
+    ref: develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
 
   - project: 'hive/hive'
-    ref: bw_hived_dockerized_deployment
+    ref: develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
 
 prepare_hived_image:
