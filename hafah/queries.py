@@ -67,7 +67,7 @@ class account_history_db_connector:
       is_legacy_style=is_legacy_style
     )[0]['get_ops_in_block_json']
 
-  def get_transaction(self, trx_hash : bytes, include_reversible : bool, is_legacy_style : bool ):
+  def get_transaction(self, trx_hash : str, include_reversible : bool, is_legacy_style : bool ):
     return self._get_all(
       f"SELECT * FROM {self._schema}.get_transaction_json( :trx_hash, :include_reversible, :is_legacy_style )",
       trx_hash=trx_hash,

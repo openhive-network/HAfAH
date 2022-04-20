@@ -186,7 +186,7 @@ BEGIN
       (
         CASE
         WHEN ht.trx_hash IS NULL THEN '0000000000000000000000000000000000000000'
-        ELSE encode( ht.trx_hash, 'escape')
+        ELSE encode( ht.trx_hash, 'hex')
         END
       ) _trx_id,
       (
@@ -256,7 +256,7 @@ BEGIN
       trim(both '"' from to_json(__result.expiration)::text) _expiration,
       __result.block_num _block_num,
       __result.trx_in_block _trx_in_block,
-      encode(__result.signature, 'escape') _signature,
+      encode(__result.signature, 'hex') _signature,
       __multisig_number;
 END
 $function$
@@ -272,7 +272,7 @@ BEGIN
 
   RETURN QUERY
     SELECT
-      encode(htm.signature, 'escape') _signature
+      encode(htm.signature, 'hex') _signature
     FROM hive.transactions_multisig_view htm
     WHERE htm.trx_hash = _trx_hash;
 END
@@ -347,7 +347,7 @@ BEGIN
       (
         CASE
           WHEN T2.trx_hash IS NULL THEN '0000000000000000000000000000000000000000'
-          ELSE encode( T2.trx_hash, 'escape')
+          ELSE encode( T2.trx_hash, 'hex')
         END
       ) _trx_id,
       T.block_num _block,
@@ -428,7 +428,7 @@ SELECT -- hafah_python.ah_get_account_history
       (
         CASE
         WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000'
-        ELSE encode( (SELECT htv.trx_hash FROM hive.transactions_view htv WHERE ho.trx_in_block >= 0 AND ds.block_num = htv.block_num AND ho.trx_in_block = htv.trx_in_block), 'escape')
+        ELSE encode( (SELECT htv.trx_hash FROM hive.transactions_view htv WHERE ho.trx_in_block >= 0 AND ds.block_num = htv.block_num AND ho.trx_in_block = htv.trx_in_block), 'hex')
         END
       ) AS _trx_id,
     ds.block_num AS _block,
@@ -539,7 +539,7 @@ BEGIN
   SELECT * INTO pre_result FROM hafah_python.get_transaction(_trx_hash, _include_reversible);
 
   IF NOT FOUND OR pre_result._block_num IS NULL THEN
-    RAISE EXCEPTION 'Assert Exception:false: Unknown Transaction %', RPAD(encode(_trx_hash, 'escape'), 40, '0');
+    RAISE EXCEPTION 'Assert Exception:false: Unknown Transaction %', RPAD(encode(_trx_hash, 'hex'), 40, '0');
   END IF;
 
   RETURN ( SELECT to_json(a) FROM (
@@ -560,13 +560,13 @@ BEGIN
             array_prepend(
               pre_result._signature,
               (SELECT ARRAY(
-                SELECT encode(signature, 'escape') FROM hive.transactions_multisig WHERE trx_hash=_trx_hash
+                SELECT encode(signature, 'hex') FROM hive.transactions_multisig WHERE trx_hash=_trx_hash
               ))
             )
           )
           END
         ) AS "signatures",
-        encode(_trx_hash, 'escape') AS "transaction_id",
+        encode(_trx_hash, 'hex') AS "transaction_id",
         pre_result._block_num AS "block_num",
         pre_result._trx_in_block AS "transaction_num"
     ) a

@@ -40,7 +40,7 @@ class account_history_impl:
   @perf(record_name=RECORD_NAME, handler=handler)
   def get_transaction(self, trx_hash : str, include_reversible : bool):
     return self.api.get_transaction(
-      trx_hash.encode('ascii'),
+      f'\\x{trx_hash}',
       include_reversible,
 
       is_legacy_style=self.is_legacy_style
