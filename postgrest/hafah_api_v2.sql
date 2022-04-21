@@ -7,7 +7,9 @@ curl -X POST http://localhost:3000/rpc/get_transaction \
 */
 DROP SCHEMA IF EXISTS hafah_api_v2 CASCADE;
 
-CREATE SCHEMA IF NOT EXISTS hafah_api_v2;
+CREATE SCHEMA IF NOT EXISTS hafah_api_v2 AUTHORIZATION hafah_owner;
+GRANT USAGE ON SCHEMA hafah_api_v2 TO hafah_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA hafah_api_v2 TO hafah_user;
 
 CREATE FUNCTION hafah_api_v2.get_ops_in_block(_block_num INT = 0, _only_virtual BOOLEAN = FALSE, _include_reversible BOOLEAN = FALSE)
 RETURNS JSON

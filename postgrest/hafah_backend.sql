@@ -8,58 +8,19 @@ Defined here are:
     Default is FALSE.
 */
 
+--SET ROLE hafah_owner;
+
 DROP SCHEMA IF EXISTS hafah_backend CASCADE;
 
-CREATE SCHEMA IF NOT EXISTS hafah_backend;
+CREATE SCHEMA IF NOT EXISTS hafah_backend AUTHORIZATION hafah_owner;
 
-CREATE PROCEDURE hafah_backend.create_api_user()
-LANGUAGE 'plpgsql'
-AS $$
-BEGIN
-  --recreate role for reading data
-  IF (SELECT 1 FROM pg_roles WHERE rolname='hafah_user') IS NOT NULL THEN
-    DROP OWNED BY hafah_user CASCADE;
-  END IF;
-  DROP ROLE IF EXISTS hafah_user;
-  CREATE ROLE hafah_user;
-
-  GRANT USAGE ON SCHEMA hafah_backend TO hafah_user;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_backend TO hafah_user;
-
-  GRANT USAGE ON SCHEMA hafah_api_v1 TO hafah_user;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_api_v1 TO hafah_user;
-
-  GRANT USAGE ON SCHEMA hafah_api_v2 TO hafah_user;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_api_v2 TO hafah_user;
-
-  GRANT USAGE ON SCHEMA hafah_endpoints TO hafah_user;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_endpoints TO hafah_user;
-
-  GRANT USAGE ON SCHEMA hafah_python TO hafah_user;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hafah_python TO hafah_user;
-  GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hafah_python TO hafah_user;
-
-  GRANT USAGE ON SCHEMA hive TO hafah_user;
-  GRANT SELECT ON ALL TABLES IN SCHEMA hive TO hafah_user;
-  GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hive TO hafah_user;
-  
-  -- add ability for admin to switch to hafah_user role
-  GRANT hafah_user TO haf_admin;
-
-  -- add hafah schemas owner
-  IF (SELECT 1 FROM pg_roles WHERE rolname='hafah_owner') IS NOT NULL THEN
-    DROP OWNED BY hafah_owner CASCADE;
-  END IF;
-  DROP ROLE IF EXISTS hafah_owner;
-  CREATE ROLE hafah_owner;
-  
-  ALTER SCHEMA hafah_backend OWNER TO hafah_owner;
-  ALTER SCHEMA hafah_api_v1 OWNER TO hafah_owner;
-  ALTER SCHEMA hafah_api_v2 OWNER TO hafah_owner;  
-  ALTER SCHEMA hafah_endpoints OWNER TO hafah_owner;
-END
-$$
-;
+GRANT USAGE ON SCHEMA hafah_backend TO hafah_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA hafah_backend TO hafah_user;
+GRANT USAGE ON SCHEMA hafah_python TO hafah_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA hafah_python TO hafah_user;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hafah_python TO hafah_user;
+GRANT USAGE ON SCHEMA hive TO hafah_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA hive TO hafah_user;
 
 CREATE FUNCTION hafah_backend.parse_is_legacy_style()
 RETURNS BOOLEAN

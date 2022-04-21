@@ -16,7 +16,9 @@ curl -X POST http://localhost:3000/ \
 */
 DROP SCHEMA IF EXISTS hafah_endpoints CASCADE;
 
-CREATE SCHEMA IF NOT EXISTS hafah_endpoints;
+CREATE SCHEMA IF NOT EXISTS hafah_endpoints AUTHORIZATION hafah_owner;
+GRANT USAGE ON SCHEMA hafah_endpoints TO hafah_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA hafah_endpoints TO hafah_user;
 
 CREATE FUNCTION hafah_endpoints.home(JSON)
 RETURNS JSONB
