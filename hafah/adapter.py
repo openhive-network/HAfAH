@@ -46,12 +46,7 @@ class Db:
         self.name = name
 
         self._conn.append( { "connection" : self.engine().connect(), "name" : name } )
-        # Since we need to manage transactions ourselves, yet the
-        # core behavior of DBAPI (per PEP-0249) is that a transaction
-        # is always in progress, this COMMIT is a workaround to get
-        # back control (and used with autocommit=False query exec).
         self._basic_connection = self.get_connection(0)
-        self._basic_connection.execute(sqlalchemy.text("COMMIT"))
 
     def clone(self, name):
         cloned = Db(self._url, name)
@@ -95,7 +90,7 @@ class Db:
         if self._engine is None:
             self._engine = sqlalchemy.create_engine(
                 self._url,
-                isolation_level="READ UNCOMMITTED", # only supported in mysql
+                isolation_level="AUTOCOMMIT",
                 pool_size=self.max_connections,
                 pool_recycle=3600,
                 echo=False,
@@ -110,10 +105,6 @@ class Db:
     def get_dialect(self):
         return self.get_connection(0).dialect
 
-    def is_trx_active(self):
-        """Check if a transaction is in progress."""
-        return self._trx_active
-
     def query_no_return(self, sql, **kwargs):
         self._query(sql, False, **kwargs)
 
@@ -126,17 +117,9 @@ class Db:
         if is_prepared:
             return sql
         else:
-            return str(sqlalchemy.text(sql).bindparams(**kwargs).execution_options(autocommit=False).compile(dialect=self.get_dialect(), compile_kwargs={"literal_binds": True}))
+            return str(sqlalchemy.text(sql).bindparams(**kwargs).compile(dialect=self.get_dialect(), compile_kwargs={"literal_binds": True}))
 
     def _query(self, sql, is_prepared, **kwargs):
-        """Send a query off to SQLAlchemy."""
-        if sql == 'START TRANSACTION':
-            assert not self._trx_active
-            self._trx_active = True
-        elif sql == 'COMMIT':
-            assert self._trx_active
-            self._trx_active = False
-
         try:
             query : str = self._sql_text(sql, is_prepared, **kwargs)
             return query, self._basic_connection.execute(query)
