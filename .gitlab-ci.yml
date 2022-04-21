@@ -9,7 +9,6 @@ variables:
   BUILDER_IMAGE_TAG: "@sha256:a22b174d15ad9878f878e798e297d2134da132174802abff0923ea214e2f4543"
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
-  HAFAH_IMAGE: $REGISTRY/instance:$CI_COMMIT_SHORT_SHA
   HAFAH_PORT: 6543
   HAF_POSTGRES_URL: postgresql://hive@haf-instance:5432/haf_block_log
 
@@ -46,17 +45,39 @@ prepare_haf_image:
     - public-runner-docker
     - hived-for-tests
 
-prepare_hafah_image:
+.prepare_hafah_image:
   extends: .docker_image_builder_job
   stage: build
+  variables:
+    HAFAH_IMAGE_NAME: ""
+    USE_POSTGREST: 0
 
   script:
-    - docker build --build-arg HTTP_PORT=$HAFAH_PORT --build-arg POSTGRES_URL="$HAF_POSTGRES_URL" --target=instance -t $HAFAH_IMAGE -f Dockerfile . 
+    - docker build --build-arg USE_POSTGREST=$USE_POSTGREST --build-arg HTTP_PORT=$HAFAH_PORT --build-arg POSTGRES_URL="$HAF_POSTGRES_URL" --target=instance -t $HAFAH_IMAGE_NAME -f Dockerfile . 
     - echo $HAFAH_CI_IMG_BUILDER_PASSWORD | docker login -u $HAFAH_CI_IMG_BUILDER_USER $REGISTRY --password-stdin
-    - docker push $HAFAH_IMAGE
+    - docker push $HAFAH_IMAGE_NAME
+    - echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
+
+  artifacts:
+    reports:
+      dotenv: docker_image_name.env
+    expire_in: 6 hours
+
   tags:
     - public-runner-docker
     - hived-for-tests
+
+prepare_python_hafah_image:
+  extends: .prepare_hafah_image
+  variables:
+    HAFAH_IMAGE_NAME: $REGISTRY/python-instance:$CI_COMMIT_SHORT_SHA
+    USE_POSTGREST: 0
+
+prepare_postgrest_hafah_image:
+  extends: .prepare_hafah_image
+  variables:
+    HAFAH_IMAGE_NAME: $REGISTRY/postgrest-instance:$CI_COMMIT_SHORT_SHA
+    USE_POSTGREST: 1
 
 patterns_tests:
   extends: .docker_image_builder_job
@@ -67,7 +88,8 @@ patterns_tests:
     PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/test_tools/package"
 
   needs:
-    - job: prepare_hafah_image
+    - job: prepare_python_hafah_image
+      artifacts: true
     - job: prepare_haf_image
       artifacts: true
 
@@ -75,7 +97,7 @@ patterns_tests:
     - name: $HAF_IMAGE_NAME
       alias: haf-instance
 
-    - name: $HAFAH_IMAGE
+    - name: $HAFAH_IMAGE_NAME
       alias: hafah_app
 
   before_script:
@@ -115,7 +137,8 @@ comparison_tests:
     PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/test_tools/package"
 
   needs:
-    - job: prepare_hafah_image
+    - job: prepare_python_hafah_image
+      artifacts: true
     - job: prepare_haf_image
       artifacts: true
     - job: prepare_hived_image
@@ -125,7 +148,7 @@ comparison_tests:
     - name: $HAF_IMAGE_NAME
       alias: haf-instance
 
-    - name: $HAFAH_IMAGE
+    - name: $HAFAH_IMAGE_NAME
       alias: hafah_app
 
     - name: $HIVED_IMAGE_NAME
