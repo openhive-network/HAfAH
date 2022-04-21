@@ -9,7 +9,7 @@ cleanup () {
   python_pid=$(pidof 'python3')
   echo "python_pid: $python_pid"
   
-  sudo -n kill -INT $python_pid
+  kill -INT $python_pid
 
   echo "Waiting for hafah finish..."
   tail --pid=$python_pid -f /dev/null || true
@@ -32,11 +32,14 @@ while [ $# -gt 0 ]; do
     shift
 done
 
+pushd /home/hafah_user/app
 
-pushd /home/hive/app
+./scripts/setup_postgres.sh --postgres-url=${POSTGRES_URL}
+./scripts/setup_db.sh --postgres-url=${POSTGRES_URL}
 
 {
-python3 ./main.py --psql-db-path=${POSTGRES_URL} --port=${HTTP_PORT} "$@"
+echo "Attempting to start HafAH process..."
+sudo -Enu hafah_user ./scripts/run_hafah.sh
 echo "HafAH process finished execution: $?"
 } &
 
