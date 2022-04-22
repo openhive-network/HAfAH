@@ -16,3 +16,4 @@ else
 fi
 
 chmod a+x ./scripts/run_hafah.sh
+chmod -R a+w ${ROOT_DIR}
