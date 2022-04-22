@@ -247,15 +247,13 @@ LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
-  __id BYTEA; -- required
+  __id TEXT; -- required
   __include_reversible BOOLEAN = NULL; -- default FALSE
 
   __exception_message TEXT;
 BEGIN
   __id = hafah_backend.parse_argument(_params, _json_type, 'id', 0);
-  IF __id IS NOT NULL THEN
-    __id = __id::BYTEA;
-  ELSE
+  IF __id IS NULL THEN
     RETURN hafah_backend.raise_missing_arg('id', _id);
   END IF;
 
@@ -273,7 +271,7 @@ BEGIN
   END;
 
   BEGIN
-    RETURN hafah_python.get_transaction_json(__id, __include_reversible, _is_legacy_style);
+    RETURN hafah_python.get_transaction_json(decode(__id, 'hex'), __include_reversible, _is_legacy_style);
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
