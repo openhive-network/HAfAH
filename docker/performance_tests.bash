@@ -11,7 +11,7 @@ function relpath() {
     python3 -c "from os.path import relpath; print(relpath('$TO', '$FROM'))"
 }
 
-pushd $WORKUSER_HOME
+pushd /home/hafah_user
 
     # perform tests
     source jmeter/activate
@@ -24,7 +24,7 @@ pushd $WORKUSER_HOME
             -j $JMETER                              \
             --explicit-python
     else
-        HTTP_PORT=$TEST_PORT ${WORKUSER_HOME}/docker_entrypoint.sh &
+        HTTP_PORT=$TEST_PORT /home/hafah_user/docker_entrypoint.sh &
         python3 ./app/tests/performance_test.py     \
             -c perf_5M_heavy.csv                    \
             -d $PERFORMANCE_DIR                     \
