@@ -148,7 +148,7 @@ class DBHandler(BaseHTTPRequestHandler):
     performance_log = '##########\n' + f'[pid={pid}] [id={id}] QUERY: `{ctx.get("query", "-- query failed or not executed --")}`' + '\n'
     for key, value in ordered:
       performance_log += f'[pid={pid}] {key} executed in {value :.2f}ms' + '\n'
-    performance_log += f'[pid={pid}] content length: {ctx["data_length"]}'
+    performance_log += f'[pid={pid}] content length: {ctx.get("data_length", 0)}'
 
     logger.debug(performance_log)
 
