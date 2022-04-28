@@ -64,7 +64,7 @@ ADD --chown=hafah_user:hafah_user . ./app
 ADD --chown=hafah_user:hafah_user ./docker/docker_entrypoint.sh .
 ADD --chown=hafah_user:hafah_user ./docker/performance_tests.bash .
 
-RUN pip3 install --no-cache-dir -r ${WORKUSER_HOME}/app/requirements.txt -r ${WORKUSER_HOME}/app/tests/requirements.txt
+RUN pip3 install --no-cache-dir -r app/requirements.txt
 RUN chmod +x ./docker_entrypoint.sh ./performance_tests.bash
 
 USER haf_admin
