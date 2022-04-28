@@ -43,4 +43,7 @@ pushd /home/hafah_user
     # move archive to shared directory
     mv $ARCHIVE "/builds/$ARCHIVE"
 
+    # start mock server, to let CI knows that service is up and running
+    python3 -m http.server $HTTP_PORT
+
 popd
