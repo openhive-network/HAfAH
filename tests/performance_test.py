@@ -10,7 +10,7 @@ from enum import Enum
 from os import environ
 from pathlib import Path
 from re import compile, match
-from shutil import rmtree
+from shutil import rmtree, copy2 as copy_file
 from subprocess import PIPE, STDOUT, Popen
 from sys import argv
 from time import sleep
@@ -103,11 +103,14 @@ CSV_DIR_PATH = PERFORMANCE_DATA_DIR_PATH / 'CSV'
 JMX_DIR_PATH = PERFORMANCE_DATA_DIR_PATH / 'JMX'
 PERF_JMX_CONFIG = JMX_DIR_PATH / 'performance.jmx.in'
 CL_JMX_CONFIG = JMX_DIR_PATH / 'constant_load.jmx.in'
-OUT_JMX_PATH = DATADIR / f'jmeter_config_{PORT}.jmx'
 HAFAH_MAIN = ROOT_DIR / 'main.py'
+
+# datadir paths
+OUT_JMX_PATH = DATADIR / f'jmeter_config_{PORT}.jmx'
 JMETER_REPORT_OUT_FILE = DATADIR / f'jmeter_{PORT}_output.csv'
 HAFAH_OUT_FILE = DATADIR / f'hafah_{PORT}_output.csv'
 REPORT_OUTPUT_FILE = DATADIR / f'report_{PORT}.csv'
+PROPERTIES_FILES = DATADIR / 'jmeter.properties'
 
 # generate list of CSV's
 AVAILA_CSV = dict()
@@ -156,30 +159,29 @@ else:
 postgres_url_jmeter = html.escape(postgres_url_jmeter)
 log.info(f'postgres connection string in JMETER: jdbc:{postgres_url_jmeter}')
 
-# program will look for theese phrases in input JMX and replace with second part of tuple
-REPLACEMENTS = [
-	('ENTER PORT NUMBER HERE',                  str(PORT)           ),
-	('ENTER ADDRESS HERE',                      ADDRESS             ),
-	('ENTER THREAD COUNT HERE',                 str(THREADS)        ),
-	('ENTER PATH TO CSV HERE',                  CSV_PATH.as_posix() ),
-	('ENTER POSTGRES CONNECTION STRING HERE',   postgres_url_jmeter )
-]
+# theese will be appended in form: -J<first>=<second>
+# Ex: -Jport=8090
+PARAMS = dict(
+	port=str(PORT),
+	host=ADDRESS,
+	threads=str(THREADS),
+	dataset=CSV_PATH.as_posix(),
+	psql=postgres_url_jmeter
+)
 
 # directory managment
 if DATADIR.exists():
 	rmtree(DATADIR.as_posix())
 	log.info(f'removed old datadir {DATADIR}')
 DATADIR.mkdir()
+copy_file( src=JMX_PATH.as_posix(), dst=OUT_JMX_PATH.as_posix() )
 
-# configure test
-with JMX_PATH.open('rt') as in_file:
-	with OUT_JMX_PATH.open('wt') as out_file:
-		for line in in_file:
-			for i, find_and_replace in enumerate(REPLACEMENTS):
-				if line.find(find_and_replace[0]) >= 0:
-					line = line.replace(*find_and_replace)
-					_ = REPLACEMENTS.pop(i)
-			out_file.write(line)
+# generate .properties file
+with PROPERTIES_FILES.open('wt') as ofile:
+	for key, value in PARAMS.items():
+		ofile.write(f'{key}={value}' + '\n')
+
+jmeter_args = tuple(f'-J{key}={value}' for key, value in PARAMS.items())
 
 # running HAfAH and tests
 jmeter_interrupt = False
@@ -217,7 +219,7 @@ try:
 	jmeter_env = environ
 	jmeter_env['JAVA_ARGS']='-Xms4g -Xmx4g'
 	JMETER = Popen(
-		args=(JMETER_BIN, '-n', '-t', OUT_JMX_PATH.as_posix(), '-l', JMETER_REPORT_OUT_FILE.as_posix(), '-L', 'jmeter.util=DEBUG', '-L', 'jorphan=DEBUG'),
+		args=(JMETER_BIN, '-n', '-t', OUT_JMX_PATH.as_posix(), '-l', JMETER_REPORT_OUT_FILE.as_posix(), '-L', 'jmeter.util=DEBUG', '-L', 'jorphan=DEBUG', '-p', PROPERTIES_FILES.as_posix()),
 		env=jmeter_env,
 		cwd=DATADIR.as_posix(),
 		stdout=PIPE,
