@@ -6,7 +6,7 @@ variables:
   GIT_DEPTH: "1"
   GIT_SUBMODULE_STRATEGY: "recursive"
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-3
-  BUILDER_IMAGE_TAG: "sha256:73919a10ae505ba0489b7b05e004ffecd9ab6b6ae0686ab8a93132cd1f5c7c31"
+  BUILDER_IMAGE_TAG: "sha256:7754da6ec8b74a68eb331552aa420693cb0af5d506594263c52c93f9c475d644"
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
   HAFAH_PORT: 6543
