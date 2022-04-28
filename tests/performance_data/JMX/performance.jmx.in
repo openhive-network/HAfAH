@@ -604,8 +604,8 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
   &quot;jsonrpc&quot;: &quot;2.0&quot;,&#xd;
   &quot;method&quot;: &quot;account_history_api.enum_virtual_ops&quot;,&#xd;
   &quot;params&quot;: {&#xd;
-	  &quot;block_range_begin&quot;: ${block_no_1},&#xd;
-	  &quot;block_range_end&quot;: ${block_no_2},&#xd;
+	  &quot;block_range_begin&quot;: &quot;${block_no_1}&quot;,&#xd;
+	  &quot;block_range_end&quot;: &quot;${block_no_2}&quot;,&#xd;
 	  &quot;include_reversible&quot;: true,&#xd;
 	  &quot;group_by_block&quot;: false,&#xd;
 	  &quot;operation_begin&quot;: 0,&#xd;
@@ -1236,7 +1236,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
   &quot;jsonrpc&quot;: &quot;2.0&quot;,&#xd;
   &quot;method&quot;: &quot;account_history_api.get_ops_in_block&quot;,&#xd;
   &quot;params&quot;: {&#xd;
-    &quot;block_num&quot;: ${block_no_1},&#xd;
+    &quot;block_num&quot;: &quot;${block_no_1}&quot;,&#xd;
     &quot;only_virtual&quot;: true,&#xd;
     &quot;include_reversible&quot;: true&#xd;
   },&#xd;
