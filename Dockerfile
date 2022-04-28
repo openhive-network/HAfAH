@@ -63,6 +63,7 @@ SHELL ["/bin/bash", "-c"]
 ADD --chown=hafah_user:hafah_user . ./app
 ADD --chown=hafah_user:hafah_user ./docker/docker_entrypoint.sh .
 ADD --chown=hafah_user:hafah_user ./docker/performance_tests.bash .
+RUN chmod a+rwx /home/hafah_user/performance_tests.bash
 
 USER haf_admin
 
