@@ -42,7 +42,7 @@ FROM $CI_REGISTRY_IMAGE/ci-base-image$CI_IMAGE_TAG AS instance
 ARG HTTP_PORT=6543
 ENV HTTP_PORT=${HTTP_PORT}
 
-ARG POSTGRES_URL="postgresql://postgres:pass@127.0.0.1:5432/hafah"
+ARG POSTGRES_URL="postgresql://hive@localhost/haf_block_log"
 ENV POSTGRES_URL=${POSTGRES_URL}
 
 ARG USE_POSTGREST=0
@@ -63,7 +63,9 @@ SHELL ["/bin/bash", "-c"]
 ADD --chown=hafah_user:hafah_user . ./app
 ADD --chown=hafah_user:hafah_user ./docker/docker_entrypoint.sh .
 ADD --chown=hafah_user:hafah_user ./docker/performance_tests.bash .
-RUN chmod a+rwx /home/hafah_user/performance_tests.bash
+
+RUN pip3 install --no-cache-dir -r ${WORKUSER_HOME}/app/requirements.txt -r ${WORKUSER_HOME}/app/tests/requirements.txt
+RUN chmod +x ./docker_entrypoint.sh ./performance_tests.bash
 
 USER haf_admin
 
