@@ -6,7 +6,7 @@ variables:
   GIT_DEPTH: "1"
   GIT_SUBMODULE_STRATEGY: "recursive"
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-3
-  BUILDER_IMAGE_TAG: "sha256:7754da6ec8b74a68eb331552aa420693cb0af5d506594263c52c93f9c475d644"
+  BUILDER_IMAGE_TAG: "sha256:82ad0c94812bda905e57094828f3ed44d5782224d420f66b50e774089b3e52f5"
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
   HAFAH_PORT: 6543
@@ -226,7 +226,7 @@ postgrest_patterns_tests:
     - name: $HAFAH_IMAGE
       alias: hafah_app
       entrypoint:
-        - /home/hive/performance_tests.bash
+        - /home/hafah_user/performance_tests.bash
 
   before_script:
     - apk update && apk add ca-certificates unzip
