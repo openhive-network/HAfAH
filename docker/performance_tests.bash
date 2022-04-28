@@ -15,7 +15,8 @@ pushd /home/hafah_user
 
     # perform tests
     source jmeter/activate
-    if [[ "$USE_POSTGREST" -eq "0" ]] then
+    if [[ "$USE_POSTGREST" -eq "0" ]]
+    then
         python3 ./app/tests/performance_test.py     \
             -c perf_5M_heavy.csv                    \
             --postgres $POSTGRES_URL                \
