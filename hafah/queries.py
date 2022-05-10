@@ -68,7 +68,7 @@ class account_history_db_connector:
 
   def get_ops_in_block( self, block_num : int, only_virtual : bool, include_reversible : bool, *, is_legacy_style : bool):
     return self._get_all(
-      f"SELECT * FROM hafah_python.get_ops_in_block_json( :block_num, :only_virt, :include_reversible, :is_legacy_style )",
+      f"SELECT * FROM {self._schema}.get_ops_in_block_json( :block_num, :only_virt, :include_reversible, :is_legacy_style )",
       block_num=block_num,
       only_virt=only_virtual,
       include_reversible=include_reversible,
@@ -85,7 +85,7 @@ class account_history_db_connector:
 
   def get_account_history(self, filter_low : int, filter_high : int, account : str, start : int, limit : int, include_reversible : bool, *, is_legacy_style : bool):
     return self._get_all(
-      f"SELECT * FROM hafah_python.ah_get_account_history_json( :filter_low, :filter_high, :account, :start ::BIGINT, :limit, :include_reversible, :is_legacy_style )",
+      f"SELECT * FROM {self._schema}.ah_get_account_history_json( :filter_low, :filter_high, :account, :start ::BIGINT, :limit, :include_reversible, :is_legacy_style )",
       filter_low=filter_low,
       filter_high=filter_high,
       account=account,
