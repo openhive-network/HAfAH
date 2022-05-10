@@ -2,10 +2,6 @@
 Defined here are:
   - Function for parsing arguments
   - Repeated exception messages, used in hafah_endpoints.sql
-  - parse_is_legacy_style():
-    when making new style call or pure API call to HAfAH server (with only params in data),
-    boolean for legacy style (condenser api) query must be set in header 'Is-Legacy-Style'.
-    Default is FALSE.
 */
 
 --SET ROLE hafah_owner;
@@ -21,35 +17,6 @@ GRANT SELECT ON ALL TABLES IN SCHEMA hafah_python TO hafah_user;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hafah_python TO hafah_user;
 GRANT USAGE ON SCHEMA hive TO hafah_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA hive TO hafah_user;
-
-CREATE FUNCTION hafah_backend.parse_is_legacy_style()
-RETURNS BOOLEAN
-LANGUAGE 'plpgsql'
-AS
-$$
-DECLARE
-  __header_val BOOLEAN;
-BEGIN
-  SELECT NULLIF(current_setting('request.header.Is-Legacy-Style', TRUE), '') INTO __header_val;
-  IF __header_val IS NULL OR __header_val IS FALSE THEN
-    RETURN FALSE;
-  ELSEIF __header_val IS TRUE THEN
-    RETURN TRUE;
-  END IF;
-END
-$$
-;
-
-CREATE FUNCTION hafah_backend.get_virtual_op_offset()
-RETURNS INT
-LANGUAGE 'plpgsql'
-AS
-$$
-BEGIN
-  RETURN MIN(id) FROM hive.operation_types WHERE is_virtual = True;
-END
-$$
-;
 
 CREATE FUNCTION hafah_backend.parse_acc_hist_start(_start BIGINT)
 RETURNS BIGINT
@@ -89,7 +56,7 @@ $$
 DECLARE
   __param TEXT;
 BEGIN
-  SELECT CASE WHEN _json_type = 'object' OR _json_type IS NULL THEN
+  SELECT CASE WHEN _json_type = 'object' THEN
     _params->>_arg_name
   ELSE
     _params->>_arg_number
