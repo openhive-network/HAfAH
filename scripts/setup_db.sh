@@ -65,6 +65,3 @@ fi
 psql $POSTGRES_ACCESS -v ON_ERROR_STOP=on -f $SCRIPTPATH/../queries/ah_schema_functions.pgsql
 psql $POSTGRES_ACCESS -v ON_ERROR_STOP=on -U hafah_owner -f $SCRIPTPATH/../postgrest/hafah_backend.sql
 psql $POSTGRES_ACCESS -v ON_ERROR_STOP=on -f $SCRIPTPATH/../postgrest/hafah_endpoints.sql
-psql $POSTGRES_ACCESS -v ON_ERROR_STOP=on -f $SCRIPTPATH/../postgrest/hafah_api_v1.sql
-psql $POSTGRES_ACCESS -v ON_ERROR_STOP=on -f $SCRIPTPATH/../postgrest/hafah_api_v2.sql
-

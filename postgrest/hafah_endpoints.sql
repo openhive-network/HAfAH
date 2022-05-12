@@ -72,11 +72,11 @@ BEGIN
   IF __method_type = 'get_ops_in_block' THEN
     SELECT hafah_endpoints.call_get_ops_in_block(__params, __json_type, __is_legacy_style, __id) INTO __result;
   ELSEIF __method_type = 'enum_virtual_ops' THEN
-    SELECT hafah_endpoints.call_enum_virtual_ops(__params, __is_legacy_style, __id, __json_type) INTO __result;
+    SELECT hafah_endpoints.call_enum_virtual_ops(__params, __json_type, __is_legacy_style, __id) INTO __result;
   ELSEIF __method_type = 'get_transaction' THEN
-    SELECT hafah_endpoints.call_get_transaction(__params, __is_legacy_style, __id, __json_type) INTO __result;
+    SELECT hafah_endpoints.call_get_transaction(__params, __json_type, __is_legacy_style, __id) INTO __result;
   ELSEIF __method_type = 'get_account_history' THEN
-    SELECT hafah_endpoints.call_get_account_history(__params, __is_legacy_style, __id, __json_type) INTO __result;
+    SELECT hafah_endpoints.call_get_account_history(__params, __json_type, __is_legacy_style, __id) INTO __result;
   END IF;
 
   RETURN CASE WHEN __result->'error' IS NULL THEN
