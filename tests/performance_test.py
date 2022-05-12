@@ -38,6 +38,26 @@ class CSV:
 		PERF = 0, 	# performance testing mode
 		CL = 1		# constant load mode
 
+class CALL_STYLE_OPT(Enum):
+	OLD_STYLE = 0,	#	/						{id:0, jsonrpc: 2.0, data:{id:gwropiwejfoifewofeofifhqifwp}, method:get_transaction}
+	NEW_STYLE = 1,	#	rpc/get_transaction		{id:gwropiwejfoifewofeofifhqifwp}
+	POSTGRES  = 2	#	-						SELECT * FROM get_transaction_json( gwropiwejfoifewofeofifhqifwp, true, true )
+
+	@staticmethod
+	def from_str(input : str):
+		input = input.strip().lower()
+		for key, value in CALL_STYLE_OPT.__members__.items():
+			if CALL_STYLE_OPT.to_str(key) == input:
+				return value
+		raise Exception(f'invalid input: `{input}`')
+
+	@staticmethod
+	def to_str(input : 'CALL_STYLE_OPT'):
+		input = str(input)
+		if '.' in input:
+			input = input.split('.')[1]
+		return input.lower().replace('_', '-')
+
 # constants
 log = configure_logger()
 BOOL_PARAM = dict(nargs='?', type=bool, const=True, default=False)
@@ -77,23 +97,25 @@ engine.add_argument('-s', '--top-slowest', dest='top_slowest',  type=int,   defa
 engine.add_argument('-d', '--datadir',     dest='datadir',      type=str,   default='./wdir',                        help='defines path to workdir (path to this dir will alway be recreated) [default=./wdir]')
 engine.add_argument('-t', '--threads',     dest='threads',      type=int,   default=10,                              help='defines amount of threads to use during tests [default=10]')
 engine.add_argument('-j', '--jmeter',      dest='jmeter',       type=str,   default='/usr/bin/jmeter',               help='path to jmeter executable [default=/usr/bin/jmeter]')
+engine.add_argument('--call-style',        dest='call_style',   type=str,   default='old-style',                     help='defines calling style, performaed by jmeter [default=old-style]', choices=('old-style', 'new-style', 'postgres'))
 engine.add_argument('--postgres',          dest='postgres_url', type=str,   default='postgresql:///haf_block_log',   help='if specified connection string, tests will be performed on postgres db [default=postgresql:///haf_block_log]')
 engine.add_argument('--no-launch',         dest='no_hafah',     **BOOL_PARAM,                                        help='if specified, no HAfAH instance will be launched (if specified, no full data will be avaiable) [default=False]')
 engine.add_argument('--explicit-python',   dest='ex_python',    **BOOL_PARAM,                                        help='starts HAfAH like `python3 main.py` instead of `main.py`, make sure that dir with python interpreter is in PATH env')
 args = engine.parse_args(list(argv[1:]))
 
 # user input
-ROOT_DIR          : Path  = Path(args.root_dir)
-TOP_SLOWEST_COUNT : int   = args.top_slowest
-DATADIR           : Path  = Path(args.datadir).resolve()
-POSTGRES_URL      : str   = args.postgres_url
-PORT              : int   = args.port
-THREADS           : int   = args.threads
-CSV_FILENAME      : str   = args.select_csv
-JMETER_BIN        : Path  = Path(args.jmeter)
-ADDRESS           : str   = args.addr
-START_HAFAH       : bool  = (not args.no_hafah) and PORT != 5432
-PYTHON_EXPLICIT   : bool  = args.ex_python
+ROOT_DIR          : Path              = Path(args.root_dir)
+TOP_SLOWEST_COUNT : int               = args.top_slowest
+DATADIR           : Path              = Path(args.datadir).resolve()
+POSTGRES_URL      : str               = args.postgres_url
+PORT              : int               = args.port
+THREADS           : int               = args.threads
+CSV_FILENAME      : str               = args.select_csv
+JMETER_BIN        : Path              = Path(args.jmeter)
+ADDRESS           : str               = args.addr
+START_HAFAH       : bool              = (not args.no_hafah) and PORT != 5432
+PYTHON_EXPLICIT   : bool              = args.ex_python
+CALL_STYLE        : CALL_STYLE_OPT    = CALL_STYLE_OPT.from_str(args.call_style)
 
 # paths
 TEST_DIR_PATH = ROOT_DIR / 'tests'
@@ -165,7 +187,8 @@ PARAMS = dict(
 	host=ADDRESS,
 	threads=str(THREADS),
 	dataset=CSV_PATH.as_posix(),
-	psql=postgres_url_jmeter
+	psql=postgres_url_jmeter,
+	call_style=CALL_STYLE_OPT.to_str(CALL_STYLE)
 )
 
 # directory managment
@@ -180,14 +203,12 @@ with PROPERTIES_FILES.open('wt') as ofile:
 	for key, value in PARAMS.items():
 		ofile.write(f'{key}={value}' + '\n')
 
-jmeter_args = tuple(f'-J{key}={value}' for key, value in PARAMS.items())
-
 # running HAfAH and tests
 jmeter_interrupt = False
 try:
 	# setup and run HAfAH process
 	HAFAH : Popen = None
-	if START_HAFAH:
+	if START_HAFAH and not CALL_STYLE == CALL_STYLE_OPT.POSTGRES:
 		hafah_file_handle = HAFAH_OUT_FILE.open('wt', encoding='utf-8')
 
 		hafah_env = environ
