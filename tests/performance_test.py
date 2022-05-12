@@ -12,7 +12,6 @@ from pathlib import Path
 from re import compile, match
 from shutil import rmtree, copy2 as copy_file
 from subprocess import PIPE, STDOUT, Popen
-from sys import argv
 from time import sleep
 from typing import Any, Dict, List, Tuple
 from urllib.parse import urlencode, urlparse
@@ -101,7 +100,7 @@ engine.add_argument('--call-style',        dest='call_style',   type=str,   defa
 engine.add_argument('--postgres',          dest='postgres_url', type=str,   default='postgresql:///haf_block_log',   help='if specified connection string, tests will be performed on postgres db [default=postgresql:///haf_block_log]')
 engine.add_argument('--no-launch',         dest='no_hafah',     **BOOL_PARAM,                                        help='if specified, no HAfAH instance will be launched (if specified, no full data will be avaiable) [default=False]')
 engine.add_argument('--explicit-python',   dest='ex_python',    **BOOL_PARAM,                                        help='starts HAfAH like `python3 main.py` instead of `main.py`, make sure that dir with python interpreter is in PATH env')
-args = engine.parse_args(list(argv[1:]))
+args = engine.parse_args()
 
 # user input
 ROOT_DIR          : Path              = Path(args.root_dir)
