@@ -34,7 +34,6 @@ def configure_logger():
 	return logger
 
 class CSV:
-
 	class MODE(Enum):
 		PERF = 0, 	# performance testing mode
 		CL = 1		# constant load mode
@@ -219,7 +218,12 @@ try:
 	jmeter_env = environ
 	jmeter_env['JAVA_ARGS']='-Xms4g -Xmx4g'
 	JMETER = Popen(
-		args=(JMETER_BIN, '-n', '-t', OUT_JMX_PATH.as_posix(), '-l', JMETER_REPORT_OUT_FILE.as_posix(), '-L', 'jmeter.util=DEBUG', '-L', 'jorphan=DEBUG', '-p', PROPERTIES_FILES.as_posix()),
+		args=(
+			JMETER_BIN, '-n',
+			'-t', OUT_JMX_PATH.as_posix(),
+			'-l', JMETER_REPORT_OUT_FILE.as_posix(),
+			'-p', PROPERTIES_FILES.as_posix()
+		),
 		env=jmeter_env,
 		cwd=DATADIR.as_posix(),
 		stdout=PIPE,
@@ -262,8 +266,8 @@ finally:
 # read and organize output from JMETER
 @dataclass
 class jmeter_record:
-  value : int
-  thread_no : int
+	value : int
+	thread_no : int
 
 # process incoming data from JMETER
 jmeter_output : Dict[str, List[jmeter_record]] = dict()
