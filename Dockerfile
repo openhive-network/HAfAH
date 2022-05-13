@@ -2,7 +2,7 @@
 # docker build --target=ci-base-image -t registry.gitlab.syncad.com/hive/hafah/ci-base-image:ubuntu20.04-xxx -f Dockerfile .
 
 ARG CI_REGISTRY_IMAGE=registry.gitlab.syncad.com/hive/hafah
-ARG CI_IMAGE_TAG=:ubuntu20.04-2
+ARG CI_IMAGE_TAG=:ubuntu20.04-3
 
 FROM python:3.8-alpine as ci-base-image
 
@@ -16,7 +16,7 @@ RUN apk update && DEBIAN_FRONTEND=noniteractive apk add  \
   postgresql-client \
   wget \
   && addgroup -S haf_admin && adduser --shell=/bin/bash -S haf_admin -G haf_admin \
-  && addgroup -S hive && adduser --shell=/bin/bash -S hive -G hive \
+  && addgroup -S haf_app_admin && adduser --shell=/bin/bash -S haf_app_admin -G haf_app_admin \
   && addgroup -S hafah_user && adduser --shell=/bin/bash -S hafah_user -G hafah_user \
   && echo "haf_admin ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
@@ -27,7 +27,8 @@ FROM $CI_REGISTRY_IMAGE/ci-base-image$CI_IMAGE_TAG AS instance
 ARG HTTP_PORT=6543
 ENV HTTP_PORT=${HTTP_PORT}
 
-ARG POSTGRES_URL="postgresql://hive@localhost/haf_block_log"
+# Lets use by default host address from default docker bridge network
+ARG POSTGRES_URL="postgresql://haf_app_admin@172.17.0.1/haf_block_log"
 ENV POSTGRES_URL=${POSTGRES_URL}
 
 ARG USE_POSTGREST=0

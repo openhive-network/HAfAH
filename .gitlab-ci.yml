@@ -10,7 +10,7 @@ variables:
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
   HAFAH_PORT: 6543
-  HAF_POSTGRES_URL: postgresql://hive@haf-instance:5432/haf_block_log
+  HAF_POSTGRES_URL: postgresql://haf_app_admin@haf-instance:5432/haf_block_log
 
 include:
   - project: 'hive/haf'
