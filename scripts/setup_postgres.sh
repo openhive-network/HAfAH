@@ -73,7 +73,7 @@ else
   POSTGRES_ACCESS=$POSTGRES_URL
 fi
 
-"$SCRIPTPATH/haf/scripts/create_haf_app_role.sh" --postgres-url="$POSTGRES_ACCESS" --haf-app-account="hafah_owner"
-"$SCRIPTPATH/haf/scripts/create_haf_app_role.sh" --postgres-url="$POSTGRES_ACCESS" --haf-app-account="hafah_user"
+"$SCRIPTPATH/../haf/scripts/create_haf_app_role.sh" --postgres-url="$POSTGRES_ACCESS" --haf-app-account="hafah_owner"
+"$SCRIPTPATH/../haf/scripts/create_haf_app_role.sh" --postgres-url="$POSTGRES_ACCESS" --haf-app-account="hafah_user"
 
 supplement_builtin_roles "$POSTGRES_ACCESS"
