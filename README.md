@@ -4,6 +4,9 @@ Python: `python3.8+`
 
 ## Starting `HAfAH`
 ---
+
+### python version
+
 > :warning: Before starting app or __load tests__, install required packages!
 
 ```
@@ -16,12 +19,21 @@ To start application execute following command:
 ./main.py -p postgresql://<user>:<password>@127.0.0.1:5432/<db_name> -n 8095
 ```
 
-To start postgREST version, use
+### postgREST version
+
+To start using this version, first create API and install postgREST locally with
 
 ```
-./run.sh re-start
+./run.sh setup
 ```
 
+Then start server 
+
+```
+./run.sh start <PORT>
+```
+
+`PORT` is optional, default is 3000.
 <br><br>
 
 ## Running load tests
