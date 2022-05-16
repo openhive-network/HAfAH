@@ -3,10 +3,12 @@
 set -e
 set -o pipefail
 
-create_api() {
-    scripts_dir=$PWD/scripts
-    bash $scripts_dir/setup_postgres.sh $@
-    bash $scripts_dir/setup_postgrest.sh $@
+setup() {
+    postgres_url=$(sed -rn '/^db-uri/p' $CONFIG_PATH | sed "s/db-uri//g" | sed "s/[\"\? =]//g")
+
+    bash $SCRIPTS_DIR/setup_postgres.sh --postgres-url=$postgres_url
+    bash $SCRIPTS_DIR/setup_db.sh --postgres-url=$postgres_url
+    bash $SCRIPTS_DIR/setup_postgrest.sh
 }
 
 start_webserver() {
@@ -21,17 +23,13 @@ start_webserver() {
     postgrest postgrest.conf
 }
 
-test_patterns() {
-    port=$1
-    cd $PWD/haf/hive
-    
-    ./tests/api_tests/pattern_tests/run_tests.sh $port $PWD
-}
+SCRIPTS_DIR=$PWD/scripts
+CONFIG_PATH=$PWD/postgrest.conf
 
 if [ "$1" = "start" ]; then
     start_webserver ${@:2}
-elif [ "$1" =  "test-patterns" ]; then
-    test_patterns ${@:2}
+elif [ "$1" =  "setup" ]; then
+    setup
 else
     echo "job not found"
     exit 1
