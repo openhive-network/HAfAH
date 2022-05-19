@@ -23,3 +23,11 @@ class CustomInt64ParserApiException(ApiError):
 class CustomBoolParserApiException(ApiError):
   def __init__(self):
     super().__init__("Bad Cast:Cannot convert string to bool (only \"true\" or \"false\" can be converted)", JSON_RPC_SERVER_ERROR)
+
+class CustomInvalidTransaction(ApiError):
+  def __init__(self, trx_hash):
+    super().__init__(f"Assert Exception:false: Unknown Transaction {trx_hash}", JSON_RPC_SERVER_ERROR)
+
+class CustomInvalidCharInTransactionHash(ApiError):
+  def __init__(self, char):
+    super().__init__(f"unspecified:Invalid hex character '{char}'", JSON_RPC_SERVER_ERROR)
