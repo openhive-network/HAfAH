@@ -5,7 +5,9 @@ from typing import Any
 import sqlalchemy
 
 from hafah.adapter import Db
-from hafah.exceptions import InternalServerException, SQLExceptionWrapper
+from hafah.exceptions import (CustomInvalidCharInTransactionHash,
+                              CustomInvalidTransaction,
+                              InternalServerException, SQLExceptionWrapper)
 from hafah.logger import get_logger
 from hafah.performance import perf
 
@@ -38,7 +40,7 @@ class account_history_db_connector:
       query, result = self._get_db().query_all(query, **kwargs)
       self.last_query = query
       return result
-    except sqlalchemy.exc.InternalError as e:
+    except (sqlalchemy.exc.InternalError, sqlalchemy.exc.DataError) as e:
       logger.debug(f'got expeced exception from SQL: {type(e).__name__} {e}')
       exception_raw = e.orig.args
       if len(exception_raw) == 0:
@@ -48,7 +50,14 @@ class account_history_db_connector:
       if len(exception_raw) == 0:
         raise SQLExceptionWrapper('error while extracting exception message')
 
-      raise SQLExceptionWrapper(exception_raw[0])
+      exception_raw = exception_raw[0]
+      if 'invalid hexadecimal digit' in exception_raw:
+        raise CustomInvalidCharInTransactionHash(exception_raw[-2])
+      elif 'invalid hexadecimal data: odd number of digits' == exception_raw:
+        trx_id = kwargs['trx_hash'][2:]
+        raise CustomInvalidTransaction(trx_id + '0' * (40 - len(trx_id)) )
+
+      raise SQLExceptionWrapper(exception_raw)
     except sqlalchemy.exc.SQLAlchemyError as e:
       logger.error(f'got unknown SQL exception: {type(e).__name__} {e}')
       raise SQLExceptionWrapper('unknown SQL exception')
