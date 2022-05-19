@@ -399,7 +399,7 @@ LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  RETURN hafah_endpoints.call_get_ops_in_block($1, json_typeof($1))->'ops';
+  RETURN hafah_endpoints.call_get_ops_in_block($1, json_typeof($1));
 END
 $$
 ;
@@ -432,7 +432,7 @@ LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  RETURN hafah_endpoints.call_get_account_history($1, json_typeof($1))->'history';
+  RETURN hafah_endpoints.call_get_account_history($1, json_typeof($1));
 END
 $$
 ;
