@@ -161,7 +161,7 @@ new_style_postgrest_patterns_tests:
 
   variables:
     HAFAH_IMAGE: $HAFAH_IMAGE_NAME
-    TEST_NAMES: "not get_transaction_hex and not account_history_api and not condenser_api and (get_transaction or get_account_history or enum_virtual_ops or get_ops_in_block)"
+    TEST_NAMES: "hafah_api"
 
 .comparison_tests:
   extends: .docker_image_builder_job
