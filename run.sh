@@ -8,7 +8,6 @@ setup() {
 
     bash $SCRIPTS_DIR/setup_postgres.sh --postgres-url=$postgres_url
     bash $SCRIPTS_DIR/setup_db.sh --postgres-url=$postgres_url
-    bash $SCRIPTS_DIR/setup_postgrest.sh
 }
 
 start_webserver() {
@@ -23,6 +22,10 @@ start_webserver() {
     postgrest postgrest.conf
 }
 
+setup_postgrest() {
+    bash $SCRIPTS_DIR/setup_postgrest.sh
+}
+
 SCRIPTS_DIR=$PWD/scripts
 CONFIG_PATH=$PWD/postgrest.conf
 
@@ -30,6 +33,8 @@ if [ "$1" = "start" ]; then
     start_webserver ${@:2}
 elif [ "$1" =  "setup" ]; then
     setup
+elif [ "$1" =  "setup-postgrest" ]; then
+    setup_postgrest
 else
     echo "job not found"
     exit 1
