@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Tuple
 from urllib.parse import urlencode, urlparse
 
 from prettytable import PrettyTable
+from requests import post
 
 LOG_LEVEL = logging.DEBUG if 'DEBUG' in os.environ else logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
@@ -99,6 +100,7 @@ engine.add_argument('-j', '--jmeter',      dest='jmeter',       type=str,   defa
 engine.add_argument('--call-style',        dest='call_style',   type=str,   default='old-style',                     help='defines calling style, performaed by jmeter [default=old-style]', choices=('old-style', 'new-style', 'postgres'))
 engine.add_argument('--postgres',          dest='postgres_url', type=str,   default='postgresql:///haf_block_log',   help='if specified connection string, tests will be performed on postgres db [default=postgresql:///haf_block_log]')
 engine.add_argument('--no-launch',         dest='no_hafah',     **BOOL_PARAM,                                        help='if specified, no HAfAH instance will be launched (if specified, no full data will be avaiable) [default=False]')
+engine.add_argument('--skip-version-check',dest='skip_version', **BOOL_PARAM,                                        help='if specified, `hive_api.get_version` call will not be performed')
 engine.add_argument('--explicit-python',   dest='ex_python',    **BOOL_PARAM,                                        help='starts HAfAH like `python3 main.py` instead of `main.py`, make sure that dir with python interpreter is in PATH env')
 args = engine.parse_args()
 
@@ -115,6 +117,25 @@ ADDRESS           : str               = args.addr
 START_HAFAH       : bool              = (not args.no_hafah) and PORT != 5432
 PYTHON_EXPLICIT   : bool              = args.ex_python
 CALL_STYLE        : CALL_STYLE_OPT    = CALL_STYLE_OPT.from_str(args.call_style)
+SKIP_VERSION      : bool              = args.skip_version
+
+# print configuration
+log.info(f'''configuration:
+### PATHS ###
+jmeter = {JMETER_BIN}
+root project directory = {ROOT_DIR}
+datadir = {DATADIR}
+
+### NETWORK ###
+postgres url = {POSTGRES_URL}
+address = {ADDRESS}
+port = {PORT}
+
+### TESTING ###
+csv = {CSV_FILENAME}
+call style = {CALL_STYLE}
+threads = {THREADS}
+''')
 
 # paths
 TEST_DIR_PATH = ROOT_DIR / 'tests'
@@ -229,6 +250,14 @@ try:
 			text=True,
 			encoding='utf-8'
 		)
+
+	# gathering version
+	if not SKIP_VERSION:
+		version : dict = post(f'http://{ADDRESS}:{PORT}/', data={"jsonrpc":"2.0","id":0,"method":"hive_api.get_version"}).json()
+		if not 'result' in version or not 'commit' in version['result']:
+			log.error('service is not responding properly to `hive_api.get_version` call: \n' + version)
+		else:
+			log.info(f'testing app: {version["result"]["app_name"]} version: {version["result"]["commit"]}')
 
 	# setup and run JMETER
 	log.info("starting performance testing")

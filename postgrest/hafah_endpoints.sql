@@ -47,27 +47,31 @@ BEGIN
     RETURN hafah_backend.raise_exception(-32600, 'Invalid JSON-RPC');
   END IF;
 
-  IF __method NOT SIMILAR TO
+  IF __method = 'hive_api.get_version' THEN
+    SELECT hafah_endpoints.get_version() INTO __result;
+  ELSEIF __method NOT SIMILAR TO
     '(account_history_api|condenser_api)\.(get_ops_in_block|enum_virtual_ops|get_transaction|get_account_history)'
   THEN
     RETURN hafah_backend.raise_exception(-32601, 'Method not found', __method, __id);
-  END IF;
+  ELSE
 
-  SELECT substring(__method FROM '^[^.]+') INTO __api_type;
-  SELECT substring(__method FROM '[^.]+$') INTO __method_type;
+    SELECT substring(__method FROM '^[^.]+') INTO __api_type;
+    SELECT substring(__method FROM '[^.]+$') INTO __method_type;
 
-  SELECT json_typeof(__params) INTO __json_type;
+    SELECT json_typeof(__params) INTO __json_type;
 
-  SELECT CASE WHEN __api_type = 'account_history_api' THEN FALSE ELSE TRUE END INTO __is_legacy_style;
+    SELECT CASE WHEN __api_type = 'account_history_api' THEN FALSE ELSE TRUE END INTO __is_legacy_style;
 
-  IF __method_type = 'get_ops_in_block' THEN
-    SELECT hafah_endpoints.get_ops_in_block(__params, __is_legacy_style, __id, __json_type) INTO __result;
-  ELSEIF __method_type = 'enum_virtual_ops' THEN
-    SELECT hafah_endpoints.enum_virtual_ops(__params, __is_legacy_style, __id, __json_type) INTO __result;
-  ELSEIF __method_type = 'get_transaction' THEN
-    SELECT hafah_endpoints.get_transaction(__params, __is_legacy_style, __id, __json_type) INTO __result;
-  ELSEIF __method_type = 'get_account_history' THEN
-    SELECT hafah_endpoints.get_account_history(__params, __is_legacy_style, __id, __json_type) INTO __result;
+    IF __method_type = 'get_ops_in_block' THEN
+      SELECT hafah_endpoints.get_ops_in_block(__params, __is_legacy_style, __id, __json_type) INTO __result;
+    ELSEIF __method_type = 'enum_virtual_ops' THEN
+      SELECT hafah_endpoints.enum_virtual_ops(__params, __is_legacy_style, __id, __json_type) INTO __result;
+    ELSEIF __method_type = 'get_transaction' THEN
+      SELECT hafah_endpoints.get_transaction(__params, __is_legacy_style, __id, __json_type) INTO __result;
+    ELSEIF __method_type = 'get_account_history' THEN
+      SELECT hafah_endpoints.get_account_history(__params, __is_legacy_style, __id, __json_type) INTO __result;
+    END IF;
+
   END IF;
 
   RETURN CASE WHEN __result->'error' IS NULL THEN
@@ -380,6 +384,17 @@ BEGIN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
       RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
   END;
+END;
+$$
+;
+
+CREATE FUNCTION hafah_endpoints.get_version()
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN json_build_object('app_name', 'PostgRESTHAfAH', 'commit', (SELECT * FROM hafah_python.get_version()));
 END;
 $$
 ;

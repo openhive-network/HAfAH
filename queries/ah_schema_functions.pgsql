@@ -2,6 +2,20 @@ DROP SCHEMA IF EXISTS hafah_python CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_python;
 
+DROP FUNCTION IF EXISTS hafah_python.get_version;
+CREATE OR REPLACE FUNCTION hafah_python.get_version()
+  RETURNS TEXT AS $$
+DECLARE
+  _ BOOLEAN;
+BEGIN
+  SELECT hasindexes  INTO _ FROM pg_tables WHERE schemaname = 'hafah_private' AND tablename = 'version';
+  IF FOUND THEN
+    RETURN (SELECT git_hash FROM hafah_private.version LIMIT 1);
+  END IF;
+  RETURN 'unspecified (run activate_versioning.bash script)';
+END;
+$$ LANGUAGE plpgsql;
+
 DROP VIEW IF EXISTS hafah_python.helper_operations_view;
 CREATE VIEW hafah_python.helper_operations_view AS SELECT
   hov.id id,

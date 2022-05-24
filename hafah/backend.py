@@ -70,3 +70,7 @@ class account_history_impl:
       include_reversible,
       group_by_block
     )
+
+  @perf(record_name=RECORD_NAME, handler=handler)
+  def get_version(self):
+    return {'app_name':'PythonHafah', 'commit': self.api.get_version()}

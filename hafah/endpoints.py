@@ -34,7 +34,7 @@ def convert(val, default_value):
     return val
 
 def backend(context, options) -> standard_backend:
-  return standard_backend(context, options['is_legacy_style'])
+  return standard_backend(context, options.get('is_legacy_style', False))
 
 def get_ops_in_block(context : None, block_num = None, only_virtual = None, include_reversible = None, **kwargs : dict):
   try:
@@ -90,6 +90,9 @@ def get_account_history(context : None, account : str, start = None, limit = Non
 
   return backend(context, kwargs).get_account_history( operation_filter_low, operation_filter_high, account, start, limit, include_reversible )
 
+def get_version(context, **kwargs):
+  return backend(context, kwargs).get_version()
+
 def build_methods():
   ACCOUNT_HISTORY_API = 'account_history_api'
   CONDENSER_API = 'condenser_api'
@@ -108,5 +111,7 @@ def build_methods():
 
     ca_method(get_ops_in_block),
     ca_method(get_transaction),
-    ca_method(get_account_history)
+    ca_method(get_account_history),
+
+    ('hive_api.get_version', get_version)
   ])

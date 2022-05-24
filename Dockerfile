@@ -20,7 +20,7 @@ RUN apk update && DEBIAN_FRONTEND=noniteractive apk add  \
   && addgroup -S hafah_user && adduser --shell=/bin/bash -S hafah_user -G hafah_user \
   && echo "haf_admin ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-SHELL ["/bin/bash", "-c"] 
+SHELL ["/bin/bash", "-c"]
 
 FROM $CI_REGISTRY_IMAGE/ci-base-image$CI_IMAGE_TAG AS instance
 
@@ -43,14 +43,14 @@ ENV LANG=en_US.UTF-8
 USER hafah_user
 WORKDIR /home/hafah_user
 
-SHELL ["/bin/bash", "-c"] 
+SHELL ["/bin/bash", "-c"]
 
 ADD --chown=hafah_user:hafah_user . ./app
 ADD --chown=hafah_user:hafah_user ./docker/docker_entrypoint.sh .
 
 USER haf_admin
 
-RUN sudo -n /home/hafah_user/app/docker/docker_build.sh /home/hafah_user ${USE_POSTGREST}
+RUN sudo -n /home/hafah_user/app/docker/docker_build.sh /home/hafah_user ${USE_POSTGREST} ; rm -rf ./app/.git
 
 # JSON rpc service
 EXPOSE ${HTTP_PORT}
