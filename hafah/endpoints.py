@@ -75,8 +75,8 @@ def get_account_history(context : None, account : str, start = None, limit = Non
   try:
     start                  = -1            if start is None                  else int(start)
     limit                  = DEFAULT_LIMIT if limit is None                  else int(limit)
-    operation_filter_low   = 0             if operation_filter_low is None   else int(operation_filter_low)
-    operation_filter_high  = 0             if operation_filter_high is None  else int(operation_filter_high)
+    operation_filter_low   = None          if operation_filter_low is None   else int(operation_filter_low)
+    operation_filter_high  = None          if operation_filter_high is None  else int(operation_filter_high)
   except Exception:
     raise CustomUInt64ParserApiException()
 
