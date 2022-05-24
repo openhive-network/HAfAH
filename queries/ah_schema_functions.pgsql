@@ -26,6 +26,10 @@ DECLARE
   MAX_BIGINT BIGINT := x'7fffffffffffffff'::BIGINT;
   MIN_BIGINT BIGINT := (1 :: BIGINT << 63);
 BEGIN
+  IF $1 IS NULL THEN
+    RETURN NULL :: BIGINT;
+  END IF;
+
   IF $1 < 0 THEN
     RETURN NULL;
   ELSEIF $1 > MAX_BIGINT THEN
@@ -57,6 +61,10 @@ DECLARE
   result SMALLINT[] := ARRAY[] ::SMALLINT[];
   MIN_BIGINT_VALUE BIGINT := (1 :: BIGINT << 63);
 BEGIN
+
+  IF _in IS NULL THEN
+    RETURN NULL :: BIGINT;
+  END IF;
 
   WHILE input_data != 0 LOOP
     IF input_data = MIN_BIGINT_VALUE THEN
@@ -320,11 +328,25 @@ BEGIN
   PERFORM hafah_python.validate_limit( _limit, 150000 );
   PERFORM hafah_python.validate_block_range( _block_range_begin, _block_range_end, 2000 );
 
+  IF (NOT (_filter IS NULL)) AND _filter = 0 THEN
+    RETURN QUERY SELECT
+      NULL::TEXT, -- _trx_id
+      NULL::INT, -- _block
+      NULL::BIGINT, -- _trx_in_block
+      NULL::BIGINT, -- _op_in_trx
+      NULL::BOOLEAN, -- _virtual_op
+      NULL::TEXT, -- _timestamp
+      NULL::TEXT, -- _value
+      NULL::BIGINT -- _operation_id
+    LIMIT 0;
+    RETURN;
+  END IF;
+
   SELECT hafah_python.translate_enum_virtual_ops_filter( _filter ) INTO __resolved_filter;
   SELECT INTO __filter_info ( select array_length( __resolved_filter, 1 ) );
 
   IF NOT _include_reversible THEN
-    SELECT hive.app_get_irreversible_block(  ) INTO __upper_block_limit;
+    SELECT hive.app_get_irreversible_block() INTO __upper_block_limit;
     IF _block_range_begin > __upper_block_limit THEN
       RETURN QUERY SELECT
         NULL::TEXT, -- _trx_id
@@ -411,10 +433,24 @@ BEGIN
   PERFORM hafah_python.validate_limit( _limit, 1000 );
   PERFORM hafah_python.validate_start_limit( _start, _limit );
 
+  IF (NOT (_filter_low IS NULL AND _filter_high IS NULL)) AND COALESCE(_filter_low, 0) + COALESCE(_filter_high, 0) = 0 THEN
+    RETURN QUERY SELECT
+      NULL :: TEXT,
+      NULL :: INT,
+      NULL :: BIGINT,
+      NULL :: BIGINT,
+      NULL :: BOOLEAN,
+      NULL :: TEXT,
+      NULL :: TEXT,
+      NULL :: INT
+    LIMIT 0;
+    RETURN;
+  END IF;
+
   SELECT hafah_python.translate_get_account_history_filter(_filter_low, _filter_high) INTO __resolved_filter;
 
   IF _include_reversible THEN
-  	SELECT num from hive.blocks order by num desc limit 1 INTO __upper_block_limit;
+    SELECT num from hive.blocks order by num desc limit 1 INTO __upper_block_limit;
   else
     SELECT hive.app_get_irreversible_block() INTO __upper_block_limit;
   END IF;
@@ -424,7 +460,7 @@ BEGIN
   __use_filter := array_length( __resolved_filter, 1 );
 
   RETURN QUERY
-SELECT -- hafah_python.ah_get_account_history
+    SELECT -- hafah_python.ah_get_account_history
       (
         CASE
         WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000'
