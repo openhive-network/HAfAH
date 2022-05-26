@@ -26,7 +26,7 @@ class CustomBoolParserApiException(ApiError):
 
 class CustomInvalidTransaction(ApiError):
   def __init__(self, trx_hash):
-    super().__init__(f"Assert Exception:false: Unknown Transaction {trx_hash}", JSON_RPC_SERVER_ERROR)
+    super().__init__(f"Assert Exception:false: Unknown Transaction {trx_hash}", JSON_RPC_ERROR_DURING_CALL)
 
 class CustomInvalidCharInTransactionHash(ApiError):
   def __init__(self, char):

@@ -759,7 +759,12 @@ BEGIN
     SELECT to_json(result)
     FROM (
       SELECT
-        COALESCE((SELECT block_num FROM pag), 0) AS next_block_range_begin,
+        COALESCE((SELECT block_num FROM pag), (
+          CASE
+            WHEN _block_range_end > (SELECT num FROM hive.blocks ORDER BY num DESC LIMIT 1) THEN 0
+            ELSE _block_range_end
+          END
+        )) AS next_block_range_begin,
         COALESCE((
           CASE
             WHEN (SELECT block_num FROM pag) >= _block_range_end THEN 0
