@@ -338,14 +338,14 @@ BEGIN
     IF __operation_filter_low IS NOT NULL THEN
       __operation_filter_low = __operation_filter_low::NUMERIC;
     ELSE
-      __operation_filter_low = 0;
+      __operation_filter_low = NULL;
     END IF;
 
     __operation_filter_high = hafah_backend.parse_argument(_params, _json_type, 'operation_filter_high', 4);
     IF __operation_filter_high IS NOT NULL THEN
       __operation_filter_high = __operation_filter_high::NUMERIC;
     ELSE
-      __operation_filter_high = 0;
+      __operation_filter_high = NULL;
     END IF;
 
   EXCEPTION
