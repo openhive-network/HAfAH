@@ -211,3 +211,25 @@ BEGIN
 END
 $$
 ;
+
+CREATE FUNCTION hafah_backend.raise_invalid_char_in_hex(_hex TEXT, _id JSON)
+RETURNS TEXT
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_backend.raise_exception(-32000, format('unspecified:Invalid hex character ''%s''', left(ltrim(_hex, '0123456789abcdefABCDEF'), 1)),  NULL, _id, TRUE);
+END
+$$
+;
+
+CREATE FUNCTION hafah_backend.raise_unknown_transaction(_hex TEXT, _id JSON)
+RETURNS TEXT
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_backend.raise_exception(-32003, format('Assert Exception:false: Unknown Transaction %s', rpad(_hex, 40, '0')), NULL, _id, TRUE);
+END
+$$
+;
