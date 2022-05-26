@@ -257,6 +257,12 @@ BEGIN
     RETURN hafah_backend.raise_missing_arg('id', _id);
   END IF;
 
+  IF NOT (translate(__id, '0123456789abcdefABCDEF', '') = '') THEN
+    RETURN hafah_backend.raise_invalid_char_in_hex(__id, _id);
+  ELSEIF length(__id) % 2 != 0 THEN
+    RETURN hafah_backend.raise_unknown_transaction(__id, _id);
+  END IF;
+
   BEGIN
     __include_reversible = hafah_backend.parse_argument(_params, _json_type, 'include_reversible', 1);
     IF __include_reversible IS NOT NULL THEN
