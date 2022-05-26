@@ -46,7 +46,7 @@ BEGIN
   IF __jsonrpc != '2.0' OR __jsonrpc IS NULL OR __params IS NULL OR __id IS NULL THEN
     RETURN hafah_backend.raise_exception(-32600, 'Invalid JSON-RPC');
   END IF;
-  
+
   IF __method NOT SIMILAR TO
     '(account_history_api|condenser_api)\.(get_ops_in_block|enum_virtual_ops|get_transaction|get_account_history)'
   THEN
@@ -57,9 +57,9 @@ BEGIN
   SELECT substring(__method FROM '[^.]+$') INTO __method_type;
 
   SELECT json_typeof(__params) INTO __json_type;
-  
+
   SELECT CASE WHEN __api_type = 'account_history_api' THEN FALSE ELSE TRUE END INTO __is_legacy_style;
-  
+
   IF __method_type = 'get_ops_in_block' THEN
     SELECT hafah_endpoints.get_ops_in_block(__params, __is_legacy_style, __id, __json_type) INTO __result;
   ELSEIF __method_type = 'enum_virtual_ops' THEN
@@ -153,7 +153,7 @@ DECLARE
   __filter NUMERIC = NULL; -- default NULL
   __include_reversible BOOLEAN = NULL; -- default FALSE
   __group_by_block BOOLEAN = NULL; -- default FALSE
-  
+
   __exception_message TEXT;
 BEGIN
   BEGIN
@@ -342,7 +342,7 @@ BEGIN
       __operation_filter_high = 0;
     END IF;
 
-  EXCEPTION 
+  EXCEPTION
     WHEN invalid_text_representation THEN
       RETURN hafah_backend.raise_uint_exception(_id);
   END;
@@ -359,7 +359,7 @@ BEGIN
     WHEN invalid_text_representation THEN
       RETURN hafah_backend.raise_bool_case_exception(_id);
   END;
-  
+
   BEGIN
     RETURN hafah_python.ah_get_account_history_json(
       __operation_filter_low, __operation_filter_high,

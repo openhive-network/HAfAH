@@ -116,7 +116,7 @@ BEGIN
   FROM json_build_object(
     'jsonrpc', '2.0',
     'error',
-    CASE WHEN _no_data IS TRUE THEN 
+    CASE WHEN _no_data IS TRUE THEN
       json_build_object(
         'code', _code,
         'message', _message
