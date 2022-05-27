@@ -67,6 +67,9 @@ def enum_virtual_ops(context : None, block_range_begin : str, block_range_end : 
   return backend(context, kwargs).enum_virtual_ops( filter, block_range_begin, block_range_end, operation_begin, limit, include_reversible, group_by_block )
 
 def get_transaction(context : None, id : str, include_reversible = None, **kwargs : dict):
+  if len(id) != 40:
+    raise CustomInvalidTransactionHashLength()
+
   include_reversible = convert(include_reversible, DEFAULT_INCLUDE_IRREVERSIBLE)
 
   return backend(context, kwargs).get_transaction( id, include_reversible )
