@@ -103,6 +103,8 @@ engine.add_argument('--postgres',             dest='postgres_url', type=str,   d
 engine.add_argument('--no-launch',            dest='no_hafah',     **BOOL_PARAM,                                        help='if specified, no HAfAH instance will be launched (if specified, no full data will be avaiable) [default=False]')
 engine.add_argument('--call-style',           dest='call_style',   type=str,   default='old-style',                     help='defines calling style, performaed by jmeter [default=old-style]', choices=('old-style', 'new-style', 'postgres'))
 engine.add_argument('--explicit-python',      dest='ex_python',    **BOOL_PARAM,                                        help='starts HAfAH like `python3 main.py` instead of `main.py`, make sure that dir with python interpreter is in PATH env')
+engine.add_argument('-i', '--ignore-bad-req', dest='ignore_br',    **BOOL_PARAM,                                        help='if specified script will ignore requests that failed, error message is still printed')
+engine.add_argument('-q', '--supr-errors',    dest='supr_err',     **BOOL_PARAM,                                        help="if specified error messages of bad requests won't be printed")
 args = engine.parse_args()
 
 # user input
@@ -119,6 +121,8 @@ START_HAFAH       : bool              = (not args.no_hafah) and PORT != 5432
 PYTHON_EXPLICIT   : bool              = args.ex_python
 CALL_STYLE        : CALL_STYLE_OPT    = CALL_STYLE_OPT.from_str(args.call_style)
 LOOP_COUNT        : int               = args.loops
+IGNORE_BAD_REQ    : bool              = args.ignore_br
+SUPR_ERRRORS      : bool              = args.supr_err
 
 # paths
 TEST_DIR_PATH = ROOT_DIR / 'tests'
@@ -305,7 +309,8 @@ class jmeter_record:
 # process incoming data from JMETER
 jmeter_output : Dict[str, List[jmeter_record]] = dict()
 with JMETER_REPORT_OUT_FILE.open('rt', encoding='utf-8') as in_file:
-	headers_raw = in_file.readline().split(',')
+	raw_line = in_file.readline()
+	headers_raw = raw_line.split(',')
 	get_index = lambda x: headers_raw.index(x)
 
 	elapsed_idx = get_index('elapsed')
@@ -313,15 +318,26 @@ with JMETER_REPORT_OUT_FILE.open('rt', encoding='utf-8') as in_file:
 	threadname_idx = get_index('threadName')
 	success_idx = get_index('success')
 
-	for count, line in enumerate(in_file):
-		line = line.split(',')
+	error_counter = 0
+	def handle_error(msg : str):
+		error_counter += 1
+		if not SUPR_ERRRORS:
+			log.error('during analysis of jmeter output, found error in line: \n' + msg)
+
+	for count, raw_line in enumerate(in_file):
+		line = raw_line.split(',')
 
 		if line[success_idx] != 'true':
-			if CSV_MODE == CSV.MODE.CL and jmeter_interrupt:
-				log.info(f'total amount of calls on {THREADS} threads: {count-1}')
-				break
+			if CSV_MODE == CSV.MODE.CL and ( jmeter_interrupt or LOOP_COUNT > 0 ):
+				if not IGNORE_BAD_REQ:
+					log.info(f'total amount of calls on {THREADS} threads: {count-1}')
+					break
+				else:
+					handle_error(raw_line)
 			else:
-				assert False, f'test failed, check logs in {DATADIR.as_posix()} for more informations '
+				handle_error(raw_line)
+				if not IGNORE_BAD_REQ:
+					assert False, f'test failed, check logs in {DATADIR.as_posix()} for more informations '
 
 		label = line[label_idx] # endpoint
 
@@ -336,6 +352,9 @@ with JMETER_REPORT_OUT_FILE.open('rt', encoding='utf-8') as in_file:
 			jmeter_output[label] = [ record ]
 		else:
 			jmeter_output[label].append( record )
+
+	if error_counter > 0:
+		log.error(f'Amount of invalid requests/total amount of requests: {error_counter}/{count + 1}')
 
 # generate pretty table
 table = PrettyTable(field_names=['Endpoint', 'Max [ms]', 'Min [ms]', 'Average [ms]', 'Median [ms]'])
