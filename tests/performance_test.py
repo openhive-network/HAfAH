@@ -61,6 +61,8 @@ class CALL_STYLE_OPT(Enum):
 log = configure_logger()
 BOOL_PARAM = dict(nargs='?', type=bool, const=True, default=False)
 DEFAULT_ROOT_DIR = Path(__file__).parent.resolve().parent.as_posix()
+DEFAULT_LOOP_COUNT = 500
+INFINITY_LOOP_COUNT = -1
 LEGEND = {
 	'cl': "constant load, CSV files marked like this will be executed in infinite loop to generate constant load",
 	'perf': "performance, if CSV file is marked with perf, it will serve as provider of 500 lines, if file contain less, it will loop aroung file",
@@ -87,19 +89,20 @@ def format_csv_file(filename : str, csv_info : tuple):
 		return res + ('postgres DB' if 'psql' in csv_tags else 'http server')
 
 engine = ArgumentParser()
-engine.add_argument('-l', '--list',        dest='list_csv',     **BOOL_PARAM,                                        help=f'if specified program will just list avaiable CSV files')
-engine.add_argument('-c', '--csv',         dest='select_csv',   type=str,   default='perf_60M_heavy.csv',            help=f'selected CSV FILENAME (use -l to list avaiable), [default=perf_60M_heavy.csv]')
-engine.add_argument('-r', '--root-dir',    dest='root_dir',     type=str,   default=DEFAULT_ROOT_DIR,                help=f'path to root directory of HAfAH project [default={DEFAULT_ROOT_DIR}]')
-engine.add_argument('-p', '--port',        dest='port',         type=int,   default=8095,                            help='port to start HAfAH instance, and perform test; set to 5432 for direct postgres query [default=8095]')
-engine.add_argument('-a', '--address',     dest='addr',         type=str,   default='localhost',                     help='addres to connect during test [default=localhost]')
-engine.add_argument('-s', '--top-slowest', dest='top_slowest',  type=int,   default=5,                               help='defines amount of top slowest calls to show [default=5]')
-engine.add_argument('-d', '--datadir',     dest='datadir',      type=str,   default='./wdir',                        help='defines path to workdir (path to this dir will alway be recreated) [default=./wdir]')
-engine.add_argument('-t', '--threads',     dest='threads',      type=int,   default=10,                              help='defines amount of threads to use during tests [default=10]')
-engine.add_argument('-j', '--jmeter',      dest='jmeter',       type=str,   default='/usr/bin/jmeter',               help='path to jmeter executable [default=/usr/bin/jmeter]')
-engine.add_argument('--call-style',        dest='call_style',   type=str,   default='old-style',                     help='defines calling style, performaed by jmeter [default=old-style]', choices=('old-style', 'new-style', 'postgres'))
-engine.add_argument('--postgres',          dest='postgres_url', type=str,   default='postgresql:///haf_block_log',   help='if specified connection string, tests will be performed on postgres db [default=postgresql:///haf_block_log]')
-engine.add_argument('--no-launch',         dest='no_hafah',     **BOOL_PARAM,                                        help='if specified, no HAfAH instance will be launched (if specified, no full data will be avaiable) [default=False]')
-engine.add_argument('--explicit-python',   dest='ex_python',    **BOOL_PARAM,                                        help='starts HAfAH like `python3 main.py` instead of `main.py`, make sure that dir with python interpreter is in PATH env')
+engine.add_argument('-l', '--list',           dest='list_csv',     **BOOL_PARAM,                                        help=f'if specified program will just list avaiable CSV files')
+engine.add_argument('-c', '--csv',            dest='select_csv',   type=str,  default='perf_60M_heavy.csv',             help=f'selected CSV FILENAME (use -l to list avaiable), [default=perf_60M_heavy.csv]')
+engine.add_argument('-r', '--root-dir',       dest='root_dir',     type=str,   default=DEFAULT_ROOT_DIR,                help=f'path to root directory of HAfAH project [default={DEFAULT_ROOT_DIR}]')
+engine.add_argument('-p', '--port',           dest='port',         type=int,   default=8095,                            help='port to start HAfAH instance, and perform test; set to 5432 for direct postgres query [default=8095]')
+engine.add_argument('-a', '--address',        dest='addr',         type=str,   default='localhost',                     help='addres to connect during test [default=localhost]')
+engine.add_argument('-s', '--top-slowest',    dest='top_slowest',  type=int,   default=5,                               help='defines amount of top slowest calls to show [default=5]')
+engine.add_argument('-d', '--datadir',        dest='datadir',      type=str,   default='./wdir',                        help='defines path to workdir (path to this dir will alway be recreated) [default=./wdir]')
+engine.add_argument('-t', '--threads',        dest='threads',      type=int,   default=10,                              help='defines amount of threads to use during tests [default=10]')
+engine.add_argument('-j', '--jmeter',         dest='jmeter',       type=str,   default='/usr/bin/jmeter',               help='path to jmeter executable [default=/usr/bin/jmeter]')
+engine.add_argument('-k', '--loops',          dest='loops',        type=int,   default=None,                            help=f'amount of loops over CSV file per thread (if exceed, thread loop over the file again); for cl mode: pass -1 for infite loop [default={DEFAULT_LOOP_COUNT}]')
+engine.add_argument('--postgres',             dest='postgres_url', type=str,   default='postgresql:///haf_block_log',   help='if specified connection string, tests will be performed on postgres db [default=postgresql:///haf_block_log]')
+engine.add_argument('--no-launch',            dest='no_hafah',     **BOOL_PARAM,                                        help='if specified, no HAfAH instance will be launched (if specified, no full data will be avaiable) [default=False]')
+engine.add_argument('--call-style',           dest='call_style',   type=str,   default='old-style',                     help='defines calling style, performaed by jmeter [default=old-style]', choices=('old-style', 'new-style', 'postgres'))
+engine.add_argument('--explicit-python',      dest='ex_python',    **BOOL_PARAM,                                        help='starts HAfAH like `python3 main.py` instead of `main.py`, make sure that dir with python interpreter is in PATH env')
 args = engine.parse_args()
 
 # user input
@@ -115,6 +118,7 @@ ADDRESS           : str               = args.addr
 START_HAFAH       : bool              = (not args.no_hafah) and PORT != 5432
 PYTHON_EXPLICIT   : bool              = args.ex_python
 CALL_STYLE        : CALL_STYLE_OPT    = CALL_STYLE_OPT.from_str(args.call_style)
+LOOP_COUNT        : int               = args.loops
 
 # paths
 TEST_DIR_PATH = ROOT_DIR / 'tests'
@@ -160,6 +164,15 @@ CSV_MODE : CSV.MODE = AVAILA_CSV[CSV_FILENAME][1]
 CSV_PATH : Path = AVAILA_CSV[CSV_FILENAME][0]
 JMX_PATH = PERF_JMX_CONFIG if CSV_MODE == CSV.MODE.PERF else CL_JMX_CONFIG
 
+# calculating loop count
+if LOOP_COUNT is None:
+	if CSV.MODE.CL != CSV_MODE:
+		LOOP_COUNT = DEFAULT_LOOP_COUNT
+	else:
+		LOOP_COUNT = INFINITY_LOOP_COUNT
+else:
+	LOOP_COUNT = max(-1, LOOP_COUNT)
+
 # process postgresql conection string to fill jdbc requirements
 # refering to: https://jdbc.postgresql.org/documentation/80/connect.html
 postgres_url_jmeter = None
@@ -187,7 +200,8 @@ PARAMS = dict(
 	threads=str(THREADS),
 	dataset=CSV_PATH.as_posix(),
 	psql=postgres_url_jmeter,
-	call_style=CALL_STYLE_OPT.to_str(CALL_STYLE)
+	call_style=CALL_STYLE_OPT.to_str(CALL_STYLE),
+	loop_count=LOOP_COUNT
 )
 
 # directory managment
