@@ -223,13 +223,13 @@ END
 $$
 ;
 
-CREATE FUNCTION hafah_backend.raise_transaction_hash_invalid_length(_id JSON)
+CREATE FUNCTION hafah_backend.raise_transaction_hash_invalid_length(_hex TEXT, _id JSON)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  RETURN hafah_backend.raise_exception(-32003, 'Assert Exception:args.id.size() == id.data_size()*2: Transaction hash is wrong length', NULL, _id, TRUE);
+  RETURN hafah_backend.raise_exception(-32003, format('"Assert Exception:false: Transaction hash ''%s'' has invalid size. Transaction hash should have size of 160 bits', _hex), NULL, _id, TRUE);
 END
 $$
 ;

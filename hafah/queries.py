@@ -54,7 +54,7 @@ class account_history_db_connector:
       if 'invalid hexadecimal digit' in exception_raw:
         raise CustomInvalidCharInTransactionHash(exception_raw[-2])
       elif 'invalid hexadecimal data: odd number of digits' == exception_raw:
-        raise CustomInvalidTransactionHashLength()
+        raise CustomInvalidTransactionHashLength(kwargs.get('id', ''))
 
       raise SQLExceptionWrapper(exception_raw)
     except sqlalchemy.exc.SQLAlchemyError as e:

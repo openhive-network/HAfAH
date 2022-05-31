@@ -25,8 +25,8 @@ class CustomBoolParserApiException(ApiError):
     super().__init__("Bad Cast:Cannot convert string to bool (only \"true\" or \"false\" can be converted)", JSON_RPC_SERVER_ERROR)
 
 class CustomInvalidTransactionHashLength(ApiError):
-  def __init__(self):
-    super().__init__(f"Assert Exception:args.id.size() == id.data_size()*2: Transaction hash is wrong length", JSON_RPC_ERROR_DURING_CALL)
+  def __init__(self, hash):
+    super().__init__(f"Assert Exception:false: Transaction hash '{hash}' has invalid size. Transaction hash should have size of 160 bits", JSON_RPC_ERROR_DURING_CALL)
 
 class CustomInvalidCharInTransactionHash(ApiError):
   def __init__(self, char):

@@ -260,7 +260,7 @@ BEGIN
   IF NOT (translate(__id, '0123456789abcdefABCDEF', '') = '') THEN
     RETURN hafah_backend.raise_invalid_char_in_hex(__id, _id);
   ELSEIF length(__id) != 40 THEN
-    RETURN hafah_backend.raise_transaction_hash_invalid_length(_id);
+    RETURN hafah_backend.raise_transaction_hash_invalid_length(__id, _id);
   END IF;
 
   BEGIN
