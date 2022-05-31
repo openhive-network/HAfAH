@@ -192,8 +192,7 @@ else:
 postgres_url_jmeter = html.escape(postgres_url_jmeter)
 log.info(f'postgres connection string in JMETER: jdbc:{postgres_url_jmeter}')
 
-# theese will be appended in form: -J<first>=<second>
-# Ex: -Jport=8090
+# theese will be appended to properties file for jmeter
 PARAMS = dict(
 	port=str(PORT),
 	host=ADDRESS,
