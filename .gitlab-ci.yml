@@ -21,7 +21,7 @@ include:
     ref: develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
 
-prepare_hived_image:
+.prepare_hived_image:
   extends: .prepare_hived_data_5m_image
   stage: build
   variables:
@@ -33,7 +33,7 @@ prepare_hived_image:
     - public-runner-docker
     - hived-for-tests
 
-prepare_haf_image:
+.prepare_haf_image:
   extends: .prepare_haf_data_5m_image
   stage: build
   variables:
@@ -42,8 +42,7 @@ prepare_haf_image:
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
 
   tags:
-    - public-runner-docker
-    - hived-for-tests
+    - pl-runner-docker
 
 .prepare_hafah_image:
   extends: .docker_image_builder_job
@@ -53,9 +52,11 @@ prepare_haf_image:
     USE_POSTGREST: 0
 
   script:
-    - docker build --build-arg USE_POSTGREST=$USE_POSTGREST --build-arg HTTP_PORT=$HAFAH_PORT --build-arg POSTGRES_URL="$HAF_POSTGRES_URL" --target=instance -t $HAFAH_IMAGE_NAME -f Dockerfile . 
     - echo $HAFAH_CI_IMG_BUILDER_PASSWORD | docker login -u $HAFAH_CI_IMG_BUILDER_USER $REGISTRY --password-stdin
-    - docker push $HAFAH_IMAGE_NAME
+    - docker info
+    - docker image ls
+    - docker build --build-arg USE_POSTGREST=$USE_POSTGREST --build-arg HTTP_PORT=$HAFAH_PORT --build-arg POSTGRES_URL="$HAF_POSTGRES_URL" --target=instance -t $HAFAH_IMAGE_NAME -f Dockerfile . 
+    #- docker push $HAFAH_IMAGE_NAME
     - echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
 
   artifacts:
@@ -64,8 +65,7 @@ prepare_haf_image:
     expire_in: 6 hours
 
   tags:
-    - public-runner-docker
-    - hived-for-tests
+    - pl-runner-docker
 
 prepare_python_hafah_image:
   extends: .prepare_hafah_image
@@ -78,6 +78,47 @@ prepare_postgrest_hafah_image:
   variables:
     HAFAH_IMAGE_NAME: $REGISTRY/postgrest-instance:$CI_COMMIT_SHORT_SHA
     USE_POSTGREST: 1
+
+image_checker:
+  extends: .docker_image_builder_job
+  stage: test
+  variables:
+    AH_ENDPOINT: hafah_app:$HAFAH_PORT
+    FF_NETWORK_PER_BUILD: 1
+    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/test_tools/package"
+    HAFAH_IMAGE: ""
+
+  needs:
+    - job: prepare_python_hafah_image
+      artifacts: true
+
+  services:
+    - name: $HAFAH_IMAGE_NAME
+      alias: hafah_app
+
+  before_script:
+    - echo "HAfAH image name $HAFAH_IMAGE_NAME"
+
+  script:
+    - echo "HAfAH image name $HAFAH_IMAGE_NAME"
+    - docker info
+    - docker image ls -a
+
+  artifacts:
+    when: always
+    reports:
+      junit: $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests/results.xml
+    paths:
+    - "$CI_JOB_NAME"
+    - "**/from_node.log"
+    - "**/ah.log"
+    - "**/*.out.json"
+    - "$CI_PROJECT_DIR/haf/hive/tests/tests_api/hived/workdir_*"
+    when: always
+    expire_in: 6 hours
+  tags:
+    - pl-runner-docker
+
 
 .patterns_tests:
   extends: .docker_image_builder_job
@@ -125,10 +166,9 @@ prepare_postgrest_hafah_image:
     when: always
     expire_in: 6 hours
   tags:
-    - public-runner-docker
-    - hived-for-tests
+    - pl-runner-docker
 
-python_patterns_tests:
+.python_patterns_tests:
   extends: .patterns_tests
 
   needs:
@@ -139,7 +179,7 @@ python_patterns_tests:
   variables:
     HAFAH_IMAGE: $HAFAH_IMAGE_NAME
 
-postgrest_patterns_tests:
+.postgrest_patterns_tests:
   extends: .patterns_tests
 
   needs:
@@ -205,7 +245,7 @@ postgrest_patterns_tests:
     - public-runner-docker
     - hived-for-tests
 
-python_comparison_tests:
+.python_comparison_tests:
   extends: .comparison_tests
 
   needs:
@@ -216,7 +256,7 @@ python_comparison_tests:
   variables:
     HAFAH_IMAGE: $HAFAH_IMAGE_NAME
 
-postgrest_comparison_tests:
+.postgrest_comparison_tests:
   extends: .comparison_tests
 
   needs:
