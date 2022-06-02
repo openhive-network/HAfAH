@@ -50,7 +50,7 @@ ADD --chown=hafah_user:hafah_user ./docker/docker_entrypoint.sh .
 
 USER haf_admin
 
-RUN sudo -n /home/hafah_user/app/docker/docker_build.sh /home/hafah_user ${USE_POSTGREST} ; rm -rf ./app/.git
+RUN sudo -n /home/hafah_user/app/docker/docker_build.sh /home/hafah_user ${USE_POSTGREST} ; sudo rm -rf /home/hafah_user/app/.git
 
 # JSON rpc service
 EXPOSE ${HTTP_PORT}
