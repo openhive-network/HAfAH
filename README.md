@@ -2,7 +2,7 @@
 
 Python: `python3.8+`
 
-## Starting `HAfAH`
+## Starting `HAfAH` directly on host
 ---
 > :warning: Before starting app or __load tests__, install required packages!
 
@@ -21,6 +21,46 @@ To start postgREST version, use
 ```
 ./run.sh re-start
 ```
+
+## Starting a `HAfAH` using prebuilt docker container
+
+Here is an example:
+
+```
+docker run --rm -it --name Python-HAFAH-instance -p 8080:6543 -e POSTGRES_URL=postgresql://haf_app_admin@172.17.0.1:15432/haf_block_log registry.gitlab.syncad.com/hive/hafah/python-instance:COMMIT_SHA
+```
+
+```
+docker run --rm -it --name Postgrest-HAFAH-instance -p 8080:6543 -e POSTGRES_URL=postgresql://haf_app_admin@172.17.0.1:15432/haf_block_log registry.gitlab.syncad.com/hive/hafah/postgrest-instance:COMMIT_SHA
+```
+
+-p option allows to specify a port to open at host and map to started docker container
+
+POSTGRES_URL is an environment variable, which should point a PostgreSQL instance holding a HAF database. By default haf_app_admin role shall be used for connection.
+
+### PostgreSQL authorization
+
+In fully dockerized environment, dockerized HAF instance has preconfigured authorization settings (defined in its own pg_hba.conf file) to allow trusted authentication to `haf_block_log` database using `haf_app_admin` role when connection comes in from docker network (assumed this is a 172.0.0.0/0 network class).
+
+If directly hosted PostgreSQL instance shall be used, user shall take care by configuring a valid authentication of haf_app_admin role like also for listening on proper ports i.e.:
+
+- configuring a postgresql.conf parameter to:
+```
+listen_addresses = '*'
+```
+will allow connections to given Postgres instance using all network interfaces provided by given host machine.
+
+- specifying a pg_hba.conf entry to:
+
+```
+host    haf_block_log             haf_app_admin    0.0.0.0/0            trust
+``` 
+
+will allow to connect from any network to haf_block_log database using haf_app_admin role by trusted authentication method.
+
+Creation of haf_app_admin role is a part of HAF instance setup.
+
+WARNING: above example is only specific for testing and fast-deploy purposes. To apply secure deployment, consult PostgreSQL documentation related to authentication methods i.e. peer one and its interaction to UNIX accounts.
 
 <br><br>
 
