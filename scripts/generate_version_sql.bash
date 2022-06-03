@@ -11,7 +11,7 @@ path_to_sql_version_file="$1/set_version_in_sql.pgsql"
 # acquiring hash without git
 if [[ -z "${GIT_HASH}" ]];
 then
-	GIT_HASH=`$2 git --git-dir=$1 rev-parse HEAD`
+	GIT_HASH=`$2 git --git-dir="$1/.git" --work-tree="$1" rev-parse HEAD`
 fi
 
 echo "
