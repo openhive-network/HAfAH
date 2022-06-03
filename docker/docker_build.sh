@@ -4,8 +4,9 @@ set -euo pipefail
 
 ROOT_DIR="${1}"
 USE_POSTGREST=${2}
+GIT_HASH=${3}
 
-bash ${ROOT_DIR}/app/scripts/generate_version_sql.bash ${ROOT_DIR}/app
+source ${ROOT_DIR}/app/scripts/generate_version_sql.bash ${ROOT_DIR}/app
 
 chmod a+x ${ROOT_DIR}/docker_entrypoint.sh
 cd ${ROOT_DIR}/app

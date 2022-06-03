@@ -5,7 +5,7 @@ stages:
 variables:
   GIT_DEPTH: "1"
   GIT_SUBMODULE_STRATEGY: "recursive"
-  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-5 
+  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-5
   BUILDER_IMAGE_TAG: "@sha256:a22b174d15ad9878f878e798e297d2134da132174802abff0923ea214e2f4543"
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
@@ -53,7 +53,7 @@ prepare_haf_image:
     USE_POSTGREST: 0
 
   script:
-    - docker build --build-arg USE_POSTGREST=$USE_POSTGREST --build-arg HTTP_PORT=$HAFAH_PORT --build-arg POSTGRES_URL="$HAF_POSTGRES_URL" --target=instance -t $HAFAH_IMAGE_NAME -f Dockerfile . 
+    - docker build --build-arg USE_POSTGREST=$USE_POSTGREST --build-arg HTTP_PORT=$HAFAH_PORT --build-arg POSTGRES_URL="$HAF_POSTGRES_URL" --build-arg GIT_HASH="$CI_COMMIT_SHA" --target=instance -t $HAFAH_IMAGE_NAME -f Dockerfile .
     - echo $HAFAH_CI_IMG_BUILDER_PASSWORD | docker login -u $HAFAH_CI_IMG_BUILDER_USER $REGISTRY --password-stdin
     - docker push $HAFAH_IMAGE_NAME
     - echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
