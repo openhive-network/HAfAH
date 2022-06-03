@@ -5,7 +5,7 @@ set -euo pipefail
 ROOT_DIR="${1}"
 USE_POSTGREST=${2}
 
-bash ${ROOT_DIR}/app/scripts/generate_version_sql.bash ${ROOT_DIR}/app
+bash ${ROOT_DIR}/app/scripts/generate_version_sql.bash ${ROOT_DIR}/app 'sudo --user=hafah_user'
 
 chmod a+x ${ROOT_DIR}/docker_entrypoint.sh
 cd ${ROOT_DIR}/app
