@@ -12,12 +12,10 @@ path_to_sql_version_file="$1/set_version_in_sql.pgsql"
 GIT_HASH=`$2 git --git-dir="$1/.git" --work-tree="$1" rev-parse HEAD`
 
 echo "
-CREATE SCHEMA IF NOT EXISTS hafah_private;
-
-DROP TABLE IF EXISTS hafah_private.version;
-CREATE TABLE hafah_private.version(
+DROP TABLE IF EXISTS hafah_python.version;
+CREATE TABLE hafah_python.version(
   git_hash TEXT
 );
 
-INSERT INTO hafah_private.version VALUES( '$GIT_HASH' );
+INSERT INTO hafah_python.version VALUES( '$GIT_HASH' );
 " > $path_to_sql_version_file

@@ -10,7 +10,7 @@ DECLARE
 BEGIN
   SELECT hasindexes  INTO _ FROM pg_tables WHERE schemaname = 'hafah_private' AND tablename = 'version';
   IF FOUND THEN
-    RETURN (SELECT git_hash FROM hafah_private.version LIMIT 1);
+    RETURN (SELECT git_hash FROM hafah_python.version LIMIT 1);
   END IF;
   RETURN 'unspecified (run activate_versioning.bash script)';
 END;

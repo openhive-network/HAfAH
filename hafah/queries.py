@@ -108,4 +108,4 @@ class account_history_db_connector:
     )[0]['enum_virtual_ops_json']
 
   def get_version(self):
-    return self._get_all(f"SELECT git_hash FROM hafah_private.version")[0]['git_hash']
+    return self._get_all(f"SELECT * FROM hafah_python.get_version()")[0]['get_version']
