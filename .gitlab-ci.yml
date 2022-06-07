@@ -114,6 +114,7 @@ prepare_postgrest_hafah_image:
     FF_NETWORK_PER_BUILD: 1
     PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/test_tools/package"
     HAFAH_IMAGE: ""
+    CALL_STYLE: "legacy_style_call"
 
   needs:
     - job: prepare_haf_image
@@ -140,7 +141,7 @@ prepare_postgrest_hafah_image:
     - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt
     # run pattern tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests
-    - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel`
+    - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel` $CALL_STYLE
 
   artifacts:
     when: always
@@ -179,6 +180,18 @@ postgrest_patterns_tests:
 
   variables:
     HAFAH_IMAGE: $HAFAH_IMAGE_NAME
+
+new_style_postgrest_patterns_tests:
+  extends: .patterns_tests
+
+  needs:
+    - !reference [.patterns_tests, needs]
+    - job: prepare_postgrest_hafah_image
+      artifacts: true
+
+  variables:
+    HAFAH_IMAGE: $HAFAH_IMAGE_NAME
+    CALL_STYLE: "direct_call_hafah"
 
 .comparison_tests:
   extends: .docker_image_builder_job

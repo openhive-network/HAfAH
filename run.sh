@@ -3,89 +3,40 @@
 set -e
 set -o pipefail
 
-echo_success() {
-    echo 'SUCCESS: Users and API recreated'
-}
-
-create_ah_schema(){
-    psql -d haf_block_log -f "queries/ah_schema_functions.pgsql"
-}
-
-create_api() {
-    postgrest_dir=$PWD/postgrest
-    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_backend.sql
-    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_endpoints.sql
-    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_api_v1.sql
-    psql -a -v "ON_ERROR_STOP=1" -d haf_block_log -f $postgrest_dir/hafah_api_v2.sql
+setup() {
+    bash $SCRIPTS_DIR/setup_postgres.sh --postgres-url=$PGRST_DB_URI
+    bash $SCRIPTS_DIR/setup_db.sh --postgres-url=$PGRST_DB_URI
 }
 
 start_webserver() {
-    postgrest postgrest.conf
+    export PGRST_DB_SCHEMA="hafah_endpoints"
+    export PGRST_DB_ANON_ROLE="hafah_user"
+    export PGRST_DB_ROOT_SPEC="home"
+
+    default_port=3000
+    if [[ $1 == ?+([0-9]) ]]; then 
+        export PGRST_SERVER_PORT=$1
+    else
+        export PGRST_SERVER_PORT=$default_port
+    fi
+
+    postgrest
 }
 
-install_postgrest() {
-    sudo apt-get update -y
-    sudo apt-get install wget -y
-
-    postgrest=postgrest-v$postgrest_v-linux-static-x64.tar.xz
-    wget https://github.com/PostgREST/postgrest/releases/download/v$postgrest_v/$postgrest
-
-    sudo tar xvf $postgrest -C '/usr/local/bin'
-    rm $postgrest
+setup_postgrest() {
+    bash $SCRIPTS_DIR/setup_postgrest.sh
 }
 
-install_jmeter() {
-    sudo apt-get update -y
-    sudo apt-get install openjdk-8-jdk -y
+export PGRST_DB_URI="postgresql://haf_app_admin@/haf_block_log"
 
-    wget "https://downloads.apache.org//jmeter/binaries/apache-jmeter-${jmeter_v}.zip"
-
-    jmeter_src="apache-jmeter-${jmeter_v}"
-    sudo unzip "${jmeter_src}.zip" -d '/usr/local/src'
-    rm "${jmeter_src}.zip"
-
-    jmeter="jmeter-${jmeter_v}"
-    touch $jmeter
-    echo '#!/usr/bin/env bash' >> $jmeter
-    echo '' >> $jmeter
-    echo "cd '/usr/local/src/apache-jmeter-${jmeter_v}/bin'" >> $jmeter
-    echo './jmeter $@' >> $jmeter
-    sudo chmod +x $jmeter
-    sudo mv $jmeter "/usr/local/bin/${jmeter}"
-}
-
-test_performance() {    
-    ./tests/performance/run_perf_tests.bash /usr/local/bin/jmeter-$jmeter_v $PWD/tests/performance $@
-}
-
-test_patterns() {
-    port=$1
-    cd $PWD/haf/hive
-    
-    ./tests/api_tests/pattern_tests/run_tests.sh $port $PWD
-}
-
-postgrest_v=9.0.0
-jmeter_v=5.4.3
+SCRIPTS_DIR=$PWD/scripts
 
 if [ "$1" = "start" ]; then
-    start_webserver
-elif [ "$1" = "re-start" ]; then
-    create_ah_schema
-    create_api
-    echo_success
-    start_webserver
-elif [ "$1" =  "install-dependancies" ]; then
-    install_postgrest
-    install_jmeter
-elif [ "$1" =  "install-postgrest" ]; then
-    install_postgrest
-elif [ "$1" =  "install-jmeter" ]; then
-    install_jmeter
-elif [ "$1" =  "test-performance" ]; then
-    test_performance ${@:2}
-elif [ "$1" =  "test-patterns" ]; then
-    test_patterns ${@:2}
+    start_webserver ${@:2}
+elif [ "$1" =  "setup" ]; then
+    setup
+elif [ "$1" =  "setup-postgrest" ]; then
+    setup_postgrest
 else
     echo "job not found"
     exit 1

@@ -6,14 +6,22 @@
   - get_account_history
 Inside these functions, arguments are parsed from 'params', their types asserted and set or set to default.
 
-'hafah_endpoints' also serves as API for old style (like python's version of HAfAH) calls:
+'hafah_endpoints' also serves as API for old style (like python's version of HAfAH) calls and new style (direct) calls:
+
+Old style call example:
 curl -X POST http://localhost:3000/ \
 	-H 'Content-Type: application/json' \
 	-d '{"jsonrpc": "2.0",
   "method": "account_history_api.get_transaction",
   "params": {"id": "390464f5178defc780b5d1a97cb308edeb27f983", "include_reversible": true},
   "id": 0}'
+
+New style call example:
+curl -X POST http://localhost:3000/rpc/get_transaction \
+	-H 'Content-Type: application/json' \
+	-d  '{"id": "390464f5178defc780b5d1a97cb308edeb27f983", "include_reversible": true}'
 */
+
 DROP SCHEMA IF EXISTS hafah_endpoints CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_endpoints AUTHORIZATION hafah_owner;
@@ -63,13 +71,13 @@ BEGIN
     SELECT CASE WHEN __api_type = 'account_history_api' THEN FALSE ELSE TRUE END INTO __is_legacy_style;
 
     IF __method_type = 'get_ops_in_block' THEN
-      SELECT hafah_endpoints.get_ops_in_block(__params, __is_legacy_style, __id, __json_type) INTO __result;
+      SELECT hafah_endpoints.call_get_ops_in_block(__params, __json_type, __is_legacy_style, __id) INTO __result;
     ELSEIF __method_type = 'enum_virtual_ops' THEN
-      SELECT hafah_endpoints.enum_virtual_ops(__params, __is_legacy_style, __id, __json_type) INTO __result;
+      SELECT hafah_endpoints.call_enum_virtual_ops(__params, __json_type, __is_legacy_style, __id) INTO __result;
     ELSEIF __method_type = 'get_transaction' THEN
-      SELECT hafah_endpoints.get_transaction(__params, __is_legacy_style, __id, __json_type) INTO __result;
+      SELECT hafah_endpoints.call_get_transaction(__params, __json_type, __is_legacy_style, __id) INTO __result;
     ELSEIF __method_type = 'get_account_history' THEN
-      SELECT hafah_endpoints.get_account_history(__params, __is_legacy_style, __id, __json_type) INTO __result;
+      SELECT hafah_endpoints.call_get_account_history(__params, __json_type, __is_legacy_style, __id) INTO __result;
     END IF;
 
   END IF;
@@ -87,7 +95,7 @@ END
 $$
 ;
 
-CREATE FUNCTION hafah_endpoints.get_ops_in_block(_params JSON, _is_legacy_style BOOLEAN, _id JSON = NULL, _json_type TEXT = NULL)
+CREATE FUNCTION hafah_endpoints.call_get_ops_in_block(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -144,7 +152,7 @@ END
 $$
 ;
 
-CREATE FUNCTION hafah_endpoints.enum_virtual_ops(_params JSON, _is_legacy_style BOOLEAN, _id JSON = NULL, _json_type TEXT = NULL)
+CREATE FUNCTION hafah_endpoints.call_enum_virtual_ops(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -245,7 +253,7 @@ END
 $$
 ;
 
-CREATE FUNCTION hafah_endpoints.get_transaction(_params JSON, _is_legacy_style BOOLEAN, _id JSON = NULL, _json_type TEXT = NULL)
+CREATE FUNCTION hafah_endpoints.call_get_transaction(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -291,7 +299,7 @@ END
 $$
 ;
 
-CREATE FUNCTION hafah_endpoints.get_account_history(_params JSON, _is_legacy_style BOOLEAN, _id JSON = NULL, _json_type TEXT = NULL)
+CREATE FUNCTION hafah_endpoints.call_get_account_history(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
@@ -396,5 +404,49 @@ $$
 BEGIN
   RETURN json_build_object('app_name', 'PostgRESTHAfAH', 'commit', (SELECT * FROM hafah_python.get_version()));
 END;
+$$
+;
+
+CREATE FUNCTION hafah_endpoints.get_ops_in_block(JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_endpoints.call_get_ops_in_block($1, json_typeof($1));
+END
+$$
+;
+
+CREATE FUNCTION hafah_endpoints.enum_virtual_ops(JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_endpoints.call_enum_virtual_ops($1, json_typeof($1));
+END
+$$
+;
+
+CREATE FUNCTION hafah_endpoints.get_transaction(JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_endpoints.call_get_transaction($1, json_typeof($1));
+END
+$$
+;
+
+CREATE FUNCTION hafah_endpoints.get_account_history(JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_endpoints.call_get_account_history($1, json_typeof($1));
+END
 $$
 ;

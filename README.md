@@ -14,7 +14,10 @@ Like HAF itself, you can install hafah directly on your computer, or you can run
 
 ## Option 1: Starting `HAfAH` directly on host
 ---
-> :warning: Before starting app or __load tests__, install required packages using command below!
+
+### python version
+
+> :warning: Before starting app or __load tests__, install required packages!
 
 ```
 python3 -m pip install --user -r requirements.txt
@@ -27,12 +30,22 @@ To start the python version of hafah directly:
 ./main.py -p postgresql://haf_app_admin:<password>@127.0.0.1:5432/haf_block_log -n 8080
 ```
 
-**THIS NEEDS CLEANING UP: Doesn't say how to set port, etc. How is it being done by CI?**
-To install and start the postgREST version of hafah directly, modify postgrest.conf as needed to connect to your HAF database, then run the command below:
+### postgREST version
+
+To start using this version, first create API and install postgREST locally with
 
 ```
-./run.sh re-start
+./run.sh setup
 ```
+
+Then start server 
+
+```
+./run.sh start <PORT>
+```
+
+`PORT` is optional, default is 3000.
+<br><br>
 
 ## Option 2: Starting a `HAfAH` using prebuilt docker container
 
@@ -73,8 +86,6 @@ host    haf_block_log             haf_app_admin    0.0.0.0/0            trust   
 ``` 
 
 WARNING: above example is only specific for testing and fast-deployment purposes. To ensure a secure deployment, consult PostgreSQL documentation related to authentication methods (e.g. peer-based authentication and its interaction with UNIX accounts).
-
-<br><br>
 
 ## Running load tests
 ---
