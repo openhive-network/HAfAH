@@ -277,12 +277,13 @@ postgrest_comparison_tests:
       alias: hafah_app
 
   before_script:
-    - apk update && apk add bash ca-certificates wget unzip openjdk11-jre openjdk11-jdk maven git python3 py3-pip
+    - apk update && apk add bash ca-certificates wget unzip openjdk11-jre openjdk11-jdk maven git python3 py3-pip curl
     - pip3 install --user prettytable
 
   script:
     - source $CACHED_BENCHMARK_DIR/jmeter/activate
     - source $CACHED_BENCHMARK_DIR/m2u/activate
+    - curl -H 'Content-type: application/json'  -s -d '{"jsonrpc":"2.0","id":0,"method":"hive_api.get_version","params":{}}' http://hafah_app:$HAFAH_PORT
     - $JMETER --version
     - /usr/bin/python3 $CI_PROJECT_DIR/tests/performance_test.py -a hafah_app -p $HAFAH_PORT --no-launch -c perf_5M_heavy.csv -j $JMETER -d $CI_PROJECT_DIR/wdir
     - $M2U --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
