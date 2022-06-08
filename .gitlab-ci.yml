@@ -72,6 +72,9 @@ prepare_benchmark_environ:
   extends: .docker_image_builder_job
   stage: build
 
+  before_script:
+    - apk update && apk add bash ca-certificates wget unzip openjdk11-jre openjdk11-jdk maven git python3 py3-pip
+
   script:
     - mkdir -p $CACHED_BENCHMARK_DIR && cd $CACHED_BENCHMARK_DIR
     - chmod a+x $CI_PROJECT_DIR/scripts/setup_jmeter.bash && $CI_PROJECT_DIR/scripts/setup_jmeter.bash
