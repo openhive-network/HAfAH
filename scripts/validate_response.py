@@ -106,7 +106,10 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
 
   response_json = response.json()
   error = response_json.get("error", None)
-  result = response_json.get("result", None)
+  if os.getenv("IS_DIRECT_CALL_HAFAH", "").lower() == "true":
+    result = response_json
+  else:
+    result = response_json.get("result", None)
 
   exclude_regex_path = None
   if isinstance(ignore_tags, str):
@@ -202,4 +205,3 @@ def has_valid_response(response, method=None, directory=None, error_response=Fal
   if correct_response is None:
     msg = "Error detected in response: result is null, json object was expected"
     raise NoResultException(msg)
-
