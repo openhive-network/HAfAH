@@ -253,7 +253,11 @@ try:
 
 	# gathering version
 	if not SKIP_VERSION:
-		version : dict = post(f'http://{ADDRESS}:{PORT}/', data={"jsonrpc":"2.0","id":0,"method":"hive_api.get_version"}).json()
+		version : dict = post(
+			url=f'http://{ADDRESS}:{PORT}/',
+			headers={'Content-Type': 'application/json'},
+			json={"jsonrpc":"2.0","id":0,"method":"hive_api.get_version"}
+		).json()
 		if not 'result' in version or not 'commit' in version['result']:
 			log.error(f'service is not responding properly to `hive_api.get_version` call: `{version}`')
 		else:
