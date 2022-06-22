@@ -122,6 +122,9 @@ prepare_postgrest_hafah_image:
   services:
     - name: $HAF_IMAGE_NAME
       alias: haf-instance
+      variables:
+        # Allow access from any network to eliminate CI IP addressing problems
+        PG_ACCESS: "host    haf_block_log    haf_app_admin    0.0.0.0/0    trust"
 
     - name: $HAFAH_IMAGE
       alias: hafah_app
@@ -196,6 +199,9 @@ postgrest_patterns_tests:
   services:
     - name: $HAF_IMAGE_NAME
       alias: haf-instance
+      variables:
+        # Allow access from any network to eliminate CI IP addressing problems
+        PG_ACCESS: "host    haf_block_log    haf_app_admin    0.0.0.0/0    trust"
 
     - name: $HAFAH_IMAGE
       alias: hafah_app
@@ -272,6 +278,9 @@ postgrest_comparison_tests:
   services:
     - name: $HAF_IMAGE_NAME
       alias: haf-instance
+      variables:
+        # Allow access from any network to eliminate CI IP addressing problems
+        PG_ACCESS: "host    haf_block_log    haf_app_admin    0.0.0.0/0    trust"
 
     - name: $HAFAH_IMAGE
       alias: hafah_app
