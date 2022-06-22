@@ -261,6 +261,7 @@ try:
 		if not 'result' in version or not 'commit' in version['result']:
 			log.error(f'service is not responding properly to `hive_api.get_version` call: `{version}`')
 		else:
+			assert 'unspecified' not in version["result"]["commit"], 'HAfAH version has not been set'
 			log.info(f'testing app: {version["result"]["app_name"]} version: {version["result"]["commit"]}')
 
 	# setup and run JMETER
