@@ -202,9 +202,8 @@ class PreparationPhase:
       logger.info("an error occurred during http server preparation")
       return False
 
-def run_server(db_url, port, log_responses, sql_src_path):
-  _prep_phase = PreparationPhase(db_url, sql_src_path)
-  if not _prep_phase.prepare_server():
+def run_server(db_url, port, log_responses, sql_src_path, recreate_schema):
+  if recreate_schema and not PreparationPhase(db_url, sql_src_path).prepare_server():
     return
 
   logger.info("connecting into http server")
