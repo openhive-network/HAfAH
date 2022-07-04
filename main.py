@@ -17,11 +17,12 @@ if __name__ == '__main__':
   engine.add_argument('-p', '--psql-db-path', dest='psql', type=str, required=True, help='connection string to postgres db ( ex. postgresql://postgres:pass@127.0.0.1:5432/hafah )')
   engine.add_argument('-n', '--port', dest='port', type=int, required=True, help='port to listen on (ex. 6380)')
   engine.add_argument('-r', '--log-responses', dest='log_responses', help='logging of responses (dev option, by default OFF)', **BOOL_PARAM)
+  engine.add_argument('--recreate-schema', dest='recreate_schema', help='if specified, looks for queries/ah_schema_functions.pgsql file and sends it contents to db', **BOOL_PARAM)
   args = engine.parse_args()
 
   try:
     logger.info("starting server, press ^C to stop server")
-    run_server(args.psql, args.port, args.log_responses, Path(dirname(realpath(__file__))) / 'queries' / 'ah_schema_functions.pgsql')
+    run_server(args.psql, args.port, args.log_responses, Path(dirname(realpath(__file__))) / 'queries' / 'ah_schema_functions.pgsql', args.recreate_schema)
   except KeyboardInterrupt:
     pass
   except Exception as e:
