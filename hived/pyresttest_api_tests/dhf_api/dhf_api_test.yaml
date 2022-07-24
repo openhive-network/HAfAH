@@ -1,7 +1,7 @@
 ---
 - config:
-  - testset: "SPS API Tests"
-  - api: &api "sps_api"
+  - testset: "DHF API Tests"
+  - api: &api "dhf_api"
   - variable_binds:
     - api: *api
   - generators:

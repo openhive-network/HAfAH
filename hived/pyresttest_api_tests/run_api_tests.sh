@@ -29,10 +29,10 @@ pyresttest $NODE:$RPC_PORT ./database_api/database_api_test.yaml --import_extens
 pyresttest $NODE:$RPC_PORT ./account_history_api/account_history_api_test.yaml --import_extensions='validator_ex;'$COMPARATOR
 [ $? -ne 0 ] && EXIT_CODE=-1
 
-pyresttest $NODE:$RPC_PORT ./sps_api/sps_api_test.yaml --import_extensions='validator_ex;'$COMPARATOR
+pyresttest $NODE:$RPC_PORT ./dhf_api/dhf_api_test.yaml --import_extensions='validator_ex;'$COMPARATOR
 [ $? -ne 0 ] && EXIT_CODE=-1
 
-pyresttest $NODE:$RPC_PORT ./condenser_api/sps_via_condenser_test.yaml --import_extensions='validator_ex;'$COMPARATOR
+pyresttest $NODE:$RPC_PORT ./condenser_api/dhf_via_condenser_test.yaml --import_extensions='validator_ex;'$COMPARATOR
 [ $? -ne 0 ] && EXIT_CODE=-1
 
 exit $EXIT_CODE

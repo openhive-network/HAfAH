@@ -10,7 +10,7 @@ LOG_LEVEL = logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
 MAIN_LOG_PATH = "hdf_rpc_api_test.log"
 
-MODULE_NAME = "SPS API Tester"
+MODULE_NAME = "DHF API Tester"
 logger = logging.getLogger(MODULE_NAME)
 logger.setLevel(LOG_LEVEL)
 
@@ -33,7 +33,7 @@ def list_voter_proposals(start, order_by, order_direction, limit, status):
      payload = {
     "jsonrpc" : "2.0",
     "id" : get_random_id(),
-    "method" : "sps_api.list_voter_proposals",
+    "method" : "dhf_api.list_voter_proposals",
     "params" : {
       "start" : start,
       "order_by" : order_by,
@@ -50,7 +50,7 @@ def find_proposals(id_set):
      payload = {
     "jsonrpc" : "2.0",
     "id" : get_random_id(),
-    "method" : "sps_api.find_proposals",
+    "method" : "dhf_api.find_proposals",
     "params" : {
       "id_set" : id_set
     }
@@ -63,7 +63,7 @@ def list_proposals(start, order_by, order_direction, limit, status):
   payload = {
     "jsonrpc" : "2.0",
     "id" : get_random_id(),
-    "method" : "sps_api.list_proposals",
+    "method" : "dhf_api.list_proposals",
     "params" : {
       "start" : start,
       "order_by" : order_by,
@@ -118,7 +118,7 @@ def run_test(test_name, expected_result, url, payload):
     logger.error("Exception during processing request: {0}".format(ex))
 
 if __name__ == '__main__':
-  logger.info("Performing SPS RPC API plugin tests")
+  logger.info("Performing DHF RPC API plugin tests")
   import argparse
   parser = argparse.ArgumentParser()
   parser.add_argument("--node-ip", help = "IP address of steem node", default = "http://127.0.0.1", dest = "node_ip")
@@ -129,7 +129,7 @@ if __name__ == '__main__':
   url = "{0}:{1}".format(args.node_ip, args.node_port)
   logger.info("Using node at: {}".format(url))
 
-  logger.info("Running SPS RPC API tests")
+  logger.info("Running DHF RPC API tests")
   payload = find_proposals([1234, 2, 3, 4])
   run_test("Basic find_proposal test", None, url, payload)
 
@@ -139,7 +139,7 @@ if __name__ == '__main__':
   payload = list_voter_proposals("blocktrades", "by_creator", "direction_ascending", 1, "all")
   run_test("Basic list_voter_proposals test", None, url, payload)
 
-  logger.info("Running SPS API tests via condeser API")
+  logger.info("Running DHF API tests via condeser API")
   payload = condenser_find_proposals([1234, 2, 3, 4])
   run_test("Basic find_proposal test", None, url, payload)
 

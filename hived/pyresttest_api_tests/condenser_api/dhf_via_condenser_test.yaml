@@ -1,6 +1,6 @@
 ---
 - config:
-  - testset: "SPS via Condenser API Tests"
+  - testset: "DHF via Condenser API Tests"
   - api: &api "condenser_api"
   - variable_binds:
     - api: *api

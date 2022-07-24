@@ -648,7 +648,7 @@ At first look it works good but sometimes output differs in:
 `head_block_id
 `head_block_number
 `last_irreversible_block_num
-`sps_interval_ledger
+`dhf_interval_ledger
 `time
 `total_vesting_fund_hive
 `total_vesting_shares
