@@ -80,7 +80,7 @@ analytics    = engine.add_argument_group('analytics')
 
 # environment configuration
 environment.add_argument('-l', '--list',           dest='list_csv',        **BOOL_PARAM,                                          help=f'if specified program will just list avaiable CSV files')
-environment.add_argument('-r', '--root-dir',       dest='root_dir',        type=str,     default=DEFAULT_ROOT_DIR,                help=f'path to root directory of HAfAH project [default={DEFAULT_ROOT_DIR}]')
+environment.add_argument('-r', '--root-dir',       dest='root_dir',        type=str,     default=DEFAULT_ROOT_DIR,                help=f'path to root directory of tests_api project [default={DEFAULT_ROOT_DIR}]')
 environment.add_argument('-d', '--datadir',        dest='datadir',         type=str,     default='./wdir',                        help='defines path to workdir (path to this dir will alway be recreated) [default=./wdir]')
 environment.add_argument('-j', '--jmeter',         dest='jmeter',          type=str,     default='/usr/bin/jmeter',               help='path to jmeter executable [default=/usr/bin/jmeter]')
 environment.add_argument('-q', '--supr-errors',    dest='supr_err',        **BOOL_PARAM,                                          help="if specified error messages of bad requests won't be printed")
