@@ -6,6 +6,11 @@ WORKDIR=jmeter
 JMETER_DOWNLOAD_URL="https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.4.3.zip"
 JMETER_POSTGRES_DOWNLOAD_URL="https://jdbc.postgresql.org/download/postgresql-42.3.1.jar"
 
+if [[ -f "$WORKDIR/activate" ]]; then
+    echo "using cached jmeter"
+    exit 0
+fi
+
 echo "creating work directory"
 mkdir -p "$WORKDIR"
 
@@ -32,7 +37,8 @@ mv apache* apache
 
     echo "For handy usage, execute following command"
     echo "echo 'export JMETER=$JMETER' >> ~/.bashrc"
+    echo "JMETER=$JMETER" > activate
 
     echo "testing is jmeter properly configured"
-    $JMETER --version && echo "ok."
+    $JMETER --version
 popd
