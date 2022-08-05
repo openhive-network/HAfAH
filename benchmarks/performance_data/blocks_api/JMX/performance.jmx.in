@@ -770,7 +770,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_block_range( 1, 10 )
           </elementProp>
           <elementProp name="PSQL_SCHEMA" elementType="Argument">
             <stringProp name="Argument.name">PSQL_SCHEMA</stringProp>
-            <stringProp name="Argument.value">${__P(psql, hafah_python)}</stringProp>
+            <stringProp name="Argument.value">${__P(schema, hafah_python)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="CALL_STYLE" elementType="Argument">
