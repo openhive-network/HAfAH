@@ -284,11 +284,11 @@
         <hashTree>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SQL_validate" enabled="true">
             <stringProp name="dataSource">psql</stringProp>
-            <stringProp name="query">SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_block( 1 ) 
+            <stringProp name="query">SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_block_json( 1 ) 
 UNION ALL
-SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_block_header( 1 )
+SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_block_header_json( 1 )
 UNION ALL
-SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_block_range( 1, 10 )
+SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_block_range_json( 1, 10 )
 ;</stringProp>
             <stringProp name="queryArguments"></stringProp>
             <stringProp name="queryArgumentsTypes"></stringProp>
@@ -433,7 +433,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_block_range( 1, 10 )
         <hashTree>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="get_block" enabled="true">
             <stringProp name="dataSource">psql</stringProp>
-            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.get_block( ${block_no} );</stringProp>
+            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.get_block_json( ${block_no} );</stringProp>
             <stringProp name="queryArguments"></stringProp>
             <stringProp name="queryArgumentsTypes"></stringProp>
             <stringProp name="queryTimeout"></stringProp>
@@ -577,7 +577,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_block_range( 1, 10 )
         <hashTree>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="get_block_header" enabled="true">
             <stringProp name="dataSource">psql</stringProp>
-            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.get_block_header( ${block_no} );</stringProp>
+            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.get_block_header_json( ${block_no} );</stringProp>
             <stringProp name="queryArguments"></stringProp>
             <stringProp name="queryArgumentsTypes"></stringProp>
             <stringProp name="queryTimeout"></stringProp>
@@ -723,7 +723,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_block_range( 1, 10 )
         <hashTree>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="get_block_range" enabled="true">
             <stringProp name="dataSource">psql</stringProp>
-            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.get_block_range( ${block_no}, ${block_count} );</stringProp>
+            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.get_block_range_json( ${block_no}, ${block_count} );</stringProp>
             <stringProp name="queryArguments"></stringProp>
             <stringProp name="queryArgumentsTypes"></stringProp>
             <stringProp name="queryTimeout"></stringProp>
