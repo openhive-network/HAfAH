@@ -97,6 +97,7 @@ benchmarking.add_argument('--call-style',           dest='call_style',      type
 connection.add_argument('-p', '--port',           dest='port',            type=int,     default=8095,                             help='port to use during tests; set to 5432 for direct postgres query [default=8095]')
 connection.add_argument('-a', '--address',        dest='addr',            type=str,     default='localhost',                      help='addres to connect during test [default=localhost]')
 connection.add_argument('--postgres',             dest='postgres_url',    type=str,     default='postgresql:///haf_block_log',    help='if specified connection string, tests will be performed on postgres db [default=postgresql:///haf_block_log]')
+connection.add_argument('--postgres-schema',      dest='schema',          type=str,     default='hive',                           help='specifies schema, where functions are placed [default=hive]')
 
 # analytics options
 analytics.add_argument('-i', '--ignore-bad-req', dest='ignore_br',       **BOOL_PARAM,                                            help='if specified script will ignore requests that failed, error message is still printed')
@@ -117,6 +118,7 @@ API_NAME          : str               = args.api
 LOOP_COUNT        : int               = args.loops
 IGNORE_BAD_REQ    : bool              = args.ignore_br
 SUPR_ERRRORS      : bool              = args.supr_err
+SCHEMA            : str               = args.schema
 
 # print configuration
 log.info(f'''configuration:
@@ -201,7 +203,7 @@ elif match('postgresql:///(.*)', POSTGRES_URL):  # Ex. postgresql:///my_database
 else:
 	assert False, "cannot parse postgres url"
 
-postgres_url_jmeter = html.escape(postgres_url_jmeter)
+# postgres_url_jmeter = html.escape(postgres_url_jmeter)
 log.info(f'postgres connection string in JMETER: jdbc:{postgres_url_jmeter}')
 
 # theese will be appended to properties file for jmeter
@@ -212,7 +214,8 @@ PARAMS = dict(
 	dataset=CSV_PATH.as_posix(),
 	psql=postgres_url_jmeter,
 	call_style=CALL_STYLE_OPT.to_str(CALL_STYLE),
-	loop_count=LOOP_COUNT
+	loop_count=LOOP_COUNT,
+	schema=SCHEMA
 )
 
 # directory managment
