@@ -87,7 +87,7 @@ def get_time(test_id):
           return (float(row[1]), row[2])
   return (0., "{}")
 
-def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False, benchmark_time_threshold=None):
+def compare_response_with_pattern(response, method=None, directory=None, ignore_tags=None, error_response=False, benchmark_time_threshold=None, allow_null_response=False):
   """ This method will compare response with pattern file """
   test_fname, _ = os.getenv('PYTEST_CURRENT_TEST').split("::")
   
@@ -142,13 +142,15 @@ def compare_response_with_pattern(response, method=None, directory=None, ignore_
 
   if error_response:
     result = error
-  if result is None:
+  if result is None and not allow_null_response:
     msg = "Error detected in response: result is null, json object was expected"
     save_json(response_fname, response_json)
     raise PatternDiffException(msg)
 
   pattern = load_pattern(pattern_fname)
   if pattern is None:
+    if result is None:
+      return
     save_json(response_fname, result)
     msg = "Pattern is missing."
     raise PatternDiffException(msg)
