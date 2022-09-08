@@ -6,14 +6,16 @@ SCRIPTDIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 cleanup () {
   echo "Performing cleanup...."
-  python_pid=$(pidof 'python3')
-  echo "python_pid: $python_pid"
+  python_pid=$(pidof 'python3' || true)
+  if [ ! -z "$python_pid" ]; then
+    echo "python_pid: $python_pid"
 
-  kill -INT $python_pid
+    sudo -En kill -INT $python_pid
 
-  echo "Waiting for hafah finish..."
-  tail --pid=$python_pid -f /dev/null || true
-  echo "hafah finish done."
+    echo "Waiting for hafah-python finish..."
+    tail --pid=$python_pid -f /dev/null || true
+    echo "hafah-python finish done."
+  fi
 
   echo "Cleanup actions done."
 }
