@@ -15,8 +15,6 @@ GRANT SELECT ON ALL TABLES IN SCHEMA hafah_backend TO hafah_user;
 GRANT USAGE ON SCHEMA hafah_python TO hafah_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA hafah_python TO hafah_user;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hafah_python TO hafah_user;
-GRANT USAGE ON SCHEMA hive TO hafah_user;
-GRANT SELECT ON ALL TABLES IN SCHEMA hive TO hafah_user;
 
 CREATE FUNCTION hafah_backend.parse_acc_hist_start(_start BIGINT)
 RETURNS BIGINT
