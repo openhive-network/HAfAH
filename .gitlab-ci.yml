@@ -114,7 +114,8 @@ prepare_postgrest_hafah_image:
     FF_NETWORK_PER_BUILD: 1
     PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/test_tools/package"
     HAFAH_IMAGE: ""
-    CALL_STYLE: "legacy_style_call"
+    TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
+    DIRECT_HAFAH_CALLS: 0
 
   needs:
     - job: prepare_haf_image
@@ -141,12 +142,12 @@ prepare_postgrest_hafah_image:
     - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt
     # run pattern tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests
-    - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel` $CALL_STYLE
+    - ./run_tests.sh $AH_ENDPOINT `git rev-parse --show-toplevel` "${TEST_SUITE}" ${DIRECT_HAFAH_CALLS}
 
   artifacts:
     when: always
     reports:
-      junit: $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests/results.xml
+      junit: haf/hive/tests/api_tests/pattern_tests/results.xml
     paths:
     - "$CI_JOB_NAME"
     - "**/from_node.log"
@@ -191,7 +192,9 @@ new_style_postgrest_patterns_tests:
 
   variables:
     HAFAH_IMAGE: $HAFAH_IMAGE_NAME
-    CALL_STYLE: "direct_call_hafah"
+    # Direct call version does not support condenser_api
+    TEST_SUITE: "account_history_api"
+    DIRECT_HAFAH_CALLS: 1
 
 .comparison_tests:
   extends: .docker_image_builder_job
