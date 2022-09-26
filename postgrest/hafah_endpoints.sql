@@ -51,21 +51,18 @@ BEGIN
   __params = (__request_data->'params');
   __id = (__request_data->'id');
 
+  SELECT NULL::JSON INTO __result;
+
   IF __jsonrpc != '2.0' OR __jsonrpc IS NULL OR __params IS NULL OR __id IS NULL THEN
     RETURN hafah_backend.raise_exception(-32600, 'Invalid JSON-RPC');
   END IF;
 
   IF __method = 'hive_api.get_version' THEN
     SELECT hafah_endpoints.get_version() INTO __result;
-  ELSEIF __method NOT SIMILAR TO
-    '(account_history_api|condenser_api)\.(get_ops_in_block|enum_virtual_ops|get_transaction|get_account_history)'
-  THEN
-    RETURN hafah_backend.raise_exception(-32601, 'Method not found', __method, __id);
   ELSE
 
     SELECT substring(__method FROM '^[^.]+') INTO __api_type;
     SELECT substring(__method FROM '[^.]+$') INTO __method_type;
-
     SELECT json_typeof(__params) INTO __json_type;
 
     SELECT CASE WHEN __api_type != 'condenser_api' THEN FALSE ELSE TRUE END INTO __is_legacy_style;
@@ -91,15 +88,17 @@ BEGIN
     END IF;
   END IF;
 
-  RETURN CASE WHEN __result->'error' IS NULL THEN
-    jsonb_build_object(
+  IF __result IS NULL THEN
+    RETURN hafah_backend.raise_exception(-32601, 'Method not found', __method, __id);
+  ELSEIF __result->'error' IS NULL THEN
+    RETURN jsonb_build_object(
       'jsonrpc', '2.0',
       'result', __result,
       'id', __id
-    )
+    );
   ELSE
-    __result::JSONB
-  END;
+    RETURN __result::JSONB;
+  END IF;
 END
 $$
 ;
