@@ -396,6 +396,114 @@ END;
 $$
 ;
 
+CREATE OR REPLACE FUNCTION hafah_endpoints.call_get_block(_params JSON, _json_type TEXT, _id JSON = NULL)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+    __block_num BIGINT = NULL;
+    __exception_message TEXT;
+BEGIN
+  BEGIN
+    __block_num = hafah_backend.parse_argument(_params, _json_type, 'block_num', 0);
+    IF __block_num IS NOT NULL THEN
+      __block_num = __block_num::BIGINT;
+      IF __block_num < 0 THEN
+        __block_num := __block_num + POW(2, 31);
+      END IF;
+    ELSE
+      RETURN hafah_backend.raise_missing_arg('block_num', _id);
+    END IF;
+
+    RETURN hive.get_block_json(__block_num::INT);
+
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_backend.raise_uint_exception(_id);
+    WHEN raise_exception THEN
+      GET STACKED DIAGNOSTICS __exception_message = message_text;
+      RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
+  END;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_endpoints.call_get_block_header(_params JSON, _json_type TEXT, _id JSON = NULL)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+    __block_num BIGINT = NULL;
+    __exception_message TEXT;
+BEGIN
+  BEGIN
+    __block_num = hafah_backend.parse_argument(_params, _json_type, 'block_num', 0);
+    IF __block_num IS NOT NULL THEN
+      __block_num = __block_num::BIGINT;
+      IF __block_num < 0 THEN
+        __block_num := __block_num + POW(2, 31);
+      END IF;
+    ELSE
+      RETURN hafah_backend.raise_missing_arg('block_num', _id);
+    END IF;
+
+    RETURN hive.get_block_header_json(__block_num::INT);
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_backend.raise_uint_exception(_id);
+    WHEN raise_exception THEN
+      GET STACKED DIAGNOSTICS __exception_message = message_text;
+      RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
+  END;
+END
+$$
+;
+
+CREATE OR REPLACE FUNCTION hafah_endpoints.call_get_block_range(_params JSON, _json_type TEXT, _id JSON = NULL)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+DECLARE
+    __starting_block_num BIGINT = NULL;
+    __block_count BIGINT = NULL;
+    __exception_message TEXT;
+BEGIN
+  BEGIN
+    __starting_block_num = hafah_backend.parse_argument(_params, _json_type, 'starting_block_num', 0);
+    IF __starting_block_num IS NOT NULL THEN
+      __starting_block_num = __starting_block_num::BIGINT;
+      IF __starting_block_num < 0 THEN
+        __starting_block_num := __starting_block_num + POW(2, 31);
+      END IF;
+    ELSE
+      RETURN hafah_backend.raise_missing_arg('starting_block_num', _id);
+    END IF;
+
+    __block_count = hafah_backend.parse_argument(_params, _json_type, 'count', 1);
+    IF __block_count IS NOT NULL THEN
+      __block_count = __block_count::BIGINT;
+      IF __block_count < 0 THEN
+        __block_count := __block_count + POW(2, 31);
+      END IF;
+    ELSE
+      RETURN hafah_backend.raise_missing_arg('count', _id);
+    END IF;
+
+    RETURN hive.get_block_range_json(__starting_block_num::INT, __block_count::INT);
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_backend.raise_uint_exception(_id);
+    WHEN raise_exception THEN
+      GET STACKED DIAGNOSTICS __exception_message = message_text;
+      RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
+  END;
+END
+$$
+;
+
 CREATE FUNCTION hafah_endpoints.get_version()
 RETURNS JSON
 LANGUAGE 'plpgsql'
