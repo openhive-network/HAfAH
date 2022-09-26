@@ -70,16 +70,25 @@ BEGIN
 
     SELECT CASE WHEN __api_type = 'account_history_api' THEN FALSE ELSE TRUE END INTO __is_legacy_style;
 
-    IF __method_type = 'get_ops_in_block' THEN
-      SELECT hafah_endpoints.call_get_ops_in_block(__params, __json_type, __is_legacy_style, __id) INTO __result;
-    ELSEIF __method_type = 'enum_virtual_ops' THEN
-      SELECT hafah_endpoints.call_enum_virtual_ops(__params, __json_type, __is_legacy_style, __id) INTO __result;
-    ELSEIF __method_type = 'get_transaction' THEN
-      SELECT hafah_endpoints.call_get_transaction(__params, __json_type, __is_legacy_style, __id) INTO __result;
-    ELSEIF __method_type = 'get_account_history' THEN
-      SELECT hafah_endpoints.call_get_account_history(__params, __json_type, __is_legacy_style, __id) INTO __result;
+    IF __api_type = 'account_history_api' OR __api_type = 'condenser_api' THEN
+      IF __method_type = 'get_ops_in_block' THEN
+        SELECT hafah_endpoints.call_get_ops_in_block(__params, __json_type, __is_legacy_style, __id) INTO __result;
+      ELSEIF __method_type = 'enum_virtual_ops' AND NOT __is_legacy_style THEN
+        SELECT hafah_endpoints.call_enum_virtual_ops(__params, __json_type, __is_legacy_style, __id) INTO __result;
+      ELSEIF __method_type = 'get_transaction' THEN
+        SELECT hafah_endpoints.call_get_transaction(__params, __json_type, __is_legacy_style, __id) INTO __result;
+      ELSEIF __method_type = 'get_account_history' THEN
+        SELECT hafah_endpoints.call_get_account_history(__params, __json_type, __is_legacy_style, __id) INTO __result;
+      END IF;
+    ELSEIF __api_type = 'block_api' THEN
+      IF __method_type = 'get_block' THEN
+        SELECT hafah_endpoints.call_get_block( __params, __json_type, __id) INTO __result;
+      ELSEIF __method_type = 'get_block_header' THEN
+        SELECT hafah_endpoints.call_get_block_header( __params, __json_type, __id) INTO __result;
+      ELSEIF __method_type = 'get_block_range' THEN
+        SELECT hafah_endpoints.call_get_block_range( __params, __json_type, __id) INTO __result;
+      END IF;
     END IF;
-
   END IF;
 
   RETURN CASE WHEN __result->'error' IS NULL THEN
