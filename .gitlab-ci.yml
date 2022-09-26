@@ -183,6 +183,18 @@ postgrest_patterns_tests:
   variables:
     HAFAH_IMAGE: $HAFAH_IMAGE_NAME
 
+postgrest_patterns_tests:
+  extends: .patterns_tests
+
+  needs:
+    - !reference [.patterns_tests, needs]
+    - job: prepare_postgrest_hafah_image
+      artifacts: true
+
+  variables:
+    HAFAH_IMAGE: $HAFAH_IMAGE_NAME
+    TEST_SUITE: "block_api_patterns"
+
 new_style_postgrest_patterns_tests:
   extends: .patterns_tests
 
