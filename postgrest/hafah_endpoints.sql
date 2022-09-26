@@ -68,7 +68,7 @@ BEGIN
 
     SELECT json_typeof(__params) INTO __json_type;
 
-    SELECT CASE WHEN __api_type = 'account_history_api' THEN FALSE ELSE TRUE END INTO __is_legacy_style;
+    SELECT CASE WHEN __api_type != 'condenser_api' THEN FALSE ELSE TRUE END INTO __is_legacy_style;
 
     IF __api_type = 'account_history_api' OR __api_type = 'condenser_api' THEN
       IF __method_type = 'get_ops_in_block' THEN
