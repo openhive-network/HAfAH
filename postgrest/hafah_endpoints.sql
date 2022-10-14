@@ -418,7 +418,7 @@ BEGIN
     IF __block_num IS NOT NULL THEN
       __block_num = __block_num::BIGINT;
       IF __block_num < 0 THEN
-        __block_num := __block_num + POW(2, 31);
+        __block_num := __block_num + ((POW(2, 31) - 1) :: BIGINT);
       END IF;
     ELSE
       RETURN hafah_backend.raise_missing_arg('block_num', _id);
@@ -451,7 +451,7 @@ BEGIN
     IF __block_num IS NOT NULL THEN
       __block_num = __block_num::BIGINT;
       IF __block_num < 0 THEN
-        __block_num := __block_num + POW(2, 31);
+        __block_num := __block_num + ((POW(2, 31) - 1) :: BIGINT);
       END IF;
     ELSE
       RETURN hafah_backend.raise_missing_arg('block_num', _id);
@@ -484,7 +484,7 @@ BEGIN
     IF __starting_block_num IS NOT NULL THEN
       __starting_block_num = __starting_block_num::BIGINT;
       IF __starting_block_num < 0 THEN
-        __starting_block_num := __starting_block_num + POW(2, 31);
+        __starting_block_num := __starting_block_num + ((POW(2, 31) - 1) :: BIGINT);
       END IF;
     ELSE
       RETURN hafah_backend.raise_missing_arg('starting_block_num', _id);
@@ -494,7 +494,7 @@ BEGIN
     IF __block_count IS NOT NULL THEN
       __block_count = __block_count::BIGINT;
       IF __block_count < 0 THEN
-        __block_count := __block_count + POW(2, 31);
+        __block_count := __block_count + ((POW(2, 31) - 1) :: BIGINT);
       END IF;
     ELSE
       RETURN hafah_backend.raise_missing_arg('count', _id);
