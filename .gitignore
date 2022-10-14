@@ -20,3 +20,6 @@ build_*/
 **/*out
 **/*csv
 **/workdir/**
+
+# virtual enviroments
+*env*
