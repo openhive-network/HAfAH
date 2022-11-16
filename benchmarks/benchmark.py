@@ -89,7 +89,7 @@ environment.add_argument('--skip-version-check',   dest='skip_version',    **BOO
 # benchmarking options
 benchmarking.add_argument('-n', '--api-name',       dest='api',             type=str,     default='account_history_api',          help='specifies which API should be tested [default=account_history_api]')
 benchmarking.add_argument('-c', '--csv',            dest='select_csv',      type=str,     default='perf_60M_heavy.csv',           help=f'selected CSV FILENAME (use -l to list avaiable), [default=perf_60M_heavy.csv]')
-benchmarking.add_argument('-k', '--loops',          dest='loops',           type=int,     default=None,                           help=f'amount of loops over CSV file per thread (if exceed, thread loop over the file again); for cl mode: pass -1 for infite loop [default={DEFAULT_LOOP_COUNT}]')
+benchmarking.add_argument('-k', '--loops',          dest='loops',           type=int,     default=DEFAULT_LOOP_COUNT,             help=f'amount of loops over CSV file per thread (if exceed, thread loop over the file again); for cl mode: pass -1 for infite loop [default={DEFAULT_LOOP_COUNT}]')
 benchmarking.add_argument('-t', '--threads',        dest='threads',         type=int,     default=10,                             help='defines amount of threads to use during tests [default=10]')
 benchmarking.add_argument('--call-style',           dest='call_style',      type=str,     default='old-style',                    help='defines calling style, performaed by jmeter [default=old-style]', choices=('old-style', 'new-style', 'postgres'))
 
@@ -115,7 +115,7 @@ ADDRESS           : str               = args.addr
 CALL_STYLE        : CALL_STYLE_OPT    = CALL_STYLE_OPT.from_str(args.call_style)
 SKIP_VERSION      : bool              = args.skip_version
 API_NAME          : str               = args.api
-LOOP_COUNT        : int               = args.loops
+LOOP_COUNT        : int               = max(-1, args.loops)
 IGNORE_BAD_REQ    : bool              = args.ignore_br
 SUPR_ERRRORS      : bool              = args.supr_err
 SCHEMA            : str               = args.schema
@@ -136,6 +136,7 @@ port = {PORT}
 csv = {CSV_FILENAME}
 call style = {CALL_STYLE}
 threads = {THREADS}
+loop = {LOOP_COUNT}
 api = {API_NAME}
 ''')
 
@@ -174,15 +175,6 @@ if args.list_csv:
 # config
 CSV_MODE : CSV.MODE = AVAILA_CSV[CSV_FILENAME][1]
 CSV_PATH : Path = AVAILA_CSV[CSV_FILENAME][0]
-
-# calculating loop count
-if LOOP_COUNT is None:
-	if CSV.MODE.CL != CSV_MODE:
-		LOOP_COUNT = DEFAULT_LOOP_COUNT
-	else:
-		LOOP_COUNT = INFINITY_LOOP_COUNT
-else:
-	LOOP_COUNT = max(-1, LOOP_COUNT)
 
 # process postgresql conection string to fill jdbc requirements
 # refering to: https://jdbc.postgresql.org/documentation/80/connect.html
@@ -349,9 +341,11 @@ with JMETER_REPORT_OUT_FILE.open('rt', encoding='utf-8') as in_file:
 # generate pretty table
 table = PrettyTable(field_names=['Endpoint', 'Max [ms]', 'Min [ms]', 'Average [ms]', 'Median [ms]'])
 value_extr = lambda x: x.value
-def median_on_sorted(iter):
+def median_on_sorted(iter: List[jmeter_record]):
 	length = len(iter)
-	if length % 2:
+	if length == 1:
+		return iter[0].value
+	elif length % 2:
 		return iter[ int(length / 2) + 1 ].value
 	else:
 		return (iter[ int(length / 2) - 1 ].value + iter[ int(length / 2) ].value) / 2.0
