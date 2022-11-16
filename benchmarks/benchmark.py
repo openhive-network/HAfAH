@@ -143,9 +143,7 @@ api = {API_NAME}
 TEST_DIR_PATH = ROOT_DIR / 'benchmarks'
 PERFORMANCE_DATA_DIR_PATH = TEST_DIR_PATH / 'performance_data' / API_NAME
 CSV_DIR_PATH = PERFORMANCE_DATA_DIR_PATH / 'CSV'
-JMX_DIR_PATH = PERFORMANCE_DATA_DIR_PATH / 'JMX'
-PERF_JMX_CONFIG = JMX_DIR_PATH / 'performance.jmx.in'
-CL_JMX_CONFIG = JMX_DIR_PATH / 'constant_load.jmx.in'
+JMX_PATH = PERFORMANCE_DATA_DIR_PATH / 'config.jmx.in'
 HAFAH_MAIN = ROOT_DIR / 'main.py'
 
 # datadir paths
@@ -176,7 +174,6 @@ if args.list_csv:
 # config
 CSV_MODE : CSV.MODE = AVAILA_CSV[CSV_FILENAME][1]
 CSV_PATH : Path = AVAILA_CSV[CSV_FILENAME][0]
-JMX_PATH = PERF_JMX_CONFIG if CSV_MODE == CSV.MODE.PERF else CL_JMX_CONFIG
 
 # calculating loop count
 if LOOP_COUNT is None:
