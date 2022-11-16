@@ -327,7 +327,7 @@ with JMETER_REPORT_OUT_FILE.open('rt', encoding='utf-8') as in_file:
 			else:
 				handle_error(raw_line)
 				if not IGNORE_BAD_REQ:
-					assert False, f'test failed, check logs in {DATADIR.as_posix()} for more informations '
+					assert False, f'test failed, check logs in {DATADIR.as_posix()} for more informations. Fail detected on line: `{raw_line}`'
 
 		label = line[label_idx] # endpoint
 
