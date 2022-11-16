@@ -1,3 +1,0 @@
-get_account_history|{"id":"gandalf","jsonrpc":"2.0","method":"condenser_api.get_account_history","params":["gandalf",-1,500,"199284866418737180",null]}
-get_account_history|{"id":"blocktrades","jsonrpc":"2.0","method":"condenser_api.get_account_history","params":["blocktrades",-1,500,"199284866418737180",null]}
-get_account_history|{"id":"abit","jsonrpc":"2.0","method":"condenser_api.get_account_history","params":["abit",-1,500,"199284866418737180",null]}
