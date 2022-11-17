@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 
-import html
 import logging
-import os
 import sys
 from argparse import ArgumentParser
 from dataclasses import dataclass
@@ -13,13 +11,13 @@ from re import compile, match
 from shutil import rmtree, copy2 as copy_file
 from subprocess import PIPE, STDOUT, Popen
 from time import sleep
-from typing import Any, Dict, List, Tuple
+from typing import Dict, List
 from urllib.parse import urlencode, urlparse
 
 from prettytable import PrettyTable
 from requests import post
 
-LOG_LEVEL = logging.DEBUG if 'DEBUG' in os.environ else logging.INFO
+LOG_LEVEL = logging.DEBUG if 'DEBUG' in environ else logging.INFO
 LOG_FORMAT = "%(asctime)-15s - %(name)s - %(levelname)s - %(message)s"
 
 def configure_logger():
