@@ -518,14 +518,13 @@
         <hashTree>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SQL_validate" enabled="true">
             <stringProp name="dataSource">psql</stringProp>
-            <stringProp name="query">SELECT COUNT(*) FROM ${PSQL_SCHEMA}.enum_virtual_ops( NULL , 1, 2, 0, 1, true ) 
+            <stringProp name="query">SELECT COUNT(*) FROM ${PSQL_SCHEMA}.enum_virtual_ops_json( NULL , 1, 2, 0, 1, true, false)
 UNION ALL
-SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_transaction( decode(&apos;390464f5178defc780b5d1a97cb308edeb27f983&apos;, &apos;hex&apos;), true )
+SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_transaction_json( decode(&apos;390464f5178defc780b5d1a97cb308edeb27f983&apos;, &apos;hex&apos;), true, false)
 UNION ALL
-SELECT COUNT(*) FROM ${PSQL_SCHEMA}.ah_get_account_history( NULL, &apos;initminer&apos;, 0, 1, true )
+SELECT COUNT(*) FROM ${PSQL_SCHEMA}.ah_get_account_history_json( NULL, NULL, &apos;initminer&apos;, 0, 1, true, false)
 UNION ALL
-SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
-;</stringProp>
+SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block_json( 1092,  true, true, false );</stringProp>
             <stringProp name="queryArguments"></stringProp>
             <stringProp name="queryArgumentsTypes"></stringProp>
             <stringProp name="queryTimeout"></stringProp>
@@ -736,8 +735,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
         <hashTree>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="enum_virtual_ops" enabled="true">
             <stringProp name="dataSource">psql</stringProp>
-            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.enum_virtual_ops( NULL , ${block_no_1}, ${block_no_2}, 0, 1000, true ) ORDER BY _operation_id;
-</stringProp>
+            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.enum_virtual_ops_json( NULL , ${block_no_1}, ${block_no_2}, 0, 1000, true, false )</stringProp>
             <stringProp name="queryArguments"></stringProp>
             <stringProp name="queryArgumentsTypes"></stringProp>
             <stringProp name="queryTimeout"></stringProp>
@@ -946,7 +944,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
         <hashTree>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="get_transaction" enabled="true">
             <stringProp name="dataSource">psql</stringProp>
-            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.get_transaction( decode(&apos;${hash}&apos;, &apos;hex&apos;), true );</stringProp>
+            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.get_transaction_json( decode(&apos;${hash}&apos;, &apos;hex&apos;), true, TRUE );</stringProp>
             <stringProp name="queryArguments"></stringProp>
             <stringProp name="queryArgumentsTypes"></stringProp>
             <stringProp name="queryTimeout"></stringProp>
@@ -1157,7 +1155,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
         <hashTree>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="get_account_history" enabled="true">
             <stringProp name="dataSource">psql</stringProp>
-            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.ah_get_account_history( NULL, &apos;${account_name}&apos;, 9223372036854775807, 1000, true );</stringProp>
+            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.ah_get_account_history_json( NULL, NULL, &apos;${account_name}&apos;, 9223372036854775807, 1000, true, false);</stringProp>
             <stringProp name="queryArguments"></stringProp>
             <stringProp name="queryArgumentsTypes"></stringProp>
             <stringProp name="queryTimeout"></stringProp>
@@ -1359,7 +1357,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
         <hashTree>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="get_ops_in_block" enabled="true">
             <stringProp name="dataSource">psql</stringProp>
-            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.get_ops_in_block( ${block_no_1},  true, true );</stringProp>
+            <stringProp name="query">SELECT * FROM ${PSQL_SCHEMA}.get_ops_in_block_json( ${block_no_1},  true, true, false);</stringProp>
             <stringProp name="queryArguments"></stringProp>
             <stringProp name="queryArgumentsTypes"></stringProp>
             <stringProp name="queryTimeout"></stringProp>
@@ -1406,7 +1404,7 @@ SELECT COUNT(*) FROM ${PSQL_SCHEMA}.get_ops_in_block( 1092,  true, true )
           </elementProp>
           <elementProp name="PSQL_SCHEMA" elementType="Argument">
             <stringProp name="Argument.name">PSQL_SCHEMA</stringProp>
-            <stringProp name="Argument.value">${__P(psql, hafah_python)}</stringProp>
+            <stringProp name="Argument.value">${__P(schema, hafah_python)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="CALL_STYLE" elementType="Argument">
