@@ -929,3 +929,9 @@ condenser_api.get_discussions_by_created|{"id": "condenser_api.get_discussions_b
 bridge.get_account_posts|{"id": "bridge.get_account_posts", "method": "bridge.get_account_posts", "params": {"account": "daltono", "limit": 11, "observer": None, "sort": "blog"}, "jsonrpc": "2.0"}
 condenser_api.get_discussions_by_blog|{"id": "condenser_api.get_discussions_by_blog", "method": "condenser_api.get_discussions_by_blog", "params": [{"limit": 100, "start_author": "", "start_permlink": "", "tag": "actifit"}], "jsonrpc": "2.0"}
 condenser_api.get_discussions_by_blog|{"id": "condenser_api.get_discussions_by_blog", "method": "condenser_api.get_discussions_by_blog", "params": [{"limit": 100, "start_author": "", "start_permlink": "", "tag": "actifit"}], "jsonrpc": "2.0"}
+bridge.get_account_posts|{"jsonrpc":"2.0","id":"0","method":"bridge.get_account_posts", "params":{"sort":"replies", "account": "resteemable", "start_author":"", "start_permlink":"", "limit": 20}}
+bridge.get_account_posts|{"jsonrpc":"2.0","id":"0","method":"bridge.get_account_posts", "params":{"sort":"comments", "account": "minnowsupport", "start_author":"", "start_permlink":"", "limit": 20}}
+bridge.get_ranked_posts|{"jsonrpc":"2.0","id":"0","method":"bridge.get_ranked_posts", "params":{"sort":"created","start_author":"", "start_permlink": "", "observer":"istayglow", "limit": 21}}
+bridge.get_ranked_posts|{"jsonrpc":"2.0","id":"0","method":"bridge.get_ranked_posts", "params":{"sort":"created","start_author":"", "start_permlink": "", "observer":"ledcerv", "limit": 20}}
+bridge.get_account_posts|{"jsonrpc":"2.0","id":"0","method":"bridge.get_account_posts", "params":{"sort":"posts", "account": "tarazkp", "start_author":"", "start_permlink":"", "limit": 21}}
+condenser_api.get_following|{"jsonrpc":"2.0","id":"0","method":"condenser_api.get_following", "params":["gamemusic", null, "blog", 25]}
