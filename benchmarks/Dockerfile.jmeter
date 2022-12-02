@@ -1,0 +1,94 @@
+################################################################
+# this image meets all requirements resources to start jmeter
+FROM alpine as jmeter_dependencies
+
+# install all required dependencies
+RUN apk add git bash openjdk8 python3 py3-pip
+RUN python3 -m pip install --upgrade pip && pip install prettytable requests
+
+# base enviroments
+ENV WDIR /jmeter
+ENV BENCHMARK_DIR ${WDIR}/benchmarks
+
+# set working direcotry in container
+WORKDIR ${WDIR}
+# get required resources from current build dir
+ADD . ${BENCHMARK_DIR}
+
+# configure jmeter
+RUN bash ${BENCHMARK_DIR}/setup_jmeter.bash
+ENV JAVA_ARGS -Xms4g -Xmx4g
+ENV JMETER="${WDIR}/jmeter/apache/bin/jmeter"
+
+# configure file/dir server
+RUN git clone https://github.com/simon-budig/woof.git
+ENV WOOF "${WDIR}/woof/woof"
+
+################################################################
+# this image contains set of rules to start benchmark tests
+FROM jmeter_dependencies AS benchmark_aio
+
+WORKDIR ${BENCHMARK_DIR}
+
+# api to test
+ARG API="account_history_api"
+ENV eAPI ${API}
+
+# input file to use for performance testing
+ARG CSV="perf_60M_heavy.csv"
+ENV eCSV ${CSV}
+
+# amount of threads
+ARG JOBS=10
+ENV eJOBS ${JOBS}
+
+# amount of requests per thread (-1 for infinite)
+ARG LOOPS=500
+ENV eLOOPS ${LOOPS}
+
+# possible options: old-style, new-style, postgres
+ARG CALL_STYLE="old-style"
+ENV eCALL_STYLE ${CALL_STYLE}
+
+# address to test (default is set to default host address in docker)
+ARG ADDRESS='172.17.0.1'
+ENV eADDRESS ${ADDRESS}
+
+# port to perform tests
+ARG PORT=8090
+ENV ePORT ${PORT}
+
+# url to postgres database (required only if CALL_STYLE = postgres)
+ARG POSTGRES_URL="postgresql:///haf_block_log"
+ENV ePOSTGRES_URL ${POSTGRES_URL}
+
+# schema in which functions to test are (required only if CALL_STYLE = postgres)
+ARG POSTGRES_SCHEMA="hive"
+ENV ePOSTGRES_SCHEMA ${POSTGRES_SCHEMA}
+
+# path to root directory of tests_api project (can be set on CI to /build/path/to/hive/tests/tests_api)
+ARG ROOT_DIR="${WDIR}"
+ENV eROOT_DIR ${ROOT_DIR}
+
+# if set, start hosting workdir after benchmarking on specified port (just one time), remember to expose that port
+ARG SERVE_PORT=""
+ENV eSERVE_PORT ${SERVE_PORT}
+
+# verification is setup ready
+RUN python3 benchmark.py -h
+RUN python3 benchmark.py -n ${eAPI} -l
+
+# defines what to do after docker starts
+ENTRYPOINT python3 benchmark.py          \
+    -r $eROOT_DIR                        \
+    -d wdir                              \
+    -j $JMETER                           \
+    -p $ePORT                            \
+    -a $eADDRESS                         \
+    --postgres $ePOSTGRES_URL            \
+    --postgres-schema $ePOSTGRES_SCHEMA  \
+    -n $eAPI                             \
+    -c $eCSV                             \
+    -k $eLOOPS                           \
+    -t $eJOBS                            \
+    --call-style $eCALL_STYLE; bash -c "[[ ! -z ${eSERVE_PORT} ]] && python3 $WOOF -i 0.0.0.0 -p $eSERVE_PORT -Z -c 1 wdir"; echo "exitting"
