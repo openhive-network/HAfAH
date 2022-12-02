@@ -1,0 +1,36 @@
+stages:
+  - benchmark
+
+variables:
+  CI_DEBUG_SERVICES: "true"
+  BENCHMARK_ADDRESS: ""
+  BENCHMARK_PORT: ""
+
+Trigger any benchmark:
+  stage: benchmark
+  image: alpine:3.7
+  rules:
+    - when: manual
+  services:
+    - name: registry.gitlab.syncad.com/hive/tests_api/benchmark_aio:latest
+      alias: benchmark
+      variables:
+        # const:
+        eROOT_DIR: "/builds/hive/tests_api"
+        # required:
+        eADDRESS: $BENCHMARK_ADDRESS
+        ePORT: $BENCHMARK_PORT
+        # optional:
+        eJOBS: 1
+        eLOOPS: 1
+        # eAPI: account_history_api
+        # eCSV: perf_60M_heavy.csv
+        # eJOBS: 10
+        # eLOOPS: 500
+        # eCALL_STYLE: old-style
+        # ePOSTGRES_URL: postgresql:///haf_block_log
+        # ePOSTGRES_SCHEMA: hive
+        # eSERVE_PORT: ""
+  script:
+    - ls -la /
+    - find /builds -type d -maxdepth 4
