@@ -15,26 +15,27 @@ variables:
 
   # Variables required bu Common CI jobs
   CI_COMMON_JOB_VERSION: "aef66465837540ec59f549f24760d6f70399d633"
-  BENCHMARK_IMAGE_TAG: "$CI_COMMON_JOB_VERSION"
-  DOCKER_BUILDER_TAG: "$CI_COMMON_JOB_VERSION"
-  DOCKER_DIND_TAG: "$CI_COMMON_JOB_VERSION"
   IMAGE_REMOVER_TAG: "$CI_COMMON_JOB_VERSION"
   TOX_IMAGE_TAG: "$CI_COMMON_JOB_VERSION"
 
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
+  - project: 'hive/haf'
+    ref: develop
+    file: '/scripts/ci-helpers/prepare_data_image_job.yml'
+  - project: 'hive/hive'
+    ref: develop
+    file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: aef66465837540ec59f549f24760d6f70399d633 # It seems a variable cannot be used here
-    file: '/templates/data_image_jobs.gitlab-ci.yml'
-  - project: 'hive/common-ci-configuration'
-    ref: aef66465837540ec59f549f24760d6f70399d633
     file: '/templates/test_jobs.gitlab-ci.yml'
 
 prepare_hived_image:
   extends: .prepare_hived_data_5m_image
   stage: build
   variables:
-    SUBDIRECTORY: "$CI_PROJECT_DIR/haf/hive"
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
+    REGISTRY_USER: "$HIVED_CI_IMGBUILDER_USER"
     REGISTRY_PASS: $HIVED_CI_IMGBUILDER_PASSWORD
 
   tags:
@@ -45,7 +46,8 @@ prepare_haf_image:
   extends: .prepare_haf_data_5m_image
   stage: build
   variables:
-    SUBDIRECTORY: "$CI_PROJECT_DIR/haf"
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
+    REGISTRY_USER: "$CI_IMG_BUILDER_USER"
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
 
   tags:
