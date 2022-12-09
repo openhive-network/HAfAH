@@ -13,7 +13,7 @@ variables:
   HAF_POSTGRES_URL: postgresql://haf_app_admin@haf-instance:5432/haf_block_log
   BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/tests_api/benchmarks"
 
-  # Variables required bu Common CI jobs
+  # Variables required by Common CI jobs
   CI_COMMON_JOB_VERSION: "aef66465837540ec59f549f24760d6f70399d633"
   IMAGE_REMOVER_TAG: "$CI_COMMON_JOB_VERSION"
   TOX_IMAGE_TAG: "$CI_COMMON_JOB_VERSION"
@@ -21,10 +21,10 @@ variables:
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: develop
+    ref: 9cb65db8cc3e36c8aa9b32b2b9978f7aa22f7de8
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/hive'
-    ref: develop
+    ref: 6d3c2c0f988c87f9ad69f89e1d9710721f0dca19
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: aef66465837540ec59f549f24760d6f70399d633 # It seems a variable cannot be used here
@@ -231,7 +231,7 @@ postgrest_comparison_tests:
       artifacts: true
 
   script:
-      - /usr/bin/python3 $CI_PROJECT_DIR/tests/tests_api/benchmarks/benchmark.py -a app -p $HAFAH_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
+      - /usr/bin/python3 $CI_PROJECT_DIR/tests/tests_api/benchmarks/benchmark.py -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
       - m2u --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
       - jmeter -g wdir/jmeter_${APP_PORT}_output.csv -o wdir/dashboard/
   artifacts:
