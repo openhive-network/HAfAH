@@ -1,10 +1,13 @@
 stages:
   - build
   - test
+  - cleanup
 
 variables:
-  GIT_DEPTH: "1"
+  GIT_DEPTH: 20
+  GIT_SUBMODULE_DEPTH: 20
   GIT_SUBMODULE_STRATEGY: "recursive"
+  CI_DEBUG_SERVICES: "true"
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-5
   BUILDER_IMAGE_TAG: "@sha256:6b557af6a98188c118d442b68437bf1b20d67e3aae5765269c4fe88465c62d60"
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
@@ -20,20 +23,45 @@ include:
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
 
   - project: 'hive/hive'
-    ref: develop
+    ref: ms_setup_ci_using_cache
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
 
+
+
 prepare_hived_image:
-  extends: .prepare_hived_data_5m_image
+  extends: .prepare_hived_image
   stage: build
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
     REGISTRY_USER: "$HIVED_CI_IMGBUILDER_USER"
     REGISTRY_PASS: $HIVED_CI_IMGBUILDER_PASSWORD
-
+    BINARY_CACHE_PATH: "hived-mainnet-binaries"
+    HIVE_NETWORK_TYPE: mainnet
   tags:
     - public-runner-docker
     - hived-for-tests
+
+prepare_hived_data:
+  extends: .prepare_hived_data
+  needs:
+    - job: prepare_hived_image
+      artifacts: true
+  stage: build
+  variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
+    DATA_CACHE: /cache/replay_data_hived_mainnet_${CI_COMMIT_SHA}
+    HIVE_NETWORK_TYPE: mainnet
+    BLOCK_LOG_SOURCE_DIR: /blockchain/block_log_5m
+    CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
+  script:
+    - set -x
+    - env
+    - pushd haf/hive
+    - git log | cat
+    - popd
+    - !reference [.prepare_hived_data, script]
+  tags:
+    - hive-builder-4
 
 prepare_haf_image:
   extends: .prepare_haf_data_5m_image
@@ -218,11 +246,13 @@ new_style_postgrest_patterns_tests:
     FF_NETWORK_PER_BUILD: 1
     PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/test_tools/package"
     HAFAH_IMAGE: ""
+    DATA_CACHE: /cache/replay_data_hived_mainnet_${CI_COMMIT_SHA}
 
   needs:
     - job: prepare_haf_image
       artifacts: true
     - job: prepare_hived_image
+    - job: prepare_hived_data
       artifacts: true
 
   services:
@@ -237,6 +267,11 @@ new_style_postgrest_patterns_tests:
 
     - name: $HIVED_IMAGE_NAME
       alias: hived-instance
+      variables:
+        DATADIR: $DATA_CACHE/datadir
+        SHM_DIR: $DATA_CACHE/shm_dir
+        COPY_DATADIR: 1
+        LOG_FILE: $CI_JOB_NAME-$CI_COMMIT_SHORT_SHA.log
 
   before_script:
     - apk update && apk add bash git ca-certificates curl build-base python3-dev
@@ -264,8 +299,7 @@ new_style_postgrest_patterns_tests:
     when: always
     expire_in: 6 hours
   tags:
-    - public-runner-docker
-    - hived-for-tests
+    - hive-builder-4
 
 python_comparison_tests:
   extends: .comparison_tests
@@ -372,3 +406,19 @@ postgrest_account_history_benchmark_tests:
 
   variables:
     HAFAH_IMAGE: $HAFAH_IMAGE_NAME
+
+cleanup_cache_manual:
+  image: alpine:3.16
+  interruptible: true
+  needs: []
+  stage: cleanup
+  before_script:
+    - apk update && apk add bash curl jq
+  script:
+    - echo "HOSTNAME is ${HOSTNAME} CI_CONCURRENT_ID ${CI_CONCURRENT_ID}"
+    - du -h -d 1 /cache
+    - ls -lath /cache
+    - rm /cache/replay_data_* -rf
+  tags:
+    - hive-builder-4
+  when: manual
