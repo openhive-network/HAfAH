@@ -42,7 +42,7 @@ prepare_hived_image:
     - hived-for-tests
 
 prepare_hived_data:
-  extends: .prepare_hived_data
+  extends: .prepare_hived_data_5m
   needs:
     - job: prepare_hived_image
       artifacts: true
@@ -59,7 +59,7 @@ prepare_hived_data:
     - pushd haf/hive
     - git log | cat
     - popd
-    - !reference [.prepare_hived_data, script]
+    - !reference [.prepare_hived_data_5m, script]
   tags:
     - hive-builder-4
 
