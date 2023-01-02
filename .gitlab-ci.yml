@@ -12,7 +12,7 @@ variables:
   HAFAH_PORT: 6543
   HAF_POSTGRES_URL: postgresql://haf_app_admin@haf-instance:5432/haf_block_log
   CACHED_BENCHMARK_DIR: "$CI_PROJECT_DIR/cached"
-  BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/tests_api/benchmarks"
+  BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/tests/tests_api/benchmarks"
 
 include:
   - project: 'hive/haf'
@@ -154,7 +154,7 @@ prepare_postgrest_hafah_image:
     - "**/from_node.log"
     - "**/ah.log"
     - "**/*.out.json"
-    - "$CI_PROJECT_DIR/haf/hive/tests/tests_api/hived/workdir_*"
+    - "$CI_PROJECT_DIR/tests/tests_api/hived/workdir_*"
     when: always
     expire_in: 6 hours
   tags:
@@ -260,7 +260,7 @@ new_style_postgrest_patterns_tests:
     - "**/from_node.log"
     - "**/ah.log"
     - "**/*.out.json"
-    - "$CI_PROJECT_DIR/haf/hive/tests/tests_api/hived/workdir_*"
+    - "$CI_PROJECT_DIR/tests/tests_api/hived/workdir_*"
     when: always
     expire_in: 6 hours
   tags:
@@ -323,7 +323,7 @@ postgrest_comparison_tests:
       - source $CACHED_BENCHMARK_DIR/jmeter/activate
       - source $CACHED_BENCHMARK_DIR/m2u/activate
       - $JMETER --version
-      - /usr/bin/python3 $CI_PROJECT_DIR/haf/hive/tests/tests_api/benchmarks/benchmark.py -a hafah_app -p $HAFAH_PORT -c perf_5M_heavy.csv -j $JMETER -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
+      - /usr/bin/python3 $CI_PROJECT_DIR/tests/tests_api/benchmarks/benchmark.py -a hafah_app -p $HAFAH_PORT -c perf_5M_heavy.csv -j $JMETER -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
       - $M2U --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
 
   artifacts:
