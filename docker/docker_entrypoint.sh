@@ -1,6 +1,6 @@
 #! /bin/bash
 
-set -euo pipefail
+set -xeuo pipefail
 
 SCRIPTDIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
