@@ -1,6 +1,6 @@
 #! /bin/bash
 
-set -euo pipefail
+set -xeuo pipefail
 
 SCRIPTDIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
@@ -37,7 +37,7 @@ done
 pushd /home/hafah_user/app
 
 # credits: https://stackoverflow.com/a/39028690/11738218
-RETRIES=12
+RETRIES=72
 until psql ${POSTGRES_URL} -c "SELECT 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
   echo "Waiting for postgres server, $((RETRIES--)) remaining attempts..."
   sleep 10
