@@ -225,7 +225,7 @@ BEGIN
       (
         CASE
           WHEN _is_legacy_style THEN hive.get_legacy_style_operation(T.body)::text
-          ELSE T.body
+          ELSE T.body :: text
         END
       ) AS _value,
       T.id::BIGINT _operation_id
@@ -315,7 +315,7 @@ BEGIN
       (
         CASE
           WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body)::text
-          ELSE ho.body
+          ELSE ho.body :: text
         END
       ) AS _value
     FROM hive.operations_view ho
@@ -398,7 +398,7 @@ BEGIN
       T.op_pos _op_in_trx,
       T.virtual_op _virtual_op,
       T._timestamp,
-      T.body _value,
+      T.body :: text _value,
       T.id _operation_id
     FROM
     (
@@ -496,7 +496,7 @@ BEGIN
       (
         CASE
           WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body)::TEXT
-          ELSE ho.body
+          ELSE ho.body :: text
         END
       ) AS _value,
       ds.account_op_seq_no AS _operation_id
