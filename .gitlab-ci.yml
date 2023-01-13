@@ -21,7 +21,7 @@ variables:
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: 7af4ea30c58b23820ab1d5ab7c8cb8b4025f544c
+    ref: dd6a7cc16c8fe32b25177ee43d9a9ada249755b9
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: aef66465837540ec59f549f24760d6f70399d633 # It seems a variable cannot be used here
@@ -46,10 +46,6 @@ prepare_haf_image:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     REGISTRY_USER: "$CI_IMG_BUILDER_USER"
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
-  script:
-    - ls -l $SCRIPTS_PATH
-    - ls -l $SCRIPTS_PATH/ci-helpers
-    - !reference [.prepare_haf_data_5m_image, script]
   tags:
     - public-runner-docker
     - hived-for-tests
