@@ -46,7 +46,10 @@ prepare_haf_image:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     REGISTRY_USER: "$CI_IMG_BUILDER_USER"
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
-
+  script:
+    - ls -l $SCRIPTS_PATH
+    - ls -l $SCRIPTS_PATH/ci-helpers
+    - !reference [.prepare_haf_data_5m_image, script]
   tags:
     - public-runner-docker
     - hived-for-tests
