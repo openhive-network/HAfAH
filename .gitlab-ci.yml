@@ -61,6 +61,7 @@ prepare_haf_image:
   variables:
     HAFAH_IMAGE_NAME: ""
     USE_POSTGREST: 0
+    SOURCE_DIR: $CI_PROJECT_DIR
 
   script:
     - scripts/build_and_push_instance.sh
