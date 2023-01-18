@@ -11,7 +11,7 @@ SCRIPTPATH=$(dirname "$(realpath "$0")")
 
 "$SCRIPTPATH/build_instance.sh"
 
-echo "$HAFAH_CI_IMG_BUILDER_PASSWORD" | docker login -u "$HAFAH_CI_IMG_BUILDER_USER $REGISTRY" --password-stdin
+echo "$HAFAH_CI_IMG_BUILDER_PASSWORD" | docker login -u "$HAFAH_CI_IMG_BUILDER_USER" "$REGISTRY" --password-stdin
 
 docker push "$HAFAH_IMAGE_NAME"
 
