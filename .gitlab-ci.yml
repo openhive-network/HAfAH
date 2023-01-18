@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - publish
 
 variables:
   GIT_DEPTH: "1"
@@ -14,7 +15,7 @@ variables:
   BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/tests_api/benchmarks"
 
   # Variables required by Common CI jobs
-  CI_COMMON_JOB_VERSION: "aef66465837540ec59f549f24760d6f70399d633"
+  CI_COMMON_JOB_VERSION: "0a8b4a4d6098c3e4087a58a61622ffb0817ecb39"
   IMAGE_REMOVER_TAG: "$CI_COMMON_JOB_VERSION"
   TOX_IMAGE_TAG: "$CI_COMMON_JOB_VERSION"
 
@@ -27,7 +28,7 @@ include:
     ref: 6d3c2c0f988c87f9ad69f89e1d9710721f0dca19
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
-    ref: aef66465837540ec59f549f24760d6f70399d633 # It seems a variable cannot be used here
+    ref: 0a8b4a4d6098c3e4087a58a61622ffb0817ecb39 # It seems a variable cannot be used here
     file: '/templates/test_jobs.gitlab-ci.yml'
 
 prepare_hived_image:
@@ -60,12 +61,10 @@ prepare_haf_image:
   variables:
     HAFAH_IMAGE_NAME: ""
     USE_POSTGREST: 0
+    SOURCE_DIR: $CI_PROJECT_DIR
 
   script:
-    - docker build --build-arg USE_POSTGREST=$USE_POSTGREST --build-arg HTTP_PORT=$APP_PORT --build-arg POSTGRES_URL="$HAF_POSTGRES_URL" --target=instance -t $HAFAH_IMAGE_NAME -f Dockerfile .
-    - echo $HAFAH_CI_IMG_BUILDER_PASSWORD | docker login -u $HAFAH_CI_IMG_BUILDER_USER $REGISTRY --password-stdin
-    - docker push $HAFAH_IMAGE_NAME
-    - echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
+    - scripts/build_and_push_instance.sh
 
   artifacts:
     reports:
@@ -276,3 +275,17 @@ postgrest_account_history_benchmark_tests:
 
   variables:
     APP_IMAGE: $HAFAH_IMAGE_NAME
+
+publish_image:
+  stage: publish
+  extends: .docker_image_builder_job
+  needs:
+    - job: prepare_postgrest_hafah_image
+      artifacts: true
+  script:
+    - scripts/publish_images.sh
+  tags:
+    - public-runner-docker  
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_COMMIT_REF_PROTECTED == "true"'
+      when: manual
