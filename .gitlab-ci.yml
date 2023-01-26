@@ -28,10 +28,10 @@ variables:
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: ms_setup_ci_using_cache
+    ref: ms_temp
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/hive'
-    ref: ms_setup_ci_using_cache
+    ref: ms_temporary
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: a32b4a361b94287eadeea1104542e4d1b0e4c362 # It seems a variable cannot be used here
@@ -139,9 +139,9 @@ prepare_postgrest_hafah_image:
       variables:
         # Allow access from any network to eliminate CI IP addressing problems
         PG_ACCESS: "host    haf_block_log    haf_app_admin    0.0.0.0/0    trust"
-        DATADIR: $DATA_CACHE_HAF/datadir
-        SHM_DIR: $DATA_CACHE_HAF/shm_dir
-        LOG_FILE: $CI_JOB_NAME.log
+        PGDATA: "${DATA_CACHE_HAF}/datadir/haf_db_store/pgdata"
+        HAF_DB_STORE: "${DATA_CACHE_HAF}/datadir/haf_db_store"
+        LOG_FILE: $CI_JOB_NAME-$CI_COMMIT_SHORT_SHA.log
       command: ["--replay-blockchain", "--stop-replay-at-block=5000000", "--data-dir=${DATA_CACHE_HAF}/datadir", "--shared-file-dir=${DATA_CACHE_HAF}/shm_dir"]
     - name: $APP_IMAGE
       alias: app
@@ -232,17 +232,15 @@ new_style_postgrest_pattern_tests:
       variables:
         # Allow access from any network to eliminate CI IP addressing problems
         PG_ACCESS: "host    haf_block_log    haf_app_admin    0.0.0.0/0    trust"
-        DATADIR: $DATA_CACHE_HAF/datadir
-        SHM_DIR: $DATA_CACHE_HAF/shm_dir
-        LOG_FILE: $CI_JOB_NAME.log
+        PGDATA: "${DATA_CACHE_HAF}/datadir/haf_db_store/pgdata"
+        HAF_DB_STORE: "${DATA_CACHE_HAF}/datadir/haf_db_store"
+        LOG_FILE: $CI_JOB_NAME-$CI_COMMIT_SHORT_SHA.log
       command: ["--replay-blockchain", "--stop-replay-at-block=5000000", "--data-dir=${DATA_CACHE_HAF}/datadir", "--shared-file-dir=${DATA_CACHE_HAF}/shm_dir"]
     - name: $APP_IMAGE
       alias: app
     - name: $HIVED_IMAGE_NAME
       alias: hived-instance
       variables:
-        DATADIR: $DATA_CACHE_HIVE/datadir
-        SHM_DIR: $DATA_CACHE_HIVE/shm_dir
         LOG_FILE: $CI_JOB_NAME.log
       command: ["--replay-blockchain", "--stop-replay-at-block=5000000", "--data-dir=${DATA_CACHE_HIVE}/datadir", "--shared-file-dir=${DATA_CACHE_HIVE}/shm_dir"]
 
@@ -308,9 +306,9 @@ postgrest_comparison_tests:
       variables:
         # Allow access from any network to eliminate CI IP addressing problems
         PG_ACCESS: "host    haf_block_log    haf_app_admin    0.0.0.0/0    trust"
-        DATADIR: $DATA_CACHE_HAF/datadir
-        SHM_DIR: $DATA_CACHE_HAF/shm_dir
-        LOG_FILE: $CI_JOB_NAME.log
+        PGDATA: "${DATA_CACHE_HAF}/datadir/haf_db_store/pgdata"
+        HAF_DB_STORE: "${DATA_CACHE_HAF}/datadir/haf_db_store"
+        LOG_FILE: $CI_JOB_NAME-$CI_COMMIT_SHORT_SHA.log
       command: ["--replay-blockchain", "--stop-replay-at-block=5000000", "--data-dir=${DATA_CACHE_HAF}/datadir", "--shared-file-dir=${DATA_CACHE_HAF}/shm_dir"]
     - name: $APP_IMAGE
       alias: app
