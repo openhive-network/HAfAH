@@ -11,6 +11,7 @@ ENUM_VIRTUAL_OPS_LIMIT = 150_000
 DEFAULT_INCLUDE_IRREVERSIBLE = False
 DEFAULT_LIMIT = 1_000
 BLOCK_WIDTH_LIMIT = 2 * DEFAULT_LIMIT
+MAX_ACCOUNT_NAME_LENGTH = 16
 
 def convert(val, default_value):
   try:
@@ -75,6 +76,9 @@ def get_transaction(context : None, id : str, include_reversible = None, **kwarg
   return backend(context, kwargs).get_transaction( id, include_reversible )
 
 def get_account_history(context : None, account : str, start = None, limit = None, operation_filter_low = None, operation_filter_high = None, include_reversible = None, **kwargs : dict):
+  if len(account) > MAX_ACCOUNT_NAME_LENGTH:
+    raise CustomInvalidAccountNameTooLong(account)
+
   try:
     start                  = -1            if start is None                  else int(start)
     limit                  = DEFAULT_LIMIT if limit is None                  else int(limit)

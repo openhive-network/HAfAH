@@ -330,6 +330,9 @@ BEGIN
   __account = hafah_backend.parse_argument(_params, _json_type, 'account', 0);
   IF __account IS NOT NULL THEN
     __account = __account::VARCHAR;
+    IF LENGTH(__account) > 16 THEN
+      RETURN hafah_backend.raise_account_name_too_long(__account, _id);
+    END IF;
   ELSE
     RETURN hafah_backend.raise_missing_arg('account', _id);
   END IF;

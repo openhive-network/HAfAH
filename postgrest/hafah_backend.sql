@@ -209,3 +209,24 @@ BEGIN
 END
 $$
 ;
+
+CREATE FUNCTION hafah_backend.raise_account_name_too_long(_account_name TEXT, _id JSON)
+RETURNS TEXT
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_backend.raise_exception(
+    -32003,
+    format(
+      'Assert Exception:in_len <= sizeof(data): Input too large: `%s` (%s) for fixed size string: (16)',
+      _account_name,
+      LENGTH(_account_name)
+    ),
+    NULL,
+    _id,
+    TRUE
+  );
+END
+$$
+;

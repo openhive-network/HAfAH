@@ -31,3 +31,7 @@ class CustomInvalidTransactionHashLength(ApiError):
 class CustomInvalidCharInTransactionHash(ApiError):
   def __init__(self, char):
     super().__init__(f"unspecified:Invalid hex character '{char}'", JSON_RPC_SERVER_ERROR)
+
+class CustomInvalidAccountNameTooLong(ApiError):
+  def __init__(self, incoming_name: str):
+    super().__init__(f"Assert Exception:in_len <= sizeof(data): Input too large: `{incoming_name}` ({len(incoming_name)}) for fixed size string: (16)", JSON_RPC_ERROR_DURING_CALL)
