@@ -556,7 +556,7 @@ BEGIN
             array_prepend(
               pre_result._signature,
               (SELECT ARRAY(
-                SELECT encode(signature, 'hex') FROM hive.transactions_multisig WHERE trx_hash=_trx_hash
+                SELECT encode(signature, 'hex') FROM hive.transactions_multisig_view WHERE trx_hash=_trx_hash
               ))
             )
           )
