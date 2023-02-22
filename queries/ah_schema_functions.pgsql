@@ -466,12 +466,17 @@ BEGIN
   SELECT hafah_python.translate_get_account_history_filter(_filter_low, _filter_high) INTO __resolved_filter;
 
   IF _include_reversible THEN
-    SELECT num from hive.blocks order by num desc limit 1 INTO __upper_block_limit;
-  else
+    SELECT num from hive.blocks_view order by num desc limit 1 INTO __upper_block_limit;
+  ELSE
     SELECT hive.app_get_irreversible_block() INTO __upper_block_limit;
   END IF;
 
-  SELECT INTO __account_id ( select id from hive.accounts where name = _account );
+
+  IF _include_reversible THEN
+    SELECT INTO __account_id ( select id from hive.accounts_view where name = _account );
+  ELSE
+    SELECT INTO __account_id ( select id from hive.accounts where name = _account );
+  END IF;
 
   __use_filter := array_length( __resolved_filter, 1 );
 
