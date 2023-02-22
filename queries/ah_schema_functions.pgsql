@@ -706,7 +706,7 @@ BEGIN
               LIMIT 1
         )
         SELECT o.block_num, o.id
-        FROM hive.operations o
+        FROM hive.operations_view o
         JOIN hive.operation_types ot ON o.op_type_id = ot.id
         WHERE
           ot.is_virtual=TRUE
