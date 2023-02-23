@@ -1,0 +1,25 @@
+[build-system]
+requires = ["poetry-core==1.1.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry]
+name = "hafah_local_tools"
+version = "0.0.0"
+description = "A collective library containing all the tools required by hafah python tests."
+authors = []
+packages = [{ include = "hafah_local_tools" },
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+psycopg2-binary = "2.9.1"
+pytest = "7.3.1"
+pytest-xdist = "3.2.0"
+pytest-repeat = "0.9.1"
+pytest-timeout = "2.0.1"
+sqlalchemy = "1.4.25"
+sqlalchemy-utils = "0.37.9"
+test_tools = { path = "test-tools", develop = true }
+haf_local_tools = { path = "../../../haf/tests/integration/haf-local-tools", develop = true }
