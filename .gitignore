@@ -1,5 +1,6 @@
 __workbook
 .vscode
+.idea
 **/__pycache__
 **/*.pyc
 *.pyc
@@ -24,3 +25,6 @@ build_*/
 
 # virtual enviroments
 *env*
+
+# exclude data generated during test_tools based tests
+**/generated_**
