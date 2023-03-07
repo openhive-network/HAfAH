@@ -5,6 +5,7 @@ stages:
 
 variables:
   GIT_DEPTH: "1"
+  GIT_STRATEGY: clone
   GIT_SUBMODULE_STRATEGY: "recursive"
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-5
   BUILDER_IMAGE_TAG: "@sha256:6b557af6a98188c118d442b68437bf1b20d67e3aae5765269c4fe88465c62d60"
@@ -15,7 +16,7 @@ variables:
   BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/tests_api/benchmarks"
 
   # Variables required by Common CI jobs
-  CI_COMMON_JOB_VERSION: "0a8b4a4d6098c3e4087a58a61622ffb0817ecb39"
+  CI_COMMON_JOB_VERSION: "656cd1670240c01fe05e56ee7158ea04877da555"
   IMAGE_REMOVER_TAG: "$CI_COMMON_JOB_VERSION"
   TOX_IMAGE_TAG: "$CI_COMMON_JOB_VERSION"
 
@@ -28,7 +29,7 @@ include:
     ref: 6d3c2c0f988c87f9ad69f89e1d9710721f0dca19
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
-    ref: 0a8b4a4d6098c3e4087a58a61622ffb0817ecb39 # It seems a variable cannot be used here
+    ref: 656cd1670240c01fe05e56ee7158ea04877da555 # It seems a variable cannot be used here
     file: '/templates/test_jobs.gitlab-ci.yml'
 
 prepare_hived_image:

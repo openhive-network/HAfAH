@@ -87,6 +87,29 @@ host    haf_block_log             haf_app_admin    0.0.0.0/0            trust   
 
 WARNING: above example is only specific for testing and fast-deployment purposes. To ensure a secure deployment, consult PostgreSQL documentation related to authentication methods (e.g. peer-based authentication and its interaction with UNIX accounts).
 
+
+### Instead of running prebuilt images, one can build their own using `build_instance.sh` script provided in the repo
+
+The command to build HAfAH Docker image is as follows:
+
+```bash
+scripts/build_instance.sh \
+  --use-postgrest=1 \
+  --http-port=6543 \
+  --haf-postgres-url=postgresql://haf_app_admin@haf-instance:5432/haf_block_log \
+  --image-name=registry.gitlab.syncad.com/hive/hafah/postgrest-instance:v2 \
+  --source-dir=.
+```
+
+All the options are mandatory. Their meaniing is as follows:
+
+ - `--use-postgrest=0 or 1`     Whether to use Postgrest or Python backend
+ - `--http-port=PORT`           HTTP port to be used by HAfAH
+ - `--haf-postgres-url=URL`     HAF PostgreSQL URL, eg. 'postgresql://haf_app_admin@haf-instance:5432/haf_block_log'
+ - `--image-name=NAME`          Docker image name to be built, eg 'hafah/python-instance:latest'
+ - `--source-dir=DIR`           Source directory
+ - `-?/--help`                  Print help help screen and exit
+
 ## Running load tests
 ---
 
