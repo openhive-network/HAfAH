@@ -41,6 +41,8 @@ prepare_hived_image:
     REGISTRY_PASS: $HIVED_CI_IMGBUILDER_PASSWORD
   before_script:
     - git config --global --add safe.directory "*"
+    - export HIVED_UID="$(id -u)"
+    - echo $HIVED_UID
   tags:
     - public-runner-docker
     - hived-for-tests
@@ -54,6 +56,8 @@ prepare_haf_image:
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
   before_script:
     - git config --global --add safe.directory "*"
+    - export HIVED_UID="$(id -u)"
+    - echo $HIVED_UID
   tags:
     - public-runner-docker
     - hived-for-tests
