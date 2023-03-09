@@ -93,7 +93,7 @@ WARNING: above example is only specific for testing and fast-deployment purposes
 The command to build HAfAH Docker image is as follows:
 
 ```bash
-scripts/build_instance.sh \
+scripts/ci-helpers/build_instance.sh \
   --use-postgrest=1 \
   --http-port=6543 \
   --haf-postgres-url=postgresql://haf_app_admin@haf-instance:5432/haf_block_log \
