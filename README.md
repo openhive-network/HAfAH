@@ -93,22 +93,18 @@ WARNING: above example is only specific for testing and fast-deployment purposes
 The command to build HAfAH Docker image is as follows:
 
 ```bash
-scripts/build_instance.sh \
+scripts/ci-helpers/build_instance.sh "postgrest-latest" . registry.gitlab.syncad.com/hive/hafah \
   --use-postgrest=1 \
-  --http-port=6543 \
-  --haf-postgres-url=postgresql://haf_app_admin@haf-instance:5432/haf_block_log \
-  --image-name=registry.gitlab.syncad.com/hive/hafah/postgrest-instance:v2 \
-  --source-dir=.
+  --http-port=80 \
+  --haf-postgres-url=postgresql://haf_app_admin@haf-instance:5432/haf_block_log
 ```
 
-All the options are mandatory. Their meaniing is as follows:
+Parameters are:
 
- - `--use-postgrest=0 or 1`     Whether to use Postgrest or Python backend
- - `--http-port=PORT`           HTTP port to be used by HAfAH
- - `--haf-postgres-url=URL`     HAF PostgreSQL URL, eg. 'postgresql://haf_app_admin@haf-instance:5432/haf_block_log'
- - `--image-name=NAME`          Docker image name to be built, eg 'hafah/python-instance:latest'
- - `--source-dir=DIR`           Source directory
- - `-?/--help`                  Print help help screen and exit
+ - `--use-postgrest=0 or 1`     Whether to use Postgrest or Python backend (default: 1)
+ - `--http-port=PORT`           HTTP port to be used by HAfAH (default: 6543)
+ - `--haf-postgres-url=URL`     HAF PostgreSQL URL, (default: postgresql://haf_app_admin@172.17.0.1:5432/haf_block_log)
+ - `-?/--help`                  Print help screen and exit
 
 ## Running load tests
 ---

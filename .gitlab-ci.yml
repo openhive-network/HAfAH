@@ -37,6 +37,9 @@ include:
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: 4dfc284c17837e642ea239e4e59764222e45d23a # It seems a variable cannot be used here
+    file: '/templates/docker_image_jobs.gitlab-ci.yml'
+  - project: 'hive/common-ci-configuration'
+    ref: 4dfc284c17837e642ea239e4e59764222e45d23a # It seems a variable cannot be used here
     file: '/templates/test_jobs.gitlab-ci.yml'
 
 prepare_hived_image:
@@ -46,7 +49,6 @@ prepare_hived_image:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
     REGISTRY_USER: "$HIVED_CI_IMGBUILDER_USER"
     REGISTRY_PASS: $HIVED_CI_IMGBUILDER_PASSWORD
-
   tags:
     - public-runner-docker
     - hived-for-tests
@@ -72,7 +74,6 @@ prepare_haf_image:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     REGISTRY_USER: "$CI_IMG_BUILDER_USER"
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
-
   tags:
     - public-runner-docker
     - hived-for-tests
@@ -95,12 +96,17 @@ prepare_haf_data:
   extends: .docker_image_builder_job
   stage: build
   variables:
-    HAFAH_IMAGE_NAME: ""
+    HAFAH_IMAGE_TAG: ""
+    HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE/instance:instance-$HAFAH_IMAGE_TAG
     USE_POSTGREST: 0
     SOURCE_DIR: $CI_PROJECT_DIR
 
   script:
-    - scripts/build_and_push_instance.sh
+    - |
+      scripts/ci-helpers/build_instance.sh
+      docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
+      docker push "$HAFAH_IMAGE_NAME"
+      echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
 
   artifacts:
     reports:
@@ -114,13 +120,13 @@ prepare_haf_data:
 prepare_python_hafah_image:
   extends: .prepare_hafah_image
   variables:
-    HAFAH_IMAGE_NAME: $REGISTRY/python-instance:$CI_COMMIT_SHORT_SHA
+    HAFAH_IMAGE_TAG: python-$CI_COMMIT_SHORT_SHA
     USE_POSTGREST: 0
 
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
   variables:
-    HAFAH_IMAGE_NAME: $REGISTRY/postgrest-instance:$CI_COMMIT_SHORT_SHA
+    HAFAH_IMAGE_TAG: postgrest-$CI_COMMIT_SHORT_SHA
     USE_POSTGREST: 1
 
 .pattern_tests:
@@ -324,16 +330,10 @@ cleanup_hived_cache_manual:
   tags:
     - hive-builder-4
 
-publish_image:
+build_and_publish_image:
   stage: publish
-  extends: .docker_image_builder_job
-  needs:
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+  extends: .publish_docker_image_template
   script:
-    - scripts/publish_images.sh
+    - scripts/ci-helpers/build_and_publish_instance.sh
   tags:
-    - public-runner-docker  
-  rules:
-    - if: '$CI_COMMIT_TAG && $CI_COMMIT_REF_PROTECTED == "true"'
-      when: manual
+    - public-runner-docker
