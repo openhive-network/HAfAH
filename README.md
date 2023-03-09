@@ -101,7 +101,7 @@ scripts/ci-helpers/build_instance.sh \
   --source-dir=.
 ```
 
-All the options are mandatory. Their meaniing is as follows:
+All the options are mandatory. Their meaning is as described below:
 
  - `--use-postgrest=0 or 1`     Whether to use Postgrest or Python backend
  - `--http-port=PORT`           HTTP port to be used by HAfAH

@@ -30,6 +30,9 @@ include:
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: 656cd1670240c01fe05e56ee7158ea04877da555 # It seems a variable cannot be used here
+    file: '/templates/docker_image_jobs.gitlab-ci.yml'
+  - project: 'hive/common-ci-configuration'
+    ref: 656cd1670240c01fe05e56ee7158ea04877da555 # It seems a variable cannot be used here
     file: '/templates/test_jobs.gitlab-ci.yml'
 
 prepare_hived_image:
@@ -279,18 +282,10 @@ postgrest_account_history_benchmark_tests:
   variables:
     APP_IMAGE: $HAFAH_IMAGE_NAME
 
-publish_image:
+build_and_publish_image:
   stage: publish
-  extends: .docker_image_builder_job
-  needs:
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+  extends: .publish_docker_image_template
   script:
-    - sed -i 85's/.*/# &/' scripts/ci-helpers/build_and_publish_instance.sh
-    - sed -i 97's/.*/# &/' scripts/ci-helpers/build_and_publish_instance.sh
     - scripts/ci-helpers/build_and_publish_instance.sh
   tags:
-    - public-runner-docker  
-  rules:
-    - if: '$CI_COMMIT_TAG && $CI_COMMIT_REF_PROTECTED == "true"'
-      when: manual
+    - public-runner-docker
