@@ -39,10 +39,6 @@ prepare_hived_image:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
     REGISTRY_USER: "$HIVED_CI_IMGBUILDER_USER"
     REGISTRY_PASS: $HIVED_CI_IMGBUILDER_PASSWORD
-  before_script:
-    - git config --global --add safe.directory "*"
-    - export HIVED_UID="$(id -u)"
-    - echo $HIVED_UID
   tags:
     - public-runner-docker
     - hived-for-tests
@@ -54,10 +50,6 @@ prepare_haf_image:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     REGISTRY_USER: "$CI_IMG_BUILDER_USER"
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
-  before_script:
-    - git config --global --add safe.directory "*"
-    - export HIVED_UID="$(id -u)"
-    - echo $HIVED_UID
   tags:
     - public-runner-docker
     - hived-for-tests
