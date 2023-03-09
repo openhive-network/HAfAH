@@ -65,7 +65,11 @@ prepare_haf_image:
     SOURCE_DIR: $CI_PROJECT_DIR
 
   script:
-    - scripts/build_and_push_instance.sh
+    - |
+      scripts/build_instance.sh
+      docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
+      docker push "$HAFAH_IMAGE_NAME"
+      echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
 
   artifacts:
     reports:
