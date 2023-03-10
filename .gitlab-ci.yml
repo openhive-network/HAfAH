@@ -1,10 +1,12 @@
 stages:
   - build
   - test
+  - cleanup
 
 variables:
-  GIT_DEPTH: "1"
+  GIT_DEPTH: 20
   GIT_SUBMODULE_STRATEGY: "recursive"
+  CI_DEBUG_SERVICES: "true"
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-5
   BUILDER_IMAGE_TAG: "@sha256:6b557af6a98188c118d442b68437bf1b20d67e3aae5765269c4fe88465c62d60"
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
@@ -18,20 +20,25 @@ variables:
   IMAGE_REMOVER_TAG: "$CI_COMMON_JOB_VERSION"
   TOX_IMAGE_TAG: "$CI_COMMON_JOB_VERSION"
 
+  # Variables specific to runner (there is single runner cache and there is 5m block_log available)
+  DATA_CACHE_HIVE: /cache/replay_data_hafah_hived_${CI_PIPELINE_ID}
+  DATA_CACHE_HAF: /cache/replay_data_hafah_haf_${CI_PIPELINE_ID}
+  BLOCK_LOG_SOURCE_DIR_5M: /blockchain/block_log_5m
+
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: 9cb65db8cc3e36c8aa9b32b2b9978f7aa22f7de8
+    ref: 677bd5b63ec807f279faf99a228cf743b39e6e9c
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/hive'
-    ref: 6d3c2c0f988c87f9ad69f89e1d9710721f0dca19
+    ref: 5c3c086b285cab729e3e46dcec8bc0246d2d8f82
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
-    ref: aef66465837540ec59f549f24760d6f70399d633 # It seems a variable cannot be used here
+    ref: 4dfc284c17837e642ea239e4e59764222e45d23a # It seems a variable cannot be used here
     file: '/templates/test_jobs.gitlab-ci.yml'
 
 prepare_hived_image:
-  extends: .prepare_hived_data_5m_image
+  extends: .prepare_hived_image
   stage: build
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
@@ -42,8 +49,22 @@ prepare_hived_image:
     - public-runner-docker
     - hived-for-tests
 
+prepare_hived_data:
+  extends: .prepare_hived_data_5m
+  needs:
+    - job: prepare_hived_image
+      artifacts: true
+  stage: build
+  variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
+    DATA_CACHE: "$DATA_CACHE_HIVE"
+    BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
+    CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
+  tags:
+    - hive-builder-4
+
 prepare_haf_image:
-  extends: .prepare_haf_data_5m_image
+  extends: .prepare_haf_image
   stage: build
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
@@ -53,6 +74,20 @@ prepare_haf_image:
   tags:
     - public-runner-docker
     - hived-for-tests
+
+prepare_haf_data:
+  extends: .prepare_haf_data_5m
+  needs:
+    - job: prepare_haf_image
+      artifacts: true
+  stage: build
+  variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
+    DATA_CACHE: $DATA_CACHE_HAF
+    BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
+    CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
+  tags:
+    - hive-builder-4
 
 .prepare_hafah_image:
   extends: .docker_image_builder_job
@@ -97,9 +132,10 @@ prepare_postgrest_hafah_image:
     APP_IMAGE: ""
     TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
     DIRECT_HAFAH_CALLS: 0
+    HIVED_UID: $HIVED_UID
 
   needs:
-    - job: prepare_haf_image
+    - job: prepare_haf_data
       artifacts: true
 
   before_script:
@@ -122,9 +158,9 @@ prepare_postgrest_hafah_image:
     - "tests/api_tests/pattern_tests/results.xml"
     reports:
       junit: haf/hive/tests/api_tests/pattern_tests/results.xml
+  resource_group: ${CI_COMMIT_SHA}
   tags:
-    - public-runner-docker
-    - hived-for-tests
+    - hive-builder-4
 
 python_pattern_tests:
   extends: .pattern_tests
@@ -168,11 +204,12 @@ new_style_postgrest_pattern_tests:
   variables:
     FF_NETWORK_PER_BUILD: 1
     PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
+    HIVED_UID: $HIVED_UID
 
   needs:
-    - job: prepare_haf_image
+    - job: prepare_haf_data
       artifacts: true
-    - job: prepare_hived_image
+    - job: prepare_hived_data
       artifacts: true
 
   script:
@@ -191,10 +228,10 @@ new_style_postgrest_pattern_tests:
     - "comparsion_tests.xml"
     reports:
       junit:
-        - comparsion_tests.xml 
+        - comparsion_tests.xml
+  resource_group: ${CI_COMMIT_SHA}
   tags:
-    - public-runner-docker
-    - hived-for-tests
+    - hive-builder-4
 
 python_comparison_tests:
   extends: .comparison_tests
@@ -226,8 +263,9 @@ postgrest_comparison_tests:
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
     PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
     APP_IMAGE: ""
+    HIVED_UID: $HIVED_UID
   needs:
-    - job: prepare_haf_image
+    - job: prepare_haf_data
       artifacts: true
 
   script:
@@ -239,9 +277,9 @@ postgrest_comparison_tests:
       - wdir/
     reports:
       junit: wdir/jmeter_junit_report.xml
+  resource_group: ${CI_COMMIT_SHA}
   tags:
-    - public-runner-docker
-    - hived-for-tests
+    - hive-builder-4
 
 python_account_history_benchmark_tests:
   extends: .benchmark_tests
@@ -276,3 +314,12 @@ postgrest_account_history_benchmark_tests:
 
   variables:
     APP_IMAGE: $HAFAH_IMAGE_NAME
+
+cleanup_hived_cache_manual:
+  extends: .cleanup_cache_manual
+  stage: cleanup
+  variables:
+    CLEANUP_PATH_PATTERN: "/cache/replay_data_hafah_*"
+  resource_group: ${CI_COMMIT_SHA}
+  tags:
+    - hive-builder-4
