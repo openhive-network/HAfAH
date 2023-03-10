@@ -143,7 +143,6 @@ prepare_postgrest_hafah_image:
     - echo "HAF image name $HAF_IMAGE_NAME"
 
   script:
-    - curl -I haf-instance:8090 || (echo "error connecting to service haf-instance" && false)
     - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt
     # run pattern tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests
@@ -214,8 +213,6 @@ new_style_postgrest_pattern_tests:
       artifacts: true
 
   script:
-    - curl -I hived-instance:8090 || (echo "error connecting to service hived-instance" && false)
-    - curl -I haf-instance:8090 || (echo "error connecting to service haf-instance" && false)
     - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt "$CI_PROJECT_DIR/tests/test-tools"
       # run comparsion tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
@@ -272,7 +269,6 @@ postgrest_comparison_tests:
       artifacts: true
 
   script:
-      - wget haf-instance:8090 --spider -O - || (echo "error connecting to service haf-instance" && false)
       - /usr/bin/python3 $CI_PROJECT_DIR/tests/tests_api/benchmarks/benchmark.py -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
       - m2u --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
       - jmeter -g wdir/jmeter_${APP_PORT}_output.csv -o wdir/dashboard/
