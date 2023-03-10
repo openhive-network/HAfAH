@@ -133,6 +133,19 @@ prepare_postgrest_hafah_image:
     TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
     DIRECT_HAFAH_CALLS: 0
     HIVED_UID: $HIVED_UID
+  services:
+    - name: $HAF_IMAGE_NAME
+      alias: haf-instance
+      variables:
+        # Allow access from any network to eliminate CI IP addressing problems
+        PG_ACCESS: "host    haf_block_log    haf_app_admin    0.0.0.0/0    trust"
+        DATADIR: ${DATA_CACHE_HAF}/datadir
+        SHM_DIR: ${DATA_CACHE_HAF}/shm_dir
+        LOG_FILE: $CI_JOB_NAME.log
+      entrypoint: ["/usr/bin/bash"]
+      command: ["-c", "sudo cp $DATADIR/* /home/hived/datadir -rp ; sudo cp $SHM_DIR/* /home/hived/shm_dir -rp ; DATADIR=/home/hived/datadir SHM_DIR=/home/hived/shm_dir exec /home/haf_admin/docker_entrypoint.sh --replay-blockchain --stop-replay-at-block=5000000"]
+    - name: $APP_IMAGE
+      alias: app
 
   needs:
     - job: prepare_haf_data
@@ -158,7 +171,6 @@ prepare_postgrest_hafah_image:
     - "tests/api_tests/pattern_tests/results.xml"
     reports:
       junit: haf/hive/tests/api_tests/pattern_tests/results.xml
-  resource_group: ${CI_COMMIT_SHA}
   tags:
     - hive-builder-4
 
@@ -205,6 +217,25 @@ new_style_postgrest_pattern_tests:
     FF_NETWORK_PER_BUILD: 1
     PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
     HIVED_UID: $HIVED_UID
+  services:
+    - name: $HAF_IMAGE_NAME
+      alias: haf-instance
+      variables:
+        # Allow access from any network to eliminate CI IP addressing problems
+        PG_ACCESS: "host    haf_block_log    haf_app_admin    0.0.0.0/0    trust"
+        DATADIR: ${DATA_CACHE_HAF}/datadir
+        SHM_DIR: ${DATA_CACHE_HAF}/shm_dir
+        LOG_FILE: $CI_JOB_NAME.log
+      entrypoint: ["/usr/bin/bash"]
+      command: ["-c", "sudo cp $DATADIR/* /home/hived/datadir -rp ; sudo cp $SHM_DIR/* /home/hived/shm_dir -rp ; DATADIR=/home/hived/datadir SHM_DIR=/home/hived/shm_dir exec /home/haf_admin/docker_entrypoint.sh --replay-blockchain --stop-replay-at-block=5000000"]
+    - name: $HIVED_IMAGE_NAME
+      alias: hived-instance
+      variables:
+        DATADIR: ${DATA_CACHE_HIVE}/datadir
+        SHM_DIR: ${DATA_CACHE_HIVE}/shm_dir
+        LOG_FILE: $CI_JOB_NAME.log
+      entrypoint: ["/usr/bin/bash"]
+      command: ["-c", "sudo cp $DATADIR/* /home/hived/datadir -rp ; sudo cp $SHM_DIR/* /home/hived/shm_dir -rp ; DATADIR=/home/hived/datadir SHM_DIR=/home/hived/shm_dir exec /home/haf_admin/docker_entrypoint.sh --replay-blockchain --stop-replay-at-block=5000000"]
 
   needs:
     - job: prepare_haf_data
@@ -229,7 +260,6 @@ new_style_postgrest_pattern_tests:
     reports:
       junit:
         - comparsion_tests.xml
-  resource_group: ${CI_COMMIT_SHA}
   tags:
     - hive-builder-4
 
@@ -264,6 +294,19 @@ postgrest_comparison_tests:
     PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
     APP_IMAGE: ""
     HIVED_UID: $HIVED_UID
+  services:
+    - name: $HAF_IMAGE_NAME
+      alias: haf-instance
+      variables:
+        # Allow access from any network to eliminate CI IP addressing problems
+        PG_ACCESS: "host    haf_block_log    haf_app_admin    0.0.0.0/0    trust"
+        DATADIR: ${DATA_CACHE_HAF}/datadir
+        SHM_DIR: ${DATA_CACHE_HAF}/shm_dir
+        LOG_FILE: $CI_JOB_NAME.log
+      entrypoint: ["/usr/bin/bash"]
+      command: ["-c", "sudo cp $DATADIR/* /home/hived/datadir -rp ; sudo cp $SHM_DIR/* /home/hived/shm_dir -rp ; DATADIR=/home/hived/datadir SHM_DIR=/home/hived/shm_dir exec /home/haf_admin/docker_entrypoint.sh --replay-blockchain --stop-replay-at-block=5000000"]
+    - name: $APP_IMAGE
+      alias: app
   needs:
     - job: prepare_haf_data
       artifacts: true
@@ -277,7 +320,6 @@ postgrest_comparison_tests:
       - wdir/
     reports:
       junit: wdir/jmeter_junit_report.xml
-  resource_group: ${CI_COMMIT_SHA}
   tags:
     - hive-builder-4
 
@@ -320,6 +362,5 @@ cleanup_hived_cache_manual:
   stage: cleanup
   variables:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_hafah_*"
-  resource_group: ${CI_COMMIT_SHA}
   tags:
     - hive-builder-4
