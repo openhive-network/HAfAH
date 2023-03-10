@@ -61,7 +61,8 @@ prepare_haf_image:
   extends: .docker_image_builder_job
   stage: build
   variables:
-    HAFAH_IMAGE_NAME: ""
+    HAFAH_IMAGE_TAG: ""
+    HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE/instance:instance-$HAFAH_IMAGE_TAG
     USE_POSTGREST: 0
     SOURCE_DIR: $CI_PROJECT_DIR
 
@@ -84,13 +85,13 @@ prepare_haf_image:
 prepare_python_hafah_image:
   extends: .prepare_hafah_image
   variables:
-    HAFAH_IMAGE_NAME: $REGISTRY/python-instance:$CI_COMMIT_SHORT_SHA
+    HAFAH_IMAGE_TAG: python-$CI_COMMIT_SHORT_SHA
     USE_POSTGREST: 0
 
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
   variables:
-    HAFAH_IMAGE_NAME: $REGISTRY/postgrest-instance:$CI_COMMIT_SHORT_SHA
+    HAFAH_IMAGE_TAG: postgrest-$CI_COMMIT_SHORT_SHA
     USE_POSTGREST: 1
 
 .pattern_tests:

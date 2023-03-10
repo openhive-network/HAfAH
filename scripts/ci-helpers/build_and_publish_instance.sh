@@ -85,12 +85,7 @@ docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
 #docker login -u "$DOCKER_HUB_USER" -p "$DOCKER_HUB_PASSWORD"
 
 echo "Building an instance image in the source directory $SRC_DIR"
-"$SRC_DIR/scripts/ci-helpers/build_instance.sh" \
-  --use-postgrest=1 \
-  --http-port=6543 \
-  --haf-postgres-url=postgresql://haf_app_admin@localhost:5432/haf_block_log \
-  --image-name="$CI_REGISTRY_IMAGE/instance:instance-$CI_COMMIT_TAG" \
-  --source-dir="$SRC_DIR"
+"$SRC_DIR/scripts/ci-helpers/build_instance.sh" "$CI_COMMIT_TAG" "$SRC_DIR" "$CI_REGISTRY_IMAGE"
 
 echo "Tagging the image built in the previous step as hiveio/$CI_PROJECT_NAME:$CI_COMMIT_TAG"
 docker tag "$CI_REGISTRY_IMAGE/instance:instance-$CI_COMMIT_TAG" "hiveio/$CI_PROJECT_NAME:$CI_COMMIT_TAG"
