@@ -137,6 +137,7 @@ prepare_postgrest_hafah_image:
   stage: test
   variables:
     FF_NETWORK_PER_BUILD: 1
+    APP_PORT: 6666
     PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools/package"
     APP_IMAGE: ""
     TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
@@ -158,6 +159,7 @@ prepare_postgrest_hafah_image:
     - ./run_tests.sh $ENDPOINT `git rev-parse --show-toplevel` "${TEST_SUITE}" ${DIRECT_HAFAH_CALLS}
 
   artifacts:
+    when: always
     paths:
     - "$CI_JOB_NAME"
     - "**/from_node.log"
@@ -166,7 +168,7 @@ prepare_postgrest_hafah_image:
     - "tests/tests_api/hived/workdir_*"
     - "tests/api_tests/pattern_tests/results.xml"
     reports:
-      junit: haf/hive/tests/api_tests/pattern_tests/results.xml
+      junit: "$CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests/results.xml"
   resource_group: ${CI_COMMIT_SHA}
   tags:
     - hive-builder-4
