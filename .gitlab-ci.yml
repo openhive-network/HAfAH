@@ -352,6 +352,7 @@ testnet_binaries:
   artifacts:
     paths:
     - "$CI_JOB_NAME"
+    - "$HAFAH_BUILD_DIR"
     expire_in: 6 hours
   interruptible: true
   tags:
