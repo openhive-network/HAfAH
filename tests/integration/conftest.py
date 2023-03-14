@@ -78,7 +78,7 @@ def database() -> Callable[[], Session]:
 
 @pytest.fixture()
 def db_session(database) -> Session:
-    return database('postgresql:///haf_block_log')
+    return database('postgresql://hafah_admin@/haf_block_log')
 
 
 @pytest.fixture()
