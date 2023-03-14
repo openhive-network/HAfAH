@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-export DEFAULT_POSTGRES_PORT=3000
+export DEFAULT_POSTGREST_PORT=3000
 export DEFAULT_PGRST_DB_URL="postgresql://haf_app_admin@/haf_block_log"
 export PGRST_DB_URI=${3:-$DEFAULT_PGRST_DB_URL}
 echo "using postgres url: $PGRST_DB_URI"
@@ -28,7 +28,7 @@ setup_postgrest() {
 
 print_help() {
     echo
-    echo "Usage: ./run.sh (start|setup|setup-postgrest|help) [port = $DEFAULT_POSTGRES_PORT] [postgres_url = $DEFAULT_PGRST_DB_URL]"
+    echo "Usage: ./run.sh (start|setup|setup-postgrest|help) [port = $DEFAULT_POSTGREST_PORT] [postgres_url = $DEFAULT_PGRST_DB_URL]"
     echo "start - starts postgrest"
     echo "setup - setups database, by setting up roles and executing required schemas"
     echo "setup-postgrest - setups postgrest, by downloading and installing postgrest binary"
@@ -38,7 +38,7 @@ print_help() {
 SCRIPTS_DIR=$PWD/scripts
 
 if [ "$1" = "start" ]; then
-    start_webserver ${2:-$DEFAULT_POSTGRES_PORT}
+    start_webserver ${2:-$DEFAULT_POSTGREST_PORT}
 elif [ "$1" =  "setup" ]; then
     setup
 elif [ "$1" =  "setup-postgrest" ]; then
