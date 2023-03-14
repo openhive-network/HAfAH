@@ -64,7 +64,7 @@ def database() -> Callable[[], Session]:
             connection.execute(statement=sqlalchemy.text(get_hafah_backend_sql_content()))
             connection.execute(statement=sqlalchemy.text(get_hafah_endpoints_sql_content()))
             connection.execute("COMMIT;")
-            connection.execute('SET ROLE hived_group')
+            connection.execute('SET ROLE hafah_owner')
 
         Session = sessionmaker(bind=engine)
         session = Session()
@@ -78,7 +78,7 @@ def database() -> Callable[[], Session]:
 
 @pytest.fixture()
 def db_session(database) -> Session:
-    return database('postgresql://hafah_owner@/haf_block_log')
+    return database('postgresql:///haf_block_log')
 
 
 @pytest.fixture()
