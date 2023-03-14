@@ -59,12 +59,12 @@ def database() -> Callable[[], Session]:
         with engine.connect() as connection:
             db_name = url.split("/")[-1]
             connection.execute('CREATE EXTENSION hive_fork_manager CASCADE;')
-            connection.execute(f'GRANT ALL PRIVILEGES ON DATABASE {db_name} TO hafah_owner;')
+            connection.execute(f'GRANT ALL PRIVILEGES ON DATABASE {db_name} TO current_user;')
             connection.execute(statement=sqlalchemy.text(get_ah_schema_functions_pgsql_content()))
             connection.execute(statement=sqlalchemy.text(get_hafah_backend_sql_content()))
             connection.execute(statement=sqlalchemy.text(get_hafah_endpoints_sql_content()))
             connection.execute("COMMIT;")
-            connection.execute('SET ROLE hafah_owner')
+            # connection.execute('SET ROLE hafah_owner')
 
         Session = sessionmaker(bind=engine)
         session = Session()
