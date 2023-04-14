@@ -444,6 +444,7 @@ DECLARE
   __account_id INT;
   __upper_block_limit INT;
   __use_filter INT;
+  __select_limit INT;
 BEGIN
 
   PERFORM hafah_python.validate_limit( _limit, 1000 );
@@ -480,6 +481,16 @@ BEGIN
 
   __use_filter := array_length( __resolved_filter, 1 );
 
+  -- search only last 3000 rows - arbitary number
+  SELECT INTO __select_limit (SELECT account_op_seq_no - 3000
+    FROM hive.account_operations_view
+    WHERE account_id = __account_id
+    order by account_op_seq_no desc 
+    limit 1);
+  IF __select_limit <= 0 THEN
+    __select_limit = 0;
+  END IF;
+
   RETURN QUERY
     SELECT -- hafah_python.ah_get_account_history
       (
@@ -509,7 +520,7 @@ BEGIN
     (
       SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
       FROM hive.account_operations_view hao
-      WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit AND (__use_filter IS NULL OR hao.op_type_id=ANY(__resolved_filter))
+      WHERE hao.account_id = __account_id AND hao.account_op_seq_no >= __select_limit AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit AND (__use_filter IS NULL OR hao.op_type_id=ANY(__resolved_filter))
       ORDER BY hao.account_op_seq_no DESC
       LIMIT _limit
     ) ds
