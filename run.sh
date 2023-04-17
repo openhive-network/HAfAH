@@ -3,9 +3,64 @@
 set -e
 set -o pipefail
 
-export POSTGRES_USER=hafah_user
+
+
+# Script reponsible for execution of all actions required to finish configuration of the database holding a HAF database to work correctly with HAfAH.
+
+print_help () {
+    echo "Usage: $0 [OPTION[=VALUE]]..."
+    echo
+    echo "Allows to setup a database already filled by HAF instance, to work with haf_be application."
+    echo "OPTIONS:"
+    echo "  --c=VALUE            Allows to specify a script command"
+    echo "  --host=VALUE         Allows to specify a PostgreSQL host location (defaults to /var/run/postgresql)"
+    echo "  --port=NUMBER        Allows to specify a PostgreSQL operating port (defaults to 5432)"
+    echo "  --user=VALUE         Allows to specify a PostgreSQL user (defaults to haf_admin)"
+    echo "  --help               Display this help screen and exit"
+    echo
+}
+
+POSTGRES_HOST="/var/run/postgresql"
+POSTGRES_PORT=5432
+POSTGRES_USER="haf_admin"
+COMMAND=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --host=*)
+        POSTGRES_HOST="${1#*=}"
+        ;;
+    --port=*)
+        POSTGRES_PORT="${1#*=}"
+        ;;
+    --user=*)
+        POSTGRES_USER="${1#*=}"
+        ;;
+    --c=*)
+        COMMAND="${1#*=}"
+        ;;
+    --help)
+        print_help
+        exit 0
+        ;;
+    -*)
+        echo "ERROR: '$1' is not a valid option"
+        echo
+        print_help
+        exit 1
+        ;;
+    *)
+        echo "ERROR: '$1' is not a valid argument"
+        echo
+        print_help
+        exit 2
+        ;;
+    esac
+    shift
+done
+
 export DEFAULT_POSTGREST_PORT=3000
-export DEFAULT_PGRST_DB_URL="postgresql://haf_app_admin@/haf_block_log"
+export DEFAULT_PGRST_DB_URL="postgresql://$POSTGRES_USER@$POSTGRES_HOST:$POSTGRES_PORT/haf_block_log"
 export PGRST_DB_URI=${3:-$DEFAULT_PGRST_DB_URL}
 echo "using postgres url: $PGRST_DB_URI"
 
@@ -39,13 +94,13 @@ print_help() {
 
 SCRIPTS_DIR=$PWD/scripts
 
-if [ "$1" = "start" ]; then
+if [ "$COMMAND" = "start" ]; then
     start_webserver ${2:-$DEFAULT_POSTGREST_PORT}
-elif [ "$1" =  "setup" ]; then
+elif [ "$COMMAND" =  "setup" ]; then
     setup
-elif [ "$1" =  "setup-postgrest" ]; then
+elif [ "$COMMAND" =  "setup-postgrest" ]; then
     setup_postgrest
-elif [ "$1" = "help" ]; then
+elif [ "$COMMAND" = "help" ]; then
     print_help
 else
     echo "job not found"
