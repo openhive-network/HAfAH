@@ -3,6 +3,7 @@
 set -e
 set -o pipefail
 
+export POSTGRES_USER=hafah_user
 export DEFAULT_POSTGREST_PORT=3000
 export DEFAULT_PGRST_DB_URL="postgresql://haf_app_admin@/haf_block_log"
 export PGRST_DB_URI=${3:-$DEFAULT_PGRST_DB_URL}
@@ -10,6 +11,7 @@ echo "using postgres url: $PGRST_DB_URI"
 
 setup() {
     bash $SCRIPTS_DIR/setup_postgres.sh --postgres-url=$PGRST_DB_URI
+    bash $SCRIPTS_DIR/generate_version_sql.bash $PWD "sudo --user=$POSTGRES_USER"
     bash $SCRIPTS_DIR/setup_db.sh --postgres-url=$PGRST_DB_URI
 }
 
