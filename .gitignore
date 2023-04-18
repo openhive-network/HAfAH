@@ -5,6 +5,7 @@ __workbook
 *.pyc
 tests/data/records.sql
 ah/api/tmp.py
+set_version_in_sql.pgsql
 
 # Build directories
 build/
