@@ -19,6 +19,8 @@ variables:
 
   # Variables required by Common CI jobs
   TOX_IMAGE_TAG: "59834935f116dce106fdf9fb98e44a6f646f5eba"
+  PYTEST_NUMBER_OF_PROCESSES: 8
+  HAFAH_BUILD_DIR: "$CI_PROJECT_DIR/build"
 
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
   DATA_CACHE_HIVE_TEMPLATE: /cache/replay_data_hafah_hived
@@ -128,7 +130,7 @@ prepare_postgrest_hafah_image:
   stage: test
   variables:
     FF_NETWORK_PER_BUILD: 1
-    PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
+    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools/package"
     APP_IMAGE: ""
     TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
     DIRECT_HAFAH_CALLS: 0
@@ -213,7 +215,7 @@ new_style_postgrest_pattern_tests:
       artifacts: true
 
   script:
-    - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt "$CI_PROJECT_DIR/tests/test-tools"
+    - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools"
       # run comparsion tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
     - python3 -m pytest -n 8 --ref http://$HIVED_ENDPOINT --test http://$ENDPOINT --start 4900000 --stop 4915000 --junitxml=$CI_PROJECT_DIR/comparsion_tests.xml
@@ -261,7 +263,7 @@ postgrest_comparison_tests:
   variables:
     FF_NETWORK_PER_BUILD: 1
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
-    PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
+    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools/package"
     APP_IMAGE: ""
     HIVED_UID: $HIVED_UID
   needs:
@@ -269,7 +271,7 @@ postgrest_comparison_tests:
       artifacts: true
 
   script:
-      - /usr/bin/python3 $CI_PROJECT_DIR/tests/tests_api/benchmarks/benchmark.py -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
+      - /usr/bin/python3 $CI_PROJECT_DIR/tests/integration/hafah-local-tools/tests_api/benchmarks/benchmark.py -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
       - m2u --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
       - jmeter -g wdir/jmeter_${APP_PORT}_output.csv -o wdir/dashboard/
   artifacts:
