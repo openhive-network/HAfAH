@@ -59,7 +59,7 @@ prepare_hived_data:
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
   resource_group: ${CI_COMMIT_SHA}
   tags:
-    - hive-builder-4
+    - data-cache-storage
 
 prepare_haf_image:
   extends: .prepare_haf_image
@@ -84,7 +84,7 @@ prepare_haf_data:
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
   resource_group: ${CI_COMMIT_SHA}
   tags:
-    - hive-builder-4
+    - data-cache-storage
 
 .prepare_hafah_image:
   extends: .docker_image_builder_job
@@ -160,7 +160,7 @@ prepare_postgrest_hafah_image:
       junit: haf/hive/tests/api_tests/pattern_tests/results.xml
   resource_group: ${CI_COMMIT_SHA}
   tags:
-    - hive-builder-4
+    - data-cache-storage
 
 python_pattern_tests:
   extends: .pattern_tests
@@ -231,7 +231,7 @@ new_style_postgrest_pattern_tests:
         - comparsion_tests.xml
   resource_group: ${CI_COMMIT_SHA}
   tags:
-    - hive-builder-4
+    - data-cache-storage
 
 python_comparison_tests:
   extends: .comparison_tests
@@ -279,7 +279,7 @@ postgrest_comparison_tests:
       junit: wdir/jmeter_junit_report.xml
   resource_group: ${CI_COMMIT_SHA}
   tags:
-    - hive-builder-4
+    - data-cache-storage
 
 python_account_history_benchmark_tests:
   extends: .benchmark_tests
@@ -322,7 +322,7 @@ cleanup_hived_cache_manual:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_hafah_*"
   resource_group: ${CI_COMMIT_SHA}
   tags:
-    - hive-builder-4
+    - data-cache-storage
 
 build_and_publish_image:
   stage: publish
