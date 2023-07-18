@@ -380,6 +380,8 @@ hafah_pytest_fuctional_tests:
       artifacts: true
     - job: prepare_postgrest_hafah_image
       artifacts: true
+    - job: .docker_image_builder_job
+      artifacts: true
   image: $BUILDER_IMAGE_PATH
   services:
     - *hfm-only-service
