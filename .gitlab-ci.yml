@@ -383,6 +383,9 @@ hafah_pytest_fuctional_tests:
   image: $BUILDER_IMAGE_PATH
   services:
     - *hfm-only-service
+    - name: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-dind:${DOCKER_DIND_TAG}
+      alias: docker
+
   variables:
     BINARY_CACHE_PATH: "haf-testnet-binaries"
     HIVED_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/hived"
@@ -391,6 +394,7 @@ hafah_pytest_fuctional_tests:
     CLI_WALLET_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/cli_wallet"
     DB_NAME: haf_block_log
     DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
+    HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE/instance:instance-$HAFAH_IMAGE_TAG
   script:
     - ls -la
     - cd /builds/hive/HAfAH
@@ -398,16 +402,16 @@ hafah_pytest_fuctional_tests:
     - cd /builds/hive/HAfAH/postgrest
     - ls -la
     # setup postgres and DB for work with hafah
-    - $CI_PROJECT_DIR/scripts/setup_postgres.sh --postgres-url="$DB_URL"
-    - bash ${CI_PROJECT_DIR}/scripts/generate_version_sql.bash ${CI_PROJECT_DIR}
-    - $CI_PROJECT_DIR/scripts/setup_db.sh --postgres-url="$DB_URL"
+    # - $CI_PROJECT_DIR/scripts/setup_postgres.sh --postgres-url="$DB_URL"
+    # - bash ${CI_PROJECT_DIR}/scripts/generate_version_sql.bash ${CI_PROJECT_DIR}
+    # - $CI_PROJECT_DIR/scripts/setup_db.sh --postgres-url="$DB_URL"
 
     # # setup postgrest
     # - $CI_PROJECT_DIR/scripts/setup_postgrest.sh
 
     # run tests
     - cd $CI_PROJECT_DIR/tests/integration/functional
-    - pytest --junitxml report.xml -n ${PYTEST_NUMBER_OF_PROCESSES} --postgrest-hafah-path=/builds/hive/HAfAH/postgrest/postgrest
+    - pytest --junitxml report.xml -n ${PYTEST_NUMBER_OF_PROCESSES} --postgrest-image=$HAFAH_IMAGE_NAME
   artifacts:
     paths:
     - "**/generated_during_*"
