@@ -1,8 +1,5 @@
-import json
-import os
-import socket
+import docker
 import shutil
-import subprocess
 import time
 
 import pytest
@@ -16,56 +13,74 @@ from haf_local_tools.system.haf import connect_nodes
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--postgrest-hafah-path", action="store", type=str, help="specifies path of hafah postgrest"
+        "--postgrest-image",
+        action="store",
+        type=str,
+        help="specifies image hafah postgrest",
     )
 
 
 @pytest.fixture
-def postgrest_hafah_path(request):
-    return request.config.getoption("--postgrest-hafah-path")
+def postgrest_image(request):
+    return request.config.getoption("--postgrest-image")
 
 
 @pytest.fixture()
 def node_set():
     init_node = tt.InitNode()
     init_node.run()
-    DB_URL = os.getenv("DB_URL")
-    haf_node = HafNode(database_url=DB_URL)
+    haf_node = HafNode()
     connect_nodes(init_node, haf_node)
     haf_node.run()
     return init_node, haf_node
 
 
 @pytest.fixture()
-def postgrest_hafah(node_set, postgrest_hafah_path) -> tt.RemoteNode:
+def postgrest_hafah(postgrest_image, node_set) -> tt.RemoteNode:
     init_node, haf_node = node_set
-    sock = socket.socket()
-    sock.bind(('', 0))
-    port = sock.getsockname()[1]
 
-    # Set environment variables needed to postgrest
-    environment = os.environ
-    environment['PGRST_DB_URI'] = str(haf_node.database_url)
-    environment['PGRST_DB_SCHEMA'] = "hafah_endpoints"
-    environment['PGRST_DB_ANON_ROLE'] = "hafah_user"
-    environment['PGRST_DB_ROOT_SPEC'] = "home"
-    environment['PGRST_SERVER_PORT'] = f"{port}"
+    db_url = haf_node.database_url
+    db_name = db_url.split("/")[-1]
+
+    container, client = run_postgrest_container(postgrest_image, db_name)
+
+    container.reload()
+    container_info = container.attrs
+    ip_address = container_info["NetworkSettings"]["IPAddress"]
+
+    postgrest_node = tt.RemoteNode(f"{ip_address}:6543")
+
+    yield postgrest_node
 
     postgrest_workdir = haf_node.directory.parent / "postgrest"
     if postgrest_workdir.exists():
         shutil.rmtree(postgrest_workdir)
     postgrest_workdir.mkdir()
 
-    with (postgrest_workdir / "environments.json").open("wt") as envs_out:
-        json.dump(dict(environment), envs_out, indent=2, sort_keys=True, ensure_ascii=False)
+    logs = container.logs().decode("utf-8")
+    with open(f"{postgrest_workdir}/logs.txt", "w") as file:
+        file.write(logs)
+    file.close()
 
-    sock.close()
-    with (postgrest_workdir / "stderr.postgrest.log").open("wt") as stderr, \
-            (postgrest_workdir / "stdout.postgrest.log").open("wt") as stdout, \
-            subprocess.Popen([postgrest_hafah_path], env=environment, stderr=stderr, stdout=stdout) as proc:
+    # CLEANUP CONTAINERS
+    container.stop()
+    container.remove()
+    client.close()
 
-        time.sleep(5)
-        yield tt.RemoteNode(f"localhost:{port}")
 
-        proc.kill()
-        proc.wait(3)
+def run_postgrest_container(postgrest_image:str, db_name: str):
+    client = docker.from_env()
+
+    postgres_url = f"postgresql://haf_admin:password@172.17.0.4:5432/{db_name}"
+    # image_name = (
+    #     "registry.gitlab.syncad.com/hive/hafah/instance:instance-postgrest-a80b6a36"
+    # )
+
+    container = client.containers.run(
+        image=postgrest_image,
+        environment={"POSTGRES_URL": postgres_url},
+        detach=True,
+    )
+
+    time.sleep(5)
+    return container, client
