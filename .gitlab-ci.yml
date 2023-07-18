@@ -380,8 +380,6 @@ hafah_pytest_fuctional_tests:
       artifacts: true
     - job: prepare_postgrest_hafah_image
       artifacts: true
-    - job: .docker_image_builder_job
-      artifacts: true
   image: $BUILDER_IMAGE_PATH
   services:
     - *hfm-only-service
@@ -398,6 +396,8 @@ hafah_pytest_fuctional_tests:
     DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
     HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE/instance:instance-$HAFAH_IMAGE_TAG
   script:
+    - sudo apt-get update
+    - sudo apt-get install docker-ce docker-ce-cli containerd.io
     - docker context ls
     - ls -la
     - cd /builds/hive/HAfAH
