@@ -99,6 +99,10 @@ prepare_haf_data:
     SOURCE_DIR: $CI_PROJECT_DIR
 
   script:
+    - echo $HAFAH_IMAGE_NAME
+    - echo $SOURCE_DIR
+    - ls -la
+    - pwd
     - |
       scripts/ci-helpers/build_instance.sh
       docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
@@ -374,6 +378,8 @@ hafah_pytest_fuctional_tests:
   needs:
     - job: prepare_haf_image_testnet
       artifacts: true
+    - job: prepare_postgrest_hafah_image
+      artifacts: true
   image: $BUILDER_IMAGE_PATH
   services:
     - *hfm-only-service
@@ -386,17 +392,22 @@ hafah_pytest_fuctional_tests:
     DB_NAME: haf_block_log
     DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
   script:
+    - ls -la
+    - cd /builds/hive/HAfAH
+    - ls -la
+    - cd /builds/hive/HAfAH/postgrest
+    - ls -la
     # setup postgres and DB for work with hafah
     - $CI_PROJECT_DIR/scripts/setup_postgres.sh --postgres-url="$DB_URL"
     - bash ${CI_PROJECT_DIR}/scripts/generate_version_sql.bash ${CI_PROJECT_DIR}
     - $CI_PROJECT_DIR/scripts/setup_db.sh --postgres-url="$DB_URL"
 
-    # setup postgrest
-    - $CI_PROJECT_DIR/scripts/setup_postgrest.sh
+    # # setup postgrest
+    # - $CI_PROJECT_DIR/scripts/setup_postgrest.sh
 
     # run tests
     - cd $CI_PROJECT_DIR/tests/integration/functional
-    - pytest --junitxml report.xml -n ${PYTEST_NUMBER_OF_PROCESSES} --postgrest-hafah-path=/usr/local/bin/postgrest
+    - pytest --junitxml report.xml -n ${PYTEST_NUMBER_OF_PROCESSES} --postgrest-hafah-path=/builds/hive/HAfAH/postgrest/postgrest
   artifacts:
     paths:
     - "**/generated_during_*"
