@@ -396,8 +396,8 @@ hafah_pytest_fuctional_tests:
     DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
     HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE/instance:instance-$HAFAH_IMAGE_TAG
   script:
-    - apt-get update -qy
-    - apt-get install -y docker.io
+    - curl -fsSL https://get.docker.com -o get-docker.sh
+    - sudo sh get-docker.sh
     - docker context ls
     - ls -la
     - cd /builds/hive/HAfAH
