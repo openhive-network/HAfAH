@@ -461,6 +461,9 @@ docker_tests_2:
     - sudo apt-get update
     - sudo apt-get install -y docker.io
     - docker context ls
+    - sudo usermod -aG docker hived
+    - sudo usermod -aG docker postgres
+    - sudo usermod -aG docker haf_admin
     - cat /etc/group
 
     # run tests
