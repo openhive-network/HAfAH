@@ -454,7 +454,9 @@ docker_tests_2:
   services:
     - name: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-dind:${DOCKER_DIND_TAG}
       alias: docker
-
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: "/certs"
   script:
     - sudo apt-get update
     - sudo apt-get install -y docker.io
