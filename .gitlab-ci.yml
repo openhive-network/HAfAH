@@ -458,6 +458,7 @@ docker_tests_2:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_HOST: "tcp://docker:2376"
+    DOCKER_TLS_VERITY: 1
   script:
     - sudo apt-get update
     - sudo apt-get install -y docker.io
