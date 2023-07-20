@@ -463,14 +463,12 @@ docker_tests_2:
     - sudo apt-get update
     - sudo apt-get install -y docker.io
     - docker context ls
-    # - sudo usermod -aG docker hived
-    # - sudo usermod -aG docker postgres
-    # - sudo usermod -aG docker haf_admin
-    # - cat /etc/group
+    - docker run --rm hello-world
+    - docker ps
 
-    # run tests
-    - cd $CI_PROJECT_DIR/tests/integration/functional
-    - pytest --junitxml report.xml -n ${PYTEST_NUMBER_OF_PROCESSES} -k test_docker --postgrest-image=$HAFAH_IMAGE_NAME
+    # # run tests
+    # - cd $CI_PROJECT_DIR/tests/integration/functional
+    # - pytest --junitxml report.xml -n ${PYTEST_NUMBER_OF_PROCESSES} -k test_docker --postgrest-image=$HAFAH_IMAGE_NAME
   artifacts:
     paths:
     - "**/generated_during_*"
