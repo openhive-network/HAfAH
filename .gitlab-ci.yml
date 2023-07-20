@@ -455,16 +455,17 @@ docker_tests_2:
     - name: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-dind:${DOCKER_DIND_TAG}
       alias: docker
   variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_HOST: "tcp://docker:2376"
-    DOCKER_TLS_VERITY: 1
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+      # DOCKER_TLS_VERITY: 1
   script:
+    - echo $DOCKER_DIND_TAG
     - sudo apt-get update
     - sudo apt-get install -y docker.io
-    - docker context ls
+    - docker version
     - docker run --rm hello-world
-    - docker ps
+     docker context ls
 
     # # run tests
     # - cd $CI_PROJECT_DIR/tests/integration/functional
