@@ -44,7 +44,6 @@ def node_set(postgres_db_url):
     haf_node = HafNode(database_url=postgres_db_url)
     # haf_node = HafNode()  #USE TO RUN LOCAL!!!!
 
-    haf_node = HafNode()
     connect_nodes(init_node, haf_node)
     haf_node.run()
     return init_node, haf_node
