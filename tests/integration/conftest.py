@@ -18,17 +18,32 @@ def pytest_addoption(parser):
         type=str,
         help="specifies image hafah postgrest",
     )
+    parser.addoption(
+        "--postgres-db-url",
+        action="store",
+        type=str,
+        help="specifies postgres db url",
+    )
 
 
-@pytest.fixture
+@pytest.fixture()
 def postgrest_image(request):
     return request.config.getoption("--postgrest-image")
 
 
 @pytest.fixture()
-def node_set():
+def postgres_db_url(request):
+    return request.config.getoption("--postgres-db-url")
+
+
+@pytest.fixture()
+def node_set(postgres_db_url):
     init_node = tt.InitNode()
     init_node.run()
+    tt.logger.info(postgres_db_url)
+    haf_node = HafNode(database_url=postgres_db_url)
+    # haf_node = HafNode()  #USE TO RUN LOCAL!!!!
+
     haf_node = HafNode()
     connect_nodes(init_node, haf_node)
     haf_node.run()

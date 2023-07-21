@@ -414,7 +414,7 @@ hafah_pytest_fuctional_tests:
 
     # run tests
     - cd $CI_PROJECT_DIR/tests/integration/functional
-    - pytest --junitxml report.xml -n ${PYTEST_NUMBER_OF_PROCESSES} -k "test_filter_only_hardfork_operations or test_docker" --postgrest-image=$HAFAH_IMAGE_NAME
+    - pytest --junitxml report.xml -n ${PYTEST_NUMBER_OF_PROCESSES} -k "test_filter_only_hardfork_operations or test_docker" --postgrest-image=$HAFAH_IMAGE_NAME --postgres-db-url=$DB_URL
   artifacts:
     paths:
     - "**/generated_during_*"
