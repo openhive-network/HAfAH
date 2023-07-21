@@ -1,5 +1,6 @@
 #! /bin/bash
 
+set -x
 print_help () {
 cat <<EOF
 Usage: $0 <image_tag> <src_dir> <registry_url> [OPTION[=VALUE]]...

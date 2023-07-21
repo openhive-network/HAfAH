@@ -71,7 +71,9 @@ def postgrest_hafah(postgrest_image, node_set) -> tt.RemoteNode:
 def run_postgrest_container(postgrest_image:str, db_name: str):
     client = docker.from_env()
 
-    postgres_url = f"postgresql://haf_admin:password@172.17.0.4:5432/{db_name}"
+    #ODWOŁUJ SIĘ PRZEZ NAZWĘ 
+    postgres_url = f"postgresql://haf_admin:password@172.17.0.2:5432/{db_name}"
+    # postgres_url = f"postgresql:///{db_name}"
     # image_name = (
     #     "registry.gitlab.syncad.com/hive/hafah/instance:instance-postgrest-a80b6a36"
     # )
@@ -84,3 +86,4 @@ def run_postgrest_container(postgrest_image:str, db_name: str):
 
     time.sleep(5)
     return container, client
+ 
