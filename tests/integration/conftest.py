@@ -50,13 +50,13 @@ def node_set(postgres_db_url):
 
 
 @pytest.fixture()
-def postgrest_hafah(postgrest_image, node_set) -> tt.RemoteNode:
+def postgrest_hafah(postgrest_image, node_set, postgres_db_url) -> tt.RemoteNode:
     init_node, haf_node = node_set
 
     db_url = haf_node.database_url
     db_name = db_url.split("/")[-1]
 
-    container, client = run_postgrest_container(postgrest_image, db_name)
+    container, client = run_postgrest_container(postgrest_image, db_name, postgres_db_url)
 
     container.reload()
     container_info = container.attrs
@@ -82,11 +82,12 @@ def postgrest_hafah(postgrest_image, node_set) -> tt.RemoteNode:
     client.close()
 
 
-def run_postgrest_container(postgrest_image:str, db_name: str):
+def run_postgrest_container(postgrest_image:str, db_name: str, postgres_db_url):
     client = docker.from_env()
 
-    #ODWOŁUJ SIĘ PRZEZ NAZWĘ 
-    postgres_url = f"postgresql://haf_admin:password@172.17.0.2:5432/{db_name}"
+    #ODWOŁUJ SIĘ PRZEZ NAZWĘ
+    postgres_url = f"{postgres_db_url}_{db_name.split('_')[-1]}"
+    # postgres_url = f"postgresql://haf_admin:password@172.17.0.2:5432/{db_name}"
     # postgres_url = f"postgresql:///{db_name}"
     # image_name = (
     #     "registry.gitlab.syncad.com/hive/hafah/instance:instance-postgrest-a80b6a36"
