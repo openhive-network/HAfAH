@@ -21,5 +21,6 @@ pytest-repeat = "0.9.1"
 pytest-timeout = "2.0.1"
 sqlalchemy = "1.4.25"
 sqlalchemy-utils = "0.37.9"
+docker = "6.1.3"
 test_tools = { path = "test-tools", develop = true }
 haf_local_tools = { path = "../../../haf/tests/integration/haf-local-tools", develop = true }
