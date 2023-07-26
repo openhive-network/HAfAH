@@ -26,17 +26,17 @@ def pytest_addoption(parser):
     )
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def postgrest_image(request):
     return request.config.getoption("--postgrest-image")
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def postgres_db_url(request):
     return request.config.getoption("--postgres-db-url")
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def node_set(postgres_db_url):
     init_node = tt.InitNode()
     init_node.run()
@@ -49,7 +49,14 @@ def node_set(postgres_db_url):
     return init_node, haf_node
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
+def wallet(node_set):
+    init_node, haf_node = node_set
+    wallet = tt.Wallet(attach_to=init_node)
+    return wallet
+
+
+@pytest.fixture(scope="module")
 def postgrest_hafah(postgrest_image, node_set, postgres_db_url) -> tt.RemoteNode:
     init_node, haf_node = node_set
 

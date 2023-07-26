@@ -10,10 +10,8 @@ def test_default_args_value(postgrest_hafah):
 
 
 @pytest.mark.parametrize("only_virtual, number_of_ops", ((False, 3), (True, 2)))
-def test_filter_virtual_ops(postgrest_hafah, node_set, only_virtual, number_of_ops):
-    init_node, haf_node = node_set
-    wallet = tt.Wallet(attach_to=init_node)
-    block_number = wallet.create_account("alice")["block_num"]
+def test_filter_virtual_ops(postgrest_hafah, wallet, only_virtual, number_of_ops):
+    block_number = wallet.create_account(f"alice-{int(only_virtual)}")["block_num"]
     response = send_request_to_hafah(
         postgrest_hafah,
         "get_ops_in_block",

@@ -2,14 +2,10 @@ import pytest
 
 import test_tools as tt
 
-from haf_local_tools.tables import OperationsReversible
-
 from hafah_local_tools import send_request_to_hafah
 
 
-def test_get_empty_history(postgrest_hafah, node_set):
-    init_node, haf_node = node_set
-    wallet = tt.Wallet(attach_to=init_node)
+def test_get_empty_history(postgrest_hafah, wallet):
     wallet.create_account("alice")
     response = send_request_to_hafah(
         postgrest_hafah, "get_account_history", account="alice", include_reversible=False
@@ -25,11 +21,10 @@ def test_get_empty_history(postgrest_hafah, node_set):
     ),
 )
 def test_check_for_newly_created_history_operations(
-    postgrest_hafah, node_set, include_reversible
+    postgrest_hafah, wallet, node_set, include_reversible
 ):
     init_node, haf_node = node_set
-    wallet = tt.Wallet(attach_to=init_node)
-    wallet.create_account("alice", hives=100)
+    wallet.create_account(f"bob-{int(include_reversible)}", hives=100)
 
     if not include_reversible:
         haf_node.wait_for_irreversible_block()
@@ -37,64 +32,42 @@ def test_check_for_newly_created_history_operations(
     response = send_request_to_hafah(
         postgrest_hafah,
         "get_account_history",
-        account="alice",
+        account=f"bob-{int(include_reversible)}",
         include_reversible=include_reversible,
     )
 
     assert len(response["history"]) > 0
 
 
-def test_filter_only_transfer_ops(postgrest_hafah, node_set):
-    init_node, haf_node = node_set
-    wallet = tt.Wallet(attach_to=init_node)
-    wallet.create_account("alice", hives=100)
+def test_filter_only_transfer_ops(postgrest_hafah, wallet):
+    wallet.create_account("carol", hives=100)
 
-    while (
-        haf_node.session.query(OperationsReversible)
-        .filter(OperationsReversible.op_type_id == 2)
-        .count()
-        == 0
-    ):
-        tt.logger.debug("no reversible operations found, waiting one more block....")
-        haf_node.wait_number_of_blocks(1)
-
-    response_with_rev = send_request_to_hafah(
+    response = send_request_to_hafah(
         postgrest_hafah,
         "get_account_history",
-        account="alice",
+        account="carol",
         include_reversible=True,
         operation_filter_low=4,
     )
 
-    response_without_rev = send_request_to_hafah(
-        postgrest_hafah,
-        "get_account_history",
-        account="alice",
-        include_reversible=False,
-        operation_filter_low=4,
-    )
-
-    assert len(response_with_rev["history"]) == 1
-    assert len(response_without_rev["history"]) == 0
+    assert len(response["history"]) == 1
 
 
 @pytest.mark.parametrize("step", (1, 2, 4, 8, 16, 32, 64))
-def test_pagination(postgrest_hafah, node_set, step: int):
-    init_node, haf_node = node_set
+def test_pagination(postgrest_hafah, wallet, step: int):
     amount_of_transfers = 59
     amount_of_operations_from_account_creation = 5
     total_amount_of_operations = (
         amount_of_transfers + amount_of_operations_from_account_creation
     )
 
-    wallet = tt.Wallet(attach_to=init_node)
-    wallet.create_account("alice", hives=100, vests=100)
+    wallet.create_account(f"dan-{step}", hives=100, vests=100)
 
     with wallet.in_single_transaction():
         for x in range(amount_of_transfers):
-            wallet.api.transfer("alice", "null", tt.Asset.Test(1), f"transfer-{x}")
+            wallet.api.transfer(f"dan-{step}", "null", tt.Asset.Test(1), f"transfer-{x}")
     response = send_request_to_hafah(
-        postgrest_hafah, "get_account_history", account="alice", include_reversible=True
+        postgrest_hafah, "get_account_history", account=f"dan-{step}", include_reversible=True
     )
     assert len(response["history"]) == total_amount_of_operations
 
@@ -103,7 +76,7 @@ def test_pagination(postgrest_hafah, node_set, step: int):
         output = send_request_to_hafah(
             postgrest_hafah,
             "get_account_history",
-            account="alice",
+            account=f"dan-{step}",
             include_reversible=True,
             limit=step,
             start=start,

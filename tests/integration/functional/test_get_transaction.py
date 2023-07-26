@@ -18,7 +18,7 @@ def test_get_transaction_in_reversible_block(
     wallet = tt.Wallet(
         attach_to=init_node, additional_arguments=["--transaction-serialization=hf26"]
     )
-    transaction = wallet.create_account("alice")
+    transaction = wallet.create_account(f"alice-{int(include_reversible)}")
     if not include_reversible:
         haf_node.wait_for_irreversible_block()
     # delete one additional key to compare transactions

@@ -7,11 +7,11 @@ import test_tools as tt
 from hafah_local_tools import send_request_to_hafah
 
 
-def send_transfers_to_vesting_from_initminer_to_alice(
-    wallet: tt.Wallet, *, amount: int
+def send_transfers_to_vesting_from_initminer(
+    wallet: tt.Wallet, *, amount: int, to: str
 ):
     for x in range(amount):
-        wallet.api.transfer_to_vesting("initminer", "alice", tt.Asset.Test(1))
+        wallet.api.transfer_to_vesting("initminer", to, tt.Asset.Test(1))
 
 
 def test_exceed_block_range(postgrest_hafah):
@@ -57,14 +57,13 @@ def test_find_irreversible_operations(postgrest_hafah, node_set):
     assert len(response["ops"]) > 0
 
 
-def test_find_newly_created_virtual_op(postgrest_hafah, node_set):
+def test_find_newly_created_virtual_op(postgrest_hafah, node_set, wallet):
     init_node, haf_node = node_set
-    wallet = tt.Wallet(attach_to=init_node)
     block_to_start = haf_node.get_last_block_number()
-    wallet.create_account("alice")
+    wallet.create_account("bob")
     # transfer_to_vesting indicates transfer_to_vesting_completed virtual operation
     transaction = wallet.api.transfer_to_vesting(
-        "initminer", "alice", tt.Asset.Test(100)
+        "initminer", "bob", tt.Asset.Test(100)
     )
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
@@ -94,11 +93,10 @@ def test_find_reversible_virtual_operations(postgrest_hafah, node_set):
     assert len(response["ops"]) > 0
 
 
-def test_grouping_by_block(postgrest_hafah, node_set):
+def test_grouping_by_block(postgrest_hafah, node_set, wallet):
     init_node, haf_node = node_set
     haf_node.wait_number_of_blocks(3)
     block_to_start = haf_node.get_last_block_number()
-    wallet = tt.Wallet(attach_to=init_node)
 
     accounts_to_create = 20
     # create many accounts in different blocks
@@ -134,13 +132,12 @@ def test_grouping_by_block(postgrest_hafah, node_set):
     itertools.product((True, False), (True, False)),
 )
 def test_limit(
-    postgrest_hafah, node_set, group_by_block: bool, include_reversible: bool
+    postgrest_hafah, node_set, wallet, group_by_block: bool, include_reversible: bool
 ):
     init_node, haf_node = node_set
     haf_node.wait_number_of_blocks(1)
     block_to_start = haf_node.get_last_block_number()
-    wallet = tt.Wallet(attach_to=init_node)
-    wallet.create_accounts(1100)
+    wallet.create_accounts(number_of_accounts=1100, name_base=f"acc-{int(group_by_block)}-{int(include_reversible)}")
 
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
@@ -174,20 +171,19 @@ def test_limit(
     "group_by_block, key", ((False, "ops"), (True, "ops_by_block"))
 )
 def test_list_vops_partly_in_irreversible_and_partly_in_reversible_blocks(
-    postgrest_hafah, node_set, group_by_block, key
+    postgrest_hafah, node_set, wallet, group_by_block, key
 ):
     init_node, haf_node = node_set
     haf_node.wait_number_of_blocks(1)
     block_to_start = haf_node.get_last_block_number()
-    wallet = tt.Wallet(attach_to=init_node)
-    wallet.create_account("alice")
+    wallet.create_account(f"alice-{int(group_by_block)}")
 
-    send_transfers_to_vesting_from_initminer_to_alice(wallet, amount=3)
+    send_transfers_to_vesting_from_initminer(wallet, amount=3, to=f"alice-{int(group_by_block)}")
 
     # make ops irreversible
     haf_node.wait_for_irreversible_block()
 
-    send_transfers_to_vesting_from_initminer_to_alice(wallet, amount=3)
+    send_transfers_to_vesting_from_initminer(wallet, amount=3, to=f"alice-{int(group_by_block)}")
 
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
@@ -224,7 +220,7 @@ def test_no_virtual_operations(postgrest_hafah, node_set, group_by_block: bool):
     assert response["next_operation_begin"] == 0
 
 
-def test_number_of_producer_reward_ops(postgrest_hafah, node_set):
+def test_number_of_producer_reward_ops(postgrest_hafah, node_set,):
     init_node, haf_node = node_set
     haf_node.wait_number_of_blocks(3)
     block_to_start = haf_node.get_last_block_number()
@@ -241,12 +237,11 @@ def test_number_of_producer_reward_ops(postgrest_hafah, node_set):
     assert len(response["ops"]) == blocks_to_wait
 
 
-def test_pagination(postgrest_hafah, node_set):
+def test_pagination(postgrest_hafah, node_set, wallet):
     init_node, haf_node = node_set
     haf_node.wait_number_of_blocks(1)
     block_to_start = haf_node.get_last_block_number()
-    wallet = tt.Wallet(attach_to=init_node)
-    wallet.create_accounts(15)
+    wallet.create_accounts(number_of_accounts=15, name_base="acc")
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
     end_block = haf_node.get_last_block_number()
