@@ -27,7 +27,8 @@ CREATE VIEW hafah_python.helper_operations_view AS SELECT
   hot.is_virtual AS virtual_op,
   op_type_id op_type_id,
   trim(both '"' from to_json(hov.timestamp)::text) formated_timestamp,
-  body body
+  hov.body AS body,
+  hov.body_binary AS body_binary
 FROM
   hive.operations_view hov
 JOIN
@@ -224,7 +225,7 @@ BEGIN
       T._timestamp,
       (
         CASE
-          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(T.body)::text
+          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(T.body_binary)::text
           ELSE T.body :: text
         END
       ) AS _value,
@@ -233,7 +234,7 @@ BEGIN
       (
         --`abs` it's temporary, until position of operation is correctly saved
         SELECT
-          ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.virtual_op, ho.formated_timestamp AS _timestamp
+          ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.body_binary, ho.op_type_id, ho.virtual_op, ho.formated_timestamp AS _timestamp
         FROM hafah_python.helper_operations_view ho
         WHERE ho.block_num = _block_num AND ( _only_virtual = FALSE OR ( _only_virtual = TRUE AND ho.virtual_op = TRUE ) )
       ) T
@@ -314,7 +315,7 @@ BEGIN
     SELECT
       (
         CASE
-          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body)::text
+          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body_binary)::text
           ELSE ho.body :: text
         END
       ) AS _value
@@ -500,7 +501,7 @@ BEGIN
       btrim(to_json(ho."timestamp")::TEXT, '"'::TEXT) AS formated_timestamp,
       (
         CASE
-          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body)::TEXT
+          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body_binary)::TEXT
           ELSE ho.body :: text
         END
       ) AS _value,
@@ -513,7 +514,7 @@ BEGIN
       ORDER BY hao.account_op_seq_no DESC
       LIMIT _limit
     ) ds
-    JOIN LATERAL (SELECT hov.body, hov.op_pos, hov.timestamp, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
+    JOIN LATERAL (SELECT hov.body, hov.body_binary, hov.op_pos, hov.timestamp, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
     JOIN LATERAL (select ot.is_virtual FROM hive.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
     ORDER BY ds.account_op_seq_no ASC
 
