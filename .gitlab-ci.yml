@@ -143,7 +143,7 @@ prepare_postgrest_hafah_image:
     - echo "HAF image name $HAF_IMAGE_NAME"
 
   script:
-    - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt
+    - poetry install
     # run pattern tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests
     - ./run_tests.sh $ENDPOINT `git rev-parse --show-toplevel` "${TEST_SUITE}" ${DIRECT_HAFAH_CALLS}
@@ -213,7 +213,7 @@ new_style_postgrest_pattern_tests:
       artifacts: true
 
   script:
-    - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt "$CI_PROJECT_DIR/tests/test-tools"
+    - poetry install
       # run comparsion tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
     - python3 -m pytest -n 8 --ref http://$HIVED_ENDPOINT --test http://$ENDPOINT --start 4900000 --stop 4915000 --junitxml=$CI_PROJECT_DIR/comparsion_tests.xml
