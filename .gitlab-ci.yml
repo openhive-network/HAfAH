@@ -9,8 +9,8 @@ variables:
   GIT_STRATEGY: clone
   GIT_SUBMODULE_STRATEGY: "recursive"
   CI_DEBUG_SERVICES: "true"
-  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-5
-  BUILDER_IMAGE_TAG: "@sha256:6b557af6a98188c118d442b68437bf1b20d67e3aae5765269c4fe88465c62d60"
+  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-6
+  BUILDER_IMAGE_TAG: "@sha256:92d854233db8a764ab42306dfe629f240c7ef5cb265931d1ff273b3d1b013d78"
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
   APP_PORT: 6543

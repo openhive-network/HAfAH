@@ -5,6 +5,10 @@ set -euo pipefail
 ROOT_DIR="${1}"
 USE_POSTGREST=${2}
 
+PATH="$HOME/.local/bin:$PATH"
+curl -sSL https://install.python-poetry.org | python3 -
+poetry self update
+
 bash ${ROOT_DIR}/app/scripts/generate_version_sql.bash ${ROOT_DIR}/app
 
 chmod a+x ${ROOT_DIR}/docker_entrypoint.sh
