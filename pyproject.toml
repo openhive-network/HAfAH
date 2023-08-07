@@ -20,3 +20,7 @@ funcy = "1.16"
 jsonrpcserver = "4.2.0"
 simplejson = "3.17.2"
 haf_local_tools = { path = "haf/tests/integration/haf-local-tools", develop = true }
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.4.1"
+
