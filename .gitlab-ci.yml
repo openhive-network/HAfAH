@@ -9,13 +9,13 @@ variables:
   GIT_STRATEGY: clone
   GIT_SUBMODULE_STRATEGY: "recursive"
   CI_DEBUG_SERVICES: "true"
-  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-6
-  BUILDER_IMAGE_TAG: "@sha256:92d854233db8a764ab42306dfe629f240c7ef5cb265931d1ff273b3d1b013d78"
+  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu20.04-5
+  BUILDER_IMAGE_TAG: "@sha256:6b557af6a98188c118d442b68437bf1b20d67e3aae5765269c4fe88465c62d60"
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
   APP_PORT: 6543
   HAF_POSTGRES_URL: postgresql://haf_app_admin@haf-instance:5432/haf_block_log
-  BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/tests_api/benchmarks"
+  BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/tests_api/benchmarks"
 
   # Variables required by Common CI jobs
   TOX_IMAGE_TAG: "59834935f116dce106fdf9fb98e44a6f646f5eba"
@@ -128,17 +128,18 @@ prepare_postgrest_hafah_image:
   stage: test
   variables:
     FF_NETWORK_PER_BUILD: 1
-    PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
     APP_IMAGE: ""
     TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
     DIRECT_HAFAH_CALLS: 0
     HIVED_UID: $HIVED_UID
+    PATH: "$HOME/.local/bin:$PATH"
 
   needs:
     - job: prepare_haf_data
       artifacts: true
 
   before_script:
+    - curl -sSL https://install.python-poetry.org | python3 -
     - echo "HAfAH image name $APP_IMAGE"
     - echo "HAF image name $HAF_IMAGE_NAME"
 
@@ -203,8 +204,8 @@ new_style_postgrest_pattern_tests:
   stage: test
   variables:
     FF_NETWORK_PER_BUILD: 1
-    PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
     HIVED_UID: $HIVED_UID
+    PATH: "$HOME/.local/bin:$PATH"
 
   needs:
     - job: prepare_haf_data
@@ -213,6 +214,7 @@ new_style_postgrest_pattern_tests:
       artifacts: true
 
   script:
+    - curl -sSL https://install.python-poetry.org | python3 -
     - poetry install
       # run comparsion tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
@@ -269,7 +271,7 @@ postgrest_comparison_tests:
       artifacts: true
 
   script:
-      - /usr/bin/python3 $CI_PROJECT_DIR/tests/tests_api/benchmarks/benchmark.py -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
+      - /usr/bin/python3 $BENCHMARK_SOURCE_DIR/benchmark.py -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
       - m2u --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
       - jmeter -g wdir/jmeter_${APP_PORT}_output.csv -o wdir/dashboard/
   artifacts:
