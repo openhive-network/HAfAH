@@ -11,6 +11,11 @@ variables:
   CI_DEBUG_SERVICES: "true"
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu22.04-3
   BUILDER_IMAGE_TAG: "@sha256:b639fee3a6f7761a8e38777045e65bc012fbd2ad01bf366e5e9211ac765f9629"
+
+  # references registry.gitlab.syncad.com/hive/hive/ci-base-image:ubuntu22.04-5
+  PYTEST_RUNTIME_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive/ci-base-image@sha256:eaa6f32730f0f4c45a95a65b6d790bea2b71a59276eb28795c04be7703f003e6"
+  POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/hive-local-tools"
+
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
   APP_PORT: 6543
@@ -124,14 +129,19 @@ prepare_postgrest_hafah_image:
     USE_POSTGREST: 1
 
 .pattern_tests:
-  extends: .pattern_tests_template
+  extends: .haf_app_pattern_tests_template 
   stage: test
   variables:
-    FF_NETWORK_PER_BUILD: 1
-    PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
-    APP_IMAGE: ""
+    HAF_APP_IMAGE: ""
+    HAF_APP_PORT: ${APP_PORT}
+
+    PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
+    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/hive-local-tools"
+
     TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
-    DIRECT_HAFAH_CALLS: 0
+    PATTERN_TESTS_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/api_tests/pattern_tests"
+    JUNIT_REPORT: "haf/hive/tests/api_tests/pattern_tests/results.xml"
+    DIRECT_CALLS: 0
     HIVED_UID: $HIVED_UID
 
   needs:
@@ -139,14 +149,9 @@ prepare_postgrest_hafah_image:
       artifacts: true
 
   before_script:
-    - echo "HAfAH image name $APP_IMAGE"
+    - !reference [.haf_app_pattern_tests_template, before_script]
+    - echo "HAfAH image name $HAF_APP_IMAGE"
     - echo "HAF image name $HAF_IMAGE_NAME"
-
-  script:
-    - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt
-    # run pattern tests
-    - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/pattern_tests
-    - ./run_tests.sh $ENDPOINT `git rev-parse --show-toplevel` "${TEST_SUITE}" ${DIRECT_HAFAH_CALLS}
 
   artifacts:
     paths:
@@ -156,8 +161,7 @@ prepare_postgrest_hafah_image:
     - "**/*.out.json"
     - "tests/tests_api/hived/workdir_*"
     - "tests/api_tests/pattern_tests/results.xml"
-    reports:
-      junit: haf/hive/tests/api_tests/pattern_tests/results.xml
+
   resource_group: ${CI_COMMIT_SHA}
   tags:
     - data-cache-storage
@@ -171,7 +175,7 @@ python_pattern_tests:
       artifacts: true
 
   variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
 
 postgrest_pattern_tests:
   extends: .pattern_tests
@@ -182,7 +186,7 @@ postgrest_pattern_tests:
       artifacts: true
 
   variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
 
 new_style_postgrest_pattern_tests:
   extends: .pattern_tests
@@ -193,10 +197,10 @@ new_style_postgrest_pattern_tests:
       artifacts: true
 
   variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     # Direct call version does not support condenser_api
     TEST_SUITE: "account_history_api"
-    DIRECT_HAFAH_CALLS: 1
+    DIRECT_CALLS: 1
 
 .comparison_tests:
   extends: .comparison_tests_template
@@ -242,7 +246,7 @@ python_comparison_tests:
       artifacts: true
 
   variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
 
 postgrest_comparison_tests:
   extends: .comparison_tests
@@ -253,7 +257,7 @@ postgrest_comparison_tests:
       artifacts: true
 
   variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
 
 .benchmark_tests:
   extends: .jmeter_benchmark_with_haf_job
