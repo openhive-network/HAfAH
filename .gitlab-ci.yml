@@ -33,7 +33,7 @@ include:
     ref: a89548de068602f509316ce052cd833fec772fa6 # develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
-    ref: 1d271c28906d267c1172641bb2aa42727f16b513 # It seems a variable cannot be used here
+    ref: 0da465dd9038f4e2f7d8f8affe6d7deea38b7444 # bw_reusing_pattern_tests_template_defs # It seems a variable cannot be used here
     file: '/templates/test_jobs.gitlab-ci.yml'
 
 prepare_hived_image:
