@@ -116,12 +116,6 @@ prepare_haf_data:
     - public-runner-docker
     - hived-for-tests
 
-prepare_python_hafah_image:
-  extends: .prepare_hafah_image
-  variables:
-    HAFAH_IMAGE_TAG: python-$CI_COMMIT_SHORT_SHA
-    USE_POSTGREST: 0
-
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
   variables:
@@ -165,17 +159,6 @@ prepare_postgrest_hafah_image:
   resource_group: ${CI_COMMIT_SHA}
   tags:
     - data-cache-storage
-
-python_pattern_tests:
-  extends: .pattern_tests
-
-  needs:
-    - !reference [.pattern_tests, needs]
-    - job: prepare_python_hafah_image
-      artifacts: true
-
-  variables:
-    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
 
 postgrest_pattern_tests:
   extends: .pattern_tests
@@ -232,17 +215,6 @@ new_style_postgrest_pattern_tests:
   tags:
     - data-cache-storage
 
-python_comparison_tests:
-  extends: .comparison_tests
-
-  needs:
-    - !reference [.comparison_tests, needs]
-    - job: prepare_python_hafah_image
-      artifacts: true
-
-  variables:
-    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
-
 postgrest_comparison_tests:
   extends: .comparison_tests
 
@@ -279,17 +251,6 @@ postgrest_comparison_tests:
   resource_group: ${CI_COMMIT_SHA}
   tags:
     - data-cache-storage
-
-python_account_history_benchmark_tests:
-  extends: .benchmark_tests
-
-  needs:
-    - !reference [.benchmark_tests, needs]
-    - job: prepare_python_hafah_image
-      artifacts: true
-
-  variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
 
 postgrest_block_api_benchmark_tests:
   extends: .benchmark_tests
