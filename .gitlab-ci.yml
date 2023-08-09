@@ -20,7 +20,7 @@ variables:
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
   APP_PORT: 6543
   HAF_POSTGRES_URL: postgresql://haf_app_admin@haf-instance:5432/haf_block_log
-  BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/tests_api/benchmarks"
+  BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/tests_api/benchmarks"
 
   # Variables required by Common CI jobs
   TOX_IMAGE_TAG: "59834935f116dce106fdf9fb98e44a6f646f5eba"
@@ -273,7 +273,7 @@ postgrest_comparison_tests:
       artifacts: true
 
   script:
-      - /usr/bin/python3 $CI_PROJECT_DIR/tests/tests_api/benchmarks/benchmark.py -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
+      - /usr/bin/python3 "${BENCHMARK_SOURCE_DIR}/benchmark.py" -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
       - m2u --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
       - jmeter -g wdir/jmeter_${APP_PORT}_output.csv -o wdir/dashboard/
   artifacts:
