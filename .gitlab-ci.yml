@@ -206,8 +206,11 @@ new_style_postgrest_pattern_tests:
   extends: .comparison_tests_template
   stage: test
   variables:
-    FF_NETWORK_PER_BUILD: 1
-    PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
+    PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
+    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/hive-local-tools"
+    JUNIT_REPORT: "haf/hive/tests/api_tests/comparsion_tests/comparsion_tests.xml"
+    COMPARISON_TESTS_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/api_tests/comparsion_tests"
+    HAF_APP_PORT: ${APP_PORT}
     HIVED_UID: $HIVED_UID
 
   needs:
@@ -216,12 +219,6 @@ new_style_postgrest_pattern_tests:
     - job: prepare_hived_data
       artifacts: true
 
-  script:
-    - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt "$CI_PROJECT_DIR/tests/test-tools"
-      # run comparsion tests
-    - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
-    - python3 -m pytest -n 8 --ref http://$HIVED_ENDPOINT --test http://$ENDPOINT --start 4900000 --stop 4915000 --junitxml=$CI_PROJECT_DIR/comparsion_tests.xml
-
   artifacts:
     paths:
     - "$CI_JOB_NAME"
@@ -229,10 +226,8 @@ new_style_postgrest_pattern_tests:
     - "**/ah.log"
     - "**/*.out.json"
     - "haf/hive/tests/tests_api/hived/workdir_*"
-    - "comparsion_tests.xml"
-    reports:
-      junit:
-        - comparsion_tests.xml
+    - "haf/hive/tests/api_tests/comparsion_tests/comparsion_tests.xml"
+
   resource_group: ${CI_COMMIT_SHA}
   tags:
     - data-cache-storage
