@@ -23,7 +23,7 @@ variables:
   BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/tests_api/benchmarks"
 
   # Variables required by Common CI jobs
-  TOX_IMAGE_TAG: "59834935f116dce106fdf9fb98e44a6f646f5eba"
+  TOX_IMAGE_TAG: "4b62d20dfebebacf51ca8795f3d7c4df2d9b8565"
 
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
   DATA_CACHE_HIVE_TEMPLATE: /cache/replay_data_hafah_hived
@@ -35,10 +35,10 @@ variables:
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: a89548de068602f509316ce052cd833fec772fa6 # develop
+    ref: 365b6663b6ebc0cd00fe01f822a02ed16c294df5 # develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
-    ref: 0da465dd9038f4e2f7d8f8affe6d7deea38b7444 # bw_reusing_pattern_tests_template_defs # It seems a variable cannot be used here
+    ref: 4b62d20dfebebacf51ca8795f3d7c4df2d9b8565 # bw_reusing_pattern_tests_template_defs # It seems a variable cannot be used here
     file: '/templates/test_jobs.gitlab-ci.yml'
 
 prepare_hived_image:
