@@ -1,7 +1,5 @@
 ## Requirements
 
-Python: `python3.8+`
-
 # Overview of hafah
 
 Hafah is a HAF-based app that implements the "account history API" for hive. It is a web server that responds to account history REST calls using data stored in a [HAF database](https://gitlab.syncad.com/hive/haf). 
@@ -14,21 +12,6 @@ Like HAF itself, you can install hafah directly on your computer, or you can run
 
 ## Option 1: Starting `HAfAH` directly on host
 ---
-
-### python version
-
-> :warning: Before starting app or __load tests__, install required packages!
-
-```
-python3 -m pip install --user -r requirements.txt
-```
-There are currently two versions of hafah (python and postgrest version).
-
-To start the python version of hafah directly:
-
-```
-./main.py -p postgresql://haf_app_admin:<password>@127.0.0.1:5432/haf_block_log -n 8080
-```
 
 ### postgREST version
 
@@ -47,13 +30,10 @@ Then start server
 `PORT` is optional, default is 3000.
 <br><br>
 
-## Option 2: Starting a `HAfAH` using prebuilt docker container
+## Option 2: Starting a `HAfAH` using prebuilt docker container (preferred way)
 
 Instead of running hafah servers directly, you can run them inside dockers. For many users, especially ones that are running their HAF database inside a docker, this is the recommended method, because it eliminates the need to manually configure authentication of hafah's connection to the HAF database. To run the python server inside a docker:
 
-```
-docker run --rm -it --name Python-HAFAH-instance -p 8080:6543 -e POSTGRES_URL=postgresql://haf_app_admin@172.17.0.1:5432/haf_block_log registry.gitlab.syncad.com/hive/hafah/python-instance:COMMIT_SHA
-```
 To run the postgrest server inside a docker:
 ```
 docker run --rm -it --name Postgrest-HAFAH-instance -p 8081:6543 -e POSTGRES_URL=postgresql://haf_app_admin@172.17.0.1:5432/haf_block_log registry.gitlab.syncad.com/hive/hafah/postgrest-instance:COMMIT_SHA
@@ -101,7 +81,7 @@ scripts/ci-helpers/build_instance.sh "postgrest-latest" . registry.gitlab.syncad
 
 Parameters are:
 
- - `--use-postgrest=0 or 1`     Whether to use Postgrest or Python backend (default: 1)
+ - `--use-postgrest=1`          Just left for compatiblity - always uses Postgrest backend (default: 1)
  - `--http-port=PORT`           HTTP port to be used by HAfAH (default: 6543)
  - `--haf-postgres-url=URL`     HAF PostgreSQL URL, (default: postgresql://haf_app_admin@172.17.0.1:5432/haf_block_log)
  - `-?/--help`                  Print help screen and exit
