@@ -374,8 +374,9 @@ prepare_haf_image_testnet:
 
 hafah_pytest_fuctional_tests:
   stage: test
-  extends: .pytest_based
+  extends: .pattern_tests
   needs:
+    - !reference [.pattern_tests, needs]
     - job: prepare_haf_image_testnet
       artifacts: true
     - job: prepare_postgrest_hafah_image
@@ -392,6 +393,14 @@ hafah_pytest_fuctional_tests:
     DB_NAME: haf_block_log
     DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
   script:
+      # - export PATH="/home/haf_admin/.local/bin:$PATH"
+    - curl -sSL https://install.python-poetry.org | python3 -  # install poetry in isolated environment
+    - python3 -m venv venv/
+    - . venv/bin/activate
+    - (cd $CI_PROJECT_DIR/haf/hive/tests/hive-local-tools && poetry install)
+    - (cd $CI_PROJECT_DIR/tests/integration/hafah-local-tools && poetry install)
+
+
     - ls -la
     - cd /builds/hive/HAfAH
     - ls -la
@@ -407,7 +416,7 @@ hafah_pytest_fuctional_tests:
 
     # run tests
     - cd $CI_PROJECT_DIR/tests/integration/functional
-    - pytest --junitxml report.xml -n ${PYTEST_NUMBER_OF_PROCESSES} --postgrest-image=$HAFAH_IMAGE_NAME --postgres-db-url=$DB_URL
+    - pytest --junitxml report.xml -n ${PYTEST_NUMBER_OF_PROCESSES} --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL
   artifacts:
     paths:
     - "**/generated_during_*"
