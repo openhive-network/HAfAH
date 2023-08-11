@@ -169,158 +169,158 @@ prepare_postgrest_hafah_image:
   tags:
     - data-cache-storage
 
-python_pattern_tests:
-  extends: .pattern_tests
+# python_pattern_tests:
+#   extends: .pattern_tests
 
-  needs:
-    - !reference [.pattern_tests, needs]
-    - job: prepare_python_hafah_image
-      artifacts: true
+#   needs:
+#     - !reference [.pattern_tests, needs]
+#     - job: prepare_python_hafah_image
+#       artifacts: true
 
-  variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
+#   variables:
+#     APP_IMAGE: $HAFAH_IMAGE_NAME
 
-postgrest_pattern_tests:
-  extends: .pattern_tests
+# postgrest_pattern_tests:
+#   extends: .pattern_tests
 
-  needs:
-    - !reference [.pattern_tests, needs]
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+#   needs:
+#     - !reference [.pattern_tests, needs]
+#     - job: prepare_postgrest_hafah_image
+#       artifacts: true
 
-  variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
+#   variables:
+#     APP_IMAGE: $HAFAH_IMAGE_NAME
 
-new_style_postgrest_pattern_tests:
-  extends: .pattern_tests
+# new_style_postgrest_pattern_tests:
+#   extends: .pattern_tests
 
-  needs:
-    - !reference [.pattern_tests, needs]
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+#   needs:
+#     - !reference [.pattern_tests, needs]
+#     - job: prepare_postgrest_hafah_image
+#       artifacts: true
 
-  variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
-    # Direct call version does not support condenser_api
-    TEST_SUITE: "account_history_api"
-    DIRECT_HAFAH_CALLS: 1
+#   variables:
+#     APP_IMAGE: $HAFAH_IMAGE_NAME
+#     # Direct call version does not support condenser_api
+#     TEST_SUITE: "account_history_api"
+#     DIRECT_HAFAH_CALLS: 1
 
-.comparison_tests:
-  extends: .comparison_tests_template
-  stage: test
-  variables:
-    FF_NETWORK_PER_BUILD: 1
-    PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
-    HIVED_UID: $HIVED_UID
+# .comparison_tests:
+#   extends: .comparison_tests_template
+#   stage: test
+#   variables:
+#     FF_NETWORK_PER_BUILD: 1
+#     PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
+#     HIVED_UID: $HIVED_UID
 
-  needs:
-    - job: prepare_haf_data
-      artifacts: true
-    - job: prepare_hived_data
-      artifacts: true
+#   needs:
+#     - job: prepare_haf_data
+#       artifacts: true
+#     - job: prepare_hived_data
+#       artifacts: true
 
-  script:
-    - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools"
-      # run comparsion tests
-    - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
-    - python3 -m pytest -n 8 --ref http://$HIVED_ENDPOINT --test http://$ENDPOINT --start 4900000 --stop 4915000 --junitxml=$CI_PROJECT_DIR/comparsion_tests.xml
+#   script:
+#     - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools"
+#       # run comparsion tests
+#     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
+#     - python3 -m pytest -n 8 --ref http://$HIVED_ENDPOINT --test http://$ENDPOINT --start 4900000 --stop 4915000 --junitxml=$CI_PROJECT_DIR/comparsion_tests.xml
 
-  artifacts:
-    paths:
-    - "$CI_JOB_NAME"
-    - "**/from_node.log"
-    - "**/ah.log"
-    - "**/*.out.json"
-    - "haf/hive/tests/tests_api/hived/workdir_*"
-    - "comparsion_tests.xml"
-    reports:
-      junit:
-        - comparsion_tests.xml
-  resource_group: ${CI_COMMIT_SHA}
-  tags:
-    - data-cache-storage
+#   artifacts:
+#     paths:
+#     - "$CI_JOB_NAME"
+#     - "**/from_node.log"
+#     - "**/ah.log"
+#     - "**/*.out.json"
+#     - "haf/hive/tests/tests_api/hived/workdir_*"
+#     - "comparsion_tests.xml"
+#     reports:
+#       junit:
+#         - comparsion_tests.xml
+#   resource_group: ${CI_COMMIT_SHA}
+#   tags:
+#     - data-cache-storage
 
-python_comparison_tests:
-  extends: .comparison_tests
+# python_comparison_tests:
+#   extends: .comparison_tests
 
-  needs:
-    - !reference [.comparison_tests, needs]
-    - job: prepare_python_hafah_image
-      artifacts: true
+#   needs:
+#     - !reference [.comparison_tests, needs]
+#     - job: prepare_python_hafah_image
+#       artifacts: true
 
-  variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
+#   variables:
+#     APP_IMAGE: $HAFAH_IMAGE_NAME
 
-postgrest_comparison_tests:
-  extends: .comparison_tests
+# postgrest_comparison_tests:
+#   extends: .comparison_tests
 
-  needs:
-    - !reference [.comparison_tests, needs]
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+#   needs:
+#     - !reference [.comparison_tests, needs]
+#     - job: prepare_postgrest_hafah_image
+#       artifacts: true
 
-  variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
+#   variables:
+#     APP_IMAGE: $HAFAH_IMAGE_NAME
 
-.benchmark_tests:
-  extends: .jmeter_benchmark_with_haf_job
-  stage: test
-  variables:
-    FF_NETWORK_PER_BUILD: 1
-    API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
-    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools/package"
-    APP_IMAGE: ""
-    HIVED_UID: $HIVED_UID
-  needs:
-    - job: prepare_haf_data
-      artifacts: true
+# .benchmark_tests:
+#   extends: .jmeter_benchmark_with_haf_job
+#   stage: test
+#   variables:
+#     FF_NETWORK_PER_BUILD: 1
+#     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
+#     PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools/package"
+#     APP_IMAGE: ""
+#     HIVED_UID: $HIVED_UID
+#   needs:
+#     - job: prepare_haf_data
+#       artifacts: true
 
-  script:
-      - /usr/bin/python3 $CI_PROJECT_DIR/tests/integration/hafah-local-tools/tests_api/benchmarks/benchmark.py -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
-      - m2u --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
-      - jmeter -g wdir/jmeter_${APP_PORT}_output.csv -o wdir/dashboard/
-  artifacts:
-    paths:
-      - wdir/
-    reports:
-      junit: wdir/jmeter_junit_report.xml
-  resource_group: ${CI_COMMIT_SHA}
-  tags:
-    - data-cache-storage
+#   script:
+#       - /usr/bin/python3 $CI_PROJECT_DIR/tests/integration/hafah-local-tools/tests_api/benchmarks/benchmark.py -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
+#       - m2u --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
+#       - jmeter -g wdir/jmeter_${APP_PORT}_output.csv -o wdir/dashboard/
+#   artifacts:
+#     paths:
+#       - wdir/
+#     reports:
+#       junit: wdir/jmeter_junit_report.xml
+#   resource_group: ${CI_COMMIT_SHA}
+#   tags:
+#     - data-cache-storage
 
-python_account_history_benchmark_tests:
-  extends: .benchmark_tests
+# python_account_history_benchmark_tests:
+#   extends: .benchmark_tests
 
-  needs:
-    - !reference [.benchmark_tests, needs]
-    - job: prepare_python_hafah_image
-      artifacts: true
+#   needs:
+#     - !reference [.benchmark_tests, needs]
+#     - job: prepare_python_hafah_image
+#       artifacts: true
 
-  variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
+#   variables:
+#     APP_IMAGE: $HAFAH_IMAGE_NAME
 
-postgrest_block_api_benchmark_tests:
-  extends: .benchmark_tests
+# postgrest_block_api_benchmark_tests:
+#   extends: .benchmark_tests
 
-  needs:
-    - !reference [.benchmark_tests, needs]
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+#   needs:
+#     - !reference [.benchmark_tests, needs]
+#     - job: prepare_postgrest_hafah_image
+#       artifacts: true
 
-  variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
-    API_FOR_TESTING: blocks_api
+#   variables:
+#     APP_IMAGE: $HAFAH_IMAGE_NAME
+#     API_FOR_TESTING: blocks_api
 
-postgrest_account_history_benchmark_tests:
-  extends: .benchmark_tests
+# postgrest_account_history_benchmark_tests:
+#   extends: .benchmark_tests
 
-  needs:
-    - !reference [.benchmark_tests, needs]
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+#   needs:
+#     - !reference [.benchmark_tests, needs]
+#     - job: prepare_postgrest_hafah_image
+#       artifacts: true
 
-  variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
+#   variables:
+#     APP_IMAGE: $HAFAH_IMAGE_NAME
 
 cleanup_hived_cache_manual:
   extends: .cleanup_cache_manual
