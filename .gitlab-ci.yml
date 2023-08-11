@@ -384,7 +384,6 @@ hafah_pytest_fuctional_tests:
   image: $BUILDER_IMAGE_PATH
   services:
     - *hfm-only-service
-    - !reference [.pattern_tests, needs]
     - name: $APP_IMAGE
       alias: app
   variables:
