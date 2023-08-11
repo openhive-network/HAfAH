@@ -5,7 +5,8 @@ import test_tools as tt
 from hafah_local_tools import send_request_to_hafah
 
 
-def test_get_empty_history(postgrest_hafah, wallet):
+def test_get_empty_history(node_set, wallet):
+    init_node, haf_node, postgrest_hafah = node_set
     wallet.create_account("alice")
     response = send_request_to_hafah(
         postgrest_hafah, "get_account_history", account="alice", include_reversible=False
@@ -21,9 +22,9 @@ def test_get_empty_history(postgrest_hafah, wallet):
     ),
 )
 def test_check_for_newly_created_history_operations(
-    postgrest_hafah, wallet, node_set, include_reversible
+    node_set, wallet, include_reversible
 ):
-    init_node, haf_node = node_set
+    init_node, haf_node, postgrest_hafah = node_set
     wallet.create_account(f"bob-{int(include_reversible)}", hives=100)
 
     if not include_reversible:
@@ -39,7 +40,8 @@ def test_check_for_newly_created_history_operations(
     assert len(response["history"]) > 0
 
 
-def test_filter_only_transfer_ops(postgrest_hafah, wallet):
+def test_filter_only_transfer_ops(node_set, wallet):
+    init_node, haf_node, postgrest_hafah = node_set
     wallet.create_account("carol", hives=100)
 
     response = send_request_to_hafah(
@@ -54,7 +56,8 @@ def test_filter_only_transfer_ops(postgrest_hafah, wallet):
 
 
 @pytest.mark.parametrize("step", (1, 2, 4, 8, 16, 32, 64))
-def test_pagination(postgrest_hafah, wallet, step: int):
+def test_pagination(node_set, wallet, step: int):
+    init_node, haf_node, postgrest_hafah = node_set
     amount_of_transfers = 59
     amount_of_operations_from_account_creation = 5
     total_amount_of_operations = (
@@ -91,3 +94,59 @@ def test_pagination(postgrest_hafah, wallet, step: int):
 
     ops_from_pagination = list(sorted(ops_from_pagination, key=lambda x: x[0]))
     assert ops_from_pagination == response["history"]
+
+
+@pytest.mark.parametrize(
+    "include_reversible",
+    (
+        True,
+        False,
+    ),
+)
+def test_get_transaction_in_reversible_block(
+    node_set, wallet, include_reversible
+):
+    init_node, haf_node, postgrest_hafah = node_set
+    wallet.close()
+    wallet = tt.Wallet(
+        attach_to=init_node, additional_arguments=["--transaction-serialization=hf26"]
+    )
+    transaction = wallet.create_account(f"ewa-{int(include_reversible)}")
+    if not include_reversible:
+        haf_node.wait_for_irreversible_block()
+    # delete one additional key to compare transactions
+    del transaction["rc_cost"]
+    response = send_request_to_hafah(
+        postgrest_hafah,
+        "get_transaction",
+        id=transaction["transaction_id"],
+        include_reversible=include_reversible,
+    )
+    assert response == transaction
+
+
+@pytest.mark.parametrize(
+    "incorrect_id",
+    (
+        # too short hex, correct hex but unknown transaction, too long hex
+        "123",
+        "1000000000000000000000000000000000000000",
+        "10000000000000000000000000000000000000001",
+    ),
+)
+@pytest.mark.parametrize(
+    "include_reversible",
+    (
+        False,
+        True,
+    ),
+)
+def test_wrong_transaction_id(node_set, incorrect_id, include_reversible):
+    init_node, haf_node, postgrest_hafah = node_set
+    with pytest.raises(tt.exceptions.CommunicationError):
+        send_request_to_hafah(
+            postgrest_hafah,
+            "get_transaction",
+            id=incorrect_id,
+            include_reversible=include_reversible,
+        )
