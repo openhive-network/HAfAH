@@ -384,6 +384,9 @@ hafah_pytest_fuctional_tests:
   image: $BUILDER_IMAGE_PATH
   services:
     - *hfm-only-service
+    - !reference [.pattern_tests, needs]
+    - name: $APP_IMAGE
+      alias: app
   variables:
     BINARY_CACHE_PATH: "haf-testnet-binaries"
     HIVED_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/hived"
@@ -392,6 +395,8 @@ hafah_pytest_fuctional_tests:
     CLI_WALLET_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/cli_wallet"
     DB_NAME: haf_block_log
     DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
+    APP_IMAGE: $HAFAH_IMAGE_NAME
+    POSTGRES_URL: $DB_URL
   script:
       # - export PATH="/home/haf_admin/.local/bin:$PATH"
     - curl -sSL https://install.python-poetry.org | python3 -  # install poetry in isolated environment
