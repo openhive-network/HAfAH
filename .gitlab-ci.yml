@@ -118,11 +118,11 @@ prepare_haf_data:
     - public-runner-docker
     - hived-for-tests
 
-prepare_python_hafah_image:
-  extends: .prepare_hafah_image
-  variables:
-    HAFAH_IMAGE_TAG: python-$CI_COMMIT_SHORT_SHA
-    USE_POSTGREST: 0
+# prepare_python_hafah_image:
+#   extends: .prepare_hafah_image
+#   variables:
+#     HAFAH_IMAGE_TAG: python-$CI_COMMIT_SHORT_SHA
+#     USE_POSTGREST: 0
 
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
