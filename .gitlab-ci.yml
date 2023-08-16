@@ -423,6 +423,7 @@ prepare_haf_image_testnet:
     when: always
     expire_in: 1 week
   interruptible: true
+  resource_group:
   tags:
     - hived-for-tests
 
