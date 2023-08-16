@@ -396,7 +396,6 @@ prepare_haf_image_testnet:
     DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
     APP_IMAGE: $HAFAH_IMAGE_NAME
     POSTGRES_URL: $DB_URL
-    PYTEST_MARK:
   script:
       # - export PATH="/home/haf_admin/.local/bin:$PATH"
     - curl -sSL https://install.python-poetry.org | python3 -  # install poetry in isolated environment
@@ -423,6 +422,7 @@ prepare_haf_image_testnet:
     when: always
     expire_in: 1 week
   interruptible: true
+  resource_group:
   tags:
     - hived-for-tests
 
