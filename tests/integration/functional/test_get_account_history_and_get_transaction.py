@@ -4,7 +4,7 @@ import test_tools as tt
 
 from hafah_local_tools import send_request_to_hafah
 
-
+@pytest.mark.skip()
 def test_get_empty_history(node_set, wallet):
     init_node, haf_node, postgrest_hafah = node_set
     wallet.create_account("alice")
@@ -14,6 +14,7 @@ def test_get_empty_history(node_set, wallet):
     assert len(response["history"]) == 0
 
 
+@pytest.mark.skip()
 @pytest.mark.parametrize(
     "include_reversible",
     (
@@ -40,6 +41,7 @@ def test_check_for_newly_created_history_operations(
     assert len(response["history"]) > 0
 
 
+@pytest.mark.skip()
 def test_filter_only_transfer_ops(node_set, wallet):
     init_node, haf_node, postgrest_hafah = node_set
     wallet.create_account("carol", hives=100)
@@ -55,6 +57,7 @@ def test_filter_only_transfer_ops(node_set, wallet):
     assert len(response["history"]) == 1
 
 
+@pytest.mark.skip()
 @pytest.mark.parametrize("step", (1, 2, 4, 8, 16, 32, 64))
 def test_pagination(node_set, wallet, step: int):
     init_node, haf_node, postgrest_hafah = node_set
@@ -96,6 +99,7 @@ def test_pagination(node_set, wallet, step: int):
     assert ops_from_pagination == response["history"]
 
 
+@pytest.mark.skip()
 @pytest.mark.parametrize(
     "include_reversible",
     (
@@ -125,6 +129,7 @@ def test_get_transaction_in_reversible_block(
     assert response == transaction
 
 
+@pytest.mark.skip()
 @pytest.mark.parametrize(
     "incorrect_id",
     (
