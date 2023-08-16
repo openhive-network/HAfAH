@@ -420,7 +420,7 @@ hafah_pytest_fuctional_tests:
 
     # run tests
     - cd $CI_PROJECT_DIR/tests/integration/functional
-    - pytest --junitxml report.xml -n ${PYTEST_NUMBER_OF_PROCESSES} --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL
+    - pytest --junitxml report.xml --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL
   artifacts:
     paths:
     - "**/generated_during_*"
