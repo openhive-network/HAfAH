@@ -372,7 +372,7 @@ prepare_haf_image_testnet:
     - (cd $CI_PROJECT_DIR/haf/hive/tests/hive-local-tools && poetry install)
     - (cd $CI_PROJECT_DIR/tests/integration/hafah-local-tools && poetry install)
 
-hafah_pytest_fuctional_tests:
+.hafah_pytest_fuctional_tests_base:
   stage: test
   extends: .pattern_tests
   needs:
@@ -396,6 +396,7 @@ hafah_pytest_fuctional_tests:
     DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
     APP_IMAGE: $HAFAH_IMAGE_NAME
     POSTGRES_URL: $DB_URL
+    PYTEST_MARK:
   script:
       # - export PATH="/home/haf_admin/.local/bin:$PATH"
     - curl -sSL https://install.python-poetry.org | python3 -  # install poetry in isolated environment
@@ -405,22 +406,14 @@ hafah_pytest_fuctional_tests:
     - (cd $CI_PROJECT_DIR/tests/integration/hafah-local-tools && poetry install)
 
 
-    - ls -la
-    - cd /builds/hive/HAfAH
-    - ls -la
-    - cd /builds/hive/HAfAH/postgrest
-    - ls -la
     # setup postgres and DB for work with hafah
     - $CI_PROJECT_DIR/scripts/setup_postgres.sh --postgres-url="$DB_URL"
     - bash ${CI_PROJECT_DIR}/scripts/generate_version_sql.bash ${CI_PROJECT_DIR}
     - $CI_PROJECT_DIR/scripts/setup_db.sh --postgres-url="$DB_URL"
 
-    # # setup postgrest
-    # - $CI_PROJECT_DIR/scripts/setup_postgrest.sh
-
     # run tests
     - cd $CI_PROJECT_DIR/tests/integration/functional
-    - pytest --junitxml report.xml --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL
+    - pytest --junitxml report.xml --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL -m $PYTEST_MARK
   artifacts:
     paths:
     - "**/generated_during_*"
@@ -432,3 +425,13 @@ hafah_pytest_fuctional_tests:
   interruptible: true
   tags:
     - hived-for-tests
+
+hafah_pytest_fuctional_tests_part1:
+  extends: .hafah_pytest_fuctional_tests_base
+  variables:
+    PYTEST_MARK: "enum_virtual_ops_and_get_ops_in_block"
+
+hafah_pytest_fuctional_tests_part2:
+  extends: .hafah_pytest_fuctional_tests_base
+  variables:
+    PYTEST_MARK: "get_account_history_and_get_transaction"
