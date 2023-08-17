@@ -55,7 +55,8 @@ def haf_node(init_node, postgres_db_url):
 
 
 @pytest.fixture(scope="module")
-def postgrest_hafah(postgrest_hafah_adress):
+def postgrest_hafah(haf_node, postgrest_hafah_adress):
+    # hafah implicitly requires the haf_noda to be running for proper operation
     postgrest_hafah = tt.RemoteNode(postgrest_hafah_adress)
 
     return postgrest_hafah
