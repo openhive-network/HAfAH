@@ -19,6 +19,8 @@ variables:
 
   # Variables required by Common CI jobs
   TOX_IMAGE_TAG: "59834935f116dce106fdf9fb98e44a6f646f5eba"
+  HAFAH_BUILD_DIR: "$CI_PROJECT_DIR/build"
+  BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/haf/ci-base-image@sha256:b639fee3a6f7761a8e38777045e65bc012fbd2ad01bf366e5e9211ac765f9629"
 
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
   DATA_CACHE_HIVE_TEMPLATE: /cache/replay_data_hafah_hived
@@ -96,6 +98,8 @@ prepare_haf_data:
     SOURCE_DIR: $CI_PROJECT_DIR
 
   script:
+    - echo $HAFAH_IMAGE_NAME
+    - echo $SOURCE_DIR
     - |
       scripts/ci-helpers/build_instance.sh
       docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
@@ -128,7 +132,7 @@ prepare_postgrest_hafah_image:
   stage: test
   variables:
     FF_NETWORK_PER_BUILD: 1
-    PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
+    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools/package"
     APP_IMAGE: ""
     TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
     DIRECT_HAFAH_CALLS: 0
@@ -213,7 +217,7 @@ new_style_postgrest_pattern_tests:
       artifacts: true
 
   script:
-    - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt "$CI_PROJECT_DIR/tests/test-tools"
+    - pip3 install -r $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests/requirements.txt "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools"
       # run comparsion tests
     - cd $CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests
     - python3 -m pytest -n 8 --ref http://$HIVED_ENDPOINT --test http://$ENDPOINT --start 4900000 --stop 4915000 --junitxml=$CI_PROJECT_DIR/comparsion_tests.xml
@@ -261,7 +265,7 @@ postgrest_comparison_tests:
   variables:
     FF_NETWORK_PER_BUILD: 1
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
-    PYTHONPATH: "$CI_PROJECT_DIR/tests/test-tools/package"
+    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools/package"
     APP_IMAGE: ""
     HIVED_UID: $HIVED_UID
   needs:
@@ -269,7 +273,7 @@ postgrest_comparison_tests:
       artifacts: true
 
   script:
-      - /usr/bin/python3 $CI_PROJECT_DIR/tests/tests_api/benchmarks/benchmark.py -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
+      - /usr/bin/python3 $CI_PROJECT_DIR/tests/integration/hafah-local-tools/tests_api/benchmarks/benchmark.py -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
       - m2u --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
       - jmeter -g wdir/jmeter_${APP_PORT}_output.csv -o wdir/dashboard/
   artifacts:
@@ -331,3 +335,91 @@ build_and_publish_image:
     - scripts/ci-helpers/build_and_publish_instance.sh
   tags:
     - public-runner-docker
+
+prepare_haf_image_testnet:
+  extends: .prepare_haf_image
+  stage: build
+  variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
+    REGISTRY_USER: "$CI_IMG_BUILDER_USER"
+    REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
+    HIVE_NETWORK_TYPE: testnet
+    BINARY_CACHE_PATH: "haf-testnet-binaries"
+  tags:
+    - public-runner-docker
+    - hived-for-tests
+
+.hfm-only-service: &hfm-only-service
+  name: $HAF_IMAGE_NAME
+  alias: hfm-only-instance
+  variables:
+    # Allow access from any network to eliminate CI IP addressing problems when hfm runs as service
+    PG_ACCESS: |
+                "host    all              haf_admin        0.0.0.0/0    trust"
+                "host    all              haf_app_admin    0.0.0.0/0    trust"
+                "host    all              all              0.0.0.0/0    scram-sha-256"
+  command: ["--postgres"]
+
+.hafah_pytest_fuctional_tests_base:
+  stage: test
+  extends: .pattern_tests
+  needs:
+    - !reference [.pattern_tests, needs]
+    - job: prepare_haf_image_testnet
+      artifacts: true
+    - job: prepare_postgrest_hafah_image
+      artifacts: true
+  image: $BUILDER_IMAGE_PATH
+  services:
+    - *hfm-only-service
+    - name: $APP_IMAGE
+      alias: app
+  variables:
+    BINARY_CACHE_PATH: "haf-testnet-binaries"
+    HIVED_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/hived"
+    COMPRESS_BLOCK_LOG_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/compress_block_log"
+    GET_DEV_KEY_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/get_dev_key"
+    CLI_WALLET_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/cli_wallet"
+    DB_NAME: haf_block_log
+    DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
+    APP_IMAGE: $HAFAH_IMAGE_NAME
+    POSTGRES_URL: $DB_URL
+  script:
+      # - export PATH="/home/haf_admin/.local/bin:$PATH"
+    - curl -sSL https://install.python-poetry.org | python3 -  # install poetry in isolated environment
+    - python3 -m venv venv/
+    - . venv/bin/activate
+    - (cd $CI_PROJECT_DIR/haf/hive/tests/hive-local-tools && poetry install)
+    - (cd $CI_PROJECT_DIR/tests/integration/hafah-local-tools && poetry install)
+
+
+    # setup postgres and DB for work with hafah
+    - $CI_PROJECT_DIR/scripts/setup_postgres.sh --postgres-url="$DB_URL"
+    - bash ${CI_PROJECT_DIR}/scripts/generate_version_sql.bash ${CI_PROJECT_DIR}
+    - $CI_PROJECT_DIR/scripts/setup_db.sh --postgres-url="$DB_URL"
+
+    # run tests
+    - cd $CI_PROJECT_DIR/tests/integration/functional
+    - pytest --junitxml report.xml --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL -m $PYTEST_MARK
+  artifacts:
+    paths:
+    - "**/generated_during_*"
+    - "**/generated_by_package_fixtures"
+    reports:
+      junit: tests/integration/system/haf/report.xml
+    when: always
+    expire_in: 1 week
+  interruptible: true
+  resource_group:
+  tags:
+    - hived-for-tests
+
+hafah_pytest_fuctional_tests_part1:
+  extends: .hafah_pytest_fuctional_tests_base
+  variables:
+    PYTEST_MARK: "enum_virtual_ops_and_get_ops_in_block"
+
+hafah_pytest_fuctional_tests_part2:
+  extends: .hafah_pytest_fuctional_tests_base
+  variables:
+    PYTEST_MARK: "get_account_history_and_get_transaction"
