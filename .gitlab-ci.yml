@@ -358,7 +358,7 @@ prepare_haf_image_testnet:
                 "host    all              haf_admin        0.0.0.0/0    trust"
                 "host    all              haf_app_admin    0.0.0.0/0    trust"
                 "host    all              all              0.0.0.0/0    scram-sha-256"
-  command: ["--execute-maintenance-script=/home/haf_admin/haf/scripts/maintanance-scripts/sleep_infinity.sh"]
+  command: ["--execute-maintenance-script=/home/haf_admin/haf/scripts/maintenance-scripts/sleep_infinity.sh"]
 
 .hafah_pytest_fuctional_tests_base:
   stage: test
