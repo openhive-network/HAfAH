@@ -358,7 +358,7 @@ prepare_haf_image_testnet:
                 "host    all              haf_admin        0.0.0.0/0    trust"
                 "host    all              haf_app_admin    0.0.0.0/0    trust"
                 "host    all              all              0.0.0.0/0    scram-sha-256"
-  command: ["--postgres"]
+  command: ["--execute-maintenance-script=/home/haf_admin/haf/scripts/maintanance-scripts/sleep_infinity.sh"]
 
 .hafah_pytest_fuctional_tests_base:
   stage: test
@@ -400,7 +400,7 @@ prepare_haf_image_testnet:
 
     # run tests
     - cd $CI_PROJECT_DIR/tests/integration/functional
-    - pytest --junitxml report.xml --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL -m $PYTEST_MARK
+    - pytest --junitxml report.xml --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL -m $PYTEST_MARK -p no:randomly
   artifacts:
     paths:
     - "**/generated_during_*"

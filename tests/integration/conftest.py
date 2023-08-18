@@ -62,5 +62,6 @@ def postgrest_hafah(haf_node, postgrest_hafah_adress):
 
 @pytest.fixture(scope="module")
 def wallet(init_node):
+    tt.logger.info(f"init_node.http_endpoint {init_node.http_endpoint}")
     wallet = tt.Wallet(attach_to=init_node)
     return wallet
