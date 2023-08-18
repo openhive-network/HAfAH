@@ -42,7 +42,9 @@ def init_node():
 
 @pytest.fixture(scope="module")
 def haf_node(init_node, postgres_db_url):
-    haf_node = HafNode(database_url=postgres_db_url, keep_database=True, create_unique_database=False)
+    haf_node = HafNode(
+        database_url=postgres_db_url, keep_database=True, create_unique_database=False
+    )
 
     connect_nodes(init_node, haf_node)
     haf_node.run()
