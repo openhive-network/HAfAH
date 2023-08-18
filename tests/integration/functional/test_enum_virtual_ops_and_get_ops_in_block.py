@@ -22,7 +22,7 @@ def send_transfers_to_vesting_from_initminer(
 def test_get_operations_in_block_with_and_without_reversible(
     postgrest_hafah, wallet, include_reversible, comparison_type
 ):
-    block_number = wallet.create_account(f"fred-{int(include_reversible)}")["block_num"]
+    block_number = wallet.create_account(f"alice-{int(include_reversible)}")["block_num"]
 
     response = send_request_to_hafah(
         postgrest_hafah,
@@ -138,10 +138,10 @@ def test_find_irreversible_operations(haf_node, postgrest_hafah):
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
 def test_find_newly_created_virtual_op(haf_node, postgrest_hafah, wallet):
     block_to_start = haf_node.get_last_block_number()
-    wallet.create_account("alice")
+    wallet.create_account("bob")
     # transfer_to_vesting indicates transfer_to_vesting_completed virtual operation
     transaction = wallet.api.transfer_to_vesting(
-        "initminer", "alice", tt.Asset.Test(100)
+        "initminer", "bob", tt.Asset.Test(100)
     )
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
@@ -179,7 +179,7 @@ def test_grouping_by_block(haf_node, postgrest_hafah, wallet):
     accounts_to_create = 20
     # create many accounts in different blocks
     for x in range(accounts_to_create):
-        wallet.create_account(f"bob-{x}")
+        wallet.create_account(f"carol-{x}")
 
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
@@ -214,17 +214,17 @@ def test_list_vops_partly_in_irreversible_and_partly_in_reversible_blocks(
 ):
     haf_node.wait_number_of_blocks(1)
     block_to_start = haf_node.get_last_block_number()
-    wallet.create_account(f"carol-{int(group_by_block)}")
+    wallet.create_account(f"dan-{int(group_by_block)}")
 
     send_transfers_to_vesting_from_initminer(
-        wallet, amount=3, to=f"carol-{int(group_by_block)}"
+        wallet, amount=3, to=f"dan-{int(group_by_block)}"
     )
 
     # make ops irreversible
     haf_node.wait_for_irreversible_block()
 
     send_transfers_to_vesting_from_initminer(
-        wallet, amount=3, to=f"carol-{int(group_by_block)}"
+        wallet, amount=3, to=f"dan-{int(group_by_block)}"
     )
 
     # block_range_end arg takes block number exclusively that's why wait 1 more block
@@ -283,7 +283,7 @@ def test_number_of_producer_reward_ops(haf_node, postgrest_hafah):
 def test_pagination(haf_node, postgrest_hafah, wallet):
     haf_node.wait_number_of_blocks(1)
     block_to_start = haf_node.get_last_block_number()
-    wallet.create_accounts(number_of_accounts=15, name_base="dan")
+    wallet.create_accounts(number_of_accounts=15, name_base="elen")
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
     end_block = haf_node.get_last_block_number()
@@ -327,7 +327,7 @@ def test_default_args_value(postgrest_hafah):
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
 @pytest.mark.parametrize("only_virtual, number_of_ops", ((False, 3), (True, 2)))
 def test_filter_virtual_ops(postgrest_hafah, wallet, only_virtual, number_of_ops):
-    block_number = wallet.create_account(f"eric-{int(only_virtual)}")["block_num"]
+    block_number = wallet.create_account(f"fred-{int(only_virtual)}")["block_num"]
     response = send_request_to_hafah(
         postgrest_hafah,
         "get_ops_in_block",
