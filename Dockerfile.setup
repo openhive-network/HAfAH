@@ -1,0 +1,21 @@
+FROM alpine:3.18.3
+RUN apk --no-cache add postgresql14-client bash
+
+RUN mkdir -p /hafah/scripts
+RUN mkdir -p /hafah/queries
+RUN mkdir -p /hafah/postgrest
+RUN mkdir -p /hafah/haf/scripts
+
+COPY docker/setup_entrypoint.sh /hafah/scripts/setup_entrypoint.sh
+COPY scripts/common.sh /hafah/scripts/common.sh 
+COPY scripts/install_app.sh /hafah/scripts/install_app.sh 
+COPY scripts/setup_postgres.sh /hafah/scripts/setup_postgres.sh
+COPY queries /hafah/queries
+COPY postgrest /hafah/postgrest
+COPY set_version_in_sql.pgsql /hafah/set_version_in_sql.pgsql
+COPY haf/scripts/common.sh /hafah/haf/scripts/common.sh
+COPY haf/scripts/create_haf_app_role.sh /hafah/haf/scripts/create_haf_app_role.sh
+
+WORKDIR /hafah/scripts
+
+ENTRYPOINT ["/hafah/scripts/setup_entrypoint.sh"]
