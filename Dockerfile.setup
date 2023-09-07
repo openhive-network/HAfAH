@@ -12,7 +12,7 @@ COPY scripts/install_app.sh /hafah/scripts/install_app.sh
 COPY scripts/setup_postgres.sh /hafah/scripts/setup_postgres.sh
 COPY queries /hafah/queries
 COPY postgrest /hafah/postgrest
-COPY set_version_in_sql.pgsql /hafah/set_version_in_sql.pgsql
+COPY set_version_in_sql.pgsql /hafah/scripts/set_version_in_sql.pgsql
 COPY haf/scripts/common.sh /hafah/haf/scripts/common.sh
 COPY haf/scripts/create_haf_app_role.sh /hafah/haf/scripts/create_haf_app_role.sh
 

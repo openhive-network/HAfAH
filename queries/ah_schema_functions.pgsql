@@ -559,6 +559,12 @@ BEGIN
     RAISE EXCEPTION 'Assert Exception:false: Unknown Transaction %', RPAD(encode(_trx_hash, 'hex'), 40, '0');
   END IF;
 
+  IF pre_result._block_num <= hive.app_get_irreversible_block() THEN
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
+  ELSE
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=3"}]', true);
+  END IF;
+
   RETURN ( SELECT to_json(a) FROM (
       SELECT
         pre_result._ref_block_num AS "ref_block_num",
@@ -649,6 +655,12 @@ RETURNS JSON
 AS
 $function$
 BEGIN
+  IF _block_num <= hive.app_get_irreversible_block() THEN
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
+  ELSE
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=3"}]', true);
+  END IF;
+
   RETURN (
     WITH result AS (SELECT ARRAY(
       SELECT
@@ -690,10 +702,18 @@ AS
 $function$
 DECLARE
   irr_num INT;
+  actual_last_irreversible_block_number INT;
 BEGIN
+  SELECT hive.app_get_irreversible_block() INTO actual_last_irreversible_block_number;
+  IF _block_range_end <= actual_last_irreversible_block_number THEN
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
+  ELSE
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=3"}]', true);
+  END IF;
+
   irr_num := (x'7fffffff' :: BIGINT :: INT);
   IF _include_reversible = TRUE AND _group_by_block = TRUE THEN
-    SELECT hive.app_get_irreversible_block() INTO irr_num;
+    irr_num := actual_last_irreversible_block_number;
   END IF;
 
   RETURN (
