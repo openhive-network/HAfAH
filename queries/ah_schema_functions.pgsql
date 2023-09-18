@@ -508,9 +508,14 @@ BEGIN
       ds.account_op_seq_no AS _operation_id
     FROM
     (
+      WITH accepted_types AS MATERIALIZED
+      (
+        SELECT ot.id FROM hive.operation_types ot WHERE __use_filter IS NULL OR ot.id=ANY(__resolved_filter)
+      )
       SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
       FROM hive.account_operations_view hao
-      WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit AND (__use_filter IS NULL OR hao.op_type_id=ANY(__resolved_filter))
+      JOIN accepted_types t ON hao.op_type_id = t.id
+      WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit 
       ORDER BY hao.account_op_seq_no DESC
       LIMIT _limit
     ) ds
