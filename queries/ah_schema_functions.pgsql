@@ -480,7 +480,9 @@ BEGIN
 
   __use_filter := array_length( __resolved_filter, 1 );
 
-  RETURN QUERY
+  IF __use_filter IS NULL THEN
+    -- No filters
+    RETURN QUERY
     SELECT -- hafah_python.ah_get_account_history
       (
         CASE
@@ -488,7 +490,7 @@ BEGIN
         ELSE encode( (SELECT htv.trx_hash FROM hive.transactions_view htv WHERE ho.trx_in_block >= 0 AND ds.block_num = htv.block_num AND ho.trx_in_block = htv.trx_in_block), 'hex')
         END
       ) AS _trx_id,
-    ds.block_num AS _block,
+      ds.block_num AS _block,
       (
         CASE
         WHEN ho.trx_in_block < 0 THEN 4294967295
@@ -509,15 +511,52 @@ BEGIN
     (
       SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
       FROM hive.account_operations_view hao
-      WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit AND (__use_filter IS NULL OR hao.op_type_id=ANY(__resolved_filter))
+      WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit
       ORDER BY hao.account_op_seq_no DESC
       LIMIT _limit
     ) ds
     JOIN LATERAL (SELECT hov.body, hov.op_pos, hov.timestamp, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
     JOIN LATERAL (select ot.is_virtual FROM hive.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
-    ORDER BY ds.account_op_seq_no ASC
-
-    ;
+    ORDER BY ds.account_op_seq_no ASC;
+  ELSE
+    RETURN QUERY
+    -- Make planner use the correct index for filtered calls 
+    SELECT /*+ IndexOnlyScan(ha hive_account_operations_type_account_id_op_seq_idx) */ -- hafah_python.ah_get_account_history
+      (
+        CASE
+        WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000'
+        ELSE encode( (SELECT htv.trx_hash FROM hive.transactions_view htv WHERE ho.trx_in_block >= 0 AND ds.block_num = htv.block_num AND ho.trx_in_block = htv.trx_in_block), 'hex')
+        END
+      ) AS _trx_id,
+      ds.block_num AS _block,
+      (
+        CASE
+        WHEN ho.trx_in_block < 0 THEN 4294967295
+        ELSE ho.trx_in_block
+        END
+      ) AS _trx_in_block,
+      ho.op_pos::BIGINT AS _op_in_trx,
+      hot.is_virtual AS virtual_op,
+      btrim(to_json(ho."timestamp")::TEXT, '"'::TEXT) AS formated_timestamp,
+      (
+        CASE
+          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body)::TEXT
+          ELSE ho.body :: text
+        END
+      ) AS _value,
+      ds.account_op_seq_no AS _operation_id
+    FROM
+    (
+      SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
+      FROM hive.account_operations_view hao
+      WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit AND hao.op_type_id=ANY(__resolved_filter)
+      ORDER BY hao.account_op_seq_no DESC
+      LIMIT _limit
+    ) ds
+    JOIN LATERAL (SELECT hov.body, hov.op_pos, hov.timestamp, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
+    JOIN LATERAL (select ot.is_virtual FROM hive.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
+    ORDER BY ds.account_op_seq_no ASC;
+  END IF;
 
 END
 $function$
