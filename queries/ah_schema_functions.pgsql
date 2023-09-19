@@ -540,6 +540,7 @@ LANGUAGE plpgsql STABLE
 SET JIT=OFF
 SET join_collapse_limit=16
 SET from_collapse_limit=16
+SET plan_cache_mode=force_generic_plan
 ;
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
