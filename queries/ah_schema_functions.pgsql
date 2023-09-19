@@ -510,14 +510,23 @@ BEGIN
     (
       WITH accepted_types AS MATERIALIZED
       (
-        SELECT ot.id FROM hive.operation_types ot WHERE __use_filter IS NULL OR ot.id=ANY(__resolved_filter)
+        SELECT ot.id FROM hive.operation_types ot WHERE __use_filter IS NOT NULL AND ot.id=ANY(__resolved_filter)
       )
-      SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
+      (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
       FROM hive.account_operations_view hao
       JOIN accepted_types t ON hao.op_type_id = t.id
-      WHERE hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit 
+      WHERE __use_filter IS NOT NULL AND hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit 
       ORDER BY hao.account_op_seq_no DESC
       LIMIT _limit
+      )
+      UNION ALL
+      (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
+      FROM hive.account_operations_view hao
+      WHERE __use_filter IS NULL AND hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit 
+      ORDER BY hao.account_op_seq_no DESC
+      LIMIT _limit
+      )
+
     ) ds
     JOIN LATERAL (SELECT hov.body, hov.body_binary, hov.op_pos, hov.timestamp, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
     JOIN LATERAL (select ot.is_virtual FROM hive.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
