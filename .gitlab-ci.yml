@@ -36,7 +36,7 @@ variables:
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: 365b6663b6ebc0cd00fe01f822a02ed16c294df5 # develop
+    ref: 4473da18e75282cbbeb770a17b3cd1663ac3f95e # develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: 4b62d20dfebebacf51ca8795f3d7c4df2d9b8565 # bw_reusing_pattern_tests_template_defs # It seems a variable cannot be used here
@@ -323,7 +323,6 @@ prepare_haf_image_testnet:
 
 .hafah_pytest_fuctional_tests_base:
   stage: test
-  extends: .pattern_tests
   needs:
     - job: prepare_haf_image_testnet
       artifacts: true
@@ -335,6 +334,7 @@ prepare_haf_image_testnet:
     - name: $APP_IMAGE
       alias: app
   variables:
+    FF_NETWORK_PER_BUILD: 1
     BINARY_CACHE_PATH: "haf-testnet-binaries"
     HIVED_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/hived"
     COMPRESS_BLOCK_LOG_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/compress_block_log"
@@ -343,7 +343,12 @@ prepare_haf_image_testnet:
     DB_NAME: haf_block_log
     DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
     APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_PORT: ${APP_PORT}
+    DIRECT_CALLS: 0
     POSTGRES_URL: $DB_URL
+  before_script:
+    - echo "HAfAH image name $HAF_APP_IMAGE"
+    - echo "HAF image name $HAF_IMAGE_NAME"
   script:
       # - export PATH="/home/haf_admin/.local/bin:$PATH"
     - curl -sSL https://install.python-poetry.org | python3 -  # install poetry in isolated environment
