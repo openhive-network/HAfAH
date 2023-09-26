@@ -204,7 +204,7 @@ files = []
 develop = true
 
 [package.dependencies]
-hive_local_tools = {path = "../../../hive/tests/hive-local-tools", develop = true}
+hive_local_tools = {path = "../../../hive/tests/python/hive-local-tools", develop = true}
 pandas = "1.4.0"
 psycopg2-binary = "2.9.1"
 sqlalchemy = "1.4.25"
@@ -238,7 +238,7 @@ wax = "0.0.1a4+277cf4f"
 
 [package.source]
 type = "directory"
-url = "../../../haf/hive/tests/hive-local-tools"
+url = "../../../haf/hive/tests/python/hive-local-tools"
 
 [[package]]
 name = "idna"
@@ -1050,7 +1050,7 @@ develop = true
 
 [package.source]
 type = "directory"
-url = "../../../haf/hive/tests/hive-local-tools/shared-tools"
+url = "../../../haf/hive/tests/python/hive-local-tools/shared-tools"
 
 [[package]]
 name = "six"
@@ -1212,7 +1212,7 @@ schemas = "0.0.0.post236.dev0+5f473da"
 
 [package.source]
 type = "directory"
-url = "../../../haf/hive/tests/hive-local-tools/test-tools"
+url = "../../../haf/hive/tests/python/hive-local-tools/test-tools"
 
 [[package]]
 name = "tests-api"
@@ -1231,7 +1231,7 @@ types-requests = "2.31.0.2"
 
 [package.source]
 type = "directory"
-url = "../../../haf/hive/tests/hive-local-tools/tests_api"
+url = "../../../haf/hive/tests/python/hive-local-tools/tests_api"
 
 [[package]]
 name = "tomli"
