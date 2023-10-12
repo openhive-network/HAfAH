@@ -14,13 +14,13 @@ variables:
 
   # references registry.gitlab.syncad.com/hive/hive/ci-base-image:ubuntu22.04-6
   PYTEST_RUNTIME_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive/ci-base-image@sha256:8132802ca3b7ddba1bf78e4cc5ce1fbda6874cb029e35ae855c4cb3443e477b7"
-  POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/hive-local-tools"
+  POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/hive-local-tools"
 
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
   APP_PORT: 6543
   HAF_POSTGRES_URL: postgresql://haf_app_admin@haf-instance:5432/haf_block_log
-  BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/tests_api/benchmarks"
+  BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools/tests_api/benchmarks"
 
   # Variables required by Common CI jobs
   TOX_IMAGE_TAG: "4b62d20dfebebacf51ca8795f3d7c4df2d9b8565"
@@ -36,7 +36,7 @@ variables:
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: 365b6663b6ebc0cd00fe01f822a02ed16c294df5 # develop
+    ref: 0d16d65d4f0c98f0fb7a1ead6c6b5c857984bb27 # develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: 4b62d20dfebebacf51ca8795f3d7c4df2d9b8565 # bw_reusing_pattern_tests_template_defs # It seems a variable cannot be used here
@@ -133,13 +133,13 @@ prepare_postgrest_hafah_image:
     HAF_APP_PORT: ${APP_PORT}
 
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
-    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/hive-local-tools"
+    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/hive-local-tools"
 
-    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools/package"
+    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools/test-tools/package"
 
     TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
-    PATTERN_TESTS_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/api_tests/pattern_tests"
-    JUNIT_REPORT: "haf/hive/tests/api_tests/pattern_tests/results.xml"
+    PATTERN_TESTS_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/api_tests/pattern_tests"
+    JUNIT_REPORT: "haf/hive/tests/python/api_tests/pattern_tests/results.xml"
     DIRECT_CALLS: 0
     HIVED_UID: $HIVED_UID
 
@@ -159,7 +159,7 @@ prepare_postgrest_hafah_image:
     - "**/ah.log"
     - "**/*.out.json"
     - "tests/tests_api/hived/workdir_*"
-    - "haf/hive/tests/api_tests/pattern_tests/results.xml"
+    - "haf/hive/tests/python/api_tests/pattern_tests/results.xml"
 
   resource_group: ${CI_COMMIT_SHA}
   tags:
@@ -195,8 +195,8 @@ new_style_postgrest_pattern_tests:
   stage: test
   variables:
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
-    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/hive-local-tools"
-    COMPARISON_TESTS_DIR: "$CI_PROJECT_DIR/haf/hive/tests/api_tests/comparsion_tests"
+    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/hive-local-tools"
+    COMPARISON_TESTS_DIR: "$CI_PROJECT_DIR/haf/hive/tests/python/api_tests/comparsion_tests"
     HAF_APP_PORT: ${APP_PORT}
     HIVED_UID: $HIVED_UID
 
@@ -214,7 +214,7 @@ new_style_postgrest_pattern_tests:
       - "**/*.out.json"
 
     reports:
-      junit: "haf/hive/tests/api_tests/comparsion_tests/comparsion_tests.xml"
+      junit: "haf/hive/tests/python/api_tests/comparsion_tests/comparsion_tests.xml"
 
   resource_group: ${CI_COMMIT_SHA}
   tags:
@@ -237,7 +237,7 @@ postgrest_comparison_tests:
   variables:
     FF_NETWORK_PER_BUILD: 1
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
-    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/hive-local-tools/test-tools/package"
+    PYTHONPATH: "$CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools/test-tools/package"
     APP_IMAGE: ""
     HIVED_UID: $HIVED_UID
   needs:
