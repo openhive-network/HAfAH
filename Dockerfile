@@ -2,7 +2,7 @@
 # docker build --target=ci-base-image -t registry.gitlab.syncad.com/hive/hafah/ci-base-image:ubuntu20.04-xxx -f Dockerfile .
 
 ARG CI_REGISTRY_IMAGE=registry.gitlab.syncad.com/hive/hafah
-ARG CI_IMAGE_TAG=:ubuntu20.04-5
+ARG CI_IMAGE_TAG=:ubuntu20.04-6
 
 # As described here, better to avoid Apline images usage together with Python...
 
