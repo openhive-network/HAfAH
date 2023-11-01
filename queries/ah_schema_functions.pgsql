@@ -483,7 +483,7 @@ BEGIN
   IF __use_filter IS NULL THEN
     -- No filters
     RETURN QUERY
-    SELECT -- hafah_python.ah_get_account_history
+    SELECT /*+ IndexOnlyScan(ha hive_account_operations_uq_1) */ -- hafah_python.ah_get_account_history
       (
         CASE
         WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000'
