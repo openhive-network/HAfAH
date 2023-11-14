@@ -12,8 +12,8 @@ variables:
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu22.04-5
   BUILDER_IMAGE_TAG: "@sha256:2da00c8f151d9d582c21c99b24b988e58138a6bf682516a5a8bd740af0b24c89"
 
-  # references registry.gitlab.syncad.com/hive/hive/ci-base-image:ubuntu22.04-6
-  PYTEST_RUNTIME_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive/ci-base-image@sha256:8132802ca3b7ddba1bf78e4cc5ce1fbda6874cb029e35ae855c4cb3443e477b7"
+  # references uses registry.gitlab.syncad.com/hive/hive/ci-base-image:ubuntu22.04-8
+  PYTEST_RUNTIME_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive/ci-base-image@sha256:e9f16040010ad24fffeabec66abca109b24baa79d912eba3118da58e8130fb26"
   POETRY_INSTALL_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/hive-local-tools"
 
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
