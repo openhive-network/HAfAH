@@ -38,7 +38,17 @@ include:
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: 7c58303ffb61d91ef9662ec20e7b498bc6f62b8f # develop # It seems a variable cannot be used here
-    file: '/templates/test_jobs.gitlab-ci.yml'
+    file:
+      - '/templates/test_jobs.gitlab-ci.yml'
+      - '/templates/python_projects.gitlab-ci.yml'
+
+verify_poetry_lock_sanity:
+  extends: .verify_poetry_lock_sanity_template
+  stage: build
+  variables:
+    PYPROJECT_DIR: "$CI_PROJECT_DIR/tests/integration/hafah-local-tools"
+  tags:
+    - public-runner-docker
 
 prepare_hived_image:
   extends: .prepare_hived_image
