@@ -44,7 +44,7 @@ until psql ${POSTGRES_URL} -c "SELECT 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ];
 done
 
 ./scripts/setup_postgres.sh --postgres-url=${POSTGRES_URL}
-./scripts/setup_db.sh --postgres-url=${POSTGRES_URL}
+./scripts/install_app.sh --postgres-url=${POSTGRES_URL}
 
 {
 echo "Attempting to start HafAH process..."

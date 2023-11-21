@@ -358,7 +358,7 @@ prepare_haf_image_testnet:
     # setup postgres and DB for work with hafah
     - $CI_PROJECT_DIR/scripts/setup_postgres.sh --postgres-url="$DB_URL"
     - bash ${CI_PROJECT_DIR}/scripts/generate_version_sql.bash ${CI_PROJECT_DIR}
-    - $CI_PROJECT_DIR/scripts/setup_db.sh --postgres-url="$DB_URL"
+    - $CI_PROJECT_DIR/scripts/install_app.sh --postgres-url="$DB_URL"
 
     # run tests
     - cd $CI_PROJECT_DIR/tests/integration/functional

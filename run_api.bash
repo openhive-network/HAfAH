@@ -19,7 +19,7 @@ rm -f $OUTPUT_LOG $PERFORMANCE_OUTPUT
 
 echo 'configuring server...'
 ./scripts/setup_.sh --postgres-url=$DB_URL
-./scripts/setup_db.sh --postgres-url=$DB_URL
+./scripts/install_app.sh --postgres-url=$DB_URL
 
 echo 'runnning server...'
 $ROOT_DIR/main.py -p $DB_URL -n $PORT | tee -i $OUTPUT_LOG

@@ -10,7 +10,7 @@ echo "using postgres url: $PGRST_DB_URI"
 
 setup() {
     bash $SCRIPTS_DIR/setup_postgres.sh --postgres-url=$PGRST_DB_URI
-    bash $SCRIPTS_DIR/setup_db.sh --postgres-url=$PGRST_DB_URI
+    bash $SCRIPTS_DIR/install_app.sh --postgres-url=$PGRST_DB_URI
 }
 
 start_webserver() {

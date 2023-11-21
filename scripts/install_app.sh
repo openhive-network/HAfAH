@@ -2,7 +2,7 @@
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
-LOG_FILE=setup_db.log
+LOG_FILE=install_app.log
 source "$SCRIPTPATH/common.sh"
 
 log_exec_params "$@"
