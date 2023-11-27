@@ -1,8 +1,9 @@
 #! /bin/bash
 
-SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit 1; pwd -P )"
 
-LOG_FILE=install_app.log
+export LOG_FILE=install_app.log
+# shellcheck source=common.sh
 source "$SCRIPTPATH/common.sh"
 
 log_exec_params "$@"
@@ -62,7 +63,7 @@ else
   POSTGRES_ACCESS=$POSTGRES_URL
 fi
 
-psql $POSTGRES_ACCESS -v ON_ERROR_STOP=on -f $SCRIPTPATH/../queries/ah_schema_functions.pgsql
-psql $POSTGRES_ACCESS -v ON_ERROR_STOP=on -U hafah_owner -f $SCRIPTPATH/../postgrest/hafah_backend.sql
-psql $POSTGRES_ACCESS -v ON_ERROR_STOP=on -f $SCRIPTPATH/../postgrest/hafah_endpoints.sql
-psql $POSTGRES_ACCESS -v ON_ERROR_STOP=on -f $SCRIPTPATH/../set_version_in_sql.pgsql
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/ah_schema_functions.pgsql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -U hafah_owner -f "$SCRIPTPATH/../postgrest/hafah_backend.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_endpoints.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/set_version_in_sql.pgsql"
