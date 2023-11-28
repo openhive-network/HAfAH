@@ -131,7 +131,7 @@ prepare_postgrest_hafah_image:
     USE_POSTGREST: 1
 
 .pattern_tests:
-  extends: .haf_app_pattern_tests_template 
+  extends: .haf_app_pattern_tests_template
   stage: test
   variables:
     HAF_APP_IMAGE: ""

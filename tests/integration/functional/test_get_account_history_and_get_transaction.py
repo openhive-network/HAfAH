@@ -1,4 +1,5 @@
 import pytest
+from schemas.apis.account_history_api.response_schemas import GetTransaction
 
 import test_tools as tt
 
@@ -130,7 +131,7 @@ def test_get_transaction_in_reversible_block(
         id=transaction["transaction_id"],
         include_reversible=include_reversible,
     )
-    assert response == transaction
+    assert response == GetTransaction(**transaction)
 
 
 @pytest.mark.get_account_history_and_get_transaction
