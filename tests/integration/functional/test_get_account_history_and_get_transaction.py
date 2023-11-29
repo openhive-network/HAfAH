@@ -129,7 +129,7 @@ def test_get_transaction_in_reversible_block(
         "get_transaction",
         id=transaction["transaction_id"],
         include_reversible=include_reversible,
-    )\
+    )
     assert response.dict(by_alias=True) == transaction
 
 
