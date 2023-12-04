@@ -131,7 +131,7 @@ prepare_postgrest_hafah_image:
     USE_POSTGREST: 1
 
 .pattern_tests:
-  extends: .haf_app_pattern_tests_template 
+  extends: .haf_app_pattern_tests_template
   stage: test
   variables:
     HAF_APP_IMAGE: ""
@@ -207,6 +207,10 @@ new_style_postgrest_pattern_tests:
       artifacts: true
     - job: prepare_hived_data
       artifacts: true
+
+  before_script:
+    - cp -f "$CI_PROJECT_DIR/tmp/pow2_operation.py" "$CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools/test-tools/helpy/schemas/schemas/operations/pow2_operation.py"
+    - !reference [.comparison_tests_template, before_script]
 
   artifacts:
     paths:
