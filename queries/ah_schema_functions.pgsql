@@ -482,56 +482,65 @@ BEGIN
   __use_filter := array_length( __resolved_filter, 1 );
 
   RETURN QUERY
-    SELECT -- hafah_python.ah_get_account_history
+      WITH acc_ops AS
+      (
+        (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
+        FROM hive.account_operations_view hao
+        JOIN hive.operation_types ot ON ( hao.op_type_id = ot.id )
+        WHERE __use_filter IS NOT NULL AND hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit AND ot.id = ANY(__resolved_filter)
+        ORDER BY hao.account_op_seq_no DESC
+        LIMIT _limit
+        )
+        UNION ALL
+        (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
+        FROM hive.account_operations_view hao
+        WHERE __use_filter IS NULL AND hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit 
+        ORDER BY hao.account_op_seq_no DESC
+        LIMIT _limit
+        )
+      )
+      ,bounds AS
+      (
+        SELECT MIN(block_num) __min, MAX(block_num) __max
+        FROM acc_ops
+      )
+      ,ops AS
+      (
+        SELECT acc_ops.operation_id, acc_ops.op_type_id, ot.is_virtual, acc_ops.block_num, acc_ops.account_op_seq_no, hov.body, hov.body_binary, hov.op_pos, hov.timestamp, hov.trx_in_block
+        FROM hive.operations_view hov
+        JOIN acc_ops ON ( acc_ops.operation_id = hov.id AND hov.block_num = acc_ops.block_num AND hov.block_num <= ( SELECT __max FROM bounds ) AND hov.block_num >= ( SELECT __min FROM bounds ) )
+        JOIN hive.operation_types ot ON ( acc_ops.op_type_id = ot.id )
+      )
+      SELECT -- hafah_python.ah_get_account_history
       (
         CASE
-        WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000'
-        ELSE encode( (SELECT htv.trx_hash FROM hive.transactions_view htv WHERE ho.trx_in_block >= 0 AND ds.block_num = htv.block_num AND ho.trx_in_block = htv.trx_in_block), 'hex')
+        WHEN ops.trx_in_block < 0 THEN '0000000000000000000000000000000000000000'
+        ELSE encode( (SELECT htv.trx_hash FROM hive.transactions_view htv
+        WHERE ops.trx_in_block >= 0 
+          AND ops.block_num = htv.block_num AND ops.trx_in_block = htv.trx_in_block
+                    ), 'hex')
         END
       ) AS _trx_id,
-    ds.block_num AS _block,
+      ops.block_num AS _block,
       (
         CASE
-        WHEN ho.trx_in_block < 0 THEN 4294967295
-        ELSE ho.trx_in_block
+        WHEN ops.trx_in_block < 0 THEN 4294967295
+        ELSE ops.trx_in_block
         END
       ) AS _trx_in_block,
-      ho.op_pos::BIGINT AS _op_in_trx,
-      hot.is_virtual AS virtual_op,
-      btrim(to_json(ho."timestamp")::TEXT, '"'::TEXT) AS formated_timestamp,
+      ops.op_pos::BIGINT AS _op_in_trx,
+      ops.is_virtual AS virtual_op,
+      btrim(to_json(ops."timestamp")::TEXT, '"'::TEXT) AS formated_timestamp,
       (
         CASE
-          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body_binary)::TEXT
-          ELSE ho.body :: text
+          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ops.body_binary)::TEXT
+          ELSE ops.body :: text
         END
       ) AS _value,
-      ds.account_op_seq_no AS _operation_id
+      ops.account_op_seq_no AS _operation_id
     FROM
-    (
-      WITH accepted_types AS MATERIALIZED
-      (
-        SELECT ot.id FROM hive.operation_types ot WHERE __use_filter IS NOT NULL AND ot.id=ANY(__resolved_filter)
-      )
-      (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
-      FROM hive.account_operations_view hao
-      JOIN accepted_types t ON hao.op_type_id = t.id
-      WHERE __use_filter IS NOT NULL AND hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit 
-      ORDER BY hao.account_op_seq_no DESC
-      LIMIT _limit
-      )
-      UNION ALL
-      (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
-      FROM hive.account_operations_view hao
-      WHERE __use_filter IS NULL AND hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit 
-      ORDER BY hao.account_op_seq_no DESC
-      LIMIT _limit
-      )
-
-    ) ds
-    JOIN LATERAL (SELECT hov.body, hov.body_binary, hov.op_pos, hov.timestamp, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
-    JOIN LATERAL (select ot.is_virtual FROM hive.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
-    ORDER BY ds.account_op_seq_no ASC
-
+     ops
+    ORDER BY ops.account_op_seq_no ASC
     ;
 
 END
@@ -542,7 +551,6 @@ SET join_collapse_limit=16
 SET from_collapse_limit=16
 SET plan_cache_mode=force_generic_plan
 ;
-
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION hafah_python.get_transaction_json( in _trx_hash BYTEA, in _include_reversible BOOLEAN, _is_legacy_style BOOLEAN )
