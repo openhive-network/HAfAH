@@ -103,14 +103,14 @@ prepare_haf_data:
   stage: build
   variables:
     HAFAH_IMAGE_TAG: ""
-    HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE/instance:instance-$HAFAH_IMAGE_TAG
+    HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE/instance:$HAFAH_IMAGE_TAG
     USE_POSTGREST: 0
     SOURCE_DIR: $CI_PROJECT_DIR
 
   script:
-    - echo $HAFAH_IMAGE_NAME
-    - echo $SOURCE_DIR
     - |
+      echo $HAFAH_IMAGE_NAME
+      echo $SOURCE_DIR
       scripts/ci-helpers/build_instance.sh
       docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
       docker push "$HAFAH_IMAGE_NAME"
@@ -127,7 +127,7 @@ prepare_haf_data:
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
   variables:
-    HAFAH_IMAGE_TAG: postgrest-$CI_COMMIT_SHORT_SHA
+    HAFAH_IMAGE_TAG: $CI_COMMIT_SHORT_SHA
     USE_POSTGREST: 1
 
 .pattern_tests:
