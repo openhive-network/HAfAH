@@ -9,6 +9,7 @@ RUN mkdir -p /hafah/haf/scripts
 COPY docker/setup_entrypoint.sh /hafah/scripts/setup_entrypoint.sh
 COPY scripts/common.sh /hafah/scripts/common.sh 
 COPY scripts/install_app.sh /hafah/scripts/install_app.sh 
+COPY scripts/uninstall_app.sh /hafah/scripts/uninstall_app.sh 
 COPY scripts/setup_postgres.sh /hafah/scripts/setup_postgres.sh
 COPY queries /hafah/queries
 COPY postgrest /hafah/postgrest
