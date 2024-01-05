@@ -508,7 +508,7 @@ BEGIN
       ds.account_op_seq_no AS _operation_id
     FROM
     (
-      WITH accepted_types AS NOT MATERIALIZED
+      WITH accepted_types AS MATERIALIZED
       (
         SELECT ot.id FROM hive.operation_types ot WHERE __use_filter IS NOT NULL AND ot.id=ANY(__resolved_filter)
       )
