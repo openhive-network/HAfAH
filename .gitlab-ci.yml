@@ -34,10 +34,10 @@ variables:
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: 9aa55020b9cddaed0f320d2da4ea22a6ef494069 # develop
+    ref: f28da7101e47f767b19fcf6cc16544773f83c802 # develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
-    ref: 7c58303ffb61d91ef9662ec20e7b498bc6f62b8f # develop # It seems a variable cannot be used here
+    ref: 44ad61be5f9d0588512f478e5baf3ec89cb92a3f # develop # It seems a variable cannot be used here
     file:
       - '/templates/test_jobs.gitlab-ci.yml'
       - '/templates/python_projects.gitlab-ci.yml'
@@ -318,7 +318,7 @@ prepare_haf_image_testnet:
                 "host    all              haf_admin        0.0.0.0/0    trust"
                 "host    all              haf_app_admin    0.0.0.0/0    trust"
                 "host    all              all              0.0.0.0/0    scram-sha-256"
-  command: ["--execute-maintenance-script=/home/haf_admin/haf/scripts/maintenance-scripts/sleep_infinity.sh"]
+  command: ["--execute-maintenance-script=${HAF_SOURCE_DIR}/scripts/maintenance-scripts/sleep_infinity.sh"]
 
 .hafah_pytest_fuctional_tests_base:
   stage: test
