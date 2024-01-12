@@ -230,3 +230,5 @@ BEGIN
 END
 $$
 ;
+
+RESET ROLE;

@@ -858,3 +858,6 @@ BEGIN
 END
 $function$
 language plpgsql STABLE;
+
+RESET ROLE;
+
