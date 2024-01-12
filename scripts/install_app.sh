@@ -58,12 +58,12 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "$POSTGRES_URL" ]; then
-  POSTGRES_ACCESS="postgresql://haf_app_admin@$POSTGRES_HOST:$POSTGRES_PORT/haf_block_log"
+  POSTGRES_ACCESS="postgresql://haf_admin@$POSTGRES_HOST:$POSTGRES_PORT/haf_block_log"
 else
   POSTGRES_ACCESS=$POSTGRES_URL
 fi
 
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/ah_schema_functions.pgsql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -U hafah_owner -f "$SCRIPTPATH/../postgrest/hafah_backend.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_backend.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_endpoints.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/set_version_in_sql.pgsql"
