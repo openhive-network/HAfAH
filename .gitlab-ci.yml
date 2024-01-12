@@ -26,7 +26,7 @@ variables:
   BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools/tests_api/benchmarks"
 
   # Variables required by Common CI jobs
-  TOX_IMAGE_TAG: "5c42c8019dd329000fd036668b22eb3eb99a743a"
+  TOX_IMAGE_TAG: "18b2a600936c6f7945d6f1131f606c7083a515ff"
   BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/haf/ci-base-image${BUILDER_IMAGE_TAG}"
 
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
@@ -40,7 +40,7 @@ include:
     ref: ad649ebee0cf62049f682e0e7e1fb70b70426aaf # develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
-    ref: 44ad61be5f9d0588512f478e5baf3ec89cb92a3f # develop # It seems a variable cannot be used here
+    ref: 18b2a600936c6f7945d6f1131f606c7083a515ff # develop # It seems a variable cannot be used here
     file:
       - '/templates/test_jobs.gitlab-ci.yml'
       - '/templates/python_projects.gitlab-ci.yml'
