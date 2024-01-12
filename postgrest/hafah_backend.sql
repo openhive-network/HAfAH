@@ -4,7 +4,7 @@ Defined here are:
   - Repeated exception messages, used in hafah_endpoints.sql
 */
 
---SET ROLE hafah_owner;
+SET ROLE hafah_owner;
 
 DROP SCHEMA IF EXISTS hafah_backend CASCADE;
 

@@ -22,6 +22,8 @@ curl -X POST http://localhost:3000/rpc/get_transaction \
 	-d  '{"id": "390464f5178defc780b5d1a97cb308edeb27f983", "include_reversible": true}'
 */
 
+SET ROLE hafah_owner;
+
 DROP SCHEMA IF EXISTS hafah_endpoints CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_endpoints AUTHORIZATION hafah_owner;

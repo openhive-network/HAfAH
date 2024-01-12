@@ -1,6 +1,9 @@
+--- Here use implicitly administration role (haf_admin)
 DROP SCHEMA IF EXISTS hafah_python CASCADE;
 
-CREATE SCHEMA IF NOT EXISTS hafah_python;
+SET ROLE hafah_owner;
+
+CREATE SCHEMA IF NOT EXISTS hafah_python AUTHORIZATION hafah_owner;
 
 DROP TABLE IF EXISTS hafah_python.version;
 CREATE TABLE hafah_python.version(
