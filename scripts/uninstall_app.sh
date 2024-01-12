@@ -61,10 +61,10 @@ uninstall_app() {
     psql "$POSTGRES_ACCESS" -v "ON_ERROR_STOP=on" -c "DROP SCHEMA IF EXISTS hafah_endpoints CASCADE;"
     psql "$POSTGRES_ACCESS" -v "ON_ERROR_STOP=on" -c "DROP SCHEMA IF EXISTS hafah_python CASCADE;"
 
-    psql "$POSTGRES_ACCESS" -v "ON_ERROR_STOP=on" -c "DROP OWNED BY hafah_owner CASCADE"
+    psql "$POSTGRES_ACCESS" -v "ON_ERROR_STOP=on" -c "DROP OWNED BY hafah_owner CASCADE" || true
     psql "$POSTGRES_ACCESS" -v "ON_ERROR_STOP=on" -c "DROP ROLE IF EXISTS hafah_owner"
 
-    psql "$POSTGRES_ACCESS" -v "ON_ERROR_STOP=on" -c "DROP OWNED BY hafah_user CASCDE"
+    psql "$POSTGRES_ACCESS" -v "ON_ERROR_STOP=on" -c "DROP OWNED BY hafah_user CASCADE" || true
     psql "$POSTGRES_ACCESS" -v "ON_ERROR_STOP=on" -c "DROP ROLE IF EXISTS hafah_user"
 
 }
