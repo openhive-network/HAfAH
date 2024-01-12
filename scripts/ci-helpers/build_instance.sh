@@ -8,7 +8,7 @@ Script for building Docker image of HAfAH instance
 OPTIONS:
   --use-postgrest=0 or 1     Whether to use Postgrest or Python backend (default: 1)
   --http-port=PORT           HTTP port to be used by HAfAH (default: 6543)
-  --haf-postgres-url=URL     HAF PostgreSQL URL, (default: postgresql://haf_app_admin@172.17.0.1:5432/haf_block_log)
+  --haf-postgres-url=URL     HAF PostgreSQL URL, (default: postgresql://haf_admin@172.17.0.1:5432/haf_block_log)
   -?/--help                  Display this help screen and exit
 
 EOF
@@ -64,7 +64,7 @@ REGISTRY=${REG:-$REGISTRY}
 
 USE_POSTGREST=${USE_POSTGREST:-1}
 APP_PORT=${APP_PORT:-6543}
-HAF_POSTGRES_URL=${HAF_POSTGRES_URL:-postgresql://haf_app_admin@172.17.0.1:5432/haf_block_log}
+HAF_POSTGRES_URL=${HAF_POSTGRES_URL:-postgresql://haf_admin@172.17.0.1:5432/haf_block_log}
 HAFAH_IMAGE_NAME=$REGISTRY/instance:$HAFAH_IMAGE_TAG
 
 printf "Parameter values:\n - SOURCE_DIR: %s\n - USE_POSTGREST: %s\n - APP_PORT: %d\n - HAF_POSTGRES_URL: %s\n - HAFAH_IMAGE_NAME: %s\n\n" \
