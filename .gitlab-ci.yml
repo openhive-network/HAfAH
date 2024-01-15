@@ -9,11 +9,11 @@ variables:
   GIT_STRATEGY: clone
   GIT_SUBMODULE_STRATEGY: "recursive"
   CI_DEBUG_SERVICES: "true"
-  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu22.04-5
-  BUILDER_IMAGE_TAG: "@sha256:2da00c8f151d9d582c21c99b24b988e58138a6bf682516a5a8bd740af0b24c89"
+  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu22.04-8
+  BUILDER_IMAGE_TAG: "@sha256:834e666ee84fb78d66a695b274b87f75535f96fda98e51726a23eab60812813b"
 
-  # references uses registry.gitlab.syncad.com/hive/hive/ci-base-image:ubuntu22.04-8
-  PYTEST_RUNTIME_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive/ci-base-image@sha256:e9f16040010ad24fffeabec66abca109b24baa79d912eba3118da58e8130fb26"
+  # references uses registry.gitlab.syncad.com/hive/hive/ci-base-image:ubuntu22.04-10
+  PYTEST_RUNTIME_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive/ci-base-image@sha256:080b16fd53013aeb9b89b00a8dfc90fecf886173f46448b05f45cee376c43330"
   POETRY_INSTALL_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/hive-local-tools"
 
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
