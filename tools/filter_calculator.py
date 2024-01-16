@@ -18,15 +18,6 @@ engine.add_argument(
     help="generates filters for `enum_virtual_ops`",
 )
 engine.add_argument(
-    "-f",
-    "--filter-input",
-    dest="ifilter",
-    type=int,
-    default=0,
-    required=False,
-    help="if given, this will be set at begin",
-)
-engine.add_argument(
     "-q",
     "--quit",
     dest="quit",
@@ -35,6 +26,22 @@ engine.add_argument(
     const=True,
     default=False,
     help="do not enter CLI mode, handy for translate only with -f option",
+)
+engine.add_argument(
+    "-l",
+    "--low",
+    dest="filter_low",
+    type=int,
+    default=0,
+    help="lower part of the filter"
+)
+engine.add_argument(
+    "-H",
+    "--high",
+    dest="filter_high",
+    type=int,
+    default=0,
+    help="high part of the filter"
 )
 args = engine.parse_args(list(argv[1:]))
 
@@ -98,7 +105,7 @@ if args.enum:
     OPERATION_NAMES = list(OPERATION_NAMES[first_vop:])
 
 operations_ids = {id: name for id, name in enumerate(OPERATION_NAMES)}
-filter = args.ifilter
+filter = (args.filter_high << 64) + args.filter_low
 
 
 def colored(r: int, g: int, b: int, text: str) -> str:
