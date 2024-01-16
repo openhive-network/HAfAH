@@ -8,6 +8,9 @@ variables:
   GIT_DEPTH: 20
   GIT_STRATEGY: clone
   GIT_SUBMODULE_STRATEGY: "recursive"
+  GIT_SUBMODULE_DEPTH: 1
+  GIT_SUBMODULE_UPDATE_FLAGS: --jobs 4
+
   CI_DEBUG_SERVICES: "true"
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu22.04-8
   BUILDER_IMAGE_TAG: "@sha256:834e666ee84fb78d66a695b274b87f75535f96fda98e51726a23eab60812813b"
