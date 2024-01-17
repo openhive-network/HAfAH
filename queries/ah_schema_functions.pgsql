@@ -61,7 +61,9 @@ END;
 $$;
 
 CREATE OR REPLACE FUNCTION hafah_python.numeric_to_bigint(NUMERIC)
-  RETURNS BIGINT AS $$
+  RETURNS BIGINT
+  IMMUTABLE
+  AS $$
 DECLARE
   MAX_BIGINT BIGINT := x'7fffffffffffffff'::BIGINT;
   MIN_BIGINT BIGINT := (1 :: BIGINT << 63);
