@@ -722,7 +722,7 @@ language plpgsql STABLE;
 
 
 CREATE OR REPLACE FUNCTION hafah_python.enum_virtual_ops_json( in _filter NUMERIC, in _block_range_begin INT, in _block_range_end INT, _operation_begin BIGINT, in _limit INT, in _include_reversible BOOLEAN, in _group_by_block BOOLEAN )
-RETURNS JSON
+RETURNS JSONB
 AS
 $function$
 DECLARE
@@ -746,7 +746,7 @@ BEGIN
       pre_result AS (
         SELECT
           _block AS "block",
-          _value ::json AS "op",
+          _value ::jsonb AS "op",
           _op_in_trx AS "op_in_trx",
           _operation_id AS "operation_id",
           _timestamp AS "timestamp",
@@ -782,7 +782,7 @@ BEGIN
         LIMIT 1
       )
 
-    SELECT to_json(result)
+    SELECT to_jsonb(result)
     FROM (
       SELECT
         COALESCE((SELECT block_num FROM pag), (
@@ -801,19 +801,19 @@ BEGIN
           CASE
             WHEN _group_by_block = FALSE THEN (
               SELECT ARRAY(
-                SELECT to_json(res) FROM (
+                SELECT to_jsonb(res) FROM (
                   SELECT * FROM pre_result
                 ) AS res
               )
             )
-            ELSE (SELECT ARRAY[] ::JSON[])
+            ELSE (SELECT ARRAY[] ::JSONB[])
           END
         ) AS ops,
         (
           CASE
             WHEN _group_by_block = TRUE THEN (
               SELECT ARRAY(
-                SELECT to_json(grouped) FROM (
+                SELECT to_jsonb(grouped) FROM (
                   SELECT
                     pre_result.block AS "block",
                     (pre_result.block <= irr_num) AS "irreversible",
@@ -825,7 +825,7 @@ BEGIN
                 ) AS grouped
               )
             )
-            ELSE (SELECT ARRAY[] ::JSON[])
+            ELSE (SELECT ARRAY[] ::JSONB[])
           END
         ) AS ops_by_block
     ) AS result
