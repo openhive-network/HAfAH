@@ -37,6 +37,29 @@ ON
   hov.op_type_id=hot.id
 ;
 
+/** Converts given BIGINT value to number or string according to official JSON specification defining them as Double-precision floating-point format standard (range [-(2**53)+1, (2**53)-1]) 
+*/
+CREATE OR REPLACE FUNCTION hafah_python.json_stringify_bigint(in n BIGINT)
+RETURNS JSONB
+IMMUTABLE
+LANGUAGE plpgsql
+AS
+$$
+DECLARE
+  __json_min_safe_integer BIGINT := -9007199254740991;
+  __json_max_safe_integer BIGINT := 9007199254740991;
+begin
+RETURN (SELECT CASE
+          WHEN n BETWEEN __json_min_safe_integer AND __json_max_safe_integer
+            THEN to_jsonb(n)
+          ELSE
+            to_jsonb(n::TEXT)
+         END
+       )
+  ;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION hafah_python.numeric_to_bigint(NUMERIC)
   RETURNS BIGINT AS $$
 DECLARE
