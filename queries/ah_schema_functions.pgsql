@@ -791,18 +791,27 @@ BEGIN
             ELSE _block_range_end
           END
         )) AS next_block_range_begin,
-        COALESCE((
+        hafah_python.json_stringify_bigint(COALESCE((
           CASE
             WHEN (SELECT block_num FROM pag) >= _block_range_end THEN 0
             ELSE (SELECT id FROM pag)
           END
-        ), 0) AS next_operation_begin,
+        ), 0)) AS next_operation_begin,
         (
           CASE
             WHEN _group_by_block = FALSE THEN (
               SELECT ARRAY(
                 SELECT to_jsonb(res) FROM (
-                  SELECT * FROM pre_result
+                  SELECT
+                    s.block,
+                    s.op,
+                    s.op_in_trx,
+                    hafah_python.json_stringify_bigint(s.operation_id) AS "operation_id",
+                    s.timestamp,
+                    s.trx_id,
+                    s.trx_in_block,
+                    s.virtual_op
+                  FROM pre_result s
                 ) AS res
               )
             )
@@ -815,13 +824,25 @@ BEGIN
               SELECT ARRAY(
                 SELECT to_jsonb(grouped) FROM (
                   SELECT
-                    pre_result.block AS "block",
-                    (pre_result.block <= irr_num) AS "irreversible",
-                    array_agg(pre_result) AS "ops",
-                    (SELECT pr.timestamp FROM pre_result pr WHERE pr.block=pre_result.block ORDER BY pr.operation_id ASC LIMIT 1) AS "timestamp"
-                  FROM pre_result
-                  GROUP BY pre_result.block
-                  ORDER BY pre_result.block ASC
+                    ds.block AS "block",
+                    (ds.block <= irr_num) AS "irreversible",
+                    array_agg(ds) AS "ops",
+                    (SELECT pr.timestamp FROM pre_result pr WHERE pr.block=ds.block ORDER BY pr.operation_id ASC LIMIT 1) AS "timestamp"
+                  FROM
+                  (
+                  SELECT
+                    s.block,
+                    s.op,
+                    s.op_in_trx,
+                    hafah_python.json_stringify_bigint(s.operation_id) AS "operation_id",
+                    s.timestamp,
+                    s.trx_id,
+                    s.trx_in_block,
+                    s.virtual_op
+                  FROM pre_result s
+                  ) AS ds
+                  GROUP BY ds.block
+                  ORDER BY ds.block ASC
                 ) AS grouped
               )
             )
