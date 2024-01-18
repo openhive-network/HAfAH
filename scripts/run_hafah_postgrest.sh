@@ -5,5 +5,6 @@ set -euo pipefail
 export PGRST_DB_URI=${POSTGRES_URL}
 export PGRST_SERVER_PORT=${HTTP_PORT}
 
+echo "Attempting to start HafAH process using a ${POSTGRES_URL} as database connection and listening on: ${HTTP_PORT} port..."
 #Helper script to run HAfAH PostgREST from docker.
 /usr/local/bin/postgrest
