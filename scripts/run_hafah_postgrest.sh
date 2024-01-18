@@ -1,12 +1,9 @@
 #! /bin/bash
-
-set -euo pipefail 
+set -euo pipefail
 
 # set both variables at rather at runtime than docker build time, to allow changing their values in subsequent docker container starts.
 export PGRST_DB_URI=${POSTGRES_URL}
 export PGRST_SERVER_PORT=${HTTP_PORT}
 
 #Helper script to run HAfAH PostgREST from docker.
-/usr/local/bin/postgrest 
-
-
+/usr/local/bin/postgrest
