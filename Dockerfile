@@ -1,33 +1,6 @@
-# Base docker file having defined environment for build and run of HAF instance.
-# docker build --target=ci-base-image -t registry.gitlab.syncad.com/hive/hafah/ci-base-image:ubuntu20.04-xxx -f Dockerfile .
+# syntax=docker/dockerfile:1.5
 
 ARG POSTGREST_VERSION=v12.0.2
-
-ARG CI_REGISTRY_IMAGE=registry.gitlab.syncad.com/hive/hafah
-ARG CI_IMAGE_TAG=:ubuntu20.04-6
-
-# As described here, better to avoid Apline images usage together with Python...
-
-FROM python:3.8-slim as ci-base-image
-
-ENV LANG=en_US.UTF-8
-
-RUN apt update && DEBIAN_FRONTEND=noniteractive apt install -y  \
-  bash \
-  joe \
-  sudo \
-  git \
-  ca-certificates \
-  postgresql-client \
-  wget \
-  procps \
-  xz-utils \
-  && DEBIAN_FRONTEND=noniteractive apt-get clean && rm -rf /var/lib/apt/lists/* \
-  && useradd -ms /bin/bash "haf_admin" && echo "haf_admin ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-  && useradd -ms /bin/bash "haf_app_admin" \
-  && useradd -ms /bin/bash "hafah_user"
-
-SHELL ["/bin/bash", "-c"]
 
 FROM postgrest/postgrest:${POSTGREST_VERSION} AS pure_postgrest
 
