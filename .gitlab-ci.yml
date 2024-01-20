@@ -141,10 +141,8 @@ prepare_postgrest_hafah_image:
     USE_POSTGREST: 1
 
 build_setup_docker_image:
+  extends: .docker_image_builder_job
   stage: build
-  image: docker:24.0.6
-  services:
-    - docker:24.0.6-dind
   tags:
     - public-runner-docker
   script:
