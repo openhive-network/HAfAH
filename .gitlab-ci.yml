@@ -262,10 +262,12 @@ postgrest_comparison_tests:
   variables:
     FF_NETWORK_PER_BUILD: 1
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
-    APP_IMAGE: ""
     HIVED_UID: $HIVED_UID
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
   needs:
     - job: prepare_haf_data
+      artifacts: true
+    - job: prepare_postgrest_hafah_image
       artifacts: true
 
   script:
@@ -283,25 +285,11 @@ postgrest_comparison_tests:
 postgrest_block_api_benchmark_tests:
   extends: .benchmark_tests
 
-  needs:
-    - !reference [.benchmark_tests, needs]
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
-
   variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
     API_FOR_TESTING: blocks_api
 
 postgrest_account_history_benchmark_tests:
   extends: .benchmark_tests
-
-  needs:
-    - !reference [.benchmark_tests, needs]
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
-
-  variables:
-    APP_IMAGE: $HAFAH_IMAGE_NAME
 
 cleanup_hived_cache_manual:
   extends: .cleanup_cache_manual
