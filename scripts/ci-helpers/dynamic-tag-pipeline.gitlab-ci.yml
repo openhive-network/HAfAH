@@ -1,0 +1,204 @@
+stages:
+  - setup
+  - build
+  - test
+  - cleanup
+
+variables:
+  # Variables specific to runner (there is single runner cache and there is 5m block_log available)
+  DATA_CACHE_HIVE_PREFIX: "/cache/replay_data_hive"
+  DATA_CACHE_HAF_PREFIX: "/cache/replay_data_haf"
+  BLOCK_LOG_SOURCE_DIR_5M: /blockchain/block_log_5m
+
+  # references uses registry.gitlab.syncad.com/hive/hive/ci-base-image:ubuntu22.04-10
+  PYTEST_RUNTIME_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive/ci-base-image@sha256:080b16fd53013aeb9b89b00a8dfc90fecf886173f46448b05f45cee376c43330"
+  POETRY_INSTALL_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/hive-local-tools"
+
+  SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
+  BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools/tests_api/benchmarks"
+
+  # Allow access from any network to eliminate CI IP addressing problems
+  HAF_DB_ACCESS: |
+              "host    all              haf_admin        0.0.0.0/0    trust"
+              "host    all              hived            0.0.0.0/0    trust"
+              "host    all              hafah_user       0.0.0.0/0    trust"
+              "host    all              all              0.0.0.0/0    scram-sha-256"
+
+include:
+  - local: scripts/ci-helpers/includes.gitlab-ci.yml
+
+######## Templates ########
+
+.pattern_tests:
+  extends: 
+    - .haf_app_pattern_tests_template
+    - .dynamic-runner-job-template
+  stage: test
+  variables:
+    HAF_APP_IMAGE: ""
+    HAF_APP_PORT: ${APP_PORT}
+    HAF_APP_USER: "hafah_user"
+    PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
+    POETRY_INSTALL_ROOT_DIR : ${POETRY_INSTALL_DIR}
+    TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
+    PATTERN_TESTS_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/api_tests/pattern_tests"
+    JUNIT_REPORT: "haf/hive/tests/python/api_tests/pattern_tests/results.xml"
+    DIRECT_CALLS: 0
+    HIVED_UID: $HIVED_UID
+  needs:
+    - job: prepare_haf_data
+      artifacts: true
+  before_script:
+    - !reference [.haf_app_pattern_tests_template, before_script]
+    - echo "HAfAH image name $HAF_APP_IMAGE"
+    - echo "HAF image name $HAF_IMAGE_NAME"
+  artifacts:
+    paths:
+    - "$CI_JOB_NAME"
+    - "**/from_node.log"
+    - "**/ah.log"
+    - "**/*.out.json"
+    - "tests/tests_api/hived/workdir_*"
+    - "haf/hive/tests/python/api_tests/pattern_tests/results.xml"
+
+.comparison_tests:
+  extends: 
+    - .comparison_tests_template
+    - .dynamic-runner-job-template
+  stage: test
+  variables:
+    JUNIT_REPORT: "$CI_PROJECT_DIR/haf/hive/tests/python/api_tests/comparsion_tests/results.xml"
+    PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
+    POETRY_INSTALL_ROOT_DIR : ${POETRY_INSTALL_DIR}
+    COMPARISON_TESTS_DIR: "$CI_PROJECT_DIR/haf/hive/tests/python/api_tests/comparsion_tests"
+    HAF_APP_PORT: ${APP_PORT}
+    HAF_APP_USER: "hafah_user"
+    HIVED_UID: $HIVED_UID
+  needs:
+    - job: prepare_haf_data
+      artifacts: true
+    - job: prepare_hived_data
+      artifacts: true
+  artifacts:
+    paths:
+      - "$CI_JOB_NAME"
+      - "**/from_node.log"
+      - "**/ah.log"
+      - "**/*.out.json"
+      - "haf/hive/tests/python/api_tests/comparsion_tests/results.xml"
+    reports:
+      junit: "haf/hive/tests/python/api_tests/comparsion_tests/results.xml"
+
+.benchmark_tests:
+  extends: 
+    - .jmeter_benchmark_with_haf_job
+    - .dynamic-runner-job-template
+  stage: test
+  variables:
+    FF_NETWORK_PER_BUILD: 1
+    API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
+    HIVED_UID: $HIVED_UID
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_PORT: $APP_PORT
+  needs:
+    - job: prepare_haf_data
+      artifacts: true
+  script:
+      - /usr/bin/python3 "${BENCHMARK_SOURCE_DIR}/benchmark.py" -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
+      - m2u --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
+      - jmeter -g wdir/jmeter_${APP_PORT}_output.csv -o wdir/dashboard/
+  artifacts:
+    paths:
+      - wdir/
+    reports:
+      junit: wdir/jmeter_junit_report.xml
+
+######## End templates ########
+
+######## Setup ########
+
+environment-debug-job:
+  stage: setup
+  image: "$BUILDER_IMAGE_PATH"
+  script:
+    - |
+      echo "Current environment:"
+      set
+  tags:
+    - public-runner-docker
+
+######## End setup ########
+
+######## Build ########
+
+prepare_hived_data:
+  extends: 
+    - .prepare_hived_data_5m
+    - .dynamic-runner-job-template
+  stage: build
+  variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
+    BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
+    CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
+
+prepare_haf_data:
+  extends: 
+    - .prepare_haf_data_5m
+    - .dynamic-runner-job-template
+  stage: build
+  variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
+    BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
+    CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
+
+######## End build ########
+
+######## Test ########
+
+postgrest_pattern_tests:
+  extends: .pattern_tests
+  variables:
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
+
+new_style_postgrest_pattern_tests:
+  extends: .pattern_tests
+  variables:
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
+    # Direct call version does not support condenser_api
+    TEST_SUITE: "account_history_api"
+    DIRECT_CALLS: 1
+
+postgrest_comparison_tests:
+  extends: .comparison_tests
+  variables:
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
+
+postgrest_block_api_benchmark_tests:
+  extends: .benchmark_tests
+  variables:
+    API_FOR_TESTING: blocks_api
+
+postgrest_account_history_benchmark_tests:
+  extends: .benchmark_tests
+
+######## End test ########
+
+######## Cleanup ########
+
+cleanup_hive_cache_manual:
+  extends: 
+    - .cleanup_cache_manual_template
+    - .dynamic-runner-job-template
+  stage: cleanup
+  variables:
+    CLEANUP_PATH_PATTERN: "/cache/replay_data_hive_*"
+
+cleanup_haf_cache_manual:
+  extends: 
+    - .cleanup_cache_manual_template
+    - .dynamic-runner-job-template
+  stage: cleanup
+  variables:
+    CLEANUP_PATH_PATTERN: "/cache/replay_data_haf_*"
+
+######## End cleanup ########
