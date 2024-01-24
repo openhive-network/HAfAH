@@ -49,10 +49,12 @@ DO_UNINSTALL=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --psql-db-path=*)
-        export POSTGRES_URL="${1#*=}"
+        POSTGRES_URL_RAW="${1#*=}"
+        export POSTGRES_URL=$(bash -c "echo ${POSTGRES_URL_RAW}")
         ;;
     --postgres-url=*)
-        export POSTGRES_URL="${1#*=}"
+        POSTGRES_URL_RAW="${1#*=}"
+        export POSTGRES_URL=$(bash -c "echo ${POSTGRES_URL_RAW}")
         ;;
     --port=*)
         export HTTP_PORT="${1#*=}"
