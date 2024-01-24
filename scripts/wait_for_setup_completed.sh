@@ -9,7 +9,8 @@ LIMIT=300
 while [ $# -gt 0 ]; do
   case "$1" in
     --postgres-url=*)
-        DATABASE_URL="${1#*=}"
+        DATABASE_URL_RAW="${1#*=}"
+        DATABASE_URL=$(bash -c "echo ${DATABASE_URL_RAW}")
         ;;
     --timeout=*)
         LIMIT="${1#*=}"
