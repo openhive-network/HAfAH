@@ -6,7 +6,7 @@ Hafah is a HAF-based app that implements the "account history API" for hive. It 
 
 Currently, hafah is a "read-only" HAF application: it writes no data to the HAF database, so it doesn't require a "replay" of blockchain history before it can start serving data (all the data it needs is available in the base-layer HAF tables).
 
-Like all standardized HAF apps, the server should be started using the `haf_app_admin` database role. This database role is created by default as part of the setup of the HAF database that your HAF apps interact with. But if you are running with a non-dockerized HAF database, you will need to configure some form of authentication for this role (e.g. a password for the role or use unix-account based authorization).
+Like all standardized HAF apps, the server should be started using the dedicated application role being created during application deployment. By default, for HAFAH this role is; `hafah_user`. To perform application setup, you need to use dedicated HAF administration role: `haf_admin`. This database role is created by default as part of the setup of the HAF database that your HAF apps interact with. But if you are running with a non-dockerized HAF database, you will need to configure some form of authentication for this role (e.g. a password for the role or use unix-account based authorization).
 
 Like HAF itself, you can install hafah directly on your computer, or you can run it inside a docker. In either case, it will then need to communicate with your HAF database as described further below.
 
@@ -32,22 +32,28 @@ Then start server
 
 ## Option 2: Starting a `HAfAH` using prebuilt docker container (preferred way)
 
-Instead of running hafah servers directly, you can run them inside dockers. For many users, especially ones that are running their HAF database inside a docker, this is the recommended method, because it eliminates the need to manually configure authentication of hafah's connection to the HAF database. To run the python server inside a docker:
+Instead of running hafah servers directly, you can run them inside dockers. For many users, especially ones that are running their HAF database inside a docker, this is the recommended method, because it eliminates the need to manually configure authentication of hafah's connection to the HAF database. To run the application server inside a docker:
 
-To run the postgrest server inside a docker:
+1. Perform application installation step into specified HAF database:
+```bash
+docker run --rm -it --name HAFAH-setup registry.gitlab.syncad.com/hive/hafah/instance:COMMIT_SHA install_app --postgres-url=postgresql://haf_admin@172.17.0.1:5432/haf_block_log
 ```
-docker run --rm -it --name Postgrest-HAFAH-instance -p 8081:6543 -e POSTGRES_URL=postgresql://haf_app_admin@172.17.0.1:5432/haf_block_log registry.gitlab.syncad.com/hive/hafah/postgrest-instance:COMMIT_SHA
+Once application installation will complete (docker container will finish its execution), go to the next step.
+
+2. Run the postgrest server inside a docker (to accept API requests on specified port):
+```bash
+docker run --rm -it --name Postgrest-HAFAH-instance -p 8081:6543 -e POSTGRES_URL=postgresql://hafah_user@172.17.0.1:5432/haf_block_log registry.gitlab.syncad.com/hive/hafah/postgrest-instance:COMMIT_SHA
 ```
 
-The first number specified by the -p option is the external port you want to use (8080 for the python server and 8081 for the postgrest server in the examples above). The second number speciefied by the -p option is the internal port that the hafah server is listening to inside the docker. **This second value is fixed by the configuration of the docker image, so it must be set to 6543.**
+The first number specified by the -p option is the external port you want to use (8081 for the postgrest server in the examples above). The second number speciefied by the -p option is the internal port that the hafah server is listening to inside the docker. **This second value is fixed by the configuration of the docker image, so it must be set to 6543.**
 
-POSTGRES_URL is an environment variable, which should point to the PostgreSQL cluster for your HAF database. By default, the auto-created haf_app_admin role should be used for the connection to your HAF database.
+POSTGRES_URL is an environment variable, which should point to the PostgreSQL cluster for your HAF database. By default, the auto-created hafah_user role should be used for the connection to your HAF database for the Postgrest-HAFAH-instance and haf_admin to use a HAFAH-setup container (which performs an installation of uninstallation).
 
 ### Important note before using above example commands: PostgreSQL authorization
 
-If you are using a dockerized HAF instance and a dockerized hafah server, the haf docker will have preconfigured authorization settings (defined in its own pg_hba.conf file) to allow trusted authentication to `haf_block_log` database using `haf_app_admin` role when connections come in from the docker network. By default, IP addresses for the docker network will be assigned in the 172.0.0.0 network class.
+If you are using a dockerized HAF instance and a dockerized hafah server, the haf docker will have preconfigured authorization settings (defined in its own pg_hba.conf file) to allow trusted authentication to `haf_block_log` database using `haf_admin` role when connections come in from the docker network. Configuration for `hafah_user` role must be done manually. By default, IP addresses for the docker network will be assigned in the 172.0.0.0 network class.
 
-If you are directly hosting your PostgreSQL instance (i.e. it's not running in a docker), you will need to configure a way to authenticate connections by the haf_app_admin role. In particular, if you are running your hafah server in a docker, you will need to configure your HAF postgres cluster to listen on the docker network. Below is an example of how to configure authentication:
+If you are directly hosting your PostgreSQL instance (i.e. it's not running in a docker), you will need to configure a way to authenticate connections by the `haf_admin` and `hafah_user` roles. In particular, if you are running your hafah server in a docker, you will need to configure your HAF postgres cluster to listen on the docker network. Below is an example of how to configure authentication:
 
 - Modify the `postgres.conf` file to listen on either the docker network OR all network interfaces:
 ```
@@ -56,13 +62,15 @@ listen_addresses = '172.17.0.1'    #listen on just docker network
 ```
 listen_addresses = '*'             #listen on all network interfaces (including docker network)
 ```
-- Add an entry to the `pg_hba.conf` file to allow authentication of haf_app_admin to the haf_block_log database by connections coming from the docker network (or alternatively, all network interfaces):
+- Add an entry to the `pg_hba.conf` file to allow authentication of `haf_admin` and `hafah_user` to the haf_block_log database by connections coming from the docker network (or alternatively, all network interfaces):
 
 ```
-host    haf_block_log             haf_app_admin    172.0.0.0/0            trust    #allow connection from docker
+host    haf_block_log             haf_admin    172.0.0.0/0          trust    #allow connection from docker
+host    haf_block_log             hafah_user   172.0.0.0/0          trust    #allow connection from docker
 ``` 
 ```
-host    haf_block_log             haf_app_admin    0.0.0.0/0            trust      #allow connection from all
+host    haf_block_log             haf_admin    0.0.0.0/0            trust    #allow connection from all
+host    haf_block_log             hafah_user   0.0.0.0/0            trust    #allow connection from all
 ``` 
 
 WARNING: above example is only specific for testing and fast-deployment purposes. To ensure a secure deployment, consult PostgreSQL documentation related to authentication methods (e.g. peer-based authentication and its interaction with UNIX accounts).
@@ -70,18 +78,18 @@ WARNING: above example is only specific for testing and fast-deployment purposes
 
 ### Instead of running prebuilt images, one can build their own using `build_instance.sh` script provided in the repo
 
+Before starting the build, be sure that you cloned git repo together with submodules (easiest way is to use `--recurse-submodules` option directly passed to `git clone`).
+
 The command to build HAfAH Docker image is as follows:
 
 ```bash
 scripts/ci-helpers/build_instance.sh "postgrest-latest" . registry.gitlab.syncad.com/hive/hafah \
-  --use-postgrest=1 \
   --http-port=80 \
-  --haf-postgres-url=postgresql://haf_app_admin@haf-instance:5432/haf_block_log
+  --haf-postgres-url=postgresql://haf_admin@haf-instance:5432/haf_block_log
 ```
 
 Parameters are:
 
- - `--use-postgrest=1`          Just left for compatiblity - always uses Postgrest backend (default: 1)
  - `--http-port=PORT`           HTTP port to be used by HAfAH (default: 6543)
  - `--haf-postgres-url=URL`     HAF PostgreSQL URL, (default: postgresql://haf_app_admin@172.17.0.1:5432/haf_block_log)
  - `-?/--help`                  Print help screen and exit
@@ -116,10 +124,9 @@ popd
 ### 1. Info
 
 
-1. Run python HAfAH (in this example on port 8095)
-2. Run postgREST HAfAH (in this example on port 3000)
-3. Run hived (in this example on http port 8091)
-4. Start load tests by executing:
+1. Run postgREST HAfAH (in this example on port 3000)
+2. Run hived (in this example on http port 8091)
+3. Start load tests by executing:
 
 
 `./tests/performance_test.py` script.
@@ -174,7 +181,7 @@ To list avaiable inputs execute
 this will provide following output:
 
 ```
-2022-04-08 14:13:27,065 - performance - INFO - Found and avaiable csv's:
+2022-04-08 14:13:27,065 - performance - INFO - Found and available csv's:
 cl_60M_prod_jrpc.csv     -      for generating load on 60M http server
 perf_5M_heavy.csv        -      for generating load on 5M http server
 cl_60M_custom_jrpc.csv   -      for generating load on 60M http server
