@@ -328,7 +328,6 @@ prepare_haf_image_testnet:
     # Allow access from any network to eliminate CI IP addressing problems when hfm runs as service
     PG_ACCESS: |
                 "host    all              haf_admin        0.0.0.0/0    trust"
-                "host    all              haf_app_admin    0.0.0.0/0    trust"
                 "host    all              hived            0.0.0.0/0    trust"
                 "host    all              hafah_user       0.0.0.0/0    trust"
                 "host    all              all              0.0.0.0/0    scram-sha-256"
