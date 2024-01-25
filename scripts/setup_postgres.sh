@@ -30,8 +30,8 @@ supplement_builtin_roles() {
   echo "Attempting to supplement definition of HAfAH builtin roles..."
   psql $pg_access -v ON_ERROR_STOP=on -c 'GRANT CREATE ON DATABASE haf_block_log TO hafah_owner;'
 
-  psql $pg_access -v ON_ERROR_STOP=on -c 'GRANT hafah_owner TO haf_app_admin;'
-  psql $pg_access -v ON_ERROR_STOP=on -c 'GRANT hafah_user TO haf_app_admin;'
+  psql $pg_access -v ON_ERROR_STOP=on -c 'GRANT hafah_owner TO haf_admin;'
+  psql $pg_access -v ON_ERROR_STOP=on -c 'GRANT hafah_user TO haf_admin;'
 }
 
 POSTGRES_HOST="/var/run/postgresql"
@@ -70,7 +70,7 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "$POSTGRES_URL" ]; then
-  POSTGRES_ACCESS="postgresql://haf_app_admin@${POSTGRES_HOST}:${POSTGRES_PORT}/haf_block_log"
+  POSTGRES_ACCESS="postgresql://haf_admin@${POSTGRES_HOST}:${POSTGRES_PORT}/haf_block_log"
 else
   POSTGRES_ACCESS=$POSTGRES_URL
 fi
