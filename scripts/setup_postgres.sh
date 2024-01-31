@@ -1,6 +1,6 @@
 #! /bin/bash
 
-set -euo pipefail 
+set -euo pipefail
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
@@ -28,8 +28,6 @@ print_help () {
 supplement_builtin_roles() {
   local pg_access="$1"
   echo "Attempting to supplement definition of HAfAH builtin roles..."
-  psql $pg_access -v ON_ERROR_STOP=on -c 'GRANT CREATE ON DATABASE haf_block_log TO hafah_owner;'
-
   psql $pg_access -v ON_ERROR_STOP=on -c 'GRANT hafah_owner TO haf_admin;'
   psql $pg_access -v ON_ERROR_STOP=on -c 'GRANT hafah_user TO haf_admin;'
 }
