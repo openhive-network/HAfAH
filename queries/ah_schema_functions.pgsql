@@ -1,6 +1,8 @@
 --- Here use implicitly administration role (haf_admin)
 DROP SCHEMA IF EXISTS hafah_python CASCADE;
 
+GRANT CREATE ON DATABASE haf_block_log TO hafah_owner;
+
 SET ROLE hafah_owner;
 
 CREATE SCHEMA IF NOT EXISTS hafah_python AUTHORIZATION hafah_owner;
