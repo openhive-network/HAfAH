@@ -89,7 +89,6 @@ if [ -z "$GIT_CURRENT_BRANCH" ]; then
   fi
 fi
 
-
 GIT_LAST_LOG_MESSAGE="$(git log -1 --pretty=%B || true)"
 if [ -z "$GIT_LAST_LOG_MESSAGE" ]; then
   GIT_LAST_LOG_MESSAGE="[unknown]"

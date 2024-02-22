@@ -125,6 +125,10 @@ prepare_haf_data:
       docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
       docker push "$HAFAH_IMAGE_NAME"
       echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
+      if [[ -n "$CI_COMMIT_TAG" ]]; then
+        docker tag "$HAFAH_IMAGE_NAME" "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
+        docker push "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
+      fi
 
   artifacts:
     reports:
