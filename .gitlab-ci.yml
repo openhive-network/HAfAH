@@ -320,7 +320,7 @@ prepare_haf_image_testnet:
     REGISTRY_USER: "$CI_IMG_BUILDER_USER"
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
     HIVE_NETWORK_TYPE: testnet
-    BINARY_CACHE_PATH: "haf-testnet-binaries"
+    BINARY_CACHE_PATH: "$CI_PROJECT_DIR/haf-testnet-binaries"
   tags:
     - public-runner-docker
     - hived-for-tests
