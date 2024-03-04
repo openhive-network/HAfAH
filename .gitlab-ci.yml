@@ -44,7 +44,7 @@ variables:
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: b55244559833580cfa0ed92e9a387812a191ca3f # develop
+    ref: ebe02706ca2da8d94489770da2c241a1a49c3200 # develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: 7ea99b10bbf0f9b1fbb88f52a78ead4c82f15d75 # develop # It seems a variable cannot be used here
