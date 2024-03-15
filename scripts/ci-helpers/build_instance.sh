@@ -66,6 +66,7 @@ REGISTRY=${REG:-$REGISTRY}
 APP_PORT=${APP_PORT:-6543}
 HAF_POSTGRES_URL=${HAF_POSTGRES_URL:-postgresql://hafah_user@haf:5432/haf_block_log}
 HAFAH_IMAGE_NAME=${REGISTRY}instance:$HAFAH_IMAGE_TAG
+HAFAH_MINIMAL_IMAGE_NAME=${REGISTRY}minimal-instance:$HAFAH_IMAGE_TAG
 
 printf "Parameter values:\n - SOURCE_DIR: %s\n - APP_PORT: %d\n - HAF_POSTGRES_URL: %s\n - HAFAH_IMAGE_NAME: %s\n\n" \
     "$SOURCE_DIR" "$APP_PORT" "$HAF_POSTGRES_URL" "$HAFAH_IMAGE_NAME"
@@ -115,6 +116,9 @@ docker buildx build \
     --build-arg GIT_LAST_COMMIT_DATE="$GIT_LAST_COMMIT_DATE" \
     --target=instance \
     --tag "$HAFAH_IMAGE_NAME" \
+    --load \
     --file Dockerfile .
+
+docker tag "$HAFAH_IMAGE_NAME" "$HAFAH_MINIMAL_IMAGE_NAME"
 
 popd
