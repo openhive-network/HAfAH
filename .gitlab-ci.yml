@@ -44,10 +44,10 @@ variables:
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: 05b3e1d22b48d065c8abbf40e6177df59f9c3b73 # master
+    ref: 7bb7aab44a7083994c36f040e84d501c11afc159 # develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
-    ref: 7ea99b10bbf0f9b1fbb88f52a78ead4c82f15d75 # develop # It seems a variable cannot be used here
+    ref: b2ff9f5a48bc8fb379c66ec4e7907ea1e796ff1b # develop # It seems a variable cannot be used here
     file:
       - '/templates/test_jobs.gitlab-ci.yml'
       - '/templates/python_projects.gitlab-ci.yml'
@@ -308,10 +308,13 @@ cleanup_hived_cache_manual:
 build_and_publish_image:
   stage: publish
   extends: .publish_docker_image_template
+  before_script:
+    - !reference [.publish_docker_image_template, before_script]
   script:
     - scripts/ci-helpers/build_and_publish_instance.sh
   tags:
     - public-runner-docker
+    - hived-for-tests
 
 prepare_haf_image_testnet:
   extends: .prepare_haf_image
