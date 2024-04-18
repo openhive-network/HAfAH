@@ -33,7 +33,7 @@ variables:
 
 
   # Variables required by Common CI jobs
-  TOX_IMAGE_TAG: "18b2a600936c6f7945d6f1131f606c7083a515ff"
+  TOX_IMAGE_TAG: "7ea99b10bbf0f9b1fbb88f52a78ead4c82f15d75"
   BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/haf/ci-base-image${BUILDER_IMAGE_TAG}"
 
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
@@ -44,7 +44,7 @@ variables:
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: 3a7456f280d6eefbd7f47240cbd1fa5e0a6251d3 # master
+    ref: 05b3e1d22b48d065c8abbf40e6177df59f9c3b73 # master
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: 7ea99b10bbf0f9b1fbb88f52a78ead4c82f15d75 # develop # It seems a variable cannot be used here
@@ -268,6 +268,7 @@ postgrest_comparison_tests:
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
     HIVED_UID: $HIVED_UID
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_PORT: $APP_PORT
   needs:
     - job: prepare_haf_data
       artifacts: true

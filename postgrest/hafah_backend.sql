@@ -7,6 +7,7 @@ Defined here are:
 SET ROLE hafah_owner;
 
 DROP SCHEMA IF EXISTS hafah_backend CASCADE;
+DROP SCHEMA IF EXISTS hafah_helper CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS hafah_backend AUTHORIZATION hafah_owner;
 
@@ -15,6 +16,10 @@ GRANT SELECT ON ALL TABLES IN SCHEMA hafah_backend TO hafah_user;
 GRANT USAGE ON SCHEMA hafah_python TO hafah_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA hafah_python TO hafah_user;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hafah_python TO hafah_user;
+
+CREATE SCHEMA IF NOT EXISTS hafah_helper AUTHORIZATION hafah_owner;
+GRANT USAGE, CREATE ON SCHEMA hafah_helper TO hafah_user;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hafah_helper TO hafah_user;
 
 CREATE FUNCTION hafah_backend.parse_acc_hist_start(_start BIGINT)
 RETURNS BIGINT
