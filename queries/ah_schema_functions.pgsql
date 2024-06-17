@@ -29,7 +29,6 @@ CREATE VIEW hafah_python.helper_operations_view AS SELECT
   hov.op_pos ::BIGINT AS op_pos,
   hot.is_virtual AS virtual_op,
   op_type_id op_type_id,
-  trim(both '"' from to_json(hov.timestamp)::text) formated_timestamp,
   hov.body AS body,
   hov.body_binary AS body_binary
 FROM
@@ -250,7 +249,7 @@ BEGIN
       ) _trx_in_block,
       T.op_pos _op_in_trx,
       T.virtual_op _virtual_op,
-      T._timestamp,
+      trim(both '"' from to_json(hb.created_at)::text) _timestamp,
       (
         CASE
           WHEN _is_legacy_style THEN hive.get_legacy_style_operation(T.body_binary)::text
@@ -262,7 +261,7 @@ BEGIN
       (
         --`abs` it's temporary, until position of operation is correctly saved
         SELECT
-          ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.body_binary, ho.op_type_id, ho.virtual_op, ho.formated_timestamp AS _timestamp
+          ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.body_binary, ho.op_type_id, ho.virtual_op
         FROM hafah_python.helper_operations_view ho
         WHERE ho.block_num = _block_num AND ( _only_virtual = FALSE OR ( _only_virtual = TRUE AND ho.virtual_op = TRUE ) )
       ) T
@@ -426,14 +425,14 @@ BEGIN
       ) _trx_in_block,
       T.op_pos _op_in_trx,
       T.virtual_op _virtual_op,
-      T._timestamp,
+      trim(both '"' from to_json(hb.created_at)::text) _timestamp,
       T.body :: text _value,
       T.id _operation_id
     FROM
     (
       --`abs` it's temporary, until position of operation is correctly saved
       SELECT
-      ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.formated_timestamp AS _timestamp, ho.virtual_op
+      ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.virtual_op
       FROM hafah_python.helper_operations_view ho
       WHERE ho.block_num >= _block_range_begin AND ho.block_num < _block_range_end
       AND ho.virtual_op = TRUE
@@ -448,6 +447,7 @@ BEGIN
       FROM hive.transactions_view ht
       WHERE ht.block_num >= _block_range_begin AND ht.block_num < _block_range_end
     )T2 ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
+    JOIN hive.blocks_view hb ON hb.num = T.block_num
     WHERE T.block_num >= _block_range_begin AND T.block_num < _block_range_end
     ORDER BY T.id
     LIMIT _limit;
@@ -526,7 +526,7 @@ BEGIN
       ) AS _trx_in_block,
       ho.op_pos::BIGINT AS _op_in_trx,
       hot.is_virtual AS virtual_op,
-      btrim(to_json(ho."timestamp")::TEXT, '"'::TEXT) AS formated_timestamp,
+      btrim(to_json(hb.created_at)::TEXT, '"'::TEXT) AS formated_timestamp,
       (
         CASE
           WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body_binary)::TEXT
@@ -556,8 +556,9 @@ BEGIN
       )
 
     ) ds
-    JOIN LATERAL (SELECT hov.body, hov.body_binary, hov.op_pos, hov.timestamp, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
+    JOIN LATERAL (SELECT hov.body, hov.body_binary, hov.op_pos, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
     JOIN LATERAL (select ot.is_virtual FROM hive.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
+    JOIN hive.blocks_view hb ON hb.num = ds.block_num
     ORDER BY ds.account_op_seq_no ASC
 
     ;
