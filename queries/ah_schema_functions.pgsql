@@ -409,48 +409,63 @@ BEGIN
   END IF;
 
   RETURN QUERY
+    WITH pre_result AS
+      (
+        SELECT
+          (
+            CASE
+              WHEN T2.trx_hash IS NULL THEN '0000000000000000000000000000000000000000'
+              ELSE encode( T2.trx_hash, 'hex')
+            END
+          ) _trx_id,
+          T.block_num _block,
+          (
+            CASE
+              WHEN T2.trx_in_block IS NULL THEN 4294967295
+              ELSE T2.trx_in_block
+            END
+          ) _trx_in_block,
+          T.op_pos _op_in_trx,
+          T.virtual_op _virtual_op,
+          T.body :: text _value,
+          T.id _operation_id
+        FROM
+        (
+          --`abs` it's temporary, until position of operation is correctly saved
+          SELECT
+          ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.virtual_op
+          FROM hafah_python.helper_operations_view ho
+          WHERE ho.block_num >= _block_range_begin AND ho.block_num < _block_range_end
+          AND ho.virtual_op = TRUE
+          AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id IN (SELECT * FROM unnest( __resolved_filter ) ) ) )
+          AND ( _operation_begin = -1 OR ho.id >= _operation_begin )
+          ORDER BY ho.id
+          LIMIT _limit
+        ) T
+        LEFT JOIN
+        (
+          SELECT block_num, trx_in_block, trx_hash
+          FROM hive.transactions_view ht
+          WHERE ht.block_num >= _block_range_begin AND ht.block_num < _block_range_end
+        )T2 ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
+        WHERE T.block_num >= _block_range_begin AND T.block_num < _block_range_end
+        ORDER BY T.id
+        LIMIT _limit
+      )
     SELECT
-      (
-        CASE
-          WHEN T2.trx_hash IS NULL THEN '0000000000000000000000000000000000000000'
-          ELSE encode( T2.trx_hash, 'hex')
-        END
-      ) _trx_id,
-      T.block_num _block,
-      (
-        CASE
-          WHEN T2.trx_in_block IS NULL THEN 4294967295
-          ELSE T2.trx_in_block
-        END
-      ) _trx_in_block,
-      T.op_pos _op_in_trx,
-      T.virtual_op _virtual_op,
+      pre_result._trx_id,
+      pre_result._block,
+      pre_result._trx_in_block,
+      pre_result._op_in_trx,
+      pre_result._virtual_op,
       trim(both '"' from to_json(hb.created_at)::text) _timestamp,
-      T.body :: text _value,
-      T.id _operation_id
+      pre_result._value,
+      pre_result._operation_id
     FROM
-    (
-      --`abs` it's temporary, until position of operation is correctly saved
-      SELECT
-      ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.virtual_op
-      FROM hafah_python.helper_operations_view ho
-      WHERE ho.block_num >= _block_range_begin AND ho.block_num < _block_range_end
-      AND ho.virtual_op = TRUE
-      AND ( ( __filter_info IS NULL ) OR ( ho.op_type_id IN (SELECT * FROM unnest( __resolved_filter ) ) ) )
-      AND ( _operation_begin = -1 OR ho.id >= _operation_begin )
-      ORDER BY ho.id
-      LIMIT _limit
-    ) T
-    LEFT JOIN
-    (
-      SELECT block_num, trx_in_block, trx_hash
-      FROM hive.transactions_view ht
-      WHERE ht.block_num >= _block_range_begin AND ht.block_num < _block_range_end
-    )T2 ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
-    JOIN hive.blocks_view hb ON hb.num = T.block_num
-    WHERE T.block_num >= _block_range_begin AND T.block_num < _block_range_end
-    ORDER BY T.id
-    LIMIT _limit;
+      pre_result
+      JOIN hive.blocks_view hb ON hb.num = pre_result._block
+      WHERE hb.num >= _block_range_begin AND hb.num < _block_range_end
+    ORDER BY pre_result._operation_id;
 END
 $function$
 language plpgsql STABLE;
@@ -510,58 +525,71 @@ BEGIN
   __use_filter := array_length( __resolved_filter, 1 );
 
   RETURN QUERY
-    SELECT -- hafah_python.ah_get_account_history
-      (
-        CASE
-        WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000'
-        ELSE encode( (SELECT htv.trx_hash FROM hive.transactions_view htv WHERE ho.trx_in_block >= 0 AND ds.block_num = htv.block_num AND ho.trx_in_block = htv.trx_in_block), 'hex')
-        END
-      ) AS _trx_id,
-    ds.block_num AS _block,
-      (
-        CASE
-        WHEN ho.trx_in_block < 0 THEN 4294967295
-        ELSE ho.trx_in_block
-        END
-      ) AS _trx_in_block,
-      ho.op_pos::BIGINT AS _op_in_trx,
-      hot.is_virtual AS virtual_op,
-      btrim(to_json(hb.created_at)::TEXT, '"'::TEXT) AS formated_timestamp,
-      (
-        CASE
-          WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body_binary)::TEXT
-          ELSE ho.body :: text
-        END
-      ) AS _value,
-      ds.account_op_seq_no AS _operation_id
-    FROM
+    WITH pre_result AS
     (
-      WITH accepted_types AS MATERIALIZED
+      SELECT -- hafah_python.ah_get_account_history
+        (
+          CASE
+          WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000'
+          ELSE encode( (SELECT htv.trx_hash FROM hive.transactions_view htv WHERE ho.trx_in_block >= 0 AND ds.block_num = htv.block_num AND ho.trx_in_block = htv.trx_in_block), 'hex')
+          END
+        ) AS _trx_id,
+        ds.block_num AS _block,
+        (
+          CASE
+          WHEN ho.trx_in_block < 0 THEN 4294967295
+          ELSE ho.trx_in_block
+          END
+        ) AS _trx_in_block,
+        ho.op_pos::BIGINT AS _op_in_trx,
+        hot.is_virtual AS virtual_op,
+        (
+          CASE
+            WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body_binary)::TEXT
+            ELSE ho.body :: text
+          END
+        ) AS _value,
+        ds.account_op_seq_no AS _operation_id
+      FROM
       (
-        SELECT ot.id FROM hive.operation_types ot WHERE __use_filter IS NOT NULL AND ot.id=ANY(__resolved_filter)
-      )
-      (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
-      FROM hive.account_operations_view hao
-      JOIN accepted_types t ON hao.op_type_id = t.id
-      WHERE __use_filter IS NOT NULL AND hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit 
-      ORDER BY hao.account_op_seq_no DESC
-      LIMIT _limit
-      )
-      UNION ALL
-      (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
-      FROM hive.account_operations_view hao
-      WHERE __use_filter IS NULL AND hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit 
-      ORDER BY hao.account_op_seq_no DESC
-      LIMIT _limit
-      )
+        WITH accepted_types AS MATERIALIZED
+        (
+          SELECT ot.id FROM hive.operation_types ot WHERE __use_filter IS NOT NULL AND ot.id=ANY(__resolved_filter)
+        )
+        (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
+        FROM hive.account_operations_view hao
+        JOIN accepted_types t ON hao.op_type_id = t.id
+        WHERE __use_filter IS NOT NULL AND hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit 
+        ORDER BY hao.account_op_seq_no DESC
+        LIMIT _limit
+        )
+        UNION ALL
+        (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
+        FROM hive.account_operations_view hao
+        WHERE __use_filter IS NULL AND hao.account_id = __account_id AND hao.account_op_seq_no <= _start AND hao.block_num <= __upper_block_limit 
+        ORDER BY hao.account_op_seq_no DESC
+        LIMIT _limit
+        )
 
-    ) ds
-    JOIN LATERAL (SELECT hov.body, hov.body_binary, hov.op_pos, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
-    JOIN LATERAL (select ot.is_virtual FROM hive.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
-    JOIN hive.blocks_view hb ON hb.num = ds.block_num
-    ORDER BY ds.account_op_seq_no ASC
+      ) ds
+      JOIN LATERAL (SELECT hov.body, hov.body_binary, hov.op_pos, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
+      JOIN LATERAL (select ot.is_virtual FROM hive.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
+      ORDER BY ds.account_op_seq_no ASC
 
-    ;
+    )
+    SELECT -- hafah_python.ah_get_account_history
+      pre_result._trx_id,
+      pre_result._block,
+      pre_result._trx_in_block,
+      pre_result._op_in_trx,
+      pre_result.virtual_op,
+      btrim(to_json(hb.created_at)::TEXT, '"'::TEXT) AS formated_timestamp,
+      pre_result._value,
+      pre_result._operation_id
+    FROM
+      pre_result
+      JOIN hive.blocks_view hb ON hb.num = pre_result._block
+      ORDER BY pre_result._operation_id ASC;
 
 END
 $function$
