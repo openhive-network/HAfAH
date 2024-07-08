@@ -205,6 +205,181 @@ declare
           }
         }
       }
+    },
+    "/#4": {
+      "post": {
+        "tags": [
+          "account_history_api"
+        ],
+        "summary": "get_ops_in_block",
+        "description": "Returns all operations contained in a block. Parameter:\n\n- block_num:int\n- only_virtual:boolean\n- include_reversible:boolean (optional) If set to true also operations from reversible block will be included if block_num points to such block.",
+        "operationId": "reptracker_endpoints.home.get_ops_in_block",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ops_in_block"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Operations in block",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": [
+                  {
+                    "ops": [
+                      {
+                        "trx_id": "0000000000000000000000000000000000000000",
+                        "block": 0,
+                        "trx_in_block": 4294967295,
+                        "op_in_trx": 0,
+                        "virtual_op": 0,
+                        "timestamp": "2019-10-06T09:05:15",
+                        "op": {}
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/#5": {
+      "post": {
+        "tags": [
+          "block_api"
+        ],
+        "summary": "get_block",
+        "description": "Retrieve a full, signed block of the referenced block, or null if no matching block was found, Parameters:\n\n- block_num:int",
+        "operationId": "reptracker_endpoints.home.get_block",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/block"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Block parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": [
+                  {
+                    "block": {
+                      "previous": "0000000000000000000000000000000000000000",
+                      "timestamp": "2016-03-24T16:05:00",
+                      "witness": "",
+                      "transaction_merkle_root": "0000000000000000000000000000000000000000",
+                      "extensions": [],
+                      "witness_signature": "",
+                      "transactions": [],
+                      "block_id": "",
+                      "signing_key": "",
+                      "transaction_ids": []
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/#6": {
+      "post": {
+        "tags": [
+          "block_api"
+        ],
+        "summary": "get_block_header",
+        "description": "Retrieve a block header of the referenced block, or null if no matching block was found, Parameters:\n\n- block_num:int - Height of the block whose header should be returned",
+        "operationId": "reptracker_endpoints.home.get_block_header",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/block_header"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Block header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": [
+                  {
+                    "header": {
+                      "previous": "0000000000000000000000000000000000000000",
+                      "timestamp": "2016-03-24T16:05:00",
+                      "witness": "",
+                      "transaction_merkle_root": "0000000000000000000000000000000000000000",
+                      "extensions": []
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/#7": {
+      "post": {
+        "tags": [
+          "block_api"
+        ],
+        "summary": "get_block_range",
+        "description": "Retrieve a range of full, signed blocks. The list may be shorter than requested if count blocks would take you past the current head block, Parameters:\n\n- starting_block_num - Height of the first block to be returned\n- count - the maximum number of blocks to return",
+        "operationId": "reptracker_endpoints.home.get_block_range",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/block_range"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "List of blocks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": [
+                  {
+                    "blocks": []
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -332,6 +507,142 @@ declare
               "filter": {
                 "type": "integer",
                 "example": 1
+              }
+            }
+          },
+          "id": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "jsonrpc",
+          "method",
+          "id"
+        ]
+      },
+      "ops_in_block": {
+        "type": "object",
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "example": "2.0"
+          },
+          "method": {
+            "type": "string",
+            "example": "account_history_api.get_ops_in_block"
+          },
+          "params": {
+            "type": "object",
+            "properties": {
+              "block_num": {
+                "type": "integer",
+                "example": 0
+              },
+              "only_virtual": {
+                "type": "boolean",
+                "example": false
+              },
+              "include_reversible": {
+                "type": "boolean",
+                "example": true
+              }
+            }
+          },
+          "id": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "jsonrpc",
+          "method",
+          "id"
+        ]
+      },
+      "block": {
+        "type": "object",
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "example": "2.0"
+          },
+          "method": {
+            "type": "string",
+            "example": "block_api.get_block"
+          },
+          "params": {
+            "type": "object",
+            "properties": {
+              "block_num": {
+                "type": "integer",
+                "example": 0
+              }
+            }
+          },
+          "id": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "jsonrpc",
+          "method",
+          "id"
+        ]
+      },
+      "block_header": {
+        "type": "object",
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "example": "2.0"
+          },
+          "method": {
+            "type": "string",
+            "example": "block_api.get_block_header"
+          },
+          "params": {
+            "type": "object",
+            "properties": {
+              "block_num": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          },
+          "id": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "required": [
+          "jsonrpc",
+          "method",
+          "id"
+        ]
+      },
+      "block_range": {
+        "type": "object",
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "example": "2.0"
+          },
+          "method": {
+            "type": "string",
+            "example": "block_api.get_block_range"
+          },
+          "params": {
+            "type": "object",
+            "properties": {
+              "starting_block_num": {
+                "type": "integer",
+                "example": 0
+              },
+              "count": {
+                "type": "integer",
+                "example": 0
               }
             }
           },
