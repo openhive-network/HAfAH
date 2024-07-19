@@ -15,9 +15,9 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_ops_in_block(5000000);`
 
       REST call example
-      * `GET https://{hafah-host}/hafah-rest/blocks/213124/operations`
+      * `GET https://{hafah-host}/hafah/blocks/213124/operations`
       
-      * `GET https://{hafah-host}/hafah-rest/blocks/5000000/operations`
+      * `GET https://{hafah-host}/hafah/blocks/5000000/operations`
     operationId: hafah_endpoints.get_ops_in_block
     parameters:
       - in: path

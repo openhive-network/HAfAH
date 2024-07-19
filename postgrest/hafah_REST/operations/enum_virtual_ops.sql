@@ -13,7 +13,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.enum_virtual_ops(200,300);`
 
       REST call example
-      * `GET https://{hafah-host}/hafah-rest/operations/virtual?from-block=200&to-block=300`
+      * `GET https://{hafah-host}/hafah/operations/virtual?from-block=200&to-block=300`
     operationId: hafah_endpoints.enum_virtual_ops
     parameters:
       - in: query

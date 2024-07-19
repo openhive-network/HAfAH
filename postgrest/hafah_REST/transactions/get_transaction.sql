@@ -14,7 +14,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_transaction('954f6de36e6715d128fa8eb5a053fc254b05ded0');`
 
       REST call example
-      * `GET https://{hafah-host}/hafah-rest/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0`
+      * `GET https://{hafah-host}/hafah/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0`
     operationId: hafah_endpoints.get_transaction
     parameters:
       - in: path
