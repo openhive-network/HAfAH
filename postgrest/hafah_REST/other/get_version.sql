@@ -13,7 +13,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_version();`
       
       REST call example
-      * `GET https://{hafah-host}/hafah-rest/version`
+      * `GET https://{hafah-host}/hafah/version`
     operationId: hafah_endpoints.get_version
     responses:
       '200':

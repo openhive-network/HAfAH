@@ -15,9 +15,9 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_account_history('gtg');`
 
       REST call example
-      * `GET https://{hafah-host}/hafah-rest/accounts/blocktrades/operations`
+      * `GET https://{hafah-host}/hafah/accounts/blocktrades/operations`
       
-      * `GET https://{hafah-host}/hafah-rest/accounts/gtg/operations`
+      * `GET https://{hafah-host}/hafah/accounts/gtg/operations`
     operationId: hafah_endpoints.get_account_history
     parameters:
       - in: path

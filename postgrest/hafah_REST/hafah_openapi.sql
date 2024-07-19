@@ -82,7 +82,7 @@ declare
           "Blocks"
         ],
         "summary": "Get block details in range",
-        "description": "Retrieve a range of full, signed blocks.\nThe list may be shorter than requested if count blocks would take you past the current head block. \n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block_range(1000000,1001000);`\n\nREST call example\n* `GET https://{hafah-host}/hafah-rest/blocks?from-block=1000000&to-block=1001000`\n",
+        "description": "Retrieve a range of full, signed blocks.\nThe list may be shorter than requested if count blocks would take you past the current head block. \n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block_range(1000000,1001000);`\n\nREST call example\n* `GET https://{hafah-host}/hafah/blocks?from-block=1000000&to-block=1001000`\n",
         "operationId": "hafah_endpoints.get_block_range",
         "parameters": [
           {
@@ -170,7 +170,7 @@ declare
           "Blocks"
         ],
         "summary": "Get block details",
-        "description": "Retrieve a full, signed block of the referenced block, or null if no matching block was found.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block(500000);`\n\nREST call example\n* `GET https://{hafah-host}/hafah-rest/blocks/500000`\n",
+        "description": "Retrieve a full, signed block of the referenced block, or null if no matching block was found.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block(500000);`\n\nREST call example\n* `GET https://{hafah-host}/hafah/blocks/500000`\n",
         "operationId": "hafah_endpoints.get_block",
         "parameters": [
           {
@@ -234,7 +234,7 @@ declare
           "Blocks"
         ],
         "summary": "Get block header of the referenced block",
-        "description": "Retrieve a block header of the referenced block, or null if no matching block was found.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block_header(500000);`\n\nREST call example\n* `GET https://{hafah-host}/hafah-rest/blocks/500000/header`\n",
+        "description": "Retrieve a block header of the referenced block, or null if no matching block was found.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block_header(500000);`\n\nREST call example\n* `GET https://{hafah-host}/hafah/blocks/500000/header`\n",
         "operationId": "hafah_endpoints.get_block_header",
         "parameters": [
           {
@@ -293,7 +293,7 @@ declare
           "Blocks"
         ],
         "summary": "Get operations in block",
-        "description": "Returns all operations contained in a block.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_ops_in_block(213124);`\n\n* `SELECT * FROM hafah_endpoints.get_ops_in_block(5000000);`\n\nREST call example\n* `GET https://{hafah-host}/hafah-rest/blocks/213124/operations`\n\n* `GET https://{hafah-host}/hafah-rest/blocks/5000000/operations`\n",
+        "description": "Returns all operations contained in a block.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_ops_in_block(213124);`\n\n* `SELECT * FROM hafah_endpoints.get_ops_in_block(5000000);`\n\nREST call example\n* `GET https://{hafah-host}/hafah/blocks/213124/operations`\n\n* `GET https://{hafah-host}/hafah/blocks/5000000/operations`\n",
         "operationId": "hafah_endpoints.get_ops_in_block",
         "parameters": [
           {
@@ -419,7 +419,7 @@ declare
           "Operations"
         ],
         "summary": "Get operations in block range",
-        "description": "Returns all operations contained in provided block range\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operations(200,300);`\n\nREST call example\n* `GET https://{hafah-host}/hafah-rest/operations?from-block=200&to-block=300`\n",
+        "description": "Returns all operations contained in provided block range\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operations(200,300);`\n\nREST call example\n* `GET https://{hafah-host}/hafah/operations?from-block=200&to-block=300`\n",
         "operationId": "hafah_endpoints.get_operations",
         "parameters": [
           {
@@ -556,7 +556,7 @@ declare
           "Operations"
         ],
         "summary": "Get virtual operations in block range",
-        "description": "Allows to specify range of blocks to retrieve virtual operations.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.enum_virtual_ops(200,300);`\n\nREST call example\n* `GET https://{hafah-host}/hafah-rest/operations/virtual?from-block=200&to-block=300`\n",
+        "description": "Allows to specify range of blocks to retrieve virtual operations.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.enum_virtual_ops(200,300);`\n\nREST call example\n* `GET https://{hafah-host}/hafah/operations/virtual?from-block=200&to-block=300`\n",
         "operationId": "hafah_endpoints.enum_virtual_ops",
         "parameters": [
           {
@@ -695,7 +695,7 @@ declare
           "Transactions"
         ],
         "summary": "Get transaction details",
-        "description": "Returns the details of a transaction based on a transaction id (including their signatures,\noperations like also a block_num it was included to).\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_transaction('954f6de36e6715d128fa8eb5a053fc254b05ded0');`\n\nREST call example\n* `GET https://{hafah-host}/hafah-rest/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0`\n",
+        "description": "Returns the details of a transaction based on a transaction id (including their signatures,\noperations like also a block_num it was included to).\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_transaction('954f6de36e6715d128fa8eb5a053fc254b05ded0');`\n\nREST call example\n* `GET https://{hafah-host}/hafah/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0`\n",
         "operationId": "hafah_endpoints.get_transaction",
         "parameters": [
           {
@@ -790,7 +790,7 @@ declare
           "Accounts"
         ],
         "summary": "Get account's history",
-        "description": "Returns a history of all operations for a given account.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_account_history('blocktrades');`\n\n* `SELECT * FROM hafah_endpoints.get_account_history('gtg');`\n\nREST call example\n* `GET https://{hafah-host}/hafah-rest/accounts/blocktrades/operations`\n\n* `GET https://{hafah-host}/hafah-rest/accounts/gtg/operations`\n",
+        "description": "Returns a history of all operations for a given account.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_account_history('blocktrades');`\n\n* `SELECT * FROM hafah_endpoints.get_account_history('gtg');`\n\nREST call example\n* `GET https://{hafah-host}/hafah/accounts/blocktrades/operations`\n\n* `GET https://{hafah-host}/hafah/accounts/gtg/operations`\n",
         "operationId": "hafah_endpoints.get_account_history",
         "parameters": [
           {
@@ -932,7 +932,7 @@ declare
           "Other"
         ],
         "summary": "hafah's version",
-        "description": "Get hafah's last commit hash that determinates its version\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_version();`\n\nREST call example\n* `GET https://{hafah-host}/hafah-rest/version`\n",
+        "description": "Get hafah's last commit hash that determinates its version\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_version();`\n\nREST call example\n* `GET https://{hafah-host}/hafah/version`\n",
         "operationId": "hafah_endpoints.get_version",
         "responses": {
           "200": {
