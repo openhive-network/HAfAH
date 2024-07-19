@@ -10,11 +10,11 @@ SET ROLE hafah_owner;
       Allows to specify range of blocks to retrieve virtual operations.
 
       SQL example
-      * `SELECT * FROM hafah_rest.enum_virtual_ops(200,300);`
+      * `SELECT * FROM hafah_endpoints.enum_virtual_ops(200,300);`
 
       REST call example
       * `GET https://{hafah-host}/hafah-rest/operations/virtual?from-block=200&to-block=300`
-    operationId: hafah_rest.enum_virtual_ops
+    operationId: hafah_endpoints.enum_virtual_ops
     parameters:
       - in: query
         name: from-block
@@ -166,8 +166,8 @@ SET ROLE hafah_owner;
         description: 
  */
 -- openapi-generated-code-begin
-DROP FUNCTION IF EXISTS hafah_rest.enum_virtual_ops;
-CREATE OR REPLACE FUNCTION hafah_rest.enum_virtual_ops(
+DROP FUNCTION IF EXISTS hafah_endpoints.enum_virtual_ops;
+CREATE OR REPLACE FUNCTION hafah_endpoints.enum_virtual_ops(
     "from-block" INT = NULL,
     "to-block" INT = NULL,
     "operation-begin" BIGINT = 0,

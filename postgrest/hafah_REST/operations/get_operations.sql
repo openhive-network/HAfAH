@@ -10,11 +10,11 @@ SET ROLE hafah_owner;
       Returns all operations contained in provided block range
       
       SQL example
-      * `SELECT * FROM hafah_rest.get_operations(200,300);`
+      * `SELECT * FROM hafah_endpoints.get_operations(200,300);`
 
       REST call example
       * `GET https://{hafah-host}/hafah-rest/operations?from-block=200&to-block=300`
-    operationId: hafah_rest.get_operations
+    operationId: hafah_endpoints.get_operations
     parameters:
       - in: query
         name: from-block
@@ -119,8 +119,8 @@ SET ROLE hafah_owner;
         description: 
  */
 -- openapi-generated-code-begin
-DROP FUNCTION IF EXISTS hafah_rest.get_operations;
-CREATE OR REPLACE FUNCTION hafah_rest.get_operations(
+DROP FUNCTION IF EXISTS hafah_endpoints.get_operations;
+CREATE OR REPLACE FUNCTION hafah_endpoints.get_operations(
     "from-block" INT = NULL,
     "to-block" INT = NULL,
     "operation-begin" BIGINT = -1,

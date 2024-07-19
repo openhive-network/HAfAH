@@ -10,11 +10,11 @@ SET ROLE hafah_owner;
       Retrieve a block header of the referenced block, or null if no matching block was found.
       
       SQL example
-      * `SELECT * FROM hafah_rest.get_block_header(500000);`
+      * `SELECT * FROM hafah_endpoints.get_block_header(500000);`
 
       REST call example
       * `GET https://{hafah-host}/hafah-rest/blocks/500000/header`
-    operationId: hafah_rest.get_block_header
+    operationId: hafah_endpoints.get_block_header
     parameters:
       - in: path
         name: block-num
@@ -55,8 +55,8 @@ SET ROLE hafah_owner;
         description: 
  */
 -- openapi-generated-code-begin
-DROP FUNCTION IF EXISTS hafah_rest.get_block_header;
-CREATE OR REPLACE FUNCTION hafah_rest.get_block_header(
+DROP FUNCTION IF EXISTS hafah_endpoints.get_block_header;
+CREATE OR REPLACE FUNCTION hafah_endpoints.get_block_header(
     "block-num" INT = NULL,
     "id" INT = 1
 )
