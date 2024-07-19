@@ -10,11 +10,11 @@ SET ROLE hafah_owner;
       Get hafah's last commit hash that determinates its version
 
       SQL example
-      * `SELECT * FROM hafah_rest.get_version();`
+      * `SELECT * FROM hafah_endpoints.get_version();`
       
       REST call example
       * `GET https://{hafah-host}/hafah-rest/version`
-    operationId: hafah_rest.get_version
+    operationId: hafah_endpoints.get_version
     responses:
       '200':
         description: |
@@ -30,8 +30,8 @@ SET ROLE hafah_owner;
         description: App not installed
  */
 -- openapi-generated-code-begin
-DROP FUNCTION IF EXISTS hafah_rest.get_version;
-CREATE OR REPLACE FUNCTION hafah_rest.get_version()
+DROP FUNCTION IF EXISTS hafah_endpoints.get_version;
+CREATE OR REPLACE FUNCTION hafah_endpoints.get_version()
 RETURNS JSON 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'

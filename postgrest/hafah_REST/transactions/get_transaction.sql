@@ -11,11 +11,11 @@ SET ROLE hafah_owner;
       operations like also a block_num it was included to).
       
       SQL example
-      * `SELECT * FROM hafah_rest.get_transaction('954f6de36e6715d128fa8eb5a053fc254b05ded0');`
+      * `SELECT * FROM hafah_endpoints.get_transaction('954f6de36e6715d128fa8eb5a053fc254b05ded0');`
 
       REST call example
       * `GET https://{hafah-host}/hafah-rest/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0`
-    operationId: hafah_rest.get_transaction
+    operationId: hafah_endpoints.get_transaction
     parameters:
       - in: path
         name: transaction-id
@@ -88,8 +88,8 @@ SET ROLE hafah_owner;
         description: 
  */
 -- openapi-generated-code-begin
-DROP FUNCTION IF EXISTS hafah_rest.get_transaction;
-CREATE OR REPLACE FUNCTION hafah_rest.get_transaction(
+DROP FUNCTION IF EXISTS hafah_endpoints.get_transaction;
+CREATE OR REPLACE FUNCTION hafah_endpoints.get_transaction(
     "transaction-id" TEXT = NULL,
     "include-reversible" BOOLEAN = False,
     "is-legacy-style" BOOLEAN = False,

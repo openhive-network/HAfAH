@@ -10,15 +10,15 @@ SET ROLE hafah_owner;
       Returns a history of all operations for a given account.
 
       SQL example
-      * `SELECT * FROM hafah_rest.get_account_history('blocktrades');`
+      * `SELECT * FROM hafah_endpoints.get_account_history('blocktrades');`
 
-      * `SELECT * FROM hafah_rest.get_account_history('gtg');`
+      * `SELECT * FROM hafah_endpoints.get_account_history('gtg');`
 
       REST call example
       * `GET https://{hafah-host}/hafah-rest/accounts/blocktrades/operations`
       
       * `GET https://{hafah-host}/hafah-rest/accounts/gtg/operations`
-    operationId: hafah_rest.get_account_history
+    operationId: hafah_endpoints.get_account_history
     parameters:
       - in: path
         name: account-name
@@ -125,8 +125,8 @@ SET ROLE hafah_owner;
         description: 
  */
 -- openapi-generated-code-begin
-DROP FUNCTION IF EXISTS hafah_rest.get_account_history;
-CREATE OR REPLACE FUNCTION hafah_rest.get_account_history(
+DROP FUNCTION IF EXISTS hafah_endpoints.get_account_history;
+CREATE OR REPLACE FUNCTION hafah_endpoints.get_account_history(
     "account-name" TEXT = NULL,
     "start" INT = -1,
     "result-limit" INT = 1000,

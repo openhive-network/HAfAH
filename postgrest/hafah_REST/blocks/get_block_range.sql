@@ -11,11 +11,11 @@ SET ROLE hafah_owner;
       The list may be shorter than requested if count blocks would take you past the current head block. 
 
       SQL example
-      * `SELECT * FROM hafah_rest.get_block_range(1000000,1001000);`
+      * `SELECT * FROM hafah_endpoints.get_block_range(1000000,1001000);`
 
       REST call example
       * `GET https://{hafah-host}/hafah-rest/blocks?from-block=1000000&to-block=1001000`
-    operationId: hafah_rest.get_block_range
+    operationId: hafah_endpoints.get_block_range
     parameters:
       - in: query
         name: from-block
@@ -81,8 +81,8 @@ SET ROLE hafah_owner;
         description: 
  */
 -- openapi-generated-code-begin
-DROP FUNCTION IF EXISTS hafah_rest.get_block_range;
-CREATE OR REPLACE FUNCTION hafah_rest.get_block_range(
+DROP FUNCTION IF EXISTS hafah_endpoints.get_block_range;
+CREATE OR REPLACE FUNCTION hafah_endpoints.get_block_range(
     "from-block" INT = NULL,
     "to-block" INT = NULL,
     "id" INT = 1
