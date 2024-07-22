@@ -4,7 +4,7 @@ set -e
 set -o pipefail
 
 SCRIPTDIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit 1; pwd -P )"
-endpoints_dir="postgrest/hafah_REST"
+endpoints_dir="../postgrest/hafah_REST"
 input_file="rewrite_rules.conf"
 temp_output_file=$(mktemp)
 
@@ -43,7 +43,7 @@ echo "Using default HAF block explorer types and endpoints directories"
 echo "$DEFAULT_ENDPOINTS"
 
 # shellcheck disable=SC2086
-python3 process_openapi.py $DEFAULT_OUTPUT $DEFAULT_ENDPOINTS
+python3 ../haf/scripts/process_openapi.py $DEFAULT_OUTPUT $DEFAULT_ENDPOINTS
 
 # Function to reverse the lines
 reverse_lines() {
@@ -70,3 +70,4 @@ reverse_lines() {
 
 reverse_lines > "$temp_output_file"
 mv "$temp_output_file" "$input_file"
+mv "$input_file" "../$input_file"
