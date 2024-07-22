@@ -321,3 +321,35 @@ this column is result of parsing jmeter log:
 `APDEX` - application performance index for endpoint<br>
 `Statistics` - stats of response times (avg, min, max, median, percentiles)<br>
 `Charts` -> `Response Times` - charts of response time distribution, percentiles, relation to thread number<br>
+
+## HAFAH REST
+
+### 1. Blocks
+---
+```
+- /blocks?from-block&to-block&search-params Get blocks from given range (get_block_range)
+- /blocks/{block-num} Block details (get_block)
+- /blocks/{block-num}/header Header in referenced block (get_block_header)
+- /blocks/{block-num}/operations List of operations for given block (get_ops_in_block)
+```
+### 2. Transactions
+---
+```
+- /transactions/{transaction-id} Get transaction (get_transaction)
+```
+### 3. Operations
+---
+```
+- /operations?from-block&to-block&search-params Search for operations (get_ops_in_block in range)
+- /operations/virtual?from-block&to-block&search-params Enum virtua operation as search (enum_virtual_ops)
+```
+### 4. Account
+---
+```
+- /accounts/{account-name}/operations Get operations for given account (get_account_history)
+```
+### 5. Other
+---
+```
+- /version (No corresponding method)
+```
