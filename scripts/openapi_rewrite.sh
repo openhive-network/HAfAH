@@ -20,7 +20,6 @@ ENDPOINTS_IN_ORDER="
 ../$endpoints/blocks/get_block_header.sql
 ../$endpoints/blocks/get_ops_in_block.sql
 ../$endpoints/operations/get_operations.sql
-../$endpoints/operations/enum_virtual_ops.sql
 ../$endpoints/transactions/get_transaction.sql
 ../$endpoints/accounts/get_account_history.sql
 ../$endpoints/other/get_version.sql"
@@ -104,4 +103,5 @@ rm "$input_file"
 rm -rf "$SCRIPTDIR/../$rewrite_dir"
 mv "$OUTPUT/../$endpoints" "$SCRIPTDIR/../$rewrite_dir"
 rm -rf $SCRIPTDIR/output 
+rm -rf $SCRIPTDIR/postgrest 
 echo "Rewritten scripts saved in $rewrite_dir"

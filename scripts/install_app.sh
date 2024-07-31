@@ -19,6 +19,7 @@ print_help () {
     echo "  --host=VALUE         Allows to specify a PostgreSQL host location (defaults to /var/run/postgresql)"
     echo "  --port=NUMBER        Allows to specify a PostgreSQL operating port (defaults to 5432)"
     echo "  --postgres-url=URL   Allows to specify a PostgreSQL URL (in opposite to separate --host and --port options)"
+    echo "  --swagger-url=URL    Allows to specify a server URL"
     echo "  --help               Display this help screen and exit"
     echo
 }
@@ -26,6 +27,7 @@ print_help () {
 POSTGRES_HOST="/var/run/postgresql"
 POSTGRES_PORT=5432
 POSTGRES_URL=""
+SWAGGER_URL="{hafah-host}"
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -37,6 +39,9 @@ while [ $# -gt 0 ]; do
         ;;
     --postgres-url=*)
         POSTGRES_URL="${1#*=}"
+        ;;
+    --swagger-url=*)
+        SWAGGER_URL="${1#*=}"
         ;;
     --help)
         print_help
@@ -65,21 +70,23 @@ else
 fi
 
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/ah_schema_functions.pgsql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/block_range_backend.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/ops_in_block_backend.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/account_history.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/block_header.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/block_range.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/block.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/ops_in_block.sql"
+
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_backend.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_endpoints.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/set_version_in_sql.pgsql"
 
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/hafah_openapi.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET custom.swagger_url = '$SWAGGER_URL';" -f "$SCRIPTPATH/../postgrest/hafah_REST/hafah_openapi.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_rest_exceptions.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/blocks/get_block.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/blocks/get_block_range.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/blocks/get_block_header.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/blocks/get_ops_in_block.sql"
-
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/transactions/get_transaction.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/accounts/get_account_history.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/operations/enum_virtual_ops.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/operations/get_operations.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/other/get_version.sql"
