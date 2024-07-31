@@ -5,15 +5,15 @@ SET ROLE hafah_owner;
   get:
     tags:
       - Other
-    summary: hafah's version
+    summary: hafah''s version
     description: |
-      Get hafah's last commit hash that determinates its version
+      Get hafah''s last commit hash that determinates its version
 
       SQL example
       * `SELECT * FROM hafah_endpoints.get_version();`
       
       REST call example
-      * `GET https://{hafah-host}/hafah/version`
+      * `GET ''https://%1$s/hafah/version''`
     operationId: hafah_endpoints.get_version
     responses:
       '200':
@@ -25,7 +25,7 @@ SET ROLE hafah_owner;
             schema:
               type: string
               x-sql-datatype: JSON
-            example: 'c2fed8958584511ef1a66dab3dbac8c40f3518f0'
+            example: c2fed8958584511ef1a66dab3dbac8c40f3518f0
       '404':
         description: App not installed
  */

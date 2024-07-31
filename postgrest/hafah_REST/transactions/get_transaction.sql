@@ -11,10 +11,10 @@ SET ROLE hafah_owner;
       operations like also a block_num it was included to).
       
       SQL example
-      * `SELECT * FROM hafah_endpoints.get_transaction('954f6de36e6715d128fa8eb5a053fc254b05ded0');`
+      * `SELECT * FROM hafah_endpoints.get_transaction(''954f6de36e6715d128fa8eb5a053fc254b05ded0'');`
 
       REST call example
-      * `GET https://{hafah-host}/hafah/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0`
+      * `GET ''https://%1$s/hafah/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0''`
     operationId: hafah_endpoints.get_transaction
     parameters:
       - in: path
@@ -34,20 +34,6 @@ SET ROLE hafah_owner;
         description: |
           If set to true also operations from reversible block will be included
           if block_num points to such block.
-      - in: query
-        name: is-legacy-style
-        required: false
-        schema:
-          type: boolean
-          default: false
-        description:
-      - in: query
-        name: id
-        required: false
-        schema:
-          type: integer
-          default: 1
-        description:
     responses:
       '200':
         description: |
@@ -84,16 +70,12 @@ SET ROLE hafah_owner;
                   "block_num": 4023233,
                   "transaction_num": 0
                 }
-      '404':
-        description: 
  */
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_transaction;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_transaction(
     "transaction-id" TEXT = NULL,
-    "include-reversible" BOOLEAN = False,
-    "is-legacy-style" BOOLEAN = False,
-    "id" INT = 1
+    "include-reversible" BOOLEAN = False
 )
 RETURNS JSON 
 -- openapi-generated-code-end
@@ -105,22 +87,22 @@ DECLARE
 BEGIN
     -- Required argument: transaction-id    
   IF NOT (translate("transaction-id", '0123456789abcdefABCDEF', '') = '') THEN
-      RETURN hafah_backend.rest_raise_invalid_char_in_hex("transaction-id", "id");
+    RETURN hafah_backend.rest_raise_invalid_char_in_hex("transaction-id");
   ELSEIF LENGTH("transaction-id") != 40 THEN
-      RETURN hafah_backend.rest_raise_transaction_hash_invalid_length("transaction-id", "id");
+    RETURN hafah_backend.rest_raise_transaction_hash_invalid_length("transaction-id");
   ELSEIF "transaction-id" IS NULL THEN
-      RETURN hafah_backend.rest_raise_missing_arg('transaction-id', "id");
+    RETURN hafah_backend.rest_raise_missing_arg('transaction-id');
   END IF;
 
   BEGIN
-    RETURN hafah_python.get_transaction_json(decode("transaction-id", 'hex'), "include-reversible", "is-legacy-style");
+    RETURN hafah_python.get_transaction_json(decode("transaction-id", 'hex'), "include-reversible", FALSE);
 
     EXCEPTION
       WHEN invalid_text_representation THEN
-        RETURN hafah_backend.rest_raise_uint_exception("id");
+        RETURN hafah_backend.rest_raise_uint_exception();
       WHEN raise_exception THEN
         GET STACKED DIAGNOSTICS __exception_message = message_text;
-        RETURN hafah_backend.rest_wrap_sql_exception(__exception_message, "id");
+        RETURN hafah_backend.rest_wrap_sql_exception(__exception_message);
   END;
 END
 $$

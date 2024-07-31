@@ -13,7 +13,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_block_header(500000);`
 
       REST call example
-      * `GET https://{hafah-host}/hafah/blocks/500000/header`
+      * `GET ''https://%1$s/hafah/blocks/500000/header''`
     operationId: hafah_endpoints.get_block_header
     parameters:
       - in: path
@@ -21,46 +21,32 @@ SET ROLE hafah_owner;
         required: true
         schema:
           type: integer
-          default: NULL
-        description: |
-          Height of the block whose header should be returned
-      - in: query
-        name: id
-        required: false
-        schema:
-          type: integer
-          default: 1
-        description: 
+        description: Given block number
     responses:
       '200':
         description: |
 
-          * Returns `JSON`
+          * Returns `JSONB`
         content:
           application/json:
             schema:
               type: string
-              x-sql-datatype: JSON
+              x-sql-datatype: JSONB
             example: 
               - {
-                  "header": {
-                    "witness": "initminer",
-                    "previous": "000003e7c4fd3221cf407efcf7c1730e2ca54b05",
-                    "timestamp": "2016-03-24T16:55:30",
-                    "extensions": [],
-                    "transaction_merkle_root": "0000000000000000000000000000000000000000"
-                  }
+                  "witness": "ihashfury",
+                  "previous": "004c4b3fc6a8735b4ab5433d59f4526e4a042644",
+                  "timestamp": "2016-09-15T19:47:21",
+                  "extensions": [],
+                  "transaction_merkle_root": "97a8f2b04848b860f1792dc07bf58efcb15aeb8c"
                 }
-      '404':
-        description: 
  */
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_block_header;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_block_header(
-    "block-num" INT = NULL,
-    "id" INT = 1
+    "block-num" INT
 )
-RETURNS JSON 
+RETURNS JSONB 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'
 AS
@@ -71,7 +57,7 @@ DECLARE
 BEGIN
     -- Required argument: block-num
   IF "block-num" IS NULL THEN
-      RETURN hafah_backend.rest_raise_missing_arg('block-num', "id");
+      RETURN hafah_backend.rest_raise_missing_arg('block-num');
   ELSE
       __block_num = "block-num"::BIGINT;
       IF __block_num < 0 THEN
@@ -80,14 +66,14 @@ BEGIN
   END IF;
 
   BEGIN
-    RETURN hive.get_block_header_json(__block_num::INT);
+    RETURN hafah_python.get_block_header_json(__block_num::INT);
 
     EXCEPTION
       WHEN invalid_text_representation THEN
-        RETURN hafah_backend.rest_raise_uint_exception("id");
+        RETURN hafah_backend.rest_raise_uint_exception();
       WHEN raise_exception THEN
         GET STACKED DIAGNOSTICS __exception_message = message_text;
-        RETURN hafah_backend.rest_wrap_sql_exception(__exception_message, "id");
+        RETURN hafah_backend.rest_wrap_sql_exception(__exception_message);
   END;
 END
 $$

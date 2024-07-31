@@ -10,61 +10,137 @@ SET ROLE hafah_owner;
       Retrieve a full, signed block of the referenced block, or null if no matching block was found.
 
       SQL example
-      * `SELECT * FROM hafah_endpoints.get_block(500000);`
+      * `SELECT * FROM hafah_endpoints.get_block(5000000);`
 
       REST call example
-      * `GET https://{hafah-host}/hafah/blocks/500000`
+      * `GET ''https://%1$s/hafah/blocks/5000000''`
     operationId: hafah_endpoints.get_block
-    parameters:
+    parameters: 
       - in: path
         name: block-num
         required: true
         schema:
           type: integer
-          default: NULL
-        description: 
-      - in: query
-        name: id
-        required: false
-        schema:
-          type: integer
-          default: 1
-        description: 
+        description: Given block number
     responses:
       '200':
         description: |
 
-          * Returns `JSON`
+          * Returns `JSONB`
         content:
           application/json:
             schema:
               type: string
-              x-sql-datatype: JSON
+              x-sql-datatype: JSONB
             example: 
               - {
-                  "block": {
-                    "witness": "initminer",
-                    "block_id": "000003e8b922f4906a45af8e99d86b3511acd7a5",
-                    "previous": "000003e7c4fd3221cf407efcf7c1730e2ca54b05",
-                    "timestamp": "2016-03-24T16:55:30",
-                    "extensions": [],
-                    "signing_key": "STM8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX",
-                    "transactions": [],
-                    "transaction_ids": [],
-                    "witness_signature": "207f15578cac20ac0e8af1ebb8f463106b8849577e21cca9fc60da146d1d95df88072dedc6ffb7f7f44a9185bbf9bf8139a5b4285c9f423843720296a44d428856",
-                    "transaction_merkle_root": "0000000000000000000000000000000000000000"
-                  }
+                  "witness": "ihashfury",
+                  "block_id": "004c4b40245ffb07380a393fb2b3d841b76cdaec",
+                  "previous": "004c4b3fc6a8735b4ab5433d59f4526e4a042644",
+                  "timestamp": "2016-09-15T19:47:21",
+                  "extensions": [],
+                  "signing_key": "STM8aUs6SGoEmNYMd3bYjE1UBr6NQPxGWmTqTdBaxJYSx244edSB2",
+                  "transactions": [
+                    {
+                      "expiration": "2016-09-15T19:47:33",
+                      "extensions": [],
+                      "operations": [
+                        {
+                          "type": "account_create_operation",
+                          "value": {
+                            "fee": {
+                              "nai": "@@000000021",
+                              "amount": "10000",
+                              "precision": 3
+                            },
+                            "owner": {
+                              "key_auths": [
+                                [
+                                  "STM871wj5KKnbwwiRv3scVcxQ26ynPnE1uaZr6dPpqVu9F4zJZgjZ",
+                                  1
+                                ]
+                              ],
+                              "account_auths": [],
+                              "weight_threshold": 1
+                            },
+                            "active": {
+                              "key_auths": [
+                                [
+                                  "STM73bAnWEwkdUa7Lp4ovNzyu4soHUCaCNSz79YHQsDqscNdSe1E8",
+                                  1
+                                ]
+                              ],
+                              "account_auths": [],
+                              "weight_threshold": 1
+                            },
+                            "creator": "steem",
+                            "posting": {
+                              "key_auths": [
+                                [
+                                  "STM7fXKrnQN3xhgFTQBFMgR9TU8CxfgAJrLvSDjGuM2bFkiuKfwZg",
+                                  1
+                                ]
+                              ],
+                              "account_auths": [],
+                              "weight_threshold": 1
+                            },
+                            "memo_key": "STM8i93Zznxu2QRNLCHBDXt5yyiMW1c3GEyVKV9XAs8H5wEWwdJaM",
+                            "json_metadata": "",
+                            "new_account_name": "kefadex"
+                          }
+                        }
+                      ],
+                      "signatures": [
+                        "1f63c75cc966916ea705a6fdef0821a810bdabb07118a3721f4cd52c972b9e4522534248c45ac908c1498752165a1d937eaf55ab6c028d7ee0ad893d3d4330d066"
+                      ],
+                      "ref_block_num": 19263,
+                      "ref_block_prefix": 1534306502
+                    },
+                    {
+                      "expiration": "2016-09-15T19:47:48",
+                      "extensions": [],
+                      "operations": [
+                        {
+                          "type": "limit_order_create_operation",
+                          "value": {
+                            "owner": "cvk",
+                            "orderid": 1473968838,
+                            "expiration": "2035-10-29T06:32:22",
+                            "fill_or_kill": false,
+                            "amount_to_sell": {
+                              "nai": "@@000000021",
+                              "amount": "10324",
+                              "precision": 3
+                            },
+                            "min_to_receive": {
+                              "nai": "@@000000013",
+                              "amount": "6819",
+                              "precision": 3
+                            }
+                          }
+                        }
+                      ],
+                      "signatures": [
+                        "203e8ef6d16005180dc06756462bd867513a929bc4fa7c45f24ca2b0763cafdb06678812d777216f46d205e68a740dd19e32a1aa1a1df022500c0f1ef97800d0e0"
+                      ],
+                      "ref_block_num": 19263,
+                      "ref_block_prefix": 1534306502
+                    }
+                  ],
+                  "transaction_ids": [
+                    "6707feb450da66dc223ab5cb3e259937b2fef6bf",
+                    "973290d26bac31335c000c7a3d3fe058ce3dbb9f"
+                  ],
+                  "witness_signature": "1f6aa1c6311c768b5225b115eaf5798e5f1d8338af3970d90899cd5ccbe38f6d1f7676c5649bcca18150cbf8f07c0cc7ec3ae40d5936cfc6d5a650e582ba0f8002",
+                  "transaction_merkle_root": "97a8f2b04848b860f1792dc07bf58efcb15aeb8c"
                 }
-      '404':
-        description: 
  */
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_block;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_block(
-    "block-num" INT = NULL,
-    "id" INT = 1
+    "block-num" INT
 )
-RETURNS JSON 
+RETURNS JSONB 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'
 AS
@@ -75,7 +151,7 @@ DECLARE
 BEGIN
     -- Required argument: block-num
   IF "block-num" IS NULL THEN
-      RETURN hafah_backend.rest_raise_missing_arg('block-num', "id");
+      RETURN hafah_backend.rest_raise_missing_arg('block-num');
   ELSE
       __block_num = "block-num"::BIGINT;
       IF __block_num < 0 THEN
@@ -84,14 +160,14 @@ BEGIN
   END IF;
 
   BEGIN
-    RETURN hive.get_block_json(__block_num::INT);
+    RETURN hafah_python.get_block_json(__block_num::INT);
 
     EXCEPTION
       WHEN invalid_text_representation THEN
-        RETURN hafah_backend.rest_raise_uint_exception("id");
+        RETURN hafah_backend.rest_raise_uint_exception();
       WHEN raise_exception THEN
         GET STACKED DIAGNOSTICS __exception_message = message_text;
-        RETURN hafah_backend.rest_wrap_sql_exception(__exception_message, "id");
+        RETURN hafah_backend.rest_wrap_sql_exception(__exception_message);
   END;
 END
 $$

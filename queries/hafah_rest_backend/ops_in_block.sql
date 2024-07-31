@@ -1,5 +1,16 @@
+SET ROLE hafah_owner;
+
 --single block
-CREATE OR REPLACE FUNCTION hafah_python.get_rest_ops_in_block_json( in _block_num INT, in _operation_begin BIGINT, in _limit INT, in _only_virtual BOOLEAN, in _include_reversible BOOLEAN, in _is_legacy_style BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.get_rest_ops_in_block_json(
+    in _block_num INT,
+    in _operation_types BOOLEAN,
+    in _operation_filter_low BIGINT, 
+    in _operation_filter_high BIGINT,
+    in _operation_begin BIGINT,
+    in _limit INT,
+    in _include_reversible BOOLEAN,
+    in _is_legacy_style BOOLEAN 
+)
 RETURNS JSON
 AS
 $function$
@@ -24,7 +35,17 @@ BEGIN
         hp._virtual_op AS "virtual_op",
         hp._operation_id AS "operation_id"
       FROM
-        hafah_python.get_rest_ops_in_block( _block_num, _block_num + 1, _operation_begin, _limit, _only_virtual, _include_reversible, _is_legacy_style ) AS hp
+        hafah_python.get_rest_ops_in_block( 
+          _block_num,
+          _block_num + 1,
+          _operation_types,
+          _operation_filter_low,
+          _operation_filter_high,
+          _operation_begin,
+          _limit,
+          _include_reversible,
+          _is_legacy_style
+        ) AS hp
     ),
     pag AS (
       SELECT
@@ -74,7 +95,17 @@ $function$
 language plpgsql STABLE;
 
 --block range 
-CREATE OR REPLACE FUNCTION hafah_python.get_rest_ops_in_blocks_json( in _block_num INT, in _end_block_num INT, in _operation_begin BIGINT, in _limit INT, in _only_virtual BOOLEAN, in _include_reversible BOOLEAN, in _is_legacy_style BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.get_rest_ops_in_blocks_json(
+    in _block_num INT,
+    in _end_block_num INT, 
+    in _operation_types BOOLEAN,
+    in _operation_filter_low BIGINT, 
+    in _operation_filter_high BIGINT,
+    in _operation_begin BIGINT,
+    in _limit INT,
+    in _include_reversible BOOLEAN,
+    in _is_legacy_style BOOLEAN 
+)
 RETURNS JSON
 AS
 $function$
@@ -87,7 +118,7 @@ BEGIN
 
   PERFORM hafah_python.validate_negative_limit( _limit );
   PERFORM hafah_python.validate_limit( _limit, 150000 );
-  PERFORM hafah_python.validate_block_range( _block_num, _end_block_num, 2000 );
+  PERFORM hafah_python.validate_block_range( _block_num, _end_block_num + 1, 2001);
 
   RETURN (
     WITH pre_result AS (
@@ -101,7 +132,17 @@ BEGIN
         hp._virtual_op AS "virtual_op",
         hp._operation_id AS "operation_id"
       FROM
-        hafah_python.get_rest_ops_in_block( _block_num, _end_block_num, _operation_begin, _limit, _only_virtual, _include_reversible, _is_legacy_style ) AS hp
+        hafah_python.get_rest_ops_in_block( 
+          _block_num,
+          _end_block_num + 1,
+          _operation_types,
+          _operation_filter_low,
+          _operation_filter_high,
+          _operation_begin,
+          _limit,
+          _include_reversible,
+          _is_legacy_style
+        ) AS hp
     ),
     pag AS (
       SELECT
@@ -161,7 +202,17 @@ $function$
 language plpgsql STABLE;
 
 
-CREATE OR REPLACE FUNCTION hafah_python.get_rest_ops_in_block( in _block_num INT, in _end_block_num INT, in _operation_begin BIGINT, in _limit INT, in _only_virtual BOOLEAN, in _include_reversible BOOLEAN, in _is_legacy_style BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.get_rest_ops_in_block( 
+    in _block_num INT,
+    in _end_block_num INT, 
+    in _operation_types BOOLEAN,
+    in _operation_filter_low BIGINT, 
+    in _operation_filter_high BIGINT,
+    in _operation_begin BIGINT,
+    in _limit INT,
+    in _include_reversible BOOLEAN,
+    in _is_legacy_style BOOLEAN 
+)
 RETURNS TABLE(
     __block_num INT,
     _trx_id TEXT,
@@ -174,6 +225,10 @@ RETURNS TABLE(
 )
 AS
 $function$
+DECLARE
+  __operation_filter BOOLEAN = (_operation_types IS NULL);
+  __resolved_filter SMALLINT[];
+  __resolved_filter_exists BOOLEAN;
 BEGIN
   IF (NOT _include_reversible) AND _block_num > hive.app_get_irreversible_block() THEN
     RETURN QUERY SELECT
@@ -190,6 +245,10 @@ BEGIN
   ELSEIF (NOT _include_reversible) AND _end_block_num > hive.app_get_irreversible_block() THEN
     _end_block_num := hive.app_get_irreversible_block() + 1;
   END IF;
+
+  SELECT hafah_python.translate_get_account_history_filter(_operation_filter_low, _operation_filter_high) INTO __resolved_filter;
+
+  __resolved_filter_exists := array_length( __resolved_filter, 1 ) IS NOT NULL;
 
   RETURN QUERY
     WITH hfm_operations AS (
@@ -218,16 +277,37 @@ BEGIN
         T.id::BIGINT _operation_id
       FROM
         (
-          SELECT
-            ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.body_binary, ho.op_type_id, ho.virtual_op
-          FROM hafah_python.helper_operations_view ho
-          WHERE 
-            (block_num >= _block_num) AND 
-            (block_num < _end_block_num) AND
-            (_only_virtual = FALSE OR ( _only_virtual = TRUE AND ho.virtual_op = TRUE )) AND
-            ( _operation_begin = -1 OR ho.id > _operation_begin )
-          ORDER BY ho.id
-          LIMIT _limit
+          WITH accepted_types AS MATERIALIZED
+          (
+            SELECT ot.id FROM hive.operation_types ot WHERE __resolved_filter_exists AND ot.id=ANY(__resolved_filter)
+          )
+          (
+            SELECT
+              ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.body_binary, ho.op_type_id, ho.virtual_op
+            FROM hafah_python.helper_operations_view ho
+            JOIN accepted_types t ON ho.op_type_id = t.id
+            WHERE __resolved_filter_exists AND (
+                (block_num >= _block_num) AND 
+                (block_num < _end_block_num ) AND
+                ( _operation_begin = -1 OR ho.id > _operation_begin )
+            )
+            ORDER BY ho.id
+            LIMIT _limit
+          )
+          UNION ALL
+          (
+            SELECT
+              ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.body_binary, ho.op_type_id, ho.virtual_op
+            FROM hafah_python.helper_operations_view ho
+            WHERE NOT __resolved_filter_exists AND (
+                (block_num >= _block_num) AND 
+                (block_num < _end_block_num ) AND
+                (__operation_filter OR (ho.virtual_op = _operation_types)) AND
+                ( _operation_begin = -1 OR ho.id > _operation_begin )
+              )
+            ORDER BY ho.id
+            LIMIT _limit
+          )
         ) T
       LEFT JOIN
         (
@@ -259,3 +339,5 @@ END
 $function$
 language plpgsql STABLE
 SET JIT=OFF;
+
+RESET ROLE;
