@@ -20,8 +20,12 @@ ENDPOINTS_IN_ORDER="
 ../$endpoints/blocks/get_block_header.sql
 ../$endpoints/blocks/get_ops_in_block.sql
 ../$endpoints/operations/get_operations.sql
+../$endpoints/operations/get_operation.sql
+../$endpoints/operation_types/get_op_types.sql
+../$endpoints/operation_types/get_operation_keys.sql
 ../$endpoints/transactions/get_transaction.sql
 ../$endpoints/accounts/get_account_history.sql
+../$endpoints/accounts/get_acc_op_types.sql
 ../$endpoints/other/get_version.sql"
 
 # Function to reverse the lines

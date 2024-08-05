@@ -102,13 +102,6 @@ CREATE TYPE hafah_backend.operation_types AS ENUM (
         description: |
           If set to true also operations from reversible block will be included
           if block_num points to such block.
-      - in: query
-        name: show-legacy-quantities
-        required: false
-        schema:
-          type: boolean
-          default: false
-        description: Determines whether to show amounts in legacy style (as `10.000 HIVE`) or use NAI-style
     responses:
       '200':
         description: |
@@ -262,8 +255,7 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_ops_in_block(
     "operation-filter-high" NUMERIC = NULL,
     "operation-begin" BIGINT = -1,
     "page-size" INT = NULL,
-    "include-reversible" BOOLEAN = False,
-    "show-legacy-quantities" BOOLEAN = False
+    "include-reversible" BOOLEAN = False
 )
 RETURNS JSON 
 -- openapi-generated-code-end
@@ -292,7 +284,7 @@ BEGIN
       "operation-begin",
       "page-size",
       "include-reversible",
-      "show-legacy-quantities"
+      FALSE
     );
 
     EXCEPTION

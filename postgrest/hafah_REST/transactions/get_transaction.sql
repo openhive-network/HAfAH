@@ -1,5 +1,38 @@
 SET ROLE hafah_owner;
 
+/** openapi:components:schemas
+hafah_endpoints.transaction:
+  type: object
+  properties:
+    transaction_json:
+      type: string
+      x-sql-datatype: JSON
+      description: contents of the transaction
+    transaction_id:
+      type: string
+      description: hash of the transaction
+    block_num:
+      type: integer
+      description: number of block the transaction was in
+    transaction_num:
+      type: integer
+      description: number of the transaction in block
+    timestamp:
+      type: string
+      format: date-time
+      description: the time of the transaction was made
+ */
+-- openapi-generated-code-begin
+DROP TYPE IF EXISTS hafah_endpoints.transaction CASCADE;
+CREATE TYPE hafah_endpoints.transaction AS (
+    "transaction_json" JSON,
+    "transaction_id" TEXT,
+    "block_num" INT,
+    "transaction_num" INT,
+    "timestamp" TIMESTAMP
+);
+-- openapi-generated-code-end
+
 /** openapi:paths
 /transactions/{transaction-id}:
   get:
@@ -22,90 +55,90 @@ SET ROLE hafah_owner;
         required: true
         schema:
           type: string
-          default: NULL
-        description: |
-          trx_id of expected transaction
-      - in: query
-        name: include-reversible
-        required: false
-        schema:
-          type: boolean
-          default: false
-        description: |
-          If set to true also operations from reversible block will be included
-          if block_num points to such block.
+        description: trx_id of expected transaction
     responses:
       '200':
         description: |
+          The transaction body
 
-          * Returns `JSON`
+          * Returns `hafah_endpoints.transaction`
         content:
           application/json:
             schema:
-              type: string
-              x-sql-datatype: JSON
-            example: 
-              - {
-                  "ref_block_num": 25532,
-                  "ref_block_prefix": 3338687976,
-                  "extensions": [],
-                  "expiration": "2016-08-12T17:23:48",
-                  "operations": [
-                    {
-                      "type": "custom_json_operation",
-                      "value": {
-                        "id": "follow",
-                        "json": "{\"follower\":\"breck0882\",\"following\":\"steemship\",\"what\":[]}",
-                        "required_auths": [],
-                        "required_posting_auths": [
-                          "breck0882"
-                        ]
+              $ref: '#/components/schemas/hafah_endpoints.transaction'
+            example:
+              - transaction_json: {
+                    "ref_block_num": 25532,
+                    "ref_block_prefix": 3338687976,
+                    "extensions": [],
+                    "expiration": "2016-08-12T17:23:48",
+                    "operations": [
+                      {
+                        "type": "custom_json_operation",
+                        "value": {
+                          "id": "follow",
+                          "json": "{\"follower\":\"breck0882\",\"following\":\"steemship\",\"what\":[]}",
+                          "required_auths": [],
+                          "required_posting_auths": [
+                            "breck0882"
+                          ]
+                        }
                       }
-                    }
-                  ],
-                  "signatures": [
-                    "201655190aac43bb272185c577262796c57e5dd654e3e491b9b32bd2d567c6d5de75185f221a38697d04d1a8e6a9deb722ec6d6b5d2f395dcfbb94f0e5898e858f"
-                  ],
-                  "transaction_id": "954f6de36e6715d128fa8eb5a053fc254b05ded0",
-                  "block_num": 4023233,
-                  "transaction_num": 0
-                }
+                    ],
+                    "signatures": [
+                      "201655190aac43bb272185c577262796c57e5dd654e3e491b921a38697d04d1a8e6a9deb722ec6d6b5d2f395dcfbb94f0e5898e858f"
+                    ]
+                  }
+                transaction_id: 954f6de36e6715d128fa8eb5a053fc254b05ded0
+                block_num: 4023233
+                transaction_num: 0
+                timestamp: "2016-08-12T17:23:39"
  */
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_transaction;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_transaction(
-    "transaction-id" TEXT = NULL,
-    "include-reversible" BOOLEAN = False
+    "transaction-id" TEXT
 )
-RETURNS JSON 
+RETURNS hafah_endpoints.transaction 
 -- openapi-generated-code-end
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
-  __exception_message TEXT;
+  _get_transaction hafah_endpoints.transaction;
 BEGIN
-    -- Required argument: transaction-id    
-  IF NOT (translate("transaction-id", '0123456789abcdefABCDEF', '') = '') THEN
-    RETURN hafah_backend.rest_raise_invalid_char_in_hex("transaction-id");
-  ELSEIF LENGTH("transaction-id") != 40 THEN
-    RETURN hafah_backend.rest_raise_transaction_hash_invalid_length("transaction-id");
-  ELSEIF "transaction-id" IS NULL THEN
-    RETURN hafah_backend.rest_raise_missing_arg('transaction-id');
+  WITH select_transaction AS MATERIALIZED 
+  (
+  SELECT transaction_json::JSON,
+  bv.created_at
+  -- _trx_hash TEXT -> BYTEA, __include_reversible = TRUE, __is_legacy_style = FALSE
+  FROM hafah_python.get_transaction_json(('\x' || "transaction-id")::BYTEA, TRUE, FALSE) AS transaction_json
+  JOIN hive.blocks_view bv ON bv.num = (transaction_json->>'block_num')::INT
+  )
+  SELECT 
+    json_build_object(
+    'ref_block_num', (transaction_json->>'ref_block_num')::BIGINT,
+    'ref_block_prefix',(transaction_json->>'ref_block_prefix')::BIGINT,
+    'extensions', (transaction_json->>'extensions')::JSON,
+    'expiration', transaction_json->>'expiration',
+    'operations', (transaction_json->>'operations')::JSON,
+    'signatures', (transaction_json->>'signatures')::JSON
+    ),
+    transaction_json->>'transaction_id',
+    (transaction_json->>'block_num')::INT,
+    (transaction_json->>'transaction_num')::INT,
+    created_at
+  INTO _get_transaction
+  FROM select_transaction;
+  
+  IF _get_transaction.block_num <= hive.app_get_irreversible_block() THEN
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
+  ELSE
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   END IF;
 
-  BEGIN
-    RETURN hafah_python.get_transaction_json(decode("transaction-id", 'hex'), "include-reversible", FALSE);
-
-    EXCEPTION
-      WHEN invalid_text_representation THEN
-        RETURN hafah_backend.rest_raise_uint_exception();
-      WHEN raise_exception THEN
-        GET STACKED DIAGNOSTICS __exception_message = message_text;
-        RETURN hafah_backend.rest_wrap_sql_exception(__exception_message);
-  END;
+  RETURN _get_transaction;
 END
-$$
-;
+$$;
 
 RESET ROLE;

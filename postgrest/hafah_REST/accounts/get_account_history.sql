@@ -68,13 +68,6 @@ SET ROLE hafah_owner;
           The higher part of the bits of a 128-bit integer mask,
           where successive positions of bits set to 1 define which operation type numbers to return,
           expressed as a decimal number
-      - in: query
-        name: show-legacy-quantities
-        required: false
-        schema:
-          type: boolean
-          default: false
-        description: Determines whether to show amounts in legacy style (as `10.000 HIVE`) or use NAI-style
     responses:
       '200':
         description: |
@@ -168,8 +161,7 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_account_history(
     "result-limit" INT = 1000,
     "include-reversible" BOOLEAN = False,
     "operation-filter-low" NUMERIC = NULL,
-    "operation-filter-high" NUMERIC = NULL,
-    "show-legacy-quantities" BOOLEAN = False
+    "operation-filter-high" NUMERIC = NULL
 )
 RETURNS JSON 
 -- openapi-generated-code-end
@@ -202,7 +194,7 @@ BEGIN
       hafah_backend.parse_acc_hist_start("start"),
       hafah_backend.parse_acc_hist_limit("result-limit"),
       "include-reversible",
-      "show-legacy-quantities"
+      FALSE
       );
     EXCEPTION
       WHEN raise_exception THEN

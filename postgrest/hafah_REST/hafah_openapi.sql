@@ -20,6 +20,8 @@ tags:
     description: Informations about transactions
   - name: Operations
     description: Informations about operations
+  - name: Operation-types
+    description: Informations about operation types
   - name: Accounts
     description: Informations about accounts
   - name: Other
@@ -67,6 +69,10 @@ declare
     {
       "name": "Operations",
       "description": "Informations about operations"
+    },
+    {
+      "name": "Operation-types",
+      "description": "Informations about operation types"
     },
     {
       "name": "Accounts",
@@ -604,16 +610,6 @@ declare
               "default": false
             },
             "description": "If set to true also operations from reversible block will be included\nif block_num points to such block.\n"
-          },
-          {
-            "in": "query",
-            "name": "show-legacy-quantities",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            },
-            "description": "Determines whether to show amounts in legacy style (as `10.000 HIVE`) or use NAI-style"
           }
         ],
         "responses": {
@@ -856,16 +852,6 @@ declare
               "default": false
             },
             "description": "If set to true also operations from reversible block will be included\nif block_num points to such block.\n"
-          },
-          {
-            "in": "query",
-            "name": "show-legacy-quantities",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            },
-            "description": "Determines whether to show amounts in legacy style (as `10.000 HIVE`) or use NAI-style"
           }
         ],
         "responses": {
@@ -1044,6 +1030,172 @@ declare
         }
       }
     },
+    "/operations/{operation-id}": {
+      "get": {
+        "tags": [
+          "Operations"
+        ],
+        "summary": "Get informations about the operation",
+        "description": "Get operation''s body and its extended parameters\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operation(3448858738752);`\n\nREST call example\n* `GET ''https://%1$s/hafah/operations/3448858738752''`\n",
+        "operationId": "hafah_endpoints.get_operation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operation-id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "x-sql-datatype": "BIGINT"
+            },
+            "description": "An operation-id is a unique operation identifier,\nencodes three key pieces of information into a single number,\nwith each piece occupying a specific number of bits:\n\n```\nmsb.....................lsb\n || block | op_pos | type ||\n ||  32b  |  24b   |  8b  ||\n```\n\n * block (block number) - occupies 32 bits.\n\n * op_pos (position of an operation in block) - occupies 24 bits.\n\n * type (operation type) - occupies 8 bits.\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation parameters\n\n* Returns `hafah_endpoints.operation`\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/hafah_endpoints.operation"
+                },
+                "example": [
+                  {
+                    "op": {
+                      "type": "producer_reward_operation",
+                      "value": {
+                        "producer": "initminer",
+                        "vesting_shares": {
+                          "nai": "@@000000021",
+                          "amount": "1000",
+                          "precision": 3
+                        }
+                      }
+                    },
+                    "block": 803,
+                    "trx_id": null,
+                    "op_pos": 1,
+                    "timestamp": "2016-03-24T16:45:39",
+                    "virtual_op": true,
+                    "operation_id": "3448858738752",
+                    "trx_in_block": -1
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operation-types": {
+      "get": {
+        "tags": [
+          "Operation-types"
+        ],
+        "summary": "Lists operation types",
+        "description": "Lookup optype ids for operations matching a partial operation name\n\nSQL example  \n* `SELECT * FROM hafah_endpoints.get_op_types(''author'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/operation-types?input-value=author''`\n",
+        "operationId": "hafah_endpoints.get_op_types",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "input-value",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": null
+            },
+            "description": "parial name of operation"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation type list, \nif provided is `input-value` the list\nis limited to operations that partially match the `input-value`\n\n* Returns array of `hafah_endpoints.op_types`\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/hafah_endpoints.array_of_op_types"
+                },
+                "example": [
+                  {
+                    "op_type_id": 51,
+                    "operation_name": "author_reward_operation",
+                    "is_virtual": true
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "No operations in the database"
+          }
+        }
+      }
+    },
+    "/operation-types/{type-id}/keys": {
+      "get": {
+        "tags": [
+          "Operation-types"
+        ],
+        "summary": "Get operation json body keys",
+        "description": "Returns json body keys for an operation type\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operation_keys(1);`\n\nREST call example\n* `GET ''https://%1$s/hafah/operation-types/1/keys''`\n",
+        "operationId": "hafah_endpoints.get_operation_keys",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "type-id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique operation type identifier"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation json key paths\n\n* Returns `JSONB`\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "x-sql-datatype": "JSONB"
+                },
+                "example": [
+                  [
+                    [
+                      "value",
+                      "body"
+                    ],
+                    [
+                      "value",
+                      "title"
+                    ],
+                    [
+                      "value",
+                      "author"
+                    ],
+                    [
+                      "value",
+                      "permlink"
+                    ],
+                    [
+                      "value",
+                      "json_metadata"
+                    ],
+                    [
+                      "value",
+                      "parent_author"
+                    ],
+                    [
+                      "value",
+                      "parent_permlink"
+                    ]
+                  ]
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/transactions/{transaction-id}": {
       "get": {
         "tags": [
@@ -1058,56 +1210,47 @@ declare
             "name": "transaction-id",
             "required": true,
             "schema": {
-              "type": "string",
-              "default": null
+              "type": "string"
             },
-            "description": "trx_id of expected transaction\n"
-          },
-          {
-            "in": "query",
-            "name": "include-reversible",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            },
-            "description": "If set to true also operations from reversible block will be included\nif block_num points to such block.\n"
+            "description": "trx_id of expected transaction"
           }
         ],
         "responses": {
           "200": {
-            "description": "\n* Returns `JSON`\n",
+            "description": "The transaction body\n\n* Returns `hafah_endpoints.transaction`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "x-sql-datatype": "JSON"
+                  "$ref": "#/components/schemas/hafah_endpoints.transaction"
                 },
                 "example": [
                   {
-                    "ref_block_num": 25532,
-                    "ref_block_prefix": 3338687976,
-                    "extensions": [],
-                    "expiration": "2016-08-12T17:23:48",
-                    "operations": [
-                      {
-                        "type": "custom_json_operation",
-                        "value": {
-                          "id": "follow",
-                          "json": "{\"follower\":\"breck0882\",\"following\":\"steemship\",\"what\":[]}",
-                          "required_auths": [],
-                          "required_posting_auths": [
-                            "breck0882"
-                          ]
+                    "transaction_json": {
+                      "ref_block_num": 25532,
+                      "ref_block_prefix": 3338687976,
+                      "extensions": [],
+                      "expiration": "2016-08-12T17:23:48",
+                      "operations": [
+                        {
+                          "type": "custom_json_operation",
+                          "value": {
+                            "id": "follow",
+                            "json": "{\"follower\":\"breck0882\",\"following\":\"steemship\",\"what\":[]}",
+                            "required_auths": [],
+                            "required_posting_auths": [
+                              "breck0882"
+                            ]
+                          }
                         }
-                      }
-                    ],
-                    "signatures": [
-                      "201655190aac43bb272185c577262796c57e5dd654e3e491b9b32bd2d567c6d5de75185f221a38697d04d1a8e6a9deb722ec6d6b5d2f395dcfbb94f0e5898e858f"
-                    ],
+                      ],
+                      "signatures": [
+                        "201655190aac43bb272185c577262796c57e5dd654e3e491b921a38697d04d1a8e6a9deb722ec6d6b5d2f395dcfbb94f0e5898e858f"
+                      ]
+                    },
                     "transaction_id": "954f6de36e6715d128fa8eb5a053fc254b05ded0",
                     "block_num": 4023233,
-                    "transaction_num": 0
+                    "transaction_num": 0,
+                    "timestamp": "2016-08-12T17:23:39"
                   }
                 ]
               }
@@ -1186,16 +1329,6 @@ declare
               "default": null
             },
             "description": "The higher part of the bits of a 128-bit integer mask,\nwhere successive positions of bits set to 1 define which operation type numbers to return,\nexpressed as a decimal number\n"
-          },
-          {
-            "in": "query",
-            "name": "show-legacy-quantities",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            },
-            "description": "Determines whether to show amounts in legacy style (as `10.000 HIVE`) or use NAI-style"
           }
         ],
         "responses": {
@@ -1288,6 +1421,75 @@ declare
         }
       }
     },
+    "/accounts/{account-name}/operation-types": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Lists operation types",
+        "description": "Lists all types of operations that the account has performed since its creation\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_acc_op_types(''blocktrades'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/accounts/blocktrades/operations/types''`\n",
+        "operationId": "hafah_endpoints.get_acc_op_types",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account-name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the account"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation type list\n\n* Returns `JSONB`\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "x-sql-datatype": "JSONB"
+                },
+                "example": [
+                  [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    10,
+                    11,
+                    12,
+                    13,
+                    14,
+                    15,
+                    18,
+                    20,
+                    51,
+                    52,
+                    53,
+                    55,
+                    56,
+                    57,
+                    61,
+                    64,
+                    72,
+                    77,
+                    78,
+                    79,
+                    80,
+                    85,
+                    86
+                  ]
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/version": {
       "get": {
         "tags": [
@@ -1325,6 +1527,96 @@ declare
           "real",
           "all"
         ]
+      },
+      "hafah_endpoints.operation": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "type": "string",
+            "x-sql-datatype": "JSONB",
+            "description": "operation body"
+          },
+          "block": {
+            "type": "integer",
+            "description": "operation block number"
+          },
+          "trx_id": {
+            "type": "string",
+            "description": "hash of the transaction"
+          },
+          "op_pos": {
+            "type": "integer",
+            "description": "operation identifier that indicates its sequence number in transaction"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "creation date"
+          },
+          "virtual_op": {
+            "type": "boolean",
+            "description": "true if is a virtual operation"
+          },
+          "operation_id": {
+            "type": "string",
+            "description": "unique operation identifier with an encoded block number and operation type id"
+          },
+          "trx_in_block": {
+            "type": "integer",
+            "x-sql-datatype": "SMALLINT",
+            "description": "transaction identifier that indicates its sequence number in block"
+          }
+        }
+      },
+      "hafah_endpoints.op_types": {
+        "type": "object",
+        "properties": {
+          "op_type_id": {
+            "type": "integer",
+            "description": "operation type id"
+          },
+          "operation_name": {
+            "type": "string",
+            "description": "operation type name"
+          },
+          "is_virtual": {
+            "type": "boolean",
+            "description": "true if operation is virtual"
+          }
+        }
+      },
+      "hafah_endpoints.array_of_op_types": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/hafah_endpoints.op_types"
+        }
+      },
+      "hafah_endpoints.transaction": {
+        "type": "object",
+        "properties": {
+          "transaction_json": {
+            "type": "string",
+            "x-sql-datatype": "JSON",
+            "description": "contents of the transaction"
+          },
+          "transaction_id": {
+            "type": "string",
+            "description": "hash of the transaction"
+          },
+          "block_num": {
+            "type": "integer",
+            "description": "number of block the transaction was in"
+          },
+          "transaction_num": {
+            "type": "integer",
+            "description": "number of the transaction in block"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "the time of the transaction was made"
+          }
+        }
       }
     }
   }
