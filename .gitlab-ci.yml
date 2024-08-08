@@ -33,7 +33,7 @@ variables:
 
 
   # Variables required by Common CI jobs
-  TOX_IMAGE_TAG: "7ea99b10bbf0f9b1fbb88f52a78ead4c82f15d75"
+  TOX_IMAGE_TAG: "d4e29410ea168096e1a822f77c7ce741d9cfb57a"
   BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/haf/ci-base-image${BUILDER_IMAGE_TAG}"
 
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
@@ -44,7 +44,7 @@ variables:
 include:
   - template: Workflows/Branch-Pipelines.gitlab-ci.yml
   - project: 'hive/haf'
-    ref: 87ab368cf81412d84e96ec22302515c88a4f9743 # develop
+    ref: 0aef1bf01fd6ee0d23f12a21038881c30672146a # develop
     file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   - project: 'hive/common-ci-configuration'
     ref: d4e29410ea168096e1a822f77c7ce741d9cfb57a # develop # It seems a variable cannot be used here
