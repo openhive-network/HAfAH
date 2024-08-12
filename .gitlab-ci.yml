@@ -54,8 +54,20 @@ include:
       - '/templates/cache_cleanup.gitlab-ci.yml'
       - '/templates/npm_projects.gitlab-ci.yml'
 
+# All jobs other than those necessary to build HAfAH Docker imagess need to extend this
+# template or include the following rules (if they need additional restrictions)
+.rules:
+  rules:
+    - if: $CI_PIPELINE_TRIGGERED
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+      when: never  
+    - when: on_success
+
 verify_poetry_lock_sanity:
-  extends: .verify_poetry_lock_sanity_template
+  extends: 
+    - .verify_poetry_lock_sanity_template
+    - .rules
   stage: build
   variables:
     PYPROJECT_DIR: "$CI_PROJECT_DIR/tests/integration/hafah-local-tools"
@@ -63,7 +75,9 @@ verify_poetry_lock_sanity:
     - public-runner-docker
 
 prepare_hived_image:
-  extends: .prepare_hived_image
+  extends: 
+    - .prepare_hived_image
+    - .rules
   stage: build
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
@@ -74,7 +88,9 @@ prepare_hived_image:
     - hived-for-tests
 
 prepare_hived_data:
-  extends: .prepare_hived_data_5m
+  extends: 
+    - .prepare_hived_data_5m
+    - .rules
   needs:
     - job: prepare_hived_image
       artifacts: true
@@ -87,7 +103,9 @@ prepare_hived_data:
     - data-cache-storage
 
 prepare_haf_image:
-  extends: .prepare_haf_image
+  extends: 
+    - .prepare_haf_image
+    - .rules
   stage: build
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
@@ -98,7 +116,9 @@ prepare_haf_image:
     - hived-for-tests
 
 extract-swagger-json:
-  extends: .filter_out_swagger_json
+  extends: 
+    - .filter_out_swagger_json
+    - .rules
   stage: build
   variables:
     INPUT_SQL_SWAGGER_FILE: "${CI_PROJECT_DIR}/postgrest/hafah_REST/hafah_openapi.sql"
@@ -106,7 +126,9 @@ extract-swagger-json:
     - public-runner-docker
 
 generate-wax-spec:
-  extends: .generate_swagger_package
+  extends: 
+    - .generate_swagger_package
+    - .rules
   stage: build
   variables:
     INPUT_JSON_SWAGGER_FILE: "${BUILT_JSON_SWAGGER_FILE}"
@@ -120,7 +142,9 @@ generate-wax-spec:
     - public-runner-docker
 
 prepare_haf_data:
-  extends: .prepare_haf_data_5m
+  extends: 
+    - .prepare_haf_data_5m
+    - .rules
   needs:
     - job: prepare_haf_image
       artifacts: true
@@ -145,10 +169,24 @@ prepare_haf_data:
     - |
       echo $HAFAH_IMAGE_NAME
       echo $SOURCE_DIR
+      function image-exists() {
+        local image=$1
+        docker manifest inspect "$image" > /dev/null
+        return $?
+      }
+      function generate-env() {
+        echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env 
+      }
+      if image-exists "$HAFAH_IMAGE_NAME"
+      then
+          echo "Image $HAFAH_IMAGE_NAME already exists. Skipping build..."
+          generate-env
+          exit 0
+      fi
       scripts/ci-helpers/build_instance.sh
       docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
       docker push "$HAFAH_IMAGE_NAME"
-      echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
+      generate-env
       if [[ -n "$CI_COMMIT_TAG" ]]; then
         docker tag "$HAFAH_IMAGE_NAME" "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
         docker push "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
@@ -164,12 +202,14 @@ prepare_haf_data:
 
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
+  interruptible: false # The job should not be cancelled to avoid problems when triggered from another project
   variables:
     HAFAH_IMAGE_TAG: $CI_COMMIT_SHORT_SHA
     USE_POSTGREST: 1
 
 build_setup_docker_image:
-  extends: .docker_image_builder_job
+  extends: 
+    - .docker_image_builder_job
   stage: build
   tags:
     - public-runner-docker
@@ -180,7 +220,9 @@ build_setup_docker_image:
     - "docker push $CI_REGISTRY_IMAGE/setup:$CI_COMMIT_SHORT_SHA"
 
 .pattern_tests:
-  extends: .haf_app_pattern_tests_template
+  extends: 
+    - .haf_app_pattern_tests_template
+    - .rules
   stage: test
   variables:
     HAF_APP_IMAGE: ""
@@ -243,7 +285,9 @@ new_style_postgrest_pattern_tests:
     DIRECT_CALLS: 1
 
 .comparison_tests:
-  extends: .comparison_tests_template
+  extends: 
+    - .comparison_tests_template
+    - .rules
   stage: test
   variables:
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
@@ -285,7 +329,9 @@ postgrest_comparison_tests:
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
 
 .benchmark_tests:
-  extends: .jmeter_benchmark_with_haf_job
+  extends: 
+    - .jmeter_benchmark_with_haf_job
+    - .rules
   stage: test
   variables:
     FF_NETWORK_PER_BUILD: 1
@@ -321,7 +367,9 @@ postgrest_account_history_benchmark_tests:
   extends: .benchmark_tests
 
 postgrest_rest_benchmark_tests:
-  extends: .jmeter_benchmark_with_haf_job
+  extends: 
+    - .jmeter_benchmark_with_haf_job
+    - .rules
   stage: test
   variables:
     FF_NETWORK_PER_BUILD: 1
@@ -350,34 +398,64 @@ postgrest_rest_benchmark_tests:
     - data-cache-storage
 
 cleanup_hive_cache_manual:
-  extends: .cleanup_cache_manual_template
+  extends: 
+    - .cleanup_cache_manual_template
   stage: cleanup
   variables:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_hive_*"
+  rules:
+    - if: $CI_PIPELINE_TRIGGERED
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+      when: never
+    - when: manual
+      allow_failure: true
   tags:
     - data-cache-storage
 
 cleanup_haf_cache_manual:
-  extends: .cleanup_cache_manual_template
+  extends: 
+    - .cleanup_cache_manual_template
+    - .rules
   stage: cleanup
   variables:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_haf_*"
+  rules:
+    - if: $CI_PIPELINE_TRIGGERED
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+      when: never
+    - when: manual
+      allow_failure: true
   tags:
     - data-cache-storage
 
 build_and_publish_image:
   stage: publish
-  extends: .publish_docker_image_template
+  extends: 
+    - .publish_docker_image_template
   before_script:
     - !reference [.publish_docker_image_template, before_script]
   script:
     - scripts/ci-helpers/build_and_publish_instance.sh
+  rules:
+    - if: "$CI_PIPELINE_TRIGGERED"
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+      when: never
+    - if: $CI_COMMIT_TAG && $CI_COMMIT_REF_PROTECTED == "true"
+      when: manual
+      allow_failure: true
+  #  - !reference [.rules, rules]
+  #  - !reference [.publish_docker_image_template, rules]
   tags:
     - public-runner-docker
     - hived-for-tests
 
 prepare_haf_image_testnet:
-  extends: .prepare_haf_image
+  extends: 
+    - .prepare_haf_image
+    - .rules
   stage: build
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
@@ -402,7 +480,9 @@ prepare_haf_image_testnet:
   command: ["--execute-maintenance-script=${HAF_SOURCE_DIR}/scripts/maintenance-scripts/sleep_infinity.sh"]
 
 .hafah_pytest_fuctional_tests_base:
-  extends: .pytest_based_template
+  extends: 
+    - .pytest_based_template
+    - .rules
   stage: test
   needs:
     - job: prepare_haf_image_testnet
@@ -483,7 +563,9 @@ hafah_pytest_fuctional_tests_part2:
     PYTEST_MARK: "get_account_history_and_get_transaction"
 
 deploy-wax-spec-dev-package:
-  extends: .npm_deploy_package_template
+  extends: 
+    - .npm_deploy_package_template
+    - .rules
   stage: publish
   variables:
     SOURCE_DIR: "${PACKAGE_SOURCE_DIR}"
@@ -496,7 +578,8 @@ deploy-wax-spec-dev-package:
     - public-runner-docker
 
 deploy-wax-spec-production-public-npm:
-  extends: .registry_npmjs_org_deploy_package_template
+  extends: 
+    - .registry_npmjs_org_deploy_package_template
   stage: publish
   variables:
     NPM_PUBLISH_TOKEN: "$INTERNAL_HIDDEN_PUBLISH_TOKEN"
@@ -506,5 +589,13 @@ deploy-wax-spec-production-public-npm:
   needs:
     - job: generate-wax-spec
       artifacts: true
+  rules:
+    - if: $CI_PIPELINE_TRIGGERED
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+      when: never 
+    - if: '$CI_COMMIT_TAG && $CI_COMMIT_REF_PROTECTED == "true"'
+      when: manual
+      allow_failure: true
   tags:
     - public-runner-docker
