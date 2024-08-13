@@ -14,19 +14,26 @@ temp_output_file=$(mktemp)
 # Default directories with fixed order if none provided
 OUTPUT="$SCRIPTDIR/output"
 ENDPOINTS_IN_ORDER="
+../$endpoints/types/op_types.sql
+../$endpoints/types/operation.sql
+../$endpoints/types/sort_direction.sql
+../$endpoints/types/block.sql
 ../$endpoints/hafah_openapi.sql
 ../$endpoints/blocks/get_block_range.sql
 ../$endpoints/blocks/get_block.sql
 ../$endpoints/blocks/get_block_header.sql
-../$endpoints/blocks/get_ops_in_block.sql
+../$endpoints/blocks/get_ops_by_block_paging.sql
 ../$endpoints/operations/get_operations.sql
 ../$endpoints/operations/get_operation.sql
 ../$endpoints/operation_types/get_op_types.sql
 ../$endpoints/operation_types/get_operation_keys.sql
 ../$endpoints/transactions/get_transaction.sql
-../$endpoints/accounts/get_account_history.sql
+../$endpoints/accounts/get_ops_by_account.sql
 ../$endpoints/accounts/get_acc_op_types.sql
-../$endpoints/other/get_version.sql"
+../$endpoints/other/get_version.sql
+../$endpoints/other/get_head_block_num.sql
+../$endpoints/other/get_block.sql
+../$endpoints/other/get_block_by_time.sql"
 
 # Function to reverse the lines
 reverse_lines() {

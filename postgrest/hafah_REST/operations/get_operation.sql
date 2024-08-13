@@ -1,55 +1,5 @@
 SET ROLE hafah_owner;
 
-/** openapi:components:schemas
-hafah_endpoints.operation:
-  type: object
-  properties:
-    op:
-      type: string
-      x-sql-datatype: JSONB
-      description: operation body
-    block:
-      type: integer
-      description: operation block number
-    trx_id:
-      type: string
-      description: hash of the transaction
-    op_pos:
-      type: integer
-      description: >-
-        operation identifier that indicates its sequence number in transaction
-    timestamp:
-      type: string
-      format: date-time
-      description: creation date
-    virtual_op:
-      type: boolean
-      description: true if is a virtual operation
-    operation_id:
-      type: string
-      description: >-
-        unique operation identifier with
-        an encoded block number and operation type id
-    trx_in_block:
-      type: integer
-      x-sql-datatype: SMALLINT
-      description: >-
-        transaction identifier that indicates its sequence number in block
- */
--- openapi-generated-code-begin
-DROP TYPE IF EXISTS hafah_endpoints.operation CASCADE;
-CREATE TYPE hafah_endpoints.operation AS (
-    "op" JSONB,
-    "block" INT,
-    "trx_id" TEXT,
-    "op_pos" INT,
-    "timestamp" TIMESTAMP,
-    "virtual_op" BOOLEAN,
-    "operation_id" TEXT,
-    "trx_in_block" SMALLINT
-);
--- openapi-generated-code-end
-
 /** openapi:paths
 /operations/{operation-id}:
   get:
@@ -93,11 +43,11 @@ CREATE TYPE hafah_endpoints.operation AS (
         description: |
           Operation parameters
 
-          * Returns `hafah_endpoints.operation`
+          * Returns `hafah_backend.operation`
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/hafah_endpoints.operation'
+              $ref: '#/components/schemas/hafah_backend.operation'
             example:
               - op: {
                   "type": "producer_reward_operation",
@@ -123,7 +73,7 @@ DROP FUNCTION IF EXISTS hafah_endpoints.get_operation;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_operation(
     "operation-id" BIGINT
 )
-RETURNS hafah_endpoints.operation 
+RETURNS hafah_backend.operation 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql' STABLE
 AS
@@ -144,6 +94,7 @@ RETURN (
       ov.block_num,
       encode(htv.trx_hash, 'hex'),
       ov.op_pos,
+      ov.op_type_id,
       ov.timestamp,
       hot.is_virtual,
       ov.id::TEXT,

@@ -98,9 +98,8 @@ language plpgsql STABLE;
 CREATE OR REPLACE FUNCTION hafah_python.get_rest_ops_in_blocks_json(
     in _block_num INT,
     in _end_block_num INT, 
-    in _operation_types BOOLEAN,
-    in _operation_filter_low BIGINT, 
-    in _operation_filter_high BIGINT,
+    in _operation_group_types BOOLEAN,
+    in _operation_types INT[],
     in _operation_begin BIGINT,
     in _limit INT,
     in _include_reversible BOOLEAN,
@@ -135,9 +134,8 @@ BEGIN
         hafah_python.get_rest_ops_in_block( 
           _block_num,
           _end_block_num + 1,
+          _operation_group_types,
           _operation_types,
-          _operation_filter_low,
-          _operation_filter_high,
           _operation_begin,
           _limit,
           _include_reversible,
@@ -205,9 +203,8 @@ language plpgsql STABLE;
 CREATE OR REPLACE FUNCTION hafah_python.get_rest_ops_in_block( 
     in _block_num INT,
     in _end_block_num INT, 
-    in _operation_types BOOLEAN,
-    in _operation_filter_low BIGINT, 
-    in _operation_filter_high BIGINT,
+    in _operation_group_types BOOLEAN,
+    in _operation_types INT[], 
     in _operation_begin BIGINT,
     in _limit INT,
     in _include_reversible BOOLEAN,
@@ -226,8 +223,7 @@ RETURNS TABLE(
 AS
 $function$
 DECLARE
-  __operation_filter BOOLEAN = (_operation_types IS NULL);
-  __resolved_filter SMALLINT[];
+  __operation_filter BOOLEAN = (_operation_group_types IS NULL);
   __resolved_filter_exists BOOLEAN;
 BEGIN
   IF (NOT _include_reversible) AND _block_num > hive.app_get_irreversible_block() THEN
@@ -246,9 +242,7 @@ BEGIN
     _end_block_num := hive.app_get_irreversible_block() + 1;
   END IF;
 
-  SELECT hafah_python.translate_get_account_history_filter(_operation_filter_low, _operation_filter_high) INTO __resolved_filter;
-
-  __resolved_filter_exists := array_length( __resolved_filter, 1 ) IS NOT NULL;
+  __resolved_filter_exists := array_length( _operation_types, 1 ) IS NOT NULL;
 
   RETURN QUERY
     WITH hfm_operations AS (
@@ -279,7 +273,7 @@ BEGIN
         (
           WITH accepted_types AS MATERIALIZED
           (
-            SELECT ot.id FROM hive.operation_types ot WHERE __resolved_filter_exists AND ot.id=ANY(__resolved_filter)
+            SELECT ot.id FROM hive.operation_types ot WHERE __resolved_filter_exists AND ot.id=ANY(_operation_types)
           )
           (
             SELECT
@@ -302,7 +296,7 @@ BEGIN
             WHERE NOT __resolved_filter_exists AND (
                 (block_num >= _block_num) AND 
                 (block_num < _end_block_num ) AND
-                (__operation_filter OR (ho.virtual_op = _operation_types)) AND
+                (__operation_filter OR (ho.virtual_op = _operation_group_types)) AND
                 ( _operation_begin = -1 OR ho.id > _operation_begin )
               )
             ORDER BY ho.id
@@ -339,5 +333,241 @@ END
 $function$
 language plpgsql STABLE
 SET JIT=OFF;
+
+CREATE OR REPLACE FUNCTION hafah_backend.get_ops_by_block(
+    _block_num INT,
+    _page_num INT,
+    _page_size INT,
+    _filter INT [],
+    _order_is hafah_backend.sort_direction, -- noqa: LT01, CP05
+    _body_limit INT,
+    _account TEXT,
+    _key_content TEXT [],
+    _setof_keys JSON
+)
+RETURNS SETOF hafah_backend.operation -- noqa: LT01, CP05
+LANGUAGE 'plpgsql' STABLE
+SET JIT = OFF
+SET join_collapse_limit = 16
+SET from_collapse_limit = 16
+AS
+$$
+DECLARE
+  __no_ops_filter BOOLEAN = (_filter IS NULL);
+  _offset INT := (_page_num - 1) * _page_size;
+  _first_key BOOLEAN = (_key_content[1] IS NULL);
+  _second_key BOOLEAN = (_key_content[2] IS NULL);
+  _third_key BOOLEAN = (_key_content[3] IS NULL);
+BEGIN
+
+IF _account IS NULL THEN
+  RETURN QUERY 
+  WITH operation_range AS MATERIALIZED (
+    SELECT
+      ls.id,
+      ls.block_num,
+      ls.trx_in_block,
+      encode(htv.trx_hash, 'hex') AS trx_hash,
+      ls.op_pos,
+      ls.op_type_id,
+      ls.body,
+      hot.is_virtual
+    FROM (
+      With operations_in_block AS 
+      (
+      SELECT ov.id, ov.trx_in_block, ov.op_pos, ov.body, ov.op_type_id, ov.block_num
+      FROM hive.operations_view ov
+      WHERE
+        ov.block_num = _block_num 
+      ),
+      filter_ops AS MATERIALIZED 
+      (
+      SELECT *
+      FROM operations_in_block oib 
+      WHERE 
+        (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
+        (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
+        (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND
+        (_third_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2))) = _key_content[3])
+      )
+      SELECT * FROM filter_ops fo
+      ORDER BY
+        (CASE WHEN _order_is = 'desc' THEN fo.id ELSE NULL END) DESC,
+        (CASE WHEN _order_is = 'asc' THEN fo.id ELSE NULL END) ASC
+      LIMIT _page_size
+      OFFSET _offset
+    ) ls
+    JOIN hive.operation_types hot ON hot.id = ls.op_type_id
+    LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ls.trx_in_block
+    ORDER BY
+      (CASE WHEN _order_is = 'desc' THEN ls.id ELSE NULL END) DESC,
+      (CASE WHEN _order_is = 'asc' THEN ls.id ELSE NULL END) ASC)
+
+  -- filter too long operation bodies 
+    SELECT 
+      (filtered_operations.composite).body,
+      filtered_operations.block_num,
+      filtered_operations.trx_hash,
+      filtered_operations.op_pos,
+      filtered_operations.op_type_id,
+      filtered_operations.created_at,
+      filtered_operations.is_virtual,
+      filtered_operations.id::TEXT,
+      filtered_operations.trx_in_block::SMALLINT
+    FROM (
+    SELECT hafah_backend.operation_body_filter(opr.body, opr.id, _body_limit) as composite, opr.id, opr.block_num, opr.trx_in_block, opr.trx_hash, opr.op_pos, opr.op_type_id, opr.is_virtual, hb.created_at
+    FROM operation_range opr
+    JOIN hive.blocks_view hb ON hb.num = opr.block_num
+    ) filtered_operations
+    ORDER BY filtered_operations.id, filtered_operations.trx_in_block, filtered_operations.op_pos;
+
+ELSE
+
+  RETURN QUERY 
+  WITH operation_range AS MATERIALIZED (
+    SELECT
+      ls.id,
+      ls.block_num,
+      ls.trx_in_block,
+      encode(htv.trx_hash, 'hex') AS trx_hash,
+      ls.op_pos,
+      ls.op_type_id,
+      ls.body,
+      hot.is_virtual
+    FROM (
+      WITH account_operations_in_block AS 
+      (
+        SELECT aov.operation_id
+        FROM hive.account_operations_view aov
+        WHERE
+          aov.account_id = (SELECT av.id FROM hive.accounts_view av WHERE av.name = _account ) AND
+          aov.block_num = _block_num 
+      ),
+      operations_in_block AS 
+      (
+        SELECT ov.id, ov.trx_in_block, ov.op_pos, ov.body, ov.op_type_id, ov.block_num
+        FROM hive.operations_view ov
+        JOIN account_operations_in_block aoib ON aoib.operation_id = ov.id
+      ),
+      filter_ops AS MATERIALIZED 
+      (
+        SELECT *
+        FROM operations_in_block oib 
+        WHERE 
+          (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
+          (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
+          (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND
+          (_third_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2))) = _key_content[3])
+      )
+      SELECT * FROM filter_ops fo
+      ORDER BY
+        (CASE WHEN _order_is = 'desc' THEN fo.id ELSE NULL END) DESC,
+        (CASE WHEN _order_is = 'asc' THEN fo.id ELSE NULL END) ASC
+      LIMIT _page_size
+      OFFSET _offset
+    ) ls
+    JOIN hive.operation_types hot ON hot.id = ls.op_type_id
+    LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ls.trx_in_block
+    ORDER BY
+      (CASE WHEN _order_is = 'desc' THEN ls.id ELSE NULL END) DESC,
+      (CASE WHEN _order_is = 'asc' THEN ls.id ELSE NULL END) ASC)
+
+  -- filter too long operation bodies 
+    SELECT 
+      (filtered_operations.composite).body,
+      filtered_operations.block_num,
+      filtered_operations.trx_hash,
+      filtered_operations.op_pos,
+      filtered_operations.op_type_id,
+      filtered_operations.created_at,
+      filtered_operations.is_virtual,
+      filtered_operations.id::TEXT,
+      filtered_operations.trx_in_block::SMALLINT
+    FROM (
+    SELECT hafah_backend.operation_body_filter(opr.body, opr.id, _body_limit) as composite, opr.id, opr.block_num, opr.trx_in_block, opr.trx_hash, opr.op_pos, opr.op_type_id, opr.is_virtual, hb.created_at timestamp, NOW() - hb.created_at AS age
+    FROM operation_range opr
+    JOIN hive.blocks_view hb ON hb.num = opr.block_num
+    ) filtered_operations
+    ORDER BY filtered_operations.id, filtered_operations.trx_in_block, filtered_operations.op_pos;
+
+END IF;
+
+END
+$$;
+
+
+CREATE OR REPLACE FUNCTION hafah_backend.get_ops_by_block_count(
+    _block_num INT,
+    _filter INT [],
+    _account TEXT,
+    _key_content TEXT [],
+    _setof_keys JSON
+)
+RETURNS INT -- noqa: LT01, CP05
+LANGUAGE 'plpgsql' STABLE
+SET JIT = OFF
+SET join_collapse_limit = 16
+SET from_collapse_limit = 16
+AS
+$$
+DECLARE
+  __no_ops_filter BOOLEAN = (_filter IS NULL);
+  _first_key BOOLEAN = (_key_content[1] IS NULL);
+  _second_key BOOLEAN = (_key_content[2] IS NULL);
+  _third_key BOOLEAN = (_key_content[3] IS NULL);
+BEGIN
+
+IF _account IS NULL THEN
+  RETURN (
+    WITH operations_in_block AS 
+    (
+      SELECT ov.op_type_id, ov.body
+      FROM hive.operations_view ov
+      WHERE
+        ov.block_num = _block_num 
+    ),
+    filter_ops AS MATERIALIZED 
+    (
+      SELECT oib.op_type_id 
+      FROM operations_in_block oib 
+      WHERE 
+        (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
+        (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
+        (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND
+        (_third_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2))) = _key_content[3])
+    )
+    SELECT COUNT(*) FROM filter_ops);
+ELSE
+  RETURN (
+    WITH account_operations_in_block AS 
+    (
+      SELECT aov.operation_id
+      FROM hive.account_operations_view aov
+      WHERE
+        aov.account_id = (SELECT av.id FROM hive.accounts_view av WHERE av.name = _account ) AND
+        aov.block_num = _block_num 
+    ),
+    operations_in_block AS 
+    (
+      SELECT ov.op_type_id, ov.body
+      FROM hive.operations_view ov
+      JOIN account_operations_in_block aoib ON aoib.operation_id = ov.id
+    ),
+    filter_ops AS MATERIALIZED 
+    (
+      SELECT oib.op_type_id 
+      FROM operations_in_block oib 
+      WHERE 
+        (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
+        (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
+        (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND
+        (_third_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2))) = _key_content[3])
+    )
+    SELECT COUNT(*) FROM filter_ops);
+
+END IF;
+
+END
+$$;
 
 RESET ROLE;

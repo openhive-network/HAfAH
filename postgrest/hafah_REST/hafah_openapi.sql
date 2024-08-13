@@ -43,6 +43,202 @@ declare
 -- openapi-generated-code-begin
   openapi json = $$
 {
+  "components": {
+    "schemas": {
+      "hafah_backend.op_types": {
+        "type": "object",
+        "properties": {
+          "op_type_id": {
+            "type": "integer",
+            "description": "operation type id"
+          },
+          "operation_name": {
+            "type": "string",
+            "description": "operation type name"
+          },
+          "is_virtual": {
+            "type": "boolean",
+            "description": "true if operation is virtual"
+          }
+        }
+      },
+      "hafah_backend.operation_group_types": {
+        "type": "string",
+        "enum": [
+          "virtual",
+          "real",
+          "all"
+        ]
+      },
+      "hafah_backend.operation": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "type": "string",
+            "x-sql-datatype": "JSONB",
+            "description": "operation body"
+          },
+          "block": {
+            "type": "integer",
+            "description": "operation block number"
+          },
+          "trx_id": {
+            "type": "string",
+            "description": "hash of the transaction"
+          },
+          "op_pos": {
+            "type": "integer",
+            "description": "operation identifier that indicates its sequence number in transaction"
+          },
+          "op_type_id": {
+            "type": "integer",
+            "description": "operation type identifier"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "creation date"
+          },
+          "virtual_op": {
+            "type": "boolean",
+            "description": "true if is a virtual operation"
+          },
+          "operation_id": {
+            "type": "string",
+            "description": "unique operation identifier with an encoded block number and operation type id"
+          },
+          "trx_in_block": {
+            "type": "integer",
+            "x-sql-datatype": "SMALLINT",
+            "description": "transaction identifier that indicates its sequence number in block"
+          }
+        }
+      },
+      "hafah_backend.sort_direction": {
+        "type": "string",
+        "enum": [
+          "asc",
+          "desc"
+        ]
+      },
+      "hafah_backend.block": {
+        "type": "object",
+        "properties": {
+          "block_num": {
+            "type": "integer",
+            "description": "block number"
+          },
+          "hash": {
+            "type": "string",
+            "description": "block hash in a blockchain is a unique, fixed-length string generated  by applying a cryptographic hash function to a block''s contents"
+          },
+          "prev": {
+            "type": "string",
+            "description": "hash of a previous block"
+          },
+          "producer_account": {
+            "type": "string",
+            "description": "account name of block''s producer"
+          },
+          "transaction_merkle_root": {
+            "type": "string",
+            "description": "single hash representing the combined hashes of all transactions in a block"
+          },
+          "extensions": {
+            "type": "string",
+            "x-sql-datatype": "JSONB",
+            "description": "various additional data/parameters related to the subject at hand. Most often, there''s nothing specific, but it''s a mechanism for extending various functionalities where something might appear in the future."
+          },
+          "witness_signature": {
+            "type": "string",
+            "description": "witness signature"
+          },
+          "signing_key": {
+            "type": "string",
+            "description": "it refers to the public key of the witness used for signing blocks and other witness operations"
+          },
+          "hbd_interest_rate": {
+            "type": "number",
+            "x-sql-datatype": "numeric",
+            "description": "the interest rate on HBD in savings, expressed in basis points (previously for each HBD), is one of the values determined by the witnesses"
+          },
+          "total_vesting_fund_hive": {
+            "type": "number",
+            "x-sql-datatype": "numeric",
+            "description": "the balance of the \"counterweight\" for these VESTS (total_vesting_shares) in the form of HIVE  (the price of VESTS is derived from these two values). A portion of the inflation is added to the balance, ensuring that each block corresponds to more HIVE for the VESTS"
+          },
+          "total_vesting_shares": {
+            "type": "number",
+            "x-sql-datatype": "numeric",
+            "description": "the total amount of VEST present in the system"
+          },
+          "total_reward_fund_hive": {
+            "type": "number",
+            "x-sql-datatype": "numeric",
+            "description": "deprecated after HF17"
+          },
+          "virtual_supply": {
+            "type": "number",
+            "x-sql-datatype": "numeric",
+            "description": "the total amount of HIVE, including the HIVE that would be generated from converting HBD to HIVE at the current price"
+          },
+          "current_supply": {
+            "type": "number",
+            "x-sql-datatype": "numeric",
+            "description": "the total amount of HIVE present in the system"
+          },
+          "current_hbd_supply": {
+            "type": "number",
+            "x-sql-datatype": "numeric",
+            "description": "the total amount of HBD present in the system, including what is in the treasury"
+          },
+          "dhf_interval_ledger": {
+            "type": "number",
+            "x-sql-datatype": "numeric",
+            "description": "the dhf_interval_ledger is a temporary HBD balance. Each block allocates a portion of inflation for proposal payouts, but these payouts occur every hour. To avoid cluttering the history with small amounts each block,  the new funds are first accumulated in the dhf_interval_ledger. Then, every HIVE_PROPOSAL_MAINTENANCE_PERIOD, the accumulated funds are transferred to the treasury account (this operation generates the virtual operation dhf_funding_operation), from where they are subsequently paid out to the approved proposals"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "the timestamp when the block was created"
+          }
+        }
+      },
+      "hafah_backend.array_of_op_types": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/hafah_backend.op_types"
+        }
+      },
+      "hafah_endpoints.transaction": {
+        "type": "object",
+        "properties": {
+          "transaction_json": {
+            "type": "string",
+            "x-sql-datatype": "JSON",
+            "description": "contents of the transaction"
+          },
+          "transaction_id": {
+            "type": "string",
+            "description": "hash of the transaction"
+          },
+          "block_num": {
+            "type": "integer",
+            "description": "number of block the transaction was in"
+          },
+          "transaction_num": {
+            "type": "integer",
+            "description": "number of the transaction in block"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "the time of the transaction was made"
+          }
+        }
+      }
+    }
+  },
   "openapi": "3.1.0",
   "info": {
     "title": "HAfAH",
@@ -535,61 +731,47 @@ declare
           "Blocks"
         ],
         "summary": "Get operations in block",
-        "description": "Returns all operations contained in a block.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_ops_in_block(5000000);`\n\nREST call example      \n* `GET ''https://%1$s/hafah/blocks/5000000/operations''`\n",
-        "operationId": "hafah_endpoints.get_ops_in_block",
+        "description": "List the operations in the specified order that are within the given block number. \nThe page size determines the number of operations per page\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_ops_by_block_paging(5000000,''5,64'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/blocks/5000000/operations?operation-types=80&path-filter=value.creator=steem''`\n",
+        "operationId": "hafah_endpoints.get_ops_by_block_paging",
         "parameters": [
           {
             "in": "path",
             "name": "block-num",
             "required": true,
             "schema": {
-              "type": "integer",
-              "default": null
+              "type": "integer"
             },
-            "description": "Given block number"
+            "description": "List operations from given block number"
           },
           {
             "in": "query",
             "name": "operation-types",
             "required": false,
             "schema": {
-              "$ref": "#/components/schemas/hafah_backend.operation_types",
-              "default": "all"
-            },
-            "description": "filter operations by:\n\n * `virtual` - only virtual operations\n\n * `real` - only real operations\n\n * `all` - all operations\n"
-          },
-          {
-            "in": "query",
-            "name": "operation-filter-low",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "x-sql-datatype": "NUMERIC",
+              "type": "string",
               "default": null
             },
-            "description": "The lower part of the bits of a 128-bit integer mask,\nwhere successive positions of bits set to 1 define which operation type numbers to return,\nexpressed as a decimal number\n"
+            "description": "List of operations: if the parameter is empty, all operations will be included,\nexample: `18,12`\n"
           },
           {
             "in": "query",
-            "name": "operation-filter-high",
+            "name": "account-name",
             "required": false,
             "schema": {
-              "type": "integer",
-              "x-sql-datatype": "NUMERIC",
+              "type": "string",
               "default": null
             },
-            "description": "The higher part of the bits of a 128-bit integer mask,\nwhere successive positions of bits set to 1 define which operation type numbers to return,\nexpressed as a decimal number\n"
+            "description": "Filter operations by the account that created them"
           },
           {
             "in": "query",
-            "name": "operation-begin",
+            "name": "page",
             "required": false,
             "schema": {
               "type": "integer",
-              "x-sql-datatype": "BIGINT",
-              "default": -1
+              "default": 1
             },
-            "description": "Starting operation id"
+            "description": "Return page on `page` number, defaults to `1`"
           },
           {
             "in": "query",
@@ -597,24 +779,48 @@ declare
             "required": false,
             "schema": {
               "type": "integer",
-              "default": null
+              "default": 100
             },
-            "description": "A limit of retrieved operations per page,\nwhen not specified, the result contains all operations in block\n"
+            "description": "Return max `page-size` operations per page, defaults to `100`"
           },
           {
             "in": "query",
-            "name": "include-reversible",
+            "name": "page-order",
             "required": false,
             "schema": {
-              "type": "boolean",
-              "default": false
+              "$ref": "#/components/schemas/hafah_backend.sort_direction",
+              "default": "desc"
             },
-            "description": "If set to true also operations from reversible block will be included\nif block_num points to such block.\n"
+            "description": "page order:\n\n * `asc` - Ascending, from oldest to newest page\n \n * `desc` - Descending, from newest to oldest page\n"
+          },
+          {
+            "in": "query",
+            "name": "data-size-limit",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 200000
+            },
+            "description": "If the operation length exceeds the data size limit,\nthe operation body is replaced with a placeholder, defaults to `200000`\n"
+          },
+          {
+            "in": "query",
+            "name": "path-filter",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "x-sql-datatype": "TEXT[]",
+              "default": null
+            },
+            "description": "A parameter specifying the expected value in operation body,\nexample: `value.creator=steem`\n"
           }
         ],
         "responses": {
           "200": {
-            "description": "\n* Returns `JSON`\n",
+            "description": "Result contains total operations number,\ntotal pages and the list of operations\n\n* Returns `JSON`\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -623,60 +829,9 @@ declare
                 },
                 "example": [
                   {
-                    "ops": [
-                      {
-                        "op": {
-                          "type": "account_create_operation",
-                          "value": {
-                            "fee": {
-                              "nai": "@@000000021",
-                              "amount": "10000",
-                              "precision": 3
-                            },
-                            "owner": {
-                              "key_auths": [
-                                [
-                                  "STM871wj5KKnbwwiRv3scVcxQ26ynPnE1uaZr6dPpqVu9F4zJZgjZ",
-                                  1
-                                ]
-                              ],
-                              "account_auths": [],
-                              "weight_threshold": 1
-                            },
-                            "active": {
-                              "key_auths": [
-                                [
-                                  "STM73bAnWEwkdUa7Lp4ovNzyu4soHUCaCNSz79YHQsDqscNdSe1E8",
-                                  1
-                                ]
-                              ],
-                              "account_auths": [],
-                              "weight_threshold": 1
-                            },
-                            "creator": "steem",
-                            "posting": {
-                              "key_auths": [
-                                [
-                                  "STM7fXKrnQN3xhgFTQBFMgR9TU8CxfgAJrLvSDjGuM2bFkiuKfwZg",
-                                  1
-                                ]
-                              ],
-                              "account_auths": [],
-                              "weight_threshold": 1
-                            },
-                            "memo_key": "STM8i93Zznxu2QRNLCHBDXt5yyiMW1c3GEyVKV9XAs8H5wEWwdJaM",
-                            "json_metadata": "",
-                            "new_account_name": "kefadex"
-                          }
-                        },
-                        "block": 5000000,
-                        "trx_id": "6707feb450da66dc223ab5cb3e259937b2fef6bf",
-                        "op_in_trx": 0,
-                        "timestamp": "2016-09-15T19:47:21",
-                        "virtual_op": false,
-                        "operation_id": "21474836480000009",
-                        "trx_in_block": 0
-                      },
+                    "total_operations": 1,
+                    "total_pages": 1,
+                    "operations_result": [
                       {
                         "op": {
                           "type": "account_created_operation",
@@ -697,66 +852,21 @@ declare
                         },
                         "block": 5000000,
                         "trx_id": "6707feb450da66dc223ab5cb3e259937b2fef6bf",
-                        "op_in_trx": 1,
+                        "op_pos": 1,
+                        "op_type_id": 80,
                         "timestamp": "2016-09-15T19:47:21",
                         "virtual_op": true,
                         "operation_id": "21474836480000336",
                         "trx_in_block": 0
-                      },
-                      {
-                        "op": {
-                          "type": "limit_order_create_operation",
-                          "value": {
-                            "owner": "cvk",
-                            "orderid": 1473968838,
-                            "expiration": "2035-10-29T06:32:22",
-                            "fill_or_kill": false,
-                            "amount_to_sell": {
-                              "nai": "@@000000021",
-                              "amount": "10324",
-                              "precision": 3
-                            },
-                            "min_to_receive": {
-                              "nai": "@@000000013",
-                              "amount": "6819",
-                              "precision": 3
-                            }
-                          }
-                        },
-                        "block": 5000000,
-                        "trx_id": "973290d26bac31335c000c7a3d3fe058ce3dbb9f",
-                        "op_in_trx": 0,
-                        "timestamp": "2016-09-15T19:47:21",
-                        "virtual_op": false,
-                        "operation_id": "21474836480000517",
-                        "trx_in_block": 1
-                      },
-                      {
-                        "op": {
-                          "type": "producer_reward_operation",
-                          "value": {
-                            "producer": "ihashfury",
-                            "vesting_shares": {
-                              "nai": "@@000000037",
-                              "amount": "3003845513",
-                              "precision": 6
-                            }
-                          }
-                        },
-                        "block": 5000000,
-                        "trx_id": "0000000000000000000000000000000000000000",
-                        "op_in_trx": 1,
-                        "timestamp": "2016-09-15T19:47:21",
-                        "virtual_op": true,
-                        "operation_id": "21474836480000832",
-                        "trx_in_block": 4294967295
                       }
-                    ],
-                    "next_operation_begin": 0
+                    ]
                   }
                 ]
               }
             }
+          },
+          "404": {
+            "description": "The result is empty"
           }
         }
       }
@@ -767,7 +877,7 @@ declare
           "Operations"
         ],
         "summary": "Get operations in block range",
-        "description": "Returns all operations contained in provided block range\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operations(4999999,5000000);`\n\nREST call example\n* `GET ''https://%1$s/hafah/operations?from-block=4999999&to-block=5000000&operation-types=virtual''`\n",
+        "description": "Returns all operations contained in provided block range\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operations(4999999,5000000);`\n\nREST call example\n* `GET ''https://%1$s/hafah/operations?from-block=4999999&to-block=5000000&operation-group-type=virtual''`\n",
         "operationId": "hafah_endpoints.get_operations",
         "parameters": [
           {
@@ -795,32 +905,20 @@ declare
             "name": "operation-types",
             "required": false,
             "schema": {
-              "$ref": "#/components/schemas/hafah_backend.operation_types",
+              "type": "string",
+              "default": null
+            },
+            "description": "List of operations: if the parameter is empty, all operations will be included,\nexample: `18,12`\n"
+          },
+          {
+            "in": "query",
+            "name": "operation-group-type",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/hafah_backend.operation_group_types",
               "default": "all"
             },
             "description": "filter operations by:\n\n * `virtual` - only virtual operations\n\n * `real` - only real operations\n\n * `all` - all operations\n"
-          },
-          {
-            "in": "query",
-            "name": "operation-filter-low",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "x-sql-datatype": "NUMERIC",
-              "default": null
-            },
-            "description": "The lower part of the bits of a 128-bit integer mask,\nwhere successive positions of bits set to 1 define which operation type numbers to return,\nexpressed as a decimal number\n"
-          },
-          {
-            "in": "query",
-            "name": "operation-filter-high",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "x-sql-datatype": "NUMERIC",
-              "default": null
-            },
-            "description": "The higher part of the bits of a 128-bit integer mask,\nwhere successive positions of bits set to 1 define which operation type numbers to return,\nexpressed as a decimal number\n"
           },
           {
             "in": "query",
@@ -1052,11 +1150,11 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "Operation parameters\n\n* Returns `hafah_endpoints.operation`\n",
+            "description": "Operation parameters\n\n* Returns `hafah_backend.operation`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/hafah_endpoints.operation"
+                  "$ref": "#/components/schemas/hafah_backend.operation"
                 },
                 "example": [
                   {
@@ -1092,12 +1190,12 @@ declare
           "Operation-types"
         ],
         "summary": "Lists operation types",
-        "description": "Lookup optype ids for operations matching a partial operation name\n\nSQL example  \n* `SELECT * FROM hafah_endpoints.get_op_types(''author'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/operation-types?input-value=author''`\n",
+        "description": "Lookup optype ids for operations matching a partial operation name\n\nSQL example  \n* `SELECT * FROM hafah_endpoints.get_op_types(''author'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/operation-types?partial-operation-name=author''`\n",
         "operationId": "hafah_endpoints.get_op_types",
         "parameters": [
           {
             "in": "query",
-            "name": "input-value",
+            "name": "partial-operation-name",
             "required": false,
             "schema": {
               "type": "string",
@@ -1108,11 +1206,11 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "Operation type list, \nif provided is `input-value` the list\nis limited to operations that partially match the `input-value`\n\n* Returns array of `hafah_endpoints.op_types`\n",
+            "description": "Operation type list, \nif `partial-operation-name` is provided then the list\nis limited to operations that partially match the `partial-operation-name`\n\n* Returns array of `hafah_backend.op_types`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/hafah_endpoints.array_of_op_types"
+                  "$ref": "#/components/schemas/hafah_backend.array_of_op_types"
                 },
                 "example": [
                   {
@@ -1264,76 +1362,105 @@ declare
         "tags": [
           "Accounts"
         ],
-        "summary": "Get account''s history",
-        "description": "Returns a history of all operations for a given account.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_account_history(''blocktrades'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/accounts/blocktrades/operations?result-limit=3''`\n",
-        "operationId": "hafah_endpoints.get_account_history",
+        "summary": "Get operations for an account",
+        "description": "List the operations in the reversed  order (first page is the oldest) for given account. \nThe page size determines the number of operations per page\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_ops_by_account(''blocktrades'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/accounts/blocktrades/operations?page-size=3''`\n",
+        "operationId": "hafah_endpoints.get_ops_by_account",
         "parameters": [
           {
             "in": "path",
             "name": "account-name",
             "required": true,
             "schema": {
+              "type": "string"
+            },
+            "description": "Filter operations by the account that created them"
+          },
+          {
+            "in": "query",
+            "name": "operation-types",
+            "required": false,
+            "schema": {
               "type": "string",
               "default": null
             },
-            "description": "given account name"
+            "description": "List of operations: if the parameter is empty, all operations will be included\nexample: `18,12`\n"
           },
           {
             "in": "query",
-            "name": "start",
+            "name": "page",
             "required": false,
             "schema": {
               "type": "integer",
-              "default": -1
-            },
-            "description": "e.g.: -1 for reverse history or any positive numeric\n"
-          },
-          {
-            "in": "query",
-            "name": "result-limit",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 1000
-            },
-            "description": "up to 1000"
-          },
-          {
-            "in": "query",
-            "name": "include-reversible",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            },
-            "description": "If set to true also operations from reversible block will be included\n"
-          },
-          {
-            "in": "query",
-            "name": "operation-filter-low",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "x-sql-datatype": "NUMERIC",
               "default": null
             },
-            "description": "The lower part of the bits of a 128-bit integer mask,\nwhere successive positions of bits set to 1 define which operation type numbers to return,\nexpressed as a decimal number\n"
+            "description": "Return page on `page` number, default null due to reversed order of pages\nthe first page is the oldest,\nexample: first call returns the newest page and total_pages is 100 - the newest page is number 100, next 99 etc.\n"
           },
           {
             "in": "query",
-            "name": "operation-filter-high",
+            "name": "page-size",
             "required": false,
             "schema": {
               "type": "integer",
-              "x-sql-datatype": "NUMERIC",
+              "default": 100
+            },
+            "description": "Return max `page-size` operations per page, defaults to `100`"
+          },
+          {
+            "in": "query",
+            "name": "data-size-limit",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 200000
+            },
+            "description": "If the operation length exceeds the data size limit,\nthe operation body is replaced with a placeholder, defaults to `200000`\n"
+          },
+          {
+            "in": "query",
+            "name": "from-block",
+            "required": false,
+            "schema": {
+              "type": "integer",
               "default": null
             },
-            "description": "The higher part of the bits of a 128-bit integer mask,\nwhere successive positions of bits set to 1 define which operation type numbers to return,\nexpressed as a decimal number\n"
+            "description": "Lower limit of the block range"
+          },
+          {
+            "in": "query",
+            "name": "to-block",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": null
+            },
+            "description": "Upper limit of the block range"
+          },
+          {
+            "in": "query",
+            "name": "start-date",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": null
+            },
+            "description": "Lower limit of the time range"
+          },
+          {
+            "in": "query",
+            "name": "end-date",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": null
+            },
+            "description": "Upper limit of the time range"
           }
         ],
         "responses": {
           "200": {
-            "description": "\n* Returns `JSON`\n",
+            "description": "Result contains total operations number,\ntotal pages and the list of operations\n\n* Returns `JSON`\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -1341,55 +1468,10 @@ declare
                   "x-sql-datatype": "JSON"
                 },
                 "example": [
-                  [
-                    [
-                      219864,
-                      {
-                        "op": {
-                          "type": "producer_reward_operation",
-                          "value": {
-                            "producer": "blocktrades",
-                            "vesting_shares": {
-                              "nai": "@@000000037",
-                              "amount": "3003868105",
-                              "precision": 6
-                            }
-                          }
-                        },
-                        "block": 4999959,
-                        "trx_id": "0000000000000000000000000000000000000000",
-                        "op_in_trx": 1,
-                        "timestamp": "2016-09-15T19:45:12",
-                        "virtual_op": true,
-                        "operation_id": "21474660386343488",
-                        "trx_in_block": 4294967295
-                      }
-                    ],
-                    [
-                      219865,
-                      {
-                        "op": {
-                          "type": "producer_reward_operation",
-                          "value": {
-                            "producer": "blocktrades",
-                            "vesting_shares": {
-                              "nai": "@@000000037",
-                              "amount": "3003850165",
-                              "precision": 6
-                            }
-                          }
-                        },
-                        "block": 4999992,
-                        "trx_id": "0000000000000000000000000000000000000000",
-                        "op_in_trx": 1,
-                        "timestamp": "2016-09-15T19:46:57",
-                        "virtual_op": true,
-                        "operation_id": "21474802120262208",
-                        "trx_in_block": 4294967295
-                      }
-                    ],
-                    [
-                      219866,
+                  {
+                    "total_operations": 219867,
+                    "total_pages": 73289,
+                    "operations_result": [
                       {
                         "op": {
                           "type": "transfer_operation",
@@ -1406,17 +1488,63 @@ declare
                         },
                         "block": 4999997,
                         "trx_id": "e75f833ceb62570c25504b55d0f23d86d9d76423",
-                        "op_in_trx": 0,
+                        "op_pos": 0,
+                        "op_type_id": 2,
                         "timestamp": "2016-09-15T19:47:12",
                         "virtual_op": false,
                         "operation_id": "21474823595099394",
                         "trx_in_block": 3
+                      },
+                      {
+                        "op": {
+                          "type": "producer_reward_operation",
+                          "value": {
+                            "producer": "blocktrades",
+                            "vesting_shares": {
+                              "nai": "@@000000037",
+                              "amount": "3003850165",
+                              "precision": 6
+                            }
+                          }
+                        },
+                        "block": 4999992,
+                        "trx_id": null,
+                        "op_pos": 1,
+                        "op_type_id": 64,
+                        "timestamp": "2016-09-15T19:46:57",
+                        "virtual_op": true,
+                        "operation_id": "21474802120262208",
+                        "trx_in_block": -1
+                      },
+                      {
+                        "op": {
+                          "type": "producer_reward_operation",
+                          "value": {
+                            "producer": "blocktrades",
+                            "vesting_shares": {
+                              "nai": "@@000000037",
+                              "amount": "3003868105",
+                              "precision": 6
+                            }
+                          }
+                        },
+                        "block": 4999959,
+                        "trx_id": null,
+                        "op_pos": 1,
+                        "op_type_id": 64,
+                        "timestamp": "2016-09-15T19:45:12",
+                        "virtual_op": true,
+                        "operation_id": "21474660386343488",
+                        "trx_in_block": -1
                       }
                     ]
-                  ]
+                  }
                 ]
               }
             }
+          },
+          "404": {
+            "description": "No such account in the database"
           }
         }
       }
@@ -1516,105 +1644,121 @@ declare
           }
         }
       }
-    }
-  },
-  "components": {
-    "schemas": {
-      "hafah_backend.operation_types": {
-        "type": "string",
-        "enum": [
-          "virtual",
-          "real",
-          "all"
-        ]
-      },
-      "hafah_endpoints.operation": {
-        "type": "object",
-        "properties": {
-          "op": {
-            "type": "string",
-            "x-sql-datatype": "JSONB",
-            "description": "operation body"
+    },
+    "/headblock": {
+      "get": {
+        "tags": [
+          "Other"
+        ],
+        "summary": "HAF last synced block",
+        "description": "Get last synced block in HAF database\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_head_block_num();`\n\nREST call example\n* `GET ''https://%1$s/hafah/headblock''`\n",
+        "operationId": "hafah_endpoints.get_head_block_num",
+        "responses": {
+          "200": {
+            "description": "Last synced block by HAF\n\n* Returns `INT`\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 5000000
+              }
+            }
           },
-          "block": {
-            "type": "integer",
-            "description": "operation block number"
-          },
-          "trx_id": {
-            "type": "string",
-            "description": "hash of the transaction"
-          },
-          "op_pos": {
-            "type": "integer",
-            "description": "operation identifier that indicates its sequence number in transaction"
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time",
-            "description": "creation date"
-          },
-          "virtual_op": {
-            "type": "boolean",
-            "description": "true if is a virtual operation"
-          },
-          "operation_id": {
-            "type": "string",
-            "description": "unique operation identifier with an encoded block number and operation type id"
-          },
-          "trx_in_block": {
-            "type": "integer",
-            "x-sql-datatype": "SMALLINT",
-            "description": "transaction identifier that indicates its sequence number in block"
+          "404": {
+            "description": "No blocks in the database"
           }
         }
-      },
-      "hafah_endpoints.op_types": {
-        "type": "object",
-        "properties": {
-          "op_type_id": {
-            "type": "integer",
-            "description": "operation type id"
+      }
+    },
+    "/global-state": {
+      "get": {
+        "tags": [
+          "Other"
+        ],
+        "summary": "Informations about block",
+        "description": "Lists the parameters of the block provided by the user\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block(5000000);`\n\nREST call example      \n* `GET ''https://%1$s/hafah/global-state?block-num=5000000''`\n",
+        "operationId": "hafah_endpoints.get_block",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "block-num",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Given block number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Given block''s stats\n\n* Returns `hafah_backend.block`\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/hafah_backend.block"
+                },
+                "example": [
+                  {
+                    "block_num": 5000000,
+                    "hash": "004c4b40245ffb07380a393fb2b3d841b76cdaec",
+                    "prev": "004c4b3fc6a8735b4ab5433d59f4526e4a042644",
+                    "producer_account": "ihashfury",
+                    "transaction_merkle_root": "97a8f2b04848b860f1792dc07bf58efcb15aeb8c",
+                    "extensions": [],
+                    "witness_signature": "1f6aa1c6311c768b5225b115eaf5798e5f1d8338af3970d90899cd5ccbe38f6d1f7676c5649bcca18150cbf8f07c0cc7ec3ae40d5936cfc6d5a650e582ba0f8002",
+                    "signing_key": "STM8aUs6SGoEmNYMd3bYjE1UBr6NQPxGWmTqTdBaxJYSx244edSB2",
+                    "hbd_interest_rate": 1000,
+                    "total_vesting_fund_hive": 149190428013,
+                    "total_vesting_shares": 448144916705468350,
+                    "total_reward_fund_hive": 66003975,
+                    "virtual_supply": 161253662237,
+                    "current_supply": 157464400971,
+                    "current_hbd_supply": 2413759427,
+                    "dhf_interval_ledger": 0,
+                    "created_at": "2016-09-15T19:47:21"
+                  }
+                ]
+              }
+            }
           },
-          "operation_name": {
-            "type": "string",
-            "description": "operation type name"
-          },
-          "is_virtual": {
-            "type": "boolean",
-            "description": "true if operation is virtual"
+          "404": {
+            "description": "No blocks in the database"
           }
         }
-      },
-      "hafah_endpoints.array_of_op_types": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/hafah_endpoints.op_types"
-        }
-      },
-      "hafah_endpoints.transaction": {
-        "type": "object",
-        "properties": {
-          "transaction_json": {
-            "type": "string",
-            "x-sql-datatype": "JSON",
-            "description": "contents of the transaction"
-          },
-          "transaction_id": {
-            "type": "string",
-            "description": "hash of the transaction"
-          },
-          "block_num": {
-            "type": "integer",
-            "description": "number of block the transaction was in"
-          },
-          "transaction_num": {
-            "type": "integer",
-            "description": "number of the transaction in block"
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time",
-            "description": "the time of the transaction was made"
+      }
+    },
+    "/block-number-by-date/{timestamp}": {
+      "get": {
+        "tags": [
+          "Other"
+        ],
+        "summary": "Search for last created block for given date",
+        "description": "Returns last created block number for given date\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block_by_time(''2016-06-24T16:05:00'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/block-number-by-date/2016-06-24T16:05:00''`\n",
+        "operationId": "hafah_endpoints.get_block_by_time",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "timestamp",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Given date"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No blocks created at that time",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 2621429
+              }
+            }
           }
         }
       }

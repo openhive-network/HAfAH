@@ -13,7 +13,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_operations(4999999,5000000);`
 
       REST call example
-      * `GET ''https://%1$s/hafah/operations?from-block=4999999&to-block=5000000&operation-types=virtual''`
+      * `GET ''https://%1$s/hafah/operations?from-block=4999999&to-block=5000000&operation-group-type=virtual''`
     operationId: hafah_endpoints.get_operations
     parameters:
       - in: query
@@ -34,7 +34,16 @@ SET ROLE hafah_owner;
         name: operation-types
         required: false
         schema:
-          $ref: '#/components/schemas/hafah_backend.operation_types'
+          type: string
+          default: NULL
+        description: |
+          List of operations: if the parameter is empty, all operations will be included,
+          example: `18,12`
+      - in: query
+        name: operation-group-type
+        required: false
+        schema:
+          $ref: '#/components/schemas/hafah_backend.operation_group_types'
           default: all
         description: |
           filter operations by:
@@ -44,28 +53,6 @@ SET ROLE hafah_owner;
            * `real` - only real operations
 
            * `all` - all operations
-      - in: query
-        name: operation-filter-low
-        required: false
-        schema:
-          type: integer
-          x-sql-datatype: NUMERIC
-          default: NULL
-        description: |
-          The lower part of the bits of a 128-bit integer mask,
-          where successive positions of bits set to 1 define which operation type numbers to return,
-          expressed as a decimal number
-      - in: query
-        name: operation-filter-high
-        required: false
-        schema:
-          type: integer
-          x-sql-datatype: NUMERIC
-          default: NULL
-        description: |
-          The higher part of the bits of a 128-bit integer mask,
-          where successive positions of bits set to 1 define which operation type numbers to return,
-          expressed as a decimal number
       - in: query
         name: operation-begin
         required: false
@@ -268,9 +255,8 @@ DROP FUNCTION IF EXISTS hafah_endpoints.get_operations;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_operations(
     "from-block" INT = NULL,
     "to-block" INT = NULL,
-    "operation-types" hafah_backend.operation_types = 'all',
-    "operation-filter-low" NUMERIC = NULL,
-    "operation-filter-high" NUMERIC = NULL,
+    "operation-types" TEXT = NULL,
+    "operation-group-type" hafah_backend.operation_group_types = 'all',
     "operation-begin" BIGINT = -1,
     "page-size" INT = 1000,
     "include-reversible" BOOLEAN = False
@@ -281,8 +267,9 @@ LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
+  _operation_types INT[] := NULL;
   __exception_message TEXT;
-  __operation_types BOOLEAN := (CASE WHEN "operation-types" = 'real' THEN FALSE WHEN "operation-types" = 'virtual' THEN TRUE ELSE NULL END);
+  _operation_group_types BOOLEAN := (CASE WHEN "operation-group-type" = 'real' THEN FALSE WHEN "operation-group-type" = 'virtual' THEN TRUE ELSE NULL END);
 BEGIN
     -- Required argument: to-block, from-block
   IF "from-block" IS NULL THEN
@@ -293,13 +280,16 @@ BEGIN
     RETURN hafah_backend.rest_raise_missing_arg('to-block');
   END IF;
 
+  IF "operation-types" IS NOT NULL THEN
+    _operation_types := string_to_array("operation-types", ',')::INT[];
+  END IF;
+
   BEGIN
     RETURN hafah_python.get_rest_ops_in_blocks_json(
       "from-block",
       "to-block",
-      __operation_types,
-      hafah_python.numeric_to_bigint("operation-filter-low"),
-      hafah_python.numeric_to_bigint("operation-filter-high"),
+      _operation_group_types,
+      _operation_types,
       "operation-begin",
       "page-size",
       "include-reversible",
