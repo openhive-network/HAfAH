@@ -80,7 +80,7 @@ declare
           },
           "block": {
             "type": "integer",
-            "description": "operation block number"
+            "description": "block containing the operation"
           },
           "trx_id": {
             "type": "string",
@@ -224,16 +224,16 @@ declare
           },
           "block_num": {
             "type": "integer",
-            "description": "number of block the transaction was in"
+            "description": "block containing the transaction"
           },
           "transaction_num": {
             "type": "integer",
-            "description": "number of the transaction in block"
+            "description": "number of transactions in the block"
           },
           "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "the time of the transaction was made"
+            "description": "time transaction was inlcuded in block"
           }
         }
       }
@@ -242,7 +242,7 @@ declare
   "openapi": "3.1.0",
   "info": {
     "title": "HAfAH",
-    "description": "HAfAH It is a web server that responds to account history REST calls.",
+    "description": "HAfAH A web server that responds to account history REST calls.",
     "license": {
       "name": "MIT License",
       "url": "https://opensource.org/license/mit"
@@ -256,27 +256,27 @@ declare
   "tags": [
     {
       "name": "Blocks",
-      "description": "Informations about blocks"
+      "description": "Information about blocks"
     },
     {
       "name": "Transactions",
-      "description": "Informations about transactions"
+      "description": "Information about transactions"
     },
     {
       "name": "Operations",
-      "description": "Informations about operations"
+      "description": "Information about operations"
     },
     {
       "name": "Operation-types",
-      "description": "Informations about operation types"
+      "description": "Informatios about operation types"
     },
     {
       "name": "Accounts",
-      "description": "Informations about accounts"
+      "description": "Information about accounts"
     },
     {
       "name": "Other",
-      "description": "General API informations"
+      "description": "General API information"
     }
   ],
   "servers": [
@@ -876,8 +876,8 @@ declare
         "tags": [
           "Operations"
         ],
-        "summary": "Get operations in block range",
-        "description": "Returns all operations contained in provided block range\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operations(4999999,5000000);`\n\nREST call example\n* `GET ''https://%1$s/hafah/operations?from-block=4999999&to-block=5000000&operation-group-type=virtual''`\n",
+        "summary": "Get operations in a block range",
+        "description": "Returns all operations contained in specified block range, supports various forms of filtering.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operations(4999999,5000000);`\n\nREST call example\n* `GET ''https://%1$s/hafah/operations?from-block=4999999&to-block=5000000&operation-group-type=virtual''`\n",
         "operationId": "hafah_endpoints.get_operations",
         "parameters": [
           {
@@ -908,7 +908,7 @@ declare
               "type": "string",
               "default": null
             },
-            "description": "List of operations: if the parameter is empty, all operations will be included,\nexample: `18,12`\n"
+            "description": "List of operations: if the parameter is empty, all operations will be included.\nexample: `18,12`\n"
           },
           {
             "in": "query",
@@ -949,7 +949,7 @@ declare
               "type": "boolean",
               "default": false
             },
-            "description": "If set to true also operations from reversible block will be included\nif block_num points to such block.\n"
+            "description": "If true, operations from reversible blocks will be included.\n"
           }
         ],
         "responses": {
@@ -1133,7 +1133,7 @@ declare
         "tags": [
           "Operations"
         ],
-        "summary": "Get informations about the operation",
+        "summary": "lookup an operation by its id.",
         "description": "Get operation''s body and its extended parameters\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operation(3448858738752);`\n\nREST call example\n* `GET ''https://%1$s/hafah/operations/3448858738752''`\n",
         "operationId": "hafah_endpoints.get_operation",
         "parameters": [
@@ -1189,8 +1189,8 @@ declare
         "tags": [
           "Operation-types"
         ],
-        "summary": "Lists operation types",
-        "description": "Lookup optype ids for operations matching a partial operation name\n\nSQL example  \n* `SELECT * FROM hafah_endpoints.get_op_types(''author'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/operation-types?partial-operation-name=author''`\n",
+        "summary": "Lookup operation type ids for operations matching a partial operation name.",
+        "description": "Lookup operation type ids for operations matching a partial operation name.\n\nSQL example  \n* `SELECT * FROM hafah_endpoints.get_op_types(''author'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/operation-types?partial-operation-name=author''`\n",
         "operationId": "hafah_endpoints.get_op_types",
         "parameters": [
           {
@@ -1233,7 +1233,7 @@ declare
         "tags": [
           "Operation-types"
         ],
-        "summary": "Get operation json body keys",
+        "summary": "Returns key names for an operation type.",
         "description": "Returns json body keys for an operation type\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operation_keys(1);`\n\nREST call example\n* `GET ''https://%1$s/hafah/operation-types/1/keys''`\n",
         "operationId": "hafah_endpoints.get_operation_keys",
         "parameters": [
@@ -1299,8 +1299,8 @@ declare
         "tags": [
           "Transactions"
         ],
-        "summary": "Get transaction details",
-        "description": "Returns the details of a transaction based on a transaction id (including their signatures,\noperations like also a block_num it was included to).\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_transaction(''954f6de36e6715d128fa8eb5a053fc254b05ded0'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0''`\n",
+        "summary": "Lookup a transaction's details from its transaction id.",
+        "description": "Returns the details of a transaction based on a transaction id (including its signatures,\noperations, and containing block number).\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_transaction(''954f6de36e6715d128fa8eb5a053fc254b05ded0'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0''`\n",
         "operationId": "hafah_endpoints.get_transaction",
         "parameters": [
           {
@@ -1310,7 +1310,7 @@ declare
             "schema": {
               "type": "string"
             },
-            "description": "trx_id of expected transaction"
+            "description": "transaction id of transaction to look up"
           }
         ],
         "responses": {
@@ -1362,8 +1362,8 @@ declare
         "tags": [
           "Accounts"
         ],
-        "summary": "Get operations for an account",
-        "description": "List the operations in the reversed  order (first page is the oldest) for given account. \nThe page size determines the number of operations per page\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_ops_by_account(''blocktrades'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/accounts/blocktrades/operations?page-size=3''`\n",
+        "summary": "Get operations for an account by recency.",
+        "description": "List the operations in reversed order (first page is the oldest) for given account. \nThe page size determines the number of operations per page.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_ops_by_account(''blocktrades'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/accounts/blocktrades/operations?page-size=3''`\n",
         "operationId": "hafah_endpoints.get_ops_by_account",
         "parameters": [
           {
@@ -1373,7 +1373,7 @@ declare
             "schema": {
               "type": "string"
             },
-            "description": "Filter operations by the account that created them"
+            "description": "Account to get operations for."
           },
           {
             "in": "query",
@@ -1383,7 +1383,7 @@ declare
               "type": "string",
               "default": null
             },
-            "description": "List of operations: if the parameter is empty, all operations will be included\nexample: `18,12`\n"
+            "description": "List of operation types to get. If NULL, gets all operation types.\nexample: `18,12`\n"
           },
           {
             "in": "query",
@@ -1393,7 +1393,7 @@ declare
               "type": "integer",
               "default": null
             },
-            "description": "Return page on `page` number, default null due to reversed order of pages\nthe first page is the oldest,\nexample: first call returns the newest page and total_pages is 100 - the newest page is number 100, next 99 etc.\n"
+            "description": "Return page on `page` number, default null due to reversed order of pages,\nthe first page is the oldest,\nexample: first call returns the newest page and total_pages is 100 - the newest page is number 100, next 99 etc.\n"
           },
           {
             "in": "query",
@@ -1403,7 +1403,7 @@ declare
               "type": "integer",
               "default": 100
             },
-            "description": "Return max `page-size` operations per page, defaults to `100`"
+            "description": "Return max `page-size` operations per page, defaults to `100`."
           },
           {
             "in": "query",
@@ -1413,7 +1413,7 @@ declare
               "type": "integer",
               "default": 200000
             },
-            "description": "If the operation length exceeds the data size limit,\nthe operation body is replaced with a placeholder, defaults to `200000`\n"
+            "description": "If the operation length exceeds the data size limit,\nthe operation body is replaced with a placeholder (defaults to `200000`).\n"
           },
           {
             "in": "query",
@@ -1460,7 +1460,7 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "Result contains total operations number,\ntotal pages and the list of operations\n\n* Returns `JSON`\n",
+            "description": "Result contains total number of operations,\ntotal pages, and the list of operations.\n\n* Returns `JSON`\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -1554,7 +1554,7 @@ declare
         "tags": [
           "Accounts"
         ],
-        "summary": "Lists operation types",
+        "summary": "Lists all types of operations that account has performed",
         "description": "Lists all types of operations that the account has performed since its creation\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_acc_op_types(''blocktrades'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/accounts/blocktrades/operations/types''`\n",
         "operationId": "hafah_endpoints.get_acc_op_types",
         "parameters": [
@@ -1624,7 +1624,7 @@ declare
           "Other"
         ],
         "summary": "hafah''s version",
-        "description": "Get hafah''s last commit hash that determinates its version\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_version();`\n\nREST call example\n* `GET ''https://%1$s/hafah/version''`\n",
+        "description": "Get hafah''s last commit hash (hash is used for versioning).\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_version();`\n\nREST call example\n* `GET ''https://%1$s/hafah/version''`\n",
         "operationId": "hafah_endpoints.get_version",
         "responses": {
           "200": {
@@ -1650,12 +1650,12 @@ declare
         "tags": [
           "Other"
         ],
-        "summary": "HAF last synced block",
-        "description": "Get last synced block in HAF database\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_head_block_num();`\n\nREST call example\n* `GET ''https://%1$s/hafah/headblock''`\n",
+        "summary": "Get last synced block in the HAF database.",
+        "description": "Get last synced block in the HAF database\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_head_block_num();`\n\nREST call example\n* `GET ''https://%1$s/hafah/headblock''`\n",
         "operationId": "hafah_endpoints.get_head_block_num",
         "responses": {
           "200": {
-            "description": "Last synced block by HAF\n\n* Returns `INT`\n",
+            "description": "Last block stored in HAF\n\n* Returns `INT`\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -1676,8 +1676,8 @@ declare
         "tags": [
           "Other"
         ],
-        "summary": "Informations about block",
-        "description": "Lists the parameters of the block provided by the user\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block(5000000);`\n\nREST call example      \n* `GET ''https://%1$s/hafah/global-state?block-num=5000000''`\n",
+        "summary": "Reports global state information at the given block.",
+        "description": "Reports dgpo-style data for a given block.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block(5000000);`\n\nREST call example      \n* `GET ''https://%1$s/hafah/global-state?block-num=5000000''`\n",
         "operationId": "hafah_endpoints.get_block",
         "parameters": [
           {
@@ -1733,7 +1733,7 @@ declare
         "tags": [
           "Other"
         ],
-        "summary": "Search for last created block for given date",
+        "summary": "Returns last created block for given date.",
         "description": "Returns last created block number for given date\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block_by_time(''2016-06-24T16:05:00'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/block-number-by-date/2016-06-24T16:05:00''`\n",
         "operationId": "hafah_endpoints.get_block_by_time",
         "parameters": [
