@@ -38,7 +38,7 @@ CREATE TYPE hafah_endpoints.transaction AS (
   get:
     tags:
       - Transactions
-    summary: Lookup a transaction's details from its transaction id.
+    summary: Lookup a transaction''s details from its transaction id.
     description: |
       Returns the details of a transaction based on a transaction id (including its signatures,
       operations, and containing block number).

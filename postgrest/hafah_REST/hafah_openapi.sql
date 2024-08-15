@@ -1299,7 +1299,7 @@ declare
         "tags": [
           "Transactions"
         ],
-        "summary": "Lookup a transaction's details from its transaction id.",
+        "summary": "Lookup a transaction''s details from its transaction id.",
         "description": "Returns the details of a transaction based on a transaction id (including its signatures,\noperations, and containing block number).\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_transaction(''954f6de36e6715d128fa8eb5a053fc254b05ded0'');`\n\nREST call example\n* `GET ''https://%1$s/hafah/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0''`\n",
         "operationId": "hafah_endpoints.get_transaction",
         "parameters": [
