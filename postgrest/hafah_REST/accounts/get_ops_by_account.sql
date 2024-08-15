@@ -5,10 +5,10 @@ SET ROLE hafah_owner;
   get:
     tags:
       - Accounts
-    summary: Get operations for an account
+    summary: Get operations for an account by recency.
     description: |
-      List the operations in the reversed  order (first page is the oldest) for given account. 
-      The page size determines the number of operations per page
+      List the operations in reversed order (first page is the oldest) for given account. 
+      The page size determines the number of operations per page.
 
       SQL example
       * `SELECT * FROM hafah_endpoints.get_ops_by_account(''blocktrades'');`
@@ -22,7 +22,7 @@ SET ROLE hafah_owner;
         required: true
         schema:
           type: string
-        description: Filter operations by the account that created them
+        description: Account to get operations for.
       - in: query
         name: operation-types
         required: false
@@ -30,7 +30,7 @@ SET ROLE hafah_owner;
           type: string
           default: NULL
         description: |
-          List of operations: if the parameter is empty, all operations will be included
+          List of operation types to get. If NULL, gets all operation types.
           example: `18,12`
       - in: query
         name: page
@@ -39,7 +39,7 @@ SET ROLE hafah_owner;
           type: integer
           default: NULL
         description: |
-          Return page on `page` number, default null due to reversed order of pages
+          Return page on `page` number, default null due to reversed order of pages,
           the first page is the oldest,
           example: first call returns the newest page and total_pages is 100 - the newest page is number 100, next 99 etc.
       - in: query
@@ -48,7 +48,7 @@ SET ROLE hafah_owner;
         schema:
           type: integer
           default: 100
-        description: Return max `page-size` operations per page, defaults to `100`
+        description: Return max `page-size` operations per page, defaults to `100`.
       - in: query
         name: data-size-limit
         required: false
@@ -57,7 +57,7 @@ SET ROLE hafah_owner;
           default: 200000
         description: |
           If the operation length exceeds the data size limit,
-          the operation body is replaced with a placeholder, defaults to `200000`
+          the operation body is replaced with a placeholder (defaults to `200000`).
       - in: query
         name: from-block
         required: false
@@ -91,8 +91,8 @@ SET ROLE hafah_owner;
     responses:
       '200':
         description: |
-          Result contains total operations number,
-          total pages and the list of operations
+          Result contains total number of operations,
+          total pages, and the list of operations.
 
           * Returns `JSON`
         content:

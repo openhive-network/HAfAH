@@ -7,7 +7,7 @@ SET ROLE hafah_owner;
       - Other
     summary: hafah''s version
     description: |
-      Get hafah''s last commit hash that determinates its version
+      Get hafah''s last commit hash (hash is used for versioning).
 
       SQL example
       * `SELECT * FROM hafah_endpoints.get_version();`

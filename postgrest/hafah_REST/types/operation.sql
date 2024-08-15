@@ -10,7 +10,7 @@ hafah_backend.operation:
       description: operation body
     block:
       type: integer
-      description: operation block number
+      description: block containing the operation
     trx_id:
       type: string
       description: hash of the transaction

@@ -5,9 +5,9 @@ SET ROLE hafah_owner;
   get:
     tags:
       - Other
-    summary: HAF last synced block
+    summary: Get last synced block in the HAF database.
     description: |
-      Get last synced block in HAF database
+      Get last synced block in the HAF database
 
       SQL example
       * `SELECT * FROM hafah_endpoints.get_head_block_num();`
@@ -18,7 +18,7 @@ SET ROLE hafah_owner;
     responses:
       '200':
         description: |
-          Last synced block by HAF
+          Last block stored in HAF
           
           * Returns `INT`
         content:

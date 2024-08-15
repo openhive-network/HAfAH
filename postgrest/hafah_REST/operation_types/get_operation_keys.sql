@@ -5,7 +5,7 @@ SET ROLE hafah_owner;
   get:
     tags:
       - Operation-types
-    summary: Get operation json body keys
+    summary: Returns key names for an operation type.
     description: |
       Returns json body keys for an operation type
 

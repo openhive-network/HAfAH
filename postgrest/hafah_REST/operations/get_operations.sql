@@ -5,9 +5,9 @@ SET ROLE hafah_owner;
   get:
     tags:
       - Operations
-    summary: Get operations in block range
+    summary: Get operations in a block range
     description: |
-      Returns all operations contained in provided block range
+      Returns all operations contained in specified block range, supports various forms of filtering.
       
       SQL example
       * `SELECT * FROM hafah_endpoints.get_operations(4999999,5000000);`
@@ -37,7 +37,7 @@ SET ROLE hafah_owner;
           type: string
           default: NULL
         description: |
-          List of operations: if the parameter is empty, all operations will be included,
+          List of operations: if the parameter is empty, all operations will be included.
           example: `18,12`
       - in: query
         name: operation-group-type
@@ -77,8 +77,7 @@ SET ROLE hafah_owner;
           type: boolean
           default: false
         description: |
-          If set to true also operations from reversible block will be included
-          if block_num points to such block.
+          If true, operations from reversible blocks will be included.
     responses:
       '200':
         description: |

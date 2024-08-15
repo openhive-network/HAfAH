@@ -13,14 +13,14 @@ hafah_endpoints.transaction:
       description: hash of the transaction
     block_num:
       type: integer
-      description: number of block the transaction was in
+      description: block containing the transaction
     transaction_num:
       type: integer
-      description: number of the transaction in block
+      description: number of transactions in the block
     timestamp:
       type: string
       format: date-time
-      description: the time of the transaction was made
+      description: time transaction was inlcuded in block
  */
 -- openapi-generated-code-begin
 DROP TYPE IF EXISTS hafah_endpoints.transaction CASCADE;
@@ -38,10 +38,10 @@ CREATE TYPE hafah_endpoints.transaction AS (
   get:
     tags:
       - Transactions
-    summary: Get transaction details
+    summary: Lookup a transaction's details from its transaction id.
     description: |
-      Returns the details of a transaction based on a transaction id (including their signatures,
-      operations like also a block_num it was included to).
+      Returns the details of a transaction based on a transaction id (including its signatures,
+      operations, and containing block number).
       
       SQL example
       * `SELECT * FROM hafah_endpoints.get_transaction(''954f6de36e6715d128fa8eb5a053fc254b05ded0'');`
@@ -55,7 +55,7 @@ CREATE TYPE hafah_endpoints.transaction AS (
         required: true
         schema:
           type: string
-        description: trx_id of expected transaction
+        description: transaction id of transaction to look up
     responses:
       '200':
         description: |

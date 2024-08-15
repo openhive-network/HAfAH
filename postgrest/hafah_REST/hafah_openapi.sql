@@ -5,7 +5,7 @@ openapi: 3.1.0
 info:
   title: HAfAH
   description: >-
-    HAfAH It is a web server that responds to account history REST calls.
+    HAfAH A web server that responds to account history REST calls.
   license:
     name: MIT License
     url: https://opensource.org/license/mit
@@ -15,17 +15,17 @@ externalDocs:
   url: https://gitlab.syncad.com/hive/hafah
 tags:
   - name: Blocks
-    description: Informations about blocks
+    description: Information about blocks
   - name: Transactions
-    description: Informations about transactions
+    description: Information about transactions
   - name: Operations
-    description: Informations about operations
+    description: Information about operations
   - name: Operation-types
-    description: Informations about operation types
+    description: Informatios about operation types
   - name: Accounts
-    description: Informations about accounts
+    description: Information about accounts
   - name: Other
-    description: General API informations
+    description: General API information
 servers:
   - url: /hafah
  */

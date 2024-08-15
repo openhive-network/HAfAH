@@ -5,7 +5,7 @@ SET ROLE hafah_owner;
   get:
     tags:
       - Accounts
-    summary: Lists operation types
+    summary: Lists all types of operations that account has performed
     description: |
       Lists all types of operations that the account has performed since its creation
 

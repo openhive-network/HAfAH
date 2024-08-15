@@ -12,9 +12,9 @@ hafah_backend.array_of_op_types:
   get:
     tags:
       - Operation-types
-    summary: Lists operation types
+    summary: Lookup operation type ids for operations matching a partial operation name.
     description: |
-      Lookup optype ids for operations matching a partial operation name
+      Lookup operation type ids for operations matching a partial operation name.
 
       SQL example  
       * `SELECT * FROM hafah_endpoints.get_op_types(''author'');`

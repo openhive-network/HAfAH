@@ -5,7 +5,7 @@ SET ROLE hafah_owner;
   get:
     tags:
       - Operations
-    summary: Get informations about the operation
+    summary: lookup an operation by its id.
     description: |
       Get operation''s body and its extended parameters
 

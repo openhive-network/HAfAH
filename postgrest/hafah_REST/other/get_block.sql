@@ -5,9 +5,9 @@ SET ROLE hafah_owner;
   get:
     tags:
       - Other
-    summary: Informations about block
+    summary: Reports global state information at the given block.
     description: |
-      Lists the parameters of the block provided by the user
+      Reports dgpo-style data for a given block.
 
       SQL example
       * `SELECT * FROM hafah_endpoints.get_block(5000000);`
