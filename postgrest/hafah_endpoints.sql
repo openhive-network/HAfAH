@@ -42,7 +42,7 @@ DECLARE
   __params JSON;
   __id JSON;
 
-  __result JSON;
+  __result JSONB;
   __api_type TEXT;
   __method_type TEXT;
   __is_legacy_style BOOLEAN;
@@ -53,7 +53,7 @@ BEGIN
   __params = (__request_data->'params');
   __id = (__request_data->'id');
 
-  SELECT NULL::JSON INTO __result;
+  SELECT NULL::JSONB INTO __result;
 
   IF __jsonrpc != '2.0' OR __jsonrpc IS NULL OR __params IS NULL OR __id IS NULL THEN
     RETURN hafah_backend.raise_exception(-32600, 'Invalid JSON-RPC');
@@ -88,6 +88,11 @@ BEGIN
         SELECT hafah_endpoints.call_get_block_range( __params, __json_type, __id) INTO __result;
       END IF;
     END IF;
+  END IF;
+
+  IF __result = 'null' THEN
+    RAISE NOTICE 'null in % api', __method;
+    __result := '[]'::JSONB;
   END IF;
 
   IF __result IS NULL THEN
