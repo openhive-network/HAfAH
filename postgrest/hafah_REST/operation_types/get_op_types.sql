@@ -20,7 +20,7 @@ hafah_backend.array_of_op_types:
       * `SELECT * FROM hafah_endpoints.get_op_types(''author'');`
 
       REST call example
-      * `GET ''https://%1$s/hafah/operation-types?partial-operation-name=author''`
+      * `GET ''https://%1$s/hafah-api/operation-types?partial-operation-name=author''`
     operationId: hafah_endpoints.get_op_types
     parameters:
       - in: query

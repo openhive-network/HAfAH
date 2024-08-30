@@ -14,7 +14,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_ops_by_block_paging(5000000,''5,64'');`
       
       REST call example
-      * `GET ''https://%1$s/hafah/blocks/5000000/operations?operation-types=80&path-filter=value.creator=steem''`
+      * `GET ''https://%1$s/hafah-api/blocks/5000000/operations?operation-types=80&path-filter=value.creator=steem''`
     operationId: hafah_endpoints.get_ops_by_block_paging
     parameters:
       - in: path

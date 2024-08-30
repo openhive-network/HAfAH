@@ -47,7 +47,7 @@ CREATE TYPE hafah_endpoints.transaction AS (
       * `SELECT * FROM hafah_endpoints.get_transaction(''954f6de36e6715d128fa8eb5a053fc254b05ded0'');`
 
       REST call example
-      * `GET ''https://%1$s/hafah/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0''`
+      * `GET ''https://%1$s/hafah-api/transactions/954f6de36e6715d128fa8eb5a053fc254b05ded0''`
     operationId: hafah_endpoints.get_transaction
     parameters:
       - in: path

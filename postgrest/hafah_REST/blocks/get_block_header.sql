@@ -13,7 +13,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_block_header(500000);`
 
       REST call example
-      * `GET ''https://%1$s/hafah/blocks/500000/header''`
+      * `GET ''https://%1$s/hafah-api/blocks/500000/header''`
     operationId: hafah_endpoints.get_block_header
     parameters:
       - in: path

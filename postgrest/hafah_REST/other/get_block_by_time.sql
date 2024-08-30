@@ -13,7 +13,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_block_by_time(''2016-06-24T16:05:00'');`
       
       REST call example
-      * `GET ''https://%1$s/hafah/block-number-by-date/2016-06-24T16:05:00''`
+      * `GET ''https://%1$s/hafah-api/block-number-by-date/2016-06-24T16:05:00''`
     operationId: hafah_endpoints.get_block_by_time
     parameters:
       - in: path

@@ -14,7 +14,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_block_range(4999999,5000000);`
 
       REST call example
-      * `GET ''https://%1$s/hafah/blocks?from-block=4999999&to-block=5000000''`
+      * `GET ''https://%1$s/hafah-api/blocks?from-block=4999999&to-block=5000000''`
     operationId: hafah_endpoints.get_block_range
     parameters:
       - in: query

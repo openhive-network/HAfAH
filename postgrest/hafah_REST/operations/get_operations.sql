@@ -13,7 +13,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_operations(4999999,5000000);`
 
       REST call example
-      * `GET ''https://%1$s/hafah/operations?from-block=4999999&to-block=5000000&operation-group-type=virtual''`
+      * `GET ''https://%1$s/hafah-api/operations?from-block=4999999&to-block=5000000&operation-group-type=virtual''`
     operationId: hafah_endpoints.get_operations
     parameters:
       - in: query

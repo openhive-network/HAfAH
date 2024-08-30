@@ -13,7 +13,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_operation(3448858738752);`
       
       REST call example
-      * `GET ''https://%1$s/hafah/operations/3448858738752''`
+      * `GET ''https://%1$s/hafah-api/operations/3448858738752''`
     operationId: hafah_endpoints.get_operation
     parameters:
       - in: path

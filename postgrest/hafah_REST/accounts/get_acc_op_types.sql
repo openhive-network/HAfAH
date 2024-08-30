@@ -13,7 +13,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_acc_op_types(''blocktrades'');`
 
       REST call example
-      * `GET ''https://%1$s/hafah/accounts/blocktrades/operations/types''`
+      * `GET ''https://%1$s/hafah-api/accounts/blocktrades/operations/types''`
     operationId: hafah_endpoints.get_acc_op_types
     parameters:
       - in: path

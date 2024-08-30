@@ -13,7 +13,7 @@ SET ROLE hafah_owner;
       * `SELECT * FROM hafah_endpoints.get_head_block_num();`
       
       REST call example
-      * `GET ''https://%1$s/hafah/headblock''`
+      * `GET ''https://%1$s/hafah-api/headblock''`
     operationId: hafah_endpoints.get_head_block_num
     responses:
       '200':
