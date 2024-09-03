@@ -484,7 +484,7 @@ ELSE
       filtered_operations.id::TEXT,
       filtered_operations.trx_in_block::SMALLINT
     FROM (
-    SELECT hafah_backend.operation_body_filter(opr.body, opr.id, _body_limit) as composite, opr.id, opr.block_num, opr.trx_in_block, opr.trx_hash, opr.op_pos, opr.op_type_id, opr.is_virtual, hb.created_at timestamp, NOW() - hb.created_at AS age
+    SELECT hafah_backend.operation_body_filter(opr.body, opr.id, _body_limit) as composite, opr.id, opr.block_num, opr.trx_in_block, opr.trx_hash, opr.op_pos, opr.op_type_id, opr.is_virtual, hb.created_at
     FROM operation_range opr
     JOIN hive.blocks_view hb ON hb.num = opr.block_num
     ) filtered_operations
