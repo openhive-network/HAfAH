@@ -1677,8 +1677,8 @@ declare
           "Other"
         ],
         "summary": "Reports global state information at the given block.",
-        "description": "Reports dgpo-style data for a given block.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block(5000000);`\n\nREST call example      \n* `GET ''https://%1$s/hafah-api/global-state?block-num=5000000''`\n",
-        "operationId": "hafah_endpoints.get_block",
+        "description": "Reports dgpo-style data for a given block.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_global_state(5000000);`\n\nREST call example      \n* `GET ''https://%1$s/hafah-api/global-state?block-num=5000000''`\n",
+        "operationId": "hafah_endpoints.get_global_state",
         "parameters": [
           {
             "in": "query",

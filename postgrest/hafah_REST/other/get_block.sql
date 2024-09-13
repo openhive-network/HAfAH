@@ -10,11 +10,11 @@ SET ROLE hafah_owner;
       Reports dgpo-style data for a given block.
 
       SQL example
-      * `SELECT * FROM hafah_endpoints.get_block(5000000);`
+      * `SELECT * FROM hafah_endpoints.get_global_state(5000000);`
       
       REST call example      
       * `GET ''https://%1$s/hafah-api/global-state?block-num=5000000''`
-    operationId: hafah_endpoints.get_block
+    operationId: hafah_endpoints.get_global_state
     parameters:
       - in: query
         name: block-num
@@ -54,8 +54,8 @@ SET ROLE hafah_owner;
         description: No blocks in the database
  */
 -- openapi-generated-code-begin
-DROP FUNCTION IF EXISTS hafah_endpoints.get_block;
-CREATE OR REPLACE FUNCTION hafah_endpoints.get_block(
+DROP FUNCTION IF EXISTS hafah_endpoints.get_global_state;
+CREATE OR REPLACE FUNCTION hafah_endpoints.get_global_state(
     "block-num" INT
 )
 RETURNS hafah_backend.block 
