@@ -20,8 +20,18 @@ SET ROLE hafah_owner;
         name: block-num
         required: true
         schema:
-          type: integer
-        description: Given block number
+          type: string
+        description: |
+          Given block, can be represented either by a `block-num` (integer) or a `timestamp` (in the format `YYYY-MM-DD HH:MI:SS`),
+
+          The provided `timestamp` will be converted to a `block-num` by finding the first block 
+          where the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`). 
+        
+          The function will interpret and convert the input based on its format, example input:
+
+          * `2016-09-15 19:47:21`
+
+          * `5000000`
     responses:
       '200':
         description: |
@@ -44,7 +54,7 @@ SET ROLE hafah_owner;
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_block_header;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_block_header(
-    "block-num" INT
+    "block-num" TEXT
 )
 RETURNS JSONB 
 -- openapi-generated-code-end
@@ -52,17 +62,24 @@ LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
+    __block INT := hive.convert_to_block_num("block-num");
     __block_num BIGINT = NULL;
     __exception_message TEXT;
 BEGIN
     -- Required argument: block-num
-  IF "block-num" IS NULL THEN
+  IF __block IS NULL THEN
       RETURN hafah_backend.rest_raise_missing_arg('block-num');
   ELSE
-      __block_num = "block-num"::BIGINT;
+      __block_num = __block::BIGINT;
       IF __block_num < 0 THEN
           __block_num := __block_num + ((POW(2, 31) - 1) :: BIGINT);
       END IF;        
+  END IF;
+
+  IF __block <= hive.app_get_irreversible_block() AND __block IS NOT NULL THEN
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
+  ELSE
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   END IF;
 
   BEGIN

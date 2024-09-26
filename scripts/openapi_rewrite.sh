@@ -32,8 +32,7 @@ ENDPOINTS_IN_ORDER="
 ../$endpoints/accounts/get_acc_op_types.sql
 ../$endpoints/other/get_version.sql
 ../$endpoints/other/get_head_block_num.sql
-../$endpoints/other/get_block.sql
-../$endpoints/other/get_block_by_time.sql"
+../$endpoints/other/get_block.sql"
 
 # Function to reverse the lines
 reverse_lines() {

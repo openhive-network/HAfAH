@@ -21,8 +21,18 @@ SET ROLE hafah_owner;
         name: block-num
         required: true
         schema:
-          type: integer
-        description: List operations from given block number
+          type: string
+        description: |
+          Given block, can be represented either by a `block-num` (integer) or a `timestamp` (in the format `YYYY-MM-DD HH:MI:SS`),
+
+          The provided `timestamp` will be converted to a `block-num` by finding the first block 
+          where the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`). 
+        
+          The function will interpret and convert the input based on its format, example input:
+
+          * `2016-09-15 19:47:21`
+
+          * `5000000`
       - in: query
         name: operation-types
         required: false
@@ -138,7 +148,7 @@ SET ROLE hafah_owner;
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_ops_by_block_paging;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_ops_by_block_paging(
-    "block-num" INT,
+    "block-num" TEXT,
     "operation-types" TEXT = NULL,
     "account-name" TEXT = NULL,
     "page" INT = 1,
@@ -156,6 +166,7 @@ SET from_collapse_limit = 16
 AS
 $$
 DECLARE
+  __block INT := hive.convert_to_block_num("block-num");
   _operation_types INT[] := NULL;
   _key_content TEXT[] := NULL;
   _set_of_keys JSON := NULL;
@@ -172,7 +183,7 @@ IF "operation-types" IS NOT NULL THEN
   _operation_types := string_to_array("operation-types", ',')::INT[];
 END IF;
 
-IF "block-num" <= hive.app_get_irreversible_block() THEN
+IF __block <= hive.app_get_irreversible_block() AND __block IS NOT NULL THEN
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
 ELSE
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
@@ -180,7 +191,7 @@ END IF;
 
 RETURN (
   WITH ops_count AS MATERIALIZED (
-    SELECT * FROM hafah_backend.get_ops_by_block_count("block-num", _operation_types, "account-name", _key_content, _set_of_keys)
+    SELECT * FROM hafah_backend.get_ops_by_block_count(__block, _operation_types, "account-name", _key_content, _set_of_keys)
   ),
   calculate_total_pages AS MATERIALIZED (
     SELECT 
@@ -196,7 +207,7 @@ RETURN (
     'operations_result', 
     (SELECT to_json(array_agg(row)) FROM (
       SELECT * FROM hafah_backend.get_ops_by_block(
-      "block-num", 
+      __block, 
       "page",
       "page-size",
       _operation_types,

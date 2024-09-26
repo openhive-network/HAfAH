@@ -62,32 +62,36 @@ SET ROLE hafah_owner;
         name: from-block
         required: false
         schema:
-          type: integer
+          type: string
           default: NULL
-        description: Lower limit of the block range
+        description: |
+          Lower limit of the block range, can be represented either by a block-number (integer) or a timestamp (in the format YYYY-MM-DD HH:MI:SS).
+
+          The provided `timestamp` will be converted to a `block-num` by finding the first block 
+          where the block''s `created_at` is more than or equal to the given `timestamp` (i.e. `block''s created_at >= timestamp`).
+
+          The function will interpret and convert the input based on its format, example input:
+
+          * `2016-09-15 19:47:21`
+
+          * `5000000`
       - in: query
         name: to-block
         required: false
         schema:
-          type: integer
-          default: NULL
-        description: Upper limit of the block range
-      - in: query
-        name: start-date
-        required: false
-        schema:
           type: string
-          format: date-time
           default: NULL
-        description: Lower limit of the time range
-      - in: query
-        name: end-date
-        required: false
-        schema:
-          type: string
-          format: date-time
-          default: NULL
-        description: Upper limit of the time range
+        description: | 
+          Similar to the from-block parameter, can either be a block-number (integer) or a timestamp (formatted as YYYY-MM-DD HH:MI:SS). 
+
+          The provided `timestamp` will be converted to a `block-num` by finding the first block 
+          where the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`).
+          
+          The function will convert the value depending on its format, example input:
+
+          * `2016-09-15 19:47:21`
+
+          * `5000000`
     responses:
       '200':
         description: |
@@ -183,10 +187,8 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_ops_by_account(
     "page" INT = NULL,
     "page-size" INT = 100,
     "data-size-limit" INT = 200000,
-    "from-block" INT = NULL,
-    "to-block" INT = NULL,
-    "start-date" TIMESTAMP = NULL,
-    "end-date" TIMESTAMP = NULL
+    "from-block" TEXT = NULL,
+    "to-block" TEXT = NULL
 )
 RETURNS JSON 
 -- openapi-generated-code-end
@@ -200,25 +202,17 @@ SET plan_cache_mode = force_custom_plan
 AS
 $$
 DECLARE 
+  _block_range hive.blocks_range := hive.convert_to_blocks_range("from-block","to-block");
   _ops_count BIGINT;
   _calculate_total_pages INT; 
   _operation_types INT[] := (SELECT string_to_array("operation-types", ',')::INT[]);
 BEGIN
-IF "start-date" IS NOT NULL THEN
-  "from-block" := (SELECT num FROM hive.blocks_view bv WHERE bv.created_at >= "start-date" ORDER BY created_at ASC LIMIT 1);
-  ASSERT "from-block" IS NOT NULL, 'No block found for the given start-date';
-END IF;
-IF "end-date" IS NOT NULL THEN  
-  "to-block" := (SELECT num FROM hive.blocks_view bv WHERE bv.created_at < "end-date" ORDER BY created_at DESC LIMIT 1);
-  ASSERT "to-block" IS NOT NULL, 'No block found for the given end-date';
-END IF;
-
-SELECT hafah_backend.get_account_operations_count(_operation_types, "account-name", "from-block", "to-block") INTO _ops_count;
+SELECT hafah_backend.get_account_operations_count(_operation_types, "account-name", _block_range.first_block, _block_range.last_block) INTO _ops_count;
 
 SELECT (CASE WHEN (_ops_count % "page-size") = 0 THEN 
     _ops_count/"page-size" ELSE ((_ops_count/"page-size") + 1) END)::INT INTO _calculate_total_pages;
 
-IF "to-block" <= hive.app_get_irreversible_block() OR ("page" IS NOT NULL AND _calculate_total_pages != "page") THEN
+IF (_block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL) OR ("page" IS NOT NULL AND _calculate_total_pages != "page") THEN
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
 ELSE
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
@@ -244,11 +238,11 @@ RETURN (
       (CASE WHEN "page" IS NULL THEN 1 ELSE ((_calculate_total_pages - "page") + 1) END)::INT,
       "page-size",
       _operation_types,
-      "from-block",
-      "to-block",
+      _block_range.first_block,
+      _block_range.last_block,
       "data-size-limit",
-       (_ops_count % "page-size")::INT,
-       _ops_count::INT)
+      (_ops_count % "page-size")::INT,
+      _ops_count::INT)
 
 -- to return the first page with the rest of the division of ops count the number is handed over to backend function
     ) row)

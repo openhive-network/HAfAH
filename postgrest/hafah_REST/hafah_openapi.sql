@@ -299,20 +299,20 @@ declare
             "name": "from-block",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "default": null
             },
-            "description": "The lower bound for a block''s range"
+            "description": "Lower limit of the block range, can be represented either by a block-number (integer) or a timestamp (in the format YYYY-MM-DD HH:MI:SS).\n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is more than or equal to the given `timestamp` (i.e. `block''s created_at >= timestamp`).\n\nThe function will interpret and convert the input based on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
           },
           {
             "in": "query",
             "name": "to-block",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "default": null
             },
-            "description": "The higher bound for a block''s range"
+            "description": "Similar to the from-block parameter, can either be a block-number (integer) or a timestamp (formatted as YYYY-MM-DD HH:MI:SS). \n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`).\n\nThe function will convert the value depending on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
           }
         ],
         "responses": {
@@ -559,9 +559,9 @@ declare
             "name": "block-num",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
-            "description": "Given block number"
+            "description": "Given block, can be represented either by a `block-num` (integer) or a `timestamp` (in the format `YYYY-MM-DD HH:MI:SS`),\n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`). \n\nThe function will interpret and convert the input based on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
           }
         ],
         "responses": {
@@ -696,9 +696,9 @@ declare
             "name": "block-num",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
-            "description": "Given block number"
+            "description": "Given block, can be represented either by a `block-num` (integer) or a `timestamp` (in the format `YYYY-MM-DD HH:MI:SS`),\n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`). \n\nThe function will interpret and convert the input based on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
           }
         ],
         "responses": {
@@ -739,9 +739,9 @@ declare
             "name": "block-num",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
-            "description": "List operations from given block number"
+            "description": "Given block, can be represented either by a `block-num` (integer) or a `timestamp` (in the format `YYYY-MM-DD HH:MI:SS`),\n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`). \n\nThe function will interpret and convert the input based on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
           },
           {
             "in": "query",
@@ -885,20 +885,20 @@ declare
             "name": "from-block",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "default": null
             },
-            "description": null
+            "description": "Lower limit of the block range, can be represented either by a block-number (integer) or a timestamp (in the format YYYY-MM-DD HH:MI:SS).\n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is more than or equal to the given `timestamp` (i.e. `block''s created_at >= timestamp`).\n\nThe function will interpret and convert the input based on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
           },
           {
             "in": "query",
             "name": "to-block",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "default": null
             },
-            "description": "The distance between the blocks can be a maximum of 2000"
+            "description": "Similar to the from-block parameter, can either be a block-number (integer) or a timestamp (formatted as YYYY-MM-DD HH:MI:SS). \n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`).\n\nThe function will convert the value depending on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
           },
           {
             "in": "query",
@@ -1420,42 +1420,20 @@ declare
             "name": "from-block",
             "required": false,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "default": null
             },
-            "description": "Lower limit of the block range"
+            "description": "Lower limit of the block range, can be represented either by a block-number (integer) or a timestamp (in the format YYYY-MM-DD HH:MI:SS).\n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is more than or equal to the given `timestamp` (i.e. `block''s created_at >= timestamp`).\n\nThe function will interpret and convert the input based on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
           },
           {
             "in": "query",
             "name": "to-block",
             "required": false,
             "schema": {
-              "type": "integer",
-              "default": null
-            },
-            "description": "Upper limit of the block range"
-          },
-          {
-            "in": "query",
-            "name": "start-date",
-            "required": false,
-            "schema": {
               "type": "string",
-              "format": "date-time",
               "default": null
             },
-            "description": "Lower limit of the time range"
-          },
-          {
-            "in": "query",
-            "name": "end-date",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "default": null
-            },
-            "description": "Upper limit of the time range"
+            "description": "Similar to the from-block parameter, can either be a block-number (integer) or a timestamp (formatted as YYYY-MM-DD HH:MI:SS). \n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`).\n\nThe function will convert the value depending on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
           }
         ],
         "responses": {
@@ -1685,9 +1663,9 @@ declare
             "name": "block-num",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
-            "description": "Given block number"
+            "description": "Given block, can be represented either by a `block-num` (integer) or a `timestamp` (in the format `YYYY-MM-DD HH:MI:SS`),\n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`). \n\nThe function will interpret and convert the input based on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
           }
         ],
         "responses": {
@@ -1724,41 +1702,6 @@ declare
           },
           "404": {
             "description": "No blocks in the database"
-          }
-        }
-      }
-    },
-    "/block-number-by-date/{timestamp}": {
-      "get": {
-        "tags": [
-          "Other"
-        ],
-        "summary": "Returns last created block for given date.",
-        "description": "Returns last created block number for given date\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block_by_time(''2016-06-24T16:05:00'');`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/block-number-by-date/2016-06-24T16:05:00''`\n",
-        "operationId": "hafah_endpoints.get_block_by_time",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "timestamp",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "description": "Given date"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "No blocks created at that time",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer"
-                },
-                "example": 2621429
-              }
-            }
           }
         }
       }

@@ -20,16 +20,36 @@ SET ROLE hafah_owner;
         name: from-block
         required: true
         schema:
-          type: integer
+          type: string
           default: NULL
-        description: 
+        description: |
+          Lower limit of the block range, can be represented either by a block-number (integer) or a timestamp (in the format YYYY-MM-DD HH:MI:SS).
+
+          The provided `timestamp` will be converted to a `block-num` by finding the first block 
+          where the block''s `created_at` is more than or equal to the given `timestamp` (i.e. `block''s created_at >= timestamp`).
+
+          The function will interpret and convert the input based on its format, example input:
+
+          * `2016-09-15 19:47:21`
+
+          * `5000000`
       - in: query
         name: to-block
         required: true
         schema:
-          type: integer
+          type: string
           default: NULL
-        description: The distance between the blocks can be a maximum of 2000
+        description: | 
+          Similar to the from-block parameter, can either be a block-number (integer) or a timestamp (formatted as YYYY-MM-DD HH:MI:SS). 
+
+          The provided `timestamp` will be converted to a `block-num` by finding the first block 
+          where the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`).
+          
+          The function will convert the value depending on its format, example input:
+
+          * `2016-09-15 19:47:21`
+
+          * `5000000`
       - in: query
         name: operation-types
         required: false
@@ -252,8 +272,8 @@ SET ROLE hafah_owner;
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_operations;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_operations(
-    "from-block" INT = NULL,
-    "to-block" INT = NULL,
+    "from-block" TEXT = NULL,
+    "to-block" TEXT = NULL,
     "operation-types" TEXT = NULL,
     "operation-group-type" hafah_backend.operation_group_types = 'all',
     "operation-begin" BIGINT = -1,
@@ -266,16 +286,24 @@ LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
+  _block_range hive.blocks_range := hive.convert_to_blocks_range("from-block","to-block");
   _operation_types INT[] := NULL;
   __exception_message TEXT;
   _operation_group_types BOOLEAN := (CASE WHEN "operation-group-type" = 'real' THEN FALSE WHEN "operation-group-type" = 'virtual' THEN TRUE ELSE NULL END);
 BEGIN
+
+  IF _block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL THEN
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
+  ELSE
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
+  END IF;
+
     -- Required argument: to-block, from-block
-  IF "from-block" IS NULL THEN
+  IF _block_range.first_block IS NULL THEN
     RETURN hafah_backend.rest_raise_missing_arg('from-block');
   END IF;
 
-  IF "to-block" IS NULL THEN
+  IF _block_range.last_block IS NULL THEN
     RETURN hafah_backend.rest_raise_missing_arg('to-block');
   END IF;
 
@@ -285,8 +313,8 @@ BEGIN
 
   BEGIN
     RETURN hafah_python.get_rest_ops_in_blocks_json(
-      "from-block",
-      "to-block",
+      _block_range.first_block,
+      _block_range.last_block,
       _operation_group_types,
       _operation_types,
       "operation-begin",
