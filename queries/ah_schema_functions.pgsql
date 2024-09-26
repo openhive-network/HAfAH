@@ -331,7 +331,7 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_transaction( in _block_num INT, in _trx_in_block INT, in _is_legacy_style BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.get_ops_in_transaction( in _block_num INT, in _trx_in_block INT, in _is_legacy_style BOOLEAN, in _include_virtual BOOLEAN = FALSE)
 RETURNS TABLE(
     _value TEXT
 )
@@ -348,7 +348,7 @@ BEGIN
       ) AS _value
     FROM hive.operations_view ho
     JOIN hive.operation_types hot ON ho.op_type_id = hot.id
-    WHERE ho.block_num = _block_num AND ho.trx_in_block = _trx_in_block AND hot.is_virtual = FALSE
+    WHERE ho.block_num = _block_num AND ho.trx_in_block = _trx_in_block AND (_include_virtual OR hot.is_virtual = FALSE)
     ORDER BY ho.id;
 END
 $function$
@@ -602,7 +602,7 @@ SET plan_cache_mode=force_generic_plan
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION hafah_python.get_transaction_json( in _trx_hash BYTEA, in _include_reversible BOOLEAN, _is_legacy_style BOOLEAN )
+CREATE OR REPLACE FUNCTION hafah_python.get_transaction_json( in _trx_hash BYTEA, in _include_reversible BOOLEAN, _is_legacy_style BOOLEAN, _include_virtual BOOLEAN = FALSE)
 RETURNS JSON
 AS
 $function$
@@ -630,7 +630,7 @@ BEGIN
         pre_result._expiration AS "expiration",
         (
           SELECT ARRAY(
-            SELECT _value ::JSON FROM hafah_python.get_ops_in_transaction(pre_result._block_num, pre_result._trx_in_block, _is_legacy_style)
+            SELECT _value ::JSON FROM hafah_python.get_ops_in_transaction(pre_result._block_num, pre_result._trx_in_block, _is_legacy_style, _include_virtual)
           )
         ) AS "operations",
         (

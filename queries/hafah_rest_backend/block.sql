@@ -1,6 +1,6 @@
 SET ROLE hafah_owner;
 
-CREATE OR REPLACE FUNCTION hafah_python.get_block_json( _block_num INT )
+CREATE OR REPLACE FUNCTION hafah_python.get_block_json( _block_num INT,  _include_virtual BOOLEAN = FALSE)
     RETURNS JSONB
     LANGUAGE plpgsql
     VOLATILE
@@ -10,7 +10,7 @@ DECLARE
     __block hive.block_type;
     __result JSON;
 BEGIN
-    SELECT * FROM hive.get_block( _block_num ) INTO __block;
+    SELECT * FROM hive.get_block( _block_num, _include_virtual) INTO __block;
 
     IF __block.timestamp IS NULL THEN
         RETURN jsonb_build_object();

@@ -56,6 +56,14 @@ CREATE TYPE hafah_endpoints.transaction AS (
         schema:
           type: string
         description: transaction id of transaction to look up
+      - in: query
+        name: include-virtual
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: |
+          If true, virtual operations will be included.
     responses:
       '200':
         description: |
@@ -97,7 +105,8 @@ CREATE TYPE hafah_endpoints.transaction AS (
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_transaction;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_transaction(
-    "transaction-id" TEXT
+    "transaction-id" TEXT,
+    "include-virtual" BOOLEAN = False
 )
 RETURNS hafah_endpoints.transaction 
 -- openapi-generated-code-end
@@ -112,7 +121,7 @@ BEGIN
   SELECT transaction_json::JSON,
   bv.created_at
   -- _trx_hash TEXT -> BYTEA, __include_reversible = TRUE, __is_legacy_style = FALSE
-  FROM hafah_python.get_transaction_json(('\x' || "transaction-id")::BYTEA, TRUE, FALSE) AS transaction_json
+  FROM hafah_python.get_transaction_json(('\x' || "transaction-id")::BYTEA, TRUE, FALSE, "include-virtual") AS transaction_json
   JOIN hive.blocks_view bv ON bv.num = (transaction_json->>'block_num')::INT
   )
   SELECT 

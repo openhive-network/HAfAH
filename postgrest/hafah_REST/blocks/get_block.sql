@@ -32,6 +32,14 @@ SET ROLE hafah_owner;
           * `2016-09-15 19:47:21`
 
           * `5000000`
+      - in: query
+        name: include-virtual
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: |
+          If true, virtual operations will be included.
     responses:
       '200':
         description: |
@@ -148,7 +156,8 @@ SET ROLE hafah_owner;
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_block;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_block(
-    "block-num" TEXT
+    "block-num" TEXT,
+    "include-virtual" BOOLEAN = False
 )
 RETURNS JSONB 
 -- openapi-generated-code-end
@@ -177,7 +186,7 @@ BEGIN
   END IF;
 
   BEGIN
-    RETURN hafah_python.get_block_json(__block_num::INT);
+    RETURN hafah_python.get_block_json(__block_num::INT, "include-virtual");
 
     EXCEPTION
       WHEN invalid_text_representation THEN

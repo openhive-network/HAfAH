@@ -562,6 +562,16 @@ declare
               "type": "string"
             },
             "description": "Given block, can be represented either by a `block-num` (integer) or a `timestamp` (in the format `YYYY-MM-DD HH:MI:SS`),\n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`). \n\nThe function will interpret and convert the input based on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
+          },
+          {
+            "in": "query",
+            "name": "include-virtual",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "If true, virtual operations will be included.\n"
           }
         ],
         "responses": {
@@ -1311,6 +1321,16 @@ declare
               "type": "string"
             },
             "description": "transaction id of transaction to look up"
+          },
+          {
+            "in": "query",
+            "name": "include-virtual",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "If true, virtual operations will be included.\n"
           }
         ],
         "responses": {
