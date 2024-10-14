@@ -117,10 +117,8 @@ def test_get_transaction_in_reversible_block(
     init_node, haf_node, postgrest_hafah, wallet, include_reversible
 ):
     wallet.close()
-    wallet = tt.Wallet(
-        attach_to=init_node, additional_arguments=["--transaction-serialization=hf26"]
-    )
-    transaction = wallet.create_account(f"ewa-{int(include_reversible)}")
+    wallet = tt.Wallet(attach_to=init_node)
+    transaction = wallet.create_account(f"ewa-{int(include_reversible)}").dict()
     if not include_reversible:
         haf_node.wait_for_irreversible_block()
     # delete one additional key to compare transactions
