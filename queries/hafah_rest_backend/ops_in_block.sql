@@ -273,7 +273,7 @@ BEGIN
         (
           WITH accepted_types AS MATERIALIZED
           (
-            SELECT ot.id FROM hive.operation_types ot WHERE __resolved_filter_exists AND ot.id=ANY(_operation_types)
+            SELECT ot.id FROM hive_data.operation_types ot WHERE __resolved_filter_exists AND ot.id=ANY(_operation_types)
           )
           (
             SELECT
@@ -397,7 +397,7 @@ IF _account IS NULL THEN
       LIMIT _page_size
       OFFSET _offset
     ) ls
-    JOIN hive.operation_types hot ON hot.id = ls.op_type_id
+    JOIN hive_data.operation_types hot ON hot.id = ls.op_type_id
     LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ls.trx_in_block
     ORDER BY
       (CASE WHEN _order_is = 'desc' THEN ls.id ELSE NULL END) DESC,
@@ -466,7 +466,7 @@ ELSE
       LIMIT _page_size
       OFFSET _offset
     ) ls
-    JOIN hive.operation_types hot ON hot.id = ls.op_type_id
+    JOIN hive_data.operation_types hot ON hot.id = ls.op_type_id
     LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ls.trx_in_block
     ORDER BY
       (CASE WHEN _order_is = 'desc' THEN ls.id ELSE NULL END) DESC,
