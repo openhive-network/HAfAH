@@ -162,7 +162,7 @@ BEGIN
       SELECT
         COALESCE((SELECT block_num FROM pag), (
           CASE
-            WHEN _end_block_num > (SELECT num FROM hive.blocks ORDER BY num DESC LIMIT 1) THEN 0
+            WHEN _end_block_num > (SELECT num FROM hafd.blocks ORDER BY num DESC LIMIT 1) THEN 0
             ELSE _end_block_num
           END
         )) AS next_block_range_begin,
@@ -273,7 +273,7 @@ BEGIN
         (
           WITH accepted_types AS MATERIALIZED
           (
-            SELECT ot.id FROM hive.operation_types ot WHERE __resolved_filter_exists AND ot.id=ANY(_operation_types)
+            SELECT ot.id FROM hafd.operation_types ot WHERE __resolved_filter_exists AND ot.id=ANY(_operation_types)
           )
           (
             SELECT
@@ -397,7 +397,7 @@ IF _account IS NULL THEN
       LIMIT _page_size
       OFFSET _offset
     ) ls
-    JOIN hive.operation_types hot ON hot.id = ls.op_type_id
+    JOIN hafd.operation_types hot ON hot.id = ls.op_type_id
     LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ls.trx_in_block
     ORDER BY
       (CASE WHEN _order_is = 'desc' THEN ls.id ELSE NULL END) DESC,
@@ -466,7 +466,7 @@ ELSE
       LIMIT _page_size
       OFFSET _offset
     ) ls
-    JOIN hive.operation_types hot ON hot.id = ls.op_type_id
+    JOIN hafd.operation_types hot ON hot.id = ls.op_type_id
     LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ls.trx_in_block
     ORDER BY
       (CASE WHEN _order_is = 'desc' THEN ls.id ELSE NULL END) DESC,

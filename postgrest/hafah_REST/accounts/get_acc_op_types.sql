@@ -90,7 +90,7 @@ BEGIN
     WITH op_types_cte AS 
     (
       SELECT id
-      FROM hive.operation_types hot
+      FROM hafd.operation_types hot
       WHERE (
         SELECT EXISTS (
           SELECT 1 FROM hive.account_operations_view aov WHERE aov.account_id = __account_id AND aov.op_type_id = hot.id))

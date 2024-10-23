@@ -34,7 +34,7 @@ CREATE VIEW hafah_python.helper_operations_view AS SELECT
 FROM
   hive.operations_view hov
 JOIN
-  hive.operation_types hot
+  hafd.operation_types hot
 ON
   hov.op_type_id=hot.id
 ;
@@ -143,7 +143,7 @@ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION hafah_python.translate_enum_virtual_ops_filter(_in BIGINT) RETURNS SMALLINT[] AS
 $function$
 BEGIN
-  RETURN ( SELECT hafah_python.get_bit_positions_64(_in, (SELECT id FROM hive.operation_types WHERE is_virtual=TRUE ORDER BY id ASC LIMIT 1) ) );
+  RETURN ( SELECT hafah_python.get_bit_positions_64(_in, (SELECT id FROM hafd.operation_types WHERE is_virtual=TRUE ORDER BY id ASC LIMIT 1) ) );
 END;
 $function$
 LANGUAGE plpgsql IMMUTABLE;
@@ -347,7 +347,7 @@ BEGIN
         END
       ) AS _value
     FROM hive.operations_view ho
-    JOIN hive.operation_types hot ON ho.op_type_id = hot.id
+    JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
     WHERE ho.block_num = _block_num AND ho.trx_in_block = _trx_in_block AND (_include_virtual OR hot.is_virtual = FALSE)
     ORDER BY ho.id;
 END
@@ -519,7 +519,7 @@ BEGIN
   IF _include_reversible THEN
     SELECT INTO __account_id ( select id from hive.accounts_view where name = _account );
   ELSE
-    SELECT INTO __account_id ( select id from hive.accounts where name = _account );
+    SELECT INTO __account_id ( select id from hafd.accounts where name = _account );
   END IF;
 
   __use_filter := array_length( __resolved_filter, 1 );
@@ -554,7 +554,7 @@ BEGIN
       (
         WITH accepted_types AS MATERIALIZED
         (
-          SELECT ot.id FROM hive.operation_types ot WHERE __use_filter IS NOT NULL AND ot.id=ANY(__resolved_filter)
+          SELECT ot.id FROM hafd.operation_types ot WHERE __use_filter IS NOT NULL AND ot.id=ANY(__resolved_filter)
         )
         (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
         FROM hive.account_operations_view hao
@@ -573,7 +573,7 @@ BEGIN
 
       ) ds
       JOIN LATERAL (SELECT hov.body, hov.body_binary, hov.op_pos, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
-      JOIN LATERAL (select ot.is_virtual FROM hive.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
+      JOIN LATERAL (select ot.is_virtual FROM hafd.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
       ORDER BY ds.account_op_seq_no ASC
 
     )
@@ -805,7 +805,7 @@ BEGIN
         )
         SELECT o.block_num, o.id
         FROM hive.operations_view o
-        JOIN hive.operation_types ot ON o.op_type_id = ot.id
+        JOIN hafd.operation_types ot ON o.op_type_id = ot.id
         WHERE
           ot.is_virtual=TRUE
           AND o.block_num>=(SELECT blk FROM pre_result_in)
@@ -819,7 +819,7 @@ BEGIN
       SELECT
         COALESCE((SELECT block_num FROM pag), (
           CASE
-            WHEN _block_range_end > (SELECT num FROM hive.blocks ORDER BY num DESC LIMIT 1) THEN 0
+            WHEN _block_range_end > (SELECT num FROM hafd.blocks ORDER BY num DESC LIMIT 1) THEN 0
             ELSE _block_range_end
           END
         )) AS next_block_range_begin,

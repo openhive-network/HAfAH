@@ -108,7 +108,7 @@ BEGIN
   IF _include_reversible THEN
     SELECT INTO __account_id ( select id from hive.accounts_view where name = _account );
   ELSE
-    SELECT INTO __account_id ( select id from hive.accounts where name = _account );
+    SELECT INTO __account_id ( select id from hafd.accounts where name = _account );
   END IF;
 
   __use_filter := array_length( __resolved_filter, 1 );
@@ -144,7 +144,7 @@ BEGIN
       (
         WITH accepted_types AS MATERIALIZED
         (
-          SELECT ot.id FROM hive.operation_types ot WHERE __use_filter IS NOT NULL AND ot.id=ANY(__resolved_filter)
+          SELECT ot.id FROM hafd.operation_types ot WHERE __use_filter IS NOT NULL AND ot.id=ANY(__resolved_filter)
         )
         (SELECT hao.operation_id, hao.op_type_id,hao.block_num, hao.account_op_seq_no
         FROM hive.account_operations_view hao
@@ -163,7 +163,7 @@ BEGIN
 
       ) ds
       JOIN LATERAL (SELECT hov.body, hov.body_binary, hov.op_pos, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
-      JOIN LATERAL (select ot.is_virtual FROM hive.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
+      JOIN LATERAL (select ot.is_virtual FROM hafd.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
       ORDER BY ds.account_op_seq_no ASC
 
     )
@@ -245,7 +245,7 @@ WITH operation_range AS MATERIALIZED (
     hot.is_virtual
   FROM (
   WITH op_filter AS MATERIALIZED (
-      SELECT ARRAY_AGG(ot.id) as op_id FROM hive.operation_types ot WHERE (CASE WHEN _filter IS NOT NULL THEN ot.id = ANY(_filter) ELSE TRUE END)
+      SELECT ARRAY_AGG(ot.id) as op_id FROM hafd.operation_types ot WHERE (CASE WHEN _filter IS NOT NULL THEN ot.id = ANY(_filter) ELSE TRUE END)
   ),
 -- changing filtering method from block_num to operation_id
 	ops_from_start_block as MATERIALIZED
@@ -291,7 +291,7 @@ WITH operation_range AS MATERIALIZED (
     OFFSET (CASE WHEN _page_num = 1 OR NOT __no_filters THEN 0 ELSE __offset END)
   ) ls
   JOIN hive.operations_view ov ON ov.id = ls.operation_id
-  JOIN hive.operation_types hot ON hot.id = ls.op_type_id
+  JOIN hafd.operation_types hot ON hot.id = ls.op_type_id
   LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ov.trx_in_block
   )
 -- filter too long operation bodies 
@@ -348,7 +348,7 @@ IF __no_ops_filter = TRUE AND __no_start_date = TRUE AND __no_end_date = TRUE TH
 ELSE
   RETURN (
     WITH op_filter AS MATERIALIZED (
-      SELECT ARRAY_AGG(ot.id) as op_id FROM hive.operation_types ot WHERE (CASE WHEN _operations IS NOT NULL THEN ot.id = ANY(_operations) ELSE TRUE END)
+      SELECT ARRAY_AGG(ot.id) as op_id FROM hafd.operation_types ot WHERE (CASE WHEN _operations IS NOT NULL THEN ot.id = ANY(_operations) ELSE TRUE END)
     ),
     account_id AS MATERIALIZED (
       SELECT av.id FROM hive.accounts_view av WHERE av.name = _account
