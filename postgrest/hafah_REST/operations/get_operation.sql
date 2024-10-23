@@ -101,7 +101,7 @@ RETURN (
       ov.trx_in_block
   )
     FROM hive.operations_view_extended ov
-    JOIN hive.operation_types hot ON hot.id = ov.op_type_id
+    JOIN hafd.operation_types hot ON hot.id = ov.op_type_id
     LEFT JOIN hive.transactions_view htv ON htv.block_num = ov.block_num AND htv.trx_in_block = ov.trx_in_block
 	  WHERE ov.id = "operation-id"
 );

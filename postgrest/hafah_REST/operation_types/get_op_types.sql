@@ -70,7 +70,7 @@ BEGIN
 
   RETURN QUERY SELECT
     id::INT, split_part(name, '::', 3), is_virtual
-  FROM hive.operation_types
+  FROM hafd.operation_types
   WHERE ((__operation_name IS NULL) OR (name LIKE __operation_name))
   ORDER BY id ASC
   ;
