@@ -180,9 +180,9 @@ build_setup_docker_image:
     - public-runner-docker
   script:
     - "echo \"TRUNCATE TABLE hafah_python.version; INSERT INTO hafah_python.version(git_hash) VALUES ('$CI_COMMIT_SHA');\" > set_version_in_sql.pgsql"
-    - "docker build --tag=$CI_REGISTRY_IMAGE/setup:$CI_COMMIT_SHORT_SHA -f Dockerfile.setup ."
+    - "docker build --tag=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -f Dockerfile.setup ."
     - "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-    - "docker push $CI_REGISTRY_IMAGE/setup:$CI_COMMIT_SHORT_SHA"
+    - "docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
 
 .pattern_tests:
   extends: .haf_app_pattern_tests_template
