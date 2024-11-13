@@ -635,7 +635,10 @@ BEGIN
         ) AS "operations",
         (
         CASE
-          WHEN pre_result._multisig_number = 0 THEN ARRAY[pre_result._signature]
+          WHEN pre_result._multisig_number = 0 AND pre_result._signature IS NOT NULL
+            THEN ARRAY[pre_result._signature]
+          WHEN pre_result._multisig_number = 0 AND pre_result._signature IS  NULL 
+            THEN '{}'
           ELSE (
             array_prepend(
               pre_result._signature,
