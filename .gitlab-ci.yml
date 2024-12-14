@@ -1,8 +1,8 @@
 stages:
-  - build
-  - test
-  - publish
-  - cleanup
+- build
+- test
+- publish
+- cleanup
 
 variables:
   GIT_STRATEGY: clone
@@ -26,10 +26,10 @@ variables:
 
   # Allow access from any network to eliminate CI IP addressing problems
   HAF_DB_ACCESS: |
-              "host    all              haf_admin        0.0.0.0/0    trust"
-              "host    all              hived            0.0.0.0/0    trust"
-              "host    all              hafah_user       0.0.0.0/0    trust"
-              "host    all              all              0.0.0.0/0    scram-sha-256"
+    "host    all              haf_admin        0.0.0.0/0    trust"
+    "host    all              hived            0.0.0.0/0    trust"
+    "host    all              hafah_user       0.0.0.0/0    trust"
+    "host    all              all              0.0.0.0/0    scram-sha-256"
 
 
   # Variables required by Common CI jobs
@@ -42,18 +42,18 @@ variables:
   BLOCK_LOG_SOURCE_DIR_5M: /blockchain/block_log_5m
 
 include:
-  - template: Workflows/Branch-Pipelines.gitlab-ci.yml
-  - project: 'hive/haf'
-    ref: 6fa48e73dcf06140424d8c70e610fa421313ac0d # develop
-    file: '/scripts/ci-helpers/prepare_data_image_job.yml'
-  - project: 'hive/common-ci-configuration'
-    ref: f197ce0134cb92761a0f0e6c315bc3d79747e0e1 # develop # It seems a variable cannot be used here
-    file:
-      - '/templates/test_jobs.gitlab-ci.yml'
-      - '/templates/python_projects.gitlab-ci.yml'
-      - '/templates/docker_image_jobs.gitlab-ci.yml'
-      - '/templates/cache_cleanup.gitlab-ci.yml'
-      - '/templates/npm_projects.gitlab-ci.yml'
+- template: Workflows/Branch-Pipelines.gitlab-ci.yml
+- project: 'hive/haf'
+  ref: e52e41222bf6586c39100ece8e1e64515df0302f   # develop
+  file: '/scripts/ci-helpers/prepare_data_image_job.yml'
+- project: 'hive/common-ci-configuration'
+  ref: f197ce0134cb92761a0f0e6c315bc3d79747e0e1   # develop # It seems a variable cannot be used here
+  file:
+  - '/templates/test_jobs.gitlab-ci.yml'
+  - '/templates/python_projects.gitlab-ci.yml'
+  - '/templates/docker_image_jobs.gitlab-ci.yml'
+  - '/templates/cache_cleanup.gitlab-ci.yml'
+  - '/templates/npm_projects.gitlab-ci.yml'
 
 verify_poetry_lock_sanity:
   extends: .verify_poetry_lock_sanity_template
@@ -61,7 +61,7 @@ verify_poetry_lock_sanity:
   variables:
     PYPROJECT_DIR: "$CI_PROJECT_DIR/tests/integration/hafah-local-tools"
   tags:
-    - public-runner-docker
+  - public-runner-docker
 
 prepare_hived_image:
   extends: .prepare_hived_image
@@ -71,21 +71,21 @@ prepare_hived_image:
     REGISTRY_USER: "$HIVED_CI_IMGBUILDER_USER"
     REGISTRY_PASS: $HIVED_CI_IMGBUILDER_PASSWORD
   tags:
-    - public-runner-docker
-    - hived-for-tests
+  - public-runner-docker
+  - hived-for-tests
 
 prepare_hived_data:
   extends: .prepare_hived_data_5m
   needs:
-    - job: prepare_hived_image
-      artifacts: true
+  - job: prepare_hived_image
+    artifacts: true
   stage: build
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
   tags:
-    - data-cache-storage
+  - data-cache-storage
 
 prepare_haf_image:
   extends: .prepare_haf_image
@@ -95,8 +95,8 @@ prepare_haf_image:
     REGISTRY_USER: "$CI_IMG_BUILDER_USER"
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
   tags:
-    - public-runner-docker
-    - hived-for-tests
+  - public-runner-docker
+  - hived-for-tests
 
 extract-swagger-json:
   extends: .filter_out_swagger_json
@@ -104,7 +104,7 @@ extract-swagger-json:
   variables:
     INPUT_SQL_SWAGGER_FILE: "${CI_PROJECT_DIR}/postgrest/hafah_REST/hafah_openapi.sql"
   tags:
-    - public-runner-docker
+  - public-runner-docker
 
 generate-wax-spec:
   extends: .generate_swagger_package
@@ -115,23 +115,23 @@ generate-wax-spec:
     NPM_PACKAGE_SCOPE: "@hiveio"
     NPM_PACKAGE_NAME: "wax-api-hafah"
   needs:
-    - job: extract-swagger-json
-      artifacts: true
+  - job: extract-swagger-json
+    artifacts: true
   tags:
-    - public-runner-docker
+  - public-runner-docker
 
 prepare_haf_data:
   extends: .prepare_haf_data_5m
   needs:
-    - job: prepare_haf_image
-      artifacts: true
+  - job: prepare_haf_image
+    artifacts: true
   stage: build
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
   tags:
-    - data-cache-storage
+  - data-cache-storage
 
 .prepare_hafah_image:
   extends: .docker_image_builder_job
@@ -144,28 +144,28 @@ prepare_haf_data:
     GIT_STRATEGY: "clone"
 
   script:
-    - |
-      echo $HAFAH_IMAGE_NAME
-      echo $SOURCE_DIR
-      scripts/ci-helpers/build_instance.sh
-      docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
-      docker push "$HAFAH_IMAGE_NAME"
-      docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG"
-      echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
-      if [[ -n "$CI_COMMIT_TAG" ]]; then
-        docker tag "$HAFAH_IMAGE_NAME" "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
-        docker push "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
-        docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
-        docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
-      fi
+  - |
+    echo $HAFAH_IMAGE_NAME
+    echo $SOURCE_DIR
+    scripts/ci-helpers/build_instance.sh
+    docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
+    docker push "$HAFAH_IMAGE_NAME"
+    docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG"
+    echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
+    if [[ -n "$CI_COMMIT_TAG" ]]; then
+      docker tag "$HAFAH_IMAGE_NAME" "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
+      docker push "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
+      docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
+      docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
+    fi
 
   artifacts:
     reports:
       dotenv: docker_image_name.env
 
   tags:
-    - public-runner-docker
-    - hived-for-tests
+  - public-runner-docker
+  - hived-for-tests
 
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
@@ -177,12 +177,14 @@ build_setup_docker_image:
   extends: .docker_image_builder_job
   stage: build
   tags:
-    - public-runner-docker
+  - public-runner-docker
   script:
-    - "echo \"TRUNCATE TABLE hafah_python.version; INSERT INTO hafah_python.version(git_hash) VALUES ('$CI_COMMIT_SHA');\" > set_version_in_sql.pgsql"
-    - "docker build --tag=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -f Dockerfile.setup ."
-    - "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-    - "docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+  - "echo \"TRUNCATE TABLE hafah_python.version; INSERT INTO hafah_python.version(git_hash)\
+    \ VALUES ('$CI_COMMIT_SHA');\" > set_version_in_sql.pgsql"
+  - "docker build --tag=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -f Dockerfile.setup\
+    \ ."
+  - "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+  - "docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
 
 .pattern_tests:
   extends: .haf_app_pattern_tests_template
@@ -193,22 +195,23 @@ build_setup_docker_image:
     HAF_APP_USER: "hafah_user"
 
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
-    POETRY_INSTALL_ROOT_DIR : ${POETRY_INSTALL_DIR}
+    POETRY_INSTALL_ROOT_DIR: ${POETRY_INSTALL_DIR}
 
-    TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
+    TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex\
+      \ or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
     PATTERN_TESTS_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/api_tests/pattern_tests"
     JUNIT_REPORT: "haf/hive/tests/python/api_tests/pattern_tests/results.xml"
     DIRECT_CALLS: 0
     HIVED_UID: $HIVED_UID
 
   needs:
-    - job: prepare_haf_data
-      artifacts: true
+  - job: prepare_haf_data
+    artifacts: true
 
   before_script:
-    - !reference [.haf_app_pattern_tests_template, before_script]
-    - echo "HAfAH image name $HAF_APP_IMAGE"
-    - echo "HAF image name $HAF_IMAGE_NAME"
+  - !reference [.haf_app_pattern_tests_template, before_script]
+  - echo "HAfAH image name $HAF_APP_IMAGE"
+  - echo "HAF image name $HAF_IMAGE_NAME"
 
   artifacts:
     paths:
@@ -220,15 +223,15 @@ build_setup_docker_image:
     - "haf/hive/tests/python/api_tests/pattern_tests/results.xml"
 
   tags:
-    - data-cache-storage
+  - data-cache-storage
 
 postgrest_pattern_tests:
   extends: .pattern_tests
 
   needs:
-    - !reference [.pattern_tests, needs]
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+  - !reference [.pattern_tests, needs]
+  - job: prepare_postgrest_hafah_image
+    artifacts: true
 
   variables:
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
@@ -237,9 +240,9 @@ new_style_postgrest_pattern_tests:
   extends: .pattern_tests
 
   needs:
-    - !reference [.pattern_tests, needs]
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+  - !reference [.pattern_tests, needs]
+  - job: prepare_postgrest_hafah_image
+    artifacts: true
 
   variables:
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
@@ -252,7 +255,7 @@ new_style_postgrest_pattern_tests:
   stage: test
   variables:
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
-    POETRY_INSTALL_ROOT_DIR : ${POETRY_INSTALL_DIR}
+    POETRY_INSTALL_ROOT_DIR: ${POETRY_INSTALL_DIR}
     COMPARISON_TESTS_DIR: "$CI_PROJECT_DIR/haf/hive/tests/python/api_tests/comparsion_tests"
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
@@ -260,31 +263,31 @@ new_style_postgrest_pattern_tests:
     HIVED_UID: $HIVED_UID
 
   needs:
-    - job: prepare_haf_data
-      artifacts: true
-    - job: prepare_hived_data
-      artifacts: true
+  - job: prepare_haf_data
+    artifacts: true
+  - job: prepare_hived_data
+    artifacts: true
 
   artifacts:
     paths:
-      - "$CI_JOB_NAME"
-      - "**/from_node.log"
-      - "**/ah.log"
-      - "**/*.out.json"
+    - "$CI_JOB_NAME"
+    - "**/from_node.log"
+    - "**/ah.log"
+    - "**/*.out.json"
 
     reports:
       junit: "haf/hive/tests/python/api_tests/comparsion_tests/comparsion_tests.xml"
 
   tags:
-    - data-cache-storage
+  - data-cache-storage
 
 postgrest_comparison_tests:
   extends: .comparison_tests
 
   needs:
-    - !reference [.comparison_tests, needs]
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+  - !reference [.comparison_tests, needs]
+  - job: prepare_postgrest_hafah_image
+    artifacts: true
 
   variables:
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
@@ -299,22 +302,23 @@ postgrest_comparison_tests:
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: $APP_PORT
   needs:
-    - job: prepare_haf_data
-      artifacts: true
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+  - job: prepare_haf_data
+    artifacts: true
+  - job: prepare_postgrest_hafah_image
+    artifacts: true
 
   script:
-      - /usr/bin/python3 "${BENCHMARK_SOURCE_DIR}/benchmark.py" -a app -p $APP_PORT -c perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
-      - m2u --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
-      - jmeter -g wdir/jmeter_${APP_PORT}_output.csv -o wdir/dashboard/
+  - /usr/bin/python3 "${BENCHMARK_SOURCE_DIR}/benchmark.py" -a app -p $APP_PORT -c
+    perf_5M_heavy.csv -d $CI_PROJECT_DIR/wdir -n $API_FOR_TESTING
+  - m2u --input wdir/raw_jmeter_report.xml --output wdir/jmeter_junit_report.xml
+  - jmeter -g wdir/jmeter_${APP_PORT}_output.csv -o wdir/dashboard/
   artifacts:
     paths:
-      - wdir/
+    - wdir/
     reports:
       junit: wdir/jmeter_junit_report.xml
   tags:
-    - data-cache-storage
+  - data-cache-storage
 
 postgrest_block_api_benchmark_tests:
   extends: .benchmark_tests
@@ -334,25 +338,26 @@ postgrest_rest_benchmark_tests:
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: $APP_PORT
   needs:
-    - job: prepare_haf_data
-      artifacts: true
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+  - job: prepare_haf_data
+    artifacts: true
+  - job: prepare_postgrest_hafah_image
+    artifacts: true
   script:
-      - timeout -k 1m 10m ./tests/performance/run_performance_tests.sh --backend-host=app --backend-port=$APP_PORT
-      - tar -czvf tests/performance/results.tar.gz $(pwd)/tests/performance/*result.*
-      - cat jmeter.log | python3 tests/performance/parse-jmeter-output.py
-      - m2u --input $(pwd)/tests/performance/result.xml --output $(pwd)/tests/performance/junit-result.xml
+  - timeout -k 1m 10m ./tests/performance/run_performance_tests.sh --backend-host=app
+    --backend-port=$APP_PORT
+  - tar -czvf tests/performance/results.tar.gz $(pwd)/tests/performance/*result.*
+  - cat jmeter.log | python3 tests/performance/parse-jmeter-output.py
+  - m2u --input $(pwd)/tests/performance/result.xml --output $(pwd)/tests/performance/junit-result.xml
   artifacts:
     paths:
-      - docker/container-logs.tar.gz
-      - tests/performance/result_report/
-      - tests/performance/results.tar.gz
-      - jmeter.log
+    - docker/container-logs.tar.gz
+    - tests/performance/result_report/
+    - tests/performance/results.tar.gz
+    - jmeter.log
     reports:
       junit: tests/performance/junit-result.xml
   tags:
-    - data-cache-storage
+  - data-cache-storage
 
 cleanup_hive_cache_manual:
   extends: .cleanup_cache_manual_template
@@ -360,7 +365,7 @@ cleanup_hive_cache_manual:
   variables:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_hive_*"
   tags:
-    - data-cache-storage
+  - data-cache-storage
 
 cleanup_haf_cache_manual:
   extends: .cleanup_cache_manual_template
@@ -368,18 +373,18 @@ cleanup_haf_cache_manual:
   variables:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_haf_*"
   tags:
-    - data-cache-storage
+  - data-cache-storage
 
 build_and_publish_image:
   stage: publish
   extends: .publish_docker_image_template
   before_script:
-    - !reference [.publish_docker_image_template, before_script]
+  - !reference [.publish_docker_image_template, before_script]
   script:
-    - scripts/ci-helpers/build_and_publish_instance.sh
+  - scripts/ci-helpers/build_and_publish_instance.sh
   tags:
-    - public-runner-docker
-    - hived-for-tests
+  - public-runner-docker
+  - hived-for-tests
 
 prepare_haf_image_testnet:
   extends: .prepare_haf_image
@@ -391,8 +396,8 @@ prepare_haf_image_testnet:
     HIVE_NETWORK_TYPE: testnet
     BINARY_CACHE_PATH: "$CI_PROJECT_DIR/haf-testnet-binaries"
   tags:
-    - public-runner-docker
-    - hived-for-tests
+  - public-runner-docker
+  - hived-for-tests
 
 .hfm-only-service: &hfm-only-service
   name: $HAF_IMAGE_NAME
@@ -400,58 +405,58 @@ prepare_haf_image_testnet:
   variables:
     # Allow access from any network to eliminate CI IP addressing problems when hfm runs as service
     PG_ACCESS: |
-                "host    all              haf_admin        0.0.0.0/0    trust"
-                "host    all              hived            0.0.0.0/0    trust"
-                "host    all              hafah_user       0.0.0.0/0    trust"
-                "host    all              all              0.0.0.0/0    scram-sha-256"
+      "host    all              haf_admin        0.0.0.0/0    trust"
+      "host    all              hived            0.0.0.0/0    trust"
+      "host    all              hafah_user       0.0.0.0/0    trust"
+      "host    all              all              0.0.0.0/0    scram-sha-256"
   command: ["--execute-maintenance-script=${HAF_SOURCE_DIR}/scripts/maintenance-scripts/sleep_infinity.sh"]
 
 .hafah_pytest_fuctional_tests_base:
   extends: .pytest_based_template
   stage: test
   needs:
-    - job: prepare_haf_image_testnet
-      artifacts: true
-    - job: prepare_postgrest_hafah_image
-      artifacts: true
+  - job: prepare_haf_image_testnet
+    artifacts: true
+  - job: prepare_postgrest_hafah_image
+    artifacts: true
 
   services:
-    - *hfm-only-service
-    - name: ${HAF_APP_IMAGE}
-      alias: app-setup
-      variables:
+  - *hfm-only-service
+  - name: ${HAF_APP_IMAGE}
+    alias: app-setup
+    variables:
         # intentionally use setup way chosed in haf_api_node compose scripts
-        POSTGRES_URL: "postgresql://haf_admin@hfm-only-instance/haf_block_log"
-      command: ["install_app"]
-      entrypoint:
-        - '/bin/bash'
-        - '-c'
-        - |
-          set -xeuo pipefail
-          echo "Attempting to perform application setup..."
-          # pass control to the default image entrypoint
-          "./docker_entrypoint.sh" "$@"
-          echo "Application setup completed, starting to listed app port to satisfy Gitlab health checker..."
-          # Once setup completed, just listen on container/app port to satisfy GitlabCI HealthChecker
-          nc -v -l -p $(echo "${HAF_APP_PORT}")
-        # arg $0 should be explicitly passed when using 'bash -c' entrypoints
-        - '/bin/bash'
+      POSTGRES_URL: "postgresql://haf_admin@hfm-only-instance/haf_block_log"
+    command: ["install_app"]
+    entrypoint:
+    - '/bin/bash'
+    - '-c'
+    - |
+      set -xeuo pipefail
+      echo "Attempting to perform application setup..."
+      # pass control to the default image entrypoint
+      "./docker_entrypoint.sh" "$@"
+      echo "Application setup completed, starting to listed app port to satisfy Gitlab health checker..."
+      # Once setup completed, just listen on container/app port to satisfy GitlabCI HealthChecker
+      nc -v -l -p $(echo "${HAF_APP_PORT}")
+     # arg $0 should be explicitly passed when using 'bash -c' entrypoints
+    - '/bin/bash'
 
-    - name: ${HAF_APP_IMAGE}
-      alias: app
-      command: ["--postgres-url=postgresql://hafah_user@hfm-only-instance/haf_block_log"]
-      entrypoint:
-        - '/bin/bash'
-        - '-c'
-        - |
-          set -xeuo pipefail
-          # since Gitlab services startup order is undefined, we need to wait for app setup completion
-          "/home/hafah_user/app/scripts/wait_for_setup_completed.sh" "$@"
-          echo "Application setup finished - continue app-service spawn..."
-          # pass control to the default image entrypoint
-          /home/hafah_user/docker_entrypoint.sh "$@"
-        # arg $0 should be explicitly passed when using 'bash -c' entrypoints
-        - '/bin/bash'
+  - name: ${HAF_APP_IMAGE}
+    alias: app
+    command: ["--postgres-url=postgresql://hafah_user@hfm-only-instance/haf_block_log"]
+    entrypoint:
+    - '/bin/bash'
+    - '-c'
+    - |
+      set -xeuo pipefail
+      # since Gitlab services startup order is undefined, we need to wait for app setup completion
+      "/home/hafah_user/app/scripts/wait_for_setup_completed.sh" "$@"
+      echo "Application setup finished - continue app-service spawn..."
+      # pass control to the default image entrypoint
+      /home/hafah_user/docker_entrypoint.sh "$@"
+     # arg $0 should be explicitly passed when using 'bash -c' entrypoints
+    - '/bin/bash'
   variables:
     JUNIT_REPORT: tests/integration/functional/report.xml
     PYTEST_BASED_IMAGE_NAME: $BUILDER_IMAGE_PATH
@@ -469,13 +474,14 @@ prepare_haf_image_testnet:
     DIRECT_CALLS: 0
     POSTGRES_URL: $DB_URL
   script:
-    - echo "HAfAH image name $HAF_APP_IMAGE"
-    - echo "HAF image name $HAF_IMAGE_NAME"
+  - echo "HAfAH image name $HAF_APP_IMAGE"
+  - echo "HAF image name $HAF_IMAGE_NAME"
     # run tests
-    - cd $CI_PROJECT_DIR/tests/integration/functional
-    - pytest --junitxml report.xml --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL -m $PYTEST_MARK
+  - cd $CI_PROJECT_DIR/tests/integration/functional
+  - pytest --junitxml report.xml --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL
+    -m $PYTEST_MARK
   tags:
-    - public-runner-docker
+  - public-runner-docker
 
 hafah_pytest_fuctional_tests_part1:
   extends: .hafah_pytest_fuctional_tests_base
@@ -495,10 +501,10 @@ deploy-wax-spec-dev-package:
     PACKAGE_TGZ_PATH: "${BUILT_PACKAGE_PATH}"
     NPM_PACKAGE_SCOPE: "@hiveio"
   needs:
-    - job: generate-wax-spec
-      artifacts: true
+  - job: generate-wax-spec
+    artifacts: true
   tags:
-    - public-runner-docker
+  - public-runner-docker
 
 deploy-wax-spec-production-public-npm:
   extends: .registry_npmjs_org_deploy_package_template
@@ -509,7 +515,7 @@ deploy-wax-spec-production-public-npm:
     SOURCE_DIR: "${PACKAGE_SOURCE_DIR}"
     PACKAGE_TGZ_PATH: "${BUILT_PACKAGE_PATH}"
   needs:
-    - job: generate-wax-spec
-      artifacts: true
+  - job: generate-wax-spec
+    artifacts: true
   tags:
-    - public-runner-docker
+  - public-runner-docker
