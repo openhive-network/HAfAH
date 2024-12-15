@@ -21,6 +21,7 @@ variables:
 
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
+  BLOG_REGISTRY: registry-upload.hive.blog/hafah
   APP_PORT: 6543
   BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools/tests_api/benchmarks"
 
@@ -153,10 +154,15 @@ prepare_haf_data:
       docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG"
       echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
       if [[ -n "$CI_COMMIT_TAG" ]]; then
+        docker login -u "$BLOG_REGISTRY_USER" -p "$BLOG_REGISTRY_PASSWORD" "registry-upload.hive.blog"
         docker tag "$HAFAH_IMAGE_NAME" "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
         docker push "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
+        docker tag "$HAFAH_IMAGE_NAME" "registry-upload.hive.blog/hafah/instance:$CI_COMMIT_TAG"
+        docker push "registry-upload.hive.blog/hafah/instance:$CI_COMMIT_TAG"
         docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
         docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
+        docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "registry-upload.hive.blog/hafah/postgrest-rewriter:$CI_COMMIT_TAG"
+        docker push "registry-upload.hive.blog/hafah/postgrest-rewriter:$CI_COMMIT_TAG"
       fi
 
   artifacts:
