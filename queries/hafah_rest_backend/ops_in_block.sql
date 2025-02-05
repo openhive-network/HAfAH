@@ -15,14 +15,6 @@ RETURNS JSON
 AS
 $function$
 BEGIN
-  IF _end_block_num <= hive.app_get_irreversible_block() THEN
-    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
-  ELSE
-    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=3"}]', true);
-  END IF;
-
-  PERFORM hafah_python.validate_negative_limit( _limit );
-  PERFORM hafah_python.validate_limit( _limit, 150000 );
   PERFORM hafah_python.validate_block_range( _block_num, _end_block_num + 1, 2001);
 
   RETURN (
