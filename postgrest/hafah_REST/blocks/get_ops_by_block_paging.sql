@@ -170,7 +170,13 @@ DECLARE
   _operation_types INT[] := NULL;
   _key_content TEXT[] := NULL;
   _set_of_keys JSON := NULL;
+  _calculate_total_pages INT;
+  _ops_count BIGINT;
 BEGIN
+PERFORM hafah_python.validate_limit("page-size", 10000, 'page-size');
+PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
+PERFORM hafah_python.validate_negative_page("page");
+
 IF "path-filter" IS NOT NULL AND "path-filter" != '{}' THEN
   SELECT 
     pvpf.param_json::JSON,
@@ -189,21 +195,29 @@ ELSE
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
 END IF;
 
+-- amount of operations
+SELECT hafah_backend.get_ops_by_block_count(
+  __block,
+  _operation_types,
+  "account-name",
+  _key_content,
+  _set_of_keys
+) INTO _ops_count;
+
+--amount of pages
+SELECT (
+  CASE WHEN (_ops_count % "page-size") = 0 THEN 
+    _ops_count/"page-size" 
+  ELSE ((_ops_count/"page-size") + 1) 
+  END
+)::INT INTO _calculate_total_pages;
+
+PERFORM hafah_python.validate_page("page", _calculate_total_pages);
+
 RETURN (
-  WITH ops_count AS MATERIALIZED (
-    SELECT * FROM hafah_backend.get_ops_by_block_count(__block, _operation_types, "account-name", _key_content, _set_of_keys)
-  ),
-  calculate_total_pages AS MATERIALIZED (
-    SELECT 
-      (CASE 
-        WHEN ((SELECT * FROM ops_count) % "page-size") = 0 THEN 
-          (SELECT * FROM ops_count)/"page-size" 
-        ELSE 
-          (((SELECT * FROM ops_count)/"page-size") + 1) END)
-  )
   SELECT json_build_object(
-    'total_operations', (SELECT * FROM ops_count),
-    'total_pages', (SELECT * FROM calculate_total_pages),
+    'total_operations', _ops_count,
+    'total_pages', _calculate_total_pages,
     'operations_result', 
     (SELECT to_json(array_agg(row)) FROM (
       SELECT * FROM hafah_backend.get_ops_by_block(

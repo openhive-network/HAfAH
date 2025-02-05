@@ -206,11 +206,24 @@ DECLARE
   _ops_count BIGINT;
   _calculate_total_pages INT; 
   _operation_types INT[] := (SELECT string_to_array("operation-types", ',')::INT[]);
+  _page INT;
 BEGIN
+PERFORM hafah_python.validate_limit("page-size", 1000, 'page-size');
+PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
+
 SELECT hafah_backend.get_account_operations_count(_operation_types, "account-name", _block_range.first_block, _block_range.last_block) INTO _ops_count;
 
 SELECT (CASE WHEN (_ops_count % "page-size") = 0 THEN 
     _ops_count/"page-size" ELSE ((_ops_count/"page-size") + 1) END)::INT INTO _calculate_total_pages;
+
+IF "page" IS NULL THEN
+  _page := 1;
+ELSE
+  PERFORM hafah_python.validate_negative_page("page");
+  PERFORM hafah_python.validate_page("page", _calculate_total_pages);
+
+  _page := _calculate_total_pages - "page" + 1;
+END IF;
 
 IF (_block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL) OR ("page" IS NOT NULL AND _calculate_total_pages != "page") THEN
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
@@ -235,7 +248,7 @@ RETURN (
 -- page 15 (external first page) 15 - 15 + 1 = 1 (internal first page)
 -- page 14 (external second page) 15 - 14 + 1 = 2 (internal second page)
 -- ... page 7, 15 - 7 + 1 =  9 (internal 9th page)
-      (CASE WHEN "page" IS NULL THEN 1 ELSE ((_calculate_total_pages - "page") + 1) END)::INT,
+      _page,
       "page-size",
       _operation_types,
       _block_range.first_block,
