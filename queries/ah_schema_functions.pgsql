@@ -156,10 +156,10 @@ END;
 $function$
 LANGUAGE plpgsql IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION hafah_python.validate_limit( in GIVEN_LIMIT BIGINT, in EXPECTED_LIMIT INT ) RETURNS VOID AS $function$
+CREATE OR REPLACE FUNCTION hafah_python.validate_limit( in GIVEN_LIMIT BIGINT, in EXPECTED_LIMIT INT, GIVEN_LIMIT_NAME TEXT DEFAULT 'limit' ) RETURNS VOID AS $function$
 BEGIN
   IF GIVEN_LIMIT > EXPECTED_LIMIT THEN
-    RAISE EXCEPTION 'Assert Exception:args.limit <= %: limit of % is greater than maxmimum allowed', EXPECTED_LIMIT, GIVEN_LIMIT;
+    RAISE EXCEPTION 'Assert Exception:args.% <= %: % of % is greater than maxmimum allowed', GIVEN_LIMIT_NAME, EXPECTED_LIMIT, GIVEN_LIMIT_NAME, GIVEN_LIMIT;
   END IF;
 
   RETURN;
@@ -167,10 +167,10 @@ END
 $function$
 language plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION hafah_python.validate_negative_limit( in _limit BIGINT ) RETURNS VOID AS $function$
+CREATE OR REPLACE FUNCTION hafah_python.validate_negative_limit( in _limit BIGINT, GIVEN_LIMIT_NAME TEXT DEFAULT 'limit' ) RETURNS VOID AS $function$
 BEGIN
   IF _limit <= 0 THEN
-    RAISE EXCEPTION 'Assert Exception:limit > 0: limit of % is lesser or equal 0', _limit;
+    RAISE EXCEPTION 'Assert Exception:% > 0: % of % is lesser or equal 0', GIVEN_LIMIT_NAME, GIVEN_LIMIT_NAME, _limit;
   END IF;
 
   RETURN;
@@ -178,6 +178,27 @@ END
 $function$
 language plpgsql STABLE;
 
+CREATE OR REPLACE FUNCTION hafah_python.validate_page( in GIVEN_PAGE BIGINT, in MAX_PAGE INT ) RETURNS VOID AS $function$
+BEGIN
+  IF GIVEN_PAGE > MAX_PAGE AND GIVEN_PAGE != 1 THEN
+    RAISE EXCEPTION 'Assert Exception:args.page <= %: page of % is greater than maxmimum page', MAX_PAGE, GIVEN_PAGE;
+  END IF;
+
+  RETURN;
+END
+$function$
+language plpgsql STABLE;
+
+CREATE OR REPLACE FUNCTION hafah_python.validate_negative_page( in given_page BIGINT ) RETURNS VOID AS $function$
+BEGIN
+  IF given_page <= 0 THEN
+    RAISE EXCEPTION 'Assert Exception:page <= 0: page of % is lesser or equal 0', given_page;
+  END IF;
+
+  RETURN;
+END
+$function$
+language plpgsql STABLE;
 
 CREATE OR REPLACE FUNCTION hafah_python.validate_start_limit( in _start BIGINT, in _limit BIGINT ) RETURNS VOID AS $function$
 BEGIN

@@ -291,6 +291,8 @@ DECLARE
   __exception_message TEXT;
   _operation_group_types BOOLEAN := (CASE WHEN "operation-group-type" = 'real' THEN FALSE WHEN "operation-group-type" = 'virtual' THEN TRUE ELSE NULL END);
 BEGIN
+  PERFORM hafah_python.validate_limit("page-size", 150000, 'page-size');
+  PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
 
   IF _block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
