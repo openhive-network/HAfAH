@@ -250,18 +250,18 @@ WITH operation_range AS MATERIALIZED (
 -- changing filtering method from block_num to operation_id
 	ops_from_start_block as MATERIALIZED
 	(
-		SELECT ov.id 
-		FROM hive.operations_view ov
-		WHERE ov.block_num >= _from
-		ORDER BY ov.block_num, ov.id
+		SELECT aov.account_op_seq_no
+		FROM hive.account_operations_view aov
+		WHERE aov.account_id = __account_id AND aov.block_num >= _from
+		ORDER BY aov.account_op_seq_no
 		LIMIT 1
 	),
 	ops_from_end_block as MATERIALIZED
 	(
-		SELECT ov.id
-		FROM hive.operations_view ov
-		WHERE ov.block_num <= _to
-		ORDER BY ov.block_num DESC, ov.id DESC
+		SELECT aov.account_op_seq_no
+		FROM hive.account_operations_view aov
+		WHERE aov.account_id = __account_id AND aov.block_num <= _to
+		ORDER BY aov.account_op_seq_no DESC
 		LIMIT 1
 	)
 
@@ -284,9 +284,9 @@ WITH operation_range AS MATERIALIZED (
     AND (__no_filters OR account_op_seq_no >= (CASE WHEN (_rest_of_division) != 0 THEN __op_seq ELSE (__op_seq - _limit) END))
 	  AND (__no_filters OR account_op_seq_no < (CASE WHEN (_rest_of_division) != 0 THEN (__op_seq + _limit) ELSE __op_seq END))
     AND (__no_ops_filter OR aov.op_type_id = ANY(ARRAY[(SELECT of.op_id FROM op_filter of)]))
-    AND (__no_start_date OR aov.operation_id >= (SELECT * FROM ops_from_start_block))
-	  AND (__no_end_date OR aov.operation_id < (SELECT * FROM ops_from_end_block))
-    ORDER BY (CASE WHEN NOT __no_start_date OR NOT __no_end_date THEN aov.operation_id ELSE aov.account_op_seq_no END) DESC
+    AND (__no_start_date OR aov.account_op_seq_no >= (SELECT * FROM ops_from_start_block))
+	  AND (__no_end_date OR aov.account_op_seq_no < (SELECT * FROM ops_from_end_block))
+    ORDER BY account_op_seq_no DESC
     LIMIT (CASE WHEN _page_num = 1 AND (_rest_of_division) != 0 THEN _rest_of_division ELSE _limit END)
     OFFSET (CASE WHEN _page_num = 1 OR NOT __no_filters THEN 0 ELSE __offset END)
   ) ls
@@ -354,29 +354,29 @@ ELSE
       SELECT av.id FROM hive.accounts_view av WHERE av.name = _account
     ),
 -- changing filtering method from block_num to operation_id
-    	ops_from_start_block as MATERIALIZED
-    (
-      SELECT ov.id 
-      FROM hive.operations_view ov
-      WHERE ov.block_num >= _from
-      ORDER BY ov.block_num, ov.id
-      LIMIT 1
-    ),
-    ops_from_end_block as MATERIALIZED
-    (
-      SELECT ov.id
-      FROM hive.operations_view ov
-      WHERE ov.block_num <= _to
-      ORDER BY ov.block_num DESC, ov.id DESC
-      LIMIT 1
-    )
+	ops_from_start_block as MATERIALIZED
+	(
+		SELECT aov.account_op_seq_no
+		FROM hive.account_operations_view aov
+		WHERE aov.account_id = __account_id AND aov.block_num >= _from
+		ORDER BY aov.account_op_seq_no
+		LIMIT 1
+	),
+	ops_from_end_block as MATERIALIZED
+	(
+		SELECT aov.account_op_seq_no
+		FROM hive.account_operations_view aov
+		WHERE aov.account_id = __account_id AND aov.block_num <= _to
+		ORDER BY aov.account_op_seq_no DESC
+		LIMIT 1
+	)
 -- using hive_account_operations_uq2, we are forcing planner to use this index on (account_id,operation_id), it achives better performance results
     SELECT COUNT(*)
     FROM hive.account_operations_view aov
     WHERE aov.account_id = (SELECT ai.id FROM account_id ai)
     AND (__no_ops_filter OR aov.op_type_id = ANY(ARRAY[(SELECT of.op_id FROM op_filter of)]))
-    AND (__no_start_date OR aov.operation_id >= (SELECT * FROM ops_from_start_block))
-    AND (__no_end_date OR aov.operation_id < (SELECT * FROM ops_from_end_block))
+    AND (__no_start_date OR aov.account_op_seq_no >= (SELECT * FROM ops_from_start_block))
+    AND (__no_end_date OR aov.account_op_seq_no < (SELECT * FROM ops_from_end_block))
     );
 
 END IF;
