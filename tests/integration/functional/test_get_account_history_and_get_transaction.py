@@ -150,7 +150,7 @@ def test_get_transaction_in_reversible_block(
     ),
 )
 def test_wrong_transaction_id(postgrest_hafah, incorrect_id, include_reversible):
-    with pytest.raises(tt.exceptions.CommunicationError):
+    with pytest.raises(helpy.exceptions.CommunicationError):
         send_request_to_hafah(
             postgrest_hafah,
             "get_transaction",
