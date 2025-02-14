@@ -1,7 +1,7 @@
 import test_tools as tt
 import time
 
-from helpy.exceptions import RequestError
+from helpy.exceptions import ErrorInResponseError
 
 
 def send_request_to_hafah(hafah_node: tt.RemoteNode, method, **kwargs):
@@ -9,7 +9,7 @@ def send_request_to_hafah(hafah_node: tt.RemoteNode, method, **kwargs):
     for i in range(5):
         try:
             response = getattr(hafah_node.api.account_history, method)(**kwargs)
-        except RequestError as error:
+        except ErrorInResponseError as error:
             if "Unknown Transaction" in error.error and i!=4:
                 response = None
             else:
