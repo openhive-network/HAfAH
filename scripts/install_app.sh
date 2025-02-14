@@ -29,6 +29,8 @@ POSTGRES_PORT=5432
 POSTGRES_URL=""
 SWAGGER_URL="{hafah-host}"
 
+echo "Script parameters: $*"
+
 while [ $# -gt 0 ]; do
   case "$1" in
     --host=*)
