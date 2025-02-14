@@ -4,13 +4,19 @@ ARG POSTGREST_VERSION=v12.0.2
 
 FROM postgrest/postgrest:${POSTGREST_VERSION} AS pure_postgrest
 
-FROM alpine:3.19 AS runtime
+FROM alpine:3.21.3 AS runtime
 
 RUN apk add --no-cache bash coreutils ca-certificates postgresql-client sudo
-RUN adduser -D "haf_admin" && echo "haf_admin ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
-    adduser -D "hafah_user" && chmod -R a+w /home/hafah_user
 
 SHELL ["/bin/bash", "-c"]
+
+RUN <<EOF
+  set -e
+  adduser -D "haf_admin"
+  echo "haf_admin ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+  adduser -D "hafah_user"
+  chmod -R a+w /home/hafah_user
+EOF
 
 ENV LANG=en_US.UTF-8
 
@@ -18,8 +24,6 @@ COPY --chmod=755 --from=pure_postgrest /bin/postgrest /usr/local/bin
 
 USER hafah_user
 WORKDIR /home/hafah_user
-
-SHELL ["/bin/bash", "-c"]
 
 FROM runtime AS instance
 

@@ -1,8 +1,6 @@
-## Requirements
+# HAfAH
 
-# Overview of hafah
-
-Hafah is a HAF-based app that implements the "account history API" for hive. It is a web server that responds to account history REST calls using data stored in a [HAF database](https://gitlab.syncad.com/hive/haf). 
+Hafah is a HAF-based app that implements the "account history API" for hive. It is a web server that responds to account history REST calls using data stored in a [HAF database](https://gitlab.syncad.com/hive/haf).
 
 Currently, hafah is a "read-only" HAF application: it writes no data to the HAF database, so it doesn't require a "replay" of blockchain history before it can start serving data (all the data it needs is available in the base-layer HAF tables).
 
@@ -11,38 +9,39 @@ Like all standardized HAF apps, the server should be started using the dedicated
 Like HAF itself, you can install hafah directly on your computer, or you can run it inside a docker. In either case, it will then need to communicate with your HAF database as described further below.
 
 ## Option 1: Starting `HAfAH` directly on host
----
 
 ### postgREST version
 
 To start using this version, first create API and install postgREST locally with
 
-```
+```bash
 ./run.sh setup
 ```
 
-Then start server 
+Then start server:
 
-```
+```bash
 ./run.sh start <PORT>
 ```
 
 `PORT` is optional, default is 3000.
-<br><br>
 
 ## Option 2: Starting a `HAfAH` using prebuilt docker container (preferred way)
 
 Instead of running hafah servers directly, you can run them inside dockers. For many users, especially ones that are running their HAF database inside a docker, this is the recommended method, because it eliminates the need to manually configure authentication of hafah's connection to the HAF database. To run the application server inside a docker:
 
-1. Perform application installation step into specified HAF database:
+Perform application installation step into specified HAF database:
+
 ```bash
-docker run --rm -it --name HAFAH-setup registry.gitlab.syncad.com/hive/hafah/instance:COMMIT_SHA install_app --postgres-url=postgresql://haf_admin@172.17.0.1:5432/haf_block_log
+docker run --rm -it --name HAFAH-setup registry.gitlab.syncad.com/hive/hafah:COMMIT_SHA install_app --postgres-url=postgresql://haf_admin@172.17.0.1:5432/haf_block_log
 ```
+
 Once application installation will complete (docker container will finish its execution), go to the next step.
 
-2. Run the postgrest server inside a docker (to accept API requests on specified port):
+Run the postgrest server inside a docker (to accept API requests on specified port):
+
 ```bash
-docker run --rm -it --name Postgrest-HAFAH-instance -p 8081:6543 -e POSTGRES_URL=postgresql://hafah_user@172.17.0.1:5432/haf_block_log registry.gitlab.syncad.com/hive/hafah/postgrest-instance:COMMIT_SHA
+docker run --rm -it --name Postgrest-HAFAH-instance -p 8081:6543 -e POSTGRES_URL=postgresql://hafah_user@172.17.0.1:5432/haf_block_log registry.gitlab.syncad.com/hive/hafah:COMMIT_SHA
 ```
 
 The first number specified by the -p option is the external port you want to use (8081 for the postgrest server in the examples above). The second number speciefied by the -p option is the internal port that the hafah server is listening to inside the docker. **This second value is fixed by the configuration of the docker image, so it must be set to 6543.**
@@ -56,25 +55,28 @@ If you are using a dockerized HAF instance and a dockerized hafah server, the ha
 If you are directly hosting your PostgreSQL instance (i.e. it's not running in a docker), you will need to configure a way to authenticate connections by the `haf_admin` and `hafah_user` roles. In particular, if you are running your hafah server in a docker, you will need to configure your HAF postgres cluster to listen on the docker network. Below is an example of how to configure authentication:
 
 - Modify the `postgres.conf` file to listen on either the docker network OR all network interfaces:
-```
+
+```properties
 listen_addresses = '172.17.0.1'    #listen on just docker network
 ```
-```
+
+```properties
 listen_addresses = '*'             #listen on all network interfaces (including docker network)
 ```
+
 - Add an entry to the `pg_hba.conf` file to allow authentication of `haf_admin` and `hafah_user` to the haf_block_log database by connections coming from the docker network (or alternatively, all network interfaces):
 
-```
+```properties
 host    haf_block_log             haf_admin    172.0.0.0/0          trust    #allow connection from docker
 host    haf_block_log             hafah_user   172.0.0.0/0          trust    #allow connection from docker
-``` 
 ```
+
+```properties
 host    haf_block_log             haf_admin    0.0.0.0/0            trust    #allow connection from all
 host    haf_block_log             hafah_user   0.0.0.0/0            trust    #allow connection from all
-``` 
+```
 
 WARNING: above example is only specific for testing and fast-deployment purposes. To ensure a secure deployment, consult PostgreSQL documentation related to authentication methods (e.g. peer-based authentication and its interaction with UNIX accounts).
-
 
 ### Instead of running prebuilt images, one can build their own using `build_instance.sh` script provided in the repo
 
@@ -90,12 +92,11 @@ scripts/ci-helpers/build_instance.sh "postgrest-latest" . registry.gitlab.syncad
 
 Parameters are:
 
- - `--http-port=PORT`           HTTP port to be used by HAfAH (default: 6543)
- - `--haf-postgres-url=URL`     HAF PostgreSQL URL, (default: postgresql://haf_app_admin@172.17.0.1:5432/haf_block_log)
- - `-?/--help`                  Print help screen and exit
+- `--http-port=PORT`           HTTP port to be used by HAfAH (default: 6543)
+- `--haf-postgres-url=URL`     HAF PostgreSQL URL, (default: postgresql://haf_app_admin@172.17.0.1:5432/haf_block_log)
+- `-?/--help`                  Print help screen and exit
 
 ## Running load tests
----
 
 ### 0. Setup
 
@@ -103,7 +104,7 @@ Required packages: `wget` `unzip` `openjdk-11-jre` `openjdk-11-jdk`
 
 In folder you want execute theese commands to download and setup jmeter
 
-```
+```bash
 # download jmeter
 wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.4.3.zip >> /dev/null
 unzip apache-*.zip >> /dev/null
@@ -119,21 +120,17 @@ sudo ln -s $PWD/bin/jmeter /usr/bin/jmeter
 popd
 ```
 
-<br>
-
 ### 1. Info
-
 
 1. Run postgREST HAfAH (in this example on port 3000)
 2. Run hived (in this example on http port 8091)
 3. Start load tests by executing:
 
-
 `./tests/performance_test.py` script.
 
 Here is `--help`:
 
-```
+```bash
 $ ./tests/performance_test.py --help
 usage: performance_test.py [-h] [-l [LIST_CSV]] [-c SELECT_CSV] [-r ROOT_DIR] [-p PORT] [-a ADDR] [-s TOP_SLOWEST]
                            [-d DATADIR] [-t THREADS] [-j JMETER] [--postgres POSTGRES_URL] [--no-launch [NO_HAFAH]]
@@ -166,21 +163,19 @@ optional arguments:
                         [default=False]
 ```
 
-<br>
-
 ### 2. Managing input data for performance test
 
 - ### LISTING
 
 To list avaiable inputs execute
 
-```
+```bash
 ./tests/performance_test.py -l
 ```
 
 this will provide following output:
 
-```
+```bash
 2022-04-08 14:13:27,065 - performance - INFO - Found and available csv's:
 cl_60M_prod_jrpc.csv     -      for generating load on 60M http server
 perf_5M_heavy.csv        -      for generating load on 5M http server
@@ -210,31 +205,31 @@ there will be also more detailed statistics, like complete CSV report and top 5 
 
 FORMAT:
 
-```
+```bash
 <get_ops_in_block|enum_virtual_ops_begin>;<enum_virtual_ops_end>;<get_account_history>;<get_transaction>
 ```
+
 Example:
-```
+
+```bash
 2889001;2889005;frankjones;ef73d8fadf17e2590c6d96efc1ca868edd7dd613
 2889002;2889006;cheetah18;02b3404402bc68314daa3752833f8c8c14daa070
 2889003;2889007;shrooms;ee1e29958549b9547383c3ef932bd95a571fd0d4
 2889004;2889008;littlekitty;8dfe0564434071b76276fc7892505a397f2fef98
 ```
 
-<br>
-
 Second one is `CL` with `cl_` prefix in `csv` input file. In this mode program will run as long as
 there is no keyboard interruption (ctrl+c). After this small summary is genmerated.
 
 FORMAT:
 
-```
+```bash
 <endpoint>|<body>
 ```
 
 Example:
 
-```
+```bash
 get_account_history|{"jsonrpc": "2.0", "method": "account_history_api.get_account_history", "params": {"opera...}
 get_transaction|{"jsonrpc": "2.0", "method": "account_history_api.get_transaction", "params": {"id":...}
 get_account_history|{"jsonrpc": "2.0", "method": "account_history_api.get_account_history", "params": {"opera...}
@@ -243,12 +238,11 @@ get_account_history|{"jsonrpc": "2.0", "method": "account_history_api.get_accoun
 
 > :warning: Pay attention that `PERF` format can be used both way: for http and SQL performing, while `CL` requires specialization
 
-
 - ### SELECTING
 
 To select input for performance testing use `-c` flag and put __just filename__ as argument:
 
-```
+```bash
 ./tests/performance_test.py -c perf_5M_heavy.csv
 ```
 
@@ -262,31 +256,31 @@ If you want to add new tag, just remember to add it to legend in script.
 
 - I want to start standard test on fully synced DB, but in custom workdir:
 
-```
+```bash
 ./tests/performance_test.py --postgres $POSTGRES_URL -d path/to/my/workdir
 ```
 
 - I want to start standard test on fully synced DB, but on already runni	ng instance
 
-```
+```bash
 ./tests/performance_test.py -p $PORT_OF_INSTANCE --no-launch
 ```
 
 - I want to use 32 threads during test on 5M DB, which is on other server:
 
-```
+```bash
 ./tests/performance_test.py -c perf_5M_heavy.csv -t 32 -a other.machine.com
 ```
 
 - I didn't installed jmeter and wnat to run simple test
 
-```
+```bash
 ./tests/performance_test.py --postgres $POSTGRES_URL -j $PATH_TO_JMETER_BIN
 ```
 
 - I want 3 most slowest queries and start HAfAH on non-default 7312 port
 
-```
+```bash
 ./tests/performance_test.py --postgres $POSTGRES_URL -p 7312 -s 3
 ```
 
@@ -295,61 +289,64 @@ If you want to add new tag, just remember to add it to legend in script.
 Path to report is always displayed, and it's located in workdir with name like: `report_<port>.csv`
 It is `|` separated and contains following columns:
 
-- endpoint				-	name of endpoint that was tested. e.g: `get_ops_in_block`
-- identifier			-	it's position of samplewith format: `<thread no [1-N]>/<sample num [1-500]>`
+- endpoint        - name of endpoint that was tested. e.g: `get_ops_in_block`
+- identifier      - it's position of samplewith format: `<thread no [1-N]>/<sample num [1-500]>`
 
 values below are in miliseconds.
 theese columns are result of parsing HAfAH log:
 
-- hafah_receive		-	time of receiving request
-- hafah_SQL				-	time of executing query
-- hafah_backend		-	time of additional processing by python
-- hafah_dispatch		-	time of handling request by `jsonrpcserver` library
-- hafah_sending		-	time of serialization and sending response from HAfAH to jmeter
-- hafah_processing	-	leftover time, during handling whole request
-- hafah_total			-	sum of all times above
+- hafah_receive    - time of receiving request
+- hafah_SQL        - time of executing query
+- hafah_backend    - time of additional processing by python
+- hafah_dispatch   - time of handling request by `jsonrpcserver` library
+- hafah_sending    - time of serialization and sending response from HAfAH to jmeter
+- hafah_processing - leftover time, during handling whole request
+- hafah_total      - sum of all times above
 
 this column is result of parsing jmeter log:
 
-- jmeter_elapsed		-	time of request by jmeter
+- jmeter_elapsed   - time of request by jmeter
 
-- query					-	SQL query extracted from HAfAH log
+- query            - SQL query extracted from HAfAH log
 
-###  5. Interpreting results in `index.html`
----
+### 5. Interpreting results in `index.html`
 
-`APDEX` - application performance index for endpoint<br>
-`Statistics` - stats of response times (avg, min, max, median, percentiles)<br>
-`Charts` -> `Response Times` - charts of response time distribution, percentiles, relation to thread number<br>
+`APDEX` - application performance index for endpoint  
+`Statistics` - stats of response times (avg, min, max, median, percentiles)  
+`Charts` -> `Response Times` - charts of response time distribution, percentiles, relation to thread number  
 
 ## HAFAH REST
 
 ### 1. Blocks
----
-```
+
+```bash
 - /blocks?from-block&to-block&search-params Get blocks from given range (get_block_range)
 - /blocks/{block-num} Block details (get_block)
 - /blocks/{block-num}/header Header in referenced block (get_block_header)
 - /blocks/{block-num}/operations List of operations for given block (get_ops_in_block)
 ```
+
 ### 2. Transactions
----
-```
+
+```bash
 - /transactions/{transaction-id} Get transaction (get_transaction)
 ```
+
 ### 3. Operations
----
-```
+
+```bash
 - /operations?from-block&to-block&search-params Search for operations (get_ops_in_block in range)
 - /operations/virtual?from-block&to-block&search-params Enum virtua operation as search (enum_virtual_ops)
 ```
+
 ### 4. Account
----
-```
+
+```bash
 - /accounts/{account-name}/operations Get operations for given account (get_account_history)
 ```
+
 ### 5. Other
----
-```
+
+```bash
 - /version (No corresponding method)
 ```

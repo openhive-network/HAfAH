@@ -23,7 +23,7 @@ start_webserver() {
 }
 
 setup_postgrest() {
-    bash $SCRIPTS_DIR/setup_postgrest.sh
+    bash "$SCRIPTS_DIR/setup_postgrest.sh"
 }
 
 print_help() {
@@ -38,7 +38,7 @@ print_help() {
 SCRIPTS_DIR=$PWD/scripts
 
 if [ "$1" = "start" ]; then
-    start_webserver ${2:-$DEFAULT_POSTGREST_PORT}
+    start_webserver "${2:-$DEFAULT_POSTGREST_PORT}"
 elif [ "$1" =  "setup" ]; then
     setup
 elif [ "$1" =  "setup-postgrest" ]; then

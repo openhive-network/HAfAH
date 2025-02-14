@@ -1,6 +1,7 @@
 import pytest
 from schemas.apis.account_history_api.response_schemas import GetTransaction
 
+from helpy.exceptions import ErrorInResponseError
 import test_tools as tt
 
 from hafah_local_tools import send_request_to_hafah
@@ -150,7 +151,7 @@ def test_get_transaction_in_reversible_block(
     ),
 )
 def test_wrong_transaction_id(postgrest_hafah, incorrect_id, include_reversible):
-    with pytest.raises(tt.exceptions.CommunicationError):
+    with pytest.raises(ErrorInResponseError):
         send_request_to_hafah(
             postgrest_hafah,
             "get_transaction",
