@@ -60,14 +60,11 @@ REGISTRY=${REG:-$REGISTRY}
 [[ -z "$SOURCE_DIR" ]] && printf "Source directroy must be provided\n" &&  print_help && exit 1
 [[ -z "$REGISTRY" ]] && printf "Docker registry URL must be provided\n" &&  print_help && exit 1
 
-# Supplement a registry path by trailing slash (if needed)
-[[ "${REGISTRY}" != */ ]] && REGISTRY="${REGISTRY}/"
-
 APP_PORT=${APP_PORT:-6543}
 HAF_POSTGRES_URL=${HAF_POSTGRES_URL:-postgresql://hafah_user@haf:5432/haf_block_log}
-HAFAH_IMAGE_NAME=${REGISTRY}instance:$HAFAH_IMAGE_TAG
-HAFAH_MINIMAL_IMAGE_NAME=${REGISTRY}minimal-instance:$HAFAH_IMAGE_TAG
-HAFAH_REWRITER_IMAGE_NAME=${REGISTRY}postgrest-rewriter:$HAFAH_IMAGE_TAG
+HAFAH_IMAGE_NAME=${REGISTRY}:$HAFAH_IMAGE_TAG
+HAFAH_MINIMAL_IMAGE_NAME=${REGISTRY}/minimal:$HAFAH_IMAGE_TAG
+HAFAH_REWRITER_IMAGE_NAME=${REGISTRY}/postgrest-rewriter:$HAFAH_IMAGE_TAG
 
 
 printf "Parameter values:\n - SOURCE_DIR: %s\n - APP_PORT: %d\n - HAF_POSTGRES_URL: %s\n - HAFAH_IMAGE_NAME: %s\n\n" \
@@ -108,10 +105,12 @@ if [ -z "$GIT_LAST_COMMIT_DATE" ]; then
 fi
 
 REWRITER_TARGET=without_tag
-if [ ! -z "$BUILD_IMAGE_TAG" ]; then
+if [ -n "$BUILD_IMAGE_TAG" ]; then
   REWRITER_TARGET=with_tag
-  TAG_BUILD_ARGS="--build-arg GIT_COMMIT_TAG=$BUILD_IMAGE_TAG"
+  TAG_BUILD_ARGS=( "--build-arg" "GIT_COMMIT_TAG=$BUILD_IMAGE_TAG" )
 fi
+
+echo "Building Hivemind image..."
 
 docker buildx build \
     --build-arg HTTP_PORT="$APP_PORT" \
@@ -128,6 +127,8 @@ docker buildx build \
     --load \
     --file Dockerfile .
 
+echo -e "Done!\nBuilding rewriter image..."
+
 docker buildx build \
     --build-arg BUILD_TIME="$BUILD_TIME" \
     --build-arg GIT_COMMIT_SHA="$GIT_COMMIT_SHA" \
@@ -136,10 +137,11 @@ docker buildx build \
     --build-arg GIT_LAST_COMMITTER="$GIT_LAST_COMMITTER" \
     --build-arg GIT_LAST_COMMIT_DATE="$GIT_LAST_COMMIT_DATE" \
     --target=$REWRITER_TARGET \
-    $TAG_BUILD_ARGS \
+    "${TAG_BUILD_ARGS[@]}" \
     --tag "$HAFAH_REWRITER_IMAGE_NAME" \
     --load \
     --file Dockerfile.rewriter .
 
+echo "Done!"
 
 popd

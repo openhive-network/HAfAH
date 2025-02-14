@@ -42,7 +42,7 @@ variables:
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 - project: 'hive/haf'
-  ref: bccc993bf38cf97ffa32eb47f88acb6c38068878   # develop
+  ref: fbcc8e36bf62d981fea0c163ae48daf86555633e # develop
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
 
@@ -129,7 +129,7 @@ prepare_haf_data:
   stage: build
   variables:
     HAFAH_IMAGE_TAG: ""
-    HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE/instance:$HAFAH_IMAGE_TAG
+    HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE:$HAFAH_IMAGE_TAG
     USE_POSTGREST: 0
     SOURCE_DIR: $CI_PROJECT_DIR
     GIT_STRATEGY: "clone"
@@ -145,10 +145,10 @@ prepare_haf_data:
     echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
     if [[ -n "$CI_COMMIT_TAG" ]]; then
       docker login -u "$BLOG_REGISTRY_USER" -p "$BLOG_REGISTRY_PASSWORD" "registry-upload.hive.blog"
-      docker tag "$HAFAH_IMAGE_NAME" "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
-      docker push "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
-      docker tag "$HAFAH_IMAGE_NAME" "registry-upload.hive.blog/hafah/instance:$CI_COMMIT_TAG"
-      docker push "registry-upload.hive.blog/hafah/instance:$CI_COMMIT_TAG"
+      docker tag "$HAFAH_IMAGE_NAME" "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+      docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+      docker tag "$HAFAH_IMAGE_NAME" "registry-upload.hive.blog/hafah:$CI_COMMIT_TAG"
+      docker push "registry-upload.hive.blog/hafah:$CI_COMMIT_TAG"
       docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
       docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
       docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "registry-upload.hive.blog/hafah/postgrest-rewriter:$CI_COMMIT_TAG"
@@ -156,6 +156,8 @@ prepare_haf_data:
     fi
 
   artifacts:
+    paths:
+      - docker_image_name.env
     reports:
       dotenv: docker_image_name.env
 
@@ -172,15 +174,12 @@ prepare_postgrest_hafah_image:
 build_setup_docker_image:
   extends: .docker_image_builder_job
   stage: build
+  before_script: 
+    - !reference [.docker_image_builder_job, before_script]
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script: scripts/ci-helpers/build_setup_image.sh "$CI_PROJECT_DIR"
   tags:
   - public-runner-docker
-  script:
-  - "echo \"TRUNCATE TABLE hafah_python.version; INSERT INTO hafah_python.version(git_hash)\
-    \ VALUES ('$CI_COMMIT_SHA');\" > set_version_in_sql.pgsql"
-  - "docker build --tag=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -f Dockerfile.setup\
-    \ ."
-  - "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-  - "docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
 
 .pattern_tests:
   extends: .haf_app_pattern_tests_template
@@ -425,7 +424,6 @@ prepare_haf_image_testnet:
     variables:
         # intentionally use setup way chosed in haf_api_node compose scripts
       POSTGRES_URL: "postgresql://haf_admin@hfm-only-instance/haf_block_log"
-    command: ["install_app"]
     entrypoint:
     - '/bin/bash'
     - '-c'
@@ -433,7 +431,7 @@ prepare_haf_image_testnet:
       set -xeuo pipefail
       echo "Attempting to perform application setup..."
       # pass control to the default image entrypoint
-      "./docker_entrypoint.sh" "$@"
+      "./docker_entrypoint.sh" "install_app"
       echo "Application setup completed, starting to listed app port to satisfy Gitlab health checker..."
       # Once setup completed, just listen on container/app port to satisfy GitlabCI HealthChecker
       nc -v -l -p $(echo "${HAF_APP_PORT}")
@@ -442,7 +440,7 @@ prepare_haf_image_testnet:
 
   - name: ${HAF_APP_IMAGE}
     alias: app
-    command: ["--postgres-url=postgresql://hafah_user@hfm-only-instance/haf_block_log"]
+    command: [ "--postgres-url=postgresql://hafah_user@hfm-only-instance/haf_block_log" ]
     entrypoint:
     - '/bin/bash'
     - '-c'
@@ -452,7 +450,7 @@ prepare_haf_image_testnet:
       "/home/hafah_user/app/scripts/wait_for_setup_completed.sh" "$@"
       echo "Application setup finished - continue app-service spawn..."
       # pass control to the default image entrypoint
-      /home/hafah_user/docker_entrypoint.sh "$@"
+      /home/hafah_user/docker_entrypoint.sh run "$@"
      # arg $0 should be explicitly passed when using 'bash -c' entrypoints
     - '/bin/bash'
   variables:

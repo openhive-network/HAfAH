@@ -3,13 +3,17 @@ ARG PSQL_CLIENT_VERSION=14-1
 ARG POSTGREST_VERSION=v12.0.2
 FROM registry.gitlab.syncad.com/hive/common-ci-configuration/postgrest:${POSTGREST_VERSION} AS pure_postgrest
 
-FROM registry.gitlab.syncad.com/hive/common-ci-configuration/psql:$PSQL_CLIENT_VERSION AS runtime
-
-USER root
-RUN apk add --no-cache coreutils ca-certificates
-RUN adduser -D "hafah_user" && chmod -R a+w /home/hafah_user
+FROM registry.gitlab.syncad.com/hive/common-ci-configuration/psql:${PSQL_CLIENT_VERSION} AS runtime
 
 SHELL ["/bin/bash", "-c"]
+
+USER root
+RUN <<EOF
+  set -e
+  apk add --no-cache coreutils ca-certificates
+  adduser -D "hafah_user"
+  chmod -R a+w /home/hafah_user
+EOF
 
 ENV LANG=en_US.UTF-8
 
@@ -17,8 +21,6 @@ COPY --chmod=755 --from=pure_postgrest /bin/postgrest /usr/local/bin
 
 USER hafah_user
 WORKDIR /home/hafah_user
-
-SHELL ["/bin/bash", "-c"]
 
 FROM runtime AS instance
 

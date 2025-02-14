@@ -12,10 +12,15 @@ EOF
 
 USER haf_admin
 
-RUN mkdir -p /hafah/scripts
-RUN mkdir -p /hafah/queries
-RUN mkdir -p /hafah/postgrest
-RUN mkdir -p /hafah/haf/scripts
+SHELL ["/bin/bash", "-c"]
+
+RUN <<EOF 
+  set -e
+  mkdir -p /hafah/scripts
+  mkdir -p /hafah/queries
+  mkdir -p /hafah/postgrest
+  mkdir -p /hafah/haf/scripts
+EOF
 
 COPY docker/setup_entrypoint.sh /hafah/scripts/setup_entrypoint.sh
 COPY scripts/common.sh /hafah/scripts/common.sh 
