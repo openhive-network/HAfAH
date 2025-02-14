@@ -36,13 +36,13 @@ Instead of running hafah servers directly, you can run them inside dockers. For 
 
 1. Perform application installation step into specified HAF database:
 ```bash
-docker run --rm -it --name HAFAH-setup registry.gitlab.syncad.com/hive/hafah/instance:COMMIT_SHA install_app --postgres-url=postgresql://haf_admin@172.17.0.1:5432/haf_block_log
+docker run --rm -it --name HAFAH-setup registry.gitlab.syncad.com/hive/hafah:COMMIT_SHA install_app --postgres-url=postgresql://haf_admin@172.17.0.1:5432/haf_block_log
 ```
 Once application installation will complete (docker container will finish its execution), go to the next step.
 
 2. Run the postgrest server inside a docker (to accept API requests on specified port):
 ```bash
-docker run --rm -it --name Postgrest-HAFAH-instance -p 8081:6543 -e POSTGRES_URL=postgresql://hafah_user@172.17.0.1:5432/haf_block_log registry.gitlab.syncad.com/hive/hafah/postgrest-instance:COMMIT_SHA
+docker run --rm -it --name Postgrest-HAFAH-instance -p 8081:6543 -e POSTGRES_URL=postgresql://hafah_user@172.17.0.1:5432/haf_block_log registry.gitlab.syncad.com/hive/hafah:COMMIT_SHA
 ```
 
 The first number specified by the -p option is the external port you want to use (8081 for the postgrest server in the examples above). The second number speciefied by the -p option is the internal port that the hafah server is listening to inside the docker. **This second value is fixed by the configuration of the docker image, so it must be set to 6543.**

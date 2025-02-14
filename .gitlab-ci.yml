@@ -34,7 +34,7 @@ variables:
 
 
   # Variables required by Common CI jobs
-  TOX_IMAGE_TAG: "6b9e9e75ec5263939450936a4f8348dfbca3666d"
+  TOX_IMAGE_TAG: "e74d7109838ff05fdc239bced6a726aa7ad46a9b"
   BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/haf/ci-base-image${BUILDER_IMAGE_TAG}"
 
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
@@ -45,10 +45,10 @@ variables:
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 - project: 'hive/haf'
-  ref: fd69207e2026ecdf046a74deacb54950b186d773   # develop
+  ref: a0764841302418eb37e4f9ed45b85aaaec328cae   # develop
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
 - project: 'hive/common-ci-configuration'
-  ref: 6b9e9e75ec5263939450936a4f8348dfbca3666d   # develop # It seems a variable cannot be used here
+  ref: e74d7109838ff05fdc239bced6a726aa7ad46a9b   # develop # It seems a variable cannot be used here
   file:
   - '/templates/test_jobs.gitlab-ci.yml'
   - '/templates/python_projects.gitlab-ci.yml'
@@ -139,7 +139,7 @@ prepare_haf_data:
   stage: build
   variables:
     HAFAH_IMAGE_TAG: ""
-    HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE/instance:$HAFAH_IMAGE_TAG
+    HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE:$HAFAH_IMAGE_TAG
     USE_POSTGREST: 0
     SOURCE_DIR: $CI_PROJECT_DIR
     GIT_STRATEGY: "clone"
@@ -155,10 +155,10 @@ prepare_haf_data:
     echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
     if [[ -n "$CI_COMMIT_TAG" ]]; then
       docker login -u "$BLOG_REGISTRY_USER" -p "$BLOG_REGISTRY_PASSWORD" "registry-upload.hive.blog"
-      docker tag "$HAFAH_IMAGE_NAME" "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
-      docker push "$CI_REGISTRY_IMAGE/instance:$CI_COMMIT_TAG"
-      docker tag "$HAFAH_IMAGE_NAME" "registry-upload.hive.blog/hafah/instance:$CI_COMMIT_TAG"
-      docker push "registry-upload.hive.blog/hafah/instance:$CI_COMMIT_TAG"
+      docker tag "$HAFAH_IMAGE_NAME" "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+      docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+      docker tag "$HAFAH_IMAGE_NAME" "registry-upload.hive.blog/hafah:$CI_COMMIT_TAG"
+      docker push "registry-upload.hive.blog/hafah:$CI_COMMIT_TAG"
       docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
       docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
       docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "registry-upload.hive.blog/hafah/postgrest-rewriter:$CI_COMMIT_TAG"
