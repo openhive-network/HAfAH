@@ -42,8 +42,7 @@ SET ROLE hafah_owner;
             schema:
               type: string
               x-sql-datatype: JSONB
-            example: 
-              - {
+            example: {
                   "witness": "ihashfury",
                   "previous": "004c4b3fc6a8735b4ab5433d59f4526e4a042644",
                   "timestamp": "2016-09-15T19:47:21",

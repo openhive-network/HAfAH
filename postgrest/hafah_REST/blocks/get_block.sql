@@ -50,8 +50,7 @@ SET ROLE hafah_owner;
             schema:
               type: string
               x-sql-datatype: JSONB
-            example: 
-              - {
+            example: {
                   "witness": "ihashfury",
                   "block_id": "004c4b40245ffb07380a393fb2b3d841b76cdaec",
                   "previous": "004c4b3fc6a8735b4ab5433d59f4526e4a042644",

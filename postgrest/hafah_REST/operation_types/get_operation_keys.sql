@@ -33,8 +33,7 @@ SET ROLE hafah_owner;
             schema:
               type: string
               x-sql-datatype: JSONB
-            example: 
-              - [
+            example: [
                   ["value","body"],
                   ["value","title"],
                   ["value","author"],
