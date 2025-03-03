@@ -1,7 +1,7 @@
 import test_tools as tt
 import time
 
-from helpy.exceptions import ErrorInResponseError
+from beekeepy.exceptions import ErrorInResponseError
 
 
 def send_request_to_hafah(hafah_node: tt.RemoteNode, method, **kwargs):
