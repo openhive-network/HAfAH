@@ -108,8 +108,7 @@ SET ROLE hafah_owner;
             schema:
               type: string
               x-sql-datatype: JSON
-            example: 
-              - {
+            example: {
                   "ops": [
                     {
                       "op": {

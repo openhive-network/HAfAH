@@ -48,25 +48,27 @@ SET ROLE hafah_owner;
           application/json:
             schema:
               $ref: '#/components/schemas/hafah_backend.operation'
-            example:
-              - op: {
-                  "type": "producer_reward_operation",
-                  "value": {
-                    "producer": "initminer",
-                    "vesting_shares": {
-                      "nai": "@@000000021",
-                      "amount": "1000",
-                      "precision": 3
-                    }
+            example: {
+              "op": {
+                "type": "producer_reward_operation",
+                "value": {
+                  "producer": "initminer",
+                  "vesting_shares": {
+                    "nai": "@@000000021",
+                    "amount": "1000",
+                    "precision": 3
                   }
                 }
-                block: 803
-                trx_id: null
-                op_pos: 1
-                timestamp: "2016-03-24T16:45:39"
-                virtual_op: true
-                operation_id: "3448858738752"
-                trx_in_block: -1
+              },
+              "block": 803,
+              "trx_id": null,
+              "op_pos": 1,
+              "op_type_id": 64,
+              "timestamp": "2016-03-24T16:45:39",
+              "virtual_op": true,
+              "operation_id": "3448858738752",
+              "trx_in_block": -1
+            }
  */
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_operation;

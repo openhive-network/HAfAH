@@ -74,33 +74,34 @@ CREATE TYPE hafah_endpoints.transaction AS (
           application/json:
             schema:
               $ref: '#/components/schemas/hafah_endpoints.transaction'
-            example:
-              - transaction_json: {
-                    "ref_block_num": 25532,
-                    "ref_block_prefix": 3338687976,
-                    "extensions": [],
-                    "expiration": "2016-08-12T17:23:48",
-                    "operations": [
-                      {
-                        "type": "custom_json_operation",
-                        "value": {
-                          "id": "follow",
-                          "json": "{\"follower\":\"breck0882\",\"following\":\"steemship\",\"what\":[]}",
-                          "required_auths": [],
-                          "required_posting_auths": [
-                            "breck0882"
-                          ]
-                        }
-                      }
-                    ],
-                    "signatures": [
-                      "201655190aac43bb272185c577262796c57e5dd654e3e491b921a38697d04d1a8e6a9deb722ec6d6b5d2f395dcfbb94f0e5898e858f"
-                    ]
+            example: {
+              "transaction_json": {
+                "ref_block_num": 25532,
+                "ref_block_prefix": 3338687976,
+                "extensions": [],
+                "expiration": "2016-08-12T17:23:48",
+                "operations": [
+                  {
+                    "type": "custom_json_operation",
+                    "value": {
+                      "id": "follow",
+                      "json": "{\"follower\":\"breck0882\",\"following\":\"steemship\",\"what\":[]}",
+                      "required_auths": [],
+                      "required_posting_auths": [
+                        "breck0882"
+                      ]
+                    }
                   }
-                transaction_id: 954f6de36e6715d128fa8eb5a053fc254b05ded0
-                block_num: 4023233
-                transaction_num: 0
-                timestamp: "2016-08-12T17:23:39"
+                ],
+                "signatures": [
+                  "201655190aac43bb272185c577262796c57e5dd654e3e491b9b32bd2d567c6d5de75185f221a38697d04d1a8e6a9deb722ec6d6b5d2f395dcfbb94f0e5898e858f"
+                ]
+              },
+              "transaction_id": "954f6de36e6715d128fa8eb5a053fc254b05ded0",
+              "block_num": 4023233,
+              "transaction_num": 0,
+              "timestamp": "2016-08-12T17:23:39"
+            }
  */
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_transaction;
