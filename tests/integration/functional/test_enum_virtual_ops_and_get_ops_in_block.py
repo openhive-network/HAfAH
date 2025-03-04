@@ -1,9 +1,9 @@
 import itertools
 
 import pytest
-from helpy.exceptions import CommunicationError
 
 import test_tools as tt
+from beekeepy.exceptions import ErrorInResponseError
 
 from hafah_local_tools import send_request_to_hafah
 
@@ -93,7 +93,7 @@ def test_exceed_block_range(init_node, haf_node, postgrest_hafah):
         f"gdgp haf node: {haf_node.api.database.get_dynamic_global_properties()}"
     )
 
-    with pytest.raises(CommunicationError):
+    with pytest.raises(ErrorInResponseError):
         send_request_to_hafah(
             postgrest_hafah,
             "enum_virtual_ops",
@@ -313,7 +313,7 @@ def test_pagination(haf_node, postgrest_hafah, wallet):
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
 def test_same_block_range_begin_and_end(postgrest_hafah):
-    with pytest.raises(CommunicationError):
+    with pytest.raises(ErrorInResponseError):
         send_request_to_hafah(
             postgrest_hafah, "enum_virtual_ops", block_range_begin=1, block_range_end=1
         )
