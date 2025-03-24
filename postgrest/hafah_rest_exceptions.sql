@@ -1,8 +1,9 @@
 SET ROLE hafah_owner;
 
 CREATE FUNCTION hafah_backend.rest_raise_missing_account(_account_name TEXT)
-RETURNS TEXT
+RETURNS VOID
 LANGUAGE 'plpgsql'
+IMMUTABLE
 AS
 $$
 BEGIN
@@ -11,9 +12,22 @@ END
 $$
 ;
 
-CREATE FUNCTION hafah_backend.rest_raise_missing_arg(_account_name TEXT)
-RETURNS TEXT
+CREATE FUNCTION hafah_backend.rest_raise_missing_block(_block_num INT)
+RETURNS VOID
 LANGUAGE 'plpgsql'
+IMMUTABLE
+AS
+$$
+BEGIN
+  RAISE EXCEPTION 'Assert Exception:block_num ''%s'' does not exist', _block_num;
+END
+$$
+;
+
+CREATE FUNCTION hafah_backend.rest_raise_missing_arg(_account_name TEXT)
+RETURNS VOID
+LANGUAGE 'plpgsql'
+IMMUTABLE
 AS
 $$
 BEGIN
@@ -23,8 +37,9 @@ $$
 ;
 
 CREATE FUNCTION hafah_backend.raise_uint_exception()
-RETURNS TEXT
+RETURNS VOID
 LANGUAGE 'plpgsql'
+IMMUTABLE
 AS
 $$
 BEGIN
@@ -34,8 +49,9 @@ $$
 ;
 
 CREATE FUNCTION hafah_backend.rest_raise_account_name_too_long(_account_name TEXT)
-RETURNS TEXT
+RETURNS VOID
 LANGUAGE 'plpgsql'
+IMMUTABLE
 AS
 $$
 BEGIN
@@ -45,8 +61,9 @@ $$
 ;
 
 CREATE FUNCTION hafah_backend.rest_raise_invalid_char_in_hex(_hex TEXT)
-RETURNS TEXT
+RETURNS VOID
 LANGUAGE 'plpgsql'
+IMMUTABLE
 AS
 $$
 BEGIN
@@ -56,8 +73,9 @@ $$
 ;
 
 CREATE FUNCTION hafah_backend.rest_raise_transaction_hash_invalid_length(_hex TEXT)
-RETURNS TEXT
+RETURNS VOID
 LANGUAGE 'plpgsql'
+IMMUTABLE
 AS
 $$
 BEGIN
