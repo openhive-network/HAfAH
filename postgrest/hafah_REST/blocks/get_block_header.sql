@@ -36,12 +36,11 @@ SET ROLE hafah_owner;
       '200':
         description: |
 
-          * Returns `JSONB`
+          * Returns `hafah_backend.block_header`
         content:
           application/json:
             schema:
-              type: string
-              x-sql-datatype: JSONB
+              $ref: '#/components/schemas/hafah_backend.block_header'
             example: {
                   "witness": "ihashfury",
                   "previous": "004c4b3fc6a8735b4ab5433d59f4526e4a042644",
@@ -55,7 +54,7 @@ DROP FUNCTION IF EXISTS hafah_endpoints.get_block_header;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_block_header(
     "block-num" TEXT
 )
-RETURNS JSONB 
+RETURNS hafah_backend.block_header 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'
 AS
@@ -67,7 +66,7 @@ DECLARE
 BEGIN
     -- Required argument: block-num
   IF __block IS NULL THEN
-      RETURN hafah_backend.rest_raise_missing_arg('block-num');
+    RETURN hafah_backend.rest_raise_missing_arg('block-num');
   ELSE
       __block_num = __block::BIGINT;
       IF __block_num < 0 THEN
@@ -82,14 +81,11 @@ BEGIN
   END IF;
 
   BEGIN
-    RETURN hafah_python.get_block_header_json(__block_num::INT);
+    RETURN hafah_backend.get_block_header(__block_num::INT);
 
     EXCEPTION
       WHEN invalid_text_representation THEN
         RETURN hafah_backend.rest_raise_uint_exception();
-      WHEN raise_exception THEN
-        GET STACKED DIAGNOSTICS __exception_message = message_text;
-        RETURN hafah_backend.rest_wrap_sql_exception(__exception_message);
   END;
 END
 $$
