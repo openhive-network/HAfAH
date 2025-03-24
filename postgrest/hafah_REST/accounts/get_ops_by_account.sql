@@ -1,5 +1,30 @@
 SET ROLE hafah_owner;
 
+/** openapi:components:schemas
+hafah_backend.account_history:
+  type: object
+  properties:
+    total_operations:
+      type: integer
+      description: Total number of operations
+    total_pages:
+      type: integer
+      description: Total number of pages
+    operations_result:
+      type: array
+      items:
+        $ref: '#/components/schemas/hafah_backend.operation'
+      description: List of operation results
+ */
+-- openapi-generated-code-begin
+DROP TYPE IF EXISTS hafah_backend.account_history CASCADE;
+CREATE TYPE hafah_backend.account_history AS (
+    "total_operations" INT,
+    "total_pages" INT,
+    "operations_result" hafah_backend.operation[]
+);
+-- openapi-generated-code-end
+
 /** openapi:paths
 /accounts/{account-name}/operations:
   get:
@@ -102,8 +127,7 @@ SET ROLE hafah_owner;
         content:
           application/json:
             schema:
-              type: string
-              x-sql-datatype: JSON
+              $ref: '#/components/schemas/hafah_backend.account_history'
             example: {
                   "total_operations": 219867,
                   "total_pages": 73289,
@@ -189,56 +213,81 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_ops_by_account(
     "from-block" TEXT = NULL,
     "to-block" TEXT = NULL
 )
-RETURNS JSON 
+RETURNS hafah_backend.account_history 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql' STABLE
 SET join_collapse_limit = 16
 SET from_collapse_limit = 16
 SET JIT = OFF
 SET enable_hashjoin = OFF
-SET plan_cache_mode = force_custom_plan
--- force_custom_plan added to every function that uses OFFSET
 AS
 $$
 DECLARE 
   _block_range hive.blocks_range := hive.convert_to_blocks_range("from-block","to-block");
-  _ops_count BIGINT;
-  _calculate_total_pages INT; 
+  _account_id INT = (SELECT av.id FROM hive.accounts_view av WHERE av.name = "account-name");
+  _ops_count INT;
+  _from INT;
+  _to INT;
   _operation_types INT[] := (SELECT string_to_array("operation-types", ',')::INT[]);
-  _page INT;
+  _result hafah_backend.operation[];
+
+  __total_pages INT;
+  __offset INT;
+  __limit INT;
 BEGIN
-PERFORM hafah_python.validate_limit("page-size", 1000, 'page-size');
-PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
+  IF _account_id IS NULL THEN
+    RETURN hafah_backend.rest_raise_missing_account("account-name");
+  END IF;
 
-SELECT hafah_backend.get_account_operations_count(_operation_types, "account-name", _block_range.first_block, _block_range.last_block) INTO _ops_count;
-
-SELECT (CASE WHEN (_ops_count % "page-size") = 0 THEN 
-    _ops_count/"page-size" ELSE ((_ops_count/"page-size") + 1) END)::INT INTO _calculate_total_pages;
-
-IF "page" IS NULL THEN
-  _page := 1;
-ELSE
+  PERFORM hafah_python.validate_limit("page-size", 1000, 'page-size');
+  PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
   PERFORM hafah_python.validate_negative_page("page");
-  PERFORM hafah_python.validate_page("page", _calculate_total_pages);
 
-  _page := _calculate_total_pages - "page" + 1;
-END IF;
+  -----------PAGING LOGIC----------------
+  SELECT count, from_seq, to_seq
+  INTO _ops_count, _from, _to
+  FROM hafah_backend.account_range(_operation_types, _account_id, _block_range.first_block, _block_range.last_block);
 
-IF (_block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL) OR ("page" IS NOT NULL AND _calculate_total_pages != "page") THEN
-  PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
-ELSE
-  PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
-END IF;
+  SELECT total_pages, offset_filter, limit_filter
+  INTO __total_pages, __offset, __limit
+  FROM hafah_backend.calculate_pages(_ops_count, "page", 'desc', "page-size");
 
-RETURN (
-  SELECT json_build_object(
+  IF (_block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL) OR ("page" IS NOT NULL AND __total_pages != "page") THEN
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
+  ELSE
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
+  END IF;
+
+  _result := array_agg(row) FROM (
+    SELECT 
+      ba.op,
+      ba.block,
+      ba.trx_id,
+      ba.op_pos,
+      ba.op_type_id,
+      ba.timestamp,
+      ba.virtual_op,
+      ba.operation_id,
+      ba.trx_in_block
+    FROM hafah_backend.get_ops_by_account(
+      _account_id,
+      _operation_types,
+      _from,
+      _to,
+      "data-size-limit",
+      __offset,
+      __limit
+    ) ba
+  ) row;
+
+  RETURN (
+    COALESCE(_ops_count,0),
+    COALESCE(__total_pages,0),
+    _result
+  )::hafah_backend.account_history;
+
 -- ops_count returns number of operations found with current filter
-    'total_operations', _ops_count,
 -- to count total_pages we need to check if there was a rest from division by "page-size", if there was the page count is +1 
-    'total_pages', _calculate_total_pages,
-    'operations_result', 
-    (SELECT to_json(array_agg(row)) FROM (
-      SELECT * FROM hafah_backend.get_ops_by_account("account-name", 
 -- there is two diffrent page_nums, internal and external, internal page_num is ascending (first page with the newest operation is number 1)
 -- external page_num is descending, its given by FE and recalculated by this query to internal 
 
@@ -247,18 +296,7 @@ RETURN (
 -- page 15 (external first page) 15 - 15 + 1 = 1 (internal first page)
 -- page 14 (external second page) 15 - 14 + 1 = 2 (internal second page)
 -- ... page 7, 15 - 7 + 1 =  9 (internal 9th page)
-      _page,
-      "page-size",
-      _operation_types,
-      _block_range.first_block,
-      _block_range.last_block,
-      "data-size-limit",
-      (_ops_count % "page-size")::INT,
-      _ops_count::INT)
-
 -- to return the first page with the rest of the division of ops count the number is handed over to backend function
-    ) row)
-  ));
 
 END
 $$;
