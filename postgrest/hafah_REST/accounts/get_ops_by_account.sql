@@ -123,7 +123,7 @@ CREATE TYPE hafah_backend.account_history AS (
           Result contains total number of operations,
           total pages, and the list of operations.
 
-          * Returns `JSON`
+          * Returns `hafah_backend.account_history`
         content:
           application/json:
             schema:
