@@ -27,12 +27,13 @@ SET ROLE hafah_owner;
         description: |
           Operation type list
 
-          * Returns `JSONB`
+          * Returns array of `INT`
         content:
           application/json:
             schema:
-              type: string
-              x-sql-datatype: JSONB
+              type: array
+              items:
+                type: integer
             example: [
               0,
               1,
@@ -72,7 +73,7 @@ DROP FUNCTION IF EXISTS hafah_endpoints.get_acc_op_types;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_acc_op_types(
     "account-name" TEXT
 )
-RETURNS JSONB 
+RETURNS INT[] 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql' STABLE
 SET JIT = OFF
@@ -83,21 +84,14 @@ $$
 DECLARE
   __account_id INT = (SELECT av.id FROM hive.accounts_view av WHERE av.name = "account-name");
 BEGIN
+  IF _account_id IS NULL THEN
+    RETURN hafah_backend.rest_raise_missing_account("account-name");
+  END IF;
+
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
 
-  RETURN (
-    WITH op_types_cte AS 
-    (
-      SELECT id
-      FROM hafd.operation_types hot
-      WHERE (
-        SELECT EXISTS (
-          SELECT 1 FROM hive.account_operations_view aov WHERE aov.account_id = __account_id AND aov.op_type_id = hot.id))
-    )
+  RETURN hafah_backend.get_acc_op_types(__account_id);
 
-    SELECT jsonb_agg(to_jsonb(cte.id::INT))
-    FROM op_types_cte cte
-  );
 END
 $$;
 
