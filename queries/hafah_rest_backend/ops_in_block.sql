@@ -1,7 +1,7 @@
 SET ROLE hafah_owner;
 
 --block range 
-CREATE OR REPLACE FUNCTION hafah_python.get_rest_ops_in_blocks_json(
+CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_blocks(
     in _block_num INT,
     in _end_block_num INT, 
     in _operation_group_types BOOLEAN,
@@ -11,94 +11,92 @@ CREATE OR REPLACE FUNCTION hafah_python.get_rest_ops_in_blocks_json(
     in _include_reversible BOOLEAN,
     in _is_legacy_style BOOLEAN 
 )
-RETURNS JSON
+RETURNS hafah_backend.operations_in_block_range
+LANGUAGE 'plpgsql' STABLE
 AS
-$function$
+$$
+DECLARE
+  _operations hafah_backend.operation[];
+  _operation_id TEXT;
+  _next_block_num INT;
+
+  _latest_block_num INT := (SELECT num FROM hafd.blocks ORDER BY num DESC LIMIT 1);
 BEGIN
-  PERFORM hafah_python.validate_block_range( _block_num, _end_block_num + 1, 2001);
-
-  RETURN (
-    WITH pre_result AS (
-      SELECT
-        hp.__block_num AS "block",
-        hp._value ::json AS "op",
-        hp._op_in_trx AS "op_in_trx",
-        hp._timestamp AS "timestamp",
-        hp._trx_id AS "trx_id",
-        hp._trx_in_block AS "trx_in_block",
-        hp._virtual_op AS "virtual_op",
-        hp._operation_id AS "operation_id"
-      FROM
-        hafah_python.get_rest_ops_in_block( 
-          _block_num,
-          _end_block_num + 1,
-          _operation_group_types,
-          _operation_types,
-          _operation_begin,
-          _limit,
-          _include_reversible,
-          _is_legacy_style
-        ) AS hp
-    ),
-    pag AS (
-      SELECT
-        (
-          CASE
-            WHEN (SELECT COUNT(*) FROM pre_result) = _limit THEN
-              pre_result.block
-            ELSE
-              _end_block_num
-          END
-        ) AS block_num,
-        pre_result.operation_id AS id
-      FROM pre_result
-      WHERE pre_result.operation_id = (SELECT MAX(pre_result.operation_id) FROM pre_result)
-      LIMIT 1
+  WITH pre_result AS (
+    SELECT
+      hp.__block_num AS "block",
+      hp._value::jsonb AS "op",
+      hp._op_in_trx AS "op_in_trx",
+      hp._op_type_id AS "op_type_id",
+      hp._timestamp AS "timestamp",
+      hp._trx_id AS "trx_id",
+      hp._trx_in_block AS "trx_in_block",
+      hp._virtual_op AS "virtual_op",
+      hp._operation_id AS "operation_id"
+    FROM hafah_backend.get_ops_in_blocks_helper( 
+      _block_num,
+      (CASE WHEN _end_block_num > _latest_block_num THEN _latest_block_num + 1 ELSE _end_block_num + 1 END),
+      _operation_group_types,
+      _operation_types,
+      _operation_begin,
+      _limit,
+      _include_reversible,
+      _is_legacy_style
+    ) AS hp
+  ),
+  count_logic AS MATERIALIZED (
+    SELECT COUNT(*) as count FROM pre_result
+  ),
+  paging_logic AS MATERIALIZED (
+    SELECT (
+      CASE
+        WHEN (SELECT count FROM count_logic) = _limit THEN
+          pre_result.block
+        ELSE
+          _end_block_num
+        END
+      ) AS block_num,
+      (
+      CASE
+        WHEN (SELECT count FROM count_logic) = _limit THEN
+          pre_result.operation_id
+        ELSE
+          0
+        END
+      ) AS id
+    FROM pre_result
+    WHERE pre_result.operation_id = (SELECT MAX(pre_result.operation_id) FROM pre_result)
+    LIMIT 1
+  )
+  SELECT 
+    COALESCE((SELECT block_num FROM paging_logic), 0)::INT,
+    COALESCE((SELECT id FROM paging_logic), 0)::TEXT,
+    (
+      SELECT array_agg(rows)
+      FROM (
+        SELECT 
+          s.op,
+          s.block,
+          s.trx_id,
+          s.op_in_trx::INT,
+          s.op_type_id,
+          s.timestamp,
+          s.virtual_op,
+          hafah_python.json_stringify_bigint(s.operation_id),
+          s.trx_in_block::SMALLINT
+        FROM pre_result s
+      ) rows
     )
-    SELECT to_jsonb(result) 
-    FROM (
-      SELECT
-        COALESCE((SELECT block_num FROM pag), (
-          CASE
-            WHEN _end_block_num > (SELECT num FROM hafd.blocks ORDER BY num DESC LIMIT 1) THEN 0
-            ELSE _end_block_num
-          END
-        )) AS next_block_range_begin,
-        hafah_python.json_stringify_bigint(COALESCE((
-          CASE
-            WHEN (SELECT block_num FROM pag) >= _end_block_num THEN 0
-            ELSE (SELECT id FROM pag)
-          END
-        ), 0)) AS next_operation_begin,
-        (
-          SELECT ARRAY(
-            SELECT
-              CASE
-                WHEN _is_legacy_style THEN to_jsonb(res) - 'operation_id'
-                ELSE to_jsonb(res)
-              END
-            FROM (
-              SELECT
-                s.block,
-                s.op,
-                s.op_in_trx,
-                hafah_python.json_stringify_bigint(s.operation_id) AS "operation_id",
-                s.timestamp,
-                s.trx_id,
-                s.trx_in_block,
-                s.virtual_op
-              FROM pre_result s
-            ) AS res
-          )
-        ) AS ops
-    ) AS result
-  );
+  INTO _next_block_num, _operation_id, _operations;
+
+
+  RETURN (_next_block_num, _operation_id, COALESCE(_operations, '{}'::hafah_backend.operation[]))::hafah_backend.operations_in_block_range;
+
 END
-$function$
-language plpgsql STABLE;
+$$;
 
-
-CREATE OR REPLACE FUNCTION hafah_python.get_rest_ops_in_block( 
+--get_ops_in_blocks json-rpc function reused in hafah REST
+CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_blocks_helper( 
     in _block_num INT,
     in _end_block_num INT, 
     in _operation_group_types BOOLEAN,
@@ -113,6 +111,7 @@ RETURNS TABLE(
     _trx_id TEXT,
     _trx_in_block BIGINT,
     _op_in_trx BIGINT,
+    _op_type_id INT,
     _virtual_op BOOLEAN,
     _timestamp TEXT,
     _value TEXT,
@@ -130,6 +129,7 @@ BEGIN
       NULL::TEXT, -- _trx_id
       NULL::BIGINT, -- _trx_in_block
       NULL::BIGINT, -- _op_in_trx
+      NULL::INT, -- _op_type_id
       NULL::BOOLEAN, -- _virtual_op
       NULL::TEXT, -- _timestamp
       NULL::TEXT, -- _value
@@ -154,11 +154,12 @@ BEGIN
         ) _trx_id,
         (
           CASE
-          WHEN T2.trx_in_block IS NULL THEN 4294967295
+          WHEN T2.trx_in_block IS NULL THEN -1
           ELSE T2.trx_in_block
           END
-        ) _trx_in_block,
+        )::BIGINT _trx_in_block,
         T.op_pos _op_in_trx,
+        T.op_type_id _op_type_id,
         T.virtual_op _virtual_op,
         (
           CASE
@@ -219,6 +220,7 @@ BEGIN
       pre_result._trx_id,
       pre_result._trx_in_block,
       pre_result._op_in_trx,
+      pre_result._op_type_id::INT,
       pre_result._virtual_op,
       trim(both '"' from to_json(hb.created_at)::text) _timestamp,
       pre_result._value,
