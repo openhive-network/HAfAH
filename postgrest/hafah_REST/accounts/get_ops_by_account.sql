@@ -236,7 +236,7 @@ DECLARE
   __limit INT;
 BEGIN
   IF _account_id IS NULL THEN
-    RETURN hafah_backend.rest_raise_missing_account("account-name");
+    PERFORM hafah_backend.rest_raise_missing_account("account-name");
   END IF;
 
   PERFORM hafah_python.validate_limit("page-size", 1000, 'page-size');

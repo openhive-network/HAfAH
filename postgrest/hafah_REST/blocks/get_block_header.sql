@@ -66,7 +66,7 @@ DECLARE
 BEGIN
     -- Required argument: block-num
   IF __block IS NULL THEN
-    RETURN hafah_backend.rest_raise_missing_arg('block-num');
+    PERFORM hafah_backend.rest_raise_missing_arg('block-num');
   ELSE
       __block_num = __block::BIGINT;
       IF __block_num < 0 THEN
@@ -85,7 +85,7 @@ BEGIN
 
     EXCEPTION
       WHEN invalid_text_representation THEN
-        RETURN hafah_backend.rest_raise_uint_exception();
+        PERFORM hafah_backend.rest_raise_uint_exception();
   END;
 END
 $$
