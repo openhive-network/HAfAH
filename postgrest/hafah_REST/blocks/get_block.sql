@@ -44,12 +44,11 @@ SET ROLE hafah_owner;
       '200':
         description: |
 
-          * Returns `JSONB`
+          * Returns `hafah_backend.block_range`
         content:
           application/json:
             schema:
-              type: string
-              x-sql-datatype: JSONB
+              $ref: '#/components/schemas/hafah_backend.block_range'
             example: {
                   "witness": "ihashfury",
                   "block_id": "004c4b40245ffb07380a393fb2b3d841b76cdaec",
@@ -158,7 +157,7 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_block(
     "block-num" TEXT,
     "include-virtual" BOOLEAN = False
 )
-RETURNS JSONB 
+RETURNS hafah_backend.block_range
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'
 AS
@@ -170,12 +169,12 @@ DECLARE
 BEGIN
     -- Required argument: block-num
   IF __block IS NULL THEN
-      RETURN hafah_backend.rest_raise_missing_arg('block-num');
+    PERFORM hafah_backend.rest_raise_missing_arg('block-num');
   ELSE
-      __block_num = __block::BIGINT;
-      IF __block_num < 0 THEN
-          __block_num := __block_num + ((POW(2, 31) - 1) :: BIGINT);
-      END IF;        
+    __block_num = __block::BIGINT;
+    IF __block_num < 0 THEN
+        __block_num := __block_num + ((POW(2, 31) - 1) :: BIGINT);
+    END IF;        
   END IF;
 
   IF __block <= hive.app_get_irreversible_block() AND __block IS NOT NULL THEN
@@ -185,14 +184,11 @@ BEGIN
   END IF;
 
   BEGIN
-    RETURN hafah_python.get_block_json(__block_num::INT, "include-virtual");
+    RETURN hafah_backend.get_block(__block_num::INT, "include-virtual")::JSON;
 
     EXCEPTION
       WHEN invalid_text_representation THEN
-        RETURN hafah_backend.rest_raise_uint_exception();
-      WHEN raise_exception THEN
-        GET STACKED DIAGNOSTICS __exception_message = message_text;
-        RETURN hafah_backend.rest_wrap_sql_exception(__exception_message);
+        PERFORM hafah_backend.rest_raise_uint_exception();
   END;
 END
 $$
