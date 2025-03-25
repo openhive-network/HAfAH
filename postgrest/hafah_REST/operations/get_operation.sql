@@ -81,32 +81,30 @@ LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
- _block_num INT := (SELECT ov.block_num FROM hive.operations_view ov WHERE ov.id = "operation-id");
+  _block_num INT := (SELECT ov.block_num FROM hive.operations_view ov WHERE ov.id = "operation-id");
 BEGIN
+  IF _block_num IS NULL THEN
+    PERFORM hafah_backend.rest_raise_missing_operation_id("operation-id");
+  END IF;
 
-IF _block_num <= hive.app_get_irreversible_block() THEN
-  PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
-ELSE
-  PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
-END IF;
+  IF _block_num <= hive.app_get_irreversible_block() THEN
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
+  ELSE
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
+  END IF;
 
-RETURN (
-  SELECT ROW (
-      ov.body,
-      ov.block_num,
-      encode(htv.trx_hash, 'hex'),
+  RETURN (
+      ov.op,
+      ov.block,
+      ov.trx_id,
       ov.op_pos,
       ov.op_type_id,
       ov.timestamp,
-      hot.is_virtual,
-      ov.id::TEXT,
+      ov.virtual_op,
+      ov.operation_id,
       ov.trx_in_block
-  )
-    FROM hive.operations_view_extended ov
-    JOIN hafd.operation_types hot ON hot.id = ov.op_type_id
-    LEFT JOIN hive.transactions_view htv ON htv.block_num = ov.block_num AND htv.trx_in_block = ov.trx_in_block
-	  WHERE ov.id = "operation-id"
-);
+    )::hafah_backend.operation 
+  FROM hafah_backend.get_operation("operation-id");
 END
 $$;
 
