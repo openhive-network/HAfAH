@@ -38,7 +38,6 @@ LANGUAGE 'plpgsql' STABLE
 AS
 $$
 BEGIN
-
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   RETURN bv.num FROM hive.blocks_view bv ORDER BY bv.num DESC LIMIT 1;
 
