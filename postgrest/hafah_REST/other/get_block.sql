@@ -52,12 +52,12 @@ SET ROLE hafah_owner;
               "witness_signature": "1f6aa1c6311c768b5225b115eaf5798e5f1d8338af3970d90899cd5ccbe38f6d1f7676c5649bcca18150cbf8f07c0cc7ec3ae40d5936cfc6d5a650e582ba0f8002",
               "signing_key": "STM8aUs6SGoEmNYMd3bYjE1UBr6NQPxGWmTqTdBaxJYSx244edSB2",
               "hbd_interest_rate": 1000,
-              "total_vesting_fund_hive": 149190428013,
-              "total_vesting_shares": 448144916705468350,
-              "total_reward_fund_hive": 66003975,
-              "virtual_supply": 161253662237,
-              "current_supply": 157464400971,
-              "current_hbd_supply": 2413759427,
+              "total_vesting_fund_hive": "149190428013",
+              "total_vesting_shares": "448144916705468350",
+              "total_reward_fund_hive": "66003975",
+              "virtual_supply": "161253662237",
+              "current_supply": "157464400971",
+              "current_hbd_supply": "2413759427",
               "dhf_interval_ledger": 0,
               "created_at": "2016-09-15T19:47:21"
             }
@@ -78,38 +78,15 @@ SET from_collapse_limit = 16
 AS
 $$
 DECLARE
-    __block INT := hive.convert_to_block_num("block-num");
+  __block INT := hive.convert_to_block_num("block-num");
 BEGIN
-
   IF __block <= hive.app_get_irreversible_block() AND __block IS NOT NULL THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
   ELSE
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   END IF;
 
-  RETURN (
-  SELECT ROW(
-    bv.num,   
-    encode(bv.hash,'hex'),
-    encode(bv.prev,'hex'),
-    (SELECT av.name FROM hive.accounts_view av WHERE av.id = bv.producer_account_id)::TEXT,
-    encode(bv.transaction_merkle_root,'hex'),
-    COALESCE(bv.extensions, '[]'),
-    encode(bv.witness_signature, 'hex'),
-    bv.signing_key,
-    bv.hbd_interest_rate::numeric,
-    bv.total_vesting_fund_hive::numeric,
-    bv.total_vesting_shares::numeric,
-    bv.total_reward_fund_hive::numeric,
-    bv.virtual_supply::numeric,
-    bv.current_supply::numeric,
-    bv.current_hbd_supply::numeric,
-    bv.dhf_interval_ledger::numeric,
-    bv.created_at)
-  FROM hive.blocks_view bv
-  WHERE bv.num = __block
-  );
-
+  RETURN hafah_backend.get_global_state(__block);
 END
 $$;
 
