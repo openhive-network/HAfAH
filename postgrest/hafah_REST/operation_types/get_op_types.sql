@@ -60,21 +60,17 @@ LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
-  __operation_name TEXT := NULL;
+  __operation_name TEXT := '%' || "partial-operation-name" || '%';
 BEGIN
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
 
-  IF "partial-operation-name" IS NOT NULL THEN
-    __operation_name := '%' || "partial-operation-name" || '%';
-  END IF;  
-
-  RETURN QUERY SELECT
-    id::INT, split_part(name, '::', 3), is_virtual
-  FROM hafd.operation_types
-  WHERE ((__operation_name IS NULL) OR (name LIKE __operation_name))
-  ORDER BY id ASC
-  ;
-
+  RETURN QUERY (
+    SELECT
+      op_type_id,
+      operation_name,
+      is_virtual
+    FROM hafah_backend.get_op_types(__operation_name)
+  );
 END
 $$;
 
