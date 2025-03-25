@@ -27,19 +27,23 @@ SET ROLE hafah_owner;
         description: |
           Operation json key paths
 
-          * Returns `JSONB`
+          * Returns `JSON`
         content:
           application/json:
             schema:
-              type: string
-              x-sql-datatype: JSONB
+              type: array
+              items:
+                type: array
+                items:
+                  type: string
+              x-sql-datatype: JSON
             example: [
                   ["value","body"],
                   ["value","title"],
                   ["value","author"],
                   ["value","permlink"],
                   ["value","json_metadata"],
-                  ["value","parent_author"] ,
+                  ["value","parent_author"],
                   ["value","parent_permlink"]
                 ]
  */
@@ -48,7 +52,7 @@ DROP FUNCTION IF EXISTS hafah_endpoints.get_operation_keys;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_operation_keys(
     "type-id" INT
 )
-RETURNS JSONB 
+RETURNS JSON 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql' STABLE
 SET JIT = OFF
@@ -64,26 +68,32 @@ DECLARE
 BEGIN
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
 
-  RETURN (
-    WITH RECURSIVE extract_keys AS (
+  IF ("type-id" > (SELECT MAX(id) FROM hafd.operation_types)) OR "type-id" < 0 THEN
+    PERFORM hafah_backend.rest_raise_missing_op_type("type-id");
+  END IF;
+
+  RETURN COALESCE(
+    (
+      WITH RECURSIVE extract_keys AS (
+        SELECT 
+          ARRAY['value']::TEXT[] as key_path, 
+          (json_each(_example_key -> 'value')).*
+        UNION ALL
+        SELECT 
+          key_path || key,
+          (json_each(value)).*
+        FROM 
+          extract_keys
+        WHERE 
+          json_typeof(value) = 'object'
+      )
       SELECT 
-        ARRAY['value']::TEXT[] as key_path, 
-        (json_each(_example_key -> 'value')).*
-      UNION ALL
-      SELECT 
-        key_path || key,
-        (json_each(value)).*
+        json_agg(to_json(key_path || key))
       FROM 
         extract_keys
       WHERE 
-        json_typeof(value) = 'object'
-    )
-    SELECT 
-      jsonb_agg(to_jsonb(key_path || key))
-    FROM 
-      extract_keys
-    WHERE 
-      json_typeof(value) != 'object'
+        json_typeof(value) != 'object'
+    ), '[]'::json
   );
 END
 $$;
