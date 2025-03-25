@@ -57,6 +57,9 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_op_types(
 RETURNS SETOF hafah_backend.op_types 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql' STABLE
+SET JIT = OFF
+SET join_collapse_limit = 16
+SET from_collapse_limit = 16
 AS
 $$
 DECLARE

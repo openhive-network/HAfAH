@@ -290,13 +290,15 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_block_range(
 RETURNS SETOF hafah_backend.block_range 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'
+SET JIT = OFF
+SET join_collapse_limit = 16
+SET from_collapse_limit = 16
 AS
 $$
 DECLARE
     _block_range hive.blocks_range := hive.convert_to_blocks_range("from-block","to-block");
     __block_num BIGINT = NULL;
     __end_block_num BIGINT = NULL;
-    __exception_message TEXT;
 BEGIN
   -- Required argument: block-num
   IF _block_range.first_block IS NULL THEN
