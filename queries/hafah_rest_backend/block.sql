@@ -32,4 +32,46 @@ END;
 $BODY$
 ;
 
+CREATE OR REPLACE FUNCTION hafah_backend.get_global_state(_block_num INT)
+    RETURNS hafah_backend.block
+    LANGUAGE plpgsql
+    STABLE
+AS
+$BODY$
+DECLARE
+  __block_type hafah_backend.block;
+BEGIN
+  __block_type := (
+    SELECT (
+      bv.num,   
+      encode(bv.hash,'hex'),
+      encode(bv.prev,'hex'),
+      (SELECT av.name FROM hive.accounts_view av WHERE av.id = bv.producer_account_id)::TEXT,
+      encode(bv.transaction_merkle_root,'hex'),
+      COALESCE(bv.extensions, '[]'),
+      encode(bv.witness_signature, 'hex'),
+      bv.signing_key,
+      bv.hbd_interest_rate::numeric,
+      bv.total_vesting_fund_hive::TEXT,
+      bv.total_vesting_shares::TEXT,
+      bv.total_reward_fund_hive::TEXT,
+      bv.virtual_supply::TEXT,
+      bv.current_supply::TEXT,
+      bv.current_hbd_supply::TEXT,
+      bv.dhf_interval_ledger::numeric,
+      bv.created_at
+    )::hafah_backend.block
+    FROM hive.blocks_view bv
+    WHERE bv.num = _block_num
+  );
+
+  IF __block_type.block_num IS NULL THEN
+    PERFORM hafah_backend.rest_raise_missing_block(_block_num);
+  END IF;
+
+  RETURN __block_type;
+END;
+$BODY$
+;
+
 RESET ROLE;
