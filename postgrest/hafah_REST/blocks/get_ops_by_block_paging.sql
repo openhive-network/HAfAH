@@ -91,7 +91,6 @@ SET ROLE hafah_owner;
           type: array
           items:
             type: string
-          x-sql-datatype: TEXT[]
           default: NULL
         description: |
           A parameter specifying the expected value in operation body,
@@ -102,12 +101,11 @@ SET ROLE hafah_owner;
           Result contains total operations number,
           total pages and the list of operations
 
-          * Returns `JSON`
+          * Returns `hafah_backend.operation_history`
         content:
           application/json:
             schema:
-              type: string
-              x-sql-datatype: JSON
+              $ref: '#/components/schemas/hafah_backend.operation_history'
             example: {
                   "total_operations": 1,
                   "total_pages": 1,
@@ -156,7 +154,7 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_ops_by_block_paging(
     "data-size-limit" INT = 200000,
     "path-filter" TEXT[] = NULL
 )
-RETURNS JSON 
+RETURNS hafah_backend.operation_history 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql' STABLE
 SET JIT = OFF
@@ -166,72 +164,97 @@ AS
 $$
 DECLARE
   __block INT := hive.convert_to_block_num("block-num");
-  _operation_types INT[] := NULL;
+  _operation_types INT[] := (CASE WHEN "operation-types" IS NOT NULL THEN string_to_array("operation-types", ',')::INT[] ELSE NULL END);
   _key_content TEXT[] := NULL;
   _set_of_keys JSON := NULL;
-  _calculate_total_pages INT;
-  _ops_count BIGINT;
+  _result hafah_backend.operation[];
+  _account_id INT := NULL;
+
+  _ops_count INT;
+  __total_pages INT;
 BEGIN
-PERFORM hafah_python.validate_limit("page-size", 10000, 'page-size');
-PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
-PERFORM hafah_python.validate_negative_page("page");
+  PERFORM hafah_python.validate_limit("page-size", 10000, 'page-size');
+  PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
+  PERFORM hafah_python.validate_negative_page("page");
 
-IF "path-filter" IS NOT NULL AND "path-filter" != '{}' THEN
-  SELECT 
-    pvpf.param_json::JSON,
-    pvpf.param_text::TEXT[]
-  INTO _set_of_keys, _key_content
-  FROM hafah_backend.parse_path_filters("path-filter") pvpf;
-END IF;
+  IF __block IS NULL THEN
+    PERFORM hafah_backend.rest_raise_missing_arg('block-num');
+  END IF;
 
-IF "operation-types" IS NOT NULL THEN
-  _operation_types := string_to_array("operation-types", ',')::INT[];
-END IF;
+  IF NOT EXISTS (SELECT 1 FROM hive.blocks_view bv WHERE bv.num = __block) THEN
+    PERFORM hafah_backend.rest_raise_missing_block(__block);
+  END IF;
 
-IF __block <= hive.app_get_irreversible_block() AND __block IS NOT NULL THEN
-  PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
-ELSE
-  PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
-END IF;
+  IF "account-name" IS NOT NULL THEN
+    _account_id := (SELECT av.id FROM hive.accounts_view av WHERE av.name = "account-name");
 
--- amount of operations
-SELECT hafah_backend.get_ops_by_block_count(
-  __block,
-  _operation_types,
-  "account-name",
-  _key_content,
-  _set_of_keys
-) INTO _ops_count;
+    IF _account_id IS NULL THEN
+      PERFORM hafah_backend.rest_raise_missing_account("account-name");
+    END IF;
+  END IF;
 
---amount of pages
-SELECT (
-  CASE WHEN (_ops_count % "page-size") = 0 THEN 
-    _ops_count/"page-size" 
-  ELSE ((_ops_count/"page-size") + 1) 
-  END
-)::INT INTO _calculate_total_pages;
+  IF "path-filter" IS NOT NULL AND "path-filter" != '{}' THEN
+    SELECT 
+      pvpf.param_json::JSON,
+      pvpf.param_text::TEXT[]
+    INTO _set_of_keys, _key_content
+    FROM hafah_backend.parse_path_filters("path-filter") pvpf;
+  END IF;
 
-PERFORM hafah_python.validate_page("page", _calculate_total_pages);
+  IF __block <= hive.app_get_irreversible_block() AND __block IS NOT NULL THEN
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
+  ELSE
+    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
+  END IF;
 
-RETURN (
-  SELECT json_build_object(
-    'total_operations', _ops_count,
-    'total_pages', _calculate_total_pages,
-    'operations_result', 
-    (SELECT to_json(array_agg(row)) FROM (
-      SELECT * FROM hafah_backend.get_ops_by_block(
+  _ops_count := (
+    SELECT hafah_backend.get_ops_by_block_count(
+      __block,
+      _operation_types,
+      _account_id,
+      _key_content,
+      _set_of_keys
+    )
+  );
+
+  __total_pages := (
+    CASE 
+      WHEN (_ops_count % "page-size") = 0 THEN 
+        _ops_count/"page-size" 
+      ELSE 
+        (_ops_count/"page-size") + 1
+    END
+  );
+
+  _result := array_agg(row) FROM (
+    SELECT 
+      ba.op,
+      ba.block,
+      ba.trx_id,
+      ba.op_pos,
+      ba.op_type_id,
+      ba.timestamp,
+      ba.virtual_op,
+      ba.operation_id,
+      ba.trx_in_block
+    FROM hafah_backend.get_ops_by_block(
       __block, 
       "page",
       "page-size",
       _operation_types,
       "page-order",
       "data-size-limit",
-      "account-name",
+      _account_id,
       _key_content,
       _set_of_keys
-      )
-    ) row)
-  ));
+      ) ba
+  ) row;
+
+  RETURN (
+    COALESCE(_ops_count,0),
+    COALESCE(__total_pages,0),
+    _result
+  )::hafah_backend.operation_history;
 
 END
 $$;

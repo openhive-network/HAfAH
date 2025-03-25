@@ -157,7 +157,7 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_block(
     "block-num" TEXT,
     "include-virtual" BOOLEAN = False
 )
-RETURNS hafah_backend.block_range
+RETURNS hafah_backend.block_range 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'
 AS
