@@ -72,4 +72,29 @@ CREATE TYPE hafah_backend.operation AS (
 );
 -- openapi-generated-code-end
 
+/** openapi:components:schemas
+hafah_backend.operation_history:
+  type: object
+  properties:
+    total_operations:
+      type: integer
+      description: Total number of operations
+    total_pages:
+      type: integer
+      description: Total number of pages
+    operations_result:
+      type: array
+      items:
+        $ref: '#/components/schemas/hafah_backend.operation'
+      description: List of operation results
+ */
+-- openapi-generated-code-begin
+DROP TYPE IF EXISTS hafah_backend.operation_history CASCADE;
+CREATE TYPE hafah_backend.operation_history AS (
+    "total_operations" INT,
+    "total_pages" INT,
+    "operations_result" hafah_backend.operation[]
+);
+-- openapi-generated-code-end
+
 RESET ROLE;
