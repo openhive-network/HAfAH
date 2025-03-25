@@ -97,4 +97,29 @@ CREATE TYPE hafah_backend.operation_history AS (
 );
 -- openapi-generated-code-end
 
+/** openapi:components:schemas
+hafah_backend.operations_in_block_range:
+  type: object
+  properties:
+    next_block_range_begin:
+      type: integer
+      description: Lower bound for the next block number
+    next_operation_begin:
+      type: string
+      description: Lower bound for the next operation id
+    ops:
+      type: array
+      items:
+        $ref: '#/components/schemas/hafah_backend.operation'
+      description: List of operation results
+ */
+-- openapi-generated-code-begin
+DROP TYPE IF EXISTS hafah_backend.operations_in_block_range CASCADE;
+CREATE TYPE hafah_backend.operations_in_block_range AS (
+    "next_block_range_begin" INT,
+    "next_operation_begin" TEXT,
+    "ops" hafah_backend.operation[]
+);
+-- openapi-generated-code-end
+
 RESET ROLE;
