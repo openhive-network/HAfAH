@@ -1,39 +1,9 @@
 SET ROLE hafah_owner;
 
-CREATE OR REPLACE FUNCTION hafah_python.get_block_range_json(_block_num INT, _end_block_num INT)
-    RETURNS JSONB
-    LANGUAGE plpgsql
-    VOLATILE
-AS
-$BODY$
-DECLARE
-    __result JSONB;
-BEGIN
-    SELECT jsonb_agg(
-        hive.build_block_json(
-            gbr.previous,
-            gbr.timestamp,
-            gbr.witness,
-            gbr.transaction_merkle_root,
-            gbr.extensions,
-            gbr.witness_signature,
-            gbr.transactions,
-            gbr.block_id,
-            gbr.signing_key,
-            gbr.transaction_ids
-        )
-    ) INTO __result
-    FROM hafah_python.get_block_range(_block_num, _end_block_num) gbr
-    WHERE gbr.timestamp IS NOT NULL;
-    RETURN __result;
-END;
-$BODY$
-;
-
 CREATE OR REPLACE FUNCTION hafah_python.get_block_range( _block_num INT, _end_block_num INT)
     RETURNS SETOF hive.block_type
     LANGUAGE plpgsql
-    VOLATILE
+    STABLE
 AS
 $BODY$
 BEGIN
@@ -50,6 +20,33 @@ BEGIN
     END IF;
 
     RETURN QUERY SELECT (block).* FROM hive.get_block_from_views( _block_num, (_end_block_num - _block_num + 1));
+END;
+$BODY$
+;
+
+
+CREATE OR REPLACE FUNCTION hafah_backend.get_block_range(_block_num INT, _end_block_num INT)
+    RETURNS SETOF hafah_backend.block_range
+    LANGUAGE plpgsql
+    STABLE
+AS
+$BODY$
+BEGIN
+  RETURN QUERY (
+    SELECT
+      encode( gbr.previous, 'hex')::TEXT,
+      TRIM(both '"' from to_json(gbr.timestamp)::text)::timestamp,
+      gbr.witness::TEXT,
+      encode( gbr.transaction_merkle_root, 'hex')::TEXT,
+      COALESCE(gbr.extensions, jsonb_build_array()),
+      encode( gbr.witness_signature, 'hex')::TEXT,
+      COALESCE(hive.transactions_to_json(gbr.transactions), jsonb_build_array()),
+      encode( gbr.block_id, 'hex')::TEXT,
+      gbr.signing_key::TEXT,
+      (SELECT ARRAY( SELECT encode(unnest(gbr.transaction_ids), 'hex')))::TEXT[]
+    FROM hafah_python.get_block_range(_block_num, _end_block_num) gbr
+    WHERE gbr.timestamp IS NOT NULL
+  );
 END;
 $BODY$
 ;

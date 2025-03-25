@@ -1,5 +1,12 @@
 SET ROLE hafah_owner;
 
+/** openapi:components:schemas
+hafah_backend.array_of_block_range:
+  type: array
+  items:
+    $ref: '#/components/schemas/hafah_backend.block_range'
+*/
+
 /** openapi:paths
 /blocks:
   get:
@@ -55,12 +62,11 @@ SET ROLE hafah_owner;
       '200':
         description: |
 
-          * Returns `JSONB`
+          * Returns array of `hafah_backend.block_range`
         content:
           application/json:
             schema:
-              type: string
-              x-sql-datatype: JSONB
+              $ref: '#/components/schemas/hafah_backend.array_of_block_range'
             example: [
                   {
                     "witness": "smooth.witness",
@@ -281,7 +287,7 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_block_range(
     "from-block" TEXT = NULL,
     "to-block" TEXT = NULL
 )
-RETURNS JSONB 
+RETURNS SETOF hafah_backend.block_range 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'
 AS
@@ -294,7 +300,7 @@ DECLARE
 BEGIN
   -- Required argument: block-num
   IF _block_range.first_block IS NULL THEN
-      RETURN hafah_backend.rest_raise_missing_arg('from-block');
+    PERFORM hafah_backend.rest_raise_missing_arg('from-block');
   ELSE
     __block_num = _block_range.first_block::BIGINT;
     IF __block_num < 0 THEN
@@ -303,7 +309,7 @@ BEGIN
   END IF;
 
   IF _block_range.last_block IS NULL THEN
-      RETURN hafah_backend.rest_raise_missing_arg('to-block');
+    PERFORM hafah_backend.rest_raise_missing_arg('to-block');
   ELSE
     __end_block_num = _block_range.last_block::BIGINT;
     IF __end_block_num < 0 THEN
@@ -321,14 +327,13 @@ BEGIN
   END IF;
 
   BEGIN
-    RETURN hafah_python.get_block_range_json(__block_num::INT, __end_block_num::INT);
+    RETURN QUERY (
+      SELECT * FROM hafah_backend.get_block_range(__block_num::INT, __end_block_num::INT)
+    );
 
     EXCEPTION
       WHEN invalid_text_representation THEN
-        RETURN hafah_backend.rest_raise_uint_exception();
-      WHEN raise_exception THEN
-        GET STACKED DIAGNOSTICS __exception_message = message_text;
-        RETURN hafah_backend.rest_wrap_sql_exception(__exception_message);
+        PERFORM hafah_backend.rest_raise_uint_exception();
   END;
 END
 $$

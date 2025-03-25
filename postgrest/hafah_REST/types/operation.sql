@@ -1,11 +1,29 @@
 SET ROLE hafah_owner;
 
 /** openapi:components:schemas
+hafah_backend.operation_body:
+  type: object
+  x-sql-datatype: JSON
+  properties:
+    type:
+      type: string
+    value:
+      type: object
+*/
+
+/** openapi:components:schemas
+hafah_backend.array_of_operations:
+  type: array
+  items:
+    $ref: '#/components/schemas/hafah_backend.operation_body'
+*/
+
+/** openapi:components:schemas
 hafah_backend.operation:
   type: object
   properties:
     op:
-      type: string
+      $ref: '#/components/schemas/hafah_backend.operation_body'
       x-sql-datatype: JSONB
       description: operation body
     block:
