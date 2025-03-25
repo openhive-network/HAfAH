@@ -239,7 +239,7 @@ CREATE OR REPLACE FUNCTION hafah_backend.get_ops_by_block(
     _filter INT [],
     _order_is hafah_backend.sort_direction, -- noqa: LT01, CP05
     _body_limit INT,
-    _account TEXT,
+    _account_id INT,
     _key_content TEXT [],
     _setof_keys JSON
 )
@@ -258,7 +258,7 @@ DECLARE
   _third_key BOOLEAN = (_key_content[3] IS NULL);
 BEGIN
 
-IF _account IS NULL THEN
+IF _account_id IS NULL THEN
   RETURN QUERY 
   WITH operation_range AS MATERIALIZED (
     SELECT
@@ -338,7 +338,7 @@ ELSE
         SELECT aov.operation_id
         FROM hive.account_operations_view aov
         WHERE
-          aov.account_id = (SELECT av.id FROM hive.accounts_view av WHERE av.name = _account ) AND
+          aov.account_id = _account_id AND
           aov.block_num = _block_num 
       ),
       operations_in_block AS 
@@ -397,7 +397,7 @@ $$;
 CREATE OR REPLACE FUNCTION hafah_backend.get_ops_by_block_count(
     _block_num INT,
     _filter INT [],
-    _account TEXT,
+    _account_id INT,
     _key_content TEXT [],
     _setof_keys JSON
 )
@@ -415,7 +415,7 @@ DECLARE
   _third_key BOOLEAN = (_key_content[3] IS NULL);
 BEGIN
 
-IF _account IS NULL THEN
+IF _account_id IS NULL THEN
   RETURN (
     WITH operations_in_block AS 
     (
@@ -442,7 +442,7 @@ ELSE
       SELECT aov.operation_id
       FROM hive.account_operations_view aov
       WHERE
-        aov.account_id = (SELECT av.id FROM hive.accounts_view av WHERE av.name = _account ) AND
+        aov.account_id = _account_id AND
         aov.block_num = _block_num 
     ),
     operations_in_block AS 

@@ -12,7 +12,7 @@ BEGIN
   SELECT * FROM hive.get_block_header( _block_num ) INTO __block;
 
   IF __block.timestamp IS NULL THEN
-    RETURN hafah_backend.rest_raise_missing_block(_block_num);
+    PERFORM hafah_backend.rest_raise_missing_block(_block_num);
   END IF;
 
   RETURN (

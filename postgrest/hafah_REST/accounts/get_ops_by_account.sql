@@ -1,30 +1,5 @@
 SET ROLE hafah_owner;
 
-/** openapi:components:schemas
-hafah_backend.account_history:
-  type: object
-  properties:
-    total_operations:
-      type: integer
-      description: Total number of operations
-    total_pages:
-      type: integer
-      description: Total number of pages
-    operations_result:
-      type: array
-      items:
-        $ref: '#/components/schemas/hafah_backend.operation'
-      description: List of operation results
- */
--- openapi-generated-code-begin
-DROP TYPE IF EXISTS hafah_backend.account_history CASCADE;
-CREATE TYPE hafah_backend.account_history AS (
-    "total_operations" INT,
-    "total_pages" INT,
-    "operations_result" hafah_backend.operation[]
-);
--- openapi-generated-code-end
-
 /** openapi:paths
 /accounts/{account-name}/operations:
   get:
@@ -123,11 +98,11 @@ CREATE TYPE hafah_backend.account_history AS (
           Result contains total number of operations,
           total pages, and the list of operations.
 
-          * Returns `hafah_backend.account_history`
+          * Returns `hafah_backend.operation_history`
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/hafah_backend.account_history'
+              $ref: '#/components/schemas/hafah_backend.operation_history'
             example: {
                   "total_operations": 219867,
                   "total_pages": 73289,
@@ -213,7 +188,7 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_ops_by_account(
     "from-block" TEXT = NULL,
     "to-block" TEXT = NULL
 )
-RETURNS hafah_backend.account_history 
+RETURNS hafah_backend.operation_history 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql' STABLE
 SET join_collapse_limit = 16
@@ -284,7 +259,7 @@ BEGIN
     COALESCE(_ops_count,0),
     COALESCE(__total_pages,0),
     _result
-  )::hafah_backend.account_history;
+  )::hafah_backend.operation_history;
 
 -- ops_count returns number of operations found with current filter
 -- to count total_pages we need to check if there was a rest from division by "page-size", if there was the page count is +1 
