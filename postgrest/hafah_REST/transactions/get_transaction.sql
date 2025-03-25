@@ -92,7 +92,7 @@ BEGIN
     SELECT 
       transaction_json::JSON,
       bv.created_at
-    FROM hafah_python.get_transaction_json(\
+    FROM hafah_python.get_transaction_json(
       ('\x' || "transaction-id")::BYTEA, 
       TRUE, 
       FALSE, 
