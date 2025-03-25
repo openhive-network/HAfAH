@@ -102,12 +102,11 @@ SET ROLE hafah_owner;
       '200':
         description: |
 
-          * Returns `JSON`
+          * Returns `hafah_backend.operations_in_block_range`
         content:
           application/json:
             schema:
-              type: string
-              x-sql-datatype: JSON
+              $ref: '#/components/schemas/hafah_backend.operations_in_block_range'
             example: {
                   "ops": [
                     {
@@ -279,19 +278,20 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_operations(
     "page-size" INT = 1000,
     "include-reversible" BOOLEAN = False
 )
-RETURNS JSON 
+RETURNS hafah_backend.operations_in_block_range 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'
 AS
 $$
 DECLARE
   _block_range hive.blocks_range := hive.convert_to_blocks_range("from-block","to-block");
-  _operation_types INT[] := NULL;
+  _operation_types INT[] := (CASE WHEN "operation-types" IS NOT NULL THEN string_to_array("operation-types", ',')::INT[] ELSE NULL END);
   __exception_message TEXT;
   _operation_group_types BOOLEAN := (CASE WHEN "operation-group-type" = 'real' THEN FALSE WHEN "operation-group-type" = 'virtual' THEN TRUE ELSE NULL END);
 BEGIN
   PERFORM hafah_python.validate_limit("page-size", 150000, 'page-size');
   PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
+  PERFORM hafah_python.validate_block_range( _block_range.first_block, _block_range.last_block + 1, 2001);
 
   IF _block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
@@ -301,33 +301,24 @@ BEGIN
 
     -- Required argument: to-block, from-block
   IF _block_range.first_block IS NULL THEN
-    RETURN hafah_backend.rest_raise_missing_arg('from-block');
+    PERFORM hafah_backend.rest_raise_missing_arg('from-block');
   END IF;
 
   IF _block_range.last_block IS NULL THEN
-    RETURN hafah_backend.rest_raise_missing_arg('to-block');
+    PERFORM hafah_backend.rest_raise_missing_arg('to-block');
   END IF;
 
-  IF "operation-types" IS NOT NULL THEN
-    _operation_types := string_to_array("operation-types", ',')::INT[];
-  END IF;
+  RETURN hafah_backend.get_ops_in_blocks(
+    _block_range.first_block,
+    _block_range.last_block,
+    _operation_group_types,
+    _operation_types,
+    "operation-begin",
+    "page-size",
+    "include-reversible",
+    FALSE
+  );
 
-  BEGIN
-    RETURN hafah_python.get_rest_ops_in_blocks_json(
-      _block_range.first_block,
-      _block_range.last_block,
-      _operation_group_types,
-      _operation_types,
-      "operation-begin",
-      "page-size",
-      "include-reversible",
-      FALSE
-    );
-    EXCEPTION
-    WHEN raise_exception THEN
-      GET STACKED DIAGNOSTICS __exception_message = message_text;
-      RETURN hafah_backend.rest_wrap_sql_exception(__exception_message);
-  END;
 END
 $$
 ;
