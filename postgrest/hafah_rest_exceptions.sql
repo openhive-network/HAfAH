@@ -24,6 +24,18 @@ END
 $$
 ;
 
+CREATE OR REPLACE FUNCTION hafah_backend.rest_raise_missing_op_type(id INT)
+RETURNS VOID
+LANGUAGE 'plpgsql'
+IMMUTABLE
+AS
+$$
+BEGIN
+  RAISE EXCEPTION 'op_type_id ''%'' does not exist', id;
+END
+$$
+;
+
 CREATE OR REPLACE FUNCTION hafah_backend.rest_raise_missing_arg(_account_name TEXT)
 RETURNS VOID
 LANGUAGE 'plpgsql'
