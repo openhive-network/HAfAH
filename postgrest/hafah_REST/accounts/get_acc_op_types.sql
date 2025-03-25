@@ -85,7 +85,7 @@ DECLARE
   __account_id INT = (SELECT av.id FROM hive.accounts_view av WHERE av.name = "account-name");
 BEGIN
   IF _account_id IS NULL THEN
-    RETURN hafah_backend.rest_raise_missing_account("account-name");
+    PERFORM hafah_backend.rest_raise_missing_account("account-name");
   END IF;
 
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
