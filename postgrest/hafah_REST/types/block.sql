@@ -151,5 +151,87 @@ CREATE TYPE hafah_backend.block_header AS (
 );
 -- openapi-generated-code-end
 
+/** openapi:components:schemas
+hafah_backend.transactions:
+  type: object
+  x-sql-datatype: JSON
+  properties:
+    ref_block_num:
+      type: integer
+    ref_block_prefix:
+      type: integer
+    expiration:
+      type: string
+    operations:
+      $ref: '#/components/schemas/hafah_backend.array_of_operations'
+    extensions:
+      $ref: '#/components/schemas/hafah_backend.extensions'
+    signatures:
+      type: array
+      items:
+        type: string
+*/
+
+/** openapi:components:schemas
+hafah_backend.block_range:
+  type: object
+  properties:
+    previous:
+      type: string
+      description: hash of a previous block
+    timestamp:
+      type: string
+      format: date-time
+      description: the timestamp when the block was created
+    witness:
+      type: string
+      description: account name of block''s producer
+    transaction_merkle_root:
+      type: string
+      description: >-
+        single hash representing the combined hashes of all transactions in a block
+    extensions:
+      $ref: '#/components/schemas/hafah_backend.extensions'
+      x-sql-datatype: JSONB
+      description: >-
+        various additional data/parameters related to the subject at hand.
+        Most often, there''s nothing specific, but it''s a mechanism for extending various functionalities
+        where something might appear in the future.
+    witness_signature:
+      type: string
+      description: witness signature
+    transactions:
+      $ref: '#/components/schemas/hafah_backend.transactions'
+      x-sql-datatype: JSONB
+      description: transactions in the block
+    block_id:
+      type: string
+      description: >-
+        block hash in a blockchain is a unique, fixed-length string generated 
+        by applying a cryptographic hash function to a block''s contents
+    signing_key:
+      type: string
+      description: >-
+        it refers to the public key of the witness used for signing blocks and other witness operations
+    transaction_ids:
+      type: array
+      items:
+        type: string
+ */
+-- openapi-generated-code-begin
+DROP TYPE IF EXISTS hafah_backend.block_range CASCADE;
+CREATE TYPE hafah_backend.block_range AS (
+    "previous" TEXT,
+    "timestamp" TIMESTAMP,
+    "witness" TEXT,
+    "transaction_merkle_root" TEXT,
+    "extensions" JSONB,
+    "witness_signature" TEXT,
+    "transactions" JSONB,
+    "block_id" TEXT,
+    "signing_key" TEXT,
+    "transaction_ids" TEXT[]
+);
+-- openapi-generated-code-end
 
 RESET ROLE;
