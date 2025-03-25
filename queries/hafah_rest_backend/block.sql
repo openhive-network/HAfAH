@@ -1,36 +1,33 @@
 SET ROLE hafah_owner;
 
-CREATE OR REPLACE FUNCTION hafah_python.get_block_json( _block_num INT,  _include_virtual BOOLEAN = FALSE)
-    RETURNS JSONB
+CREATE OR REPLACE FUNCTION hafah_backend.get_block(_block_num INT,  _include_virtual BOOLEAN = FALSE)
+    RETURNS hafah_backend.block_range
     LANGUAGE plpgsql
-    VOLATILE
+    STABLE
 AS
 $BODY$
 DECLARE
     __block hive.block_type;
-    __result JSON;
 BEGIN
-    SELECT * FROM hive.get_block( _block_num, _include_virtual) INTO __block;
+  SELECT * FROM hive.get_block( _block_num, _include_virtual) INTO __block;
 
-    IF __block.timestamp IS NULL THEN
-        RETURN jsonb_build_object();
-    END IF;
+  IF __block.timestamp IS NULL THEN
+    PERFORM hafah_backend.rest_raise_missing_block(_block_num);
+  END IF;
 
-    SELECT to_jsonb(
-        hive.build_block_json(
-        __block.previous,
-        __block.timestamp,
-        __block.witness,
-        __block.transaction_merkle_root,
-        __block.extensions,
-        __block.witness_signature,
-        __block.transactions,
-        __block.block_id,
-        __block.signing_key,
-        __block.transaction_ids
-        )
-    ) INTO __result;
-    RETURN __result;
+  RETURN (
+    encode( __block.previous, 'hex')::TEXT,
+    TRIM(both '"' from to_json(__block.timestamp)::text)::timestamp,
+    __block.witness::TEXT,
+    encode( __block.transaction_merkle_root, 'hex')::TEXT,
+    COALESCE(__block.extensions, jsonb_build_array()),
+    encode( __block.witness_signature, 'hex')::TEXT,
+    COALESCE(hive.transactions_to_json(__block.transactions), jsonb_build_array()),
+    encode( __block.block_id, 'hex')::TEXT,
+    __block.signing_key::TEXT,
+    (SELECT ARRAY( SELECT encode(unnest(__block.transaction_ids), 'hex')))::TEXT[]
+  )::hafah_backend.block_range;
+
 END;
 $BODY$
 ;
