@@ -36,6 +36,18 @@ END
 $$
 ;
 
+CREATE OR REPLACE FUNCTION hafah_backend.rest_raise_missing_operation_id(id BIGINT)
+RETURNS VOID
+LANGUAGE 'plpgsql'
+IMMUTABLE
+AS
+$$
+BEGIN
+  RAISE EXCEPTION 'Operation_id ''%'' does not exist', id;
+END
+$$
+;
+
 CREATE OR REPLACE FUNCTION hafah_backend.rest_raise_missing_arg(_account_name TEXT)
 RETURNS VOID
 LANGUAGE 'plpgsql'
