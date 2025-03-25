@@ -191,9 +191,9 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_ops_by_account(
 RETURNS hafah_backend.operation_history 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql' STABLE
+SET JIT = OFF
 SET join_collapse_limit = 16
 SET from_collapse_limit = 16
-SET JIT = OFF
 SET enable_hashjoin = OFF
 AS
 $$

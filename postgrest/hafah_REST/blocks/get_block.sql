@@ -160,6 +160,9 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_block(
 RETURNS hafah_backend.block_range 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'
+SET JIT = OFF
+SET join_collapse_limit = 16
+SET from_collapse_limit = 16
 AS
 $$
 DECLARE
@@ -184,7 +187,7 @@ BEGIN
   END IF;
 
   BEGIN
-    RETURN hafah_backend.get_block(__block_num::INT, "include-virtual")::JSON;
+    RETURN hafah_backend.get_block(__block_num::INT, "include-virtual");
 
     EXCEPTION
       WHEN invalid_text_representation THEN

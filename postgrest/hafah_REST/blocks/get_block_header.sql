@@ -57,12 +57,14 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_block_header(
 RETURNS hafah_backend.block_header 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'
+SET JIT = OFF
+SET join_collapse_limit = 16
+SET from_collapse_limit = 16
 AS
 $$
 DECLARE
     __block INT := hive.convert_to_block_num("block-num");
     __block_num BIGINT = NULL;
-    __exception_message TEXT;
 BEGIN
     -- Required argument: block-num
   IF __block IS NULL THEN

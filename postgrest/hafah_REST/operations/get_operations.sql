@@ -281,12 +281,14 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_operations(
 RETURNS hafah_backend.operations_in_block_range 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql'
+SET JIT = OFF
+SET join_collapse_limit = 16
+SET from_collapse_limit = 16
 AS
 $$
 DECLARE
   _block_range hive.blocks_range := hive.convert_to_blocks_range("from-block","to-block");
   _operation_types INT[] := (CASE WHEN "operation-types" IS NOT NULL THEN string_to_array("operation-types", ',')::INT[] ELSE NULL END);
-  __exception_message TEXT;
   _operation_group_types BOOLEAN := (CASE WHEN "operation-group-type" = 'real' THEN FALSE WHEN "operation-group-type" = 'virtual' THEN TRUE ELSE NULL END);
 BEGIN
   PERFORM hafah_python.validate_limit("page-size", 150000, 'page-size');
