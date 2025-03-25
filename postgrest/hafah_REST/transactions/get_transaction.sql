@@ -1,38 +1,5 @@
 SET ROLE hafah_owner;
 
-/** openapi:components:schemas
-hafah_endpoints.transaction:
-  type: object
-  properties:
-    transaction_json:
-      type: string
-      x-sql-datatype: JSON
-      description: contents of the transaction
-    transaction_id:
-      type: string
-      description: hash of the transaction
-    block_num:
-      type: integer
-      description: block containing the transaction
-    transaction_num:
-      type: integer
-      description: number of transactions in the block
-    timestamp:
-      type: string
-      format: date-time
-      description: time transaction was inlcuded in block
- */
--- openapi-generated-code-begin
-DROP TYPE IF EXISTS hafah_endpoints.transaction CASCADE;
-CREATE TYPE hafah_endpoints.transaction AS (
-    "transaction_json" JSON,
-    "transaction_id" TEXT,
-    "block_num" INT,
-    "transaction_num" INT,
-    "timestamp" TIMESTAMP
-);
--- openapi-generated-code-end
-
 /** openapi:paths
 /transactions/{transaction-id}:
   get:
@@ -69,11 +36,11 @@ CREATE TYPE hafah_endpoints.transaction AS (
         description: |
           The transaction body
 
-          * Returns `hafah_endpoints.transaction`
+          * Returns `hafah_backend.transaction`
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/hafah_endpoints.transaction'
+              $ref: '#/components/schemas/hafah_backend.transaction'
             example: {
               "transaction_json": {
                 "ref_block_num": 25532,
@@ -109,45 +76,55 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_transaction(
     "transaction-id" TEXT,
     "include-virtual" BOOLEAN = False
 )
-RETURNS hafah_endpoints.transaction 
+RETURNS hafah_backend.transaction 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql' STABLE
+SET JIT = OFF
+SET join_collapse_limit = 16
+SET from_collapse_limit = 16
 AS
 $$
 DECLARE
-  _get_transaction hafah_endpoints.transaction;
+  _transaction_type hafah_backend.transaction ;
 BEGIN
   WITH select_transaction AS MATERIALIZED 
   (
-  SELECT transaction_json::JSON,
-  bv.created_at
-  -- _trx_hash TEXT -> BYTEA, __include_reversible = TRUE, __is_legacy_style = FALSE
-  FROM hafah_python.get_transaction_json(('\x' || "transaction-id")::BYTEA, TRUE, FALSE, "include-virtual") AS transaction_json
-  JOIN hive.blocks_view bv ON bv.num = (transaction_json->>'block_num')::INT
+    SELECT 
+      transaction_json::JSON,
+      bv.created_at
+    FROM hafah_python.get_transaction_json(\
+      ('\x' || "transaction-id")::BYTEA, 
+      TRUE, 
+      FALSE, 
+      "include-virtual"
+    ) AS transaction_json
+    JOIN hive.blocks_view bv ON bv.num = (transaction_json->>'block_num')::INT
   )
-  SELECT 
-    json_build_object(
-    'ref_block_num', (transaction_json->>'ref_block_num')::BIGINT,
-    'ref_block_prefix',(transaction_json->>'ref_block_prefix')::BIGINT,
-    'extensions', (transaction_json->>'extensions')::JSON,
-    'expiration', transaction_json->>'expiration',
-    'operations', (transaction_json->>'operations')::JSON,
-    'signatures', (transaction_json->>'signatures')::JSON
-    ),
-    transaction_json->>'transaction_id',
-    (transaction_json->>'block_num')::INT,
-    (transaction_json->>'transaction_num')::INT,
-    created_at
-  INTO _get_transaction
+  SELECT
+    (
+      json_build_object(
+        'ref_block_num', (transaction_json->>'ref_block_num')::BIGINT,
+        'ref_block_prefix',(transaction_json->>'ref_block_prefix')::BIGINT,
+        'extensions', (transaction_json->>'extensions')::JSON,
+        'expiration', (transaction_json->>'expiration')::TEXT,
+        'operations', (transaction_json->>'operations')::JSON,
+        'signatures', (transaction_json->>'signatures')::JSON
+      ),
+      (transaction_json->>'transaction_id')::TEXT,
+      (transaction_json->>'block_num')::INT,
+      (transaction_json->>'transaction_num')::INT,
+      (created_at)::TIMESTAMP
+    )::hafah_backend.transaction
+  INTO _transaction_type
   FROM select_transaction;
   
-  IF _get_transaction.block_num <= hive.app_get_irreversible_block() THEN
+  IF _transaction_type.block_num <= hive.app_get_irreversible_block() THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
   ELSE
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   END IF;
 
-  RETURN _get_transaction;
+  RETURN _transaction_type;
 END
 $$;
 
