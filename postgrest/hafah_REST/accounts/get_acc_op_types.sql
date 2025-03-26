@@ -82,7 +82,7 @@ SET from_collapse_limit = 16
 AS
 $$
 DECLARE
-  __account_id INT = (SELECT av.id FROM hive.accounts_view av WHERE av.name = "account-name");
+  _account_id INT = (SELECT av.id FROM hive.accounts_view av WHERE av.name = "account-name");
 BEGIN
   IF _account_id IS NULL THEN
     PERFORM hafah_backend.rest_raise_missing_account("account-name");
@@ -90,7 +90,7 @@ BEGIN
 
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
 
-  RETURN hafah_backend.get_acc_op_types(__account_id);
+  RETURN hafah_backend.get_acc_op_types(_account_id);
 
 END
 $$;
