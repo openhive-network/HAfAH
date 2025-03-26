@@ -226,28 +226,31 @@ BEGIN
     END
   );
 
-  _result := array_agg(row) FROM (
-    SELECT 
-      ba.op,
-      ba.block,
-      ba.trx_id,
-      ba.op_pos,
-      ba.op_type_id,
-      ba.timestamp,
-      ba.virtual_op,
-      ba.operation_id,
-      ba.trx_in_block
-    FROM hafah_backend.get_ops_by_block(
-      __block, 
-      "page",
-      "page-size",
-      _operation_types,
-      "page-order",
-      "data-size-limit",
-      _account_id,
-      _key_content,
-      _set_of_keys
-      ) ba
+  _result := array_agg(row ORDER BY
+      (CASE WHEN "page-order" = 'desc' THEN row.operation_id::BIGINT ELSE NULL END) DESC,
+      (CASE WHEN "page-order" = 'asc' THEN row.operation_id::BIGINT ELSE NULL END) ASC
+    ) FROM (
+      SELECT 
+        ba.op,
+        ba.block,
+        ba.trx_id,
+        ba.op_pos,
+        ba.op_type_id,
+        ba.timestamp,
+        ba.virtual_op,
+        ba.operation_id,
+        ba.trx_in_block
+      FROM hafah_backend.get_ops_by_block(
+        __block, 
+        "page",
+        "page-size",
+        _operation_types,
+        "page-order",
+        "data-size-limit",
+        _account_id,
+        _key_content,
+        _set_of_keys
+        ) ba
   ) row;
 
   RETURN (
