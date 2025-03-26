@@ -233,7 +233,7 @@ BEGIN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   END IF;
 
-  _result := array_agg(row) FROM (
+  _result := array_agg(row ORDER BY row.operation_id::BIGINT DESC) FROM (
     SELECT 
       ba.op,
       ba.block,
