@@ -72,7 +72,7 @@ BEGIN
     COALESCE((SELECT block_num FROM paging_logic), 0)::INT,
     COALESCE((SELECT id FROM paging_logic), 0)::TEXT,
     (
-      SELECT array_agg(rows)
+      SELECT array_agg(rows ORDER BY rows.json_stringify_bigint::BIGINT)
       FROM (
         SELECT 
           s.op,

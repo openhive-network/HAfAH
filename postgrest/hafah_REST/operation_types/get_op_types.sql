@@ -73,6 +73,7 @@ BEGIN
       operation_name,
       is_virtual
     FROM hafah_backend.get_op_types(__operation_name)
+    ORDER BY op_type_id
   );
 END
 $$;
