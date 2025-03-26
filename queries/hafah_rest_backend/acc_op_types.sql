@@ -9,11 +9,12 @@ LANGUAGE 'plpgsql' STABLE
 AS
 $$
 BEGIN
-  RETURN array_agg(hot.id)
+  RETURN array_agg(hot.id) 
   FROM hafd.operation_types hot
   WHERE EXISTS (
     SELECT 1 FROM hive.account_operations_view aov 
     WHERE aov.account_id = _account_id AND aov.op_type_id = hot.id
+  ORDER BY hot.id
   );
 
 END

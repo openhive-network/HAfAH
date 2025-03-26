@@ -85,46 +85,31 @@ SET from_collapse_limit = 16
 AS
 $$
 DECLARE
-  _transaction_type hafah_backend.transaction ;
+  _transaction_json JSON := hafah_python.get_transaction_json(('\x' || "transaction-id")::BYTEA, TRUE, FALSE, "include-virtual");
+  _result JSON;
 BEGIN
-  WITH select_transaction AS MATERIALIZED 
-  (
-    SELECT 
-      transaction_json::JSON,
-      bv.created_at
-    FROM hafah_python.get_transaction_json(
-      ('\x' || "transaction-id")::BYTEA, 
-      TRUE, 
-      FALSE, 
-      "include-virtual"
-    ) AS transaction_json
-    JOIN hive.blocks_view bv ON bv.num = (transaction_json->>'block_num')::INT
-  )
-  SELECT
-    (
-      json_build_object(
-        'ref_block_num', (transaction_json->>'ref_block_num')::BIGINT,
-        'ref_block_prefix',(transaction_json->>'ref_block_prefix')::BIGINT,
-        'extensions', (transaction_json->>'extensions')::JSON,
-        'expiration', (transaction_json->>'expiration')::TEXT,
-        'operations', (transaction_json->>'operations')::JSON,
-        'signatures', (transaction_json->>'signatures')::JSON
-      ),
-      (transaction_json->>'transaction_id')::TEXT,
-      (transaction_json->>'block_num')::INT,
-      (transaction_json->>'transaction_num')::INT,
-      (created_at)::TIMESTAMP
-    )::hafah_backend.transaction
-  INTO _transaction_type
-  FROM select_transaction;
-  
-  IF _transaction_type.block_num <= hive.app_get_irreversible_block() THEN
+  IF (_transaction_json->>'block_num')::INT <= hive.app_get_irreversible_block() THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
   ELSE
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   END IF;
 
-  RETURN _transaction_type;
+  _result := json_build_object(
+    'ref_block_num', (_transaction_json->>'ref_block_num')::BIGINT,
+    'ref_block_prefix',(_transaction_json->>'ref_block_prefix')::BIGINT,
+    'extensions', (_transaction_json->>'extensions')::JSON,
+    'expiration', (_transaction_json->>'expiration')::TEXT,
+    'operations', (_transaction_json->>'operations')::JSON,
+    'signatures', (_transaction_json->>'signatures')::JSON
+  );
+
+  RETURN (
+    _result,
+    (_transaction_json->>'transaction_id')::TEXT,
+    (_transaction_json->>'block_num')::INT,
+    (_transaction_json->>'transaction_num')::INT,
+    (SELECT bv.created_at FROM hive.blocks_view bv WHERE bv.num = (_transaction_json->>'block_num')::INT)
+  )::hafah_backend.transaction;
 END
 $$;
 

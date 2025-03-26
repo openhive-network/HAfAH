@@ -12,7 +12,7 @@ hafah_backend.transaction:
       type: string
       description: hash of the transaction
     block_num:
-      type: string
+      type: integer
       description: block number
     transaction_num:
       type: integer
@@ -28,7 +28,7 @@ DROP TYPE IF EXISTS hafah_backend.transaction CASCADE;
 CREATE TYPE hafah_backend.transaction AS (
     "transaction_json" JSONB,
     "transaction_id" TEXT,
-    "block_num" TEXT,
+    "block_num" INT,
     "transaction_num" INT,
     "timestamp" TIMESTAMP
 );

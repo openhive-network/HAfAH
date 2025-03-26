@@ -107,7 +107,7 @@ BEGIN
       ov.operation_id,
       ov.trx_in_block
     )::hafah_backend.operation 
-  FROM hafah_backend.get_operation("operation-id");
+  FROM hafah_backend.get_operation("operation-id") ov;
 END
 $$;
 

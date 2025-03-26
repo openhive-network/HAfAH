@@ -70,11 +70,29 @@ declare
           "all"
         ]
       },
+      "hafah_backend.operation_body": {
+        "type": "object",
+        "x-sql-datatype": "JSON",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "object"
+          }
+        }
+      },
+      "hafah_backend.array_of_operations": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/hafah_backend.operation_body"
+        }
+      },
       "hafah_backend.operation": {
         "type": "object",
         "properties": {
           "op": {
-            "type": "string",
+            "$ref": "#/components/schemas/hafah_backend.operation_body",
             "x-sql-datatype": "JSONB",
             "description": "operation body"
           },
@@ -114,12 +132,66 @@ declare
           }
         }
       },
+      "hafah_backend.operation_history": {
+        "type": "object",
+        "properties": {
+          "total_operations": {
+            "type": "integer",
+            "description": "Total number of operations"
+          },
+          "total_pages": {
+            "type": "integer",
+            "description": "Total number of pages"
+          },
+          "operations_result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/hafah_backend.operation"
+            },
+            "description": "List of operation results"
+          }
+        }
+      },
+      "hafah_backend.operations_in_block_range": {
+        "type": "object",
+        "properties": {
+          "next_block_range_begin": {
+            "type": "integer",
+            "description": "Lower bound for the next block number"
+          },
+          "next_operation_begin": {
+            "type": "string",
+            "description": "Lower bound for the next operation id"
+          },
+          "ops": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/hafah_backend.operation"
+            },
+            "description": "List of operation results"
+          }
+        }
+      },
       "hafah_backend.sort_direction": {
         "type": "string",
         "enum": [
           "asc",
           "desc"
         ]
+      },
+      "hafah_backend.extensions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          }
+        }
       },
       "hafah_backend.block": {
         "type": "object",
@@ -145,7 +217,7 @@ declare
             "description": "single hash representing the combined hashes of all transactions in a block"
           },
           "extensions": {
-            "type": "string",
+            "$ref": "#/components/schemas/hafah_backend.extensions",
             "x-sql-datatype": "JSONB",
             "description": "various additional data/parameters related to the subject at hand. Most often, there''s nothing specific, but it''s a mechanism for extending various functionalities where something might appear in the future."
           },
@@ -163,33 +235,27 @@ declare
             "description": "the interest rate on HBD in savings, expressed in basis points (previously for each HBD), is one of the values determined by the witnesses"
           },
           "total_vesting_fund_hive": {
-            "type": "number",
-            "x-sql-datatype": "numeric",
+            "type": "string",
             "description": "the balance of the \"counterweight\" for these VESTS (total_vesting_shares) in the form of HIVE  (the price of VESTS is derived from these two values). A portion of the inflation is added to the balance, ensuring that each block corresponds to more HIVE for the VESTS"
           },
           "total_vesting_shares": {
-            "type": "number",
-            "x-sql-datatype": "numeric",
+            "type": "string",
             "description": "the total amount of VEST present in the system"
           },
           "total_reward_fund_hive": {
-            "type": "number",
-            "x-sql-datatype": "numeric",
+            "type": "string",
             "description": "deprecated after HF17"
           },
           "virtual_supply": {
-            "type": "number",
-            "x-sql-datatype": "numeric",
+            "type": "string",
             "description": "the total amount of HIVE, including the HIVE that would be generated from converting HBD to HIVE at the current price"
           },
           "current_supply": {
-            "type": "number",
-            "x-sql-datatype": "numeric",
+            "type": "string",
             "description": "the total amount of HIVE present in the system"
           },
           "current_hbd_supply": {
-            "type": "number",
-            "x-sql-datatype": "numeric",
+            "type": "string",
             "description": "the total amount of HBD present in the system, including what is in the treasury"
           },
           "dhf_interval_ledger": {
@@ -204,19 +270,117 @@ declare
           }
         }
       },
-      "hafah_backend.array_of_op_types": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/hafah_backend.op_types"
+      "hafah_backend.block_header": {
+        "type": "object",
+        "properties": {
+          "previous": {
+            "type": "string",
+            "description": "hash of a previous block"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "the timestamp when the block was created"
+          },
+          "witness": {
+            "type": "string",
+            "description": "account name of block''s producer"
+          },
+          "transaction_merkle_root": {
+            "type": "string",
+            "description": "single hash representing the combined hashes of all transactions in a block"
+          },
+          "extensions": {
+            "$ref": "#/components/schemas/hafah_backend.extensions",
+            "x-sql-datatype": "JSONB",
+            "description": "various additional data/parameters related to the subject at hand. Most often, there''s nothing specific, but it''s a mechanism for extending various functionalities where something might appear in the future."
+          }
         }
       },
-      "hafah_endpoints.transaction": {
+      "hafah_backend.transactions": {
+        "type": "object",
+        "x-sql-datatype": "JSON",
+        "properties": {
+          "ref_block_num": {
+            "type": "integer"
+          },
+          "ref_block_prefix": {
+            "type": "integer"
+          },
+          "expiration": {
+            "type": "string"
+          },
+          "operations": {
+            "$ref": "#/components/schemas/hafah_backend.array_of_operations"
+          },
+          "extensions": {
+            "$ref": "#/components/schemas/hafah_backend.extensions"
+          },
+          "signatures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "hafah_backend.block_range": {
+        "type": "object",
+        "properties": {
+          "previous": {
+            "type": "string",
+            "description": "hash of a previous block"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "the timestamp when the block was created"
+          },
+          "witness": {
+            "type": "string",
+            "description": "account name of block''s producer"
+          },
+          "transaction_merkle_root": {
+            "type": "string",
+            "description": "single hash representing the combined hashes of all transactions in a block"
+          },
+          "extensions": {
+            "$ref": "#/components/schemas/hafah_backend.extensions",
+            "x-sql-datatype": "JSONB",
+            "description": "various additional data/parameters related to the subject at hand. Most often, there''s nothing specific, but it''s a mechanism for extending various functionalities where something might appear in the future."
+          },
+          "witness_signature": {
+            "type": "string",
+            "description": "witness signature"
+          },
+          "transactions": {
+            "$ref": "#/components/schemas/hafah_backend.transactions",
+            "x-sql-datatype": "JSONB",
+            "description": "transactions in the block"
+          },
+          "block_id": {
+            "type": "string",
+            "description": "block hash in a blockchain is a unique, fixed-length string generated  by applying a cryptographic hash function to a block''s contents"
+          },
+          "signing_key": {
+            "type": "string",
+            "description": "it refers to the public key of the witness used for signing blocks and other witness operations"
+          },
+          "transaction_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "hafah_backend.transaction": {
         "type": "object",
         "properties": {
           "transaction_json": {
-            "type": "string",
-            "x-sql-datatype": "JSON",
-            "description": "contents of the transaction"
+            "$ref": "#/components/schemas/hafah_backend.transactions",
+            "x-sql-datatype": "JSONB",
+            "description": "transactions in the block"
           },
           "transaction_id": {
             "type": "string",
@@ -224,16 +388,41 @@ declare
           },
           "block_num": {
             "type": "integer",
-            "description": "block containing the transaction"
+            "description": "block number"
           },
           "transaction_num": {
             "type": "integer",
-            "description": "number of transactions in the block"
+            "description": "transaction identifier that indicates its sequence number in block"
           },
           "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "time transaction was inlcuded in block"
+            "description": "the timestamp when the block was created"
+          }
+        }
+      },
+      "hafah_backend.array_of_block_range": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/hafah_backend.block_range"
+        }
+      },
+      "hafah_backend.array_of_op_types": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/hafah_backend.op_types"
+        }
+      },
+      "hafah_backend.version_type": {
+        "type": "object",
+        "properties": {
+          "app_name": {
+            "type": "string",
+            "description": "Application name"
+          },
+          "commit": {
+            "type": "string",
+            "description": "Last commit hash"
           }
         }
       }
@@ -317,12 +506,11 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "\n* Returns `JSONB`\n",
+            "description": "\n* Returns array of `hafah_backend.block_range`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "x-sql-datatype": "JSONB"
+                  "$ref": "#/components/schemas/hafah_backend.array_of_block_range"
                 },
                 "example": [
                   {
@@ -574,12 +762,11 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "\n* Returns `JSONB`\n",
+            "description": "\n* Returns `hafah_backend.block_range`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "x-sql-datatype": "JSONB"
+                  "$ref": "#/components/schemas/hafah_backend.block_range"
                 },
                 "example": {
                   "witness": "ihashfury",
@@ -709,12 +896,11 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "\n* Returns `JSONB`\n",
+            "description": "\n* Returns `hafah_backend.block_header`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "x-sql-datatype": "JSONB"
+                  "$ref": "#/components/schemas/hafah_backend.block_header"
                 },
                 "example": {
                   "witness": "ihashfury",
@@ -816,7 +1002,6 @@ declare
               "items": {
                 "type": "string"
               },
-              "x-sql-datatype": "TEXT[]",
               "default": null
             },
             "description": "A parameter specifying the expected value in operation body,\nexample: `value.creator=steem`\n"
@@ -824,12 +1009,11 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "Result contains total operations number,\ntotal pages and the list of operations\n\n* Returns `JSON`\n",
+            "description": "Result contains total operations number,\ntotal pages and the list of operations\n\n* Returns `hafah_backend.operation_history`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "x-sql-datatype": "JSON"
+                  "$ref": "#/components/schemas/hafah_backend.operation_history"
                 },
                 "example": {
                   "total_operations": 1,
@@ -956,12 +1140,11 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "\n* Returns `JSON`\n",
+            "description": "\n* Returns `hafah_backend.operations_in_block_range`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "x-sql-datatype": "JSON"
+                  "$ref": "#/components/schemas/hafah_backend.operations_in_block_range"
                 },
                 "example": {
                   "ops": [
@@ -1248,12 +1431,18 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "Operation json key paths\n\n* Returns `JSONB`\n",
+            "description": "Operation json key paths\n\n* Returns `JSON`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "x-sql-datatype": "JSONB"
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "x-sql-datatype": "JSON"
                 },
                 "example": [
                   [
@@ -1322,11 +1511,11 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "The transaction body\n\n* Returns `hafah_endpoints.transaction`\n",
+            "description": "The transaction body\n\n* Returns `hafah_backend.transaction`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/hafah_endpoints.transaction"
+                  "$ref": "#/components/schemas/hafah_backend.transaction"
                 },
                 "example": {
                   "transaction_json": {
@@ -1443,12 +1632,11 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "Result contains total number of operations,\ntotal pages, and the list of operations.\n\n* Returns `JSON`\n",
+            "description": "Result contains total number of operations,\ntotal pages, and the list of operations.\n\n* Returns `hafah_backend.operation_history`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "x-sql-datatype": "JSON"
+                  "$ref": "#/components/schemas/hafah_backend.operation_history"
                 },
                 "example": {
                   "total_operations": 219867,
@@ -1551,12 +1739,14 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "Operation type list\n\n* Returns `JSONB`\n",
+            "description": "Operation type list\n\n* Returns array of `INT`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "x-sql-datatype": "JSONB"
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
                 },
                 "example": [
                   0,
@@ -1607,14 +1797,16 @@ declare
         "operationId": "hafah_endpoints.get_version",
         "responses": {
           "200": {
-            "description": "\n* Returns `JSON`\n",
+            "description": "\n* Returns `hafah_backend.version_type`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "x-sql-datatype": "JSON"
+                  "$ref": "#/components/schemas/hafah_backend.version_type"
                 },
-                "example": "c2fed8958584511ef1a66dab3dbac8c40f3518f0"
+                "example": {
+                  "app_name": "PostgRESTHAfAH",
+                  "commit": "136fe35c62cdc0fd7d6ff41cf6c946cadc2a4cd5"
+                }
               }
             }
           },
@@ -1687,12 +1879,12 @@ declare
                   "witness_signature": "1f6aa1c6311c768b5225b115eaf5798e5f1d8338af3970d90899cd5ccbe38f6d1f7676c5649bcca18150cbf8f07c0cc7ec3ae40d5936cfc6d5a650e582ba0f8002",
                   "signing_key": "STM8aUs6SGoEmNYMd3bYjE1UBr6NQPxGWmTqTdBaxJYSx244edSB2",
                   "hbd_interest_rate": 1000,
-                  "total_vesting_fund_hive": 149190428013,
-                  "total_vesting_shares": 448144916705468350,
-                  "total_reward_fund_hive": 66003975,
-                  "virtual_supply": 161253662237,
-                  "current_supply": 157464400971,
-                  "current_hbd_supply": 2413759427,
+                  "total_vesting_fund_hive": "149190428013",
+                  "total_vesting_shares": "448144916705468350",
+                  "total_reward_fund_hive": "66003975",
+                  "virtual_supply": "161253662237",
+                  "current_supply": "157464400971",
+                  "current_hbd_supply": "2413759427",
                   "dhf_interval_ledger": 0,
                   "created_at": "2016-09-15T19:47:21"
                 }

@@ -1,7 +1,7 @@
 SET ROLE hafah_owner;
 
 CREATE OR REPLACE FUNCTION hafah_backend.get_operation(
-    _operation_id INT
+    _operation_id BIGINT
 )
 RETURNS hafah_backend.operation 
 LANGUAGE 'plpgsql' STABLE

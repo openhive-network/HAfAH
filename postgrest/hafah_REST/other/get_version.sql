@@ -44,7 +44,10 @@ CREATE TYPE hafah_backend.version_type AS (
           application/json:
             schema:
               $ref: '#/components/schemas/hafah_backend.version_type'
-            example: c2fed8958584511ef1a66dab3dbac8c40f3518f0
+            example: {
+                "app_name": "PostgRESTHAfAH",
+                "commit": "136fe35c62cdc0fd7d6ff41cf6c946cadc2a4cd5"
+              }
       '404':
         description: App not installed
  */
