@@ -339,6 +339,7 @@ postgrest_rest_benchmark_tests:
   - job: prepare_postgrest_hafah_image
     artifacts: true
   script:
+  - sleep 10 
   - timeout -k 1m 10m ./tests/performance/run_performance_tests.sh --backend-host=app
     --backend-port=$APP_PORT
   - tar -czvf tests/performance/results.tar.gz $(pwd)/tests/performance/*result.*
@@ -350,6 +351,7 @@ postgrest_rest_benchmark_tests:
     - tests/performance/result_report/
     - tests/performance/results.tar.gz
     - jmeter.log
+    when: always
     reports:
       junit: tests/performance/junit-result.xml
   tags:
@@ -478,6 +480,76 @@ prepare_haf_image_testnet:
     -m $PYTEST_MARK
   tags:
   - public-runner-docker
+
+hafah_pytest_rest_api_pattern_tests:
+  extends: .pytest_based_template
+  stage: test
+  needs:
+  - job: prepare_haf_data
+    artifacts: true
+  - job: prepare_postgrest_hafah_image
+    artifacts: true
+  services:
+  - *hfm-only-service
+  - name: ${HAF_APP_IMAGE}
+    alias: app-setup
+    variables:
+        # intentionally use setup way chosed in haf_api_node compose scripts
+      POSTGRES_URL: "postgresql://haf_admin@hfm-only-instance/haf_block_log"
+    command: ["install_app"]
+    entrypoint:
+    - '/bin/bash'
+    - '-c'
+    - |
+      set -xeuo pipefail
+      echo "Attempting to perform application setup..."
+      # pass control to the default image entrypoint
+      "./docker_entrypoint.sh" "$@"
+      echo "Application setup completed, starting to listed app port to satisfy Gitlab health checker..."
+      # Once setup completed, just listen on container/app port to satisfy GitlabCI HealthChecker
+      nc -v -l -p $(echo "${HAF_APP_PORT}")
+     # arg $0 should be explicitly passed when using 'bash -c' entrypoints
+    - '/bin/bash'
+
+  - name: ${HAF_APP_IMAGE}
+    alias: app
+    command: ["--postgres-url=postgresql://hafah_user@hfm-only-instance/haf_block_log"]
+    entrypoint:
+    - '/bin/bash'
+    - '-c'
+    - |
+      set -xeuo pipefail
+      # since Gitlab services startup order is undefined, we need to wait for app setup completion
+      "/home/hafah_user/app/scripts/wait_for_setup_completed.sh" "$@"
+      echo "Application setup finished - continue app-service spawn..."
+      # pass control to the default image entrypoint
+      /home/hafah_user/docker_entrypoint.sh "$@"
+     # arg $0 should be explicitly passed when using 'bash -c' entrypoints
+    - '/bin/bash'
+  variables:
+    DATA_SOURCE: "${DATA_CACHE_HAF_PREFIX}_${HAF_COMMIT}"
+    JUNIT_REPORT: $CI_PROJECT_DIR/tests/tavern/report.xml
+    PYTEST_BASED_IMAGE_NAME: $BUILDER_IMAGE_PATH
+    POETRY_INSTALL_ROOT_DIR: $CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools
+    TAVERN_DIR: $CI_PROJECT_DIR/tests/tavern
+    DB_NAME: haf_block_log
+    DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_PORT: ${APP_PORT}
+    HAF_APP_HOST: app
+    DIRECT_CALLS: 0
+    POSTGRES_URL: $DB_URL
+  script:
+  - |
+    echo "HAfAH image name $HAF_APP_IMAGE"
+    echo "HAF image name $HAF_IMAGE_NAME"
+    cd $CI_PROJECT_DIR/tests/tavern
+    pytest -n $PYTEST_NUMBER_OF_PROCESSES --junitxml report.xml .
+  artifacts:
+    paths:
+    - "**/*.out.json"
+  tags:
+  - data-cache-storage
 
 hafah_pytest_fuctional_tests_part1:
   extends: .hafah_pytest_fuctional_tests_base
