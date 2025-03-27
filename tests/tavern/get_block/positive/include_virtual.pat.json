@@ -1,0 +1,161 @@
+{
+    "witness": "smooth.witness",
+    "block_id": "004c4b3fc6a8735b4ab5433d59f4526e4a042644",
+    "previous": "004c4b3e03ea2eac2494790786bfb9e41a8669d9",
+    "timestamp": "2016-09-15T19:47:18",
+    "extensions": [],
+    "signing_key": "STM5jtPaM5G2jemsqTY8xYgy3CVUgzygKn7vUVpFozr6nWcCJ8mDW",
+    "transactions": [
+      {
+        "expiration": "2016-09-15T19:47:27",
+        "extensions": [],
+        "operations": [
+          {
+            "type": "vote_operation",
+            "value": {
+              "voter": "rkpl",
+              "author": "thedevil",
+              "weight": -10000,
+              "permlink": "re-rkpl-how-to-make-a-good-picture-of-the-moon-my-guide-and-photos-20160915t193128824z"
+            }
+          },
+          {
+            "type": "effective_comment_vote_operation",
+            "value": {
+              "voter": "rkpl",
+              "author": "thedevil",
+              "weight": 0,
+              "rshares": -1383373254,
+              "permlink": "re-rkpl-how-to-make-a-good-picture-of-the-moon-my-guide-and-photos-20160915t193128824z",
+              "pending_payout": {
+                "nai": "@@000000013",
+                "amount": "0",
+                "precision": 3
+              },
+              "total_vote_weight": 590910411298246
+            }
+          }
+        ],
+        "signatures": [
+          "2046cca841a2c84caf416ccec47f4d894732236505c21964ca092a4bf83b755979402486e49f4f6c116fc7e8d8525df14592d2993365b54ac26cb4bc52d3611e50"
+        ],
+        "ref_block_num": 19245,
+        "ref_block_prefix": 325640405
+      },
+      {
+        "expiration": "2016-09-15T19:47:45",
+        "extensions": [],
+        "operations": [
+          {
+            "type": "limit_order_cancel_operation",
+            "value": {
+              "owner": "cvk",
+              "orderid": 1473968539
+            }
+          },
+          {
+            "type": "limit_order_cancelled_operation",
+            "value": {
+              "seller": "cvk",
+              "orderid": 1473968539,
+              "amount_back": {
+                "nai": "@@000000021",
+                "amount": "9941",
+                "precision": 3
+              }
+            }
+          }
+        ],
+        "signatures": [
+          "20388171dcf8401b9ca74a79991fa2aaeff26729a28c3acb5510663a930e51f15e180e712e0e7fd3a65b2082ea89583b5155239259fc37c9a0c2b0ec4aacfb6963"
+        ],
+        "ref_block_num": 19262,
+        "ref_block_prefix": 2888755715
+      },
+      {
+        "expiration": "2016-09-15T20:47:15",
+        "extensions": [],
+        "operations": [
+          {
+            "type": "pow2_operation",
+            "value": {
+              "work": {
+                "type": "pow2",
+                "value": {
+                  "input": {
+                    "nonce": "12906882138532220661",
+                    "prev_block": "004c4b3e03ea2eac2494790786bfb9e41a8669d9",
+                    "worker_account": "rabbit-25"
+                  },
+                  "pow_summary": 3818441282
+                }
+              },
+              "props": {
+                "hbd_interest_rate": 1000,
+                "maximum_block_size": 131072,
+                "account_creation_fee": {
+                  "nai": "@@000000021",
+                  "amount": "10000",
+                  "precision": 3
+                }
+              }
+            }
+          },
+          {
+            "type": "pow_reward_operation",
+            "value": {
+              "reward": {
+                "nai": "@@000000037",
+                "amount": "5031442145",
+                "precision": 6
+              },
+              "worker": "smooth.witness"
+            }
+          }
+        ],
+        "signatures": [
+          "200cecb32d535041c061ea00ec8092c4ab12bf1453035c52987beffb53099f4d5045b29946037b15f9cdde3cbbe0f6e72b8f2f42027cafbeeee54cb8e780f8b07f"
+        ],
+        "ref_block_num": 19262,
+        "ref_block_prefix": 2888755715
+      },
+      {
+        "expiration": "2016-09-15T19:47:45",
+        "extensions": [],
+        "operations": [
+          {
+            "type": "limit_order_cancel_operation",
+            "value": {
+              "owner": "paco-steem",
+              "orderid": 1243424767
+            }
+          },
+          {
+            "type": "limit_order_cancelled_operation",
+            "value": {
+              "seller": "paco-steem",
+              "orderid": 1243424767,
+              "amount_back": {
+                "nai": "@@000000013",
+                "amount": "19276",
+                "precision": 3
+              }
+            }
+          }
+        ],
+        "signatures": [
+          "1f7de4d1ea38b5ddb2de499242aacc92d3fff529a74264c568114a48bf4182e4e775bd757cd718cb31b92017279bc781d7282be48abf615aa856bf6828a53b7fe1"
+        ],
+        "ref_block_num": 19262,
+        "ref_block_prefix": 2888755715
+      }
+    ],
+    "transaction_ids": [
+      "9f4639be729f8ca436ac5bd01b5684cbc126d44d",
+      "8f2a70dbe09902473eac39ffbd8ff626cb49bb51",
+      "a9596ee741bd4b4b7d3d8cadd15416bfe854209e",
+      "b664e368d117e0b0d4b1b32325a18044f47b5ca5"
+    ],
+    "witness_signature": "1f4a3e6e868c4b729790e64b0656cf12996f35010dd07b535a502b019080c849c75f370642b00e302d003def5e6b2280246b08ee8ab37824af4664ab740a79b940",
+    "transaction_merkle_root": "708e4d6a2a722ef7fecc58d1f177a2826e54edd3"
+  }

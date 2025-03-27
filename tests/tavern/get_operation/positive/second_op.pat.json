@@ -1,0 +1,33 @@
+{
+  "op": {
+    "type": "pow_operation",
+    "value": {
+      "work": {
+        "work": "000000021be1b6ff7db72546e38f84c3e27b74c92caa78b3d58101ec23590e06",
+        "input": "a66710befb1da6af7ee045d73cb3b0aaa2dae0ddd79b824991298a35f6e51707",
+        "worker": "STM58dnqTLPrybB3eR3vuAEgsmF73N5raACK6ceGynXYHziCg9kSJ",
+        "signature": "20a118dd4ae99f5028d5b39ff225a75892311feb26962878d23afd296e0ec8880e254b5b4148c26646fcb60ecf85f0165edfa993d2d38fefe5c55847e6539f3507"
+      },
+      "nonce": "15388158104033372400",
+      "props": {
+        "hbd_interest_rate": 1000,
+        "maximum_block_size": 131072,
+        "account_creation_fee": {
+          "nai": "@@000000021",
+          "amount": "1",
+          "precision": 3
+        }
+      },
+      "block_id": "0034483d9f5f41e48c842c0aff31aea140868ce6",
+      "worker_account": "catfish"
+    }
+  },
+  "block": 3426366,
+  "trx_id": "03fb2153261c9bc33fb245ab2ee9d0f8cb952b5d",
+  "op_pos": 0,
+  "op_type_id": 14,
+  "timestamp": "2016-07-22T20:42:51",
+  "virtual_op": false,
+  "operation_id": "14716129914127118",
+  "trx_in_block": 2
+}

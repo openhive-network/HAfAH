@@ -1,0 +1,26 @@
+---
+  test_name: Hafbe PostgREST
+
+  marks:
+    - patterntest
+    - negative
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: test
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/rpc/get_transaction"
+        method: POST  
+        headers:
+          content-type: application/json
+          accept: application/json
+        json:
+          transaction-id: "954f6de36e6715d128fa8eb5a053fc254b05ded1"
+      response:
+        status_code: 400
+        verify_response_with:
+          function: validate_response:compare_rest_response_with_pattern
+          extra_kwargs:
+            error_response: true
