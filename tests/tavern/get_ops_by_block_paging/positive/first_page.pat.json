@@ -1,0 +1,56 @@
+{
+  "operations_result": [
+    {
+      "block": 5000000,
+      "op": {
+        "type": "producer_reward_operation",
+        "value": {
+          "producer": "ihashfury",
+          "vesting_shares": {
+            "amount": "3003845513",
+            "nai": "@@000000037",
+            "precision": 6
+          }
+        }
+      },
+      "op_pos": 1,
+      "op_type_id": 64,
+      "operation_id": "21474836480000832",
+      "timestamp": "2016-09-15T19:47:21",
+      "trx_id": null,
+      "trx_in_block": -1,
+      "virtual_op": true
+    },
+    {
+      "block": 5000000,
+      "op": {
+        "type": "limit_order_create_operation",
+        "value": {
+          "amount_to_sell": {
+            "amount": "10324",
+            "nai": "@@000000021",
+            "precision": 3
+          },
+          "expiration": "2035-10-29T06:32:22",
+          "fill_or_kill": false,
+          "min_to_receive": {
+            "amount": "6819",
+            "nai": "@@000000013",
+            "precision": 3
+          },
+          "orderid": 1473968838,
+          "owner": "cvk"
+        }
+      },
+      "op_pos": 0,
+      "op_type_id": 5,
+      "operation_id": "21474836480000517",
+      "timestamp": "2016-09-15T19:47:21",
+      "trx_id": "973290d26bac31335c000c7a3d3fe058ce3dbb9f",
+      "trx_in_block": 1,
+      "virtual_op": false
+    }
+  ],
+  "total_operations": 4,
+  "total_pages": 2
+}

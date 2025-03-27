@@ -1,0 +1,78 @@
+{
+  "transaction_json": {
+    "ref_block_num": 19263,
+    "ref_block_prefix": 1534306502,
+    "extensions": [],
+    "expiration": "2016-09-15T19:47:33",
+    "operations": [
+      {
+        "type": "account_create_operation",
+        "value": {
+          "fee": {
+            "nai": "@@000000021",
+            "amount": "10000",
+            "precision": 3
+          },
+          "owner": {
+            "key_auths": [
+              [
+                "STM871wj5KKnbwwiRv3scVcxQ26ynPnE1uaZr6dPpqVu9F4zJZgjZ",
+                1
+              ]
+            ],
+            "account_auths": [],
+            "weight_threshold": 1
+          },
+          "active": {
+            "key_auths": [
+              [
+                "STM73bAnWEwkdUa7Lp4ovNzyu4soHUCaCNSz79YHQsDqscNdSe1E8",
+                1
+              ]
+            ],
+            "account_auths": [],
+            "weight_threshold": 1
+          },
+          "creator": "steem",
+          "posting": {
+            "key_auths": [
+              [
+                "STM7fXKrnQN3xhgFTQBFMgR9TU8CxfgAJrLvSDjGuM2bFkiuKfwZg",
+                1
+              ]
+            ],
+            "account_auths": [],
+            "weight_threshold": 1
+          },
+          "memo_key": "STM8i93Zznxu2QRNLCHBDXt5yyiMW1c3GEyVKV9XAs8H5wEWwdJaM",
+          "json_metadata": "",
+          "new_account_name": "kefadex"
+        }
+      },
+      {
+        "type": "account_created_operation",
+        "value": {
+          "creator": "steem",
+          "new_account_name": "kefadex",
+          "initial_delegation": {
+            "nai": "@@000000037",
+            "amount": "0",
+            "precision": 6
+          },
+          "initial_vesting_shares": {
+            "nai": "@@000000037",
+            "amount": "30038455132",
+            "precision": 6
+          }
+        }
+      }
+    ],
+    "signatures": [
+      "1f63c75cc966916ea705a6fdef0821a810bdabb07118a3721f4cd52c972b9e4522534248c45ac908c1498752165a1d937eaf55ab6c028d7ee0ad893d3d4330d066"
+    ]
+  },
+  "transaction_id": "6707feb450da66dc223ab5cb3e259937b2fef6bf",
+  "block_num": 5000000,
+  "transaction_num": 0,
+  "timestamp": "2016-09-15T19:47:21"
+}

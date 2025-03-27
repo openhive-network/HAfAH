@@ -72,7 +72,7 @@ BEGIN
     COALESCE((SELECT block_num FROM paging_logic), 0)::INT,
     COALESCE((SELECT id FROM paging_logic), 0)::TEXT,
     (
-      SELECT array_agg(rows ORDER BY rows.json_stringify_bigint::BIGINT)
+      SELECT array_agg(rows ORDER BY rows.operation_id::BIGINT)
       FROM (
         SELECT 
           s.op,
@@ -82,7 +82,7 @@ BEGIN
           s.op_type_id,
           s.timestamp,
           s.virtual_op,
-          hafah_python.json_stringify_bigint(s.operation_id),
+          s.operation_id::TEXT,
           s.trx_in_block::SMALLINT
         FROM pre_result s
       ) rows
