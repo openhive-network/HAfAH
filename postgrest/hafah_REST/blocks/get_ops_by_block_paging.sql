@@ -226,6 +226,8 @@ BEGIN
     END
   );
 
+  PERFORM hafah_python.validate_page("page", __total_pages);
+
   _result := array_agg(row ORDER BY
       (CASE WHEN "page-order" = 'desc' THEN row.operation_id::BIGINT ELSE NULL END) DESC,
       (CASE WHEN "page-order" = 'asc' THEN row.operation_id::BIGINT ELSE NULL END) ASC
@@ -256,7 +258,7 @@ BEGIN
   RETURN (
     COALESCE(_ops_count,0),
     COALESCE(__total_pages,0),
-    _result
+    COALESCE(_result, '{}'::hafah_backend.operation[])
   )::hafah_backend.operation_history;
 
 END

@@ -1,0 +1,196 @@
+{
+  "next_block_range_begin": 4999901,
+  "next_operation_begin": "21474411278239744",
+  "ops": [
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "snowden",
+          "author": "charlieshrem",
+          "weight": 10000,
+          "permlink": "mackerelcoin-and-my-socioeconomic-observations-from-prison-part-1-by-charlie-shrem"
+        }
+      },
+      "block": 4999900,
+      "trx_id": "2e41d3ed7f52b211bc40c5684b12bbfd01217d95",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-09-15T19:42:06",
+      "virtual_op": false,
+      "operation_id": "21474406983270656",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "wildchild",
+          "author": "charlieshrem",
+          "weight": 10000,
+          "permlink": "mackerelcoin-and-my-socioeconomic-observations-from-prison-part-1-by-charlie-shrem"
+        }
+      },
+      "block": 4999900,
+      "trx_id": "22e457b14aa8b400fc5ad8a82c359f67135eb526",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-09-15T19:42:06",
+      "virtual_op": false,
+      "operation_id": "21474406983271168",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "adm",
+          "author": "larrytom",
+          "weight": -2000,
+          "permlink": "8-reasons-why-we-need-human-touch-more-than-ever"
+        }
+      },
+      "block": 4999900,
+      "trx_id": "ba93f0eaf2f514022c0ea88414adde969f6f1640",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-09-15T19:42:06",
+      "virtual_op": false,
+      "operation_id": "21474406983271680",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "storage",
+          "author": "charlieshrem",
+          "weight": 10000,
+          "permlink": "mackerelcoin-and-my-socioeconomic-observations-from-prison-part-1-by-charlie-shrem"
+        }
+      },
+      "block": 4999900,
+      "trx_id": "86fdc359c124c94d55a89f2b69d2cec6d78eca07",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-09-15T19:42:06",
+      "virtual_op": false,
+      "operation_id": "21474406983272192",
+      "trx_in_block": 4
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "brains",
+          "author": "charlieshrem",
+          "weight": 5000,
+          "permlink": "mackerelcoin-and-my-socioeconomic-observations-from-prison-part-1-by-charlie-shrem"
+        }
+      },
+      "block": 4999900,
+      "trx_id": "04d99e732c384755eefa3ed9dcc59c5c291e8328",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-09-15T19:42:06",
+      "virtual_op": false,
+      "operation_id": "21474406983272704",
+      "trx_in_block": 5
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "zettar",
+          "author": "charlieshrem",
+          "weight": 10000,
+          "permlink": "mackerelcoin-and-my-socioeconomic-observations-from-prison-part-1-by-charlie-shrem"
+        }
+      },
+      "block": 4999901,
+      "trx_id": "353a78116f11629d74a937032bb3919c77ef19c5",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-09-15T19:42:09",
+      "virtual_op": false,
+      "operation_id": "21474411278237696",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "dolpo777",
+          "author": "charlieshrem",
+          "weight": 10000,
+          "permlink": "mackerelcoin-and-my-socioeconomic-observations-from-prison-part-1-by-charlie-shrem"
+        }
+      },
+      "block": 4999901,
+      "trx_id": "73a17905012e3e583eabafc30a9426a672a5a79d",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-09-15T19:42:09",
+      "virtual_op": false,
+      "operation_id": "21474411278238208",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "mikehere",
+          "author": "charlieshrem",
+          "weight": 10000,
+          "permlink": "mackerelcoin-and-my-socioeconomic-observations-from-prison-part-1-by-charlie-shrem"
+        }
+      },
+      "block": 4999901,
+      "trx_id": "4a49ce6879b897a6c50ccaeb56118595b4ffcd14",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-09-15T19:42:09",
+      "virtual_op": false,
+      "operation_id": "21474411278238720",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "rimann",
+          "author": "charlieshrem",
+          "weight": 10000,
+          "permlink": "mackerelcoin-and-my-socioeconomic-observations-from-prison-part-1-by-charlie-shrem"
+        }
+      },
+      "block": 4999901,
+      "trx_id": "df2e3338a20251cbfd0375ae20b4d23180c0737d",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-09-15T19:42:09",
+      "virtual_op": false,
+      "operation_id": "21474411278239232",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "blackmarket",
+          "author": "charlieshrem",
+          "weight": 10000,
+          "permlink": "mackerelcoin-and-my-socioeconomic-observations-from-prison-part-1-by-charlie-shrem"
+        }
+      },
+      "block": 4999901,
+      "trx_id": "f1b6f85124838310e4aa2708c5f0853072595c0d",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-09-15T19:42:09",
+      "virtual_op": false,
+      "operation_id": "21474411278239744",
+      "trx_in_block": 4
+    }
+  ]
+}

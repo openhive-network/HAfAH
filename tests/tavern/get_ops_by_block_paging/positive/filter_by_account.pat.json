@@ -1,0 +1,28 @@
+{
+  "total_operations": 1,
+  "total_pages": 1,
+  "operations_result": [
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": "I need your help to solve this problem with Mr. justin o'connell: https://steemit.com/steemit/@luisucv34/i-would-like-to-publicly-apologize-to-justin-oconnell-from-cryptocoinsnews",
+          "title": "",
+          "author": "luisucv34",
+          "permlink": "re-carlos-cabeza-steemit-enables-user-accounts-after-hacking-into-their-systems-20160722t204333625z",
+          "json_metadata": "{\"tags\":[\"steemit\"],\"links\":[\"https://steemit.com/steemit/@luisucv34/i-would-like-to-publicly-apologize-to-justin-oconnell-from-cryptocoinsnews\"]}",
+          "parent_author": "carlos-cabeza",
+          "parent_permlink": "steemit-enables-user-accounts-after-hacking-into-their-systems"
+        }
+      },
+      "block": 3426366,
+      "trx_id": "8cb06dc4ad7ca0142208a7094e61f72ca7746388",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-07-22T20:42:51",
+      "virtual_op": false,
+      "operation_id": "14716129914126337",
+      "trx_in_block": 0
+    }
+  ]
+}

@@ -258,7 +258,7 @@ BEGIN
   RETURN (
     COALESCE(_ops_count,0),
     COALESCE(__total_pages,0),
-    _result
+    COALESCE(_result, '{}'::hafah_backend.operation[])
   )::hafah_backend.operation_history;
 
 -- ops_count returns number of operations found with current filter

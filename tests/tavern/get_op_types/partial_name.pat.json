@@ -1,0 +1,87 @@
+[
+  {
+    "is_virtual": false,
+    "op_type_id": 9,
+    "operation_name": "account_create_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 10,
+    "operation_name": "account_update_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 12,
+    "operation_name": "account_witness_vote_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 13,
+    "operation_name": "account_witness_proxy_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 22,
+    "operation_name": "claim_account_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 23,
+    "operation_name": "create_claimed_account_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 24,
+    "operation_name": "request_account_recovery_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 25,
+    "operation_name": "recover_account_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 26,
+    "operation_name": "change_recovery_account_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 37,
+    "operation_name": "reset_account_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 38,
+    "operation_name": "set_reset_account_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 41,
+    "operation_name": "account_create_with_delegation_operation"
+  },
+  {
+    "is_virtual": false,
+    "op_type_id": 43,
+    "operation_name": "account_update2_operation"
+  },
+  {
+    "is_virtual": true,
+    "op_type_id": 65,
+    "operation_name": "clear_null_account_balance_operation"
+  },
+  {
+    "is_virtual": true,
+    "op_type_id": 75,
+    "operation_name": "expired_account_notification_operation"
+  },
+  {
+    "is_virtual": true,
+    "op_type_id": 76,
+    "operation_name": "changed_recovery_account_operation"
+  },
+  {
+    "is_virtual": true,
+    "op_type_id": 80,
+    "operation_name": "account_created_operation"
+  }
+]
