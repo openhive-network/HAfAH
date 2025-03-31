@@ -1,5 +1,16 @@
-FROM alpine:3.18.3
-RUN apk --no-cache add postgresql14-client bash
+# syntax=registry.gitlab.syncad.com/hive/common-ci-configuration/dockerfile:1.5
+ARG PSQL_CLIENT_VERSION=14-1
+FROM registry.gitlab.syncad.com/hive/common-ci-configuration/psql:$PSQL_CLIENT_VERSION
+
+USER root
+
+RUN <<EOF
+  set -e
+  mkdir /hafah
+  chown haf_admin /hafah
+EOF
+
+USER haf_admin
 
 RUN mkdir -p /hafah/scripts
 RUN mkdir -p /hafah/queries

@@ -1,14 +1,13 @@
-# syntax=docker/dockerfile:1.5
-
+# syntax=registry.gitlab.syncad.com/hive/common-ci-configuration/dockerfile:1.5
+ARG PSQL_CLIENT_VERSION=14-1
 ARG POSTGREST_VERSION=v12.0.2
+FROM registry.gitlab.syncad.com/hive/common-ci-configuration/postgrest:${POSTGREST_VERSION} AS pure_postgrest
 
-FROM postgrest/postgrest:${POSTGREST_VERSION} AS pure_postgrest
+FROM registry.gitlab.syncad.com/hive/common-ci-configuration/psql:$PSQL_CLIENT_VERSION AS runtime
 
-FROM alpine:3.19 AS runtime
-
-RUN apk add --no-cache bash coreutils ca-certificates postgresql-client sudo
-RUN adduser -D "haf_admin" && echo "haf_admin ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
-    adduser -D "hafah_user" && chmod -R a+w /home/hafah_user
+USER root
+RUN apk add --no-cache coreutils ca-certificates
+RUN adduser -D "hafah_user" && chmod -R a+w /home/hafah_user
 
 SHELL ["/bin/bash", "-c"]
 
