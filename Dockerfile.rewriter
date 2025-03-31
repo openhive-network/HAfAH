@@ -1,4 +1,4 @@
-FROM registry.gitlab.syncad.com/hive/hafah/openresty:1.27.1.1-1-alpine AS without_tag
+FROM registry.gitlab.syncad.com/hive/common-ci-configuration/nginx:ecd325dd43aee24562f59195ef51a20fa15514d4 AS without_tag
 
 COPY docker/hafah_rest_nginx.conf.template /usr/local/openresty/nginx/conf/nginx.conf.template
 COPY rewrite_rules.conf /usr/local/openresty/nginx/conf/rewrite_rules.conf
