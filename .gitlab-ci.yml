@@ -42,7 +42,7 @@ variables:
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 - project: 'hive/haf'
-  ref: 0eab198d487701212b48bb4ba6fd7423c849c651
+  ref: 2cf965eb7bb8a6d2983bb8e3bac719cdc8b52c5c
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
 
@@ -157,7 +157,7 @@ prepare_haf_data:
 
   artifacts:
     paths:
-      - docker_image_name.env
+    - docker_image_name.env
     reports:
       dotenv: docker_image_name.env
 
@@ -174,9 +174,9 @@ prepare_postgrest_hafah_image:
 build_setup_docker_image:
   extends: .docker_image_builder_job
   stage: build
-  before_script: 
-    - !reference [.docker_image_builder_job, before_script]
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  before_script:
+  - !reference [.docker_image_builder_job, before_script]
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script: scripts/ci-helpers/build_setup_image.sh "$CI_PROJECT_DIR"
   tags:
   - public-runner-docker
@@ -338,7 +338,7 @@ postgrest_rest_benchmark_tests:
   - job: prepare_postgrest_hafah_image
     artifacts: true
   script:
-  - sleep 10 
+  - sleep 10
   - timeout -k 1m 10m ./tests/performance/run_performance_tests.sh --backend-host=app
     --backend-port=$APP_PORT
   - tar -czvf tests/performance/results.tar.gz $(pwd)/tests/performance/*result.*
@@ -440,7 +440,7 @@ prepare_haf_image_testnet:
 
   - name: ${HAF_APP_IMAGE}
     alias: app
-    command: [ "--postgres-url=postgresql://hafah_user@hfm-only-instance/haf_block_log" ]
+    command: ["--postgres-url=postgresql://hafah_user@hfm-only-instance/haf_block_log"]
     entrypoint:
     - '/bin/bash'
     - '-c'
