@@ -19,6 +19,7 @@ ENDPOINTS_IN_ORDER="
 ../$endpoints/types/sort_direction.sql
 ../$endpoints/types/block.sql
 ../$endpoints/types/transaction.sql
+../$endpoints/types/fill_order.sql
 ../$endpoints/hafah_openapi.sql
 ../$endpoints/blocks/get_block_range.sql
 ../$endpoints/blocks/get_block.sql
