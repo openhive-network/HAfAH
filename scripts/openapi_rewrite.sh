@@ -32,6 +32,8 @@ ENDPOINTS_IN_ORDER="
 ../$endpoints/transactions/get_transaction.sql
 ../$endpoints/accounts/get_ops_by_account.sql
 ../$endpoints/accounts/get_acc_op_types.sql
+../$endpoints/market_history/get_trade_history.sql
+../$endpoints/market_history/get_recent_trades.sql
 ../$endpoints/other/get_version.sql
 ../$endpoints/other/get_head_block_num.sql
 ../$endpoints/other/get_block.sql"
@@ -69,7 +71,7 @@ install_pip() {
     fi
     # Try to install pip3
     sudo apt-get update
-    sudo apt-get install -y python3-pip
+    sudo apt-get install -y python3-pip 
     if ! command -v pip3 &> /dev/null; then
         echo "pip3 installation failed. Please install pip3 manually."
         exit 1
@@ -86,7 +88,7 @@ if python3 -c "import deepmerge" &> /dev/null; then
     echo "deepmerge is already installed."
 else
     echo "deepmerge is not installed. Installing now..."
-    pip3 install deepmerge
+    pip3 install deepmerge 
     echo "deepmerge has been installed."
 fi
 
@@ -95,7 +97,7 @@ if python3 -c "import jsonpointer" &> /dev/null; then
     echo "jsonpointer is already installed."
 else
     echo "jsonpointer is not installed. Installing now..."
-    pip3 install jsonpointer
+    pip3 install jsonpointer 
     echo "jsonpointer has been installed."
 fi
 
