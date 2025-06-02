@@ -1,0 +1,6 @@
+{
+  "code": "P0001",
+  "details": null,
+  "hint": null,
+  "message": "Assert Exception:args.result-limit <= 1000: result-limit of 10000 is greater than maxmimum allowed"
+}
