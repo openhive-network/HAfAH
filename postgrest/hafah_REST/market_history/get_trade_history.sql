@@ -5,7 +5,7 @@ SET ROLE hafah_owner;
   get:
     tags:
       - Market-history
-    summary: Returns the most recent trades for the internal HBD:HIVE market.
+    summary: Returns the trade history for the internal HBD:HIVE market.
     description: |
 
       SQL example
