@@ -24,6 +24,8 @@ tags:
     description: Informatios about operation types
   - name: Accounts
     description: Information about accounts
+  - name: Market-history
+    description: Information about market history
   - name: Other
     description: General API information
 servers:
@@ -401,6 +403,50 @@ declare
           }
         }
       },
+      "hafah_backend.nai_object": {
+        "type": "object",
+        "properties": {
+          "nai": {
+            "type": "string",
+            "description": "String representation of a NAI (Network Asset Identifier)"
+          },
+          "amount": {
+            "type": "string",
+            "description": "Amount of the asset"
+          },
+          "precision": {
+            "type": "integer",
+            "description": "Precision of the asset"
+          }
+        }
+      },
+      "hafah_backend.fill_order": {
+        "type": "object",
+        "properties": {
+          "current_pays": {
+            "$ref": "#/components/schemas/hafah_backend.nai_object"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maker": {
+            "type": "string"
+          },
+          "open_pays": {
+            "$ref": "#/components/schemas/hafah_backend.nai_object"
+          },
+          "taker": {
+            "type": "string"
+          }
+        }
+      },
+      "hafah_backend.array_of_fill_order": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/hafah_backend.fill_order"
+        }
+      },
       "hafah_backend.array_of_block_range": {
         "type": "array",
         "items": {
@@ -462,6 +508,10 @@ declare
     {
       "name": "Accounts",
       "description": "Information about accounts"
+    },
+    {
+      "name": "Market-history",
+      "description": "Information about market history"
     },
     {
       "name": "Other",
@@ -1780,6 +1830,154 @@ declare
                   80,
                   85,
                   86
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/market-history/trade-history": {
+      "get": {
+        "tags": [
+          "Market-history"
+        ],
+        "summary": "Returns the trade history for the internal HBD:HIVE market.",
+        "description": "\nSQL example\n* `SELECT * FROM hafah_endpoints.get_trade_history(''2016-08-15 19:47:21'', ''2016-09-15 19:47:21'',1000);`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/market-history/trade-history?result-limit=100&from-block=2016-08-15 19:47:21&to-block==2016-09-15 19:47:21''`\n",
+        "operationId": "hafah_endpoints.get_trade_history",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "from-block",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Lower limit of the block range, can be represented either by a block-number (integer) or a timestamp (in the format YYYY-MM-DD HH:MI:SS).\n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is more than or equal to the given `timestamp` (i.e. `block''s created_at >= timestamp`).\n\nThe function will interpret and convert the input based on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
+          },
+          {
+            "in": "query",
+            "name": "to-block",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Similar to the from-block parameter, can either be a block-number (integer) or a timestamp (formatted as YYYY-MM-DD HH:MI:SS). \n\nThe provided `timestamp` will be converted to a `block-num` by finding the first block \nwhere the block''s `created_at` is less than or equal to the given `timestamp` (i.e. `block''s created_at <= timestamp`).\n\nThe function will convert the value depending on its format, example input:\n\n* `2016-09-15 19:47:21`\n\n* `5000000`\n"
+          },
+          {
+            "in": "query",
+            "name": "result-limit",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "A limit of retrieved orders\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "\n* Returns `hafah_backend.array_of_fill_order`\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/hafah_backend.array_of_fill_order"
+                },
+                "example": [
+                  {
+                    "current_pays": {
+                      "amount": "1000",
+                      "nai": "@@000000013",
+                      "precision": 3
+                    },
+                    "date": "2025-04-26T11:45:57",
+                    "maker": "quicktrades",
+                    "open_pays": {
+                      "amount": "3871",
+                      "nai": "@@000000021",
+                      "precision": 3
+                    },
+                    "taker": "elon.curator"
+                  },
+                  {
+                    "current_pays": {
+                      "amount": "1939",
+                      "nai": "@@000000021",
+                      "precision": 3
+                    },
+                    "date": "2025-05-26T11:45:30",
+                    "maker": "quicktrades",
+                    "open_pays": {
+                      "amount": "500",
+                      "nai": "@@000000013",
+                      "precision": 3
+                    },
+                    "taker": "cst90"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/market-history/recent-trades": {
+      "get": {
+        "tags": [
+          "Market-history"
+        ],
+        "summary": "Returns the most recent trades for the internal HBD:HIVE market.",
+        "description": "\nSQL example\n* `SELECT * FROM hafah_endpoints.get_recent_trades(1000);`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/market-history/recent-trades?result-limit=1000''`\n",
+        "operationId": "hafah_endpoints.get_recent_trades",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "result-limit",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "A limit of retrieved orders\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "\n* Returns `hafah_backend.array_of_fill_order`\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/hafah_backend.array_of_fill_order"
+                },
+                "example": [
+                  {
+                    "current_pays": {
+                      "amount": "1000",
+                      "nai": "@@000000013",
+                      "precision": 3
+                    },
+                    "date": "2025-05-26T11:45:57",
+                    "maker": "quicktrades",
+                    "open_pays": {
+                      "amount": "3871",
+                      "nai": "@@000000021",
+                      "precision": 3
+                    },
+                    "taker": "elon.curator"
+                  },
+                  {
+                    "current_pays": {
+                      "amount": "1939",
+                      "nai": "@@000000021",
+                      "precision": 3
+                    },
+                    "date": "2025-05-26T11:45:30",
+                    "maker": "quicktrades",
+                    "open_pays": {
+                      "amount": "500",
+                      "nai": "@@000000013",
+                      "precision": 3
+                    },
+                    "taker": "cst90"
+                  }
                 ]
               }
             }
