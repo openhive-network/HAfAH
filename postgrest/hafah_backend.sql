@@ -106,6 +106,17 @@ END
 $$
 ;
 
+CREATE FUNCTION hafah_backend.raise_exceed_max_uint32_exception(_id JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_backend.raise_exception(-32000, 'Parse Error:Exceeded maximum value for uint32_t', NULL, _id, TRUE);
+END
+$$
+;
+
 CREATE FUNCTION hafah_backend.raise_missing_arg(_arg_name TEXT, _id JSON)
 RETURNS TEXT
 LANGUAGE 'plpgsql'
@@ -146,6 +157,17 @@ AS
 $$
 BEGIN
   RETURN hafah_backend.raise_exception(-32000, 'Parse Error:Couldn''t parse int64_t', NULL, _id, TRUE);
+END
+$$
+;
+
+CREATE FUNCTION hafah_backend.raise_int32_exception(_id JSON)
+RETURNS JSON
+LANGUAGE 'plpgsql'
+AS
+$$
+BEGIN
+  RETURN hafah_backend.raise_exception(-32000, 'Parse Error:Couldn''t parse int32_t', NULL, _id, TRUE);
 END
 $$
 ;

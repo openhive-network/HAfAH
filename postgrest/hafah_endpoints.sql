@@ -125,6 +125,8 @@ BEGIN
   EXCEPTION
     WHEN invalid_text_representation THEN
       RETURN hafah_backend.raise_uint_exception(_id);
+    WHEN numeric_value_out_of_range THEN
+      RETURN hafah_backend.raise_int32_exception(_id);
   END;
 
   BEGIN
@@ -191,7 +193,15 @@ BEGIN
     ELSE
       RETURN hafah_backend.raise_missing_arg('block_range_end', _id);
     END IF;
+  
+  EXCEPTION
+    WHEN invalid_text_representation THEN
+      RETURN hafah_backend.raise_uint_exception(_id);
+    WHEN numeric_value_out_of_range THEN
+      RETURN hafah_backend.raise_int32_exception(_id);
+  END;
 
+  BEGIN
     -- Optional arguments
     __operation_begin = hafah_backend.parse_argument(_params, _json_type, 'operation_begin', 2);
     IF __operation_begin IS NOT NULL THEN
@@ -210,6 +220,8 @@ BEGIN
   EXCEPTION
     WHEN invalid_text_representation THEN
       RETURN hafah_backend.raise_uint_exception(_id);
+    WHEN numeric_value_out_of_range THEN
+      RETURN hafah_backend.raise_int_exception(_id);
   END;
 
   BEGIN
@@ -224,6 +236,8 @@ BEGIN
   EXCEPTION
     WHEN invalid_text_representation THEN
       RETURN hafah_backend.raise_int_exception(_id);
+    WHEN numeric_value_out_of_range THEN
+      RETURN hafah_backend.raise_int32_exception(_id);
   END;
 
   BEGIN
@@ -374,6 +388,8 @@ BEGIN
   EXCEPTION
     WHEN invalid_text_representation THEN
       RETURN hafah_backend.raise_uint_exception(_id);
+    WHEN numeric_value_out_of_range THEN
+      RETURN hafah_backend.raise_int_exception(_id);
   END;
 
   BEGIN
@@ -432,6 +448,8 @@ BEGIN
   EXCEPTION
     WHEN invalid_text_representation THEN
       RETURN hafah_backend.raise_uint_exception(_id);
+    WHEN numeric_value_out_of_range THEN
+      RETURN hafah_backend.raise_int32_exception(_id);
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
       RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
@@ -464,6 +482,8 @@ BEGIN
   EXCEPTION
     WHEN invalid_text_representation THEN
       RETURN hafah_backend.raise_uint_exception(_id);
+    WHEN numeric_value_out_of_range THEN
+      RETURN hafah_backend.raise_int32_exception(_id);
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
       RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
@@ -507,6 +527,8 @@ BEGIN
   EXCEPTION
     WHEN invalid_text_representation THEN
       RETURN hafah_backend.raise_uint_exception(_id);
+    WHEN numeric_value_out_of_range THEN
+      RETURN hafah_backend.raise_int32_exception(_id);
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
       RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
