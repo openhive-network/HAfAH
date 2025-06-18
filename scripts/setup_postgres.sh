@@ -21,6 +21,7 @@ print_help () {
     echo "  --host=VALUE         Allows to specify a PostgreSQL host location (defaults to /var/run/postgresql)"
     echo "  --port=NUMBER        Allows to specify a PostgreSQL operating port (defaults to 5432)"
     echo "  --postgres-url=URL   Allows to specify a PostgreSQL URL (in opposite to separate --host and --port options)"
+    echo "  --path-to-haf=PATH   Allows to specify a path to HAF installation (defaults to the parent directory of this script)"
     echo "  --help               Display this help screen and exit"
     echo
 }
@@ -35,6 +36,7 @@ supplement_builtin_roles() {
 POSTGRES_HOST="/var/run/postgresql"
 POSTGRES_PORT=5432
 POSTGRES_URL=""
+HAF_PATH="$SCRIPTPATH/../haf"
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -46,6 +48,9 @@ while [ $# -gt 0 ]; do
         ;;
     --postgres-url=*)
         POSTGRES_URL="${1#*=}"
+        ;;
+    --path-to-haf=*)
+        HAF_PATH="${1#*=}"
         ;;
     --help)
         print_help
@@ -73,7 +78,7 @@ else
   POSTGRES_ACCESS=$POSTGRES_URL
 fi
 
-"$SCRIPTPATH/../haf/scripts/create_haf_app_role.sh" --postgres-url="$POSTGRES_ACCESS" --haf-app-account="hafah_owner"
-"$SCRIPTPATH/../haf/scripts/create_haf_app_role.sh" --postgres-url="$POSTGRES_ACCESS" --haf-app-account="hafah_user"
+"$HAF_PATH/scripts/create_haf_app_role.sh" --postgres-url="$POSTGRES_ACCESS" --haf-app-account="hafah_owner"
+"$HAF_PATH/scripts/create_haf_app_role.sh" --postgres-url="$POSTGRES_ACCESS" --haf-app-account="hafah_user"
 
 supplement_builtin_roles "$POSTGRES_ACCESS"
