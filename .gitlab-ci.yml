@@ -12,12 +12,12 @@ variables:
   GIT_SUBMODULE_UPDATE_FLAGS: --jobs 4
 
   CI_DEBUG_SERVICES: "true"
-  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu24.04-1
-  BUILDER_IMAGE_TAG: "@sha256:fc149082a4ee91ed622a14d283ae7fe44d13b123f2927d2e71a2167bbe63fab0"
+  # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu24.04-6
+  BUILDER_IMAGE_TAG: "@sha256:9d5cacf26a0f21b6debc933909a7e8c56fb10c1346fe26dc5ce9ae1bc775190d"
   BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/haf/ci-base-image${BUILDER_IMAGE_TAG}"
 
-  # references registry.gitlab.syncad.com/hive/hive/ci-base-image:ubuntu24.04-1
-  PYTEST_RUNTIME_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive/ci-base-image@sha256:813f18c42929193036fc4e0017981c16913766442ef8d146313c64785df29c2e"
+  # references registry.gitlab.syncad.com/hive/hive/ci-base-image:ubuntu24.04-2023-10-04
+  PYTEST_RUNTIME_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive/ci-base-image@sha256:50bcbfe37fc031a902071ceaf586aff4554b15aa84e33b8bd84c31ad2386a26f"
   POETRY_INSTALL_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/hive-local-tools"
 
   SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
