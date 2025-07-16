@@ -24,6 +24,14 @@ SET ROLE hafah_owner;
           type: string
         description: Account to get operations for.
       - in: query
+        name: transacting-account-name
+        required: false
+        schema:
+          type: string
+          default: NULL
+        description: |
+          Account to filter operations by, if provided only operations where the account is an author will be returned.
+      - in: query
         name: operation-types
         required: false
         schema:
@@ -185,6 +193,7 @@ SET ROLE hafah_owner;
 DROP FUNCTION IF EXISTS hafah_endpoints.get_ops_by_account;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_ops_by_account(
     "account-name" TEXT,
+    "transacting-account-name" TEXT = NULL,
     "operation-types" TEXT = NULL,
     "page" INT = NULL,
     "page-size" INT = 100,
@@ -192,7 +201,7 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_ops_by_account(
     "from-block" TEXT = NULL,
     "to-block" TEXT = NULL
 )
-RETURNS hafah_backend.operation_history 
+RETURNS hafah_backend.account_operation_history 
 -- openapi-generated-code-end
 LANGUAGE 'plpgsql' STABLE
 SET JIT = OFF
@@ -204,18 +213,16 @@ $$
 DECLARE 
   _block_range hive.blocks_range := hive.convert_to_blocks_range("from-block","to-block");
   _account_id INT = (SELECT av.id FROM hive.accounts_view av WHERE av.name = "account-name");
-  _ops_count INT;
-  _from INT;
-  _to INT;
+  _transacting_account_id INT = (SELECT av.id FROM hive.accounts_view av WHERE av.name = "transacting-account-name");
   _operation_types INT[] := (SELECT string_to_array("operation-types", ',')::INT[]);
-  _result hafah_backend.operation[];
-
-  __total_pages INT;
-  __offset INT;
-  __limit INT;
 BEGIN
+  -- Validate inputs
   IF _account_id IS NULL THEN
     PERFORM hafah_backend.rest_raise_missing_account("account-name");
+  END IF;
+
+  IF "transacting-account-name" IS NOT NULL AND _transacting_account_id IS NULL THEN
+    PERFORM hafah_backend.rest_raise_missing_account("transacting-account-name");
   END IF;
 
   PERFORM hafah_python.validate_limit("page-size", 1000, 'page-size');
