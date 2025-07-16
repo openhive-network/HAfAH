@@ -98,14 +98,18 @@ SET ROLE hafah_owner;
           Result contains total number of operations,
           total pages, and the list of operations.
 
-          * Returns `hafah_backend.operation_history`
+          * Returns `hafah_backend.account_operation_history`
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/hafah_backend.operation_history'
+              $ref: '#/components/schemas/hafah_backend.account_operation_history'
             example: {
                   "total_operations": 219867,
                   "total_pages": 73289,
+                  "block_range": {
+                    "from": 1,
+                    "to": 5000000
+                  },
                   "operations_result": [
                     {
                       "op": {

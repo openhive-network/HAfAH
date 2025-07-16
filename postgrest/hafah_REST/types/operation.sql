@@ -1,6 +1,23 @@
 SET ROLE hafah_owner;
 
 /** openapi:components:schemas
+hafah_backend.block_range_type:
+  type: object
+  properties:
+    from:
+      type: integer
+    to:
+      type: integer
+ */
+-- openapi-generated-code-begin
+DROP TYPE IF EXISTS hafah_backend.block_range_type CASCADE;
+CREATE TYPE hafah_backend.block_range_type AS (
+    "from" INT,
+    "to" INT
+);
+-- openapi-generated-code-end
+
+/** openapi:components:schemas
 hafah_backend.operation_body:
   type: object
   x-sql-datatype: JSON
@@ -97,6 +114,34 @@ CREATE TYPE hafah_backend.operation_history AS (
 );
 -- openapi-generated-code-end
 
+/** openapi:components:schemas
+hafah_backend.account_operation_history:
+  type: object
+  properties:
+    total_operations:
+      type: integer
+      description: Total number of operations
+    total_pages:
+      type: integer
+      description: Total number of pages
+    block_range:
+      $ref: '#/components/schemas/hafah_backend.block_range_type'
+      description: Range of blocks that contains the returned pages  
+    operations_result:
+      type: array
+      items:
+        $ref: '#/components/schemas/hafah_backend.operation'
+      description: List of operation results
+ */
+-- openapi-generated-code-begin
+DROP TYPE IF EXISTS hafah_backend.account_operation_history CASCADE;
+CREATE TYPE hafah_backend.account_operation_history AS (
+    "total_operations" INT,
+    "total_pages" INT,
+    "block_range" hafah_backend.block_range_type,
+    "operations_result" hafah_backend.operation[]
+);
+-- openapi-generated-code-end
 /** openapi:components:schemas
 hafah_backend.operations_in_block_range:
   type: object
