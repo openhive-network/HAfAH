@@ -81,7 +81,8 @@ $$;
 DROP TYPE IF EXISTS hafah_backend.account_filter_return CASCADE;
 CREATE TYPE hafah_backend.account_filter_return AS
 (
-    count INT,
+    from_block INT,
+    to_block INT,
     from_seq INT,
     to_seq INT
 );
@@ -98,9 +99,12 @@ SET JIT = OFF
 AS
 $$
 DECLARE 
+  __to INT;
+  __from INT;
   __to_seq INT;
   __from_seq INT;
-  __count INT;
+  
+  _current_block INT := (SELECT bv.num FROM hive.blocks_view bv ORDER BY bv.num DESC LIMIT 1);
 BEGIN
   /*
   we are using 3 diffrent methods of fetching data,
@@ -135,9 +139,27 @@ BEGIN
     ORDER BY aov.account_op_seq_no ASC LIMIT 1
   );
 
-  __count := hafah_backend.get_account_operations_count(_operations, _account_id, __from_seq, __to_seq);
+  __to := (
+    CASE 
+      WHEN (_to IS NULL) THEN 
+        _current_block 
+      WHEN (_to IS NOT NULL) AND (_current_block < _to) THEN 
+        _current_block 
+      ELSE 
+        _to 
+      END
+  );
 
-  RETURN (__count, __from_seq, __to_seq)::hafah_backend.account_filter_return;
+  __from := (
+    CASE 
+      WHEN (_from IS NULL) THEN 
+        1 
+      ELSE 
+        _from 
+      END
+  );
+
+  RETURN (__from, __to, __from_seq, __to_seq)::hafah_backend.account_filter_return;
 END
 $$;
 
