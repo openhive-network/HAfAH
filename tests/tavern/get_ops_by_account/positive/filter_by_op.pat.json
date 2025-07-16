@@ -1,6 +1,10 @@
 {
   "total_operations": 7947,
   "total_pages": 398,
+  "block_range": {
+    "from": 1,
+    "to": 5000000
+  },
   "operations_result": [
     {
       "op": {
