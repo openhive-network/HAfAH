@@ -229,48 +229,23 @@ BEGIN
   PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
   PERFORM hafah_python.validate_negative_page("page");
 
-  -----------PAGING LOGIC----------------
-  SELECT count, from_seq, to_seq
-  INTO _ops_count, _from, _to
-  FROM hafah_backend.account_range(_operation_types, _account_id, _block_range.first_block, _block_range.last_block);
-
-  SELECT total_pages, offset_filter, limit_filter
-  INTO __total_pages, __offset, __limit
-  FROM hafah_backend.calculate_pages(_ops_count, "page", 'desc', "page-size");
-
-  IF (_block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL) OR ("page" IS NOT NULL AND __total_pages != "page") THEN
+  IF (_block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL) THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
   ELSE
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   END IF;
 
-  _result := array_agg(row ORDER BY row.operation_id::BIGINT DESC) FROM (
-    SELECT 
-      ba.op,
-      ba.block,
-      ba.trx_id,
-      ba.op_pos,
-      ba.op_type_id,
-      ba.timestamp,
-      ba.virtual_op,
-      ba.operation_id,
-      ba.trx_in_block
-    FROM hafah_backend.get_ops_by_account(
-      _account_id,
-      _operation_types,
-      _from,
-      _to,
-      "data-size-limit",
-      __offset,
-      __limit
-    ) ba
-  ) row;
-
-  RETURN (
-    COALESCE(_ops_count,0),
-    COALESCE(__total_pages,0),
-    COALESCE(_result, '{}'::hafah_backend.operation[])
-  )::hafah_backend.operation_history;
+  RETURN hafah_backend.get_ops_by_account(
+    _account_id,
+    ARRAY[_transacting_account_id],
+    _operation_types,
+    _block_range.first_block,
+    _block_range.last_block,
+    "page",
+    "data-size-limit",
+    "page-size",
+    TRUE -- incluede account - flag determines if the transacting account's operations are included or excluded
+);
 
 -- ops_count returns number of operations found with current filter
 -- to count total_pages we need to check if there was a rest from division by "page-size", if there was the page count is +1 
