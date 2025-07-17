@@ -93,7 +93,7 @@ BEGIN
   RETURN (
     COALESCE(_ops_count,0),
     COALESCE(_calculate_pages.total_pages,0),
-    (_from_block, _to_block)::hafah_backend.block_range_type,
+    (_account_range.from_block, _account_range.to_block)::hafah_backend.block_range_type,
     COALESCE(_result, '{}'::hafah_backend.operation[])
   )::hafah_backend.account_operation_history;
 

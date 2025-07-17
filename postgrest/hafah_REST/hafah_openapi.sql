@@ -72,6 +72,17 @@ declare
           "all"
         ]
       },
+      "hafah_backend.block_range_type": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "integer"
+          },
+          "to": {
+            "type": "integer"
+          }
+        }
+      },
       "hafah_backend.operation_body": {
         "type": "object",
         "x-sql-datatype": "JSON",
@@ -144,6 +155,30 @@ declare
           "total_pages": {
             "type": "integer",
             "description": "Total number of pages"
+          },
+          "operations_result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/hafah_backend.operation"
+            },
+            "description": "List of operation results"
+          }
+        }
+      },
+      "hafah_backend.account_operation_history": {
+        "type": "object",
+        "properties": {
+          "total_operations": {
+            "type": "integer",
+            "description": "Total number of operations"
+          },
+          "total_pages": {
+            "type": "integer",
+            "description": "Total number of pages"
+          },
+          "block_range": {
+            "$ref": "#/components/schemas/hafah_backend.block_range_type",
+            "description": "Range of blocks that contains the returned pages"
           },
           "operations_result": {
             "type": "array",
@@ -1621,6 +1656,16 @@ declare
           },
           {
             "in": "query",
+            "name": "transacting-account-name",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": null
+            },
+            "description": "Account to filter operations by, if provided only operations where the account is an author will be returned.\n"
+          },
+          {
+            "in": "query",
             "name": "operation-types",
             "required": false,
             "schema": {
@@ -1682,15 +1727,19 @@ declare
         ],
         "responses": {
           "200": {
-            "description": "Result contains total number of operations,\ntotal pages, and the list of operations.\n\n* Returns `hafah_backend.operation_history`\n",
+            "description": "Result contains total number of operations,\ntotal pages, and the list of operations.\n\n* Returns `hafah_backend.account_operation_history`\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/hafah_backend.operation_history"
+                  "$ref": "#/components/schemas/hafah_backend.account_operation_history"
                 },
                 "example": {
                   "total_operations": 219867,
                   "total_pages": 73289,
+                  "block_range": {
+                    "from": 1,
+                    "to": 5000000
+                  },
                   "operations_result": [
                     {
                       "op": {
