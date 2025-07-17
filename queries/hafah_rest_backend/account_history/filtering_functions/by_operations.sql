@@ -25,9 +25,9 @@ DECLARE
 BEGIN
 
   -----------PAGING LOGIC----------------
-  _account_range := hafah_backend.account_range(NULL, _account_id, _from_block, _to_block);
+  _account_range := hafah_backend.account_range(_operations, _account_id, _from_block, _to_block);
 
-  _ops_count := hafah_backend.get_account_operations_count(NULL, _account_id, _account_range.from_seq, _account_range.to_seq);
+  _ops_count := hafah_backend.get_account_operations_count(_operations, _account_id, _account_range.from_seq, _account_range.to_seq);
 
   _calculate_pages := hafah_backend.calculate_pages(_ops_count, _page, 'desc', _limit);
 
@@ -96,7 +96,7 @@ BEGIN
   RETURN (
     COALESCE(_ops_count,0),
     COALESCE(_calculate_pages.total_pages,0),
-    (_from_block, _to_block)::hafah_backend.block_range_type,
+    (_account_range.from_block, _account_range.to_block)::hafah_backend.block_range_type,
     COALESCE(_result, '{}'::hafah_backend.operation[])
   )::hafah_backend.account_operation_history;
 
