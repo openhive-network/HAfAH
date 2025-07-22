@@ -32,6 +32,20 @@ SET ROLE hafah_owner;
         description: |
           Account to filter operations by, if provided only operations where the account is an author will be returned.
       - in: query
+        name: participation-mode
+        required: false
+        schema:
+          $ref: '#/components/schemas/hafah_backend.participation_mode'
+          default: all
+        description: |
+          filter operations by:
+
+           * `include` - List only operations where transacting_account_id was the author.
+
+           * `exclude` - List only operations where transacting_account_id was not the author.
+
+           * `all` -  No filtering, transacting_account_id must be NULL.
+      - in: query
         name: operation-types
         required: false
         schema:
@@ -194,6 +208,7 @@ DROP FUNCTION IF EXISTS hafah_endpoints.get_ops_by_account;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_ops_by_account(
     "account-name" TEXT,
     "transacting-account-name" TEXT = NULL,
+    "participation-mode" hafah_backend.participation_mode = 'all',
     "operation-types" TEXT = NULL,
     "page" INT = NULL,
     "page-size" INT = 100,
@@ -207,7 +222,7 @@ LANGUAGE 'plpgsql' STABLE
 SET JIT = OFF
 SET join_collapse_limit = 16
 SET from_collapse_limit = 16
-SET enable_hashjoin = OFF
+SET plan_cache_mode = force_custom_plan
 AS
 $$
 DECLARE 
@@ -217,6 +232,11 @@ DECLARE
   _operation_types INT[] := (SELECT string_to_array("operation-types", ',')::INT[]);
 BEGIN
   -- Validate inputs
+  PERFORM hafah_backend.validate_participation_mode("participation-mode","transacting-account-name");
+  PERFORM hafah_python.validate_limit("page-size", 1000, 'page-size');
+  PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
+  PERFORM hafah_python.validate_negative_page("page");
+  
   IF _account_id IS NULL THEN
     PERFORM hafah_backend.rest_raise_missing_account("account-name");
   END IF;
@@ -224,10 +244,6 @@ BEGIN
   IF "transacting-account-name" IS NOT NULL AND _transacting_account_id IS NULL THEN
     PERFORM hafah_backend.rest_raise_missing_account("transacting-account-name");
   END IF;
-
-  PERFORM hafah_python.validate_limit("page-size", 1000, 'page-size');
-  PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
-  PERFORM hafah_python.validate_negative_page("page");
 
   IF (_block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL) THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
@@ -237,14 +253,16 @@ BEGIN
 
   RETURN hafah_backend.get_ops_by_account(
     _account_id,
-    ARRAY[_transacting_account_id],
+    -- in the current implementation, we only support a single transacting account, 
+    -- we may extend this in the future to support multiple accounts
+    ARRAY[_transacting_account_id], 
     _operation_types,
     _block_range.first_block,
     _block_range.last_block,
     "page",
     "data-size-limit",
     "page-size",
-    TRUE -- incluede account - flag determines if the transacting account's operations are included or excluded
+    "participation-mode" 
 );
 
 -- ops_count returns number of operations found with current filter

@@ -108,4 +108,18 @@ END
 $$
 ;
 
+CREATE OR REPLACE FUNCTION hafah_backend.validate_participation_mode(_mode hafah_backend.participation_mode, _account_name TEXT)
+RETURNS VOID
+LANGUAGE 'plpgsql'
+IMMUTABLE
+AS
+$$
+BEGIN
+  IF _mode = 'all' AND _account_name IS NOT NULL THEN
+    RAISE EXCEPTION 'For participation mode ''all'', account name should not be provided';
+  END IF;
+END
+$$
+;
+
 RESET ROLE;
