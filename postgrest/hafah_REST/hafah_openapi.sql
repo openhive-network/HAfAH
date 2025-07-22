@@ -482,6 +482,14 @@ declare
           "$ref": "#/components/schemas/hafah_backend.fill_order"
         }
       },
+      "hafah_backend.participation_mode": {
+        "type": "string",
+        "enum": [
+          "include",
+          "exclude",
+          "all"
+        ]
+      },
       "hafah_backend.array_of_block_range": {
         "type": "array",
         "items": {
@@ -1663,6 +1671,16 @@ declare
               "default": null
             },
             "description": "Account to filter operations by, if provided only operations where the account is an author will be returned.\n"
+          },
+          {
+            "in": "query",
+            "name": "participation-mode",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/hafah_backend.participation_mode",
+              "default": "all"
+            },
+            "description": "filter operations by:\n\n * `include` - List only operations where transacting_account_id was the author.\n\n * `exclude` - List only operations where transacting_account_id was not the author.\n\n * `all` -  No filtering, transacting_account_id must be NULL.\n"
           },
           {
             "in": "query",
