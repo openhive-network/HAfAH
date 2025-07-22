@@ -1,9 +1,9 @@
 SET ROLE hafah_owner;
 
-CREATE OR REPLACE FUNCTION hafah_backend.account_history_including_accounts(
+CREATE OR REPLACE FUNCTION hafah_backend.account_history_exclude_account(
     _account_id INT,
     _operations INT [],
-    _transacting_account_ids INT [],
+    _transacting_account_id INT,
     _from_block INT,
     _to_block INT,
     _page INT,
@@ -41,7 +41,7 @@ BEGIN
       SELECT aov.operation_id, aov.op_type_id, aov.block_num
       FROM hive.account_operations_view aov
       WHERE aov.account_id = _account_id
-      AND aov.transacting_account_id = ANY(_transacting_account_ids)
+      AND aov.transacting_account_id != _transacting_account_id
       AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
       AND aov.account_op_seq_no >= _account_range.from_seq
       AND aov.account_op_seq_no <= _account_range.to_seq
