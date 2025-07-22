@@ -17,8 +17,8 @@
           accept: application/json  
         json:
           account-name: "blocktrades"
-          transacting-account-name: "gtg"
-          participation-mode: "include"
+          transacting-account-name: "blocktrades"
+          participation-mode: "exclude"
       response:
         status_code: 200
         verify_response_with:
