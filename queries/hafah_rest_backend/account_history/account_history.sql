@@ -21,8 +21,11 @@ DECLARE
   -- flags
   _filter_by_account_ids BOOLEAN := (_filter_account_ids != ARRAY[NULL]::INT[]);
   _filter_by_single_acc BOOLEAN := (CASE WHEN (_filter_account_ids != ARRAY[NULL]::INT[]) AND (array_length(_filter_account_ids, 1) = 1) THEN TRUE ELSE FALSE END);
-  _filter_by_op BOOLEAN:= (_operations IS NOT NULL);
+  _filter_by_op BOOLEAN;
 BEGIN
+  _operations := hafah_backend.limit_to_only_real_operations(_operations, _participation_mode = 'all');
+  _filter_by_op := (_operations IS NOT NULL);
+
   CASE
     -- If no filters are applied, use the default account history function
     WHEN (NOT _filter_by_account_ids) AND (NOT _filter_by_op) THEN

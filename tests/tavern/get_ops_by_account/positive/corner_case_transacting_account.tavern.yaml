@@ -18,7 +18,7 @@
         json:
           account-name: "abit"
           transacting-account-name: "abit"
-          participation-mode: "include"
+          participation-mode: "exclude"
           page: 1
       response:
         status_code: 200

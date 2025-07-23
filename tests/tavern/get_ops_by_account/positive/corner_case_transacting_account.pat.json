@@ -1,2131 +1,1941 @@
 {
-  "total_operations": 1001,
+  "total_operations": 1007,
   "total_pages": 11,
   "block_range": {
-    "from": 4981191,
+    "from": 4168823,
     "to": 5000000
   },
   "operations_result": [
     {
       "op": {
-        "type": "producer_reward_operation",
+        "type": "vote_operation",
         "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013425676",
-            "precision": 6
-          }
+          "voter": "wilfred",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4982887,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:22:51",
-      "virtual_op": true,
-      "operation_id": "21401336704664896",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013430053",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982879,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:22:27",
-      "virtual_op": true,
-      "operation_id": "21401302344925760",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013442940",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982856,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:21:18",
-      "virtual_op": true,
-      "operation_id": "21401203560677952",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013463791",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982819,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:19:27",
-      "virtual_op": true,
-      "operation_id": "21401044646887488",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013470113",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982808,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:18:54",
-      "virtual_op": true,
-      "operation_id": "21400997402247232",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013482454",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982786,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:17:48",
-      "virtual_op": true,
-      "operation_id": "21400902912967488",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013497288",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982760,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:16:30",
-      "virtual_op": true,
-      "operation_id": "21400791243817280",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013507987",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982741,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:15:33",
-      "virtual_op": true,
-      "operation_id": "21400709639439936",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013514310",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982730,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:15:00",
-      "virtual_op": true,
-      "operation_id": "21400662394798656",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013526408",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982709,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:13:57",
-      "virtual_op": true,
-      "operation_id": "21400572200484928",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013546652",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982672,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:12:06",
-      "virtual_op": true,
-      "operation_id": "21400413286695744",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "curation_reward_operation",
-        "value": {
-          "author": "laonie",
-          "reward": {
-            "nai": "@@000000037",
-            "amount": "2995465372",
-            "precision": 6
-          },
-          "curator": "abit",
-          "permlink": "robinhoodwhale-14-09-2016",
-          "payout_must_be_claimed": false
-        }
-      },
-      "block": 4982671,
-      "trx_id": null,
-      "op_pos": 3,
-      "op_type_id": 52,
-      "timestamp": "2016-09-15T05:12:03",
-      "virtual_op": true,
-      "operation_id": "21400408991729460",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013553765",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982659,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:11:27",
-      "virtual_op": true,
-      "operation_id": "21400357452120640",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013562824",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982643,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:10:39",
-      "virtual_op": true,
-      "operation_id": "21400288732643904",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013582278",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982608,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:08:54",
-      "virtual_op": true,
-      "operation_id": "21400138408789056",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013593221",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982588,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:07:54",
-      "virtual_op": true,
-      "operation_id": "21400052509443648",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013600638",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982575,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:07:15",
-      "virtual_op": true,
-      "operation_id": "21399996674872384",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013617662",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982545,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:05:45",
-      "virtual_op": true,
-      "operation_id": "21399867825850432",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013619303",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982542,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:05:36",
-      "virtual_op": true,
-      "operation_id": "21399854940946496",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013634381",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982515,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:04:15",
-      "virtual_op": true,
-      "operation_id": "21399738976830784",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "pow_reward_operation",
-        "value": {
-          "reward": {
-            "nai": "@@000000037",
-            "amount": "5029755783",
-            "precision": 6
-          },
-          "worker": "abit"
-        }
-      },
-      "block": 4982515,
-      "trx_id": "93a6c22ea048b25bdd24eff1452fa499ae85dc47",
-      "op_pos": 1,
-      "op_type_id": 78,
-      "timestamp": "2016-09-15T05:04:15",
-      "virtual_op": true,
-      "operation_id": "21399738976830542",
-      "trx_in_block": 2
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013644049",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982499,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:03:27",
-      "virtual_op": true,
-      "operation_id": "21399670257354048",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013654203",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982481,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:02:33",
-      "virtual_op": true,
-      "operation_id": "21399592947941440",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013667092",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982458,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:01:24",
-      "virtual_op": true,
-      "operation_id": "21399494163694400",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013678887",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982437,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T05:00:21",
-      "virtual_op": true,
-      "operation_id": "21399403969381440",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013689284",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982418,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:59:24",
-      "virtual_op": true,
-      "operation_id": "21399322365002816",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013710625",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982379,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:57:27",
-      "virtual_op": true,
-      "operation_id": "21399154861277504",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013720231",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982362,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:56:36",
-      "virtual_op": true,
-      "operation_id": "21399081846835264",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013729291",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982346,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:55:48",
-      "virtual_op": true,
-      "operation_id": "21399013127358528",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "effective_comment_vote_operation",
-        "value": {
-          "voter": "abit",
-          "author": "userlogin",
-          "weight": "5219181476551540775",
-          "rshares": 7016909099162,
-          "permlink": "steem-transfer-daily-2016-09-14-steem",
-          "pending_payout": {
-            "nai": "@@000000013",
-            "amount": "7164",
-            "precision": 3
-          },
-          "total_vote_weight": "13201860673658672410"
-        }
-      },
-      "block": 4982346,
-      "trx_id": "f50be9b3d52340525260f7c9d87f6c884d70284f",
-      "op_pos": 1,
-      "op_type_id": 72,
-      "timestamp": "2016-09-15T04:55:48",
-      "virtual_op": true,
-      "operation_id": "21399013127357256",
+      "block": 4180549,
+      "trx_id": "d5513599594707e5e66301e46d84aa6b94235221",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T05:11:36",
+      "virtual_op": false,
+      "operation_id": "17955321234325760",
       "trx_in_block": 1
     },
     {
       "op": {
         "type": "vote_operation",
         "value": {
-          "voter": "abit",
-          "author": "userlogin",
+          "voter": "smooth.witness",
+          "author": "abit",
           "weight": 10000,
-          "permlink": "steem-transfer-daily-2016-09-14-steem"
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4982346,
-      "trx_id": "f50be9b3d52340525260f7c9d87f6c884d70284f",
+      "block": 4178023,
+      "trx_id": "6fe2120b5fe391fbdb8521d18511a2790ef63439",
       "op_pos": 0,
       "op_type_id": 0,
-      "timestamp": "2016-09-15T04:55:48",
+      "timestamp": "2016-08-18T03:04:54",
       "virtual_op": false,
-      "operation_id": "21399013127356928",
-      "trx_in_block": 1
+      "operation_id": "17944472146935808",
+      "trx_in_block": 0
     },
     {
       "op": {
-        "type": "curation_reward_operation",
+        "type": "vote_operation",
         "value": {
+          "voter": "smooth",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4178022,
+      "trx_id": "c9c2e39f80107a748ee61376ed24fb0c50e4bc6d",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T03:04:51",
+      "virtual_op": false,
+      "operation_id": "17944467851969792",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": "@@ -25,16 +25,18 @@\n  Please \n+re\n move you\n",
+          "title": "",
+          "author": "future24",
+          "permlink": "re-abit-re-future24-help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community-20160818t025421970z",
+          "json_metadata": "{\"tags\":[\"steemit-help\"],\"users\":[\"abit\"]}",
+          "parent_author": "abit",
+          "parent_permlink": "re-future24-help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community-20160818t012856733z"
+        }
+      },
+      "block": 4177999,
+      "trx_id": "897bea177ddb68a9e5206f38f43945ea16f9fb49",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-08-18T03:03:42",
+      "virtual_op": false,
+      "operation_id": "17944369067720705",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": "@@ -22,10 +22,15 @@\n am? \n-Re\n+Please \n move\n@@ -80,8 +80,43 @@\n article!\n+ @abit and the two others flaggers.\n",
+          "title": "",
+          "author": "future24",
+          "permlink": "re-abit-re-future24-help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community-20160818t025421970z",
+          "json_metadata": "{\"tags\":[\"steemit-help\"],\"users\":[\"abit\"]}",
+          "parent_author": "abit",
+          "parent_permlink": "re-future24-help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community-20160818t012856733z"
+        }
+      },
+      "block": 4177996,
+      "trx_id": "55b8fd7db82c14dfdb792c86758f273ddccee774",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-08-18T03:03:33",
+      "virtual_op": false,
+      "operation_id": "17944356182820609",
+      "trx_in_block": 4
+    },
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": "What why? Where is spam? Remove your flag men, this is a really important article!",
+          "title": "",
+          "author": "future24",
+          "permlink": "re-abit-re-future24-help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community-20160818t025421970z",
+          "json_metadata": "{\"tags\":[\"steemit-help\"]}",
+          "parent_author": "abit",
+          "parent_permlink": "re-future24-help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community-20160818t012856733z"
+        }
+      },
+      "block": 4177915,
+      "trx_id": "0bf3a247078a4084a72e5d4c7d9c69c8d5018bec",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-08-18T02:59:24",
+      "virtual_op": false,
+      "operation_id": "17944008290467841",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "account_witness_vote_operation",
+        "value": {
+          "account": "cnfund",
+          "approve": true,
+          "witness": "abit"
+        }
+      },
+      "block": 4177899,
+      "trx_id": "f9c4114303181912292fddfc2e8d67fb065a61db",
+      "op_pos": 0,
+      "op_type_id": 12,
+      "timestamp": "2016-08-18T02:58:33",
+      "virtual_op": false,
+      "operation_id": "17943939570991116",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": "What why?",
+          "title": "",
+          "author": "future24",
+          "permlink": "re-abit-re-future24-help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community-20160818t025421970z",
+          "json_metadata": "{\"tags\":[\"steemit-help\"]}",
+          "parent_author": "abit",
+          "parent_permlink": "re-future24-help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community-20160818t012856733z"
+        }
+      },
+      "block": 4177816,
+      "trx_id": "cf75dc7aa3df2cc8e510e2ca8b34249fed3f2029",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-08-18T02:54:24",
+      "virtual_op": false,
+      "operation_id": "17943583088706305",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": ":(",
+          "title": "",
+          "author": "future24",
+          "permlink": "re-abit-re-future24-help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community-20160818t025355873z",
+          "json_metadata": "{\"tags\":[\"steemit-help\"]}",
+          "parent_author": "abit",
+          "parent_permlink": "re-future24-help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community-20160818t012856733z"
+        }
+      },
+      "block": 4177808,
+      "trx_id": "3540e19c7f122b82c914fce3b721cca68c55316f",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-08-18T02:54:00",
+      "virtual_op": false,
+      "operation_id": "17943548728967169",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": "Good post.",
+          "title": "",
+          "author": "cnfund",
+          "permlink": "re-abit-more-info-about-how-supercomputing-was-dominating-the-mining-queue-20160818t023833863z",
+          "json_metadata": "{\"tags\":[\"steem\"]}",
+          "parent_author": "abit",
+          "parent_permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4177469,
+      "trx_id": "4ca220d0451d714738f6a77cde61f23f3688452d",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-08-18T02:37:00",
+      "virtual_op": false,
+      "operation_id": "17942092735055105",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": "好深奥",
+          "title": "",
           "author": "oflyhigh",
-          "reward": {
-            "nai": "@@000000037",
-            "amount": "5162538482",
-            "precision": 6
-          },
-          "curator": "abit",
-          "permlink": "6hoytq",
-          "payout_must_be_claimed": false
+          "permlink": "re-abit-more-info-about-how-supercomputing-was-dominating-the-mining-queue-20160818t023407147z",
+          "json_metadata": "{\"tags\":[\"steem\"]}",
+          "parent_author": "abit",
+          "parent_permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4982324,
-      "trx_id": null,
-      "op_pos": 2,
-      "op_type_id": 52,
-      "timestamp": "2016-09-15T04:54:42",
-      "virtual_op": true,
-      "operation_id": "21398918638078260",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013743823",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982320,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:54:30",
-      "virtual_op": true,
-      "operation_id": "21398901458208064",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013757017",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982297,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:53:21",
-      "virtual_op": true,
-      "operation_id": "21398802673961536",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "pow_reward_operation",
-        "value": {
-          "reward": {
-            "nai": "@@000000037",
-            "amount": "5029960462",
-            "precision": 6
-          },
-          "worker": "abit"
-        }
-      },
-      "block": 4982297,
-      "trx_id": "d6acf652384c58c55a23127f09bf5f5652c2baf9",
-      "op_pos": 1,
-      "op_type_id": 78,
-      "timestamp": "2016-09-15T04:53:21",
-      "virtual_op": true,
-      "operation_id": "21398802673959246",
-      "trx_in_block": 0
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013761700",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982289,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:52:57",
-      "virtual_op": true,
-      "operation_id": "21398768314221632",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013778420",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982259,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:51:27",
-      "virtual_op": true,
-      "operation_id": "21398639465201728",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013792405",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982234,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:50:12",
-      "virtual_op": true,
-      "operation_id": "21398532091019840",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013800066",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982220,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:49:30",
-      "virtual_op": true,
-      "operation_id": "21398471961480512",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013813504",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982196,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:48:18",
-      "virtual_op": true,
-      "operation_id": "21398368882262080",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013826942",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982172,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:47:06",
-      "virtual_op": true,
-      "operation_id": "21398265803049792",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013835698",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982156,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:46:18",
-      "virtual_op": true,
-      "operation_id": "21398197083571264",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "effective_comment_vote_operation",
-        "value": {
-          "voter": "abit",
-          "author": "lemooljiang",
-          "weight": "11541103210750507335",
-          "rshares": 7016726247780,
-          "permlink": "471m1v",
-          "pending_payout": {
-            "nai": "@@000000013",
-            "amount": "3937",
-            "precision": 3
-          },
-          "total_vote_weight": "11780897525504116941"
-        }
-      },
-      "block": 4982152,
-      "trx_id": "db504e419e8e1cb7160f5afb500d259e31c0f355",
-      "op_pos": 1,
-      "op_type_id": 72,
-      "timestamp": "2016-09-15T04:46:06",
-      "virtual_op": true,
-      "operation_id": "21398179903701832",
+      "block": 4177413,
+      "trx_id": "5f8b65daf407cd9c241348fea07b9204431cbd3e",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-08-18T02:34:12",
+      "virtual_op": false,
+      "operation_id": "17941852216885505",
       "trx_in_block": 1
     },
     {
       "op": {
         "type": "vote_operation",
         "value": {
-          "voter": "abit",
-          "author": "lemooljiang",
+          "voter": "cnfund",
+          "author": "abit",
           "weight": 10000,
-          "permlink": "471m1v"
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4982152,
-      "trx_id": "db504e419e8e1cb7160f5afb500d259e31c0f355",
+      "block": 4177411,
+      "trx_id": "fd8dcdb936ea07b2c9879f7a064a09a244e9f2c7",
       "op_pos": 0,
       "op_type_id": 0,
-      "timestamp": "2016-09-15T04:46:06",
+      "timestamp": "2016-08-18T02:34:06",
       "virtual_op": false,
-      "operation_id": "21398179903701504",
-      "trx_in_block": 1
-    },
-    {
-      "op": {
-        "type": "effective_comment_vote_operation",
-        "value": {
-          "voter": "abit",
-          "author": "yangyang",
-          "weight": "7647348356681883608",
-          "rshares": 7016726247780,
-          "permlink": "mid-autumn-day-s-pc-paint-drawing",
-          "pending_payout": {
-            "nai": "@@000000013",
-            "amount": "5297",
-            "precision": 3
-          },
-          "total_vote_weight": "12521623444169398596"
-        }
-      },
-      "block": 4982150,
-      "trx_id": "6247131aa802ec51641b6ef81434f11b0e0f02b4",
-      "op_pos": 1,
-      "op_type_id": 72,
-      "timestamp": "2016-09-15T04:46:00",
-      "virtual_op": true,
-      "operation_id": "21398171313767496",
-      "trx_in_block": 2
-    },
-    {
-      "op": {
-        "type": "vote_operation",
-        "value": {
-          "voter": "abit",
-          "author": "yangyang",
-          "weight": 10000,
-          "permlink": "mid-autumn-day-s-pc-paint-drawing"
-        }
-      },
-      "block": 4982150,
-      "trx_id": "6247131aa802ec51641b6ef81434f11b0e0f02b4",
-      "op_pos": 0,
-      "op_type_id": 0,
-      "timestamp": "2016-09-15T04:46:00",
-      "virtual_op": false,
-      "operation_id": "21398171313767168",
-      "trx_in_block": 2
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013851630",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982128,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:44:54",
-      "virtual_op": true,
-      "operation_id": "21398076824485952",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013853818",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982124,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:44:42",
-      "virtual_op": true,
-      "operation_id": "21398059644617280",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "effective_comment_vote_operation",
-        "value": {
-          "voter": "abit",
-          "author": "jademont",
-          "weight": "11681497147989204564",
-          "rshares": 7016696712023,
-          "permlink": "re-bloggersclub-breaking-news-first-time-voting-option-as-shareholder-made-possible-on-the-decentralized-excahnge-openledger-let-your-voice-be-20160915t040222007z",
-          "pending_payout": {
-            "nai": "@@000000013",
-            "amount": "3902",
-            "precision": 3
-          },
-          "total_vote_weight": "11759286132483617228"
-        }
-      },
-      "block": 4982116,
-      "trx_id": "3f4082939c57dd19b9751d1bc911d46d24bb6d97",
-      "op_pos": 1,
-      "op_type_id": 72,
-      "timestamp": "2016-09-15T04:44:18",
-      "virtual_op": true,
-      "operation_id": "21398025284879688",
-      "trx_in_block": 2
-    },
-    {
-      "op": {
-        "type": "vote_operation",
-        "value": {
-          "voter": "abit",
-          "author": "jademont",
-          "weight": 10000,
-          "permlink": "re-bloggersclub-breaking-news-first-time-voting-option-as-shareholder-made-possible-on-the-decentralized-excahnge-openledger-let-your-voice-be-20160915t040222007z"
-        }
-      },
-      "block": 4982116,
-      "trx_id": "3f4082939c57dd19b9751d1bc911d46d24bb6d97",
-      "op_pos": 0,
-      "op_type_id": 0,
-      "timestamp": "2016-09-15T04:44:18",
-      "virtual_op": false,
-      "operation_id": "21398025284879360",
-      "trx_in_block": 2
-    },
-    {
-      "op": {
-        "type": "effective_comment_vote_operation",
-        "value": {
-          "voter": "abit",
-          "author": "bloggersclub",
-          "weight": "8078580049650391897",
-          "rshares": 7159894604105,
-          "permlink": "breaking-news-first-time-voting-option-as-shareholder-made-possible-on-the-decentralized-excahnge-openledger-let-your-voice-be",
-          "pending_payout": {
-            "nai": "@@000000013",
-            "amount": "5262",
-            "precision": 3
-          },
-          "total_vote_weight": "12507535182167387389"
-        }
-      },
-      "block": 4982114,
-      "trx_id": "1a4f109bafd56cfdaa64ce0426e07dbba6e68c75",
-      "op_pos": 1,
-      "op_type_id": 72,
-      "timestamp": "2016-09-15T04:44:12",
-      "virtual_op": true,
-      "operation_id": "21398016694944072",
+      "operation_id": "17941843626950656",
       "trx_in_block": 0
     },
     {
       "op": {
         "type": "vote_operation",
         "value": {
-          "voter": "abit",
-          "author": "bloggersclub",
+          "voter": "oflyhigh",
+          "author": "abit",
           "weight": 10000,
-          "permlink": "breaking-news-first-time-voting-option-as-shareholder-made-possible-on-the-decentralized-excahnge-openledger-let-your-voice-be"
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4982114,
-      "trx_id": "1a4f109bafd56cfdaa64ce0426e07dbba6e68c75",
+      "block": 4177331,
+      "trx_id": "cd1ad5c664a2618d9f7eb65745420be244b92fd6",
       "op_pos": 0,
       "op_type_id": 0,
-      "timestamp": "2016-09-15T04:44:12",
+      "timestamp": "2016-08-18T02:30:06",
       "virtual_op": false,
-      "operation_id": "21398016694943744",
+      "operation_id": "17941500029567488",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "sweetsssj",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4176288,
+      "trx_id": "0ae8cd08368b59aaed9194828a1f8958f85b2bf9",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:37:45",
+      "virtual_op": false,
+      "operation_id": "17937020378678016",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "beowulfoflegend",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4176086,
+      "trx_id": "bad6d9079a59b46ba3d99eb1005127ff93e1d38d",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:27:36",
+      "virtual_op": false,
+      "operation_id": "17936152795283456",
       "trx_in_block": 0
     },
     {
       "op": {
-        "type": "producer_reward_operation",
+        "type": "vote_operation",
         "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013874980",
-            "precision": 6
-          }
+          "voter": "johnbradshaw",
+          "author": "abit",
+          "weight": 5000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4982087,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:42:51",
-      "virtual_op": true,
-      "operation_id": "21397900730827328",
-      "trx_in_block": -1
+      "block": 4175958,
+      "trx_id": "b599d4c642abfb9b2e05dc8d2f0d29072a6c13d2",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:21:09",
+      "virtual_op": false,
+      "operation_id": "17935603039470592",
+      "trx_in_block": 2
     },
     {
       "op": {
-        "type": "producer_reward_operation",
+        "type": "vote_operation",
         "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013887567",
-            "precision": 6
-          }
+          "voter": "thebotkiller",
+          "author": "abit",
+          "weight": 5000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4982064,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:41:42",
-      "virtual_op": true,
-      "operation_id": "21397801946579520",
-      "trx_in_block": -1
+      "block": 4175954,
+      "trx_id": "c99499099a5e7302e73e8e8a1eb61414c84b1722",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:20:57",
+      "virtual_op": false,
+      "operation_id": "17935585859601152",
+      "trx_in_block": 2
     },
     {
       "op": {
-        "type": "producer_reward_operation",
+        "type": "vote_operation",
         "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013896323",
-            "precision": 6
-          }
+          "voter": "vote",
+          "author": "abit",
+          "weight": 5000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4982048,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:40:54",
-      "virtual_op": true,
-      "operation_id": "21397733227103040",
-      "trx_in_block": -1
+      "block": 4175951,
+      "trx_id": "a8293a43ed064e0420955b612d5f59e0c01b9686",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:20:48",
+      "virtual_op": false,
+      "operation_id": "17935572974699264",
+      "trx_in_block": 2
     },
     {
       "op": {
-        "type": "producer_reward_operation",
+        "type": "vote_operation",
         "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013905079",
-            "precision": 6
-          }
+          "voter": "unicornfarts",
+          "author": "abit",
+          "weight": 5000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4982032,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:40:06",
-      "virtual_op": true,
-      "operation_id": "21397664507626048",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013920707",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4982004,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:38:39",
-      "virtual_op": true,
-      "operation_id": "21397544248542016",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013923991",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981998,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:38:21",
-      "virtual_op": true,
-      "operation_id": "21397518478738240",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013937977",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981973,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:37:06",
-      "virtual_op": true,
-      "operation_id": "21397411104555072",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013955794",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981941,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:35:30",
-      "virtual_op": true,
-      "operation_id": "21397273665601856",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013965098",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981924,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:34:39",
-      "virtual_op": true,
-      "operation_id": "21397200651157568",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013971118",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981913,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:34:06",
-      "virtual_op": true,
-      "operation_id": "21397153406518848",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013987964",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981885,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:32:42",
-      "virtual_op": true,
-      "operation_id": "21397033147433280",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3013995079",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981872,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:32:03",
-      "virtual_op": true,
-      "operation_id": "21396977312858688",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014016486",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981834,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:30:09",
-      "virtual_op": true,
-      "operation_id": "21396814104101440",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014021411",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981825,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:29:42",
-      "virtual_op": true,
-      "operation_id": "21396775449395776",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014039230",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981793,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:28:06",
-      "virtual_op": true,
-      "operation_id": "21396638010442816",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014047197",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981779,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:27:24",
-      "virtual_op": true,
-      "operation_id": "21396577880900928",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "pow_reward_operation",
-        "value": {
-          "reward": {
-            "nai": "@@000000037",
-            "amount": "5030444771",
-            "precision": 6
-          },
-          "worker": "abit"
-        }
-      },
-      "block": 4981779,
-      "trx_id": "fd069f532c0fedc78350bff449929379594ddd8d",
-      "op_pos": 1,
-      "op_type_id": 78,
-      "timestamp": "2016-09-15T04:27:24",
-      "virtual_op": true,
-      "operation_id": "21396577880900174",
+      "block": 4175949,
+      "trx_id": "f75d2ab3c7efdd4637419f0862c2fcd0a8b0f2ba",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:20:42",
+      "virtual_op": false,
+      "operation_id": "17935564384764416",
       "trx_in_block": 1
     },
     {
       "op": {
-        "type": "producer_reward_operation",
+        "type": "vote_operation",
         "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014054616",
-            "precision": 6
-          }
+          "voter": "the.whale",
+          "author": "abit",
+          "weight": 5000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4981766,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:26:45",
-      "virtual_op": true,
-      "operation_id": "21396522046325056",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014076875",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981727,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:24:48",
-      "virtual_op": true,
-      "operation_id": "21396354542600768",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014081801",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981718,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:24:21",
-      "virtual_op": true,
-      "operation_id": "21396315887896896",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "pow_reward_operation",
-        "value": {
-          "reward": {
-            "nai": "@@000000037",
-            "amount": "5030502526",
-            "precision": 6
-          },
-          "worker": "abit"
-        }
-      },
-      "block": 4981718,
-      "trx_id": "e31cc6c7b75dbf93efcdb2ba490e582a754a3cce",
-      "op_pos": 1,
-      "op_type_id": 78,
-      "timestamp": "2016-09-15T04:24:21",
-      "virtual_op": true,
-      "operation_id": "21396315887895374",
+      "block": 4175942,
+      "trx_id": "c211cf0909d0c2eaf60c6a8b683b79646fbfd428",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:20:21",
+      "virtual_op": false,
+      "operation_id": "17935534319993088",
       "trx_in_block": 1
     },
     {
       "op": {
-        "type": "producer_reward_operation",
+        "type": "vote_operation",
         "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014091776",
-            "precision": 6
-          }
+          "voter": "kissmybutt",
+          "author": "abit",
+          "weight": 5000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4981702,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:23:33",
-      "virtual_op": true,
-      "operation_id": "21396247168418624",
-      "trx_in_block": -1
+      "block": 4175936,
+      "trx_id": "dadb9b8432490cb7df5c1d9701ca424f20929513",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:20:03",
+      "virtual_op": false,
+      "operation_id": "17935508550189568",
+      "trx_in_block": 1
     },
     {
       "op": {
-        "type": "producer_reward_operation",
+        "type": "vote_operation",
         "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014106069",
-            "precision": 6
-          }
+          "voter": "iloveporn",
+          "author": "abit",
+          "weight": 5000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
         }
       },
-      "block": 4981677,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:22:18",
-      "virtual_op": true,
-      "operation_id": "21396139794235712",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014119510",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981653,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:21:06",
-      "virtual_op": true,
-      "operation_id": "21396036715020864",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014135444",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981625,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:19:42",
-      "virtual_op": true,
-      "operation_id": "21395916455937344",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014139823",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981617,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:19:18",
-      "virtual_op": true,
-      "operation_id": "21395882096197696",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014154906",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981590,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:17:57",
-      "virtual_op": true,
-      "operation_id": "21395766132081216",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014171875",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981559,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:16:24",
-      "virtual_op": true,
-      "operation_id": "21395632988095296",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014175159",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981553,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:16:06",
-      "virtual_op": true,
-      "operation_id": "21395607218291776",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014188843",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981528,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:14:51",
-      "virtual_op": true,
-      "operation_id": "21395499844109120",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014200095",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981508,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:13:51",
-      "virtual_op": true,
-      "operation_id": "21395413944763456",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014215969",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981479,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:12:24",
-      "virtual_op": true,
-      "operation_id": "21395289390711616",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014227221",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981459,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:11:24",
-      "virtual_op": true,
-      "operation_id": "21395203491365184",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014240116",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981436,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:10:15",
-      "virtual_op": true,
-      "operation_id": "21395104707117888",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014248084",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981422,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:09:33",
-      "virtual_op": true,
-      "operation_id": "21395044577575488",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014261221",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981398,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:08:21",
-      "virtual_op": true,
-      "operation_id": "21394941498360384",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014272716",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981377,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:07:18",
-      "virtual_op": true,
-      "operation_id": "21394851304046656",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014280380",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981363,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:06:36",
-      "virtual_op": true,
-      "operation_id": "21394791174505024",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014300515",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981329,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:04:54",
-      "virtual_op": true,
-      "operation_id": "21394645145616960",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014302704",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981325,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:04:42",
-      "virtual_op": true,
-      "operation_id": "21394627965747776",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "pow_reward_operation",
-        "value": {
-          "reward": {
-            "nai": "@@000000037",
-            "amount": "5030871214",
-            "precision": 6
-          },
-          "worker": "abit"
-        }
-      },
-      "block": 4981325,
-      "trx_id": "f977e90eb13123cd1e57fbd457b0661e350f0b8d",
-      "op_pos": 1,
-      "op_type_id": 78,
-      "timestamp": "2016-09-15T04:04:42",
-      "virtual_op": true,
-      "operation_id": "21394627965747534",
+      "block": 4175933,
+      "trx_id": "e9d28dad939a41cc3a542ab7d2a1ab2bacbdd031",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:19:54",
+      "virtual_op": false,
+      "operation_id": "17935495665287168",
       "trx_in_block": 0
     },
     {
       "op": {
-        "type": "producer_reward_operation",
+        "type": "account_witness_vote_operation",
         "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014322230",
-            "precision": 6
-          }
+          "account": "someguy123",
+          "approve": true,
+          "witness": "abit"
         }
       },
-      "block": 4981291,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:03:00",
-      "virtual_op": true,
-      "operation_id": "21394481936859968",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014327461",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981282,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:02:33",
-      "virtual_op": true,
-      "operation_id": "21394443282154048",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014341756",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981257,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:01:18",
-      "virtual_op": true,
-      "operation_id": "21394335907971136",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014354347",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981234,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T04:00:09",
-      "virtual_op": true,
-      "operation_id": "21394237123724352",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014365843",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981213,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T03:59:06",
-      "virtual_op": true,
-      "operation_id": "21394146929410112",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "producer_reward_operation",
-        "value": {
-          "producer": "abit",
-          "vesting_shares": {
-            "nai": "@@000000037",
-            "amount": "3014377339",
-            "precision": 6
-          }
-        }
-      },
-      "block": 4981192,
-      "trx_id": null,
-      "op_pos": 1,
-      "op_type_id": 64,
-      "timestamp": "2016-09-15T03:58:03",
-      "virtual_op": true,
-      "operation_id": "21394056735097408",
-      "trx_in_block": -1
-    },
-    {
-      "op": {
-        "type": "pow_reward_operation",
-        "value": {
-          "reward": {
-            "nai": "@@000000037",
-            "amount": "5027981402",
-            "precision": 6
-          },
-          "worker": "abit"
-        }
-      },
-      "block": 4981192,
-      "trx_id": "3dac4cc7d1bc5c01a5eca7aebff2af4b9fa3e7f5",
-      "op_pos": 1,
-      "op_type_id": 78,
-      "timestamp": "2016-09-15T03:58:03",
-      "virtual_op": true,
-      "operation_id": "21394056735097166",
+      "block": 4175931,
+      "trx_id": "af0cdbbacc531612c132376646f0e10369f4dd84",
+      "op_pos": 0,
+      "op_type_id": 12,
+      "timestamp": "2016-08-18T01:19:48",
+      "virtual_op": false,
+      "operation_id": "17935487075352588",
       "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "jimmytwoshoes",
+          "author": "abit",
+          "weight": 5000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4175930,
+      "trx_id": "ef73c9df04c601a3066ce468ee98e3080c2b4505",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:19:45",
+      "virtual_op": false,
+      "operation_id": "17935482780386048",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "fuck.off",
+          "author": "abit",
+          "weight": 5000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4175923,
+      "trx_id": "a4d76fe4893a119c3c91900baf1ae558a26a5f58",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:19:24",
+      "virtual_op": false,
+      "operation_id": "17935452715614208",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "the.bot",
+          "author": "abit",
+          "weight": 5000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4175922,
+      "trx_id": "726f9aa74db51fd03774c97d52c45bd0575224b3",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:19:21",
+      "virtual_op": false,
+      "operation_id": "17935448420648192",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "complexring",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4175904,
+      "trx_id": "934fd359021968bfdd2cbcf9b076e43f72c4e091",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-18T01:18:27",
+      "virtual_op": false,
+      "operation_id": "17935371111237632",
+      "trx_in_block": 7
+    },
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": "@@ -449,17 +449,19 @@\n he exist\n-s\n+ing\n  APIs co\n",
+          "title": "",
+          "author": "arhag",
+          "permlink": "re-abit-more-info-about-how-supercomputing-was-dominating-the-mining-queue-20160817t205401396z",
+          "json_metadata": "{\"tags\":[\"steem\"],\"users\":[\"supercomputing\"]}",
+          "parent_author": "abit",
+          "parent_permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4175841,
+      "trx_id": "e19ff8fd7af31528b0ed3cf909d261c31e014208",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-08-18T01:15:18",
+      "virtual_op": false,
+      "operation_id": "17935100528296193",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "murh",
+          "author": "abit",
+          "weight": 3301,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4173263,
+      "trx_id": "16448d8c45ac9913ee5bdd8f7e26ac4149c7cdcf",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T23:06:00",
+      "virtual_op": false,
+      "operation_id": "17924028102608384",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "ubg",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4173117,
+      "trx_id": "8526ac2d81195029b97a9ab7350aef9e3476e5b0",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T22:58:42",
+      "virtual_op": false,
+      "operation_id": "17923401037381632",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": "Upvoted, thanks for this article! It would be really nice if you would upvote my new article here everyone, with which i will support a friend in gambia: https://steemit.com/steemit-help/@future24/help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community",
+          "title": "",
+          "author": "future24",
+          "permlink": "re-abit-more-info-about-how-supercomputing-was-dominating-the-mining-queue-20160817t223353721z",
+          "json_metadata": "{\"tags\":[\"steem\"],\"links\":[\"https://steemit.com/steemit-help/@future24/help-for-a-bro-in-africa-gambia-let-s-share-this-steemit-community\"]}",
+          "parent_author": "abit",
+          "parent_permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4172624,
+      "trx_id": "5e6deaad2db89a5638720105613f906a64bb21b6",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-08-17T22:33:57",
+      "virtual_op": false,
+      "operation_id": "17921283618504705",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "future24",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4172554,
+      "trx_id": "b497671e6e3d6efd5a58d2180d918439df6a1bf8",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T22:30:27",
+      "virtual_op": false,
+      "operation_id": "17920982970793984",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "picokernel",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4171752,
+      "trx_id": "f217ba8648f509b092346b6f06c4bd0a3e750a88",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T21:50:12",
+      "virtual_op": false,
+      "operation_id": "17917538407024640",
+      "trx_in_block": 4
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "kennyskitchen",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4171719,
+      "trx_id": "c59b6600d68ea981e222e7de251ebf499a1c4f59",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T21:48:33",
+      "virtual_op": false,
+      "operation_id": "17917396673102848",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "goose",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4171414,
+      "trx_id": "ded9cf3ec6836371294baebb5fd9139a966a0f76",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T21:33:15",
+      "virtual_op": false,
+      "operation_id": "17916086708078080",
+      "trx_in_block": 5
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "doggnostic",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170809,
+      "trx_id": "2af2db3cfe109bffd30cb846a7315578fc1c621d",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T21:02:51",
+      "virtual_op": false,
+      "operation_id": "17913488252862720",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": "> she can simply recover the public key (which is needed to put into the PoW operation) with the same method used in step 6\n\n> because a transaction contains only a PoW operation requires no signature (which is another hole in the old algo which got fixed in new algo)\n\nGood point.\n\nThat means the implementation of the exploit was actually easier than I thought because it didn't require messing around the libsecp256k1 function implementations. The exists APIs could have been used to get the active public key, and that's most likely what was used by @supercomputing.",
+          "title": "",
+          "author": "arhag",
+          "permlink": "re-abit-more-info-about-how-supercomputing-was-dominating-the-mining-queue-20160817t205401396z",
+          "json_metadata": "{\"tags\":[\"steem\"],\"users\":[\"supercomputing\"]}",
+          "parent_author": "abit",
+          "parent_permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170633,
+      "trx_id": "dd415881c4c12104206e0b0b9e537732e517dbed",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-08-17T20:54:03",
+      "virtual_op": false,
+      "operation_id": "17912732338619905",
+      "trx_in_block": 4
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "helen.tan",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170627,
+      "trx_id": "38039d31a66da9c06c42ddcddbc1088becf0d2ad",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:45",
+      "virtual_op": false,
+      "operation_id": "17912706568815104",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "moon",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170626,
+      "trx_id": "06bd5756758c14cf92252941ce9cde0787448027",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:42",
+      "virtual_op": false,
+      "operation_id": "17912702273848064",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "bunny",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170625,
+      "trx_id": "9a2729ac6f3a21e9c9b86333e8c6c59df754e64e",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:39",
+      "virtual_op": false,
+      "operation_id": "17912697978880000",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "daniel.pan",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170624,
+      "trx_id": "55d598328b622c0c3e8f87aafb6ed95e3d8e1644",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:36",
+      "virtual_op": false,
+      "operation_id": "17912693683915520",
+      "trx_in_block": 7
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "boy",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170624,
+      "trx_id": "26d2f4480f4919b2665d36ab8f5e1fdebdba7813",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:36",
+      "virtual_op": false,
+      "operation_id": "17912693683913472",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "healthcare",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170623,
+      "trx_id": "e1cfadaff7dd3d191ce004e2b5cefee078effe93",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:33",
+      "virtual_op": false,
+      "operation_id": "17912689388946432",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "mini",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170622,
+      "trx_id": "9f1cbc3a0cbd787b839c4cadc0effcc0e2f550f1",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:30",
+      "virtual_op": false,
+      "operation_id": "17912685093981440",
+      "trx_in_block": 7
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "soupernerd",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170622,
+      "trx_id": "ae5f38f37de3e7887feedae6bec141d1facb5bc6",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:30",
+      "virtual_op": false,
+      "operation_id": "17912685093980160",
+      "trx_in_block": 4
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "bue",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170622,
+      "trx_id": "441e33562394078a9bb23d7c29e17e66e84c4211",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:30",
+      "virtual_op": false,
+      "operation_id": "17912685093979136",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "weenis",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170622,
+      "trx_id": "9d2583236e6c09f981e716cd4ee43972c49902f1",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:30",
+      "virtual_op": false,
+      "operation_id": "17912685093978112",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "bue-witness",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170621,
+      "trx_id": "65c112b5197cdc41ddf04d1105398fe1ca5ae97b",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:27",
+      "virtual_op": false,
+      "operation_id": "17912680799014400",
+      "trx_in_block": 8
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "anonymous",
+          "author": "abit",
+          "weight": 100,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170612,
+      "trx_id": "c78ca80f68357fe63de38b9759bae157001b5cd0",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:53:00",
+      "virtual_op": false,
+      "operation_id": "17912642144305920",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "arhag",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170610,
+      "trx_id": "fc52bfa8cafa36882448cd165fe6575caef44b39",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:52:54",
+      "virtual_op": false,
+      "operation_id": "17912633554374144",
+      "trx_in_block": 8
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "lantto",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170584,
+      "trx_id": "fe485135ea19187752a31288fa4fbef482ab6008",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:51:33",
+      "virtual_op": false,
+      "operation_id": "17912521885221376",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "d-marim",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170465,
+      "trx_id": "3c430f9ae353f382a33abb223de641517d394c91",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:45:36",
+      "virtual_op": false,
+      "operation_id": "17912010784114176",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "roadhog",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170412,
+      "trx_id": "e41e67e783eaa7071685dbdf639cd8040f0747cc",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:42:57",
+      "virtual_op": false,
+      "operation_id": "17911783150846720",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "fatboy",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170164,
+      "trx_id": "57c8dde2f492f8d231babb9b9b06bb007d763ea5",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:30:24",
+      "virtual_op": false,
+      "operation_id": "17910717998959616",
+      "trx_in_block": 7
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "analyzethis",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4170010,
+      "trx_id": "2939bfa522efd72e3219f0fd05ca96bce51949c3",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:22:42",
+      "virtual_op": false,
+      "operation_id": "17910056573992960",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "sunshinecrypto",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169776,
+      "trx_id": "382ccb0068157f6acac0244d77b3e0747141388a",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:10:57",
+      "virtual_op": false,
+      "operation_id": "17909051551648000",
+      "trx_in_block": 7
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "jenny-talls",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169622,
+      "trx_id": "9844a94ffdef916e7fca95150f8b4ddb82939802",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T20:03:15",
+      "virtual_op": false,
+      "operation_id": "17908390126682624",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "xtester",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169555,
+      "trx_id": "0923e754731cebf0e2d5187602578a140875bc31",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:59:54",
+      "virtual_op": false,
+      "operation_id": "17908102363874304",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "akareyon",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169417,
+      "trx_id": "a5c6aa66d2ff8fbe0dc2d49b4aa4d21acb0049f9",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:53:00",
+      "virtual_op": false,
+      "operation_id": "17907509658386944",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "bingo-0",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169360,
+      "trx_id": "6b88d4f2b4e3f82fd1a71a408f8a050ff4ba2e2c",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:50:06",
+      "virtual_op": false,
+      "operation_id": "17907264845253376",
+      "trx_in_block": 7
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "mineralwasser",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169331,
+      "trx_id": "fd16f81e0af11d8e9caf7e13f9d74deb93b5d252",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:48:39",
+      "virtual_op": false,
+      "operation_id": "17907140291200000",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "boombastic",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169267,
+      "trx_id": "8e662a536807690328ae0bf81e6e846fd2bc213f",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:45:27",
+      "virtual_op": false,
+      "operation_id": "17906865413292288",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "barrie",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169264,
+      "trx_id": "8bcf684d6a4b044912e5b5481d6b4701cafb63a8",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:45:18",
+      "virtual_op": false,
+      "operation_id": "17906852528390144",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "mrs.agsexplorer",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169256,
+      "trx_id": "9b24f8dc5c84ec440e47dca7b777134444858b47",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:44:54",
+      "virtual_op": false,
+      "operation_id": "17906818168651776",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "rubybian",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169253,
+      "trx_id": "26feb906bdf2dbaeb150378a2fe438ec883ddca4",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:44:45",
+      "virtual_op": false,
+      "operation_id": "17906805283750400",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "post-successful",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169209,
+      "trx_id": "6f67360bc47ea12751c4b484dc72fa11bf7926dd",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:42:33",
+      "virtual_op": false,
+      "operation_id": "17906616305188864",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "litali",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169200,
+      "trx_id": "48f812a1d3432b19cead461b11f2fbcd8d26d27f",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:42:06",
+      "virtual_op": false,
+      "operation_id": "17906577650483712",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "alenevaa",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169197,
+      "trx_id": "bf1e7f5633b2a9bbb2685501d9cb61463fd28a1e",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:41:57",
+      "virtual_op": false,
+      "operation_id": "17906564765581824",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "michaeldodridge",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169143,
+      "trx_id": "c3343d0825bac9cb45c53f04494439860b6b21fb",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:39:15",
+      "virtual_op": false,
+      "operation_id": "17906332837347328",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "cortegam",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169141,
+      "trx_id": "55511109529e1210724df33b6a11d1a11f9ff70c",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:39:09",
+      "virtual_op": false,
+      "operation_id": "17906324247412736",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "comment_operation",
+        "value": {
+          "body": "> But there is a hole in the description, because the private key of a given signature shouldn't be so quickly to be resolved -- it's the nature of ECC algo.\n\nIs it bad?",
+          "title": "",
+          "author": "vi1son",
+          "permlink": "re-abit-more-info-about-how-supercomputing-was-dominating-the-mining-queue-20160817t193631631z",
+          "json_metadata": "{\"tags\":[\"steem\"]}",
+          "parent_author": "abit",
+          "parent_permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169089,
+      "trx_id": "bc2e2374fdca3bda39956135c015adffaab8dcc1",
+      "op_pos": 0,
+      "op_type_id": 1,
+      "timestamp": "2016-08-17T19:36:33",
+      "virtual_op": false,
+      "operation_id": "17906100909113345",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "gsdalex",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169053,
+      "trx_id": "4d80b57eabf70c2ad2c791122b49f20908ab6623",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:34:45",
+      "virtual_op": false,
+      "operation_id": "17905946290292992",
+      "trx_in_block": 7
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "runridefly",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169036,
+      "trx_id": "f915034739a322a79cdee3fcb75893a6531a6d03",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:33:54",
+      "virtual_op": false,
+      "operation_id": "17905873275846912",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "james-show",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169023,
+      "trx_id": "65802b72a716770e5ce79b4ff7b1b149844678d8",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:33:15",
+      "virtual_op": false,
+      "operation_id": "17905817441272320",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "vi1son",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4169015,
+      "trx_id": "910c1025d284a3ba733901a3cf025eae71f58fe2",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:32:51",
+      "virtual_op": false,
+      "operation_id": "17905783081533440",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "mahekg",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168991,
+      "trx_id": "d72e7e898dd751996095b140a680e1e8fe971740",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:31:39",
+      "virtual_op": false,
+      "operation_id": "17905680002319872",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "eileenbeach",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168934,
+      "trx_id": "ff0c6209649fc1780aeb3265569e7c67f3b1eb6c",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:28:48",
+      "virtual_op": false,
+      "operation_id": "17905435189182720",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "mrainp",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168920,
+      "trx_id": "164cbb960dcd21ae4e7168da594a07af8a94ecfb",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:28:06",
+      "virtual_op": false,
+      "operation_id": "17905375059641600",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "imp3",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168916,
+      "trx_id": "dfb7215af4bb9e9531acd9c4bfc956df7012e503",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:27:54",
+      "virtual_op": false,
+      "operation_id": "17905357879772928",
+      "trx_in_block": 4
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "budda",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168899,
+      "trx_id": "839fee965784bef49507c7c4ea37e0e8669728e5",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:27:03",
+      "virtual_op": false,
+      "operation_id": "17905284865327616",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "natalyt",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168897,
+      "trx_id": "76accba01ed499271558a77195a6fdf9caf8dca6",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:26:57",
+      "virtual_op": false,
+      "operation_id": "17905276275393792",
+      "trx_in_block": 3
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "noodhoog",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168897,
+      "trx_id": "84cd3e893638a3dc27a7f6740a1a173af4a343c6",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:26:57",
+      "virtual_op": false,
+      "operation_id": "17905276275392512",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "longtech",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168896,
+      "trx_id": "f80ce10451e7dc879020d461479080b6ca03e351",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:26:54",
+      "virtual_op": false,
+      "operation_id": "17905271980425728",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "future-shock",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168895,
+      "trx_id": "24d35725edfac839e706e664e683f6424251c21c",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:26:51",
+      "virtual_op": false,
+      "operation_id": "17905267685458432",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "immortality",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168891,
+      "trx_id": "fef6020765a93c5791d945cc1b1d588f2b65e469",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:26:39",
+      "virtual_op": false,
+      "operation_id": "17905250505588736",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "longevity",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168890,
+      "trx_id": "89d2893d86392360c1e945667a740998d4c8f9cb",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:26:36",
+      "virtual_op": false,
+      "operation_id": "17905246210621440",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "rashka",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168889,
+      "trx_id": "0d01eb4ad15f3537b4eac76cff25cc945ed74941",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:26:33",
+      "virtual_op": false,
+      "operation_id": "17905241915654144",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "zite",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168888,
+      "trx_id": "9d9307ba12c74879e423bfa2eb58cc9817e2875b",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:26:30",
+      "virtual_op": false,
+      "operation_id": "17905237620686848",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "gamerate",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168884,
+      "trx_id": "492f92cb048cc4299b79675d21f735617a85bb44",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:26:18",
+      "virtual_op": false,
+      "operation_id": "17905220440817664",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "creatorgalaxy",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168883,
+      "trx_id": "8c8fe0c7af0da6d18639d77d69f3fc6c297e65a9",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:26:15",
+      "virtual_op": false,
+      "operation_id": "17905216145850368",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "yarly11",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168824,
+      "trx_id": "2db3ea74c66360a05357291caae34cbf21281f61",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:23:18",
+      "virtual_op": false,
+      "operation_id": "17904962742785536",
+      "trx_in_block": 12
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "yarly4",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168824,
+      "trx_id": "e80709bbc27f8d015b07ca28fef70e763bad07dc",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:23:18",
+      "virtual_op": false,
+      "operation_id": "17904962742785024",
+      "trx_in_block": 11
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "yarly7",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168824,
+      "trx_id": "aa14551c25b73bf2b6348bb6c0731fc83f253e24",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:23:18",
+      "virtual_op": false,
+      "operation_id": "17904962742784512",
+      "trx_in_block": 10
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "yarly10",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168824,
+      "trx_id": "b4ecdb973b47497bf16cf2670e21634ae28990e0",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:23:18",
+      "virtual_op": false,
+      "operation_id": "17904962742784000",
+      "trx_in_block": 9
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "yarly",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168824,
+      "trx_id": "474028851579507d32efe9332fe215faa3e893bf",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:23:18",
+      "virtual_op": false,
+      "operation_id": "17904962742783488",
+      "trx_in_block": 8
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "yarly12",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168824,
+      "trx_id": "1b7fbca1616974eaec66e911719a47b30b2f5cf9",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:23:18",
+      "virtual_op": false,
+      "operation_id": "17904962742782976",
+      "trx_in_block": 7
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "yarly5",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168824,
+      "trx_id": "4c723177bfa892670b9e6c0a8bfd691cee6697db",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:23:18",
+      "virtual_op": false,
+      "operation_id": "17904962742782464",
+      "trx_in_block": 6
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "yarly2",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168824,
+      "trx_id": "54e5dc8744d77965716ef57afab36efc59a4c919",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:23:18",
+      "virtual_op": false,
+      "operation_id": "17904962742781952",
+      "trx_in_block": 5
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "yarly3",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168824,
+      "trx_id": "05fc229b1687887f481b792a1319aea775c3d307",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:23:18",
+      "virtual_op": false,
+      "operation_id": "17904962742781440",
+      "trx_in_block": 4
+    },
+    {
+      "op": {
+        "type": "vote_operation",
+        "value": {
+          "voter": "orly",
+          "author": "abit",
+          "weight": 10000,
+          "permlink": "more-info-about-how-supercomputing-was-dominating-the-mining-queue"
+        }
+      },
+      "block": 4168824,
+      "trx_id": "e7863cdd210b9907d52515e981d9bb6511147e2d",
+      "op_pos": 0,
+      "op_type_id": 0,
+      "timestamp": "2016-08-17T19:23:18",
+      "virtual_op": false,
+      "operation_id": "17904962742780928",
+      "trx_in_block": 3
     }
   ]
 }
