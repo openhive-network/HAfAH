@@ -31,9 +31,9 @@ BEGIN
   _account_range := hafah_backend.account_range(_operations, _account_id, _from_block, _to_block);
 
   -- Fetching operations
-  WITH excluded_ids AS MATERIALIZED (
+  WITH /* excluded_ids AS MATERIALIZED (
     SELECT unnest(_transacting_account_ids) AS id
-  ),
+  ), */
   operation_range AS MATERIALIZED (
     SELECT
       ls.operation_id AS id,
@@ -47,10 +47,14 @@ BEGIN
       AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
       AND aov.account_op_seq_no >= _account_range.from_seq
       AND aov.account_op_seq_no <= _account_range.to_seq
+      AND aov.transacting_account_id != ANY(_transacting_account_ids) -- exclude all transacting accounts
+      AND aov.transacting_account_id IS NOT NULL -- for future compatibility
+      /*
       AND NOT EXISTS (
           SELECT 1 FROM excluded_ids e
           WHERE e.id = aov.transacting_account_id
       )
+      */
       ORDER BY aov.account_op_seq_no DESC
       LIMIT (__max_page_count * _limit) + 1 -- by default operation filter is limited to 10 pages
       -- The +1 is to check if there are more operations in block that are not included in the current page-range
@@ -105,16 +109,20 @@ BEGIN
     FROM hive.account_operations_view aov
     WHERE aov.account_id = _account_id
     AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
+    AND aov.transacting_account_id != ANY(_transacting_account_ids) -- exclude all transacting accounts
+    AND aov.transacting_account_id IS NOT NULL -- for future compatibility
     AND aov.account_op_seq_no >= _account_range.from_seq
     AND aov.account_op_seq_no <= _account_range.to_seq
     AND (
 	    (SELECT block_num FROM block_check) IS NOT NULL 
 	    AND aov.block_num = (SELECT block_num FROM block_check)
 	  ) 
+    /*
     AND NOT EXISTS (
         SELECT 1 FROM excluded_ids e
         WHERE e.id = aov.transacting_account_id
     )
+    */
   ),
   union_operations AS MATERIALIZED (
     SELECT
