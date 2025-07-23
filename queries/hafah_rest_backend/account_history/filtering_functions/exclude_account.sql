@@ -36,12 +36,14 @@ BEGIN
       ls.operation_id AS id,
       ls.block_num,
       ls.op_type_id,
+      ls.account_op_seq_no,
       ROW_NUMBER() OVER (ORDER BY ls.operation_id DESC) AS row_num -- used to determine if last 2 records are in the same block (when page is saturated)
     FROM (
-      SELECT aov.operation_id, aov.op_type_id, aov.block_num
+      SELECT aov.operation_id, aov.op_type_id, aov.block_num, aov.account_op_seq_no
       FROM hive.account_operations_view aov
       WHERE aov.account_id = _account_id
       AND aov.transacting_account_id != _transacting_account_id
+      AND aov.transacting_account_id IS NOT NULL -- for future compatibility
       AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
       AND aov.account_op_seq_no >= _account_range.from_seq
       AND aov.account_op_seq_no <= _account_range.to_seq
@@ -71,7 +73,8 @@ BEGIN
   ), 
   if_saturated_find_last_two_ops AS ( -- if not saturated, returns empty
     SELECT
-      orr.block_num
+      orr.block_num,
+      orr.account_op_seq_no
     FROM operation_range orr
     WHERE orr.row_num IN (
       (SELECT count FROM check_if_saturated), 
@@ -86,7 +89,15 @@ BEGIN
         ELSE 
           NULL
       END  
-    ) AS block_num
+    ) AS block_num,
+    (
+      CASE
+        WHEN COUNT(DISTINCT block_num) = 1 THEN 
+          MIN(account_op_seq_no)
+        ELSE 
+          NULL
+      END  
+    ) AS account_op_seq_no
     FROM if_saturated_find_last_two_ops
   ),
   -- returns empty if the last two operations are not in the same block
@@ -102,11 +113,15 @@ BEGIN
     AND aov.transacting_account_id IS NOT NULL -- for future compatibility
     AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
     AND aov.account_op_seq_no >= _account_range.from_seq
-    AND aov.account_op_seq_no <= _account_range.to_seq
+    AND (
+	    (SELECT account_op_seq_no FROM block_check) IS NOT NULL 
+	    AND aov.account_op_seq_no <= (SELECT account_op_seq_no FROM block_check)
+	  ) 
     AND (
 	    (SELECT block_num FROM block_check) IS NOT NULL 
 	    AND aov.block_num = (SELECT block_num FROM block_check)
-	  ) 
+	  )
+    ORDER BY aov.account_op_seq_no DESC
   ),
   union_operations AS MATERIALIZED (
     SELECT
@@ -115,7 +130,6 @@ BEGIN
       op_type_id
     FROM operation_range
     WHERE row_num <= (__max_page_count * _limit) -- limit to the maximum number of rows for the page and remove the extra row
-    AND ((SELECT block_num FROM block_check) IS NULL OR block_num != (SELECT block_num FROM block_check) ) 
     -- if block_check is not NULL, exclude the operations from last block
     -- operations from excluded block are fetched in find_all_records_for_page
     UNION ALL
