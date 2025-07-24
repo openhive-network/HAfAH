@@ -195,39 +195,4 @@ BEGIN
 END
 $$;
 
-
-CREATE OR REPLACE FUNCTION hafah_backend.limit_to_only_real_operations(
-    _operations INT [],
-    _include_virtual BOOLEAN
-)
-RETURNS INT []-- noqa: LT01, CP05
-LANGUAGE 'plpgsql' STABLE
-SET JIT = OFF
-AS
-$$
-DECLARE
-  _non_virtual_ops INT[];
-BEGIN
-  IF _include_virtual IS TRUE THEN
-    RETURN _operations;
-  END IF;
-  
-  _non_virtual_ops := (
-    SELECT array_agg(id)::INT[]
-    FROM hafd.operation_types
-    WHERE is_virtual = FALSE 
-  );
-
-  IF _operations IS NULL THEN
-    RETURN _non_virtual_ops;
-  END IF;
-
-  IF NOT _operations <@ _non_virtual_ops THEN
-    RAISE EXCEPTION 'Invalid operation ID detected. Allowed IDs are: %', _non_virtual_ops;
-  END IF;
-
-  RETURN _operations;
-END
-$$;
-
 RESET ROLE;

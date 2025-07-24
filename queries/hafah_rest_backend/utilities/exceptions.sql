@@ -108,16 +108,14 @@ END
 $$
 ;
 
-CREATE OR REPLACE FUNCTION hafah_backend.validate_participation_mode(_mode hafah_backend.participation_mode, _account_name TEXT)
+CREATE OR REPLACE FUNCTION hafah_backend.rest_raise_invalid_operation_types(_allowed_operations INT[])
 RETURNS VOID
 LANGUAGE 'plpgsql'
 IMMUTABLE
 AS
 $$
 BEGIN
-  IF _mode = 'all' AND _account_name IS NOT NULL THEN
-    RAISE EXCEPTION 'For participation mode ''all'', account name should not be provided';
-  END IF;
+  RAISE EXCEPTION 'Invalid operation ID detected. Allowed IDs are: %', _allowed_operations;
 END
 $$
 ;
