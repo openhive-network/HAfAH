@@ -227,24 +227,15 @@ AS
 $$
 DECLARE 
   _block_range hive.blocks_range := hive.convert_to_blocks_range("from-block","to-block");
-  _account_id INT = (SELECT av.id FROM hive.accounts_view av WHERE av.name = "account-name");
-  _transacting_account_id INT = (SELECT av.id FROM hive.accounts_view av WHERE av.name = "transacting-account-name");
-  _operation_types INT[] := (SELECT string_to_array("operation-types", ',')::INT[]);
+  _account_id INT                := hafah_backend.get_account_id("account-name", TRUE);
+  _transacting_account_id INT    := hafah_backend.get_account_id("transacting-account-name", FALSE);
+  _operation_types INT[]         := hafah_backend.get_operation_types("operation-types", "participation-mode" = 'all');
 BEGIN
-  -- Validate inputs
   PERFORM hafah_backend.validate_participation_mode("participation-mode","transacting-account-name");
   PERFORM hafah_python.validate_limit("page-size", 1000, 'page-size');
   PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
   PERFORM hafah_python.validate_negative_page("page");
   
-  IF _account_id IS NULL THEN
-    PERFORM hafah_backend.rest_raise_missing_account("account-name");
-  END IF;
-
-  IF "transacting-account-name" IS NOT NULL AND _transacting_account_id IS NULL THEN
-    PERFORM hafah_backend.rest_raise_missing_account("transacting-account-name");
-  END IF;
-
   IF (_block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL) THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
   ELSE

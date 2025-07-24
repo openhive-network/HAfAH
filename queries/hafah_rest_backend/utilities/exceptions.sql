@@ -120,4 +120,16 @@ END
 $$
 ;
 
+CREATE OR REPLACE FUNCTION hafah_backend.rest_raise_invalid_participation()
+RETURNS VOID
+LANGUAGE 'plpgsql'
+IMMUTABLE
+AS
+$$
+BEGIN
+  RAISE EXCEPTION 'For participation mode ''all'', account name should not be provided';
+END
+$$
+;
+
 RESET ROLE;

@@ -86,7 +86,7 @@ AS
 $$
 DECLARE
   _transaction_json JSON := hafah_python.get_transaction_json(('\x' || "transaction-id")::BYTEA, TRUE, FALSE, "include-virtual");
-  _result JSON;
+  _result JSON           := NULL;
 BEGIN
   IF (_transaction_json->>'block_num')::INT <= hive.app_get_irreversible_block() THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);

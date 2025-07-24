@@ -116,14 +116,8 @@ DECLARE
 BEGIN
   PERFORM hafah_python.validate_limit("result-limit", 1000, 'result-limit');
   PERFORM hafah_python.validate_negative_limit("result-limit", 'result-limit');
-
-  IF _block_range.first_block IS NULL THEN
-    PERFORM hafah_backend.rest_raise_missing_arg('from-block');   
-  END IF;
-
-  IF _block_range.last_block IS NULL THEN
-    PERFORM hafah_backend.rest_raise_missing_arg('to-block');
-  END IF;
+  PERFORM hafah_backend.is_block_missing(_block_range.first_block, 'from-block');
+  PERFORM hafah_backend.is_block_missing(_block_range.last_block, 'to-block');
 
   IF _block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);

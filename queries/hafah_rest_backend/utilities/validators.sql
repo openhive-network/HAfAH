@@ -8,7 +8,7 @@ AS
 $$
 BEGIN
   IF _mode = 'all' AND _account_name IS NOT NULL THEN
-    RAISE EXCEPTION 'For participation mode ''all'', account name should not be provided';
+    PERFORM hafah_backend.rest_raise_invalid_participation();
   END IF;
 END
 $$

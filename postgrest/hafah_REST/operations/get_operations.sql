@@ -288,26 +288,19 @@ AS
 $$
 DECLARE
   _block_range hive.blocks_range := hive.convert_to_blocks_range("from-block","to-block");
-  _operation_types INT[] := (CASE WHEN "operation-types" IS NOT NULL THEN string_to_array("operation-types", ',')::INT[] ELSE NULL END);
-  _operation_group_types BOOLEAN := (CASE WHEN "operation-group-type" = 'real' THEN FALSE WHEN "operation-group-type" = 'virtual' THEN TRUE ELSE NULL END);
+  _operation_types INT[]         := hafah_backend.get_operation_types("operation-types", TRUE);
+  _operation_group_types BOOLEAN := hafah_backend.get_group_type("operation-group-type");
 BEGIN
   PERFORM hafah_python.validate_limit("page-size", 150000, 'page-size');
   PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
   PERFORM hafah_python.validate_block_range( _block_range.first_block, _block_range.last_block + 1, 2001);
+  PERFORM hafah_backend.is_block_missing(_block_range.first_block, 'from-block');
+  PERFORM hafah_backend.is_block_missing(_block_range.last_block, 'to-block');
 
   IF _block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
   ELSE
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
-  END IF;
-
-    -- Required argument: to-block, from-block
-  IF _block_range.first_block IS NULL THEN
-    PERFORM hafah_backend.rest_raise_missing_arg('from-block');
-  END IF;
-
-  IF _block_range.last_block IS NULL THEN
-    PERFORM hafah_backend.rest_raise_missing_arg('to-block');
   END IF;
 
   RETURN hafah_backend.get_ops_in_blocks(
