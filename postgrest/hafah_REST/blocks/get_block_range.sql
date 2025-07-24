@@ -297,29 +297,22 @@ AS
 $$
 DECLARE
     _block_range hive.blocks_range := hive.convert_to_blocks_range("from-block","to-block");
-    __block_num BIGINT = NULL;
-    __end_block_num BIGINT = NULL;
+    __block_num BIGINT             := NULL;
+    __end_block_num BIGINT         := NULL;
 BEGIN
   -- Required argument: block-num
-  IF _block_range.first_block IS NULL THEN
-    PERFORM hafah_backend.rest_raise_missing_arg('from-block');
-  ELSE
-    __block_num = _block_range.first_block::BIGINT;
-    IF __block_num < 0 THEN
-      __block_num := __block_num + ((POW(2, 31) - 1) :: BIGINT);
-    END IF;     
-  END IF;
+  PERFORM hafah_backend.is_block_missing(_block_range.first_block, 'from-block');
 
-  IF _block_range.last_block IS NULL THEN
-    PERFORM hafah_backend.rest_raise_missing_arg('to-block');
-  ELSE
-    __end_block_num = _block_range.last_block::BIGINT;
-    IF __end_block_num < 0 THEN
-      __end_block_num := __end_block_num + ((POW(2, 31) - 1) :: BIGINT);
-    ELSE
+  __block_num = _block_range.first_block::BIGINT;
+  IF __block_num < 0 THEN
+    __block_num := __block_num + ((POW(2, 31) - 1) :: BIGINT);
+  END IF;     
 
-    END IF;
+  PERFORM hafah_backend.is_block_missing(_block_range.last_block, 'to-block');
 
+  __end_block_num = _block_range.last_block::BIGINT;
+  IF __end_block_num < 0 THEN
+    __end_block_num := __end_block_num + ((POW(2, 31) - 1) :: BIGINT);
   END IF;
 
   IF _block_range.last_block <= hive.app_get_irreversible_block() AND _block_range.last_block IS NOT NULL THEN

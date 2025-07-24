@@ -63,18 +63,16 @@ SET from_collapse_limit = 16
 AS
 $$
 DECLARE
-    __block INT := hive.convert_to_block_num("block-num");
-    __block_num BIGINT = NULL;
+    __block INT        := hive.convert_to_block_num("block-num");
+    __block_num BIGINT := NULL;
 BEGIN
     -- Required argument: block-num
-  IF __block IS NULL THEN
-    PERFORM hafah_backend.rest_raise_missing_arg('block-num');
-  ELSE
-      __block_num = __block::BIGINT;
-      IF __block_num < 0 THEN
-          __block_num := __block_num + ((POW(2, 31) - 1) :: BIGINT);
-      END IF;        
-  END IF;
+  PERFORM hafah_backend.is_block_missing(__block);
+
+  __block_num = __block::BIGINT;
+  IF __block_num < 0 THEN
+      __block_num := __block_num + ((POW(2, 31) - 1) :: BIGINT);
+  END IF;        
 
   IF __block <= hive.app_get_irreversible_block() AND __block IS NOT NULL THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);

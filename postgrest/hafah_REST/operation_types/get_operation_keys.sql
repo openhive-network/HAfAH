@@ -64,13 +64,18 @@ SET enable_bitmapscan = OFF
 AS
 $$
 DECLARE
-	_example_key JSON := (SELECT ov.body FROM hive.operations_view ov WHERE ov.op_type_id = "type-id" LIMIT 1);
+	_example_key JSON := NULL;
 BEGIN
+  PERFORM hafah_backend.validate_op_type_id("type-id");
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
 
-  IF ("type-id" > (SELECT MAX(id) FROM hafd.operation_types)) OR "type-id" < 0 THEN
-    PERFORM hafah_backend.rest_raise_missing_op_type("type-id");
-  END IF;
+  _example_key := (
+    SELECT 
+      ov.body 
+    FROM hive.operations_view ov 
+    WHERE ov.op_type_id = "type-id" 
+    LIMIT 1
+  );
 
   RETURN COALESCE(
     (

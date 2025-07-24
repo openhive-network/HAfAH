@@ -89,25 +89,14 @@ BEGIN
   IF _block_num IS NULL THEN
     PERFORM hafah_backend.rest_raise_missing_operation_id("operation-id");
   END IF;
-
+  
   IF _block_num <= hive.app_get_irreversible_block() THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
   ELSE
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   END IF;
 
-  RETURN (
-      ov.op,
-      ov.block,
-      ov.trx_id,
-      ov.op_pos,
-      ov.op_type_id,
-      ov.timestamp,
-      ov.virtual_op,
-      ov.operation_id,
-      ov.trx_in_block
-    )::hafah_backend.operation 
-  FROM hafah_backend.get_operation("operation-id") ov;
+  RETURN hafah_backend.get_operation("operation-id");
 END
 $$;
 

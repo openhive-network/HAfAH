@@ -163,37 +163,24 @@ SET from_collapse_limit = 16
 AS
 $$
 DECLARE
-  __block INT := hive.convert_to_block_num("block-num");
-  _operation_types INT[] := (CASE WHEN "operation-types" IS NOT NULL THEN string_to_array("operation-types", ',')::INT[] ELSE NULL END);
-  _key_content TEXT[] := NULL;
-  _set_of_keys JSON := NULL;
-  _result hafah_backend.operation[];
-  _account_id INT := NULL;
+  __block INT            := hive.convert_to_block_num("block-num");
+  _operation_types INT[] := hafah_backend.get_operation_types("operation-types", TRUE);
+  _account_id INT        := hafah_backend.get_account_id("account-name", FALSE);
 
-  _ops_count INT;
-  __total_pages INT;
+  _key_content TEXT[]    := NULL;
+  _set_of_keys JSON      := NULL;
+  _ops_count INT         := NULL;
+  __total_pages INT      := NULL;
+
+  _result hafah_backend.operation[];
 BEGIN
   PERFORM hafah_python.validate_limit("page-size", 10000, 'page-size');
   PERFORM hafah_python.validate_negative_limit("page-size", 'page-size');
   PERFORM hafah_python.validate_negative_page("page");
+  PERFORM hafah_backend.is_block_missing(__block);
+  PERFORM hafah_backend.validate_block_num(__block);
 
-  IF __block IS NULL THEN
-    PERFORM hafah_backend.rest_raise_missing_arg('block-num');
-  END IF;
-
-  IF NOT EXISTS (SELECT 1 FROM hive.blocks_view bv WHERE bv.num = __block) THEN
-    PERFORM hafah_backend.rest_raise_missing_block(__block);
-  END IF;
-
-  IF "account-name" IS NOT NULL THEN
-    _account_id := (SELECT av.id FROM hive.accounts_view av WHERE av.name = "account-name");
-
-    IF _account_id IS NULL THEN
-      PERFORM hafah_backend.rest_raise_missing_account("account-name");
-    END IF;
-  END IF;
-
-  IF "path-filter" IS NOT NULL AND "path-filter" != '{}' THEN
+  IF hafah_backend.is_path_filter_not_empty("path-filter") THEN
     SELECT 
       pvpf.param_json::JSON,
       pvpf.param_text::TEXT[]
@@ -207,15 +194,7 @@ BEGIN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   END IF;
 
-  _ops_count := (
-    SELECT hafah_backend.get_ops_by_block_count(
-      __block,
-      _operation_types,
-      _account_id,
-      _key_content,
-      _set_of_keys
-    )
-  );
+  _ops_count := hafah_backend.get_ops_by_block_count(__block, _operation_types, _account_id, _key_content, _set_of_keys);
 
   __total_pages := (
     CASE 
