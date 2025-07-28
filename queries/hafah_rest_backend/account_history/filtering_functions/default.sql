@@ -26,7 +26,8 @@ BEGIN
   -----------PAGING LOGIC----------------
   _account_range := hafah_backend.account_range(NULL, _account_id, _from_block, _to_block);
 
-  _ops_count := hafah_backend.get_account_operations_count(NULL, _account_id, _account_range.from_seq, _account_range.to_seq);
+  -- always include virtual operations
+  _ops_count := hafah_backend.get_account_operations_count(NULL, _account_id, _account_range.from_seq, _account_range.to_seq, TRUE);
 
   _calculate_pages := hafah_backend.calculate_pages(_ops_count, _page, 'desc', _limit);
 
