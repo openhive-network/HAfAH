@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION hafah_backend.account_history_by_operations(
     _to_block INT,
     _page INT,
     _body_limit INT,
-    _limit INT
+    _limit INT,
+    _include_virtual BOOLEAN
 )
 RETURNS hafah_backend.account_operation_history -- noqa: LT01, CP05
 LANGUAGE 'plpgsql' STABLE
@@ -27,7 +28,7 @@ BEGIN
   -----------PAGING LOGIC----------------
   _account_range := hafah_backend.account_range(_operations, _account_id, _from_block, _to_block);
 
-  _ops_count := hafah_backend.get_account_operations_count(_operations, _account_id, _account_range.from_seq, _account_range.to_seq);
+  _ops_count := hafah_backend.get_account_operations_count(_operations, _account_id, _account_range.from_seq, _account_range.to_seq, _include_virtual);
 
   _calculate_pages := hafah_backend.calculate_pages(_ops_count, _page, 'desc', _limit);
 
@@ -46,7 +47,8 @@ BEGIN
       SELECT aov.operation_id, aov.op_type_id, aov.block_num
       FROM hive.account_operations_view aov
       WHERE aov.account_id = _account_id
-      AND aov.op_type_id = ANY(_operations)
+      AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
+      AND (_include_virtual OR aov.transacting_account_id IS NOT NULL)
       AND aov.account_op_seq_no >= _account_range.from_seq
       AND aov.account_op_seq_no <= _account_range.to_seq
       ORDER BY aov.account_op_seq_no DESC
