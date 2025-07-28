@@ -32,10 +32,6 @@ BEGIN
     WHERE is_virtual = FALSE 
   );
 
-  IF _operation_ids IS NULL THEN
-    RETURN _non_virtual_ops;
-  END IF;
-
   PERFORM hafah_backend.validate_operation_types(_operation_ids, _non_virtual_ops);
 
   RETURN _operation_ids;
