@@ -1,5 +1,5 @@
 {
-  "total_operations": 11,
+  "total_operations": 21,
   "total_pages": 1,
   "block_range": {
     "from": 1,
@@ -26,6 +26,32 @@
     },
     {
       "op": {
+        "type": "effective_comment_vote_operation",
+        "value": {
+          "voter": "gtg",
+          "author": "blocktrades",
+          "weight": 1883324796189,
+          "rshares": 108176539,
+          "permlink": "bitcoin-payments-accepted-in-20s-soon-to-be-6s",
+          "pending_payout": {
+            "nai": "@@000000013",
+            "amount": "319805",
+            "precision": 3
+          },
+          "total_vote_weight": "17313337917951663196"
+        }
+      },
+      "block": 2887502,
+      "trx_id": "9729bd39ffede1ad4d461474012f2868b7d4d8a2",
+      "op_pos": 1,
+      "op_type_id": 72,
+      "timestamp": "2016-07-03T22:43:48",
+      "virtual_op": true,
+      "operation_id": "12401726657134920",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
         "type": "vote_operation",
         "value": {
           "voter": "gtg",
@@ -41,6 +67,32 @@
       "timestamp": "2016-07-03T22:43:48",
       "virtual_op": false,
       "operation_id": "12401726657134592",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "effective_comment_vote_operation",
+        "value": {
+          "voter": "gtg",
+          "author": "blocktrades",
+          "weight": 0,
+          "rshares": 26467069,
+          "permlink": "-blocktrades-adds-support-for-directly-buyingselling-steem",
+          "pending_payout": {
+            "nai": "@@000000013",
+            "amount": "3395497",
+            "precision": 3
+          },
+          "total_vote_weight": 37079019999706
+        }
+      },
+      "block": 2840599,
+      "trx_id": "2bf9b0850282ed3867d9a2470dc8d6af55aa4ea4",
+      "op_pos": 1,
+      "op_type_id": 72,
+      "timestamp": "2016-07-02T07:34:18",
+      "virtual_op": true,
+      "operation_id": "12200279806050632",
       "trx_in_block": 0
     },
     {
@@ -64,6 +116,32 @@
     },
     {
       "op": {
+        "type": "effective_comment_vote_operation",
+        "value": {
+          "voter": "gtg",
+          "author": "blocktrades",
+          "weight": 0,
+          "rshares": 26467069,
+          "permlink": "openledger-pre-sale-of-dao-tokens-is-now-live",
+          "pending_payout": {
+            "nai": "@@000000013",
+            "amount": "1805443",
+            "precision": 3
+          },
+          "total_vote_weight": 39555131983403
+        }
+      },
+      "block": 2840592,
+      "trx_id": "5179c7745a8a8e729cf8faab0461e97bc1219ba3",
+      "op_pos": 1,
+      "op_type_id": 72,
+      "timestamp": "2016-07-02T07:33:57",
+      "virtual_op": true,
+      "operation_id": "12200249741280584",
+      "trx_in_block": 2
+    },
+    {
+      "op": {
         "type": "vote_operation",
         "value": {
           "voter": "gtg",
@@ -80,6 +158,32 @@
       "virtual_op": false,
       "operation_id": "12200249741280256",
       "trx_in_block": 2
+    },
+    {
+      "op": {
+        "type": "effective_comment_vote_operation",
+        "value": {
+          "voter": "gtg",
+          "author": "blocktrades",
+          "weight": 0,
+          "rshares": 26467069,
+          "permlink": "is-vote-changing-an-important-feature-for-steem",
+          "pending_payout": {
+            "nai": "@@000000013",
+            "amount": "1004732",
+            "precision": 3
+          },
+          "total_vote_weight": 39522051255407
+        }
+      },
+      "block": 2840592,
+      "trx_id": "4fdfc9bcbc84c0b7d798cf3f0c606269043f14ff",
+      "op_pos": 1,
+      "op_type_id": 72,
+      "timestamp": "2016-07-02T07:33:57",
+      "virtual_op": true,
+      "operation_id": "12200249741280072",
+      "trx_in_block": 1
     },
     {
       "op": {
@@ -102,6 +206,32 @@
     },
     {
       "op": {
+        "type": "effective_comment_vote_operation",
+        "value": {
+          "voter": "gtg",
+          "author": "blocktrades",
+          "weight": 0,
+          "rshares": 26467069,
+          "permlink": "tax-issues-facing-us-based-cryptocurrency-holders-and-miners-intro-and-irs-guidelines",
+          "pending_payout": {
+            "nai": "@@000000013",
+            "amount": "2031797",
+            "precision": 3
+          },
+          "total_vote_weight": 38794385435057
+        }
+      },
+      "block": 2840592,
+      "trx_id": "88d2f81c37e1288448b334042c3eee02df6395d9",
+      "op_pos": 1,
+      "op_type_id": 72,
+      "timestamp": "2016-07-02T07:33:57",
+      "virtual_op": true,
+      "operation_id": "12200249741279560",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
         "type": "vote_operation",
         "value": {
           "voter": "gtg",
@@ -117,6 +247,32 @@
       "timestamp": "2016-07-02T07:33:57",
       "virtual_op": false,
       "operation_id": "12200249741279232",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "effective_comment_vote_operation",
+        "value": {
+          "voter": "gtg",
+          "author": "blocktrades",
+          "weight": 0,
+          "rshares": 27007214,
+          "permlink": "tax-issues-facing-us-based-cryptocurrency-holders-and-miners-part-1-capital-gainslosses-for-crypto",
+          "pending_payout": {
+            "nai": "@@000000013",
+            "amount": "2428829",
+            "precision": 3
+          },
+          "total_vote_weight": 38851983572277
+        }
+      },
+      "block": 2840591,
+      "trx_id": "9174e0f692023ecf91d632f9949a94c808302119",
+      "op_pos": 1,
+      "op_type_id": 72,
+      "timestamp": "2016-07-02T07:33:54",
+      "virtual_op": true,
+      "operation_id": "12200245446312264",
       "trx_in_block": 0
     },
     {
@@ -140,6 +296,32 @@
     },
     {
       "op": {
+        "type": "effective_comment_vote_operation",
+        "value": {
+          "voter": "gtg",
+          "author": "blocktrades",
+          "weight": 0,
+          "rshares": 27007214,
+          "permlink": "i-find-steemit-posts-with-summariesanalysis-of-3rd-party-content-more-compelling",
+          "pending_payout": {
+            "nai": "@@000000013",
+            "amount": "1386736",
+            "precision": 3
+          },
+          "total_vote_weight": 39919636650316
+        }
+      },
+      "block": 2840590,
+      "trx_id": "e909cd27baf117473ec99ec9b875a6916927c55e",
+      "op_pos": 1,
+      "op_type_id": 72,
+      "timestamp": "2016-07-02T07:33:51",
+      "virtual_op": true,
+      "operation_id": "12200241151344968",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
         "type": "vote_operation",
         "value": {
           "voter": "gtg",
@@ -155,6 +337,32 @@
       "timestamp": "2016-07-02T07:33:51",
       "virtual_op": false,
       "operation_id": "12200241151344640",
+      "trx_in_block": 0
+    },
+    {
+      "op": {
+        "type": "effective_comment_vote_operation",
+        "value": {
+          "voter": "gtg",
+          "author": "blocktrades",
+          "weight": 0,
+          "rshares": 27007214,
+          "permlink": "blocktrades-now-offering-steem-power-for-cryptocurrency",
+          "pending_payout": {
+            "nai": "@@000000013",
+            "amount": "1439043",
+            "precision": 3
+          },
+          "total_vote_weight": 40979209439222
+        }
+      },
+      "block": 2840585,
+      "trx_id": "8726774b3c8d53e9dcb870db6b3561a217871d27",
+      "op_pos": 1,
+      "op_type_id": 72,
+      "timestamp": "2016-07-02T07:33:36",
+      "virtual_op": true,
+      "operation_id": "12200219676508488",
       "trx_in_block": 0
     },
     {
@@ -178,6 +386,32 @@
     },
     {
       "op": {
+        "type": "effective_comment_vote_operation",
+        "value": {
+          "voter": "gtg",
+          "author": "blocktrades",
+          "weight": 0,
+          "rshares": 27007214,
+          "permlink": "dao-gateway-on-openledger-is-fully-operational",
+          "pending_payout": {
+            "nai": "@@000000013",
+            "amount": "1102767",
+            "precision": 3
+          },
+          "total_vote_weight": 37317034722668
+        }
+      },
+      "block": 2839669,
+      "trx_id": "c02b46ca3eced3c6bd5cc43df2114143ce6c2105",
+      "op_pos": 1,
+      "op_type_id": 72,
+      "timestamp": "2016-07-02T06:47:45",
+      "virtual_op": true,
+      "operation_id": "12196285486465864",
+      "trx_in_block": 1
+    },
+    {
+      "op": {
         "type": "vote_operation",
         "value": {
           "voter": "gtg",
@@ -194,6 +428,32 @@
       "virtual_op": false,
       "operation_id": "12196285486465536",
       "trx_in_block": 1
+    },
+    {
+      "op": {
+        "type": "effective_comment_vote_operation",
+        "value": {
+          "voter": "gtg",
+          "author": "blocktrades",
+          "weight": 0,
+          "rshares": 27547358,
+          "permlink": "blocktrades-supports-buyingselling-dao-coins-without-exchange-risk",
+          "pending_payout": {
+            "nai": "@@000000013",
+            "amount": "2715326",
+            "precision": 3
+          },
+          "total_vote_weight": 41395120110223
+        }
+      },
+      "block": 2839669,
+      "trx_id": "2b79214e07cffd28c8ee026055d92767229d8b45",
+      "op_pos": 1,
+      "op_type_id": 72,
+      "timestamp": "2016-07-02T06:47:45",
+      "virtual_op": true,
+      "operation_id": "12196285486465352",
+      "trx_in_block": 0
     },
     {
       "op": {
