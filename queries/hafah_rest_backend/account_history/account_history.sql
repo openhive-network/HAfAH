@@ -25,7 +25,7 @@ DECLARE
 BEGIN
   CASE
     -- If no filters are applied, use the default account history function
-    WHEN (_participation_mode = 'all') AND (NOT _filter_by_op) THEN
+    WHEN ((_participation_mode = 'all') AND (NOT _filter_by_op)) OR ((_participation_mode != 'all') AND (NOT _filter_by_account_ids) AND (NOT _filter_by_op) ) THEN
       _result := hafah_backend.account_history_default(
           _account_id,
           _from_block,
@@ -34,9 +34,9 @@ BEGIN
           _body_limit,
           _limit
       );
-      
+
     -- If only operations are filtered, use the account history by operations function
-    WHEN ((_participation_mode = 'all') AND (_filter_by_op)) OR ((_participation_mode != 'all') AND (NOT _filter_by_account_ids)) THEN
+    WHEN ((_participation_mode = 'all') AND (_filter_by_op)) OR ((_participation_mode != 'all') AND (NOT _filter_by_account_ids) AND (_filter_by_op)) THEN
       _result := hafah_backend.account_history_by_operations(
         _account_id,
         _operations,
@@ -44,8 +44,7 @@ BEGIN
         _to_block,
         _page,
         _body_limit,
-        _limit,
-        (_participation_mode = 'all') -- include virtual operations if participation mode is 'all'
+        _limit
       );
     -- If accounts are filtered, use the account history by accounts function (include account)
     WHEN (_participation_mode = 'include') AND (_filter_by_account_ids) AND (_filter_by_single_acc) THEN

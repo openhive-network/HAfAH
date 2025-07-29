@@ -229,7 +229,7 @@ DECLARE
   _block_range hive.blocks_range := hive.convert_to_blocks_range("from-block","to-block");
   _account_id INT                := hafah_backend.get_account_id("account-name", TRUE);
   _transacting_account_id INT    := hafah_backend.get_account_id("transacting-account-name", FALSE);
-  _operation_types INT[]         := hafah_backend.get_operation_types("operation-types", "participation-mode" = 'all');
+  _operation_types INT[]         := hafah_backend.get_operation_types("operation-types", TRUE);
 BEGIN
   PERFORM hafah_backend.validate_participation_mode("participation-mode","transacting-account-name");
   PERFORM hafah_python.validate_limit("page-size", 1000, 'page-size');
