@@ -192,7 +192,8 @@ BEGIN
       ls.id,
       ls.block_num,
       ov.trx_in_block,
-      encode(htv.trx_hash, 'hex') AS trx_hash,
+      -- subquery is more stable than using LEFT JOIN with hive.transactions_view
+      (SELECT encode(htv.trx_hash, 'hex') FROM hive.transactions_view htv WHERE htv.block_num = ls.block_num AND htv.trx_in_block = ov.trx_in_block) AS trx_hash, 
       ov.op_pos,
       ls.op_type_id,
       ov.body,
@@ -203,7 +204,7 @@ BEGIN
     ) ls
     JOIN hive.operations_view ov ON ov.id = ls.id
     JOIN hafd.operation_types hot ON hot.id = ls.op_type_id
-    LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ov.trx_in_block
+    --LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ov.trx_in_block
   ),
   -- filter too long operation bodies 
   result_query AS (
