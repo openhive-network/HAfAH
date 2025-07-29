@@ -49,7 +49,6 @@ BEGIN
       AND aov.account_op_seq_no >= _account_range.from_seq
       AND aov.account_op_seq_no <= _account_range.to_seq
       AND aov.transacting_account_id != ANY(_transacting_account_ids) -- exclude all transacting accounts
-      AND aov.transacting_account_id IS NOT NULL -- for future compatibility
       /*
       AND NOT EXISTS (
           SELECT 1 FROM excluded_ids e
