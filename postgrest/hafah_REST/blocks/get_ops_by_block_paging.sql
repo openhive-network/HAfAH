@@ -170,7 +170,7 @@ DECLARE
   _key_content TEXT[]    := NULL;
   _set_of_keys JSON      := NULL;
   _ops_count INT         := NULL;
-  __total_pages INT      := NULL;
+  _total_pages INT       := NULL;
 
   _result hafah_backend.operation[];
 BEGIN
@@ -194,18 +194,10 @@ BEGIN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   END IF;
 
-  _ops_count := hafah_backend.get_ops_by_block_count(__block, _operation_types, _account_id, _key_content, _set_of_keys);
+  _ops_count   := hafah_backend.get_ops_by_block_count(__block, _operation_types, _account_id, _key_content, _set_of_keys);
+  _total_pages := hafah_backend.total_pages(_ops_count, "page-size");
 
-  __total_pages := (
-    CASE 
-      WHEN (_ops_count % "page-size") = 0 THEN 
-        _ops_count/"page-size" 
-      ELSE 
-        (_ops_count/"page-size") + 1
-    END
-  );
-
-  PERFORM hafah_python.validate_page("page", __total_pages);
+  PERFORM hafah_python.validate_page("page", _total_pages);
 
   _result := array_agg(row ORDER BY
       (CASE WHEN "page-order" = 'desc' THEN row.operation_id::BIGINT ELSE NULL END) DESC,
@@ -236,7 +228,7 @@ BEGIN
 
   RETURN (
     COALESCE(_ops_count,0),
-    COALESCE(__total_pages,0),
+    COALESCE(_total_pages,0),
     COALESCE(_result, '{}'::hafah_backend.operation[])
   )::hafah_backend.operation_history;
 

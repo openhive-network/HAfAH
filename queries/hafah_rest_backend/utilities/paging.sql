@@ -163,6 +163,26 @@ BEGIN
 END
 $$;
 
+CREATE OR REPLACE FUNCTION hafah_backend.total_pages(
+    _ops_count INT,
+    _page_size INT
+)
+RETURNS INT -- noqa: LT01, CP05
+LANGUAGE 'plpgsql' IMMUTABLE
+AS
+$$
+BEGIN
+  RETURN (
+    CASE 
+      WHEN (_ops_count % _page_size) = 0 THEN 
+        _ops_count / _page_size 
+      ELSE 
+        (_ops_count / _page_size) + 1
+    END
+  );
+END
+$$;
+
 -- used in account page endpoint (not used when filtered by accounts)
 CREATE OR REPLACE FUNCTION hafah_backend.get_account_operations_count(
     _operations INT [],
