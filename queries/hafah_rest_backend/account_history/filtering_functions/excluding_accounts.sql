@@ -49,6 +49,7 @@ BEGIN
       AND aov.account_op_seq_no >= _account_range.from_seq
       AND aov.account_op_seq_no <= _account_range.to_seq
       AND aov.transacting_account_id != ANY(_transacting_account_ids) -- exclude all transacting accounts
+      AND aov.transacting_account_id IS NOT NULL -- for future compatibility
       /*
       AND NOT EXISTS (
           SELECT 1 FROM excluded_ids e
@@ -110,33 +111,33 @@ BEGIN
   ),
   -- returns empty if the last two operations are not in the same block
   -- if the last two operations are in the same block, next CTE returns all operations in that block
-  find_all_records_for_page AS ( -- if not saturated, returns empty
-    SELECT 
-      aov.operation_id AS id, 
+  filter_by_op_seq AS MATERIALIZED (
+    SELECT
+      aov.operation_id AS id,
       aov.op_type_id,
       aov.block_num
     FROM hive.account_operations_view aov
     WHERE aov.account_id = _account_id
-    AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
     AND aov.transacting_account_id != ANY(_transacting_account_ids) -- exclude all transacting accounts
     AND aov.transacting_account_id IS NOT NULL -- for future compatibility
+    AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
     AND aov.account_op_seq_no >= _account_range.from_seq
---    AND aov.account_op_seq_no <= _account_range.to_seq
     AND (
-	    (SELECT account_op_seq_no FROM block_check) IS NOT NULL 
-	    AND aov.account_op_seq_no <= (SELECT account_op_seq_no FROM block_check)
-	  ) 
-    AND (
-	    (SELECT block_num FROM block_check) IS NOT NULL 
-	    AND aov.block_num = (SELECT block_num FROM block_check)
-	  ) 
-    /*
-    AND NOT EXISTS (
-        SELECT 1 FROM excluded_ids e
-        WHERE e.id = aov.transacting_account_id
+      (SELECT account_op_seq_no FROM block_check) IS NOT NULL
+      AND aov.account_op_seq_no <= (SELECT account_op_seq_no FROM block_check)
     )
-    */
     ORDER BY aov.account_op_seq_no DESC
+    LIMIT _limit -- limit to the maximum number of rows for the extra records
+  ),
+  find_all_records_for_page AS ( -- if not saturated, returns empty
+    SELECT
+      ls.id,
+      ls.block_num,
+      ls.op_type_id
+    FROM filter_by_op_seq ls
+    WHERE
+      (SELECT block_num FROM block_check) IS NOT NULL AND
+      ls.block_num = (SELECT block_num FROM block_check)
   ),
   union_operations AS MATERIALIZED (
     SELECT
