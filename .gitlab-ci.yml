@@ -103,6 +103,7 @@ generate-wax-spec:
   variables:
     INPUT_JSON_SWAGGER_FILE: "${BUILT_JSON_SWAGGER_FILE}"
     NAMESPACE: "hafah"
+    API_TYPE: "rest"
     NPM_PACKAGE_SCOPE: "@hiveio"
     NPM_PACKAGE_NAME: "wax-api-hafah"
   needs:
