@@ -42,7 +42,7 @@ variables:
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 - project: 'hive/haf'
-  ref: a4daf3db6b8cfa6e0bf5a9bffd1550db3f65c118 # develop
+  ref: f1ebe0ea07227db915f21c760aec8423ae3d3be7 # develop
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
 
@@ -193,8 +193,8 @@ build_setup_docker_image:
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
     POETRY_INSTALL_ROOT_DIR: ${POETRY_INSTALL_DIR}
 
-    TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex\
-      \ or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
+    TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex
+      or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
     PATTERN_TESTS_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/api_tests/pattern_tests"
     JUNIT_REPORT: "haf/hive/tests/python/api_tests/pattern_tests/results.xml"
     DIRECT_CALLS: 0
