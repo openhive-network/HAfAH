@@ -510,10 +510,8 @@ __account_id INT;
 __upper_block_limit INT;
 __use_filter INT;
 BEGIN
-
 PERFORM hafah_python.validate_limit( _limit, 1000 );
 PERFORM hafah_python.validate_start_limit( _start, _limit );
-
 IF (NOT (_filter_low IS NULL AND _filter_high IS NULL)) AND COALESCE(_filter_low, 0) + COALESCE(_filter_high, 0) = 0 THEN
 RETURN QUERY SELECT
 NULL :: TEXT,
@@ -527,32 +525,20 @@ NULL :: INT
 LIMIT 0;
 RETURN;
 END IF;
-
 SELECT hafah_python.translate_get_account_history_filter(_filter_low, _filter_high) INTO __resolved_filter;
-
-IF _include_reversible THEN
-SELECT num from hive.blocks_view order by num desc limit 1 INTO __upper_block_limit;
-ELSE
+-- Always use irreversible block limit
 SELECT hive.app_get_irreversible_block() INTO __upper_block_limit;
-END IF;
-
-
-IF _include_reversible THEN
-SELECT INTO __account_id ( select id from hive.accounts_view where name = _account );
-ELSE
+-- Always use base accounts table
 SELECT INTO __account_id ( select id from hafd.accounts where name = _account );
-END IF;
-
 __use_filter := array_length( __resolved_filter, 1 );
-
 RETURN QUERY
 WITH pre_result AS
 (
-SELECT -- hafah_python.ah_get_account_history3
+SELECT -- hafah_python.ah_get_account_history_base_only
 (
 CASE
 WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000'
-ELSE encode( (SELECT htv.trx_hash FROM hive.transactions_view htv WHERE ho.trx_in_block >= 0 AND ds.block_num = htv.block_num AND ho.trx_in_block = htv.trx_in_block), 'hex')
+ELSE encode( ht.trx_hash, 'hex')
 END
 ) AS _trx_id,
 ds.block_num AS _block,
@@ -567,13 +553,13 @@ hot.is_virtual AS virtual_op,
 (
 CASE
 WHEN _is_legacy_style THEN hive.get_legacy_style_operation(ho.body_binary)::TEXT
-ELSE ho.body :: text
+ELSE ho.body_binary::jsonb :: text
 END
 ) AS _value,
 ds.account_op_seq_no AS _operation_id
 FROM
 (
--- FILTERED QUERY: Query base table directly instead of view for better index usage
+-- FILTERED QUERY
 (SELECT hao.operation_id, hafd.operation_id_to_type_id(hao.operation_id) as op_type_id, hafd.operation_id_to_block_num(hao.operation_id) as block_num, hao.account_op_seq_no
 FROM hafd.account_operations hao
 WHERE __use_filter IS NOT NULL
@@ -585,24 +571,26 @@ ORDER BY hao.account_op_seq_no DESC
 LIMIT _limit
 )
 UNION ALL
--- UNFILTERED QUERY: Use view as before
-(SELECT hao.operation_id, hao.op_type_id, hao.block_num, hao.account_op_seq_no
-FROM hive.account_operations_view hao
+-- UNFILTERED QUERY
+(SELECT hao.operation_id, hafd.operation_id_to_type_id(hao.operation_id) as op_type_id, hafd.operation_id_to_block_num(hao.operation_id) as block_num, hao.account_op_seq_no
+FROM hafd.account_operations hao
 WHERE __use_filter IS NULL
 AND hao.account_id = __account_id
 AND hao.account_op_seq_no <= _start
-AND hao.block_num <= __upper_block_limit
+AND hafd.operation_id_to_block_num(hao.operation_id) <= __upper_block_limit
 ORDER BY hao.account_op_seq_no DESC
 LIMIT _limit
 )
-
 ) ds
-JOIN LATERAL (SELECT hov.body, hov.body_binary, hov.op_pos, hov.trx_in_block FROM hive.operations_view hov WHERE ds.operation_id = hov.id) ho ON TRUE
-JOIN LATERAL (select ot.is_virtual FROM hafd.operation_types ot WHERE ds.op_type_id = ot.id) hot on true
+-- Join to base operations table (not view)
+JOIN hafd.operations ho ON ds.operation_id = ho.id
+-- Join to base transactions table (not view)
+LEFT JOIN hafd.transactions ht ON ho.trx_in_block >= 0 AND ds.block_num = ht.block_num AND ho.trx_in_block = ht.trx_in_block
+-- Join to operation_types
+JOIN hafd.operation_types hot ON ds.op_type_id = hot.id
 ORDER BY ds.account_op_seq_no ASC
-
 )
-SELECT -- hafah_python.ah_get_account_history3
+SELECT -- hafah_python.ah_get_account_history_base_only
 pre_result._trx_id,
 pre_result._block,
 pre_result._trx_in_block,
@@ -613,9 +601,9 @@ pre_result._value,
 pre_result._operation_id
 FROM
 pre_result
-JOIN hive.blocks_view hb ON hb.num = pre_result._block
+-- Join to base blocks table (not view)
+JOIN hafd.blocks hb ON hb.num = pre_result._block
 ORDER BY pre_result._operation_id ASC;
-
 END
 $function$
 LANGUAGE plpgsql STABLE
@@ -623,6 +611,9 @@ SET JIT=OFF
 SET join_collapse_limit=16
 SET from_collapse_limit=16
 SET plan_cache_mode=force_generic_plan
+SET max_parallel_workers_per_gather=4
+SET min_parallel_table_scan_size=0
+SET min_parallel_index_scan_size=0
 ;
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
