@@ -619,6 +619,9 @@ SET JIT=OFF
 SET join_collapse_limit=16
 SET from_collapse_limit=16
 SET plan_cache_mode=force_generic_plan
+SET max_parallel_workers_per_gather=4
+SET min_parallel_table_scan_size=0
+SET min_parallel_index_scan_size=0
 ;
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
