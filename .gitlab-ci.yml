@@ -77,6 +77,7 @@ prepare_hived_data:
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
   tags:
   - data-cache-storage
+  - hive-builder-9
 
 prepare_haf_image:
   extends: .prepare_haf_image
@@ -124,6 +125,7 @@ prepare_haf_data:
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
   tags:
   - data-cache-storage
+  - hive-builder-9
 
 .prepare_hafah_image:
   extends: .docker_image_builder_job
@@ -220,6 +222,7 @@ build_setup_docker_image:
 
   tags:
   - data-cache-storage
+  - hive-builder-9
 
 postgrest_pattern_tests:
   extends: .pattern_tests
@@ -276,6 +279,7 @@ new_style_postgrest_pattern_tests:
 
   tags:
   - data-cache-storage
+  - hive-builder-9
 
 postgrest_comparison_tests:
   extends: .comparison_tests
@@ -315,6 +319,7 @@ postgrest_comparison_tests:
       junit: wdir/jmeter_junit_report.xml
   tags:
   - data-cache-storage
+  - hive-builder-9
 
 postgrest_block_api_benchmark_tests:
   extends: .benchmark_tests
@@ -356,6 +361,7 @@ postgrest_rest_benchmark_tests:
       junit: tests/performance/junit-result.xml
   tags:
   - data-cache-storage
+  - hive-builder-9
 
 cleanup_hive_cache_manual:
   extends: .cleanup_cache_manual_template
@@ -364,6 +370,7 @@ cleanup_hive_cache_manual:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_hive_*"
   tags:
   - data-cache-storage
+  - hive-builder-9
 
 cleanup_haf_cache_manual:
   extends: .cleanup_cache_manual_template
@@ -372,6 +379,7 @@ cleanup_haf_cache_manual:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_haf_*"
   tags:
   - data-cache-storage
+  - hive-builder-9
 
 build_and_publish_image:
   stage: publish
@@ -549,6 +557,7 @@ hafah_pytest_rest_api_pattern_tests:
     - "**/*.out.json"
   tags:
   - data-cache-storage
+  - hive-builder-9
 
 hafah_pytest_fuctional_tests_part1:
   extends: .hafah_pytest_fuctional_tests_base
