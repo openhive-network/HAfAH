@@ -64,6 +64,7 @@ prepare_hived_image:
   tags:
   - public-runner-docker
   - hived-for-tests
+  - hived
 
 prepare_hived_data:
   extends: .prepare_hived_data_5m
@@ -89,6 +90,7 @@ prepare_haf_image:
   tags:
   - public-runner-docker
   - hived-for-tests
+  - hived
 
 extract-swagger-json:
   extends: .filter_out_swagger_json
@@ -167,6 +169,7 @@ prepare_haf_data:
   tags:
   - public-runner-docker
   - hived-for-tests
+  - hived
 
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
@@ -391,6 +394,7 @@ build_and_publish_image:
   tags:
   - public-runner-docker
   - hived-for-tests
+  - hived
 
 prepare_haf_image_testnet:
   extends: .prepare_haf_image
