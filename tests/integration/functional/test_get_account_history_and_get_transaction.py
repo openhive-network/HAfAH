@@ -33,8 +33,8 @@ def test_check_for_newly_created_history_operations(
 ):
     wallet.create_account(f"bob-{int(include_reversible)}", hives=100)
 
-    # Wait for HAF to process the block
-    haf_node.wait_number_of_blocks(1)
+    # Wait for HAF to process the block (need multiple blocks for reliable sync)
+    haf_node.wait_number_of_blocks(2)
 
     if not include_reversible:
         haf_node.wait_for_irreversible_block()
@@ -53,8 +53,8 @@ def test_check_for_newly_created_history_operations(
 def test_filter_only_transfer_ops(haf_node, postgrest_hafah, wallet):
     wallet.create_account("carol", hives=100)
 
-    # Wait for HAF to process the block
-    haf_node.wait_number_of_blocks(1)
+    # Wait for HAF to process the block (need multiple blocks for reliable sync)
+    haf_node.wait_number_of_blocks(2)
 
     response = send_request_to_hafah(
         postgrest_hafah,
@@ -84,8 +84,8 @@ def test_pagination(haf_node, postgrest_hafah, wallet, step: int):
                 f"dan-{step}", "null", tt.Asset.Test(1), f"transfer-{x}"
             )
 
-    # Wait for HAF to process the block
-    haf_node.wait_number_of_blocks(1)
+    # Wait for HAF to process the block (need multiple blocks for reliable sync)
+    haf_node.wait_number_of_blocks(2)
 
     response = send_request_to_hafah(
         postgrest_hafah,
@@ -132,8 +132,8 @@ def test_get_transaction_in_reversible_block(
     wallet = tt.Wallet(attach_to=init_node)
     transaction = wallet.create_account(f"ewa-{int(include_reversible)}").dict()
 
-    # Wait for HAF to process the block
-    haf_node.wait_number_of_blocks(1)
+    # Wait for HAF to process the block (need multiple blocks for reliable sync)
+    haf_node.wait_number_of_blocks(2)
 
     if not include_reversible:
         haf_node.wait_for_irreversible_block()
