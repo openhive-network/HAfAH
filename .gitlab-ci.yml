@@ -543,7 +543,8 @@ prepare_haf_image_testnet:
   - pytest --junitxml report.xml --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL
     -m $PYTEST_MARK
   tags:
-  - public-runner-docker
+  - data-cache-storage
+  - fast
 
 hafah_pytest_rest_api_pattern_tests:
   extends: .pytest_based_template
