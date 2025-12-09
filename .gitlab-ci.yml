@@ -33,18 +33,50 @@ variables:
     "host    all              hafah_user       0.0.0.0/0    trust"
     "host    all              all              0.0.0.0/0    scram-sha-256"
 
-
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
   DATA_CACHE_HIVE_PREFIX: "/cache/replay_data_hive"
   DATA_CACHE_HAF_PREFIX: "/cache/replay_data_haf"
+  # NFS cache configuration for data sharing across builders
+  DATA_CACHE_NFS_PREFIX: "/nfs/ci-cache"
   BLOCK_LOG_SOURCE_DIR_5M: /blockchain/block_log_5m
+  # HAF submodule commit - must match the 'ref:' in the include section below
+  # This is needed for service containers which can't access dotenv artifacts
+  HAF_COMMIT: "2c55a49ab1661a184a8bd6e9cf1434d88209a5b8"
 
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 - project: 'hive/haf'
-  ref: bf820442979eff6c7cb7e387f26cd4ccf9345f3c # develop
+  ref: 2c55a49ab1661a184a8bd6e9cf1434d88209a5b8   # feature/nfs-cache-manager
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
+
+validate_haf_commit:
+  stage: build
+  image: alpine:latest
+  script:
+  - |
+    set -e
+    apk add --no-cache git
+    SUBMODULE_COMMIT=$(cat .git/modules/haf/HEAD 2>/dev/null || git -C haf rev-parse HEAD)
+    INCLUDE_REF=$(grep -A2 "project:.*hive/haf" .gitlab-ci.yml | grep "ref:" | head -1 | sed 's/.*ref: *\([a-f0-9]*\).*/\1/' || true)
+    echo "HAF_COMMIT variable: $HAF_COMMIT"
+    echo "HAF submodule HEAD:  $SUBMODULE_COMMIT"
+    echo "Include ref:         $INCLUDE_REF"
+    ERRORS=0
+    if [ "$HAF_COMMIT" != "$SUBMODULE_COMMIT" ]; then
+      echo "ERROR: HAF_COMMIT variable does not match submodule commit!"
+      ERRORS=1
+    fi
+    if [ "$HAF_COMMIT" != "$INCLUDE_REF" ]; then
+      echo "ERROR: HAF_COMMIT variable does not match include ref!"
+      ERRORS=1
+    fi
+    if [ $ERRORS -eq 1 ]; then
+      exit 1
+    fi
+    echo "All HAF commit references are consistent"
+  tags:
+  - public-runner-docker
 
 verify_poetry_lock_sanity:
   extends: .verify_poetry_lock_sanity_template
@@ -78,7 +110,7 @@ prepare_hived_data:
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
   tags:
   - data-cache-storage
-  - hive-builder-9
+  - fast
 
 prepare_haf_image:
   extends: .prepare_haf_image
@@ -127,7 +159,7 @@ prepare_haf_data:
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
   tags:
   - data-cache-storage
-  - hive-builder-9
+  - fast
 
 .prepare_hafah_image:
   extends: .docker_image_builder_job
@@ -225,7 +257,7 @@ build_setup_docker_image:
 
   tags:
   - data-cache-storage
-  - hive-builder-9
+  - fast
 
 postgrest_pattern_tests:
   extends: .pattern_tests
@@ -282,7 +314,7 @@ new_style_postgrest_pattern_tests:
 
   tags:
   - data-cache-storage
-  - hive-builder-9
+  - fast
 
 postgrest_comparison_tests:
   extends: .comparison_tests
@@ -322,7 +354,7 @@ postgrest_comparison_tests:
       junit: wdir/jmeter_junit_report.xml
   tags:
   - data-cache-storage
-  - hive-builder-9
+  - fast
 
 postgrest_block_api_benchmark_tests:
   extends: .benchmark_tests
@@ -364,7 +396,7 @@ postgrest_rest_benchmark_tests:
       junit: tests/performance/junit-result.xml
   tags:
   - data-cache-storage
-  - hive-builder-9
+  - fast
 
 cleanup_hive_cache_manual:
   extends: .cleanup_cache_manual_template
@@ -373,7 +405,7 @@ cleanup_hive_cache_manual:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_hive_*"
   tags:
   - data-cache-storage
-  - hive-builder-9
+  - fast
 
 cleanup_haf_cache_manual:
   extends: .cleanup_cache_manual_template
@@ -382,7 +414,7 @@ cleanup_haf_cache_manual:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_haf_*"
   tags:
   - data-cache-storage
-  - hive-builder-9
+  - fast
 
 build_and_publish_image:
   stage: publish
@@ -409,16 +441,37 @@ prepare_haf_image_testnet:
   - public-runner-docker
   - hived-for-tests
 
-.hfm-only-service: &hfm-only-service
-  name: $HAF_IMAGE_NAME
-  alias: hfm-only-instance
+.haf-instance-with-nfs-fallback: &haf-instance-with-nfs-fallback
+  name: ${HAF_IMAGE_NAME}
+  alias: haf-instance
   variables:
-    # Allow access from any network to eliminate CI IP addressing problems when hfm runs as service
+    PGCTLTIMEOUT: 600
     PG_ACCESS: |
       "host    all              haf_admin        0.0.0.0/0    trust"
       "host    all              hived            0.0.0.0/0    trust"
       "host    all              hafah_user       0.0.0.0/0    trust"
       "host    all              all              0.0.0.0/0    scram-sha-256"
+    DATA_SOURCE: "${DATA_CACHE_HAF_PREFIX}_${HAF_COMMIT}"
+    DATA_SOURCE_NFS_PREFIX: "${DATA_CACHE_NFS_PREFIX}"
+    DATA_SOURCE_NFS_TYPE: "haf"
+    DATA_SOURCE_NFS_KEY: "${HAF_COMMIT}"
+  entrypoint:
+    - '/bin/bash'
+    - '-c'
+    - |
+      set -xeuo pipefail
+      ORIGINAL_SOURCE="${DATA_SOURCE}"
+      NFS_PREFIX="${DATA_SOURCE_NFS_PREFIX:-/nfs/ci-cache}"
+      NFS_TYPE="${DATA_SOURCE_NFS_TYPE:-haf}"
+      NFS_KEY="${DATA_SOURCE_NFS_KEY}"
+      if [[ ! -d "${ORIGINAL_SOURCE}/datadir" ]]; then
+        NFS_PATH="${NFS_PREFIX}/${NFS_TYPE}/${NFS_KEY}"
+        if [[ -d "${NFS_PATH}/datadir" ]]; then
+          export DATA_SOURCE="$NFS_PATH"
+        fi
+      fi
+      exec /home/haf_admin/docker_entrypoint.sh "$@"
+    - '/bin/bash'
   command: ["--execute-maintenance-script=${HAF_SOURCE_DIR}/scripts/maintenance-scripts/sleep_infinity.sh"]
 
 .hafah_pytest_fuctional_tests_base:
@@ -431,12 +484,12 @@ prepare_haf_image_testnet:
     artifacts: true
 
   services:
-  - *hfm-only-service
+  - *haf-instance-with-nfs-fallback
   - name: ${HAF_APP_IMAGE}
     alias: app-setup
     variables:
         # intentionally use setup way chosed in haf_api_node compose scripts
-      POSTGRES_URL: "postgresql://haf_admin@hfm-only-instance/haf_block_log"
+      POSTGRES_URL: "postgresql://haf_admin@haf-instance/haf_block_log"
     entrypoint:
     - '/bin/bash'
     - '-c'
@@ -453,7 +506,7 @@ prepare_haf_image_testnet:
 
   - name: ${HAF_APP_IMAGE}
     alias: app
-    command: ["--postgres-url=postgresql://hafah_user@hfm-only-instance/haf_block_log"]
+    command: ["--postgres-url=postgresql://hafah_user@haf-instance/haf_block_log"]
     entrypoint:
     - '/bin/bash'
     - '-c'
@@ -477,7 +530,7 @@ prepare_haf_image_testnet:
     GET_DEV_KEY_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/get_dev_key"
     CLI_WALLET_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/cli_wallet"
     DB_NAME: haf_block_log
-    DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
+    DB_URL: "postgresql://haf_admin@haf-instance:5432/$DB_NAME"
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: ${APP_PORT}
     DIRECT_CALLS: 0
@@ -501,12 +554,12 @@ hafah_pytest_rest_api_pattern_tests:
   - job: prepare_postgrest_hafah_image
     artifacts: true
   services:
-  - *hfm-only-service
+  - *haf-instance-with-nfs-fallback
   - name: ${HAF_APP_IMAGE}
     alias: app-setup
     variables:
         # intentionally use setup way chosed in haf_api_node compose scripts
-      POSTGRES_URL: "postgresql://haf_admin@hfm-only-instance/haf_block_log"
+      POSTGRES_URL: "postgresql://haf_admin@haf-instance/haf_block_log"
     command: ["install_app"]
     entrypoint:
     - '/bin/bash'
@@ -524,7 +577,7 @@ hafah_pytest_rest_api_pattern_tests:
 
   - name: ${HAF_APP_IMAGE}
     alias: app
-    command: ["--postgres-url=postgresql://hafah_user@hfm-only-instance/haf_block_log"]
+    command: ["--postgres-url=postgresql://hafah_user@haf-instance/haf_block_log"]
     entrypoint:
     - '/bin/bash'
     - '-c'
@@ -544,7 +597,7 @@ hafah_pytest_rest_api_pattern_tests:
     POETRY_INSTALL_ROOT_DIR: $CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools
     TAVERN_DIR: $CI_PROJECT_DIR/tests/tavern
     DB_NAME: haf_block_log
-    DB_URL: "postgresql://haf_admin@hfm-only-instance:5432/$DB_NAME"
+    DB_URL: "postgresql://haf_admin@haf-instance:5432/$DB_NAME"
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_HOST: app
@@ -561,7 +614,7 @@ hafah_pytest_rest_api_pattern_tests:
     - "**/*.out.json"
   tags:
   - data-cache-storage
-  - hive-builder-9
+  - fast
 
 hafah_pytest_fuctional_tests_part1:
   extends: .hafah_pytest_fuctional_tests_base

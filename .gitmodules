@@ -1,3 +1,4 @@
 [submodule "haf"]
 	path = haf
 	url = ../haf.git
+	branch = feature/nfs-cache-manager
