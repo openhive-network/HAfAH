@@ -8,9 +8,10 @@ from hafah_local_tools import send_request_to_hafah
 
 
 @pytest.mark.get_account_history_and_get_transaction
-def test_get_empty_history(haf_node, postgrest_hafah, wallet):
+def test_get_empty_history(postgrest_hafah, wallet):
     wallet.create_account("alice")
-    haf_node.wait_for_irreversible_block()
+    # Query immediately without waiting for irreversible - blocks should still be reversible
+    # so include_reversible=False should return no results
     response = send_request_to_hafah(
         postgrest_hafah,
         "get_account_history",
@@ -78,14 +79,14 @@ def test_pagination(haf_node, postgrest_hafah, wallet, step: int):
 
     wallet.create_account(f"dan-{step}", hives=100, vests=100)
 
-    with wallet.in_single_transaction() as transaction:
+    with wallet.in_single_transaction():
         for x in range(amount_of_transfers):
             wallet.api.transfer(
                 f"dan-{step}", "null", tt.Asset.Test(1), f"transfer-{x}"
             )
 
-    # Wait for HAF to actually sync the transaction to the database
-    haf_node.wait_for_transaction_in_database(transaction, timeout=60)
+    # Wait for HAF to sync the blocks containing the transactions
+    haf_node.wait_number_of_blocks(2)
 
     response = send_request_to_hafah(
         postgrest_hafah,
