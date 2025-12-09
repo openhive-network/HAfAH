@@ -474,6 +474,19 @@ prepare_haf_image_testnet:
     - '/bin/bash'
   command: ["--execute-maintenance-script=${HAF_SOURCE_DIR}/scripts/maintenance-scripts/sleep_infinity.sh"]
 
+# Testnet HAF instance - starts with empty database, no pre-existing data required
+.haf-instance-testnet: &haf-instance-testnet
+  name: ${HAF_IMAGE_NAME}
+  alias: haf-instance
+  variables:
+    PGCTLTIMEOUT: 600
+    PG_ACCESS: |
+      "host    all              haf_admin        0.0.0.0/0    trust"
+      "host    all              hived            0.0.0.0/0    trust"
+      "host    all              hafah_user       0.0.0.0/0    trust"
+      "host    all              all              0.0.0.0/0    scram-sha-256"
+  command: ["--execute-maintenance-script=${HAF_SOURCE_DIR}/scripts/maintenance-scripts/sleep_infinity.sh"]
+
 .hafah_pytest_fuctional_tests_base:
   extends: .pytest_based_template
   stage: test
@@ -484,7 +497,7 @@ prepare_haf_image_testnet:
     artifacts: true
 
   services:
-  - *haf-instance-with-nfs-fallback
+  - *haf-instance-testnet
   - name: ${HAF_APP_IMAGE}
     alias: app-setup
     variables:
@@ -543,8 +556,7 @@ prepare_haf_image_testnet:
   - pytest --junitxml report.xml --postgrest-hafah-adress=app:$APP_PORT --postgres-db-url=$DB_URL
     -m $PYTEST_MARK
   tags:
-  - data-cache-storage
-  - fast
+  - public-runner-docker
 
 hafah_pytest_rest_api_pattern_tests:
   extends: .pytest_based_template
