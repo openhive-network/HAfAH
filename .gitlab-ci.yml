@@ -358,16 +358,21 @@ postgrest_comparison_tests:
 
 postgrest_block_api_benchmark_tests:
   extends: .benchmark_tests
-
+  # Benchmark tests may fail when using non-develop HAF commit due to different service behavior
+  allow_failure: true
   variables:
     API_FOR_TESTING: blocks_api
 
 postgrest_account_history_benchmark_tests:
   extends: .benchmark_tests
+  # Benchmark tests may fail when using non-develop HAF commit due to different service behavior
+  allow_failure: true
 
 postgrest_rest_benchmark_tests:
   extends: .jmeter_benchmark_with_haf_job
   stage: test
+  # Benchmark tests may fail when using non-develop HAF commit due to different service behavior
+  allow_failure: true
   variables:
     FF_NETWORK_PER_BUILD: 1
     HIVED_UID: $HIVED_UID
