@@ -138,7 +138,7 @@ generate-wax-spec:
   extends: .generate_swagger_package
   stage: build
   variables:
-    INPUT_JSON_SWAGGER_FILE: "${BUILT_JSON_SWAGGER_FILE}"
+    INPUT_JSON_SWAGGER_FILE: "${CI_PROJECT_DIR}/build/swagger-doc.json"
     NAMESPACE: "hafah"
     API_TYPE: "rest"
     NPM_PACKAGE_SCOPE: "@hiveio"
