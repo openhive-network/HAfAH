@@ -655,10 +655,11 @@ deploy-wax-spec-dev-package:
   before_script:
     - . "${NVM_DIR}/nvm.sh"
     - nvm use "${NODEJS_VERSION}"
-    - export PACKAGE_TGZ_PATH=$(ls ${CI_PROJECT_DIR}/build/*.tgz | head -1)
-    - echo "Using package: ${PACKAGE_TGZ_PATH}"
-    - cd "${CI_PROJECT_DIR}"
-    - tar -xf "${PACKAGE_TGZ_PATH}" -C "${SOURCE_DIR}" --strip-components=1
+    - |
+      PACKAGE_TGZ_PATH=$(ls ${CI_PROJECT_DIR}/build/*.tgz | head -1)
+      echo "Using package: ${PACKAGE_TGZ_PATH}"
+      cd "${CI_PROJECT_DIR}"
+      tar -xf "${PACKAGE_TGZ_PATH}" -C "${SOURCE_DIR}" --strip-components=1
   needs:
   - job: generate-wax-spec
     artifacts: true
@@ -675,10 +676,11 @@ deploy-wax-spec-production-public-npm:
   before_script:
     - . "${NVM_DIR}/nvm.sh"
     - nvm use "${NODEJS_VERSION}"
-    - export PACKAGE_TGZ_PATH=$(ls ${CI_PROJECT_DIR}/build/*.tgz | head -1)
-    - echo "Using package: ${PACKAGE_TGZ_PATH}"
-    - cd "${CI_PROJECT_DIR}"
-    - tar -xf "${PACKAGE_TGZ_PATH}" -C "${SOURCE_DIR}" --strip-components=1
+    - |
+      PACKAGE_TGZ_PATH=$(ls ${CI_PROJECT_DIR}/build/*.tgz | head -1)
+      echo "Using package: ${PACKAGE_TGZ_PATH}"
+      cd "${CI_PROJECT_DIR}"
+      tar -xf "${PACKAGE_TGZ_PATH}" -C "${SOURCE_DIR}" --strip-components=1
   needs:
   - job: generate-wax-spec
     artifacts: true
