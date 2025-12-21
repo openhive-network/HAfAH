@@ -97,8 +97,6 @@ prepare_hived_image:
     REGISTRY_PASS: $HIVED_CI_IMGBUILDER_PASSWORD
   tags:
   - public-runner-docker
-  - hived-for-tests
-  - hived
 
 prepare_hived_data:
   extends: .prepare_hived_data_5m
@@ -123,8 +121,6 @@ prepare_haf_image:
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
   tags:
   - public-runner-docker
-  - hived-for-tests
-  - hived
 
 extract-swagger-json:
   extends: .filter_out_swagger_json
@@ -202,8 +198,6 @@ prepare_haf_data:
 
   tags:
   - public-runner-docker
-  - hived-for-tests
-  - hived
 
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
@@ -438,8 +432,6 @@ build_and_publish_image:
   - scripts/ci-helpers/build_and_publish_instance.sh
   tags:
   - public-runner-docker
-  - hived-for-tests
-  - hived
 
 prepare_haf_image_testnet:
   extends: .prepare_haf_image
@@ -452,7 +444,6 @@ prepare_haf_image_testnet:
     BINARY_CACHE_PATH: "$CI_PROJECT_DIR/haf-testnet-binaries"
   tags:
   - public-runner-docker
-  - hived-for-tests
 
 .haf-instance-with-nfs-fallback: &haf-instance-with-nfs-fallback
   name: ${HAF_IMAGE_NAME}
