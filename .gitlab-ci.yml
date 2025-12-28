@@ -63,7 +63,7 @@ variables:
   BLOCK_LOG_SOURCE_DIR_5M: /blockchain/block_log_5m
   # HAF submodule commit - must match the 'ref:' in the include section below
   # This is needed for service containers which can't access dotenv artifacts
-  HAF_COMMIT: "7559639514d53f8b7e644a61fb2172468427abf9"
+  HAF_COMMIT: "87b4e8a411bb3ab17d14dc8edc8358b384dcaa54"
   # Enable CI-specific PostgreSQL config with reduced memory for HAF service containers
   HAF_CI_MODE: "1"
 
@@ -73,7 +73,7 @@ variables:
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 - project: 'hive/haf'
-  ref: 7559639514d53f8b7e644a61fb2172468427abf9   # develop (Python 3.14)
+  ref: 87b4e8a411bb3ab17d14dc8edc8358b384dcaa54   # develop (CI base image v2)
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
 
