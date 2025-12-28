@@ -1,4 +1,5 @@
 stages:
+- detect
 - build
 - test
 - publish
@@ -34,27 +35,25 @@ variables:
     "host    all              all              0.0.0.0/0    scram-sha-256"
 
   # =============================================================================
-  # Quick Test Mode
+  # Quick Test / Auto-Skip Mode
   # =============================================================================
-  # Skip data preparation jobs and use cached HAF data directly.
-  # Useful for testing SQL changes, test fixes, etc. without full replay.
+  # Two ways to skip data preparation and use cached HAF data:
   #
-  # Usage:
-  #   1. Go to CI/CD → Run Pipeline
-  #   2. Set variables:
-  #      QUICK_TEST=true
-  #      QUICK_TEST_HAF_COMMIT=<sha>  (from cache list below)
+  # 1. AUTOMATIC: When only tests/docs/SQL change, data prep is automatically
+  #    skipped and cached data is used. No configuration needed.
+  #
+  # 2. MANUAL: Set QUICK_TEST=true to force skip mode with a specific cache:
+  #    - QUICK_TEST=true
+  #    - QUICK_TEST_HAF_COMMIT=<sha>  (required - find with list below)
   #
   # Find available caches:
   #   ssh hive-builder-10 'ls -lt /nfs/ci-cache/haf/*.tar | head -5'
   # Or use: ../haf/scripts/ci-helpers/list-haf-caches.sh --recent
-  #
-  # When QUICK_TEST=true:
-  #   - prepare_hived_data and prepare_haf_data jobs are skipped
-  #   - Test jobs use cached data from NFS based on QUICK_TEST_HAF_COMMIT
   # =============================================================================
   QUICK_TEST: "false"
   QUICK_TEST_HAF_COMMIT: ""   # Required when QUICK_TEST=true - HAF commit with cached data
+  # Auto-populated by detect_changes job:
+  AUTO_SKIP_BUILD: "false"    # Set to true when only tests/docs/SQL changed
 
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
   DATA_CACHE_HIVE_PREFIX: "/cache/replay_data_hive"
@@ -77,6 +76,127 @@ include:
   ref: 7559639514d53f8b7e644a61fb2172468427abf9   # develop (Python 3.14)
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
+
+# =============================================================================
+# Detect Changes - determines if we can skip data preparation
+# Outputs via dotenv artifact:
+#   AUTO_SKIP_BUILD  - true if data prep can be skipped
+#   HAF_COMMIT       - commit SHA for cached data (when skipping)
+# =============================================================================
+detect_changes:
+  stage: detect
+  image: alpine:latest
+  rules:
+    # Skip for tags (always do full build for releases)
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: on_success
+  script:
+    - |
+      set -e
+      apk add --no-cache git docker-cli
+
+      # Initialize defaults
+      CAN_SKIP_BUILD=false
+      CACHE_COMMIT=""
+
+      # Handle manual QUICK_TEST mode
+      if [ "$QUICK_TEST" = "true" ]; then
+        echo "=== Manual QUICK_TEST Mode ==="
+        CAN_SKIP_BUILD=true
+        CACHE_COMMIT="${QUICK_TEST_HAF_COMMIT}"
+        if [ -z "$CACHE_COMMIT" ]; then
+          echo "ERROR: QUICK_TEST_HAF_COMMIT must be set when QUICK_TEST=true"
+          echo ""
+          echo "Find available caches:"
+          echo "  ssh hive-builder-10 'ls -lt /nfs/ci-cache/haf/*.tar | head -5'"
+          exit 1
+        fi
+        echo "Using cached data from: $CACHE_COMMIT"
+      else
+        # Automatic detection mode
+        echo "=== Detecting Changed Files ==="
+
+        # Get changed files based on pipeline type
+        if [ -n "${CI_MERGE_REQUEST_DIFF_BASE_SHA:-}" ]; then
+          BASE_SHA="$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+          echo "MR pipeline: comparing against target branch"
+        elif [ "${CI_PIPELINE_SOURCE:-}" = "push" ]; then
+          BASE_SHA="HEAD~1"
+          echo "Push pipeline: comparing against previous commit"
+        else
+          BASE_SHA=$(git merge-base HEAD origin/develop 2>/dev/null || echo "HEAD~1")
+          echo "Other pipeline: comparing against develop"
+        fi
+
+        echo "Comparing $BASE_SHA to HEAD"
+        CHANGED_FILES=$(git diff --name-only "$BASE_SHA" HEAD 2>/dev/null || git diff --name-only HEAD~1 HEAD)
+
+        echo "Changed files:"
+        echo "$CHANGED_FILES" | head -50
+
+        # Skip patterns: tests, docs, SQL, markdown (SQL doesn't require rebuild, just replay)
+        SKIP_PATTERNS="^tests/|^docs/|\.sql$|\.md$|^README|^CHANGELOG|^LICENSE|^CLAUDE"
+
+        NEEDS_BUILD=$(echo "$CHANGED_FILES" | grep -vE "$SKIP_PATTERNS" || true)
+
+        if [ -z "$NEEDS_BUILD" ]; then
+          echo ""
+          echo "=== Can skip data prep (only tests/docs/SQL changed) ==="
+          CAN_SKIP_BUILD=true
+
+          # Find cached data from NFS
+          NFS_CACHE_PATH="/nfs/ci-cache/haf"
+          if [ -d "$NFS_CACHE_PATH" ]; then
+            echo "Looking for cached HAF data..."
+            # Docker login for image verification
+            echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY" 2>/dev/null || true
+
+            for TAR in $(ls -t "$NFS_CACHE_PATH"/*.tar 2>/dev/null | head -5); do
+              TEST_COMMIT=$(basename "$TAR" .tar)
+              CACHE_SHORT=$(echo "$TEST_COMMIT" | cut -c1-8)
+              IMG="registry.gitlab.syncad.com/hive/haf:${CACHE_SHORT}"
+
+              if docker manifest inspect "$IMG" >/dev/null 2>&1; then
+                CACHE_COMMIT="$TEST_COMMIT"
+                echo "Found cached data with valid image: $CACHE_COMMIT"
+                break
+              else
+                echo "Cache $TEST_COMMIT missing Docker image, trying next..."
+              fi
+            done
+
+            if [ -z "$CACHE_COMMIT" ]; then
+              echo "WARNING: No cached data with valid images found - cannot skip"
+              CAN_SKIP_BUILD=false
+            fi
+          else
+            echo "WARNING: NFS cache path not found - cannot skip"
+            CAN_SKIP_BUILD=false
+          fi
+        else
+          echo ""
+          echo "=== Full data prep required ==="
+          echo "Files requiring data prep:"
+          echo "$NEEDS_BUILD" | head -20
+        fi
+      fi
+
+      # Export results
+      echo "AUTO_SKIP_BUILD=$CAN_SKIP_BUILD" >> detect_changes.env
+      if [ "$CAN_SKIP_BUILD" = "true" ] && [ -n "$CACHE_COMMIT" ]; then
+        echo "HAF_COMMIT=$CACHE_COMMIT" >> detect_changes.env
+      fi
+
+      echo ""
+      echo "=== Results ==="
+      cat detect_changes.env
+  artifacts:
+    reports:
+      dotenv: detect_changes.env
+    expire_in: 1 day
+  tags:
+    - data-cache-storage  # Needs NFS access to find caches
 
 validate_haf_commit:
   stage: build
@@ -127,6 +247,9 @@ prepare_hived_image:
 prepare_hived_data:
   extends: .prepare_hived_data_5m
   needs:
+  - job: detect_changes
+    artifacts: true
+    optional: true
   - job: prepare_hived_image
     artifacts: true
   stage: build
@@ -135,7 +258,7 @@ prepare_hived_data:
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
   rules:
-  - if: $QUICK_TEST == "true"
+  - if: $QUICK_TEST == "true" || $AUTO_SKIP_BUILD == "true"
     when: never
   - when: on_success
   tags:
@@ -178,6 +301,9 @@ generate-wax-spec:
 prepare_haf_data:
   extends: .prepare_haf_data_5m
   needs:
+  - job: detect_changes
+    artifacts: true
+    optional: true
   - job: prepare_haf_image
     artifacts: true
   stage: build
@@ -186,7 +312,7 @@ prepare_haf_data:
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
   rules:
-  - if: $QUICK_TEST == "true"
+  - if: $QUICK_TEST == "true" || $AUTO_SKIP_BUILD == "true"
     when: never
   - when: on_success
   tags:
@@ -256,8 +382,6 @@ build_setup_docker_image:
     HAF_APP_IMAGE: ""
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
-    # Use QUICK_TEST_HAF_COMMIT for cache key when in quick test mode
-    HAF_COMMIT: ${QUICK_TEST_HAF_COMMIT:-$HAF_COMMIT}
 
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
     POETRY_INSTALL_ROOT_DIR: ${POETRY_INSTALL_DIR}
@@ -270,6 +394,9 @@ build_setup_docker_image:
     HIVED_UID: $HIVED_UID
 
   needs:
+  - job: detect_changes
+    artifacts: true
+    optional: true
   - job: prepare_haf_data
     artifacts: true
     optional: true
@@ -332,12 +459,13 @@ new_style_postgrest_pattern_tests:
     COMPARISON_TESTS_DIR: "$CI_PROJECT_DIR/haf/hive/tests/python/api_tests/comparsion_tests"
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
-    # Use QUICK_TEST_HAF_COMMIT for cache key when in quick test mode
-    HAF_COMMIT: ${QUICK_TEST_HAF_COMMIT:-$HAF_COMMIT}
 
     HIVED_UID: $HIVED_UID
 
   needs:
+  - job: detect_changes
+    artifacts: true
+    optional: true
   - job: prepare_haf_data
     artifacts: true
     optional: true
@@ -379,9 +507,10 @@ postgrest_comparison_tests:
     HIVED_UID: $HIVED_UID
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: $APP_PORT
-    # Use QUICK_TEST_HAF_COMMIT for cache key when in quick test mode
-    HAF_COMMIT: ${QUICK_TEST_HAF_COMMIT:-$HAF_COMMIT}
   needs:
+  - job: detect_changes
+    artifacts: true
+    optional: true
   - job: prepare_haf_data
     artifacts: true
     optional: true
@@ -424,9 +553,10 @@ postgrest_rest_benchmark_tests:
     HIVED_UID: $HIVED_UID
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: $APP_PORT
-    # Use QUICK_TEST_HAF_COMMIT for cache key when in quick test mode
-    HAF_COMMIT: ${QUICK_TEST_HAF_COMMIT:-$HAF_COMMIT}
   needs:
+  - job: detect_changes
+    artifacts: true
+    optional: true
   - job: prepare_haf_data
     artifacts: true
     optional: true
@@ -615,10 +745,10 @@ hafah_pytest_rest_api_pattern_tests:
   # Pattern tests are tied to specific blockchain data indexed by develop branch HAF
   # Allow failure when using a different HAF commit (feature branches with HAF changes)
   allow_failure: true
-  variables:
-    # Use QUICK_TEST_HAF_COMMIT for cache key when in quick test mode
-    HAF_COMMIT: ${QUICK_TEST_HAF_COMMIT:-$HAF_COMMIT}
   needs:
+  - job: detect_changes
+    artifacts: true
+    optional: true
   - job: prepare_haf_data
     artifacts: true
     optional: true
