@@ -45,6 +45,9 @@ variables:
   # Enable CI-specific PostgreSQL config with reduced memory for HAF service containers
   HAF_CI_MODE: "1"
 
+  # Python 3.14 compatibility - allow PyO3-based packages to build
+  PYO3_USE_ABI3_FORWARD_COMPATIBILITY: "1"
+
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 - project: 'hive/haf'
