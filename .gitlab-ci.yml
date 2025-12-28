@@ -33,6 +33,29 @@ variables:
     "host    all              hafah_user       0.0.0.0/0    trust"
     "host    all              all              0.0.0.0/0    scram-sha-256"
 
+  # =============================================================================
+  # Quick Test Mode
+  # =============================================================================
+  # Skip data preparation jobs and use cached HAF data directly.
+  # Useful for testing SQL changes, test fixes, etc. without full replay.
+  #
+  # Usage:
+  #   1. Go to CI/CD → Run Pipeline
+  #   2. Set variables:
+  #      QUICK_TEST=true
+  #      QUICK_TEST_HAF_COMMIT=<sha>  (from cache list below)
+  #
+  # Find available caches:
+  #   ssh hive-builder-10 'ls -lt /nfs/ci-cache/haf/*.tar | head -5'
+  # Or use: ../haf/scripts/ci-helpers/list-haf-caches.sh --recent
+  #
+  # When QUICK_TEST=true:
+  #   - prepare_hived_data and prepare_haf_data jobs are skipped
+  #   - Test jobs use cached data from NFS based on QUICK_TEST_HAF_COMMIT
+  # =============================================================================
+  QUICK_TEST: "false"
+  QUICK_TEST_HAF_COMMIT: ""   # Required when QUICK_TEST=true - HAF commit with cached data
+
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
   DATA_CACHE_HIVE_PREFIX: "/cache/replay_data_hive"
   DATA_CACHE_HAF_PREFIX: "/cache/replay_data_haf"
@@ -111,6 +134,10 @@ prepare_hived_data:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
+  rules:
+  - if: $QUICK_TEST == "true"
+    when: never
+  - when: on_success
   tags:
   - data-cache-storage
   - fast
@@ -158,6 +185,10 @@ prepare_haf_data:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
+  rules:
+  - if: $QUICK_TEST == "true"
+    when: never
+  - when: on_success
   tags:
   - data-cache-storage
   - fast
@@ -225,6 +256,8 @@ build_setup_docker_image:
     HAF_APP_IMAGE: ""
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
+    # Use QUICK_TEST_HAF_COMMIT for cache key when in quick test mode
+    HAF_COMMIT: ${QUICK_TEST_HAF_COMMIT:-$HAF_COMMIT}
 
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
     POETRY_INSTALL_ROOT_DIR: ${POETRY_INSTALL_DIR}
@@ -239,6 +272,7 @@ build_setup_docker_image:
   needs:
   - job: prepare_haf_data
     artifacts: true
+    optional: true
 
   before_script:
   - !reference [.haf_app_pattern_tests_template, before_script]
@@ -298,14 +332,18 @@ new_style_postgrest_pattern_tests:
     COMPARISON_TESTS_DIR: "$CI_PROJECT_DIR/haf/hive/tests/python/api_tests/comparsion_tests"
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
+    # Use QUICK_TEST_HAF_COMMIT for cache key when in quick test mode
+    HAF_COMMIT: ${QUICK_TEST_HAF_COMMIT:-$HAF_COMMIT}
 
     HIVED_UID: $HIVED_UID
 
   needs:
   - job: prepare_haf_data
     artifacts: true
+    optional: true
   - job: prepare_hived_data
     artifacts: true
+    optional: true
 
   artifacts:
     paths:
@@ -341,9 +379,12 @@ postgrest_comparison_tests:
     HIVED_UID: $HIVED_UID
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: $APP_PORT
+    # Use QUICK_TEST_HAF_COMMIT for cache key when in quick test mode
+    HAF_COMMIT: ${QUICK_TEST_HAF_COMMIT:-$HAF_COMMIT}
   needs:
   - job: prepare_haf_data
     artifacts: true
+    optional: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
 
@@ -383,9 +424,12 @@ postgrest_rest_benchmark_tests:
     HIVED_UID: $HIVED_UID
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: $APP_PORT
+    # Use QUICK_TEST_HAF_COMMIT for cache key when in quick test mode
+    HAF_COMMIT: ${QUICK_TEST_HAF_COMMIT:-$HAF_COMMIT}
   needs:
   - job: prepare_haf_data
     artifacts: true
+    optional: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
   script:
@@ -571,9 +615,13 @@ hafah_pytest_rest_api_pattern_tests:
   # Pattern tests are tied to specific blockchain data indexed by develop branch HAF
   # Allow failure when using a different HAF commit (feature branches with HAF changes)
   allow_failure: true
+  variables:
+    # Use QUICK_TEST_HAF_COMMIT for cache key when in quick test mode
+    HAF_COMMIT: ${QUICK_TEST_HAF_COMMIT:-$HAF_COMMIT}
   needs:
   - job: prepare_haf_data
     artifacts: true
+    optional: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
   services:
