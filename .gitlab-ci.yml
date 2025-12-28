@@ -82,13 +82,12 @@ include:
 # Outputs via dotenv artifact:
 #   AUTO_SKIP_BUILD  - true if data prep can be skipped
 #   HAF_COMMIT       - commit SHA for cached data (when skipping)
+#
+# Note: Actual cache handling is done by cache-manager.sh from common-ci-configuration
 # =============================================================================
 detect_changes:
   stage: detect
   image: alpine:latest
-  variables:
-    # Fetch enough history to compare changes
-    GIT_DEPTH: 100
   rules:
     # Skip for tags (always do full build for releases)
     - if: $CI_COMMIT_TAG
@@ -97,7 +96,7 @@ detect_changes:
   script:
     - |
       set -e
-      apk add --no-cache git docker-cli
+      apk add --no-cache git
 
       # Initialize defaults
       CAN_SKIP_BUILD=false
@@ -120,30 +119,16 @@ detect_changes:
         # Automatic detection mode
         echo "=== Detecting Changed Files ==="
 
-        # Get changed files based on pipeline type
-        CHANGED_FILES=""
-        if [ -n "${CI_MERGE_REQUEST_DIFF_BASE_SHA:-}" ]; then
+        # Get changed files - use git show for shallow clones (CI default)
+        CHANGED_FILES=$(git show --name-only --pretty=format: HEAD 2>/dev/null | grep -v '^$' || true)
+
+        # Fallback for MR pipelines
+        if [ -z "$CHANGED_FILES" ] && [ -n "${CI_MERGE_REQUEST_DIFF_BASE_SHA:-}" ]; then
           echo "MR pipeline: comparing against target branch"
-          # Fetch the base commit for MR comparison
-          git fetch origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" --depth=1 2>/dev/null || true
           CHANGED_FILES=$(git diff --name-only "$CI_MERGE_REQUEST_DIFF_BASE_SHA" HEAD 2>/dev/null || true)
         fi
 
-        # If MR diff failed or not an MR pipeline, try push comparison
-        if [ -z "$CHANGED_FILES" ] && [ "${CI_PIPELINE_SOURCE:-}" = "push" ]; then
-          echo "Push pipeline: comparing against previous commit"
-          # For shallow clones, git show gives files changed in current commit
-          CHANGED_FILES=$(git show --name-only --pretty=format: HEAD 2>/dev/null | grep -v '^$' || true)
-        fi
-
-        # Fallback: compare against develop
-        if [ -z "$CHANGED_FILES" ]; then
-          echo "Fallback: comparing against develop"
-          git fetch origin develop --depth=1 2>/dev/null || true
-          CHANGED_FILES=$(git diff --name-only origin/develop HEAD 2>/dev/null || true)
-        fi
-
-        # Last resort: if we still can't get changed files, require full build
+        # Last resort: require full build
         if [ -z "$CHANGED_FILES" ]; then
           echo "WARNING: Could not determine changed files - requiring full build"
           CHANGED_FILES="unknown-changes"
@@ -152,7 +137,7 @@ detect_changes:
         echo "Changed files:"
         echo "$CHANGED_FILES" | head -50
 
-        # Skip patterns: tests, docs, SQL, markdown (SQL doesn't require rebuild, just replay)
+        # Skip patterns: tests, docs, SQL, markdown
         SKIP_PATTERNS="^tests/|^docs/|\.sql$|\.md$|^README|^CHANGELOG|^LICENSE|^CLAUDE"
 
         NEEDS_BUILD=$(echo "$CHANGED_FILES" | grep -vE "$SKIP_PATTERNS" || true)
@@ -162,29 +147,14 @@ detect_changes:
           echo "=== Can skip data prep (only tests/docs/SQL changed) ==="
           CAN_SKIP_BUILD=true
 
-          # Find cached data from NFS
+          # Find most recent cache from NFS - cache-manager will handle the rest
           NFS_CACHE_PATH="/nfs/ci-cache/haf"
           if [ -d "$NFS_CACHE_PATH" ]; then
-            echo "Looking for cached HAF data..."
-            # Docker login for image verification
-            echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY" 2>/dev/null || true
-
-            for TAR in $(ls -t "$NFS_CACHE_PATH"/*.tar 2>/dev/null | head -5); do
-              TEST_COMMIT=$(basename "$TAR" .tar)
-              CACHE_SHORT=$(echo "$TEST_COMMIT" | cut -c1-8)
-              IMG="registry.gitlab.syncad.com/hive/haf:${CACHE_SHORT}"
-
-              if docker manifest inspect "$IMG" >/dev/null 2>&1; then
-                CACHE_COMMIT="$TEST_COMMIT"
-                echo "Found cached data with valid image: $CACHE_COMMIT"
-                break
-              else
-                echo "Cache $TEST_COMMIT missing Docker image, trying next..."
-              fi
-            done
-
-            if [ -z "$CACHE_COMMIT" ]; then
-              echo "WARNING: No cached data with valid images found - cannot skip"
+            CACHE_COMMIT=$(ls -t "$NFS_CACHE_PATH"/*.tar 2>/dev/null | head -1 | xargs -r basename | sed 's/\.tar$//' || true)
+            if [ -n "$CACHE_COMMIT" ]; then
+              echo "Using most recent cache: $CACHE_COMMIT"
+            else
+              echo "WARNING: No cached data found - cannot skip"
               CAN_SKIP_BUILD=false
             fi
           else
