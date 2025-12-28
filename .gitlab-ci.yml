@@ -658,14 +658,15 @@ prepare_haf_image_testnet:
 .hafah_pytest_fuctional_tests_base:
   extends: .pytest_based_template
   stage: test
-  # Allow failure until psycopg2-binary adds Python 3.14 wheels
-  # (haf-local-tools dependency, requires pg_config to build from source)
-  allow_failure: true
   needs:
   - job: prepare_haf_image_testnet
     artifacts: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
+  before_script:
+    # Install libpq-dev for psycopg2-binary build (no Python 3.14 wheels yet)
+    - sudo apt-get update && sudo apt-get install -y libpq-dev
+    - !reference [.pytest_based_template, before_script]
 
   services:
   - *haf-instance-testnet
