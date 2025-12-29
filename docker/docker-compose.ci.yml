@@ -1,0 +1,75 @@
+name: 'hafah-ci'
+services:
+  haf:
+    image: ${HAF_IMAGE:-registry.gitlab.syncad.com/hive/haf/instance:latest}
+    entrypoint: /home/haf_admin/docker_entrypoint.sh
+    command: ["--execute-maintenance-script=/home/haf_admin/haf/scripts/maintenance-scripts/sleep_infinity.sh"]
+    environment:
+      PGCTLTIMEOUT: 600
+      HIVED_UID: ${HIVED_UID:-1000}
+      DATADIR: /home/hived/datadir
+      SHM_DIR: /home/hived/shm_dir
+      PG_ACCESS: |
+        host    all    haf_admin      all    trust
+        host    all    hived          all    trust
+        host    all    hafah_user     all    trust
+        host    all    all            all    scram-sha-256
+    ports:
+      - "5432:5432"
+    volumes:
+      - haf_datadir:/home/hived/datadir
+      - haf_shmdir:/home/hived/shm_dir
+    networks:
+      haf-network:
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U haf_admin -d haf_block_log -c 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 120s
+
+  hafah-setup:
+    image: ${HAFAH_IMAGE:-registry.gitlab.syncad.com/hive/hafah:latest}
+    command: ["install_app"]
+    environment:
+      POSTGRES_URL: postgresql://haf_admin@haf:5432/haf_block_log
+    networks:
+      haf-network:
+    depends_on:
+      haf:
+        condition: service_healthy
+
+  hafah:
+    image: ${HAFAH_IMAGE:-registry.gitlab.syncad.com/hive/hafah:latest}
+    command: ["--postgres-url=postgresql://hafah_user@haf:5432/haf_block_log"]
+    ports:
+      - "${HAFAH_PORT:-6543}:6543"
+    networks:
+      haf-network:
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:6543/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    depends_on:
+      hafah-setup:
+        condition: service_completed_successfully
+
+networks:
+  haf-network:
+    name: haf-network
+
+volumes:
+  haf_datadir:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${HAF_DATA_DIRECTORY:-/tmp/haf-data}
+  haf_shmdir:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${HAF_SHM_DIRECTORY:-/tmp/haf-shm}
