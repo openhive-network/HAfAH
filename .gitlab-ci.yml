@@ -703,7 +703,8 @@ prepare_haf_image_testnet:
 hafah_pytest_rest_api_pattern_tests:
   extends: .pytest_based_template
   stage: test
-  image: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-builder:latest
+  # Use specific tag with util-linux for NFS flock support (not :latest which has BusyBox flock)
+  image: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-builder:${DOCKER_BUILDER_TAG}
   # Pattern tests are tied to specific blockchain data indexed by develop branch HAF
   # Allow failure when using a different HAF commit (feature branches with HAF changes)
   allow_failure: true
@@ -719,7 +720,7 @@ hafah_pytest_rest_api_pattern_tests:
   - job: prepare_postgrest_hafah_image
     artifacts: true
   services:
-  - name: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-dind:latest
+  - name: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-dind:${DOCKER_DIND_TAG}
     alias: docker
   variables:
     DOCKER_HOST: tcp://docker:2376
