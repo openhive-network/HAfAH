@@ -3,7 +3,7 @@ services:
   haf:
     image: ${HAF_IMAGE:-registry.gitlab.syncad.com/hive/haf/instance:latest}
     entrypoint: /home/haf_admin/docker_entrypoint.sh
-    command: ["--execute-maintenance-script=/home/haf_admin/haf/scripts/maintenance-scripts/sleep_infinity.sh"]
+    command: ["--execute-maintenance-script=/home/haf_admin/source/scripts/maintenance-scripts/sleep_infinity.sh"]
     environment:
       PGCTLTIMEOUT: 600
       HIVED_UID: ${HIVED_UID:-1000}
