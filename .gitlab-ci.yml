@@ -726,8 +726,7 @@ hafah_pytest_rest_api_pattern_tests:
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_CERT_PATH: "/certs/client"
     DOCKER_TLS_VERIFY: 1
-    # Cache paths
-    LOCAL_HAF_CACHE: "${DATA_CACHE_HAF_PREFIX}_${HAF_COMMIT}"
+    # Data directories for docker-compose bind mounts
     HAF_DATA_DIRECTORY: "${CI_PROJECT_DIR}/haf-data"
     HAF_SHM_DIRECTORY: "${CI_PROJECT_DIR}/haf-shm"
     # Test configuration
@@ -745,34 +744,19 @@ hafah_pytest_rest_api_pattern_tests:
   before_script:
   - |
     echo -e "\e[0Ksection_start:$(date +%s):cache[collapsed=true]\r\e[0KFetching HAF cache..."
-    # Ensure HAF replay data is available locally (fetch from NFS if needed)
-    if [[ -d "${LOCAL_HAF_CACHE}/datadir" ]]; then
-      echo "Local HAF cache found at ${LOCAL_HAF_CACHE}"
+    # Use cache-manager to extract HAF data directly to target directory
+    # cache-manager handles local/NFS fallback and permission restoration
+    CACHE_MANAGER="/tmp/cache-manager.sh"
+    curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/scripts/cache-manager.sh" -o "$CACHE_MANAGER"
+    chmod +x "$CACHE_MANAGER"
+    mkdir -p "${HAF_DATA_DIRECTORY}" "${HAF_SHM_DIRECTORY}"
+    if "$CACHE_MANAGER" get haf "${HAF_COMMIT}" "${HAF_DATA_DIRECTORY}"; then
+      echo "HAF data extracted to ${HAF_DATA_DIRECTORY}"
     else
-      echo "Local HAF cache not found, fetching from NFS via cache-manager..."
-      CACHE_MANAGER="/tmp/cache-manager.sh"
-      curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/scripts/cache-manager.sh" -o "$CACHE_MANAGER"
-      chmod +x "$CACHE_MANAGER"
-      if "$CACHE_MANAGER" get haf "${HAF_COMMIT}" "${LOCAL_HAF_CACHE}"; then
-        echo "Fetched HAF replay data from NFS cache"
-      else
-        echo "ERROR: Failed to fetch HAF replay data from NFS cache"
-        exit 1
-      fi
+      echo "ERROR: Failed to get HAF cache for ${HAF_COMMIT}"
+      exit 1
     fi
     echo -e "\e[0Ksection_end:$(date +%s):cache\r\e[0K"
-  - |
-    echo -e "\e[0Ksection_start:$(date +%s):setup[collapsed=true]\r\e[0KSetting up HAF data directory..."
-    # Copy HAF data to working directory (docker-compose bind mount)
-    # Use sudo because pgdata has mode 700 owned by postgres (UID 105)
-    mkdir -p "${HAF_DATA_DIRECTORY}" "${HAF_SHM_DIRECTORY}"
-    sudo cp -a "${LOCAL_HAF_CACHE}/datadir/." "${HAF_DATA_DIRECTORY}/"
-    # Fix PostgreSQL permissions
-    if [[ -d "${HAF_DATA_DIRECTORY}/haf_db_store/pgdata" ]]; then
-      sudo chown -R 105:109 "${HAF_DATA_DIRECTORY}/haf_db_store"
-      sudo chmod 700 "${HAF_DATA_DIRECTORY}/haf_db_store/pgdata"
-    fi
-    echo -e "\e[0Ksection_end:$(date +%s):setup\r\e[0K"
   - |
     echo -e "\e[0Ksection_start:$(date +%s):docker[collapsed=true]\r\e[0KStarting docker-compose environment..."
     docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
