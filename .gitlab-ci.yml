@@ -764,8 +764,9 @@ hafah_pytest_rest_api_pattern_tests:
   - |
     echo -e "\e[0Ksection_start:$(date +%s):setup[collapsed=true]\r\e[0KSetting up HAF data directory..."
     # Copy HAF data to working directory (docker-compose bind mount)
+    # Use sudo because pgdata has mode 700 owned by postgres (UID 105)
     mkdir -p "${HAF_DATA_DIRECTORY}" "${HAF_SHM_DIRECTORY}"
-    cp -a "${LOCAL_HAF_CACHE}/datadir/." "${HAF_DATA_DIRECTORY}/"
+    sudo cp -a "${LOCAL_HAF_CACHE}/datadir/." "${HAF_DATA_DIRECTORY}/"
     # Fix PostgreSQL permissions
     if [[ -d "${HAF_DATA_DIRECTORY}/haf_db_store/pgdata" ]]; then
       sudo chown -R 105:109 "${HAF_DATA_DIRECTORY}/haf_db_store"
