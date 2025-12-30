@@ -110,8 +110,12 @@ default:
         )
   before_script:
     # Initialize submodules manually (GIT_SUBMODULE_STRATEGY: none)
-    - git submodule sync --recursive
-    - git submodule update --init --recursive --jobs 4
+    # Skip if git not available (some jobs use minimal images)
+    - |
+      if command -v git >/dev/null 2>&1; then
+        git submodule sync --recursive
+        git submodule update --init --recursive --jobs 4
+      fi
 
 validate_haf_commit:
   stage: build
