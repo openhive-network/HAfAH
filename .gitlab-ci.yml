@@ -63,6 +63,8 @@ include:
 default:
   hooks:
     pre_get_sources_script:
+      # Rewrite relative submodule URLs to absolute (for nested submodules with fetch strategy)
+      - git config --global url."${CI_SERVER_URL}/${CI_PROJECT_NAMESPACE}/".insteadOf "../"
       # Clean corrupt git state left by cancelled pipelines (see GitLab #296638, #4600)
       # Wrapped in subshell to avoid changing working directory for subsequent git operations
       - |
@@ -102,15 +104,6 @@ default:
                   rm -rf "$submod" ".git/modules/$submod"
                 fi
               done
-            fi
-            # Fix nested submodule origin URLs for fetch strategy
-            # The haf submodule contains hive with relative URL ../hive.git
-            # which doesn't resolve correctly with fetch strategy
-            if [ -d "haf/.git" ] || [ -f "haf/.git" ]; then
-              if [ -d "haf/hive" ]; then
-                echo "pre_get_sources: fixing nested hive submodule origin"
-                git -C haf/hive remote set-url origin "${CI_SERVER_URL}/${CI_PROJECT_NAMESPACE}/hive.git" 2>/dev/null || true
-              fi
             fi
             echo "pre_get_sources: existing repo OK"
           fi
