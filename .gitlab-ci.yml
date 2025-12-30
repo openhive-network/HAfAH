@@ -16,8 +16,9 @@ variables:
   # Temporary: separate clone path prevents clone-strategy jobs from erasing
   # fetch workspaces during transition. Remove once all projects use fetch.
   GIT_CLONE_PATH: $CI_BUILDS_DIR/fetch/$CI_RUNNER_SHORT_TOKEN/$CI_CONCURRENT_ID/$CI_PROJECT_PATH
-  # Allow file:// transport for nested submodules (haf contains hive submodule)
-  GIT_CONFIG_PARAMETERS: "'protocol.file.allow=always'"
+  # Allow file:// transport and remap relative URLs for nested submodules.
+  # The haf submodule uses relative URL ../hive.git which breaks with fetch strategy.
+  GIT_CONFIG_PARAMETERS: "'protocol.file.allow=always' 'url.https://gitlab.syncad.com/hive/.insteadOf=../'"
 
   CI_DEBUG_SERVICES: "true"
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu24.04-6
