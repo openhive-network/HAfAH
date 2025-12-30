@@ -12,19 +12,27 @@ HAfAH (HAF Account History) is a read-only HAF (Hive Application Framework) appl
 
 **Key directories**:
 - `postgrest/` - PostgREST endpoint definitions and SQL types
-  - `hafah_endpoints.sql` - Main API endpoint registration
-  - `hafah_REST/` - REST endpoint SQL functions organized by resource (blocks, accounts, operations, transactions)
-- `queries/` - Backend SQL functions
-  - `ah_schema_functions.pgsql` - Core schema and helper functions
-  - `hafah_rest_backend/` - Implementation functions for each API
+  - `hafah_endpoints.sql` - Main API router that dispatches JSON-RPC calls to backend functions
+  - `hafah_backend.sql` - Argument parsing and exception utilities
+  - `hafah_roles.sql` - Permission grants for database roles
+  - `hafah_REST/` - REST endpoint SQL functions organized by resource
+- `queries/` - Backend SQL implementation
+  - `ah_schema_functions.pgsql` - Core schema setup (`hafah_python` schema), version table, helper views
+  - `hafah_rest_backend/` - Implementation functions for each API endpoint
 - `scripts/` - Setup and management scripts
 - `tests/` - Integration tests (pytest) and REST API tests (tavern YAML)
 - `haf/` - HAF submodule (the underlying data framework)
 
+**Database schemas** (created in order):
+1. `hafah_python` - Core schema with version table and helper views (from `ah_schema_functions.pgsql`)
+2. `hafah_backend` - Argument parsing and exception utilities
+3. `hafah_helper` - Utility functions
+4. `hafah_endpoints` - PostgREST-exposed API functions (the public interface)
+
 **Database roles**:
 - `haf_admin` - For install/uninstall operations
-- `hafah_user` - For running the PostgREST service
-- `hafah_owner` - Schema owner for hafah_python
+- `hafah_owner` - Schema owner (creates all objects)
+- `hafah_user` - For running the PostgREST service (read-only)
 
 ## Common Commands
 
@@ -53,7 +61,7 @@ scripts/ci-helpers/build_instance.sh "postgrest-latest" . registry.gitlab.syncad
 # Install app via Docker
 docker run --rm -it registry.gitlab.syncad.com/hive/hafah:TAG install_app --postgres-url=postgresql://haf_admin@172.17.0.1:5432/haf_block_log
 
-# Run PostgREST server via Docker
+# Run PostgREST server via Docker (internal port 6543 is fixed)
 docker run --rm -it -p 8081:6543 -e POSTGRES_URL=postgresql://hafah_user@172.17.0.1:5432/haf_block_log registry.gitlab.syncad.com/hive/hafah:TAG
 ```
 
@@ -64,15 +72,36 @@ docker run --rm -it -p 8081:6543 -e POSTGRES_URL=postgresql://hafah_user@172.17.
 cd tests/integration/functional
 pytest --junitxml report.xml --postgrest-hafah-adress=app:6543 --postgres-db-url=postgresql://haf_admin@haf-instance:5432/haf_block_log -m PYTEST_MARK
 
-# Run tavern REST API tests
+# Run tavern REST API tests (pattern tests against real blockchain data)
 cd tests/tavern
 pytest -n auto --junitxml report.xml .
+
+# Run a single tavern test
+pytest tests/tavern/get_block/positive/first_block.tavern.yaml
 
 # Run performance tests (requires jmeter)
 ./tests/performance_test.py --postgres postgresql:///haf_block_log
 ```
 
 Test marks: `enum_virtual_ops_and_get_ops_in_block`, `get_account_history_and_get_transaction`
+
+## API Call Styles
+
+HAfAH supports two call styles:
+
+**Old style (JSON-RPC via POST to /):**
+```bash
+curl -X POST http://localhost:3000/ \
+  -H 'Content-Type: application/json' \
+  -d '{"jsonrpc": "2.0", "method": "account_history_api.get_transaction", "params": {"id": "..."}, "id": 0}'
+```
+
+**New style (direct REST):**
+```bash
+curl -X POST http://localhost:3000/rpc/get_transaction \
+  -H 'Content-Type: application/json' \
+  -d '{"id": "..."}'
+```
 
 ## REST API Endpoints
 
@@ -90,13 +119,33 @@ Test marks: `enum_virtual_ops_and_get_ops_in_block`, `get_account_history_and_ge
 
 - HAF submodule commit must match in three places: `.gitmodules` ref, `HAF_COMMIT` variable in `.gitlab-ci.yml`, and `include: ref:` in `.gitlab-ci.yml`
 - The `validate_haf_commit` job ensures these stay in sync
-- Pattern tests are tied to specific blockchain data and may fail when HAF commit changes
-- Uses NFS cache at `/nfs/ci-cache/haf/` for HAF data across CI runners
+- Pattern tests (tavern) are tied to specific blockchain data and may fail when HAF commit changes
+- Uses cache-manager.sh from common-ci-configuration for HAF data caching
+- NFS cache at `/nfs/ci-cache/haf/` shares HAF data across CI runners
+- Docker image is Alpine-based (uses `apk`, `wget` - not `curl`)
+
+**Quick Test Mode**: Skip data preparation by setting `QUICK_TEST=true` and `QUICK_TEST_HAF_COMMIT=<sha>` in pipeline variables. Find available caches with:
+```bash
+ssh hive-builder-10 'ls -lt /nfs/ci-cache/haf/*.tar | head -5'
+```
+
+## SQL File Execution Order
+
+SQL files are executed in specific order by `scripts/install_app.sh`:
+1. `queries/ah_schema_functions.pgsql` - Core schema setup
+2. `postgrest/hafah_backend.sql` - Backend utilities
+3. `postgrest/hafah_REST/types/*.sql` - Type definitions
+4. `queries/hafah_rest_backend/utilities/*.sql` - Utility functions
+5. `queries/hafah_rest_backend/*/` - API implementations (account_history, blocks, operations, market_history)
+6. `postgrest/hafah_endpoints.sql` - API router
+7. `postgrest/hafah_REST/*.sql` - REST endpoint functions
+8. `postgrest/hafah_roles.sql` - Permission grants (must be last)
 
 ## Development Notes
 
 - All API logic is in SQL - no Python/application code for the main service
 - PostgREST exposes `hafah_endpoints` schema functions as REST endpoints
+- The `hafah_endpoints.home()` function is the main JSON-RPC dispatcher
 - Backend functions live in `hafah_python` and `hafah_backend` schemas
-- SQL files are executed in specific order by `scripts/install_app.sh`
 - Test tools from HAF submodule: `test_tools`, `haf_local_tools`
+- The `hafah_python.helper_operations_view` joins `hive.operations_view` with operation types

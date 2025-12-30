@@ -13,7 +13,7 @@ variables:
   GIT_SUBMODULE_UPDATE_FLAGS: --jobs 4
 
   CI_DEBUG_SERVICES: "true"
-  # uses registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image:ubuntu24.04-py3.14-1
+  # ci-base-image version is inherited from HAF's ci_image_tag_vars.yml via TEST_HAF_IMAGE_TAG
   BUILDER_IMAGE_TAG: "$TEST_HAF_IMAGE_TAG"
   BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image${BUILDER_IMAGE_TAG}"
 
@@ -63,7 +63,7 @@ variables:
   BLOCK_LOG_SOURCE_DIR_5M: /blockchain/block_log_5m
   # HAF submodule commit - must match the 'ref:' in the include section below
   # This is needed for service containers which can't access dotenv artifacts
-  HAF_COMMIT: "87b4e8a411bb3ab17d14dc8edc8358b384dcaa54"
+  HAF_COMMIT: "1ac5d12439b9cca33e6db383adc59967cae75fc4"
   # Enable CI-specific PostgreSQL config with reduced memory for HAF service containers
   HAF_CI_MODE: "1"
 
@@ -73,7 +73,7 @@ variables:
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 - project: 'hive/haf'
-  ref: 87b4e8a411bb3ab17d14dc8edc8358b384dcaa54   # develop (CI base image v2)
+  ref: 1ac5d12439b9cca33e6db383adc59967cae75fc4   # develop
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
 
@@ -609,38 +609,8 @@ prepare_haf_image_testnet:
   tags:
   - public-runner-docker
 
-.haf-instance-with-nfs-fallback: &haf-instance-with-nfs-fallback
-  name: ${HAF_IMAGE_NAME}
-  alias: haf-instance
-  variables:
-    PGCTLTIMEOUT: 600
-    PG_ACCESS: |
-      "host    all              haf_admin        0.0.0.0/0    trust"
-      "host    all              hived            0.0.0.0/0    trust"
-      "host    all              hafah_user       0.0.0.0/0    trust"
-      "host    all              all              0.0.0.0/0    scram-sha-256"
-    DATA_SOURCE: "${DATA_CACHE_HAF_PREFIX}_${HAF_COMMIT}"
-    DATA_SOURCE_NFS_PREFIX: "${DATA_CACHE_NFS_PREFIX}"
-    DATA_SOURCE_NFS_TYPE: "haf"
-    DATA_SOURCE_NFS_KEY: "${HAF_COMMIT}"
-  entrypoint:
-    - '/bin/bash'
-    - '-c'
-    - |
-      set -xeuo pipefail
-      ORIGINAL_SOURCE="${DATA_SOURCE}"
-      NFS_PREFIX="${DATA_SOURCE_NFS_PREFIX:-/nfs/ci-cache}"
-      NFS_TYPE="${DATA_SOURCE_NFS_TYPE:-haf}"
-      NFS_KEY="${DATA_SOURCE_NFS_KEY}"
-      if [[ ! -d "${ORIGINAL_SOURCE}/datadir" ]]; then
-        NFS_PATH="${NFS_PREFIX}/${NFS_TYPE}/${NFS_KEY}"
-        if [[ -d "${NFS_PATH}/datadir" ]]; then
-          export DATA_SOURCE="$NFS_PATH"
-        fi
-      fi
-      exec /home/haf_admin/docker_entrypoint.sh "$@"
-    - '/bin/bash'
-  command: ["--execute-maintenance-script=${HAF_SOURCE_DIR}/scripts/maintenance-scripts/sleep_infinity.sh"]
+# Removed: .haf-instance-with-nfs-fallback - replaced with docker-compose approach
+# See hafah_pytest_rest_api_pattern_tests for the new pattern
 
 # Testnet HAF instance - starts with empty database, no pre-existing data required
 .haf-instance-testnet: &haf-instance-testnet
@@ -731,8 +701,9 @@ prepare_haf_image_testnet:
   - public-runner-docker
 
 hafah_pytest_rest_api_pattern_tests:
-  extends: .pytest_based_template
   stage: test
+  # Use specific tag with util-linux for NFS flock support (not :latest which has BusyBox flock)
+  image: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-builder:${DOCKER_BUILDER_TAG}
   # Pattern tests are tied to specific blockchain data indexed by develop branch HAF
   # Allow failure when using a different HAF commit (feature branches with HAF changes)
   allow_failure: true
@@ -740,70 +711,89 @@ hafah_pytest_rest_api_pattern_tests:
   - job: detect_changes
     artifacts: true
     optional: true
+  - job: prepare_haf_image
+    artifacts: true
   - job: prepare_haf_data
     artifacts: true
     optional: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
   services:
-  - *haf-instance-with-nfs-fallback
-  - name: ${HAF_APP_IMAGE}
-    alias: app-setup
-    variables:
-        # intentionally use setup way chosed in haf_api_node compose scripts
-      POSTGRES_URL: "postgresql://haf_admin@haf-instance/haf_block_log"
-    command: ["install_app"]
-    entrypoint:
-    - '/bin/bash'
-    - '-c'
-    - |
-      set -xeuo pipefail
-      echo "Attempting to perform application setup..."
-      # pass control to the default image entrypoint
-      "./docker_entrypoint.sh" "$@"
-      echo "Application setup completed, starting to listed app port to satisfy Gitlab health checker..."
-      # Once setup completed, just listen on container/app port to satisfy GitlabCI HealthChecker
-      nc -v -l -p $(echo "${HAF_APP_PORT}")
-     # arg $0 should be explicitly passed when using 'bash -c' entrypoints
-    - '/bin/bash'
-
-  - name: ${HAF_APP_IMAGE}
-    alias: app
-    command: ["--postgres-url=postgresql://hafah_user@haf-instance/haf_block_log"]
-    entrypoint:
-    - '/bin/bash'
-    - '-c'
-    - |
-      set -xeuo pipefail
-      # since Gitlab services startup order is undefined, we need to wait for app setup completion
-      "/home/hafah_user/app/scripts/wait_for_setup_completed.sh" "$@"
-      echo "Application setup finished - continue app-service spawn..."
-      # pass control to the default image entrypoint
-      /home/hafah_user/docker_entrypoint.sh "$@"
-     # arg $0 should be explicitly passed when using 'bash -c' entrypoints
-    - '/bin/bash'
+  - name: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-dind:${DOCKER_DIND_TAG}
+    alias: docker
   variables:
-    DATA_SOURCE: "${DATA_CACHE_HAF_PREFIX}_${HAF_COMMIT}"
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_CERT_PATH: "/certs/client"
+    DOCKER_TLS_VERIFY: 1
+    # Data directories for docker-compose bind mounts
+    HAF_DATA_DIRECTORY: "${CI_PROJECT_DIR}/haf-data"
+    HAF_SHM_DIRECTORY: "${CI_PROJECT_DIR}/haf-shm"
+    # Test configuration
     JUNIT_REPORT: $CI_PROJECT_DIR/tests/tavern/report.xml
-    PYTEST_BASED_IMAGE_NAME: $BUILDER_IMAGE_PATH
+    PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
     POETRY_INSTALL_ROOT_DIR: $CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools
     TAVERN_DIR: $CI_PROJECT_DIR/tests/tavern
     DB_NAME: haf_block_log
-    DB_URL: "postgresql://haf_admin@haf-instance:5432/$DB_NAME"
+    DB_URL: "postgresql://haf_admin@localhost:5432/$DB_NAME"
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: ${APP_PORT}
-    HAF_APP_HOST: app
+    HAF_APP_HOST: localhost
     DIRECT_CALLS: 0
     POSTGRES_URL: $DB_URL
+  before_script:
+  - |
+    echo -e "\e[0Ksection_start:$(date +%s):cache[collapsed=true]\r\e[0KFetching HAF cache..."
+    # Use cache-manager to extract HAF data directly to target directory
+    # cache-manager handles local/NFS fallback and permission restoration
+    CACHE_MANAGER="/tmp/cache-manager.sh"
+    curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/scripts/cache-manager.sh" -o "$CACHE_MANAGER"
+    chmod +x "$CACHE_MANAGER"
+    mkdir -p "${HAF_DATA_DIRECTORY}" "${HAF_SHM_DIRECTORY}"
+    if "$CACHE_MANAGER" get haf "${HAF_COMMIT}" "${HAF_DATA_DIRECTORY}"; then
+      echo "HAF data extracted to ${HAF_DATA_DIRECTORY}"
+    else
+      echo "ERROR: Failed to get HAF cache for ${HAF_COMMIT}"
+      exit 1
+    fi
+    echo -e "\e[0Ksection_end:$(date +%s):cache\r\e[0K"
+  - |
+    echo -e "\e[0Ksection_start:$(date +%s):docker[collapsed=true]\r\e[0KStarting docker-compose environment..."
+    docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    export HAF_IMAGE_NAME="${HAF_IMAGE_NAME}"
+    export HAFAH_IMAGE_NAME="${HAFAH_IMAGE_NAME}"
+    "${CI_PROJECT_DIR}/scripts/ci-helpers/start-ci-compose.sh"
+    echo -e "\e[0Ksection_end:$(date +%s):docker\r\e[0K"
   script:
   - |
-    echo "HAfAH image name $HAF_APP_IMAGE"
+    echo "HAfAH image name $HAFAH_IMAGE_NAME"
     echo "HAF image name $HAF_IMAGE_NAME"
-    cd $CI_PROJECT_DIR/tests/tavern
-    pytest -n $PYTEST_NUMBER_OF_PROCESSES --junitxml report.xml .
+    # Run pytest from a Python container connected to the haf-network
+    # This allows pytest to reach the hafah service at hafah-ci-hafah-1:6543
+    # Use standard Python 3.11 image to avoid setuptools issues with Python 3.14
+    docker run --rm --network haf-network \
+      -e HAF_APP_HOST=hafah-ci-hafah-1 \
+      -e HAF_APP_PORT=${APP_PORT} \
+      -e PYTHONPATH=/workspace/haf/hive/tests/python/hive-local-tools/tests_api \
+      -e TAVERN_DIR=/workspace/tests/tavern \
+      -v "${CI_PROJECT_DIR}:/workspace" \
+      -w /workspace \
+      python:3.11-slim \
+      /bin/bash -c "
+        cd /workspace/tests/tavern && \
+        pip install --quiet tavern pytest-xdist pyyaml requests deepdiff && \
+        pytest -n ${PYTEST_NUMBER_OF_PROCESSES:-4} --junitxml report.xml .
+      "
+  after_script:
+  - |
+    cd "${CI_PROJECT_DIR}/docker"
+    docker compose --env-file ci.env -f docker-compose.ci.yml logs > docker-compose-logs.txt 2>&1 || true
+    docker compose --env-file ci.env -f docker-compose.ci.yml down --volumes || true
   artifacts:
     paths:
     - "**/*.out.json"
+    - docker/docker-compose-logs.txt
+    when: always
   tags:
   - data-cache-storage
   - fast
