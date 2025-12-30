@@ -780,7 +780,7 @@ hafah_pytest_rest_api_pattern_tests:
       python:3.11-slim \
       /bin/bash -c "
         cd /workspace/tests/tavern && \
-        pip install --quiet tavern pytest-xdist pyyaml requests && \
+        pip install --quiet tavern pytest-xdist pyyaml requests deepdiff && \
         pytest -n ${PYTEST_NUMBER_OF_PROCESSES:-4} --junitxml report.xml .
       "
   after_script:
