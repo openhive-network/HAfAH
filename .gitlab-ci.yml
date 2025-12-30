@@ -775,6 +775,7 @@ hafah_pytest_rest_api_pattern_tests:
       -e HAF_APP_HOST=hafah-ci-hafah-1 \
       -e HAF_APP_PORT=${APP_PORT} \
       -e PYTHONPATH=/workspace/haf/hive/tests/python/hive-local-tools/tests_api \
+      -e TAVERN_DIR=/workspace/tests/tavern \
       -v "${CI_PROJECT_DIR}:/workspace" \
       -w /workspace \
       python:3.11-slim \
