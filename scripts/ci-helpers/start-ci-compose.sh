@@ -46,24 +46,8 @@ echo "=== Starting services ==="
 docker compose --env-file ci.env -f docker-compose.ci.yml up --detach --quiet-pull
 
 echo "=== Waiting for HAfAH to be healthy ==="
-echo "Initial container status:"
-docker compose --env-file ci.env -f docker-compose.ci.yml ps
-timeout 300 bash -c 'while true; do
-  STATUS=$(docker compose --env-file ci.env -f docker-compose.ci.yml ps hafah 2>&1)
-  echo "Container status: $STATUS"
-  if echo "$STATUS" | grep -qi "healthy"; then
-    echo "HAfAH is healthy!"
-    break
-  fi
-  # Also check docker inspect for health status
-  HEALTH=$(docker inspect --format="{{.State.Health.Status}}" hafah-ci-hafah-1 2>/dev/null || echo "unknown")
-  echo "Docker health status: $HEALTH"
-  if [ "$HEALTH" = "healthy" ]; then
-    echo "HAfAH is healthy (via inspect)!"
-    break
-  fi
-  sleep 5
-done'
+timeout 300 bash -c 'until docker compose --env-file ci.env -f docker-compose.ci.yml ps hafah 2>&1 | grep -qi "healthy"; do echo "Waiting for hafah..."; sleep 5; done'
+echo "HAfAH is healthy!"
 
 echo "=== Services started successfully ==="
 docker compose --env-file ci.env -f docker-compose.ci.yml ps
