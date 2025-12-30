@@ -681,7 +681,8 @@ prepare_haf_image_testnet:
     - |
       set -xeuo pipefail
       # since Gitlab services startup order is undefined, we need to wait for app setup completion
-      "/home/hafah_user/app/scripts/wait_for_setup_completed.sh" "$@"
+      # Use haf_admin to check for setup (hafah_user doesn't exist until app-setup creates it)
+      "/home/hafah_user/app/scripts/wait_for_setup_completed.sh" --postgres-url="postgresql://haf_admin@haf-instance/haf_block_log"
       echo "Application setup finished - continue app-service spawn..."
       # pass control to the default image entrypoint
       /home/hafah_user/docker_entrypoint.sh run "$@"
@@ -755,7 +756,8 @@ hafah_pytest_rest_api_pattern_tests:
     - |
       set -xeuo pipefail
       # since Gitlab services startup order is undefined, we need to wait for app setup completion
-      "/home/hafah_user/app/scripts/wait_for_setup_completed.sh" "$@"
+      # Use haf_admin to check for setup (hafah_user doesn't exist until app-setup creates it)
+      "/home/hafah_user/app/scripts/wait_for_setup_completed.sh" --postgres-url="postgresql://haf_admin@haf-instance/haf_block_log"
       echo "Application setup finished - continue app-service spawn..."
       # pass control to the default image entrypoint
       /home/hafah_user/docker_entrypoint.sh "$@"
