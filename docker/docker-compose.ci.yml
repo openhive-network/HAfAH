@@ -47,7 +47,7 @@ services:
     networks:
       haf-network:
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:6543/rpc/get_version || exit 1"]
+      test: ["CMD-SHELL", "psql -U hafah_user -d haf_block_log -h haf -c 'SELECT hafah_python.get_version()' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 30
