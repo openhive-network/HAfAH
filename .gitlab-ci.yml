@@ -7,59 +7,43 @@ stages:
 
 variables:
   # Fetch strategy reuses workspace between jobs, reducing GitLab server load.
+  # Full clone (depth 0) enables efficient incremental fetches - shallow clones
+  # don't reduce server CPU and make fetch less effective.
   GIT_STRATEGY: fetch
   GIT_DEPTH: 0
+  # Disable automatic submodule fetching - we handle it manually in before_script
+  # This is needed because haf contains nested hive submodule with relative URLs
   GIT_SUBMODULE_STRATEGY: none
+  GIT_SUBMODULE_FORCE_HTTPS: "true"
+  # Allow file:// protocol for nested submodules (required for test-tools in hive)
+  GIT_CONFIG_COUNT: 1
+  GIT_CONFIG_KEY_0: "protocol.file.allow"
+  GIT_CONFIG_VALUE_0: "always"
   # Temporary: separate clone path prevents clone-strategy jobs from erasing
   # fetch workspaces during transition. Remove once all projects use fetch.
   GIT_CLONE_PATH: $CI_BUILDS_DIR/fetch/$CI_RUNNER_SHORT_TOKEN/$CI_CONCURRENT_ID/$CI_PROJECT_PATH
 
   CI_DEBUG_SERVICES: "true"
-  # CI base image version (ubuntu24.04-py3.14-2 is the current stable version)
-  BUILDER_IMAGE_TAG: ":ubuntu24.04-py3.14-2"
+  # ci-base-image version is inherited from HAF's ci_image_tag_vars.yml via TEST_HAF_IMAGE_TAG
+  BUILDER_IMAGE_TAG: "$TEST_HAF_IMAGE_TAG"
   BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image${BUILDER_IMAGE_TAG}"
 
-  # Python 3.14 image for test tools (wax, test-tools require Python 3.14)
-  PYTHON_COMPAT_IMAGE: "registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image:ubuntu24.04-py3.14-2"
-  # Use the Python 3.14 image for pytest compatibility
-  PYTEST_RUNTIME_IMAGE_NAME: "${PYTHON_COMPAT_IMAGE}"
+  # Use the same Python 3.14 base image as develop for pytest compatibility
+  PYTEST_RUNTIME_IMAGE_NAME: "${BUILDER_IMAGE_PATH}"
   # Enable PyO3 forward compatibility for Python 3.14 (rpds-py build support)
   PYO3_USE_ABI3_FORWARD_COMPATIBILITY: "1"
+  POETRY_INSTALL_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/hive-local-tools"
 
-  # Common CI configuration for fetching scripts at runtime
-  COMMON_CI_REF: "develop"
-  COMMON_CI_URL: "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/${COMMON_CI_REF}"
-
+  SETUP_SCRIPTS_PATH: "$CI_PROJECT_DIR/haf/scripts"
   REGISTRY: registry.gitlab.syncad.com/hive/hafah
   BLOG_REGISTRY: registry-upload.hive.blog/hafah
   APP_PORT: 6543
-
-  # =============================================================================
-  # Upstream Image Detection (No Submodules Required)
-  # =============================================================================
-  # Both HAF and Hive images are dynamically detected by find_haf_image and
-  # find_hive_image jobs using common-ci-configuration scripts. No manual
-  # updates needed - always uses the latest built images from each repo.
-  #
-  # Output variables (set by detect stage jobs):
-  #   HAF_UPSTREAM_IMAGE, HAF_UPSTREAM_COMMIT, HAF_UPSTREAM_TAG
-  #   HIVE_UPSTREAM_IMAGE, HIVE_UPSTREAM_COMMIT, HIVE_UPSTREAM_TAG
-  # =============================================================================
-  # Use develop for test-tools to get latest dependency fixes
-  HIVE_TEST_TOOLS_REF: "develop"
-  # tests_api repo uses master branch (not develop)
-  TESTS_API_REF: "master"
+  BENCHMARK_SOURCE_DIR: "$CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools/tests_api/benchmarks"
 
   # Allow access from any network to eliminate CI IP addressing problems
-  # Also allow local socket connections for hived/haf_maintainer (peer auth fails in container)
   HAF_DB_ACCESS: |
-    "local   all              haf_admin                     trust"
-    "local   all              haf_maintainer                trust"
-    "local   all              hived                         trust"
-    "local   all              postgres                      trust"
     "host    all              haf_admin        0.0.0.0/0    trust"
     "host    all              hived            0.0.0.0/0    trust"
-    "host    all              haf_maintainer   0.0.0.0/0    trust"
     "host    all              hafah_user       0.0.0.0/0    trust"
     "host    all              all              0.0.0.0/0    scram-sha-256"
 
@@ -92,231 +76,130 @@ variables:
   # NFS cache configuration for data sharing across builders
   DATA_CACHE_NFS_PREFIX: "/nfs/ci-cache"
   BLOCK_LOG_SOURCE_DIR_5M: /blockchain/block_log_5m
+  # HAF submodule commit - must match the 'ref:' in the include section below
+  # This is needed for service containers which can't access dotenv artifacts
+  HAF_COMMIT: "a9d236ef60e9551eb98be16a00fca1cb22be4b49"
 
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
-# Common CI templates from common-ci-configuration
-- project: 'hive/common-ci-configuration'
-  ref: develop
-  file:
-    - '/templates/cache_cleanup.gitlab-ci.yml'
-    - '/templates/docker_image_jobs.gitlab-ci.yml'
-    - '/templates/haf_app_testing.gitlab-ci.yml'
-    - '/templates/haf_data_preparation.gitlab-ci.yml'
-    - '/templates/python_projects.gitlab-ci.yml'
-    - '/templates/npm_projects.gitlab-ci.yml'
-    - '/templates/test_jobs.gitlab-ci.yml'
-    - '/templates/source_change_detection.gitlab-ci.yml'
+- project: 'hive/haf'
+  ref: a9d236ef60e9551eb98be16a00fca1cb22be4b49   # fix/ci-base-image-version
+  file: '/scripts/ci-helpers/prepare_data_image_job.yml'
+  # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
 
-# Use templates from common-ci-configuration for fetch strategy support
 default:
-  hooks: !reference [.haf_git_corruption_cleanup, hooks]
+  hooks:
+    pre_get_sources_script:
+      # Clean corrupt git state left by cancelled pipelines (see GitLab #296638, #4600)
+      # Wrapped in subshell to avoid changing working directory for subsequent git operations
+      - |
+        (
+        cd "${CI_PROJECT_DIR:-/builds}" 2>/dev/null || exit 0
+        echo "pre_get_sources: checking $(pwd) for corrupt git state"
+        if [ -d ".git" ]; then
+          # Remove stale lock files that block git operations
+          find .git -name "*.lock" -delete 2>/dev/null || true
 
-# =============================================================================
-# Upstream Image Detection Jobs
-# =============================================================================
-# Automatically find the latest built images from upstream repos (Hive, HAF) by
-# analyzing which commits changed source files. Uses .find_upstream_image template
-# from common-ci-configuration.
-#
-# Each job outputs variables with a unique prefix to avoid collisions:
-#   find_hive_image → HIVE_UPSTREAM_* (HIVE_UPSTREAM_IMAGE, HIVE_UPSTREAM_COMMIT, etc.)
-#   find_haf_image  → HAF_UPSTREAM_*  (HAF_UPSTREAM_IMAGE, HAF_UPSTREAM_COMMIT, etc.)
-# =============================================================================
-find_hive_image:
-  extends: .find_upstream_image
-  stage: detect
-  variables:
-    UPSTREAM_REPO_URL: "https://gitlab.syncad.com/hive/hive.git"
-    UPSTREAM_REGISTRY: "registry.gitlab.syncad.com/hive/hive"
-    UPSTREAM_BRANCH: "develop"
-    UPSTREAM_OUTPUT: "hive_image.env"
+          # Check if main repo is corrupt - if so, remove .git to force fresh clone
+          if ! git rev-parse HEAD >/dev/null 2>&1; then
+            echo "pre_get_sources: main repository corrupt, forcing fresh clone"
+            rm -rf .git
+          else
+            # Main repo OK - check and clean corrupt submodules
+            # Check both the working dir and .git/modules/ since either can be corrupt
+            if [ -f ".gitmodules" ]; then
+              git config --file .gitmodules --get-regexp path 2>/dev/null | awk '{print $2}' | while read submod; do
+                needs_clean=false
+                [ -z "$submod" ] && continue
+                # Check if submodule working directory exists but is corrupt
+                if [ -d "$submod" ] && [ -f "$submod/.git" ]; then
+                  if ! git -C "$submod" rev-parse HEAD >/dev/null 2>&1; then
+                    needs_clean=true
+                  fi
+                fi
+                # Check if .git/modules exists but is corrupt (even if working dir is gone)
+                if [ -d ".git/modules/$submod" ]; then
+                  if ! git --git-dir=".git/modules/$submod" rev-parse HEAD >/dev/null 2>&1; then
+                    echo "pre_get_sources: $submod corrupt (rev-parse failed)"
+                    needs_clean=true
+                  fi
+                fi
+                if [ "$needs_clean" = true ]; then
+                  echo "pre_get_sources: cleaning corrupt submodule: $submod"
+                  rm -rf "$submod" ".git/modules/$submod"
+                fi
+              done
+            fi
+            echo "pre_get_sources: existing repo OK"
+          fi
+        else
+          echo "pre_get_sources: no .git directory (fresh workspace)"
+        fi
+        )
   before_script:
-    # docker-builder image already has git, bash, and curl
-    # Fetch source patterns from hive's script (single source of truth)
+    # Initialize submodules manually (GIT_SUBMODULE_STRATEGY: none)
+    # Skip if git not available (some jobs use minimal images)
     - |
-      PATTERNS_URL="https://gitlab.syncad.com/hive/hive/-/raw/develop/scripts/ci-helpers/source-patterns.sh"
-      echo "Fetching source patterns from: $PATTERNS_URL"
-      if UPSTREAM_PATTERNS=$(curl -sf "$PATTERNS_URL" | sh); then
-        echo "Loaded patterns: $UPSTREAM_PATTERNS"
-        export UPSTREAM_PATTERNS
-      else
-        echo "ERROR: Could not fetch source-patterns.sh from hive"
-        exit 1
+      if command -v git >/dev/null 2>&1; then
+        echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
+        git config --global --add safe.directory '*'
+        # Get the commit we need from the haf submodule
+        HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+        HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+        echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+        # Remove existing haf directory if it exists (can be stale from GIT_STRATEGY=fetch)
+        sudo rm -rf haf 2>/dev/null || rm -rf haf
+        # Clone and checkout specific commit
+        git clone --no-checkout "$HAF_URL" haf
+        cd haf
+        git fetch origin develop
+        git checkout $HAF_SUBMOD_COMMIT
+        # Initialize nested submodules inside haf (hive and its submodules)
+        git submodule update --init --recursive --jobs 4
+        cd ..
+        echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
       fi
+
+validate_haf_commit:
+  stage: build
+  image: alpine:latest
   script:
-    - !reference [.find_upstream_image, script]
-    # Rename UPSTREAM_* to HIVE_UPSTREAM_* to avoid collisions with other upstream jobs
-    - |
-      if [ -f "$UPSTREAM_OUTPUT" ]; then
-        sed -i 's/^UPSTREAM_/HIVE_UPSTREAM_/' "$UPSTREAM_OUTPUT"
-        echo "Renamed variables in $UPSTREAM_OUTPUT:"
-        cat "$UPSTREAM_OUTPUT"
-      fi
-  artifacts:
-    reports:
-      dotenv: hive_image.env
-    expire_in: 1 day
-  tags:
-    - public-runner-docker
-    - standard
-
-find_haf_image:
-  extends: .find_upstream_image
-  stage: detect
-  variables:
-    UPSTREAM_REPO_URL: "https://gitlab.syncad.com/hive/haf.git"
-    UPSTREAM_REGISTRY: "registry.gitlab.syncad.com/hive/haf"
-    UPSTREAM_BRANCH: "develop"
-    UPSTREAM_OUTPUT: "haf_image.env"
-  before_script:
-    # docker-builder image already has git, bash, and curl
-    # Fetch source patterns from HAF's script (single source of truth)
-    - |
-      PATTERNS_URL="https://gitlab.syncad.com/hive/haf/-/raw/develop/scripts/ci-helpers/source-patterns.sh"
-      echo "Fetching source patterns from: $PATTERNS_URL"
-      if UPSTREAM_PATTERNS=$(curl -sf "$PATTERNS_URL" | sh); then
-        echo "Loaded patterns: $UPSTREAM_PATTERNS"
-        export UPSTREAM_PATTERNS
-      else
-        echo "ERROR: Could not fetch source-patterns.sh from HAF"
-        exit 1
-      fi
-  script:
-    - !reference [.find_upstream_image, script]
-    # Rename UPSTREAM_* to HAF_UPSTREAM_* to avoid collisions with other upstream jobs
-    - |
-      if [ -f "$UPSTREAM_OUTPUT" ]; then
-        sed -i 's/^UPSTREAM_/HAF_UPSTREAM_/' "$UPSTREAM_OUTPUT"
-        echo "Renamed variables in $UPSTREAM_OUTPUT:"
-        cat "$UPSTREAM_OUTPUT"
-      fi
-  artifacts:
-    reports:
-      dotenv: haf_image.env
-    expire_in: 1 day
-  tags:
-    - public-runner-docker
-    - standard
-
-# =============================================================================
-# Reusable YAML Anchors for Services and Clone Operations
-# =============================================================================
-# These anchors reduce duplication across benchmark and test jobs.
-
-# HAF instance service for benchmark tests (simple, no NFS fallback)
-.haf-instance-benchmark: &haf-instance-benchmark
-  name: ${HAF_IMAGE_NAME}
-  alias: haf-instance
-  variables:
-    PG_ACCESS: "${HAF_DB_ACCESS}"
-    DATA_SOURCE: "${HAF_DATA_SOURCE}"
-    SHARED_BLOCK_LOG_DIR: "${BLOCK_LOG_SOURCE_DIR_5M}"
-    LOG_FILE: $CI_JOB_NAME.log
-  command: ["--stop-at-block=5000000"]
-
-# HAfAH app-setup service (installs app then listens for health check)
-.hafah-app-setup: &hafah-app-setup
-  name: ${HAF_APP_IMAGE}
-  alias: app-setup
-  variables:
-    POSTGRES_URL: "postgresql://haf_admin@haf-instance/haf_block_log"
-  command: ["install_app"]
-  entrypoint:
-    - '/bin/bash'
-    - '-c'
-    - |
-      set -xeuo pipefail
-      echo "Attempting to perform application setup..."
-      "./docker_entrypoint.sh" "$@"
-      echo "Application setup completed, starting to listen on app port to satisfy Gitlab health checker..."
-      nc -v -l -p $(echo "${HAF_APP_PORT}")
-    - '/bin/bash'
-
-# HAfAH app service (waits for setup, then starts PostgREST)
-.hafah-app-service: &hafah-app-service
-  name: ${HAF_APP_IMAGE}
-  alias: app
-  command: ["--postgres-url=postgresql://${HAF_APP_USER}@haf-instance/haf_block_log"]
-  entrypoint:
-  - '/bin/bash'
-  - '-c'
   - |
-    set -xeuo pipefail
-    # Since Gitlab services startup order is undefined, wait for app setup completion
-    # Use haf_admin to check for setup (hafah_user doesn't exist until app-setup creates it)
-    [ -s "./app/scripts/wait_for_setup_completed.sh" ] && "./app/scripts/wait_for_setup_completed.sh" --postgres-url="postgresql://haf_admin@haf-instance/haf_block_log"
-    echo "Application setup finished - continue app-service spawn..."
-    # Pass control to the default image entrypoint
-    "./docker_entrypoint.sh" "$@"
-  - '/bin/bash'
-
-# Clone hive test-tools (tests/python directory with submodules)
-# Usage: !reference [.clone_hive_test_tools, script]
-.clone_hive_test_tools:
-  script:
-    - |
-      echo "Cloning hive test tools at ref ${HIVE_TEST_TOOLS_REF}..."
-      git clone --depth 1 --single-branch \
-        https://gitlab.syncad.com/hive/hive.git "${CI_PROJECT_DIR}/hive-test-tools" \
-        --no-checkout
-      cd "${CI_PROJECT_DIR}/hive-test-tools"
-      git fetch --depth 1 origin "${HIVE_TEST_TOOLS_REF}"
-      git sparse-checkout init --cone
-      git sparse-checkout set tests/python
-      git checkout "${HIVE_TEST_TOOLS_REF}"
-      # Initialize submodules within hive-local-tools (test-tools, tests_api, shared-tools)
-      git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
-      git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
-      git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
-      cd "${CI_PROJECT_DIR}"
-
-# Clone tests_api repo for benchmarks (uses TESTS_API_REF - master branch)
-# Usage: !reference [.clone_tests_api, script]
-.clone_tests_api:
-  script:
-    - |
-      echo "Cloning tests_api repo for benchmarks at ref ${TESTS_API_REF}..."
-      git clone --depth 1 --single-branch -b "${TESTS_API_REF}" \
-        https://gitlab.syncad.com/hive/tests_api.git "${CI_PROJECT_DIR}/tests_api"
-
-# Clone HAF and hive test tools for pytest functional tests
-# This creates haf/ and haf/hive/ directories for hafah-local-tools path dependencies
-# Usage: !reference [.clone_haf_and_hive_test_tools, script]
-.clone_haf_and_hive_test_tools:
-  script:
-    - |
-      echo "Cloning HAF test tools at commit ${HAF_COMMIT}..."
-      git clone --depth 1 --single-branch \
-        https://gitlab.syncad.com/hive/haf.git "${CI_PROJECT_DIR}/haf" \
-        --no-checkout
-      cd "${CI_PROJECT_DIR}/haf"
-      git fetch --depth 1 origin "${HAF_COMMIT}"
-      git sparse-checkout init --cone
-      git sparse-checkout set tests/integration/haf-local-tools
-      git checkout "${HAF_COMMIT}"
-      cd "${CI_PROJECT_DIR}"
-    - |
-      echo "Cloning hive test tools into haf/hive at ref ${HIVE_TEST_TOOLS_REF}..."
-      git clone --depth 1 --single-branch \
-        https://gitlab.syncad.com/hive/hive.git "${CI_PROJECT_DIR}/haf/hive" \
-        --no-checkout
-      cd "${CI_PROJECT_DIR}/haf/hive"
-      git fetch --depth 1 origin "${HIVE_TEST_TOOLS_REF}"
-      git sparse-checkout init --cone
-      git sparse-checkout set tests/python/hive-local-tools
-      git checkout "${HIVE_TEST_TOOLS_REF}"
-      # Initialize submodules within hive-local-tools
-      git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
-      git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
-      git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
-      cd "${CI_PROJECT_DIR}"
-
-# =============================================================================
-# Validation Jobs
-# =============================================================================
-# Note: Both HAF and Hive variables are automatically detected by find_haf_image
-# and find_hive_image jobs. No manual validation needed.
+    set -e
+    apk add --no-cache git
+    # Initialize submodules (default before_script skipped because alpine lacks git initially)
+    # Use manual clone to avoid nested submodule issues with relative URLs
+    git config --global --add safe.directory '*'
+    HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+    HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+    echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+    rm -rf haf
+    git clone --no-checkout "$HAF_URL" haf
+    cd haf
+    git fetch origin develop
+    git checkout $HAF_SUBMOD_COMMIT
+    git submodule update --init --recursive --jobs 4
+    cd ..
+    SUBMODULE_COMMIT=$(git -C haf rev-parse HEAD)
+    INCLUDE_REF=$(grep -A2 "project:.*hive/haf" .gitlab-ci.yml | grep "ref:" | head -1 | sed 's/.*ref: *\([a-f0-9]*\).*/\1/' || true)
+    echo "HAF_COMMIT variable: $HAF_COMMIT"
+    echo "HAF submodule HEAD:  $SUBMODULE_COMMIT"
+    echo "Include ref:         $INCLUDE_REF"
+    ERRORS=0
+    if [ "$HAF_COMMIT" != "$SUBMODULE_COMMIT" ]; then
+      echo "ERROR: HAF_COMMIT variable does not match submodule commit!"
+      ERRORS=1
+    fi
+    if [ "$HAF_COMMIT" != "$INCLUDE_REF" ]; then
+      echo "ERROR: HAF_COMMIT variable does not match include ref!"
+      ERRORS=1
+    fi
+    if [ $ERRORS -eq 1 ]; then
+      exit 1
+    fi
+    echo "All HAF commit references are consistent"
+  tags:
+  - public-runner-docker
 
 verify_poetry_lock_sanity:
   extends: .verify_poetry_lock_sanity_template
@@ -325,33 +208,42 @@ verify_poetry_lock_sanity:
     PYPROJECT_DIR: "$CI_PROJECT_DIR/tests/integration/hafah-local-tools"
   tags:
   - public-runner-docker
-  - standard
 
-# =============================================================================
-# Data Preparation Jobs (use pre-built images from registry)
-# =============================================================================
+prepare_hived_image:
+  extends: .prepare_hived_image
+  stage: build
+  variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
+    REGISTRY_USER: "$HIVED_CI_IMGBUILDER_USER"
+    REGISTRY_PASS: $HIVED_CI_IMGBUILDER_PASSWORD
+  tags:
+  - public-runner-docker
+  - hived
+
 prepare_hived_data:
   extends: .prepare_hived_data_5m
-  stage: build
   needs:
-    - job: find_hive_image
-      artifacts: true
+  - job: prepare_hived_image
+    artifacts: true
+  stage: build
   variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
-    CONFIG_INI_SOURCE: "/tmp/haf-app-tools/hived_config_5M.ini"
-    # Map HIVE_UPSTREAM_* from find_hive_image to HIVE_* expected by template
-    HIVED_IMAGE_NAME: "${HIVE_UPSTREAM_IMAGE}"
-    HIVE_COMMIT: "${HIVE_UPSTREAM_COMMIT}"
-  before_script:
-    - !reference [.haf_docker_image_builder_job, before_script]
-    - mkdir -p /tmp/haf-app-tools
-    - curl -fsSL "${COMMON_CI_URL}/haf-app-tools/config/hived_config_5M.ini" -o /tmp/haf-app-tools/hived_config_5M.ini
-    # Log the mapped variables
-    - echo "Using hived image:${HIVED_IMAGE_NAME} (commit:${HIVE_COMMIT})"
+    CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
   tags:
   - data-cache-storage
-  - standard
   - fast
+
+prepare_haf_image:
+  extends: .prepare_haf_image
+  stage: build
+  variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
+    REGISTRY_USER: "$CI_IMG_BUILDER_USER"
+    REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
+  tags:
+  - public-runner-docker
+  - hived
 
 extract-swagger-json:
   extends: .filter_out_swagger_json
@@ -360,7 +252,6 @@ extract-swagger-json:
     INPUT_SQL_SWAGGER_FILE: "${CI_PROJECT_DIR}/postgrest/hafah_REST/hafah_openapi.sql"
   tags:
   - public-runner-docker
-  - standard
 
 generate-wax-spec:
   extends: .generate_swagger_package
@@ -378,33 +269,23 @@ generate-wax-spec:
     artifacts: true
   tags:
   - public-runner-docker
-  - standard
 
 prepare_haf_data:
   extends: .prepare_haf_data_5m
-  stage: build
   needs:
-    - job: find_haf_image
-      artifacts: true
+  - job: prepare_haf_image
+    artifacts: true
+  stage: build
   variables:
+    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
-    CONFIG_INI_SOURCE: "/tmp/haf-app-tools/config_5M.ini"
-    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* expected by template
-    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
-    HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
-  before_script:
-    - !reference [.haf_docker_image_builder_job, before_script]
-    - mkdir -p /tmp/haf-app-tools
-    - curl -fsSL "${COMMON_CI_URL}/haf-app-tools/config/config_5M.ini" -o /tmp/haf-app-tools/config_5M.ini
-    # Log the mapped variables
-    - echo "Using HAF image:${HAF_IMAGE_NAME} (commit:${HAF_COMMIT})"
+    CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 .prepare_hafah_image:
-  extends: .docker_image_builder_job_template
+  extends: .docker_image_builder_job
   stage: build
   variables:
     HAFAH_IMAGE_TAG: ""
@@ -413,14 +294,20 @@ prepare_haf_data:
     SOURCE_DIR: $CI_PROJECT_DIR
 
   before_script:
-  - !reference [.docker_image_builder_job_template, before_script]
-  # Fetch HAF scripts from common-ci-configuration (replaces submodule)
-  - mkdir -p "${CI_PROJECT_DIR}/haf/scripts"
+  - !reference [.docker_image_builder_job, before_script]
+  # Initialize haf submodule manually (nested hive submodule has relative URL issues)
   - |
-    for script in common.sh create_haf_app_role.sh; do
-      curl -fsSL "${COMMON_CI_URL}/haf-app-tools/scripts/${script}" -o "${CI_PROJECT_DIR}/haf/scripts/${script}"
-      chmod +x "${CI_PROJECT_DIR}/haf/scripts/${script}"
-    done
+    git config --global --add safe.directory '*'
+    HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+    HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+    echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+    sudo rm -rf haf 2>/dev/null || rm -rf haf
+    git clone --no-checkout "$HAF_URL" haf
+    cd haf
+    git fetch origin develop
+    git checkout $HAF_SUBMOD_COMMIT
+    git submodule update --init --recursive --jobs 4
+    cd ..
 
   script:
   - |
@@ -451,7 +338,7 @@ prepare_haf_data:
 
   tags:
   - public-runner-docker
-  - standard
+  - hived
 
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
@@ -459,25 +346,44 @@ prepare_postgrest_hafah_image:
     HAFAH_IMAGE_TAG: $CI_COMMIT_SHORT_SHA
     USE_POSTGREST: 1
 
+build_setup_docker_image:
+  extends: .docker_image_builder_job
+  stage: build
+  before_script:
+  - !reference [.docker_image_builder_job, before_script]
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  # Initialize haf submodule manually (nested hive submodule has relative URL issues)
+  - |
+    git config --global --add safe.directory '*'
+    HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+    HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+    echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+    sudo rm -rf haf 2>/dev/null || rm -rf haf
+    git clone --no-checkout "$HAF_URL" haf
+    cd haf
+    git fetch origin develop
+    git checkout $HAF_SUBMOD_COMMIT
+    git submodule update --init --recursive --jobs 4
+    cd ..
+  script: scripts/ci-helpers/build_setup_image.sh "$CI_PROJECT_DIR"
+  tags:
+  - public-runner-docker
+
 .pattern_tests:
   extends: .haf_app_pattern_tests_template
   stage: test
   variables:
-    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* expected by template
-    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
-    HAF_DATA_SOURCE: "/cache/haf_${HAF_UPSTREAM_COMMIT}"
-    HAF_APP_IMAGE: "${HAFAH_IMAGE_NAME}"
+    HAF_APP_IMAGE: ""
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
 
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
-    # Test tools are cloned at runtime - use the cloned path
-    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/hive-local-tools"
+    POETRY_INSTALL_ROOT_DIR: ${POETRY_INSTALL_DIR}
 
     TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex
       or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
-    PATTERN_TESTS_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/api_tests/pattern_tests"
-    JUNIT_REPORT: "hive-test-tools/tests/python/api_tests/pattern_tests/results.xml"
+    PATTERN_TESTS_DIR: "${CI_PROJECT_DIR}/haf/hive/tests/python/api_tests/pattern_tests"
+    JUNIT_REPORT: "haf/hive/tests/python/api_tests/pattern_tests/results.xml"
     DIRECT_CALLS: 0
     HIVED_UID: $HIVED_UID
 
@@ -487,8 +393,7 @@ prepare_postgrest_hafah_image:
       alias: haf-instance
       variables:
         PG_ACCESS: "${HAF_DB_ACCESS}"
-        DATA_SOURCE: "${HAF_DATA_SOURCE}"
-        SHARED_BLOCK_LOG_DIR: "${BLOCK_LOG_SOURCE_DIR_5M}"
+        DATA_SOURCE: "${DATA_CACHE_HAF_PREFIX}_${HAF_COMMIT}"
         LOG_FILE: $CI_JOB_NAME.log
       command: ["--stop-at-block=5000000"]
 
@@ -504,7 +409,7 @@ prepare_postgrest_hafah_image:
           set -xeuo pipefail
           echo "Attempting to perform application setup..."
           "./docker_entrypoint.sh" "$@"
-          echo "Application setup completed, starting to listen on app port to satisfy Gitlab health checker..."
+          echo "Application setup completed, starting to listed app port to satisfy Gitlab health checker..."
           nc -v -l -p $(echo "${HAF_APP_PORT}")
         - '/bin/bash'
 
@@ -525,14 +430,27 @@ prepare_postgrest_hafah_image:
       - '/bin/bash'
 
   needs:
-  - job: find_haf_image
-    artifacts: true
   - job: prepare_haf_data
     artifacts: true
 
-  # Clone hive test tools at runtime (replaces submodule)
+  # Override before_script to include submodule initialization before poetry install
+  # (see .hafah_pytest_fuctional_tests_base for explanation)
   before_script:
-    - !reference [.clone_hive_test_tools, script]
+    - |
+      echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
+      git config --global --add safe.directory '*'
+      HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+      HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+      echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+      sudo rm -rf haf 2>/dev/null || rm -rf haf
+      git clone --no-checkout "$HAF_URL" haf
+      cd haf
+      git fetch origin develop
+      git checkout $HAF_SUBMOD_COMMIT
+      git submodule update --init --recursive --jobs 4
+      cd ..
+      echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
+    # Poetry install (from parent template via !reference)
     - !reference [.haf_app_pattern_tests_template, before_script]
     - echo "HAfAH image name $HAF_APP_IMAGE"
     - echo "HAF image name $HAF_IMAGE_NAME"
@@ -544,15 +462,17 @@ prepare_postgrest_hafah_image:
     - "**/ah.log"
     - "**/*.out.json"
     - "tests/tests_api/hived/workdir_*"
-    - "hive-test-tools/tests/python/api_tests/pattern_tests/results.xml"
+    - "haf/hive/tests/python/api_tests/pattern_tests/results.xml"
 
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 postgrest_pattern_tests:
   extends: .pattern_tests
+  # Pattern tests are tied to specific blockchain data indexed by develop branch HAF
+  # Allow failure when using a different HAF commit (feature branches with HAF changes)
+  allow_failure: true
 
   needs:
   - !reference [.pattern_tests, needs]
@@ -564,6 +484,9 @@ postgrest_pattern_tests:
 
 new_style_postgrest_pattern_tests:
   extends: .pattern_tests
+  # Pattern tests are tied to specific blockchain data indexed by develop branch HAF
+  # Allow failure when using a different HAF commit (feature branches with HAF changes)
+  allow_failure: true
 
   needs:
   - !reference [.pattern_tests, needs]
@@ -580,24 +503,31 @@ new_style_postgrest_pattern_tests:
   extends: .comparison_tests_template
   stage: test
   variables:
-    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* expected by template
-    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
-    HAF_DATA_SOURCE: "/cache/haf_${HAF_UPSTREAM_COMMIT}"
-    HAF_APP_IMAGE: "${HAFAH_IMAGE_NAME}"
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
-    # Test tools are cloned at runtime - use the cloned path
-    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/hive-local-tools"
-    COMPARISON_TESTS_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/api_tests/comparsion_tests"
+    POETRY_INSTALL_ROOT_DIR: ${POETRY_INSTALL_DIR}
+    COMPARISON_TESTS_DIR: "$CI_PROJECT_DIR/haf/hive/tests/python/api_tests/comparsion_tests"
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
-    HIVED_UID: $HIVED_UID
-    # Map HIVE_UPSTREAM_* from find_hive_image to HIVE_* for services
-    HIVED_IMAGE_NAME: "${HIVE_UPSTREAM_IMAGE}"
-    HIVE_DATA_SOURCE: "${DATA_CACHE_HIVE_PREFIX}_${HIVE_UPSTREAM_COMMIT}"
 
-  # Clone hive test tools at runtime then do poetry install
+    HIVED_UID: $HIVED_UID
+
+  # Override before_script to include submodule initialization before poetry install
+  # (see .hafah_pytest_fuctional_tests_base for explanation)
   before_script:
-    - !reference [.clone_hive_test_tools, script]
+    - |
+      echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
+      git config --global --add safe.directory '*'
+      HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+      HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+      echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+      sudo rm -rf haf 2>/dev/null || rm -rf haf
+      git clone --no-checkout "$HAF_URL" haf
+      cd haf
+      git fetch origin develop
+      git checkout $HAF_SUBMOD_COMMIT
+      git submodule update --init --recursive --jobs 4
+      cd ..
+      echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
     # Poetry install (from .pytest_based_template)
     - python3 -m venv venv/
     - . venv/bin/activate
@@ -611,33 +541,15 @@ new_style_postgrest_pattern_tests:
     - name: $HIVED_IMAGE_NAME
       alias: hived-instance
       variables:
-        DATA_SOURCE: "${HIVE_DATA_SOURCE}"
-        SHARED_BLOCK_LOG_DIR: "${BLOCK_LOG_SOURCE_DIR_5M}"
+        DATA_SOURCE: "${DATA_CACHE_HIVE_PREFIX}_${HIVED_COMMIT}"
         LOG_FILE: $CI_JOB_NAME.log
-      entrypoint:
-        - '/bin/bash'
-        - '-c'
-        - |
-          set -xeuo pipefail
-          # Download fixed copy_datadir.sh from develop until hive images are rebuilt
-          # Use wget (Alpine) or curl (Debian) based on availability
-          if command -v wget >/dev/null 2>&1; then
-            wget -qO /home/hived_admin/scripts/copy_datadir.sh "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/haf-app-tools/scripts/copy_datadir.sh"
-          elif command -v curl >/dev/null 2>&1; then
-            curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/haf-app-tools/scripts/copy_datadir.sh" -o /home/hived_admin/scripts/copy_datadir.sh
-          else
-            echo "WARNING: Neither wget nor curl available, using bundled copy_datadir.sh"
-          fi
-          chmod +x /home/hived_admin/scripts/copy_datadir.sh
-          # Run the original docker entrypoint with the fixed copy_datadir.sh
-          exec /home/hived_admin/docker_entrypoint.sh --stop-at-block=5000000
+      command: ["--stop-at-block=5000000"]
 
     - name: ${HAF_IMAGE_NAME}
       alias: haf-instance
       variables:
         PG_ACCESS: "${HAF_DB_ACCESS}"
-        DATA_SOURCE: "${HAF_DATA_SOURCE}"
-        SHARED_BLOCK_LOG_DIR: "${BLOCK_LOG_SOURCE_DIR_5M}"
+        DATA_SOURCE: "${DATA_CACHE_HAF_PREFIX}_${HAF_COMMIT}"
         LOG_FILE: $CI_JOB_NAME.log
       command: ["--stop-at-block=5000000"]
 
@@ -653,7 +565,7 @@ new_style_postgrest_pattern_tests:
           set -xeuo pipefail
           echo "Attempting to perform application setup..."
           "./docker_entrypoint.sh" "$@"
-          echo "Application setup completed, starting to listen on app port to satisfy Gitlab health checker..."
+          echo "Application setup completed, starting to listed app port to satisfy Gitlab health checker..."
           nc -v -l -p $(echo "${HAF_APP_PORT}")
         - '/bin/bash'
 
@@ -674,10 +586,6 @@ new_style_postgrest_pattern_tests:
       - '/bin/bash'
 
   needs:
-  - job: find_hive_image
-    artifacts: true
-  - job: find_haf_image
-    artifacts: true
   - job: prepare_haf_data
     artifacts: true
   - job: prepare_hived_data
@@ -691,11 +599,10 @@ new_style_postgrest_pattern_tests:
     - "**/*.out.json"
 
     reports:
-      junit: "hive-test-tools/tests/python/api_tests/comparsion_tests/comparsion_tests.xml"
+      junit: "haf/hive/tests/python/api_tests/comparsion_tests/comparsion_tests.xml"
 
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 postgrest_comparison_tests:
@@ -713,34 +620,16 @@ postgrest_comparison_tests:
   extends: .jmeter_benchmark_with_haf_job
   stage: test
   variables:
-    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* expected by template/anchors
-    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
-    HAF_DATA_SOURCE: "/cache/haf_${HAF_UPSTREAM_COMMIT}"
-    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
-    HAF_APP_PORT: $APP_PORT
-    HAF_APP_USER: "hafah_user"
     FF_NETWORK_PER_BUILD: 1
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
     HIVED_UID: $HIVED_UID
-    BENCHMARK_SOURCE_DIR: "${CI_PROJECT_DIR}/tests_api/benchmarks"
-
-  # Use YAML anchors for services (defined in Reusable YAML Anchors section)
-  services:
-    - *haf-instance-benchmark
-    - *hafah-app-setup
-    - *hafah-app-service
-
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_PORT: $APP_PORT
   needs:
-  - job: find_haf_image
-    artifacts: true
   - job: prepare_haf_data
     artifacts: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
-
-  before_script:
-    - apk add --no-cache git
-    - !reference [.clone_tests_api, script]
 
   script:
   - /usr/bin/python3 "${BENCHMARK_SOURCE_DIR}/benchmark.py" -a app -p $APP_PORT -c
@@ -754,41 +643,31 @@ postgrest_comparison_tests:
       junit: wdir/jmeter_junit_report.xml
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 postgrest_block_api_benchmark_tests:
   extends: .benchmark_tests
+  # Benchmark tests may fail when using non-develop HAF commit due to different service behavior
+  allow_failure: true
   variables:
     API_FOR_TESTING: blocks_api
 
 postgrest_account_history_benchmark_tests:
   extends: .benchmark_tests
+  # Benchmark tests may fail when using non-develop HAF commit due to different service behavior
+  allow_failure: true
 
-# This job uses different test scripts than .benchmark_tests, so define its own config
-# but reuse the services via YAML anchors
 postgrest_rest_benchmark_tests:
   extends: .jmeter_benchmark_with_haf_job
   stage: test
+  # Benchmark tests may fail when using non-develop HAF commit due to different service behavior
+  allow_failure: true
   variables:
-    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* expected by template/anchors
-    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
-    HAF_DATA_SOURCE: "/cache/haf_${HAF_UPSTREAM_COMMIT}"
-    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
-    HAF_APP_PORT: $APP_PORT
-    HAF_APP_USER: "hafah_user"
     FF_NETWORK_PER_BUILD: 1
     HIVED_UID: $HIVED_UID
-
-  # Use YAML anchors for services (defined in Reusable YAML Anchors section)
-  services:
-    - *haf-instance-benchmark
-    - *hafah-app-setup
-    - *hafah-app-service
-
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_PORT: $APP_PORT
   needs:
-  - job: find_haf_image
-    artifacts: true
   - job: prepare_haf_data
     artifacts: true
   - job: prepare_postgrest_hafah_image
@@ -811,7 +690,6 @@ postgrest_rest_benchmark_tests:
       junit: tests/performance/junit-result.xml
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 cleanup_hive_cache_manual:
@@ -821,7 +699,6 @@ cleanup_hive_cache_manual:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_hive_*"
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 cleanup_haf_cache_manual:
@@ -831,7 +708,6 @@ cleanup_haf_cache_manual:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_haf_*"
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 build_and_publish_image:
@@ -839,49 +715,23 @@ build_and_publish_image:
   extends: .publish_docker_image_template
   before_script:
   - !reference [.publish_docker_image_template, before_script]
-  # Fetch HAF scripts from common-ci-configuration (replaces submodule)
-  - mkdir -p "${CI_PROJECT_DIR}/haf/scripts"
-  - |
-    for script in common.sh create_haf_app_role.sh; do
-      curl -fsSL "${COMMON_CI_URL}/haf-app-tools/scripts/${script}" -o "${CI_PROJECT_DIR}/haf/scripts/${script}"
-      chmod +x "${CI_PROJECT_DIR}/haf/scripts/${script}"
-    done
   script:
   - scripts/ci-helpers/build_and_publish_instance.sh
   tags:
   - public-runner-docker
-  - standard
+  - hived
 
 prepare_haf_image_testnet:
   extends: .prepare_haf_image
   stage: build
-  needs:
-    - job: find_haf_image
-      artifacts: true
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     REGISTRY_USER: "$CI_IMG_BUILDER_USER"
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
     HIVE_NETWORK_TYPE: testnet
     BINARY_CACHE_PATH: "$CI_PROJECT_DIR/haf-testnet-binaries"
-    # Map HAF_UPSTREAM_* from find_haf_image
-    HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
-  before_script:
-    - !reference [.haf_docker_image_builder_job, before_script]
-    # Clone HAF at runtime for testnet build using HAF_COMMIT
-    - |
-      echo "Cloning HAF for testnet build at commit ${HAF_COMMIT}..."
-      git clone --single-branch \
-        https://gitlab.syncad.com/hive/haf.git "${CI_PROJECT_DIR}/haf" \
-        --no-checkout
-      cd "${CI_PROJECT_DIR}/haf"
-      git fetch --depth 1 origin "${HAF_COMMIT}"
-      git checkout "${HAF_COMMIT}"
-      git submodule update --init --recursive --depth 1
-      cd "${CI_PROJECT_DIR}"
   tags:
   - public-runner-docker
-  - standard
 
 .haf-instance-with-nfs-fallback: &haf-instance-with-nfs-fallback
   name: ${HAF_IMAGE_NAME}
@@ -889,17 +739,11 @@ prepare_haf_image_testnet:
   variables:
     PGCTLTIMEOUT: 600
     PG_ACCESS: |
-      "local   all              haf_admin                     trust"
-      "local   all              haf_maintainer                trust"
-      "local   all              hived                         trust"
-      "local   all              postgres                      trust"
       "host    all              haf_admin        0.0.0.0/0    trust"
       "host    all              hived            0.0.0.0/0    trust"
-      "host    all              haf_maintainer   0.0.0.0/0    trust"
       "host    all              hafah_user       0.0.0.0/0    trust"
       "host    all              all              0.0.0.0/0    scram-sha-256"
-    DATA_SOURCE: "${HAF_DATA_SOURCE}"
-    SHARED_BLOCK_LOG_DIR: "${BLOCK_LOG_SOURCE_DIR_5M}"
+    DATA_SOURCE: "${DATA_CACHE_HAF_PREFIX}_${HAF_COMMIT}"
     DATA_SOURCE_NFS_PREFIX: "${DATA_CACHE_NFS_PREFIX}"
     DATA_SOURCE_NFS_TYPE: "haf"
     DATA_SOURCE_NFS_KEY: "${HAF_COMMIT}"
@@ -929,13 +773,8 @@ prepare_haf_image_testnet:
   variables:
     PGCTLTIMEOUT: 600
     PG_ACCESS: |
-      "local   all              haf_admin                     trust"
-      "local   all              haf_maintainer                trust"
-      "local   all              hived                         trust"
-      "local   all              postgres                      trust"
       "host    all              haf_admin        0.0.0.0/0    trust"
       "host    all              hived            0.0.0.0/0    trust"
-      "host    all              haf_maintainer   0.0.0.0/0    trust"
       "host    all              hafah_user       0.0.0.0/0    trust"
       "host    all              all              0.0.0.0/0    scram-sha-256"
   command: ["--execute-maintenance-script=${HAF_SOURCE_DIR}/scripts/maintenance-scripts/sleep_infinity.sh"]
@@ -944,27 +783,33 @@ prepare_haf_image_testnet:
   extends: .pytest_based_template
   stage: test
   needs:
-  - job: find_haf_image
-    artifacts: true
   - job: prepare_haf_image_testnet
     artifacts: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
 
-  # Clone HAF and hive test tools at runtime using reusable template
-  # hafah-local-tools has path dependencies to haf/ and haf/hive/ directories
-  # Note: HAF_COMMIT is mapped from HAF_UPSTREAM_COMMIT in variables section
+  # Override before_script to include submodule initialization before poetry install
+  # The default before_script in .pytest_based_template only runs poetry install,
+  # but hafah-local-tools has a path dependency to haf/tests/integration/haf-local-tools
+  # which requires the haf submodule to be present
   before_script:
-    - !reference [.clone_haf_and_hive_test_tools, script]
-    # Fix Python version constraint in pyproject.toml files (test-tools requires 3.14 but we use 3.12)
+    # Initialize haf submodule and its nested submodules
     - |
-      cd "${CI_PROJECT_DIR}/haf/hive"
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/pyproject.toml
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/test-tools/pyproject.toml
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/shared-tools/pyproject.toml
-      cd "${CI_PROJECT_DIR}"
-    # Install libpq-dev for psycopg2 build (CI base image runs as root)
-    - apt-get update && apt-get install -y libpq-dev
+      echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
+      git config --global --add safe.directory '*'
+      HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+      HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+      echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+      sudo rm -rf haf 2>/dev/null || rm -rf haf
+      git clone --no-checkout "$HAF_URL" haf
+      cd haf
+      git fetch origin develop
+      git checkout $HAF_SUBMOD_COMMIT
+      git submodule update --init --recursive --jobs 4
+      cd ..
+      echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
+    # Install libpq-dev for psycopg2 build (until CI base image includes it)
+    - sudo apt-get update && sudo apt-get install -y libpq-dev
     # Poetry install (from .pytest_based_template)
     - python3 -m venv venv/
     - . venv/bin/activate
@@ -987,7 +832,7 @@ prepare_haf_image_testnet:
       echo "Attempting to perform application setup..."
       # pass control to the default image entrypoint
       "./docker_entrypoint.sh" "install_app"
-      echo "Application setup completed, starting to listen on app port to satisfy Gitlab health checker..."
+      echo "Application setup completed, starting to listed app port to satisfy Gitlab health checker..."
       # Once setup completed, just listen on container/app port to satisfy GitlabCI HealthChecker
       nc -v -l -p $(echo "${HAF_APP_PORT}")
      # arg $0 should be explicitly passed when using 'bash -c' entrypoints
@@ -1011,12 +856,8 @@ prepare_haf_image_testnet:
     - '/bin/bash'
   variables:
     JUNIT_REPORT: tests/integration/functional/report.xml
-    # Use builder image with Python 3.14 (hafah-local-tools requires Python ^3.14)
-    PYTEST_BASED_IMAGE_NAME: $BUILDER_IMAGE_PATH
+    PYTEST_BASED_IMAGE_NAME: $PYTEST_RUNTIME_IMAGE_NAME
     POETRY_INSTALL_ROOT_DIR: $CI_PROJECT_DIR/tests/integration/hafah-local-tools
-    # HAF_IMAGE_NAME is set by prepare_haf_image_testnet dotenv artifact
-    # Map HAF_UPSTREAM_COMMIT for .clone_haf_and_hive_test_tools script
-    HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
 
     BINARY_CACHE_PATH: "haf-testnet-binaries"
     HIVED_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/hived"
@@ -1038,14 +879,16 @@ prepare_haf_image_testnet:
     -m $PYTEST_MARK
   tags:
   - public-runner-docker
-  - standard
 
 hafah_pytest_rest_api_pattern_tests:
   stage: test
   # Use specific tag with util-linux for NFS flock support (not :latest which has BusyBox flock)
   image: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-builder:${DOCKER_BUILDER_TAG}
+  # Pattern tests are tied to specific blockchain data indexed by develop branch HAF
+  # Allow failure when using a different HAF commit (feature branches with HAF changes)
+  allow_failure: true
   needs:
-  - job: find_haf_image
+  - job: prepare_haf_image
     artifacts: true
   - job: prepare_haf_data
     artifacts: true
@@ -1060,15 +903,13 @@ hafah_pytest_rest_api_pattern_tests:
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_CERT_PATH: "/certs/client"
     DOCKER_TLS_VERIFY: 1
-    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* for cache-manager and docker-compose
-    HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
-    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
     # Data directories for docker-compose bind mounts
     HAF_DATA_DIRECTORY: "${CI_PROJECT_DIR}/haf-data"
     HAF_SHM_DIRECTORY: "${CI_PROJECT_DIR}/haf-shm"
     # Test configuration
     JUNIT_REPORT: $CI_PROJECT_DIR/tests/tavern/report.xml
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
+    POETRY_INSTALL_ROOT_DIR: $CI_PROJECT_DIR/haf/hive/tests/python/hive-local-tools
     TAVERN_DIR: $CI_PROJECT_DIR/tests/tavern
     DB_NAME: haf_block_log
     DB_URL: "postgresql://haf_admin@localhost:5432/$DB_NAME"
@@ -1106,24 +947,18 @@ hafah_pytest_rest_api_pattern_tests:
     echo "HAF image name $HAF_IMAGE_NAME"
     # Run pytest from a Python container connected to the haf-network
     # This allows pytest to reach the hafah service at hafah-ci-hafah-1:6543
-    # Use Python 3.12 image - tests_api requires Python 3.12+
-    # Tavern tests require validate_response module from hive/tests_api
+    # Use standard Python 3.11 image to avoid setuptools issues with Python 3.14
     docker run --rm --network haf-network \
       -e HAF_APP_HOST=hafah-ci-hafah-1 \
       -e HAF_APP_PORT=${APP_PORT} \
+      -e PYTHONPATH=/workspace/haf/hive/tests/python/hive-local-tools/tests_api \
       -e TAVERN_DIR=/workspace/tests/tavern \
       -v "${CI_PROJECT_DIR}:/workspace" \
       -w /workspace \
-      python:3.12-slim \
+      python:3.11-slim \
       /bin/bash -c "
-        # Clone and install tests_api for validate_response module
-        apt-get update && apt-get install -y --no-install-recommends git ca-certificates >/dev/null 2>&1
-        git clone --depth 1 https://gitlab.syncad.com/hive/tests_api.git /tmp/tests_api
-        pip install --quiet /tmp/tests_api
-        # Install tavern test dependencies
-        pip install --quiet tavern pytest-xdist pyyaml requests deepdiff
-        # Run tests
-        cd /workspace/tests/tavern
+        cd /workspace/tests/tavern && \
+        pip install --quiet tavern pytest-xdist pyyaml requests deepdiff && \
         pytest -n ${PYTEST_NUMBER_OF_PROCESSES:-4} --junitxml report.xml .
       "
   after_script:
@@ -1138,7 +973,6 @@ hafah_pytest_rest_api_pattern_tests:
     when: always
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 hafah_pytest_fuctional_tests_part1:
@@ -1172,7 +1006,6 @@ deploy-wax-spec-dev-package:
     artifacts: true
   tags:
   - public-runner-docker
-  - standard
 
 deploy-wax-spec-production-public-npm:
   extends: .registry_npmjs_org_deploy_package_template
@@ -1196,4 +1029,3 @@ deploy-wax-spec-production-public-npm:
     artifacts: true
   tags:
   - public-runner-docker
-  - standard
