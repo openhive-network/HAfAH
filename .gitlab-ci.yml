@@ -70,20 +70,23 @@ variables:
   # Python 3.14 compatibility - allow PyO3-based packages to build
   PYO3_USE_ABI3_FORWARD_COMPATIBILITY: "1"
 
+  # Cache manager configuration (from common-ci-configuration)
+  CACHE_MANAGER: "/tmp/cache-manager.sh"
+  CACHE_MANAGER_REF: "feature/haf-app-testing-templates"
+
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 - project: 'hive/haf'
   ref: 1ac5d12439b9cca33e6db383adc59967cae75fc4   # develop
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
-  # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
+# HAF app testing templates from common-ci-configuration
+- project: 'hive/common-ci-configuration'
+  ref: feature/haf-app-testing-templates
+  file: '/templates/haf_app_testing.gitlab-ci.yml'
 
 # =============================================================================
 # Detect Changes - determines if we can skip data preparation
-# Outputs via dotenv artifact:
-#   AUTO_SKIP_BUILD  - true if data prep can be skipped
-#   HAF_COMMIT       - commit SHA for cached data (when skipping)
-#
-# Note: Actual cache handling is done by cache-manager.sh from common-ci-configuration
+# Uses base HAF cache (not app-specific sync) since hafah doesn't need sync step
 # =============================================================================
 detect_changes:
   stage: detect
@@ -185,33 +188,16 @@ detect_changes:
   tags:
     - data-cache-storage  # Needs NFS access to find caches
 
+# =============================================================================
+# HAF Commit Validation - uses common template
+# =============================================================================
 validate_haf_commit:
+  extends: .haf_commit_validation
   stage: build
-  image: alpine:latest
-  script:
-  - |
-    set -e
-    apk add --no-cache git
-    SUBMODULE_COMMIT=$(cat .git/modules/haf/HEAD 2>/dev/null || git -C haf rev-parse HEAD)
-    INCLUDE_REF=$(grep -A2 "project:.*hive/haf" .gitlab-ci.yml | grep "ref:" | head -1 | sed 's/.*ref: *\([a-f0-9]*\).*/\1/' || true)
-    echo "HAF_COMMIT variable: $HAF_COMMIT"
-    echo "HAF submodule HEAD:  $SUBMODULE_COMMIT"
-    echo "Include ref:         $INCLUDE_REF"
-    ERRORS=0
-    if [ "$HAF_COMMIT" != "$SUBMODULE_COMMIT" ]; then
-      echo "ERROR: HAF_COMMIT variable does not match submodule commit!"
-      ERRORS=1
-    fi
-    if [ "$HAF_COMMIT" != "$INCLUDE_REF" ]; then
-      echo "ERROR: HAF_COMMIT variable does not match include ref!"
-      ERRORS=1
-    fi
-    if [ $ERRORS -eq 1 ]; then
-      exit 1
-    fi
-    echo "All HAF commit references are consistent"
-  tags:
-  - public-runner-docker
+  variables:
+    HAF_COMMIT: "1ac5d12439b9cca33e6db383adc59967cae75fc4"
+    HAF_INCLUDE_REF: "1ac5d12439b9cca33e6db383adc59967cae75fc4"
+    HAF_SUBMODULE_PATH: "haf"
 
 verify_poetry_lock_sanity:
   extends: .verify_poetry_lock_sanity_template
@@ -609,9 +595,6 @@ prepare_haf_image_testnet:
   tags:
   - public-runner-docker
 
-# Removed: .haf-instance-with-nfs-fallback - replaced with docker-compose approach
-# See hafah_pytest_rest_api_pattern_tests for the new pattern
-
 # Testnet HAF instance - starts with empty database, no pre-existing data required
 .haf-instance-testnet: &haf-instance-testnet
   name: ${HAF_IMAGE_NAME}
@@ -700,10 +683,12 @@ prepare_haf_image_testnet:
   tags:
   - public-runner-docker
 
+# =============================================================================
+# REST API Pattern Tests - uses common DinD infrastructure
+# =============================================================================
 hafah_pytest_rest_api_pattern_tests:
+  extends: .docker_image_builder_job_template
   stage: test
-  # Use specific tag with util-linux for NFS flock support (not :latest which has BusyBox flock)
-  image: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-builder:${DOCKER_BUILDER_TAG}
   # Pattern tests are tied to specific blockchain data indexed by develop branch HAF
   # Allow failure when using a different HAF commit (feature branches with HAF changes)
   allow_failure: true
@@ -718,14 +703,7 @@ hafah_pytest_rest_api_pattern_tests:
     optional: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
-  services:
-  - name: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-dind:${DOCKER_DIND_TAG}
-    alias: docker
   variables:
-    DOCKER_HOST: tcp://docker:2376
-    DOCKER_TLS_CERTDIR: "/certs"
-    DOCKER_CERT_PATH: "/certs/client"
-    DOCKER_TLS_VERIFY: 1
     # Data directories for docker-compose bind mounts
     HAF_DATA_DIRECTORY: "${CI_PROJECT_DIR}/haf-data"
     HAF_SHM_DIRECTORY: "${CI_PROJECT_DIR}/haf-shm"
@@ -742,12 +720,12 @@ hafah_pytest_rest_api_pattern_tests:
     DIRECT_CALLS: 0
     POSTGRES_URL: $DB_URL
   before_script:
+  - !reference [.docker_image_builder_job_template, before_script]
   - |
     echo -e "\e[0Ksection_start:$(date +%s):cache[collapsed=true]\r\e[0KFetching HAF cache..."
-    # Use cache-manager to extract HAF data directly to target directory
-    # cache-manager handles local/NFS fallback and permission restoration
-    CACHE_MANAGER="/tmp/cache-manager.sh"
-    curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/scripts/cache-manager.sh" -o "$CACHE_MANAGER"
+    # Use cache-manager from common-ci-configuration
+    mkdir -p "$(dirname "$CACHE_MANAGER")"
+    curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/${CACHE_MANAGER_REF}/scripts/cache-manager.sh" -o "$CACHE_MANAGER"
     chmod +x "$CACHE_MANAGER"
     mkdir -p "${HAF_DATA_DIRECTORY}" "${HAF_SHM_DIRECTORY}"
     if "$CACHE_MANAGER" get haf "${HAF_COMMIT}" "${HAF_DATA_DIRECTORY}"; then
@@ -769,8 +747,6 @@ hafah_pytest_rest_api_pattern_tests:
     echo "HAfAH image name $HAFAH_IMAGE_NAME"
     echo "HAF image name $HAF_IMAGE_NAME"
     # Run pytest from a Python container connected to the haf-network
-    # This allows pytest to reach the hafah service at hafah-ci-hafah-1:6543
-    # Use standard Python 3.11 image to avoid setuptools issues with Python 3.14
     docker run --rm --network haf-network \
       -e HAF_APP_HOST=hafah-ci-hafah-1 \
       -e HAF_APP_PORT=${APP_PORT} \
