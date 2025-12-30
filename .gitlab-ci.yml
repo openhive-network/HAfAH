@@ -52,12 +52,12 @@ variables:
   BLOCK_LOG_SOURCE_DIR_5M: /blockchain/block_log_5m
   # HAF submodule commit - must match the 'ref:' in the include section below
   # This is needed for service containers which can't access dotenv artifacts
-  HAF_COMMIT: "1ac5d12439b9cca33e6db383adc59967cae75fc4"
+  HAF_COMMIT: "66e1f1046ffc8cf8a6c08b381a84c6fceefe000c"
 
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 - project: 'hive/haf'
-  ref: 1ac5d12439b9cca33e6db383adc59967cae75fc4   # develop
+  ref: 66e1f1046ffc8cf8a6c08b381a84c6fceefe000c   # fix/ci-base-image-version
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
   # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
 
