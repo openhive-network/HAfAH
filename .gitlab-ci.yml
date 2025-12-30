@@ -266,7 +266,22 @@ prepare_haf_data:
     HAFAH_IMAGE_NAME: $CI_REGISTRY_IMAGE:$HAFAH_IMAGE_TAG
     USE_POSTGREST: 0
     SOURCE_DIR: $CI_PROJECT_DIR
-    GIT_STRATEGY: "clone"
+
+  before_script:
+  - !reference [.docker_image_builder_job, before_script]
+  # Initialize haf submodule manually (nested hive submodule has relative URL issues)
+  - |
+    git config --global --add safe.directory '*'
+    HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+    HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+    echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+    rm -rf haf
+    git clone --no-checkout "$HAF_URL" haf
+    cd haf
+    git fetch origin develop
+    git checkout $HAF_SUBMOD_COMMIT
+    git submodule update --init --recursive --jobs 4
+    cd ..
 
   script:
   - |
@@ -311,6 +326,19 @@ build_setup_docker_image:
   before_script:
   - !reference [.docker_image_builder_job, before_script]
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  # Initialize haf submodule manually (nested hive submodule has relative URL issues)
+  - |
+    git config --global --add safe.directory '*'
+    HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+    HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+    echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+    rm -rf haf
+    git clone --no-checkout "$HAF_URL" haf
+    cd haf
+    git fetch origin develop
+    git checkout $HAF_SUBMOD_COMMIT
+    git submodule update --init --recursive --jobs 4
+    cd ..
   script: scripts/ci-helpers/build_setup_image.sh "$CI_PROJECT_DIR"
   tags:
   - public-runner-docker
