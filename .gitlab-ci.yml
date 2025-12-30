@@ -10,10 +10,14 @@ variables:
   # don't reduce server CPU and make fetch less effective.
   GIT_STRATEGY: fetch
   GIT_DEPTH: 0
-  # Disable automatic submodule handling - nested submodules with relative URLs
-  # don't work with fetch strategy. Submodules are initialized manually in before_script.
+  # Disable automatic submodule fetching - we handle it manually in before_script
+  # This is needed because haf contains nested hive submodule with relative URLs
   GIT_SUBMODULE_STRATEGY: none
   GIT_SUBMODULE_FORCE_HTTPS: "true"
+  # Allow file:// protocol for nested submodules (required for test-tools in hive)
+  GIT_CONFIG_COUNT: 1
+  GIT_CONFIG_KEY_0: "protocol.file.allow"
+  GIT_CONFIG_VALUE_0: "always"
   # Temporary: separate clone path prevents clone-strategy jobs from erasing
   # fetch workspaces during transition. Remove once all projects use fetch.
   GIT_CLONE_PATH: $CI_BUILDS_DIR/fetch/$CI_RUNNER_SHORT_TOKEN/$CI_CONCURRENT_ID/$CI_PROJECT_PATH
@@ -60,9 +64,6 @@ include:
 default:
   hooks:
     pre_get_sources_script:
-      # Allow file transport for nested submodules and rewrite relative URLs
-      - git config --global protocol.file.allow always
-      - git config --global url."${CI_SERVER_URL}/${CI_PROJECT_NAMESPACE}/".insteadOf "../"
       # Clean corrupt git state left by cancelled pipelines (see GitLab #296638, #4600)
       # Wrapped in subshell to avoid changing working directory for subsequent git operations
       - |
@@ -114,10 +115,23 @@ default:
     # Skip if git not available (some jobs use minimal images)
     - |
       if command -v git >/dev/null 2>&1; then
-        # Ensure file transport is allowed (config may not persist from pre_get_sources_script)
-        git config --global protocol.file.allow always
-        git submodule sync --recursive
+        echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
+        git config --global --add safe.directory '*'
+        # Get the commit we need from the haf submodule
+        HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+        HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+        echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+        # Remove existing haf directory if it exists (can be stale from GIT_STRATEGY=fetch)
+        sudo rm -rf haf 2>/dev/null || rm -rf haf
+        # Clone and checkout specific commit
+        git clone --no-checkout "$HAF_URL" haf
+        cd haf
+        git fetch origin develop
+        git checkout $HAF_SUBMOD_COMMIT
+        # Initialize nested submodules inside haf (hive and its submodules)
         git submodule update --init --recursive --jobs 4
+        cd ..
+        echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
       fi
 
 validate_haf_commit:
@@ -128,9 +142,18 @@ validate_haf_commit:
     set -e
     apk add --no-cache git
     # Initialize submodules (default before_script skipped because alpine lacks git initially)
-    git config --global protocol.file.allow always
-    git submodule sync --recursive
+    # Use manual clone to avoid nested submodule issues with relative URLs
+    git config --global --add safe.directory '*'
+    HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+    HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+    echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+    rm -rf haf
+    git clone --no-checkout "$HAF_URL" haf
+    cd haf
+    git fetch origin develop
+    git checkout $HAF_SUBMOD_COMMIT
     git submodule update --init --recursive --jobs 4
+    cd ..
     SUBMODULE_COMMIT=$(git -C haf rev-parse HEAD)
     INCLUDE_REF=$(grep -A2 "project:.*hive/haf" .gitlab-ci.yml | grep "ref:" | head -1 | sed 's/.*ref: *\([a-f0-9]*\).*/\1/' || true)
     echo "HAF_COMMIT variable: $HAF_COMMIT"
