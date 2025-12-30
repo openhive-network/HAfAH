@@ -103,6 +103,15 @@ default:
                 fi
               done
             fi
+            # Fix nested submodule origin URLs for fetch strategy
+            # The haf submodule contains hive with relative URL ../hive.git
+            # which doesn't resolve correctly with fetch strategy
+            if [ -d "haf/.git" ] || [ -f "haf/.git" ]; then
+              if [ -d "haf/hive" ]; then
+                echo "pre_get_sources: fixing nested hive submodule origin"
+                git -C haf/hive remote set-url origin "${CI_SERVER_URL}/${CI_PROJECT_NAMESPACE}/hive.git" 2>/dev/null || true
+              fi
+            fi
             echo "pre_get_sources: existing repo OK"
           fi
         else
