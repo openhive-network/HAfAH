@@ -74,6 +74,11 @@ variables:
   CACHE_MANAGER: "/tmp/cache-manager.sh"
   CACHE_MANAGER_REF: "feature/haf-app-testing-templates"
 
+  # Docker image tags - use specific version with util-linux for NFS flock support
+  # (overrides template default of "latest" which may be stale)
+  DOCKER_BUILDER_TAG: "3dd346380da7f28cdaf3ef3955559c905d94bd1c"
+  DOCKER_DIND_TAG: "3dd346380da7f28cdaf3ef3955559c905d94bd1c"
+
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 - project: 'hive/haf'
