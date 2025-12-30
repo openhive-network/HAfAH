@@ -127,7 +127,11 @@ validate_haf_commit:
   - |
     set -e
     apk add --no-cache git
-    SUBMODULE_COMMIT=$(cat .git/modules/haf/HEAD 2>/dev/null || git -C haf rev-parse HEAD)
+    # Initialize submodules (default before_script skipped because alpine lacks git initially)
+    git config --global protocol.file.allow always
+    git submodule sync --recursive
+    git submodule update --init --recursive --jobs 4
+    SUBMODULE_COMMIT=$(git -C haf rev-parse HEAD)
     INCLUDE_REF=$(grep -A2 "project:.*hive/haf" .gitlab-ci.yml | grep "ref:" | head -1 | sed 's/.*ref: *\([a-f0-9]*\).*/\1/' || true)
     echo "HAF_COMMIT variable: $HAF_COMMIT"
     echo "HAF submodule HEAD:  $SUBMODULE_COMMIT"
