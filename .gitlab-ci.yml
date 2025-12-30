@@ -9,17 +9,14 @@ variables:
   # Full clone (depth 0) enables efficient incremental fetches - shallow clones
   # don't reduce server CPU and make fetch less effective.
   GIT_STRATEGY: fetch
-  GIT_SUBMODULE_STRATEGY: "recursive"
   GIT_DEPTH: 0
-  GIT_SUBMODULE_DEPTH: 0
-  GIT_SUBMODULE_UPDATE_FLAGS: --jobs 4
+  # Disable automatic submodule handling - nested submodules with relative URLs
+  # don't work with fetch strategy. Submodules are initialized manually in before_script.
+  GIT_SUBMODULE_STRATEGY: none
+  GIT_SUBMODULE_FORCE_HTTPS: "true"
   # Temporary: separate clone path prevents clone-strategy jobs from erasing
   # fetch workspaces during transition. Remove once all projects use fetch.
   GIT_CLONE_PATH: $CI_BUILDS_DIR/fetch/$CI_RUNNER_SHORT_TOKEN/$CI_CONCURRENT_ID/$CI_PROJECT_PATH
-  # Allow file:// transport for nested submodules
-  GIT_CONFIG_PARAMETERS: "'protocol.file.allow=always'"
-  # Force HTTPS URLs for submodules (helps with nested submodule resolution)
-  GIT_SUBMODULE_FORCE_HTTPS: "true"
 
   CI_DEBUG_SERVICES: "true"
   # uses registry.gitlab.syncad.com/hive/haf/ci-base-image:ubuntu24.04-6
@@ -111,6 +108,10 @@ default:
           echo "pre_get_sources: no .git directory (fresh workspace)"
         fi
         )
+  before_script:
+    # Initialize submodules manually (GIT_SUBMODULE_STRATEGY: none)
+    - git submodule sync --recursive
+    - git submodule update --init --recursive --jobs 4
 
 validate_haf_commit:
   stage: build
