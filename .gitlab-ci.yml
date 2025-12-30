@@ -75,7 +75,10 @@ include:
 - project: 'hive/haf'
   ref: 1ac5d12439b9cca33e6db383adc59967cae75fc4   # develop
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
-  # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
+# HAF app testing templates from common-ci-configuration
+- project: 'hive/common-ci-configuration'
+  ref: develop
+  file: '/templates/haf_app_testing.gitlab-ci.yml'
 
 # =============================================================================
 # Detect Changes - determines if we can skip data preparation
