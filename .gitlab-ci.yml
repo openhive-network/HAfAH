@@ -70,7 +70,9 @@ variables:
 
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
   DATA_CACHE_HIVE_PREFIX: "/cache/replay_data_hive"
-  DATA_CACHE_HAF_PREFIX: "/cache/replay_data_haf"
+  # Cache path format must match NFS structure: /cache/{type}_{key} -> /nfs/ci-cache/{type}/{key}.tar
+  # HAF caches are stored at /nfs/ci-cache/haf/{commit}.tar, so use /cache/haf_{commit}
+  DATA_CACHE_HAF_PREFIX: "/cache/haf"
   # NFS cache configuration for data sharing across builders
   DATA_CACHE_NFS_PREFIX: "/nfs/ci-cache"
   BLOCK_LOG_SOURCE_DIR_5M: /blockchain/block_log_5m
