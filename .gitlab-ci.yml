@@ -429,10 +429,27 @@ build_setup_docker_image:
   - job: prepare_haf_data
     artifacts: true
 
+  # Override before_script to include submodule initialization before poetry install
+  # (see .hafah_pytest_fuctional_tests_base for explanation)
   before_script:
-  - !reference [.haf_app_pattern_tests_template, before_script]
-  - echo "HAfAH image name $HAF_APP_IMAGE"
-  - echo "HAF image name $HAF_IMAGE_NAME"
+    - |
+      echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
+      git config --global --add safe.directory '*'
+      HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+      HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+      echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+      sudo rm -rf haf 2>/dev/null || rm -rf haf
+      git clone --no-checkout "$HAF_URL" haf
+      cd haf
+      git fetch origin develop
+      git checkout $HAF_SUBMOD_COMMIT
+      git submodule update --init --recursive --jobs 4
+      cd ..
+      echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
+    # Poetry install (from parent template via !reference)
+    - !reference [.haf_app_pattern_tests_template, before_script]
+    - echo "HAfAH image name $HAF_APP_IMAGE"
+    - echo "HAF image name $HAF_IMAGE_NAME"
 
   artifacts:
     paths:
@@ -489,6 +506,30 @@ new_style_postgrest_pattern_tests:
     HAF_APP_USER: "hafah_user"
 
     HIVED_UID: $HIVED_UID
+
+  # Override before_script to include submodule initialization before poetry install
+  # (see .hafah_pytest_fuctional_tests_base for explanation)
+  before_script:
+    - |
+      echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
+      git config --global --add safe.directory '*'
+      HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+      HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+      echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+      sudo rm -rf haf 2>/dev/null || rm -rf haf
+      git clone --no-checkout "$HAF_URL" haf
+      cd haf
+      git fetch origin develop
+      git checkout $HAF_SUBMOD_COMMIT
+      git submodule update --init --recursive --jobs 4
+      cd ..
+      echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
+    # Poetry install (from .pytest_based_template)
+    - python3 -m venv venv/
+    - . venv/bin/activate
+    - echo "Entering ${POETRY_INSTALL_ROOT_DIR}"
+    - cd "${POETRY_INSTALL_ROOT_DIR}"
+    - poetry install
 
   # Override services to use haf_admin for wait script (hafah_user doesn't exist until app-setup creates it)
   # comparison_tests needs services from both hived_pattern_tests_template and haf_app_pattern_tests_template
@@ -743,6 +784,33 @@ prepare_haf_image_testnet:
   - job: prepare_postgrest_hafah_image
     artifacts: true
 
+  # Override before_script to include submodule initialization before poetry install
+  # The default before_script in .pytest_based_template only runs poetry install,
+  # but hafah-local-tools has a path dependency to haf/tests/integration/haf-local-tools
+  # which requires the haf submodule to be present
+  before_script:
+    # Initialize haf submodule and its nested submodules
+    - |
+      echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
+      git config --global --add safe.directory '*'
+      HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+      HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+      echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+      sudo rm -rf haf 2>/dev/null || rm -rf haf
+      git clone --no-checkout "$HAF_URL" haf
+      cd haf
+      git fetch origin develop
+      git checkout $HAF_SUBMOD_COMMIT
+      git submodule update --init --recursive --jobs 4
+      cd ..
+      echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
+    # Poetry install (from .pytest_based_template)
+    - python3 -m venv venv/
+    - . venv/bin/activate
+    - echo "Entering ${POETRY_INSTALL_ROOT_DIR}"
+    - cd "${POETRY_INSTALL_ROOT_DIR}"
+    - poetry install
+
   services:
   - *haf-instance-testnet
   - name: ${HAF_APP_IMAGE}
@@ -817,6 +885,30 @@ hafah_pytest_rest_api_pattern_tests:
     artifacts: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
+
+  # Override before_script to include submodule initialization before poetry install
+  # (see .hafah_pytest_fuctional_tests_base for explanation)
+  before_script:
+    - |
+      echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
+      git config --global --add safe.directory '*'
+      HAF_URL="https://gitlab.syncad.com/hive/haf.git"
+      HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
+      echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
+      sudo rm -rf haf 2>/dev/null || rm -rf haf
+      git clone --no-checkout "$HAF_URL" haf
+      cd haf
+      git fetch origin develop
+      git checkout $HAF_SUBMOD_COMMIT
+      git submodule update --init --recursive --jobs 4
+      cd ..
+      echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
+    - python3 -m venv venv/
+    - . venv/bin/activate
+    - echo "Entering ${POETRY_INSTALL_ROOT_DIR}"
+    - cd "${POETRY_INSTALL_ROOT_DIR}"
+    - poetry install
+
   services:
   - *haf-instance-with-nfs-fallback
   - name: ${HAF_APP_IMAGE}
