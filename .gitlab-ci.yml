@@ -275,7 +275,7 @@ prepare_haf_data:
     HAF_URL="https://gitlab.syncad.com/hive/haf.git"
     HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
     echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
-    rm -rf haf
+    sudo rm -rf haf 2>/dev/null || rm -rf haf
     git clone --no-checkout "$HAF_URL" haf
     cd haf
     git fetch origin develop
@@ -332,7 +332,7 @@ build_setup_docker_image:
     HAF_URL="https://gitlab.syncad.com/hive/haf.git"
     HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
     echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
-    rm -rf haf
+    sudo rm -rf haf 2>/dev/null || rm -rf haf
     git clone --no-checkout "$HAF_URL" haf
     cd haf
     git fetch origin develop
