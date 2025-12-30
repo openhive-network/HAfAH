@@ -1,4 +1,5 @@
 stages:
+- detect
 - build
 - test
 - publish
@@ -43,6 +44,27 @@ variables:
     "host    all              hived            0.0.0.0/0    trust"
     "host    all              hafah_user       0.0.0.0/0    trust"
     "host    all              all              0.0.0.0/0    scram-sha-256"
+
+  # =============================================================================
+  # Quick Test / Auto-Skip Mode
+  # =============================================================================
+  # Two ways to skip data preparation and use cached HAF data:
+  #
+  # 1. AUTOMATIC: When only tests/docs/SQL change, data prep is automatically
+  #    skipped and cached data is used. No configuration needed.
+  #
+  # 2. MANUAL: Set QUICK_TEST=true to force skip mode with a specific cache:
+  #    - QUICK_TEST=true
+  #    - QUICK_TEST_HAF_COMMIT=<sha>  (required - find with list below)
+  #
+  # Find available caches:
+  #   ssh hive-builder-10 'ls -lt /nfs/ci-cache/haf/*.tar | head -5'
+  # Or use: ../haf/scripts/ci-helpers/list-haf-caches.sh --recent
+  # =============================================================================
+  QUICK_TEST: "false"
+  QUICK_TEST_HAF_COMMIT: ""   # Required when QUICK_TEST=true - HAF commit with cached data
+  # Auto-populated by detect_changes job:
+  AUTO_SKIP_BUILD: "false"    # Set to true when only tests/docs/SQL changed
 
   # Variables specific to runner (there is single runner cache and there is 5m block_log available)
   DATA_CACHE_HIVE_PREFIX: "/cache/replay_data_hive"
