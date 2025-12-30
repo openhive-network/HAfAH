@@ -772,13 +772,15 @@ hafah_pytest_rest_api_pattern_tests:
     # This allows pytest to reach the hafah service at hafah-ci-hafah-1:6543
     # Use standard Python 3.11 image to avoid setuptools issues with Python 3.14
     docker run --rm --network haf-network \
+      -e HAF_APP_HOST=hafah-ci-hafah-1 \
+      -e HAF_APP_PORT=${APP_PORT} \
       -v "${CI_PROJECT_DIR}:/workspace" \
       -w /workspace \
       python:3.11-slim \
       /bin/bash -c "
         cd /workspace/tests/tavern && \
         pip install --quiet tavern pytest-xdist pyyaml requests && \
-        pytest -n ${PYTEST_NUMBER_OF_PROCESSES:-4} --junitxml report.xml --postgrest-hafah-address=hafah-ci-hafah-1:${APP_PORT} .
+        pytest -n ${PYTEST_NUMBER_OF_PROCESSES:-4} --junitxml report.xml .
       "
   after_script:
   - |
