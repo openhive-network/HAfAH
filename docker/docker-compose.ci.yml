@@ -47,7 +47,7 @@ services:
     networks:
       haf-network:
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:6543/ || exit 1"]
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:6543/ || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 30
