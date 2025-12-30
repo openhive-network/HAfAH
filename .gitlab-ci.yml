@@ -806,6 +806,8 @@ prepare_haf_image_testnet:
       git submodule update --init --recursive --jobs 4
       cd ..
       echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
+    # Install libpq-dev for psycopg2 build (until CI base image includes it)
+    - sudo apt-get update && sudo apt-get install -y libpq-dev
     # Poetry install (from .pytest_based_template)
     - python3 -m venv venv/
     - . venv/bin/activate
