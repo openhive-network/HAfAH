@@ -770,10 +770,11 @@ hafah_pytest_rest_api_pattern_tests:
     echo "HAF image name $HAF_IMAGE_NAME"
     # Run pytest from a Python container connected to the haf-network
     # This allows pytest to reach the hafah service at hafah-ci-hafah-1:6543
+    # Use standard Python 3.11 image to avoid setuptools issues with Python 3.14
     docker run --rm --network haf-network \
       -v "${CI_PROJECT_DIR}:/workspace" \
       -w /workspace \
-      "${PYTEST_BASED_IMAGE_NAME}" \
+      python:3.11-slim \
       /bin/bash -c "
         cd /workspace/tests/tavern && \
         pip install --quiet tavern pytest-xdist pyyaml requests && \
