@@ -85,119 +85,44 @@ include:
 - project: 'hive/haf'
   ref: a9d236ef60e9551eb98be16a00fca1cb22be4b49   # fix/ci-base-image-version
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
-  # Do not include common-ci-configuration here, it is already referenced by scripts/ci-helpers/prepare_data_image_job.yml included from Haf/Hive repos
+# HAF app testing templates from common-ci-configuration (includes fetch strategy support)
+- project: 'hive/common-ci-configuration'
+  ref: feature/fetch-strategy-support
+  file: '/templates/haf_app_testing.gitlab-ci.yml'
 
+# Use templates from common-ci-configuration for fetch strategy support
 default:
-  hooks:
-    pre_get_sources_script:
-      # Clean corrupt git state left by cancelled pipelines (see GitLab #296638, #4600)
-      # Wrapped in subshell to avoid changing working directory for subsequent git operations
-      - |
-        (
-        cd "${CI_PROJECT_DIR:-/builds}" 2>/dev/null || exit 0
-        echo "pre_get_sources: checking $(pwd) for corrupt git state"
-        if [ -d ".git" ]; then
-          # Remove stale lock files that block git operations
-          find .git -name "*.lock" -delete 2>/dev/null || true
-
-          # Check if main repo is corrupt - if so, remove .git to force fresh clone
-          if ! git rev-parse HEAD >/dev/null 2>&1; then
-            echo "pre_get_sources: main repository corrupt, forcing fresh clone"
-            rm -rf .git
-          else
-            # Main repo OK - check and clean corrupt submodules
-            # Check both the working dir and .git/modules/ since either can be corrupt
-            if [ -f ".gitmodules" ]; then
-              git config --file .gitmodules --get-regexp path 2>/dev/null | awk '{print $2}' | while read submod; do
-                needs_clean=false
-                [ -z "$submod" ] && continue
-                # Check if submodule working directory exists but is corrupt
-                if [ -d "$submod" ] && [ -f "$submod/.git" ]; then
-                  if ! git -C "$submod" rev-parse HEAD >/dev/null 2>&1; then
-                    needs_clean=true
-                  fi
-                fi
-                # Check if .git/modules exists but is corrupt (even if working dir is gone)
-                if [ -d ".git/modules/$submod" ]; then
-                  if ! git --git-dir=".git/modules/$submod" rev-parse HEAD >/dev/null 2>&1; then
-                    echo "pre_get_sources: $submod corrupt (rev-parse failed)"
-                    needs_clean=true
-                  fi
-                fi
-                if [ "$needs_clean" = true ]; then
-                  echo "pre_get_sources: cleaning corrupt submodule: $submod"
-                  rm -rf "$submod" ".git/modules/$submod"
-                fi
-              done
-            fi
-            echo "pre_get_sources: existing repo OK"
-          fi
-        else
-          echo "pre_get_sources: no .git directory (fresh workspace)"
-        fi
-        )
+  hooks: !reference [.haf_git_corruption_cleanup, hooks]
   before_script:
-    # Initialize submodules manually (GIT_SUBMODULE_STRATEGY: none)
-    # Skip if git not available (some jobs use minimal images)
-    - |
-      if command -v git >/dev/null 2>&1; then
-        echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
-        git config --global --add safe.directory '*'
-        # Get the commit we need from the haf submodule
-        HAF_URL="https://gitlab.syncad.com/hive/haf.git"
-        HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
-        echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
-        # Remove existing haf directory if it exists (can be stale from GIT_STRATEGY=fetch)
-        sudo rm -rf haf 2>/dev/null || rm -rf haf
-        # Clone and checkout specific commit
-        git clone --no-checkout "$HAF_URL" haf
-        cd haf
-        git fetch origin develop
-        git checkout $HAF_SUBMOD_COMMIT
-        # Initialize nested submodules inside haf (hive and its submodules)
-        git submodule update --init --recursive --jobs 4
-        cd ..
-        echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
-      fi
+    - !reference [.haf_submodule_init, script]
 
 validate_haf_commit:
   stage: build
   image: alpine:latest
+  before_script:
+    - apk add --no-cache git
+    - !reference [.haf_submodule_init, script]
   script:
-  - |
-    set -e
-    apk add --no-cache git
-    # Initialize submodules (default before_script skipped because alpine lacks git initially)
-    # Use manual clone to avoid nested submodule issues with relative URLs
-    git config --global --add safe.directory '*'
-    HAF_URL="https://gitlab.syncad.com/hive/haf.git"
-    HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
-    echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
-    rm -rf haf
-    git clone --no-checkout "$HAF_URL" haf
-    cd haf
-    git fetch origin develop
-    git checkout $HAF_SUBMOD_COMMIT
-    git submodule update --init --recursive --jobs 4
-    cd ..
-    SUBMODULE_COMMIT=$(git -C haf rev-parse HEAD)
-    INCLUDE_REF=$(grep -A2 "project:.*hive/haf" .gitlab-ci.yml | grep "ref:" | head -1 | sed 's/.*ref: *\([a-f0-9]*\).*/\1/' || true)
-    echo "HAF_COMMIT variable: $HAF_COMMIT"
-    echo "HAF submodule HEAD:  $SUBMODULE_COMMIT"
-    echo "Include ref:         $INCLUDE_REF"
-    ERRORS=0
-    if [ "$HAF_COMMIT" != "$SUBMODULE_COMMIT" ]; then
-      echo "ERROR: HAF_COMMIT variable does not match submodule commit!"
-      ERRORS=1
-    fi
-    if [ "$HAF_COMMIT" != "$INCLUDE_REF" ]; then
-      echo "ERROR: HAF_COMMIT variable does not match include ref!"
-      ERRORS=1
-    fi
-    if [ $ERRORS -eq 1 ]; then
-      exit 1
-    fi
-    echo "All HAF commit references are consistent"
+    - |
+      set -e
+      SUBMODULE_COMMIT=$(git -C haf rev-parse HEAD)
+      INCLUDE_REF=$(grep -A2 "project:.*hive/haf" .gitlab-ci.yml | grep "ref:" | head -1 | sed 's/.*ref: *\([a-f0-9]*\).*/\1/' || true)
+      echo "HAF_COMMIT variable: $HAF_COMMIT"
+      echo "HAF submodule HEAD:  $SUBMODULE_COMMIT"
+      echo "Include ref:         $INCLUDE_REF"
+      ERRORS=0
+      if [ "$HAF_COMMIT" != "$SUBMODULE_COMMIT" ]; then
+        echo "ERROR: HAF_COMMIT variable does not match submodule commit!"
+        ERRORS=1
+      fi
+      if [ "$HAF_COMMIT" != "$INCLUDE_REF" ]; then
+        echo "ERROR: HAF_COMMIT variable does not match include ref!"
+        ERRORS=1
+      fi
+      if [ $ERRORS -eq 1 ]; then
+        exit 1
+      fi
+      echo "All HAF commit references are consistent"
   tags:
   - public-runner-docker
 
@@ -295,19 +220,7 @@ prepare_haf_data:
 
   before_script:
   - !reference [.docker_image_builder_job, before_script]
-  # Initialize haf submodule manually (nested hive submodule has relative URL issues)
-  - |
-    git config --global --add safe.directory '*'
-    HAF_URL="https://gitlab.syncad.com/hive/haf.git"
-    HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
-    echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
-    sudo rm -rf haf 2>/dev/null || rm -rf haf
-    git clone --no-checkout "$HAF_URL" haf
-    cd haf
-    git fetch origin develop
-    git checkout $HAF_SUBMOD_COMMIT
-    git submodule update --init --recursive --jobs 4
-    cd ..
+  - !reference [.haf_submodule_init, script]
 
   script:
   - |
@@ -352,19 +265,7 @@ build_setup_docker_image:
   before_script:
   - !reference [.docker_image_builder_job, before_script]
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  # Initialize haf submodule manually (nested hive submodule has relative URL issues)
-  - |
-    git config --global --add safe.directory '*'
-    HAF_URL="https://gitlab.syncad.com/hive/haf.git"
-    HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
-    echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
-    sudo rm -rf haf 2>/dev/null || rm -rf haf
-    git clone --no-checkout "$HAF_URL" haf
-    cd haf
-    git fetch origin develop
-    git checkout $HAF_SUBMOD_COMMIT
-    git submodule update --init --recursive --jobs 4
-    cd ..
+  - !reference [.haf_submodule_init, script]
   script: scripts/ci-helpers/build_setup_image.sh "$CI_PROJECT_DIR"
   tags:
   - public-runner-docker
@@ -434,23 +335,8 @@ build_setup_docker_image:
     artifacts: true
 
   # Override before_script to include submodule initialization before poetry install
-  # (see .hafah_pytest_fuctional_tests_base for explanation)
   before_script:
-    - |
-      echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
-      git config --global --add safe.directory '*'
-      HAF_URL="https://gitlab.syncad.com/hive/haf.git"
-      HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
-      echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
-      sudo rm -rf haf 2>/dev/null || rm -rf haf
-      git clone --no-checkout "$HAF_URL" haf
-      cd haf
-      git fetch origin develop
-      git checkout $HAF_SUBMOD_COMMIT
-      git submodule update --init --recursive --jobs 4
-      cd ..
-      echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
-    # Poetry install (from parent template via !reference)
+    - !reference [.haf_submodule_init, script]
     - !reference [.haf_app_pattern_tests_template, before_script]
     - echo "HAfAH image name $HAF_APP_IMAGE"
     - echo "HAF image name $HAF_IMAGE_NAME"
@@ -512,22 +398,8 @@ new_style_postgrest_pattern_tests:
     HIVED_UID: $HIVED_UID
 
   # Override before_script to include submodule initialization before poetry install
-  # (see .hafah_pytest_fuctional_tests_base for explanation)
   before_script:
-    - |
-      echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
-      git config --global --add safe.directory '*'
-      HAF_URL="https://gitlab.syncad.com/hive/haf.git"
-      HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
-      echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
-      sudo rm -rf haf 2>/dev/null || rm -rf haf
-      git clone --no-checkout "$HAF_URL" haf
-      cd haf
-      git fetch origin develop
-      git checkout $HAF_SUBMOD_COMMIT
-      git submodule update --init --recursive --jobs 4
-      cd ..
-      echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
+    - !reference [.haf_submodule_init, script]
     # Poetry install (from .pytest_based_template)
     - python3 -m venv venv/
     - . venv/bin/activate
@@ -789,25 +661,9 @@ prepare_haf_image_testnet:
     artifacts: true
 
   # Override before_script to include submodule initialization before poetry install
-  # The default before_script in .pytest_based_template only runs poetry install,
-  # but hafah-local-tools has a path dependency to haf/tests/integration/haf-local-tools
-  # which requires the haf submodule to be present
+  # hafah-local-tools has a path dependency to haf/tests/integration/haf-local-tools
   before_script:
-    # Initialize haf submodule and its nested submodules
-    - |
-      echo -e "\e[0Ksection_start:$(date +%s):init_submodules[collapsed=true]\r\e[0KInitializing submodules..."
-      git config --global --add safe.directory '*'
-      HAF_URL="https://gitlab.syncad.com/hive/haf.git"
-      HAF_SUBMOD_COMMIT=$(git ls-tree HEAD haf | awk '{print $3}')
-      echo "Need haf submodule at commit $HAF_SUBMOD_COMMIT"
-      sudo rm -rf haf 2>/dev/null || rm -rf haf
-      git clone --no-checkout "$HAF_URL" haf
-      cd haf
-      git fetch origin develop
-      git checkout $HAF_SUBMOD_COMMIT
-      git submodule update --init --recursive --jobs 4
-      cd ..
-      echo -e "\e[0Ksection_end:$(date +%s):init_submodules\r\e[0K"
+    - !reference [.haf_submodule_init, script]
     # Install libpq-dev for psycopg2 build (until CI base image includes it)
     - sudo apt-get update && sudo apt-get install -y libpq-dev
     # Poetry install (from .pytest_based_template)
