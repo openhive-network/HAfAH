@@ -356,9 +356,6 @@ build_setup_docker_image:
 
 postgrest_pattern_tests:
   extends: .pattern_tests
-  # Pattern tests are tied to specific blockchain data indexed by develop branch HAF
-  # Allow failure when using a different HAF commit (feature branches with HAF changes)
-  allow_failure: true
 
   needs:
   - !reference [.pattern_tests, needs]
@@ -370,9 +367,6 @@ postgrest_pattern_tests:
 
 new_style_postgrest_pattern_tests:
   extends: .pattern_tests
-  # Pattern tests are tied to specific blockchain data indexed by develop branch HAF
-  # Allow failure when using a different HAF commit (feature branches with HAF changes)
-  allow_failure: true
 
   needs:
   - !reference [.pattern_tests, needs]
@@ -519,21 +513,15 @@ postgrest_comparison_tests:
 
 postgrest_block_api_benchmark_tests:
   extends: .benchmark_tests
-  # Benchmark tests may fail when using non-develop HAF commit due to different service behavior
-  allow_failure: true
   variables:
     API_FOR_TESTING: blocks_api
 
 postgrest_account_history_benchmark_tests:
   extends: .benchmark_tests
-  # Benchmark tests may fail when using non-develop HAF commit due to different service behavior
-  allow_failure: true
 
 postgrest_rest_benchmark_tests:
   extends: .jmeter_benchmark_with_haf_job
   stage: test
-  # Benchmark tests may fail when using non-develop HAF commit due to different service behavior
-  allow_failure: true
   variables:
     FF_NETWORK_PER_BUILD: 1
     HIVED_UID: $HIVED_UID
@@ -740,9 +728,6 @@ hafah_pytest_rest_api_pattern_tests:
   stage: test
   # Use specific tag with util-linux for NFS flock support (not :latest which has BusyBox flock)
   image: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-builder:${DOCKER_BUILDER_TAG}
-  # Pattern tests are tied to specific blockchain data indexed by develop branch HAF
-  # Allow failure when using a different HAF commit (feature branches with HAF changes)
-  allow_failure: true
   needs:
   - job: prepare_haf_image
     artifacts: true
