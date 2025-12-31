@@ -87,7 +87,7 @@ include:
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
 # HAF app testing templates from common-ci-configuration (includes fetch strategy support)
 - project: 'hive/common-ci-configuration'
-  ref: feature/fetch-strategy-support
+  ref: develop
   file: '/templates/haf_app_testing.gitlab-ci.yml'
 
 # Use templates from common-ci-configuration for fetch strategy support
