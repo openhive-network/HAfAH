@@ -167,6 +167,8 @@ prepare_hived_data:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
+  before_script:
+    - !reference [.haf_submodule_init, script]
   tags:
   - data-cache-storage
   - fast
@@ -217,6 +219,8 @@ prepare_haf_data:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
+  before_script:
+    - !reference [.haf_submodule_init, script]
   tags:
   - data-cache-storage
   - fast
