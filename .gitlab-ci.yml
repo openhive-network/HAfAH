@@ -160,8 +160,6 @@ prepare_hived_image:
 prepare_hived_data:
   extends: .prepare_hived_data_5m
   needs:
-  - job: detect_changes
-    artifacts: true
   - job: prepare_hived_image
     artifacts: true
   stage: build
@@ -169,7 +167,6 @@ prepare_hived_data:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
-  rules: !reference [.skip_on_cached_data, rules]
   tags:
   - data-cache-storage
   - fast
@@ -213,8 +210,6 @@ generate-wax-spec:
 prepare_haf_data:
   extends: .prepare_haf_data_5m
   needs:
-  - job: detect_changes
-    artifacts: true
   - job: prepare_haf_image
     artifacts: true
   stage: build
@@ -222,7 +217,6 @@ prepare_haf_data:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
-  rules: !reference [.skip_on_cached_data, rules]
   tags:
   - data-cache-storage
   - fast
