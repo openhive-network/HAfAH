@@ -154,7 +154,8 @@ prepare_hived_image:
     REGISTRY_USER: "$HIVED_CI_IMGBUILDER_USER"
     REGISTRY_PASS: $HIVED_CI_IMGBUILDER_PASSWORD
   before_script:
-    - !reference [.docker_image_builder_job, before_script]
+    - !reference [.docker_image_builder_job_template, before_script]
+    - git config --global --add safe.directory '*'
     - !reference [.haf_submodule_init, script]
   tags:
   - public-runner-docker
@@ -184,7 +185,8 @@ prepare_haf_image:
     REGISTRY_USER: "$CI_IMG_BUILDER_USER"
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
   before_script:
-    - !reference [.haf_docker_image_builder_job, before_script]
+    - !reference [.docker_image_builder_job_template, before_script]
+    - git config --global --add safe.directory '*'
     - !reference [.haf_submodule_init, script]
   tags:
   - public-runner-docker
@@ -608,7 +610,8 @@ prepare_haf_image_testnet:
     HIVE_NETWORK_TYPE: testnet
     BINARY_CACHE_PATH: "$CI_PROJECT_DIR/haf-testnet-binaries"
   before_script:
-    - !reference [.haf_docker_image_builder_job, before_script]
+    - !reference [.docker_image_builder_job_template, before_script]
+    - git config --global --add safe.directory '*'
     - !reference [.haf_submodule_init, script]
   tags:
   - public-runner-docker
