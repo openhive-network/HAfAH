@@ -153,6 +153,9 @@ prepare_hived_image:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf/hive"
     REGISTRY_USER: "$HIVED_CI_IMGBUILDER_USER"
     REGISTRY_PASS: $HIVED_CI_IMGBUILDER_PASSWORD
+  before_script:
+    - !reference [.docker_image_builder_job, before_script]
+    - !reference [.haf_submodule_init, script]
   tags:
   - public-runner-docker
   - hived
@@ -180,6 +183,9 @@ prepare_haf_image:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     REGISTRY_USER: "$CI_IMG_BUILDER_USER"
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
+  before_script:
+    - !reference [.haf_docker_image_builder_job, before_script]
+    - !reference [.haf_submodule_init, script]
   tags:
   - public-runner-docker
   - hived
@@ -601,6 +607,9 @@ prepare_haf_image_testnet:
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
     HIVE_NETWORK_TYPE: testnet
     BINARY_CACHE_PATH: "$CI_PROJECT_DIR/haf-testnet-binaries"
+  before_script:
+    - !reference [.haf_docker_image_builder_job, before_script]
+    - !reference [.haf_submodule_init, script]
   tags:
   - public-runner-docker
 
