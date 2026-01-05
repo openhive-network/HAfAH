@@ -570,6 +570,7 @@ postgrest_comparison_tests:
     artifacts: true
 
   before_script:
+    - apk add --no-cache git
     - |
       echo "Cloning hive test tools for benchmarks at ref ${HIVE_TEST_TOOLS_REF}..."
       git clone --depth 1 --single-branch \
