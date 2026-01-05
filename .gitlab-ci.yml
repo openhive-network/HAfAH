@@ -15,12 +15,14 @@ variables:
   GIT_CLONE_PATH: $CI_BUILDS_DIR/fetch/$CI_RUNNER_SHORT_TOKEN/$CI_CONCURRENT_ID/$CI_PROJECT_PATH
 
   CI_DEBUG_SERVICES: "true"
-  # CI base image version
-  BUILDER_IMAGE_TAG: ":python-3.12-bookworm"
+  # CI base image version (ubuntu24.04-py3.14-2 is the current stable version)
+  BUILDER_IMAGE_TAG: ":ubuntu24.04-py3.14-2"
   BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image${BUILDER_IMAGE_TAG}"
 
-  # Use the same Python base image for pytest compatibility
-  PYTEST_RUNTIME_IMAGE_NAME: "${BUILDER_IMAGE_PATH}"
+  # Python 3.12 image for test tools that don't support Python 3.14 yet (pydantic-core)
+  PYTHON_COMPAT_IMAGE: "registry.gitlab.syncad.com/hive/common-ci-configuration/python:3.12.9-1"
+  # Use the Python 3.12 compat image for pytest compatibility
+  PYTEST_RUNTIME_IMAGE_NAME: "${PYTHON_COMPAT_IMAGE}"
   # Enable PyO3 forward compatibility for Python 3.14 (rpds-py build support)
   PYO3_USE_ABI3_FORWARD_COMPATIBILITY: "1"
 
@@ -246,7 +248,9 @@ build_setup_docker_image:
   extends: .haf_app_pattern_tests_template
   stage: test
   variables:
-    HAF_APP_IMAGE: ""
+    # Override template's empty defaults with actual image names
+    HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
+    HAF_APP_IMAGE: "${HAFAH_IMAGE_NAME}"
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
 
@@ -365,6 +369,10 @@ new_style_postgrest_pattern_tests:
   extends: .comparison_tests_template
   stage: test
   variables:
+    # Override template's empty defaults with actual image names
+    HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
+    HIVED_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive:${HIVE_COMMIT_SHORT}"
+    HAF_APP_IMAGE: "${HAFAH_IMAGE_NAME}"
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
     # Test tools are cloned at runtime - use the cloned path
     POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/hive-local-tools"
@@ -478,11 +486,14 @@ postgrest_comparison_tests:
   extends: .jmeter_benchmark_with_haf_job
   stage: test
   variables:
+    # Override template's empty defaults with actual image names
+    HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
+    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
+    HAF_APP_PORT: $APP_PORT
+    HAF_APP_USER: "hafah_user"
     FF_NETWORK_PER_BUILD: 1
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
     HIVED_UID: $HIVED_UID
-    HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
-    HAF_APP_PORT: $APP_PORT
     BENCHMARK_SOURCE_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/api_tests/benchmarks"
   needs:
   - job: prepare_haf_data
@@ -528,10 +539,13 @@ postgrest_rest_benchmark_tests:
   extends: .jmeter_benchmark_with_haf_job
   stage: test
   variables:
-    FF_NETWORK_PER_BUILD: 1
-    HIVED_UID: $HIVED_UID
+    # Override template's empty defaults with actual image names
+    HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: $APP_PORT
+    HAF_APP_USER: "hafah_user"
+    FF_NETWORK_PER_BUILD: 1
+    HIVED_UID: $HIVED_UID
   needs:
   - job: prepare_haf_data
     artifacts: true
@@ -814,7 +828,7 @@ hafah_pytest_rest_api_pattern_tests:
     # Run pytest from a Python container connected to the haf-network
     # This allows pytest to reach the hafah service at hafah-ci-hafah-1:6543
     # Use standard Python 3.11 image to avoid setuptools issues with Python 3.14
-    # Tavern tests are self-contained HTTP API tests - no hive test tools needed
+    # Tavern tests require validate_response module from hive/tests_api
     docker run --rm --network haf-network \
       -e HAF_APP_HOST=hafah-ci-hafah-1 \
       -e HAF_APP_PORT=${APP_PORT} \
@@ -823,8 +837,14 @@ hafah_pytest_rest_api_pattern_tests:
       -w /workspace \
       python:3.11-slim \
       /bin/bash -c "
-        cd /workspace/tests/tavern && \
-        pip install --quiet tavern pytest-xdist pyyaml requests deepdiff && \
+        # Clone and install tests_api for validate_response module
+        apt-get update && apt-get install -y --no-install-recommends git ca-certificates >/dev/null 2>&1
+        git clone --depth 1 https://gitlab.syncad.com/hive/tests_api.git /tmp/tests_api
+        pip install --quiet /tmp/tests_api
+        # Install tavern test dependencies
+        pip install --quiet tavern pytest-xdist pyyaml requests deepdiff
+        # Run tests
+        cd /workspace/tests/tavern
         pytest -n ${PYTEST_NUMBER_OF_PROCESSES:-4} --junitxml report.xml .
       "
   after_script:
