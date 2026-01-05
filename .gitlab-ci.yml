@@ -53,9 +53,10 @@ variables:
   HIVED_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive:${HIVE_COMMIT_SHORT}"
 
   # Pre-computed data source paths for service container variable expansion
-  # (GitLab CI services expand variables differently - compound paths must be pre-computed)
-  HAF_DATA_SOURCE: "${DATA_CACHE_HAF_PREFIX}_${HAF_COMMIT}"
-  HIVE_DATA_SOURCE: "${DATA_CACHE_HIVE_PREFIX}_${HIVE_COMMIT}"
+  # GitLab CI service variables don't properly expand nested variable references,
+  # so we must use literal values here. Update these when changing HAF_COMMIT/HIVE_COMMIT.
+  HAF_DATA_SOURCE: "/cache/haf_a9d236ef60e9551eb98be16a00fca1cb22be4b49"
+  HIVE_DATA_SOURCE: "/cache/replay_data_hive_1179c5456dbb6be65c73178eb53d2e02223de3a2"
 
   # Allow access from any network to eliminate CI IP addressing problems
   HAF_DB_ACCESS: |
