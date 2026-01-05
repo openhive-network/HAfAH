@@ -253,6 +253,8 @@ build_setup_docker_image:
     HAF_APP_IMAGE: "${HAFAH_IMAGE_NAME}"
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
+    # Explicitly set HAF_COMMIT to ensure it's passed to service containers
+    HAF_COMMIT: "${HAF_COMMIT}"
 
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
     # Test tools are cloned at runtime - use the cloned path
@@ -373,6 +375,9 @@ new_style_postgrest_pattern_tests:
     HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
     HIVED_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive:${HIVE_COMMIT_SHORT}"
     HAF_APP_IMAGE: "${HAFAH_IMAGE_NAME}"
+    # Explicitly set commits to ensure they're passed to service containers
+    HAF_COMMIT: "${HAF_COMMIT}"
+    HIVE_COMMIT: "${HIVE_COMMIT}"
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
     # Test tools are cloned at runtime - use the cloned path
     POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/hive-local-tools"
@@ -491,6 +496,8 @@ postgrest_comparison_tests:
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: $APP_PORT
     HAF_APP_USER: "hafah_user"
+    # Explicitly set HAF_COMMIT to ensure it's passed to service containers
+    HAF_COMMIT: "${HAF_COMMIT}"
     FF_NETWORK_PER_BUILD: 1
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
     HIVED_UID: $HIVED_UID
@@ -544,6 +551,8 @@ postgrest_rest_benchmark_tests:
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: $APP_PORT
     HAF_APP_USER: "hafah_user"
+    # Explicitly set HAF_COMMIT to ensure it's passed to service containers
+    HAF_COMMIT: "${HAF_COMMIT}"
     FF_NETWORK_PER_BUILD: 1
     HIVED_UID: $HIVED_UID
   needs:
@@ -694,8 +703,8 @@ prepare_haf_image_testnet:
       git sparse-checkout set tests/integration/haf-local-tools
       git checkout
       cd "${CI_PROJECT_DIR}"
-    # Install libpq-dev for psycopg2 build (until CI base image includes it)
-    - sudo apt-get update && sudo apt-get install -y libpq-dev
+    # Install libpq-dev for psycopg2 build (CI base image runs as root)
+    - apt-get update && apt-get install -y libpq-dev
     # Poetry install (from .pytest_based_template)
     - python3 -m venv venv/
     - . venv/bin/activate
@@ -742,8 +751,10 @@ prepare_haf_image_testnet:
     - '/bin/bash'
   variables:
     JUNIT_REPORT: tests/integration/functional/report.xml
-    PYTEST_BASED_IMAGE_NAME: $PYTEST_RUNTIME_IMAGE_NAME
+    # Use builder image with Python 3.14 (hafah-local-tools requires Python ^3.14)
+    PYTEST_BASED_IMAGE_NAME: $BUILDER_IMAGE_PATH
     POETRY_INSTALL_ROOT_DIR: $CI_PROJECT_DIR/tests/integration/hafah-local-tools
+    # HAF_IMAGE_NAME is set by prepare_haf_image_testnet dotenv artifact
 
     BINARY_CACHE_PATH: "haf-testnet-binaries"
     HIVED_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/hived"
@@ -827,7 +838,7 @@ hafah_pytest_rest_api_pattern_tests:
     echo "HAF image name $HAF_IMAGE_NAME"
     # Run pytest from a Python container connected to the haf-network
     # This allows pytest to reach the hafah service at hafah-ci-hafah-1:6543
-    # Use standard Python 3.11 image to avoid setuptools issues with Python 3.14
+    # Use Python 3.12 image - tests_api requires Python 3.12+
     # Tavern tests require validate_response module from hive/tests_api
     docker run --rm --network haf-network \
       -e HAF_APP_HOST=hafah-ci-hafah-1 \
@@ -835,7 +846,7 @@ hafah_pytest_rest_api_pattern_tests:
       -e TAVERN_DIR=/workspace/tests/tavern \
       -v "${CI_PROJECT_DIR}:/workspace" \
       -w /workspace \
-      python:3.11-slim \
+      python:3.12-slim \
       /bin/bash -c "
         # Clone and install tests_api for validate_response module
         apt-get update && apt-get install -y --no-install-recommends git ca-certificates >/dev/null 2>&1
