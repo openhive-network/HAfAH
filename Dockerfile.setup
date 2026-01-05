@@ -14,7 +14,7 @@ USER haf_admin
 
 SHELL ["/bin/bash", "-c"]
 
-RUN <<EOF 
+RUN <<EOF
   set -e
   mkdir -p /hafah/scripts
   mkdir -p /hafah/queries
@@ -23,15 +23,24 @@ RUN <<EOF
 EOF
 
 COPY docker/setup_entrypoint.sh /hafah/scripts/setup_entrypoint.sh
-COPY scripts/common.sh /hafah/scripts/common.sh 
-COPY scripts/install_app.sh /hafah/scripts/install_app.sh 
-COPY scripts/uninstall_app.sh /hafah/scripts/uninstall_app.sh 
+COPY scripts/common.sh /hafah/scripts/common.sh
+COPY scripts/install_app.sh /hafah/scripts/install_app.sh
+COPY scripts/uninstall_app.sh /hafah/scripts/uninstall_app.sh
 COPY scripts/setup_postgres.sh /hafah/scripts/setup_postgres.sh
 COPY queries /hafah/queries
 COPY postgrest /hafah/postgrest
 COPY set_version_in_sql.pgsql /hafah/scripts/set_version_in_sql.pgsql
-COPY haf/scripts/common.sh /hafah/haf/scripts/common.sh
-COPY haf/scripts/create_haf_app_role.sh /hafah/haf/scripts/create_haf_app_role.sh
+
+# Fetch HAF scripts from common-ci-configuration (replaces submodule dependency)
+ARG COMMON_CI_REF=develop
+RUN <<EOF
+  set -e
+  COMMON_CI_URL="https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/${COMMON_CI_REF}"
+  for script in common.sh create_haf_app_role.sh; do
+    wget -q "${COMMON_CI_URL}/haf-app-tools/scripts/${script}" -O "/hafah/haf/scripts/${script}"
+    chmod +x "/hafah/haf/scripts/${script}"
+  done
+EOF
 
 WORKDIR /hafah/scripts
 
