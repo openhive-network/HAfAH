@@ -333,7 +333,7 @@ build_setup_docker_image:
       git sparse-checkout set tests/python
       git checkout "${HIVE_COMMIT}"
       # Fix Python version constraint (3.14 doesn't exist, should be 3.10)
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.10,<4"/' tests/python/hive-local-tools/pyproject.toml
+      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/pyproject.toml
       # Initialize submodules within hive-local-tools (test-tools, tests_api, shared-tools)
       git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
       git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
@@ -412,7 +412,7 @@ new_style_postgrest_pattern_tests:
       git sparse-checkout set tests/python
       git checkout "${HIVE_COMMIT}"
       # Fix Python version constraint (3.14 doesn't exist, should be 3.10)
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.10,<4"/' tests/python/hive-local-tools/pyproject.toml
+      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/pyproject.toml
       # Initialize submodules within hive-local-tools (test-tools, tests_api, shared-tools)
       git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
       git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
@@ -742,7 +742,7 @@ prepare_haf_image_testnet:
       git sparse-checkout set tests/python/hive-local-tools
       git checkout "${HIVE_COMMIT}"
       # Fix Python version constraint (3.14 doesn't exist, should be 3.10)
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.10,<4"/' tests/python/hive-local-tools/pyproject.toml
+      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/pyproject.toml
       # Initialize submodules within hive-local-tools
       git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
       git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
