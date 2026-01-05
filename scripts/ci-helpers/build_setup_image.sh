@@ -9,7 +9,7 @@ pushd "${SRC_DIR}"
 
 echo "TRUNCATE TABLE hafah_python.version; INSERT INTO hafah_python.version(git_hash) VALUES ('$(git rev-parse HEAD)');" > set_version_in_sql.pgsql
 
-docker buildx build --tag="${TAG}" -f Dockerfile.setup .
+docker buildx build --tag="${TAG}" -f Dockerfile.setup --load .
 
 if [ -n "${CI:-}" ]; then
     docker push "${TAG}"

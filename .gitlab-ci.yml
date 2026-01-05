@@ -42,11 +42,13 @@ variables:
   #   git -C /path/to/haf ls-tree <haf-commit> hive
   # =============================================================================
   HAF_COMMIT: "a9d236ef60e9551eb98be16a00fca1cb22be4b49"
+  HAF_COMMIT_SHORT: "a9d236ef"
   HIVE_COMMIT: "1179c5456dbb6be65c73178eb53d2e02223de3a2"
+  HIVE_COMMIT_SHORT: "1179c545"
 
   # Pre-built images from registries (no submodule build required)
-  HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT:0:8}"
-  HIVED_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive:${HIVE_COMMIT:0:8}"
+  HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
+  HIVED_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive:${HIVE_COMMIT_SHORT}"
 
   # Allow access from any network to eliminate CI IP addressing problems
   HAF_DB_ACCESS: |
