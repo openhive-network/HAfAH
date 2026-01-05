@@ -518,7 +518,7 @@ postgrest_comparison_tests:
     FF_NETWORK_PER_BUILD: 1
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
     HIVED_UID: $HIVED_UID
-    BENCHMARK_SOURCE_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/hive-local-tools/tests_api/benchmarks"
+    BENCHMARK_SOURCE_DIR: "${CI_PROJECT_DIR}/tests_api/benchmarks"
 
   # Override services with pre-computed DATA_SOURCE (GitLab doesn't expand nested vars in services)
   services:
@@ -572,16 +572,9 @@ postgrest_comparison_tests:
   before_script:
     - apk add --no-cache git
     - |
-      echo "Cloning hive test tools for benchmarks at ref ${HIVE_TEST_TOOLS_REF}..."
+      echo "Cloning tests_api repo for benchmarks..."
       git clone --depth 1 --single-branch \
-        https://gitlab.syncad.com/hive/hive.git "${CI_PROJECT_DIR}/hive-test-tools" \
-        --no-checkout
-      cd "${CI_PROJECT_DIR}/hive-test-tools"
-      git fetch --depth 1 origin "${HIVE_TEST_TOOLS_REF}"
-      git sparse-checkout init --cone
-      git sparse-checkout set tests/python/hive-local-tools/tests_api/benchmarks
-      git checkout "${HIVE_TEST_TOOLS_REF}"
-      cd "${CI_PROJECT_DIR}"
+        https://gitlab.syncad.com/hive/tests_api.git "${CI_PROJECT_DIR}/tests_api"
 
   script:
   - /usr/bin/python3 "${BENCHMARK_SOURCE_DIR}/benchmark.py" -a app -p $APP_PORT -c
