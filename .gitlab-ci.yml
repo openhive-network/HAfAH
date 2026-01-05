@@ -329,6 +329,10 @@ build_setup_docker_image:
       git sparse-checkout init --cone
       git sparse-checkout set tests/python
       git checkout
+      # Initialize submodules within hive-local-tools (test-tools, tests_api, shared-tools)
+      git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
+      git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
+      git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
       cd "${CI_PROJECT_DIR}"
     - !reference [.haf_app_pattern_tests_template, before_script]
     - echo "HAfAH image name $HAF_APP_IMAGE"
@@ -400,6 +404,10 @@ new_style_postgrest_pattern_tests:
       git sparse-checkout init --cone
       git sparse-checkout set tests/python
       git checkout
+      # Initialize submodules within hive-local-tools (test-tools, tests_api, shared-tools)
+      git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
+      git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
+      git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
       cd "${CI_PROJECT_DIR}"
     # Poetry install (from .pytest_based_template)
     - python3 -m venv venv/
