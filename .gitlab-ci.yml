@@ -319,16 +319,19 @@ build_setup_docker_image:
     artifacts: true
 
   # Clone hive test tools at runtime (replaces submodule)
+  # Uses HIVE_COMMIT instead of develop to ensure compatibility with our Python version
   before_script:
     - |
-      echo "Cloning hive test tools..."
-      git clone --depth 1 --single-branch --branch develop \
+      echo "Cloning hive test tools at commit ${HIVE_COMMIT}..."
+      git clone --depth 1 --single-branch \
         https://gitlab.syncad.com/hive/hive.git "${CI_PROJECT_DIR}/hive-test-tools" \
         --no-checkout
       cd "${CI_PROJECT_DIR}/hive-test-tools"
+      # Fetch the specific commit we need (not develop which may have incompatible changes)
+      git fetch --depth 1 origin "${HIVE_COMMIT}"
       git sparse-checkout init --cone
       git sparse-checkout set tests/python
-      git checkout
+      git checkout "${HIVE_COMMIT}"
       # Initialize submodules within hive-local-tools (test-tools, tests_api, shared-tools)
       git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
       git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
@@ -394,16 +397,18 @@ new_style_postgrest_pattern_tests:
     HIVED_UID: $HIVED_UID
 
   # Clone hive test tools at runtime then do poetry install
+  # Uses HIVE_COMMIT instead of develop to ensure compatibility with our Python version
   before_script:
     - |
-      echo "Cloning hive test tools..."
-      git clone --depth 1 --single-branch --branch develop \
+      echo "Cloning hive test tools at commit ${HIVE_COMMIT}..."
+      git clone --depth 1 --single-branch \
         https://gitlab.syncad.com/hive/hive.git "${CI_PROJECT_DIR}/hive-test-tools" \
         --no-checkout
       cd "${CI_PROJECT_DIR}/hive-test-tools"
+      git fetch --depth 1 origin "${HIVE_COMMIT}"
       git sparse-checkout init --cone
       git sparse-checkout set tests/python
-      git checkout
+      git checkout "${HIVE_COMMIT}"
       # Initialize submodules within hive-local-tools (test-tools, tests_api, shared-tools)
       git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
       git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
@@ -520,14 +525,15 @@ postgrest_comparison_tests:
 
   before_script:
     - |
-      echo "Cloning hive test tools for benchmarks..."
-      git clone --depth 1 --single-branch --branch develop \
+      echo "Cloning hive test tools for benchmarks at commit ${HIVE_COMMIT}..."
+      git clone --depth 1 --single-branch \
         https://gitlab.syncad.com/hive/hive.git "${CI_PROJECT_DIR}/hive-test-tools" \
         --no-checkout
       cd "${CI_PROJECT_DIR}/hive-test-tools"
+      git fetch --depth 1 origin "${HIVE_COMMIT}"
       git sparse-checkout init --cone
       git sparse-checkout set tests/python/api_tests/benchmarks
-      git checkout
+      git checkout "${HIVE_COMMIT}"
       cd "${CI_PROJECT_DIR}"
 
   script:
@@ -635,12 +641,17 @@ prepare_haf_image_testnet:
     BINARY_CACHE_PATH: "$CI_PROJECT_DIR/haf-testnet-binaries"
   before_script:
     - !reference [.haf_docker_image_builder_job, before_script]
-    # Clone HAF at runtime for testnet build
+    # Clone HAF at runtime for testnet build using HAF_COMMIT
     - |
-      echo "Cloning HAF for testnet build..."
-      git clone --depth 1 --single-branch --branch develop \
-        --recurse-submodules --shallow-submodules \
-        https://gitlab.syncad.com/hive/haf.git "${CI_PROJECT_DIR}/haf"
+      echo "Cloning HAF for testnet build at commit ${HAF_COMMIT}..."
+      git clone --single-branch \
+        https://gitlab.syncad.com/hive/haf.git "${CI_PROJECT_DIR}/haf" \
+        --no-checkout
+      cd "${CI_PROJECT_DIR}/haf"
+      git fetch --depth 1 origin "${HAF_COMMIT}"
+      git checkout "${HAF_COMMIT}"
+      git submodule update --init --recursive --depth 1
+      cd "${CI_PROJECT_DIR}"
   tags:
   - public-runner-docker
 
@@ -700,30 +711,36 @@ prepare_haf_image_testnet:
   - job: prepare_postgrest_hafah_image
     artifacts: true
 
-  # Clone HAF and hive test tools at runtime
+  # Clone HAF and hive test tools at runtime using specific commits
   # hafah-local-tools has path dependencies to:
   #   - haf/tests/integration/haf-local-tools
   #   - haf/hive/tests/python/hive-local-tools/*
   before_script:
     - |
-      echo "Cloning HAF test tools..."
-      git clone --depth 1 --single-branch --branch develop \
+      echo "Cloning HAF test tools at commit ${HAF_COMMIT}..."
+      git clone --depth 1 --single-branch \
         https://gitlab.syncad.com/hive/haf.git "${CI_PROJECT_DIR}/haf" \
         --no-checkout
       cd "${CI_PROJECT_DIR}/haf"
+      git fetch --depth 1 origin "${HAF_COMMIT}"
       git sparse-checkout init --cone
       git sparse-checkout set tests/integration/haf-local-tools
-      git checkout
+      git checkout "${HAF_COMMIT}"
       cd "${CI_PROJECT_DIR}"
     - |
-      echo "Cloning hive test tools into haf/hive..."
-      git clone --depth 1 --single-branch --branch develop \
+      echo "Cloning hive test tools into haf/hive at commit ${HIVE_COMMIT}..."
+      git clone --depth 1 --single-branch \
         https://gitlab.syncad.com/hive/hive.git "${CI_PROJECT_DIR}/haf/hive" \
         --no-checkout
       cd "${CI_PROJECT_DIR}/haf/hive"
+      git fetch --depth 1 origin "${HIVE_COMMIT}"
       git sparse-checkout init --cone
       git sparse-checkout set tests/python/hive-local-tools
-      git checkout
+      git checkout "${HIVE_COMMIT}"
+      # Initialize submodules within hive-local-tools
+      git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
+      git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
+      git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
       cd "${CI_PROJECT_DIR}"
     # Install libpq-dev for psycopg2 build (CI base image runs as root)
     - apt-get update && apt-get install -y libpq-dev
