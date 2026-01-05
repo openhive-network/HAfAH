@@ -518,7 +518,7 @@ postgrest_comparison_tests:
     FF_NETWORK_PER_BUILD: 1
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
     HIVED_UID: $HIVED_UID
-    BENCHMARK_SOURCE_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/api_tests/benchmarks"
+    BENCHMARK_SOURCE_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/hive-local-tools/tests_api/benchmarks"
 
   # Override services with pre-computed DATA_SOURCE (GitLab doesn't expand nested vars in services)
   services:
@@ -579,7 +579,7 @@ postgrest_comparison_tests:
       cd "${CI_PROJECT_DIR}/hive-test-tools"
       git fetch --depth 1 origin "${HIVE_TEST_TOOLS_REF}"
       git sparse-checkout init --cone
-      git sparse-checkout set tests/python/api_tests/benchmarks
+      git sparse-checkout set tests/python/hive-local-tools/tests_api/benchmarks
       git checkout "${HIVE_TEST_TOOLS_REF}"
       cd "${CI_PROJECT_DIR}"
 
