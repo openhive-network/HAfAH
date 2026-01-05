@@ -49,6 +49,8 @@ variables:
   HIVE_COMMIT_SHORT: "1179c545"
   # Use develop for test-tools to get latest dependency fixes
   HIVE_TEST_TOOLS_REF: "develop"
+  # tests_api repo uses master branch (not develop)
+  TESTS_API_REF: "master"
 
   # Pre-built images from registries (no submodule build required)
   HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
@@ -187,13 +189,13 @@ default:
       git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
       cd "${CI_PROJECT_DIR}"
 
-# Clone tests_api repo for benchmarks (uses HIVE_TEST_TOOLS_REF for consistency)
+# Clone tests_api repo for benchmarks (uses TESTS_API_REF - master branch)
 # Usage: !reference [.clone_tests_api, script]
 .clone_tests_api:
   script:
     - |
-      echo "Cloning tests_api repo for benchmarks at ref ${HIVE_TEST_TOOLS_REF}..."
-      git clone --depth 1 --single-branch -b "${HIVE_TEST_TOOLS_REF}" \
+      echo "Cloning tests_api repo for benchmarks at ref ${TESTS_API_REF}..."
+      git clone --depth 1 --single-branch -b "${TESTS_API_REF}" \
         https://gitlab.syncad.com/hive/tests_api.git "${CI_PROJECT_DIR}/tests_api"
 
 # Clone HAF and hive test tools for pytest functional tests
