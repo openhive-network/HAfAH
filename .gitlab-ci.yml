@@ -301,7 +301,7 @@ prepare_hived_data:
   extends: .prepare_hived_data_5m
   stage: build
   variables:
-    SHARED_BLOCK_LOG_DIR: $BLOCK_LOG_SOURCE_DIR_5M
+    BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "/tmp/haf-app-tools/hived_config_5M.ini"
   before_script:
     - !reference [.haf_docker_image_builder_job, before_script]
