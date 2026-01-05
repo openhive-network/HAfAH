@@ -19,9 +19,9 @@ variables:
   BUILDER_IMAGE_TAG: ":ubuntu24.04-py3.14-2"
   BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image${BUILDER_IMAGE_TAG}"
 
-  # Python 3.12 image for test tools that don't support Python 3.14 yet (pydantic-core)
-  PYTHON_COMPAT_IMAGE: "registry.gitlab.syncad.com/hive/common-ci-configuration/python:3.12.9-1"
-  # Use the Python 3.12 compat image for pytest compatibility
+  # Python 3.14 image for test tools (wax, test-tools require Python 3.14)
+  PYTHON_COMPAT_IMAGE: "registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image:ubuntu24.04-py3.14-2"
+  # Use the Python 3.14 image for pytest compatibility
   PYTEST_RUNTIME_IMAGE_NAME: "${PYTHON_COMPAT_IMAGE}"
   # Enable PyO3 forward compatibility for Python 3.14 (rpds-py build support)
   PYO3_USE_ABI3_FORWARD_COMPATIBILITY: "1"
@@ -338,10 +338,6 @@ build_setup_docker_image:
       git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
       git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
       git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
-      # Fix Python version constraint (3.14 doesn't exist, should be 3.12) in all pyproject.toml files
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/pyproject.toml
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/test-tools/pyproject.toml
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/shared-tools/pyproject.toml
       cd "${CI_PROJECT_DIR}"
     - !reference [.haf_app_pattern_tests_template, before_script]
     - echo "HAfAH image name $HAF_APP_IMAGE"
@@ -419,10 +415,6 @@ new_style_postgrest_pattern_tests:
       git submodule update --init --depth 1 tests/python/hive-local-tools/test-tools
       git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
       git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
-      # Fix Python version constraint (3.14 doesn't exist, should be 3.12) in all pyproject.toml files
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/pyproject.toml
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/test-tools/pyproject.toml
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/shared-tools/pyproject.toml
       cd "${CI_PROJECT_DIR}"
     # Poetry install (from .pytest_based_template)
     - python3 -m venv venv/
