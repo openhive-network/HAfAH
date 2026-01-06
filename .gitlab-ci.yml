@@ -577,12 +577,12 @@ new_style_postgrest_pattern_tests:
         - '-c'
         - |
           set -xeuo pipefail
-          # Download fixed copy_datadir.sh that handles blockchain dir permissions for rocksdb case
+          # Download fixed copy_datadir.sh from develop until hive images are rebuilt
           # Use wget (Alpine) or curl (Debian) based on availability
           if command -v wget >/dev/null 2>&1; then
-            wget -qO /home/hived_admin/scripts/copy_datadir.sh "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/fix/cache-manager-preserve-rocksdb/haf-app-tools/scripts/copy_datadir.sh"
+            wget -qO /home/hived_admin/scripts/copy_datadir.sh "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/haf-app-tools/scripts/copy_datadir.sh"
           elif command -v curl >/dev/null 2>&1; then
-            curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/fix/cache-manager-preserve-rocksdb/haf-app-tools/scripts/copy_datadir.sh" -o /home/hived_admin/scripts/copy_datadir.sh
+            curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/haf-app-tools/scripts/copy_datadir.sh" -o /home/hived_admin/scripts/copy_datadir.sh
           else
             echo "WARNING: Neither wget nor curl available, using bundled copy_datadir.sh"
           fi
