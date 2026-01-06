@@ -572,6 +572,16 @@ new_style_postgrest_pattern_tests:
         DATA_SOURCE: "${HIVE_DATA_SOURCE}"
         SHARED_BLOCK_LOG_DIR: "${BLOCK_LOG_SOURCE_DIR_5M}"
         LOG_FILE: $CI_JOB_NAME.log
+      entrypoint:
+        - '/bin/bash'
+        - '-c'
+        - |
+          set -xeuo pipefail
+          # Download fixed copy_datadir.sh that handles blockchain dir permissions for rocksdb case
+          curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/fix/cache-manager-preserve-rocksdb/haf-app-tools/scripts/copy_datadir.sh" \
+            -o /home/hived_admin/scripts/copy_datadir.sh && chmod +x /home/hived_admin/scripts/copy_datadir.sh
+          # Run the original docker entrypoint with the fixed copy_datadir.sh
+          exec /home/hived_admin/docker_entrypoint.sh "$@"
       command: ["--stop-at-block=5000000"]
 
     - name: ${HAF_IMAGE_NAME}
