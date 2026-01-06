@@ -13,6 +13,31 @@ log_exec_params "$@"
 #
 # - creates all builtin HAfAH roles on pointed PostgreSQL server instance
 
+# Download create_haf_app_role.sh from common-ci-configuration if not present locally
+# Note: create_haf_app_role.sh handles its own common.sh dependency via built-in fallback
+ensure_haf_scripts() {
+    local haf_path="$1"
+    local scripts_dir="$haf_path/scripts"
+    local script="create_haf_app_role.sh"
+    local common_ci_ref="${COMMON_CI_REF:-develop}"
+    local script_url="https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/${common_ci_ref}/haf-app-tools/scripts/${script}"
+
+    if [[ ! -f "$scripts_dir/$script" ]]; then
+        echo "HAF script not found locally, downloading from common-ci-configuration (ref: $common_ci_ref)..."
+        mkdir -p "$scripts_dir"
+        if command -v curl &> /dev/null; then
+            curl -fsSL "$script_url" -o "$scripts_dir/$script"
+        elif command -v wget &> /dev/null; then
+            wget -q "$script_url" -O "$scripts_dir/$script"
+        else
+            echo "ERROR: Neither curl nor wget is available. Please install one to download HAF scripts."
+            exit 1
+        fi
+        chmod +x "$scripts_dir/$script"
+        echo "HAF script downloaded successfully."
+    fi
+}
+
 print_help () {
     echo "Usage: $0 [OPTION[=VALUE]]..."
     echo
@@ -77,6 +102,8 @@ if [ -z "$POSTGRES_URL" ]; then
 else
   POSTGRES_ACCESS=$POSTGRES_URL
 fi
+
+ensure_haf_scripts "$HAF_PATH"
 
 "$HAF_PATH/scripts/create_haf_app_role.sh" --postgres-url="$POSTGRES_ACCESS" --haf-app-account="hafah_owner"
 "$HAF_PATH/scripts/create_haf_app_role.sh" --postgres-url="$POSTGRES_ACCESS" --haf-app-account="hafah_user"

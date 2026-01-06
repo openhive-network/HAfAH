@@ -80,8 +80,6 @@ WARNING: above example is only specific for testing and fast-deployment purposes
 
 ### Instead of running prebuilt images, one can build their own using `build_instance.sh` script provided in the repo
 
-Before starting the build, be sure that you cloned git repo together with submodules (easiest way is to use `--recurse-submodules` option directly passed to `git clone`).
-
 The command to build HAfAH Docker image is as follows:
 
 ```bash

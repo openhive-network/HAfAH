@@ -21,7 +21,6 @@ HAfAH (HAF Account History) is a read-only HAF (Hive Application Framework) appl
   - `hafah_rest_backend/` - Implementation functions for each API endpoint
 - `scripts/` - Setup and management scripts
 - `tests/` - Integration tests (pytest) and REST API tests (tavern YAML)
-- `haf/` - HAF submodule (the underlying data framework)
 
 **Database schemas** (created in order):
 1. `hafah_python` - Core schema with version table and helper views (from `ah_schema_functions.pgsql`)
@@ -117,8 +116,8 @@ curl -X POST http://localhost:3000/rpc/get_transaction \
 
 ## CI/CD Notes
 
-- HAF submodule commit must match in three places: `.gitmodules` ref, `HAF_COMMIT` variable in `.gitlab-ci.yml`, and `include: ref:` in `.gitlab-ci.yml`
-- The `validate_haf_commit` job ensures these stay in sync
+- HAF scripts are fetched from `common-ci-configuration` at build/runtime (no submodule)
+- `HAF_COMMIT` variable in `.gitlab-ci.yml` controls which HAF version is used for data caching
 - Pattern tests (tavern) are tied to specific blockchain data and may fail when HAF commit changes
 - Uses cache-manager.sh from common-ci-configuration for HAF data caching
 - NFS cache at `/nfs/ci-cache/haf/` shares HAF data across CI runners
@@ -147,5 +146,6 @@ SQL files are executed in specific order by `scripts/install_app.sh`:
 - PostgREST exposes `hafah_endpoints` schema functions as REST endpoints
 - The `hafah_endpoints.home()` function is the main JSON-RPC dispatcher
 - Backend functions live in `hafah_python` and `hafah_backend` schemas
-- Test tools from HAF submodule: `test_tools`, `haf_local_tools`
+- HAF scripts are downloaded automatically by `setup_postgres.sh` when needed
+- Integration tests use `test_tools` and `haf_local_tools` (cloned at CI runtime)
 - The `hafah_python.helper_operations_view` joins `hive.operations_view` with operation types
