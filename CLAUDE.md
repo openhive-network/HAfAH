@@ -116,13 +116,12 @@ curl -X POST http://localhost:3000/rpc/get_transaction \
 
 ## CI/CD Notes
 
-- No submodules - CI uses runtime cloning with sparse checkout for test tools
-- HAF and Hive images are automatically detected via `find_haf_image` and `find_hive_image` jobs
-- Pattern tests (tavern) are tied to specific blockchain data
+- HAF scripts are fetched from `common-ci-configuration` at build/runtime (no submodule)
+- `HAF_COMMIT` variable in `.gitlab-ci.yml` controls which HAF version is used for data caching
+- Pattern tests (tavern) are tied to specific blockchain data and may fail when HAF commit changes
 - Uses cache-manager.sh from common-ci-configuration for HAF data caching
 - NFS cache at `/nfs/ci-cache/haf/` shares HAF data across CI runners
 - Docker image is Alpine-based (uses `apk`, `wget` - not `curl`)
-- HAF scripts (common.sh, create_haf_app_role.sh) are fetched from common-ci-configuration at build time
 
 **Quick Test Mode**: Skip data preparation by setting `QUICK_TEST=true` and `QUICK_TEST_HAF_COMMIT=<sha>` in pipeline variables. Find available caches with:
 ```bash
@@ -147,5 +146,6 @@ SQL files are executed in specific order by `scripts/install_app.sh`:
 - PostgREST exposes `hafah_endpoints` schema functions as REST endpoints
 - The `hafah_endpoints.home()` function is the main JSON-RPC dispatcher
 - Backend functions live in `hafah_python` and `hafah_backend` schemas
-- Test tools (`test_tools`, `haf_local_tools`) are cloned at runtime in CI via sparse checkout
+- HAF scripts are downloaded automatically by `setup_postgres.sh` when needed
+- Integration tests use `test_tools` and `haf_local_tools` (cloned at CI runtime)
 - The `hafah_python.helper_operations_view` joins `hive.operations_view` with operation types
