@@ -578,11 +578,17 @@ new_style_postgrest_pattern_tests:
         - |
           set -xeuo pipefail
           # Download fixed copy_datadir.sh that handles blockchain dir permissions for rocksdb case
-          curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/fix/cache-manager-preserve-rocksdb/haf-app-tools/scripts/copy_datadir.sh" \
-            -o /home/hived_admin/scripts/copy_datadir.sh && chmod +x /home/hived_admin/scripts/copy_datadir.sh
+          # Use wget (Alpine) or curl (Debian) based on availability
+          if command -v wget >/dev/null 2>&1; then
+            wget -qO /home/hived_admin/scripts/copy_datadir.sh "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/fix/cache-manager-preserve-rocksdb/haf-app-tools/scripts/copy_datadir.sh"
+          elif command -v curl >/dev/null 2>&1; then
+            curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/fix/cache-manager-preserve-rocksdb/haf-app-tools/scripts/copy_datadir.sh" -o /home/hived_admin/scripts/copy_datadir.sh
+          else
+            echo "WARNING: Neither wget nor curl available, using bundled copy_datadir.sh"
+          fi
+          chmod +x /home/hived_admin/scripts/copy_datadir.sh
           # Run the original docker entrypoint with the fixed copy_datadir.sh
-          exec /home/hived_admin/docker_entrypoint.sh "$@"
-      command: ["--stop-at-block=5000000"]
+          exec /home/hived_admin/docker_entrypoint.sh --stop-at-block=5000000
 
     - name: ${HAF_IMAGE_NAME}
       alias: haf-instance
