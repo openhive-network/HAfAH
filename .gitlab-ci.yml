@@ -566,14 +566,13 @@ new_style_postgrest_pattern_tests:
   # Override services to use haf_admin for wait script (hafah_user doesn't exist until app-setup creates it)
   # comparison_tests needs services from both hived_pattern_tests_template and haf_app_pattern_tests_template
   services:
-    # hived-instance: No --stop-at-block so hived stays running for API requests
-    # With cached data, hived loads state and waits for sync (serving API meanwhile)
     - name: $HIVED_IMAGE_NAME
       alias: hived-instance
       variables:
         DATA_SOURCE: "${HIVE_DATA_SOURCE}"
         SHARED_BLOCK_LOG_DIR: "${BLOCK_LOG_SOURCE_DIR_5M}"
         LOG_FILE: $CI_JOB_NAME.log
+      command: ["--stop-at-block=5000000"]
 
     - name: ${HAF_IMAGE_NAME}
       alias: haf-instance
