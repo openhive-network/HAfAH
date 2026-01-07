@@ -35,32 +35,31 @@ variables:
   APP_PORT: 6543
 
   # =============================================================================
-  # HAF and Hive Version Configuration (No Submodule Required)
+  # HAF Version Configuration (No Submodule Required)
   # =============================================================================
-  # Pre-built images are used from GitLab registries instead of building from
-  # submodules. Update these commits when upgrading HAF/hive versions.
+  # HAF: Pre-built images from GitLab registry. Update when upgrading HAF version.
+  # Hive: Dynamically detected by find_hive_image job using common-ci-configuration
+  #       scripts. No manual updates needed - always uses latest built image.
   #
   # To find the hive commit for a HAF commit:
   #   git -C /path/to/haf ls-tree <haf-commit> hive
   # =============================================================================
   HAF_COMMIT: "a9d236ef60e9551eb98be16a00fca1cb22be4b49"
   HAF_COMMIT_SHORT: "a9d236ef"
-  HIVE_COMMIT: "1179c5456dbb6be65c73178eb53d2e02223de3a2"
-  HIVE_COMMIT_SHORT: "1179c545"
   # Use develop for test-tools to get latest dependency fixes
   HIVE_TEST_TOOLS_REF: "develop"
   # tests_api repo uses master branch (not develop)
   TESTS_API_REF: "master"
 
-  # Pre-built images from registries (no submodule build required)
+  # Pre-built HAF image from registry (no submodule build required)
   HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
-  HIVED_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive:${HIVE_COMMIT_SHORT}"
+  # HIVED_IMAGE_NAME is set dynamically by find_hive_image job
+  # HIVE_COMMIT and HIVE_COMMIT_SHORT are set dynamically by find_hive_image job
 
-  # Pre-computed data source paths for service container variable expansion
-  # GitLab CI service variables don't properly expand nested variable references,
-  # so we must use literal values here. Update these when changing HAF_COMMIT/HIVE_COMMIT.
+  # Pre-computed HAF data source path for service container variable expansion
+  # GitLab CI service variables don't properly expand nested variable references.
   HAF_DATA_SOURCE: "/cache/haf_a9d236ef60e9551eb98be16a00fca1cb22be4b49"
-  HIVE_DATA_SOURCE: "/cache/replay_data_hive_1179c5456dbb6be65c73178eb53d2e02223de3a2"
+  # HIVE_DATA_SOURCE is computed dynamically based on UPSTREAM_COMMIT from find_hive_image
 
   # Allow access from any network to eliminate CI IP addressing problems
   HAF_DB_ACCESS: |
@@ -112,10 +111,49 @@ include:
     - '/templates/python_projects.gitlab-ci.yml'
     - '/templates/npm_projects.gitlab-ci.yml'
     - '/templates/test_jobs.gitlab-ci.yml'
+    - '/templates/source_change_detection.gitlab-ci.yml'
 
 # Use templates from common-ci-configuration for fetch strategy support
 default:
   hooks: !reference [.haf_git_corruption_cleanup, hooks]
+
+# =============================================================================
+# Hive Image Detection Job
+# =============================================================================
+# Automatically finds the latest built Hive image by analyzing which commits
+# changed source files. Uses .find_upstream_image template from common-ci-configuration.
+# Source patterns are fetched from hive's source-patterns.sh (single source of truth).
+#
+# Outputs: UPSTREAM_IMAGE, UPSTREAM_COMMIT, UPSTREAM_TAG, etc.
+# Downstream jobs use these directly and map to HIVE_*/HIVED_* as needed.
+# =============================================================================
+find_hive_image:
+  extends: .find_upstream_image
+  stage: detect
+  variables:
+    UPSTREAM_REPO_URL: "https://gitlab.syncad.com/hive/hive.git"
+    UPSTREAM_REGISTRY: "registry.gitlab.syncad.com/hive/hive"
+    UPSTREAM_BRANCH: "develop"
+    UPSTREAM_OUTPUT: "hive_image.env"
+  before_script:
+    - apk add --no-cache git bash curl
+    # Fetch source patterns from hive's script (single source of truth)
+    - |
+      PATTERNS_URL="https://gitlab.syncad.com/hive/hive/-/raw/develop/scripts/ci-helpers/source-patterns.sh"
+      echo "Fetching source patterns from: $PATTERNS_URL"
+      if UPSTREAM_PATTERNS=$(curl -sf "$PATTERNS_URL" | sh); then
+        echo "Loaded patterns: $UPSTREAM_PATTERNS"
+        export UPSTREAM_PATTERNS
+      else
+        echo "ERROR: Could not fetch source-patterns.sh from hive"
+        exit 1
+      fi
+  artifacts:
+    reports:
+      dotenv: hive_image.env
+    expire_in: 1 day
+  tags:
+    - public-runner-docker
 
 # =============================================================================
 # Reusable YAML Anchors for Services and Clone Operations
@@ -233,13 +271,17 @@ default:
 # =============================================================================
 # Validation Jobs
 # =============================================================================
+# Note: Hive variables (HIVE_COMMIT, HIVE_COMMIT_SHORT, HIVE_DATA_SOURCE, HIVED_IMAGE_NAME)
+# are automatically detected by find_hive_image job and are always consistent.
+# Only HAF variables need manual validation since they are hardcoded.
 validate_commit_variables:
   stage: build
   image: alpine:latest
   script:
     - |
       set -e
-      echo "Validating commit variable consistency..."
+      echo "Validating HAF commit variable consistency..."
+      echo "(Hive variables are auto-detected by find_hive_image job)"
       ERRORS=0
 
       # Check HAF_DATA_SOURCE contains HAF_COMMIT
@@ -251,15 +293,6 @@ validate_commit_variables:
         echo "OK: HAF_DATA_SOURCE contains HAF_COMMIT"
       fi
 
-      # Check HIVE_DATA_SOURCE contains HIVE_COMMIT
-      if [[ "$HIVE_DATA_SOURCE" != *"$HIVE_COMMIT"* ]]; then
-        echo "ERROR: HIVE_DATA_SOURCE ($HIVE_DATA_SOURCE) doesn't contain HIVE_COMMIT ($HIVE_COMMIT)"
-        echo "Update HIVE_DATA_SOURCE to: /cache/replay_data_hive_${HIVE_COMMIT}"
-        ERRORS=1
-      else
-        echo "OK: HIVE_DATA_SOURCE contains HIVE_COMMIT"
-      fi
-
       # Check HAF_COMMIT_SHORT matches HAF_COMMIT prefix
       if [[ "$HAF_COMMIT" != "$HAF_COMMIT_SHORT"* ]]; then
         echo "ERROR: HAF_COMMIT_SHORT ($HAF_COMMIT_SHORT) is not a prefix of HAF_COMMIT ($HAF_COMMIT)"
@@ -268,21 +301,13 @@ validate_commit_variables:
         echo "OK: HAF_COMMIT_SHORT is valid"
       fi
 
-      # Check HIVE_COMMIT_SHORT matches HIVE_COMMIT prefix
-      if [[ "$HIVE_COMMIT" != "$HIVE_COMMIT_SHORT"* ]]; then
-        echo "ERROR: HIVE_COMMIT_SHORT ($HIVE_COMMIT_SHORT) is not a prefix of HIVE_COMMIT ($HIVE_COMMIT)"
-        ERRORS=1
-      else
-        echo "OK: HIVE_COMMIT_SHORT is valid"
-      fi
-
       if [ $ERRORS -eq 1 ]; then
         echo ""
         echo "FAILED: Fix the inconsistencies above before merging"
         exit 1
       fi
       echo ""
-      echo "All commit variable references are consistent"
+      echo "All HAF commit variable references are consistent"
   tags:
   - public-runner-docker
 
@@ -300,13 +325,21 @@ verify_poetry_lock_sanity:
 prepare_hived_data:
   extends: .prepare_hived_data_5m
   stage: build
+  needs:
+    - job: find_hive_image
+      artifacts: true
   variables:
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "/tmp/haf-app-tools/hived_config_5M.ini"
+    # Map UPSTREAM_* from find_hive_image to HIVE_* expected by template
+    HIVED_IMAGE_NAME: "${UPSTREAM_IMAGE}"
+    HIVE_COMMIT: "${UPSTREAM_COMMIT}"
   before_script:
     - !reference [.haf_docker_image_builder_job, before_script]
     - mkdir -p /tmp/haf-app-tools
     - curl -fsSL "${COMMON_CI_URL}/haf-app-tools/config/hived_config_5M.ini" -o /tmp/haf-app-tools/hived_config_5M.ini
+    # Log the mapped variables
+    - echo "Using hived image:${HIVED_IMAGE_NAME} (commit:${HIVE_COMMIT})"
   tags:
   - data-cache-storage
   - fast
@@ -542,7 +575,6 @@ new_style_postgrest_pattern_tests:
   variables:
     # Override template's empty defaults with actual image names
     HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
-    HIVED_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive:${HIVE_COMMIT_SHORT}"
     HAF_APP_IMAGE: "${HAFAH_IMAGE_NAME}"
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
     # Test tools are cloned at runtime - use the cloned path
@@ -550,8 +582,10 @@ new_style_postgrest_pattern_tests:
     COMPARISON_TESTS_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/api_tests/comparsion_tests"
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
-    # HIVED_COMMIT is populated from prepare_hived_data artifacts
     HIVED_UID: $HIVED_UID
+    # Map UPSTREAM_* from find_hive_image to HIVE_* for services
+    HIVED_IMAGE_NAME: "${UPSTREAM_IMAGE}"
+    HIVE_DATA_SOURCE: "${DATA_CACHE_HIVE_PREFIX}_${UPSTREAM_COMMIT}"
 
   # Clone hive test tools at runtime then do poetry install
   before_script:
@@ -632,6 +666,8 @@ new_style_postgrest_pattern_tests:
       - '/bin/bash'
 
   needs:
+  - job: find_hive_image
+    artifacts: true
   - job: prepare_haf_data
     artifacts: true
   - job: prepare_hived_data
