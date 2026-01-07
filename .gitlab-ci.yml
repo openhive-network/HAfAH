@@ -35,32 +35,20 @@ variables:
   APP_PORT: 6543
 
   # =============================================================================
-  # HAF and Hive Version Configuration (No Submodule Required)
+  # Upstream Image Detection (No Submodules Required)
   # =============================================================================
-  # Pre-built images are used from GitLab registries instead of building from
-  # submodules. Update these commits when upgrading HAF/hive versions.
+  # Both HAF and Hive images are dynamically detected by find_haf_image and
+  # find_hive_image jobs using common-ci-configuration scripts. No manual
+  # updates needed - always uses the latest built images from each repo.
   #
-  # To find the hive commit for a HAF commit:
-  #   git -C /path/to/haf ls-tree <haf-commit> hive
+  # Output variables (set by detect stage jobs):
+  #   HAF_UPSTREAM_IMAGE, HAF_UPSTREAM_COMMIT, HAF_UPSTREAM_TAG
+  #   HIVE_UPSTREAM_IMAGE, HIVE_UPSTREAM_COMMIT, HIVE_UPSTREAM_TAG
   # =============================================================================
-  HAF_COMMIT: "a9d236ef60e9551eb98be16a00fca1cb22be4b49"
-  HAF_COMMIT_SHORT: "a9d236ef"
-  HIVE_COMMIT: "1179c5456dbb6be65c73178eb53d2e02223de3a2"
-  HIVE_COMMIT_SHORT: "1179c545"
   # Use develop for test-tools to get latest dependency fixes
   HIVE_TEST_TOOLS_REF: "develop"
   # tests_api repo uses master branch (not develop)
   TESTS_API_REF: "master"
-
-  # Pre-built images from registries (no submodule build required)
-  HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
-  HIVED_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive:${HIVE_COMMIT_SHORT}"
-
-  # Pre-computed data source paths for service container variable expansion
-  # GitLab CI service variables don't properly expand nested variable references,
-  # so we must use literal values here. Update these when changing HAF_COMMIT/HIVE_COMMIT.
-  HAF_DATA_SOURCE: "/cache/haf_a9d236ef60e9551eb98be16a00fca1cb22be4b49"
-  HIVE_DATA_SOURCE: "/cache/replay_data_hive_1179c5456dbb6be65c73178eb53d2e02223de3a2"
 
   # Allow access from any network to eliminate CI IP addressing problems
   HAF_DB_ACCESS: |
@@ -112,10 +100,96 @@ include:
     - '/templates/python_projects.gitlab-ci.yml'
     - '/templates/npm_projects.gitlab-ci.yml'
     - '/templates/test_jobs.gitlab-ci.yml'
+    - '/templates/source_change_detection.gitlab-ci.yml'
 
 # Use templates from common-ci-configuration for fetch strategy support
 default:
   hooks: !reference [.haf_git_corruption_cleanup, hooks]
+
+# =============================================================================
+# Upstream Image Detection Jobs
+# =============================================================================
+# Automatically find the latest built images from upstream repos (Hive, HAF) by
+# analyzing which commits changed source files. Uses .find_upstream_image template
+# from common-ci-configuration.
+#
+# Each job outputs variables with a unique prefix to avoid collisions:
+#   find_hive_image → HIVE_UPSTREAM_* (HIVE_UPSTREAM_IMAGE, HIVE_UPSTREAM_COMMIT, etc.)
+#   find_haf_image  → HAF_UPSTREAM_*  (HAF_UPSTREAM_IMAGE, HAF_UPSTREAM_COMMIT, etc.)
+# =============================================================================
+find_hive_image:
+  extends: .find_upstream_image
+  stage: detect
+  variables:
+    UPSTREAM_REPO_URL: "https://gitlab.syncad.com/hive/hive.git"
+    UPSTREAM_REGISTRY: "registry.gitlab.syncad.com/hive/hive"
+    UPSTREAM_BRANCH: "develop"
+    UPSTREAM_OUTPUT: "hive_image.env"
+  before_script:
+    - apk add --no-cache git bash curl
+    # Fetch source patterns from hive's script (single source of truth)
+    - |
+      PATTERNS_URL="https://gitlab.syncad.com/hive/hive/-/raw/develop/scripts/ci-helpers/source-patterns.sh"
+      echo "Fetching source patterns from: $PATTERNS_URL"
+      if UPSTREAM_PATTERNS=$(curl -sf "$PATTERNS_URL" | sh); then
+        echo "Loaded patterns: $UPSTREAM_PATTERNS"
+        export UPSTREAM_PATTERNS
+      else
+        echo "ERROR: Could not fetch source-patterns.sh from hive"
+        exit 1
+      fi
+  script:
+    - !reference [.find_upstream_image, script]
+    # Rename UPSTREAM_* to HIVE_UPSTREAM_* to avoid collisions with other upstream jobs
+    - |
+      if [ -f "$UPSTREAM_OUTPUT" ]; then
+        sed -i 's/^UPSTREAM_/HIVE_UPSTREAM_/' "$UPSTREAM_OUTPUT"
+        echo "Renamed variables in $UPSTREAM_OUTPUT:"
+        cat "$UPSTREAM_OUTPUT"
+      fi
+  artifacts:
+    reports:
+      dotenv: hive_image.env
+    expire_in: 1 day
+  tags:
+    - public-runner-docker
+
+find_haf_image:
+  extends: .find_upstream_image
+  stage: detect
+  variables:
+    UPSTREAM_REPO_URL: "https://gitlab.syncad.com/hive/haf.git"
+    UPSTREAM_REGISTRY: "registry.gitlab.syncad.com/hive/haf"
+    UPSTREAM_BRANCH: "develop"
+    UPSTREAM_OUTPUT: "haf_image.env"
+  before_script:
+    - apk add --no-cache git bash curl
+    # Fetch source patterns from HAF's script (single source of truth)
+    - |
+      PATTERNS_URL="https://gitlab.syncad.com/hive/haf/-/raw/develop/scripts/ci-helpers/source-patterns.sh"
+      echo "Fetching source patterns from: $PATTERNS_URL"
+      if UPSTREAM_PATTERNS=$(curl -sf "$PATTERNS_URL" | sh); then
+        echo "Loaded patterns: $UPSTREAM_PATTERNS"
+        export UPSTREAM_PATTERNS
+      else
+        echo "ERROR: Could not fetch source-patterns.sh from HAF"
+        exit 1
+      fi
+  script:
+    - !reference [.find_upstream_image, script]
+    # Rename UPSTREAM_* to HAF_UPSTREAM_* to avoid collisions with other upstream jobs
+    - |
+      if [ -f "$UPSTREAM_OUTPUT" ]; then
+        sed -i 's/^UPSTREAM_/HAF_UPSTREAM_/' "$UPSTREAM_OUTPUT"
+        echo "Renamed variables in $UPSTREAM_OUTPUT:"
+        cat "$UPSTREAM_OUTPUT"
+      fi
+  artifacts:
+    reports:
+      dotenv: haf_image.env
+    expire_in: 1 day
+  tags:
+    - public-runner-docker
 
 # =============================================================================
 # Reusable YAML Anchors for Services and Clone Operations
@@ -233,58 +307,8 @@ default:
 # =============================================================================
 # Validation Jobs
 # =============================================================================
-validate_commit_variables:
-  stage: build
-  image: alpine:latest
-  script:
-    - |
-      set -e
-      echo "Validating commit variable consistency..."
-      ERRORS=0
-
-      # Check HAF_DATA_SOURCE contains HAF_COMMIT
-      if [[ "$HAF_DATA_SOURCE" != *"$HAF_COMMIT"* ]]; then
-        echo "ERROR: HAF_DATA_SOURCE ($HAF_DATA_SOURCE) doesn't contain HAF_COMMIT ($HAF_COMMIT)"
-        echo "Update HAF_DATA_SOURCE to: /cache/haf_${HAF_COMMIT}"
-        ERRORS=1
-      else
-        echo "OK: HAF_DATA_SOURCE contains HAF_COMMIT"
-      fi
-
-      # Check HIVE_DATA_SOURCE contains HIVE_COMMIT
-      if [[ "$HIVE_DATA_SOURCE" != *"$HIVE_COMMIT"* ]]; then
-        echo "ERROR: HIVE_DATA_SOURCE ($HIVE_DATA_SOURCE) doesn't contain HIVE_COMMIT ($HIVE_COMMIT)"
-        echo "Update HIVE_DATA_SOURCE to: /cache/replay_data_hive_${HIVE_COMMIT}"
-        ERRORS=1
-      else
-        echo "OK: HIVE_DATA_SOURCE contains HIVE_COMMIT"
-      fi
-
-      # Check HAF_COMMIT_SHORT matches HAF_COMMIT prefix
-      if [[ "$HAF_COMMIT" != "$HAF_COMMIT_SHORT"* ]]; then
-        echo "ERROR: HAF_COMMIT_SHORT ($HAF_COMMIT_SHORT) is not a prefix of HAF_COMMIT ($HAF_COMMIT)"
-        ERRORS=1
-      else
-        echo "OK: HAF_COMMIT_SHORT is valid"
-      fi
-
-      # Check HIVE_COMMIT_SHORT matches HIVE_COMMIT prefix
-      if [[ "$HIVE_COMMIT" != "$HIVE_COMMIT_SHORT"* ]]; then
-        echo "ERROR: HIVE_COMMIT_SHORT ($HIVE_COMMIT_SHORT) is not a prefix of HIVE_COMMIT ($HIVE_COMMIT)"
-        ERRORS=1
-      else
-        echo "OK: HIVE_COMMIT_SHORT is valid"
-      fi
-
-      if [ $ERRORS -eq 1 ]; then
-        echo ""
-        echo "FAILED: Fix the inconsistencies above before merging"
-        exit 1
-      fi
-      echo ""
-      echo "All commit variable references are consistent"
-  tags:
-  - public-runner-docker
+# Note: Both HAF and Hive variables are automatically detected by find_haf_image
+# and find_hive_image jobs. No manual validation needed.
 
 verify_poetry_lock_sanity:
   extends: .verify_poetry_lock_sanity_template
@@ -300,13 +324,21 @@ verify_poetry_lock_sanity:
 prepare_hived_data:
   extends: .prepare_hived_data_5m
   stage: build
+  needs:
+    - job: find_hive_image
+      artifacts: true
   variables:
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "/tmp/haf-app-tools/hived_config_5M.ini"
+    # Map HIVE_UPSTREAM_* from find_hive_image to HIVE_* expected by template
+    HIVED_IMAGE_NAME: "${HIVE_UPSTREAM_IMAGE}"
+    HIVE_COMMIT: "${HIVE_UPSTREAM_COMMIT}"
   before_script:
     - !reference [.haf_docker_image_builder_job, before_script]
     - mkdir -p /tmp/haf-app-tools
     - curl -fsSL "${COMMON_CI_URL}/haf-app-tools/config/hived_config_5M.ini" -o /tmp/haf-app-tools/hived_config_5M.ini
+    # Log the mapped variables
+    - echo "Using hived image:${HIVED_IMAGE_NAME} (commit:${HIVE_COMMIT})"
   tags:
   - data-cache-storage
   - fast
@@ -339,13 +371,21 @@ generate-wax-spec:
 prepare_haf_data:
   extends: .prepare_haf_data_5m
   stage: build
+  needs:
+    - job: find_haf_image
+      artifacts: true
   variables:
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "/tmp/haf-app-tools/config_5M.ini"
+    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* expected by template
+    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
+    HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
   before_script:
     - !reference [.haf_docker_image_builder_job, before_script]
     - mkdir -p /tmp/haf-app-tools
     - curl -fsSL "${COMMON_CI_URL}/haf-app-tools/config/config_5M.ini" -o /tmp/haf-app-tools/config_5M.ini
+    # Log the mapped variables
+    - echo "Using HAF image:${HAF_IMAGE_NAME} (commit:${HAF_COMMIT})"
   tags:
   - data-cache-storage
   - fast
@@ -427,8 +467,9 @@ build_setup_docker_image:
   extends: .haf_app_pattern_tests_template
   stage: test
   variables:
-    # Override template's empty defaults with actual image names
-    HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
+    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* expected by template
+    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
+    HAF_DATA_SOURCE: "/cache/haf_${HAF_UPSTREAM_COMMIT}"
     HAF_APP_IMAGE: "${HAFAH_IMAGE_NAME}"
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
@@ -488,6 +529,8 @@ build_setup_docker_image:
       - '/bin/bash'
 
   needs:
+  - job: find_haf_image
+    artifacts: true
   - job: prepare_haf_data
     artifacts: true
 
@@ -540,9 +583,9 @@ new_style_postgrest_pattern_tests:
   extends: .comparison_tests_template
   stage: test
   variables:
-    # Override template's empty defaults with actual image names
-    HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
-    HIVED_IMAGE_NAME: "registry.gitlab.syncad.com/hive/hive:${HIVE_COMMIT_SHORT}"
+    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* expected by template
+    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
+    HAF_DATA_SOURCE: "/cache/haf_${HAF_UPSTREAM_COMMIT}"
     HAF_APP_IMAGE: "${HAFAH_IMAGE_NAME}"
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
     # Test tools are cloned at runtime - use the cloned path
@@ -550,8 +593,10 @@ new_style_postgrest_pattern_tests:
     COMPARISON_TESTS_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/api_tests/comparsion_tests"
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
-    # HIVED_COMMIT is populated from prepare_hived_data artifacts
     HIVED_UID: $HIVED_UID
+    # Map HIVE_UPSTREAM_* from find_hive_image to HIVE_* for services
+    HIVED_IMAGE_NAME: "${HIVE_UPSTREAM_IMAGE}"
+    HIVE_DATA_SOURCE: "${DATA_CACHE_HIVE_PREFIX}_${HIVE_UPSTREAM_COMMIT}"
 
   # Clone hive test tools at runtime then do poetry install
   before_script:
@@ -632,6 +677,10 @@ new_style_postgrest_pattern_tests:
       - '/bin/bash'
 
   needs:
+  - job: find_hive_image
+    artifacts: true
+  - job: find_haf_image
+    artifacts: true
   - job: prepare_haf_data
     artifacts: true
   - job: prepare_hived_data
@@ -666,8 +715,9 @@ postgrest_comparison_tests:
   extends: .jmeter_benchmark_with_haf_job
   stage: test
   variables:
-    # Override template's empty defaults with actual image names
-    HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
+    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* expected by template/anchors
+    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
+    HAF_DATA_SOURCE: "/cache/haf_${HAF_UPSTREAM_COMMIT}"
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: $APP_PORT
     HAF_APP_USER: "hafah_user"
@@ -683,6 +733,8 @@ postgrest_comparison_tests:
     - *hafah-app-service
 
   needs:
+  - job: find_haf_image
+    artifacts: true
   - job: prepare_haf_data
     artifacts: true
   - job: prepare_postgrest_hafah_image
@@ -720,8 +772,9 @@ postgrest_rest_benchmark_tests:
   extends: .jmeter_benchmark_with_haf_job
   stage: test
   variables:
-    # Override template's empty defaults with actual image names
-    HAF_IMAGE_NAME: "registry.gitlab.syncad.com/hive/haf:${HAF_COMMIT_SHORT}"
+    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* expected by template/anchors
+    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
+    HAF_DATA_SOURCE: "/cache/haf_${HAF_UPSTREAM_COMMIT}"
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: $APP_PORT
     HAF_APP_USER: "hafah_user"
@@ -735,6 +788,8 @@ postgrest_rest_benchmark_tests:
     - *hafah-app-service
 
   needs:
+  - job: find_haf_image
+    artifacts: true
   - job: prepare_haf_data
     artifacts: true
   - job: prepare_postgrest_hafah_image
@@ -798,12 +853,17 @@ build_and_publish_image:
 prepare_haf_image_testnet:
   extends: .prepare_haf_image
   stage: build
+  needs:
+    - job: find_haf_image
+      artifacts: true
   variables:
     SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
     REGISTRY_USER: "$CI_IMG_BUILDER_USER"
     REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
     HIVE_NETWORK_TYPE: testnet
     BINARY_CACHE_PATH: "$CI_PROJECT_DIR/haf-testnet-binaries"
+    # Map HAF_UPSTREAM_* from find_haf_image
+    HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
   before_script:
     - !reference [.haf_docker_image_builder_job, before_script]
     # Clone HAF at runtime for testnet build using HAF_COMMIT
@@ -871,6 +931,8 @@ prepare_haf_image_testnet:
   extends: .pytest_based_template
   stage: test
   needs:
+  - job: find_haf_image
+    artifacts: true
   - job: prepare_haf_image_testnet
     artifacts: true
   - job: prepare_postgrest_hafah_image
@@ -878,6 +940,7 @@ prepare_haf_image_testnet:
 
   # Clone HAF and hive test tools at runtime using reusable template
   # hafah-local-tools has path dependencies to haf/ and haf/hive/ directories
+  # Note: HAF_COMMIT is mapped from HAF_UPSTREAM_COMMIT in variables section
   before_script:
     - !reference [.clone_haf_and_hive_test_tools, script]
     # Fix Python version constraint in pyproject.toml files (test-tools requires 3.14 but we use 3.12)
@@ -939,6 +1002,8 @@ prepare_haf_image_testnet:
     PYTEST_BASED_IMAGE_NAME: $BUILDER_IMAGE_PATH
     POETRY_INSTALL_ROOT_DIR: $CI_PROJECT_DIR/tests/integration/hafah-local-tools
     # HAF_IMAGE_NAME is set by prepare_haf_image_testnet dotenv artifact
+    # Map HAF_UPSTREAM_COMMIT for .clone_haf_and_hive_test_tools script
+    HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
 
     BINARY_CACHE_PATH: "haf-testnet-binaries"
     HIVED_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/hived"
@@ -966,6 +1031,8 @@ hafah_pytest_rest_api_pattern_tests:
   # Use specific tag with util-linux for NFS flock support (not :latest which has BusyBox flock)
   image: registry.gitlab.syncad.com/hive/common-ci-configuration/docker-builder:${DOCKER_BUILDER_TAG}
   needs:
+  - job: find_haf_image
+    artifacts: true
   - job: prepare_haf_data
     artifacts: true
     optional: true
@@ -979,6 +1046,9 @@ hafah_pytest_rest_api_pattern_tests:
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_CERT_PATH: "/certs/client"
     DOCKER_TLS_VERIFY: 1
+    # Map HAF_UPSTREAM_* from find_haf_image to HAF_* for cache-manager and docker-compose
+    HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
+    HAF_IMAGE_NAME: "${HAF_UPSTREAM_IMAGE}"
     # Data directories for docker-compose bind mounts
     HAF_DATA_DIRECTORY: "${CI_PROJECT_DIR}/haf-data"
     HAF_SHM_DIRECTORY: "${CI_PROJECT_DIR}/haf-shm"

@@ -123,6 +123,12 @@ curl -X POST http://localhost:3000/rpc/get_transaction \
 - NFS cache at `/nfs/ci-cache/haf/` shares HAF data across CI runners
 - Docker image is Alpine-based (uses `apk`, `wget` - not `curl`)
 
+**Hive Image Detection**: The `find_hive_image` job automatically detects the latest built Hive image from the develop branch using the `.find_upstream_image` template from `common-ci-configuration`. This eliminates manual tracking of Hive commits. The job:
+- Extends `.find_upstream_image` template (same approach as clive)
+- Fetches source patterns from hive's `source-patterns.sh` (single source of truth)
+- Outputs `UPSTREAM_IMAGE`, `UPSTREAM_COMMIT`, etc. for downstream jobs
+- Downstream jobs map these to `HIVED_IMAGE_NAME`, `HIVE_COMMIT` as needed
+
 **Quick Test Mode**: Skip data preparation by setting `QUICK_TEST=true` and `QUICK_TEST_HAF_COMMIT=<sha>` in pipeline variables. Find available caches with:
 ```bash
 ssh hive-builder-10 'ls -lt /nfs/ci-cache/haf/*.tar | head -5'
