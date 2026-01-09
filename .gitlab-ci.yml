@@ -153,6 +153,7 @@ find_hive_image:
     expire_in: 1 day
   tags:
     - public-runner-docker
+    - standard
 
 find_haf_image:
   extends: .find_upstream_image
@@ -190,6 +191,7 @@ find_haf_image:
     expire_in: 1 day
   tags:
     - public-runner-docker
+    - standard
 
 # =============================================================================
 # Reusable YAML Anchors for Services and Clone Operations
@@ -317,6 +319,7 @@ verify_poetry_lock_sanity:
     PYPROJECT_DIR: "$CI_PROJECT_DIR/tests/integration/hafah-local-tools"
   tags:
   - public-runner-docker
+  - standard
 
 # =============================================================================
 # Data Preparation Jobs (use pre-built images from registry)
@@ -341,6 +344,7 @@ prepare_hived_data:
     - echo "Using hived image:${HIVED_IMAGE_NAME} (commit:${HIVE_COMMIT})"
   tags:
   - data-cache-storage
+  - standard
   - fast
 
 extract-swagger-json:
@@ -350,6 +354,7 @@ extract-swagger-json:
     INPUT_SQL_SWAGGER_FILE: "${CI_PROJECT_DIR}/postgrest/hafah_REST/hafah_openapi.sql"
   tags:
   - public-runner-docker
+  - standard
 
 generate-wax-spec:
   extends: .generate_swagger_package
@@ -367,6 +372,7 @@ generate-wax-spec:
     artifacts: true
   tags:
   - public-runner-docker
+  - standard
 
 prepare_haf_data:
   extends: .prepare_haf_data_5m
@@ -388,6 +394,7 @@ prepare_haf_data:
     - echo "Using HAF image:${HAF_IMAGE_NAME} (commit:${HAF_COMMIT})"
   tags:
   - data-cache-storage
+  - standard
   - fast
 
 .prepare_hafah_image:
@@ -438,7 +445,7 @@ prepare_haf_data:
 
   tags:
   - public-runner-docker
-  - hived
+  - standard
 
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
@@ -462,6 +469,7 @@ build_setup_docker_image:
   script: scripts/ci-helpers/build_setup_image.sh "$CI_PROJECT_DIR"
   tags:
   - public-runner-docker
+  - standard
 
 .pattern_tests:
   extends: .haf_app_pattern_tests_template
@@ -552,6 +560,7 @@ build_setup_docker_image:
 
   tags:
   - data-cache-storage
+  - standard
   - fast
 
 postgrest_pattern_tests:
@@ -698,6 +707,7 @@ new_style_postgrest_pattern_tests:
 
   tags:
   - data-cache-storage
+  - standard
   - fast
 
 postgrest_comparison_tests:
@@ -756,6 +766,7 @@ postgrest_comparison_tests:
       junit: wdir/jmeter_junit_report.xml
   tags:
   - data-cache-storage
+  - standard
   - fast
 
 postgrest_block_api_benchmark_tests:
@@ -812,6 +823,7 @@ postgrest_rest_benchmark_tests:
       junit: tests/performance/junit-result.xml
   tags:
   - data-cache-storage
+  - standard
   - fast
 
 cleanup_hive_cache_manual:
@@ -821,6 +833,7 @@ cleanup_hive_cache_manual:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_hive_*"
   tags:
   - data-cache-storage
+  - standard
   - fast
 
 cleanup_haf_cache_manual:
@@ -830,6 +843,7 @@ cleanup_haf_cache_manual:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_haf_*"
   tags:
   - data-cache-storage
+  - standard
   - fast
 
 build_and_publish_image:
@@ -848,7 +862,7 @@ build_and_publish_image:
   - scripts/ci-helpers/build_and_publish_instance.sh
   tags:
   - public-runner-docker
-  - hived
+  - standard
 
 prepare_haf_image_testnet:
   extends: .prepare_haf_image
@@ -879,6 +893,7 @@ prepare_haf_image_testnet:
       cd "${CI_PROJECT_DIR}"
   tags:
   - public-runner-docker
+  - standard
 
 .haf-instance-with-nfs-fallback: &haf-instance-with-nfs-fallback
   name: ${HAF_IMAGE_NAME}
@@ -1025,6 +1040,7 @@ prepare_haf_image_testnet:
     -m $PYTEST_MARK
   tags:
   - public-runner-docker
+  - standard
 
 hafah_pytest_rest_api_pattern_tests:
   stage: test
@@ -1124,6 +1140,7 @@ hafah_pytest_rest_api_pattern_tests:
     when: always
   tags:
   - data-cache-storage
+  - standard
   - fast
 
 hafah_pytest_fuctional_tests_part1:
@@ -1157,6 +1174,7 @@ deploy-wax-spec-dev-package:
     artifacts: true
   tags:
   - public-runner-docker
+  - standard
 
 deploy-wax-spec-production-public-npm:
   extends: .registry_npmjs_org_deploy_package_template
@@ -1180,3 +1198,4 @@ deploy-wax-spec-production-public-npm:
     artifacts: true
   tags:
   - public-runner-docker
+  - standard
