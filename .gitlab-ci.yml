@@ -51,7 +51,12 @@ variables:
   TESTS_API_REF: "master"
 
   # Allow access from any network to eliminate CI IP addressing problems
+  # Also allow local socket connections for hived/haf_maintainer (peer auth fails in container)
   HAF_DB_ACCESS: |
+    "local   all              haf_admin                     trust"
+    "local   all              haf_maintainer                trust"
+    "local   all              hived                         trust"
+    "local   all              postgres                      trust"
     "host    all              haf_admin        0.0.0.0/0    trust"
     "host    all              hived            0.0.0.0/0    trust"
     "host    all              haf_maintainer   0.0.0.0/0    trust"
@@ -902,6 +907,10 @@ prepare_haf_image_testnet:
   variables:
     PGCTLTIMEOUT: 600
     PG_ACCESS: |
+      "local   all              haf_admin                     trust"
+      "local   all              haf_maintainer                trust"
+      "local   all              hived                         trust"
+      "local   all              postgres                      trust"
       "host    all              haf_admin        0.0.0.0/0    trust"
       "host    all              hived            0.0.0.0/0    trust"
       "host    all              haf_maintainer   0.0.0.0/0    trust"
@@ -938,6 +947,10 @@ prepare_haf_image_testnet:
   variables:
     PGCTLTIMEOUT: 600
     PG_ACCESS: |
+      "local   all              haf_admin                     trust"
+      "local   all              haf_maintainer                trust"
+      "local   all              hived                         trust"
+      "local   all              postgres                      trust"
       "host    all              haf_admin        0.0.0.0/0    trust"
       "host    all              hived            0.0.0.0/0    trust"
       "host    all              haf_maintainer   0.0.0.0/0    trust"
