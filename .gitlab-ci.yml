@@ -54,6 +54,7 @@ variables:
   HAF_DB_ACCESS: |
     "host    all              haf_admin        0.0.0.0/0    trust"
     "host    all              hived            0.0.0.0/0    trust"
+    "host    all              haf_maintainer   0.0.0.0/0    trust"
     "host    all              hafah_user       0.0.0.0/0    trust"
     "host    all              all              0.0.0.0/0    scram-sha-256"
 
@@ -903,6 +904,7 @@ prepare_haf_image_testnet:
     PG_ACCESS: |
       "host    all              haf_admin        0.0.0.0/0    trust"
       "host    all              hived            0.0.0.0/0    trust"
+      "host    all              haf_maintainer   0.0.0.0/0    trust"
       "host    all              hafah_user       0.0.0.0/0    trust"
       "host    all              all              0.0.0.0/0    scram-sha-256"
     DATA_SOURCE: "${HAF_DATA_SOURCE}"
@@ -938,6 +940,7 @@ prepare_haf_image_testnet:
     PG_ACCESS: |
       "host    all              haf_admin        0.0.0.0/0    trust"
       "host    all              hived            0.0.0.0/0    trust"
+      "host    all              haf_maintainer   0.0.0.0/0    trust"
       "host    all              hafah_user       0.0.0.0/0    trust"
       "host    all              all              0.0.0.0/0    scram-sha-256"
   command: ["--execute-maintenance-script=${HAF_SOURCE_DIR}/scripts/maintenance-scripts/sleep_infinity.sh"]
