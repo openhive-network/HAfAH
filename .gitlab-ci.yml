@@ -354,16 +354,16 @@ new_style_postgrest_pattern_tests:
     artifacts: true
     optional: true
 
-  # Override services to fix hived-instance exiting immediately due to --stop-at-block
-  # when data is already at 5M blocks. Remove the stop flag so hived stays running for API calls.
+  # Override services to provide SHARED_BLOCK_LOG_DIR for hived-instance
+  # The hived container needs this to find the block_log files
   services:
     # hived-instance - standalone hived for comparison (reference node)
     - name: $HIVED_IMAGE_NAME
       alias: hived-instance
       variables:
         DATA_SOURCE: "${DATA_CACHE_HIVE_PREFIX}_${HIVED_COMMIT}"
+        SHARED_BLOCK_LOG_DIR: "${BLOCK_LOG_SOURCE_DIR_5M}"
         LOG_FILE: $CI_JOB_NAME.log
-      # No --stop-at-block so hived stays running for API requests
 
     # HAF services (from .haf_app_pattern_tests_template)
     - !reference [.haf_app_pattern_tests_template, services]
