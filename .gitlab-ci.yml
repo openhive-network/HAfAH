@@ -75,144 +75,35 @@ include:
 - project: 'hive/haf'
   ref: 1ac5d12439b9cca33e6db383adc59967cae75fc4   # develop
   file: '/scripts/ci-helpers/prepare_data_image_job.yml'
-# HAF app testing templates from common-ci-configuration
+# Common CI templates
+- project: 'hive/common-ci-configuration'
+  ref: develop
+  file: '/templates/base.gitlab-ci.yml'
 - project: 'hive/common-ci-configuration'
   ref: develop
   file: '/templates/haf_app_testing.gitlab-ci.yml'
 
+# Git corruption cleanup hook - prevents issues from cancelled pipelines
+default:
+  hooks: !reference [.haf_git_corruption_cleanup, hooks]
+
 # =============================================================================
 # Detect Changes - determines if we can skip data preparation
+# Uses standardized template from common-ci-configuration
 # Outputs via dotenv artifact:
-#   AUTO_SKIP_BUILD  - true if data prep can be skipped
-#   HAF_COMMIT       - commit SHA for cached data (when skipping)
-#
-# Note: Actual cache handling is done by cache-manager.sh from common-ci-configuration
+#   AUTO_SKIP_BUILD/AUTO_SKIP_SYNC  - true if data prep can be skipped
+#   CACHE_COMMIT                    - commit SHA for cached data (when skipping)
 # =============================================================================
 detect_changes:
-  stage: detect
-  image: alpine:latest
-  rules:
-    # Skip for tags (always do full build for releases)
-    - if: $CI_COMMIT_TAG
-      when: never
-    - when: on_success
-  script:
-    - |
-      set -e
-      apk add --no-cache git
-
-      # Initialize defaults
-      CAN_SKIP_BUILD=false
-      CACHE_COMMIT=""
-
-      # Handle manual QUICK_TEST mode
-      if [ "$QUICK_TEST" = "true" ]; then
-        echo "=== Manual QUICK_TEST Mode ==="
-        CAN_SKIP_BUILD=true
-        CACHE_COMMIT="${QUICK_TEST_HAF_COMMIT}"
-        if [ -z "$CACHE_COMMIT" ]; then
-          echo "ERROR: QUICK_TEST_HAF_COMMIT must be set when QUICK_TEST=true"
-          echo ""
-          echo "Find available caches:"
-          echo "  ssh hive-builder-10 'ls -lt /nfs/ci-cache/haf/*.tar | head -5'"
-          exit 1
-        fi
-        echo "Using cached data from: $CACHE_COMMIT"
-      else
-        # Automatic detection mode
-        echo "=== Detecting Changed Files ==="
-
-        # Get changed files - use git show for shallow clones (CI default)
-        CHANGED_FILES=$(git show --name-only --pretty=format: HEAD 2>/dev/null | grep -v '^$' || true)
-
-        # Fallback for MR pipelines
-        if [ -z "$CHANGED_FILES" ] && [ -n "${CI_MERGE_REQUEST_DIFF_BASE_SHA:-}" ]; then
-          echo "MR pipeline: comparing against target branch"
-          CHANGED_FILES=$(git diff --name-only "$CI_MERGE_REQUEST_DIFF_BASE_SHA" HEAD 2>/dev/null || true)
-        fi
-
-        # Last resort: require full build
-        if [ -z "$CHANGED_FILES" ]; then
-          echo "WARNING: Could not determine changed files - requiring full build"
-          CHANGED_FILES="unknown-changes"
-        fi
-
-        echo "Changed files:"
-        echo "$CHANGED_FILES" | head -50
-
-        # Skip patterns: tests, docs, SQL, markdown
-        SKIP_PATTERNS="^tests/|^docs/|\.sql$|\.md$|^README|^CHANGELOG|^LICENSE|^CLAUDE"
-
-        NEEDS_BUILD=$(echo "$CHANGED_FILES" | grep -vE "$SKIP_PATTERNS" || true)
-
-        if [ -z "$NEEDS_BUILD" ]; then
-          echo ""
-          echo "=== Can skip data prep (only tests/docs/SQL changed) ==="
-          CAN_SKIP_BUILD=true
-
-          # Find most recent cache from NFS - cache-manager will handle the rest
-          NFS_CACHE_PATH="/nfs/ci-cache/haf"
-          if [ -d "$NFS_CACHE_PATH" ]; then
-            CACHE_COMMIT=$(ls -t "$NFS_CACHE_PATH"/*.tar 2>/dev/null | head -1 | xargs -r basename | sed 's/\.tar$//' || true)
-            if [ -n "$CACHE_COMMIT" ]; then
-              echo "Using most recent cache: $CACHE_COMMIT"
-            else
-              echo "WARNING: No cached data found - cannot skip"
-              CAN_SKIP_BUILD=false
-            fi
-          else
-            echo "WARNING: NFS cache path not found - cannot skip"
-            CAN_SKIP_BUILD=false
-          fi
-        else
-          echo ""
-          echo "=== Full data prep required ==="
-          echo "Files requiring data prep:"
-          echo "$NEEDS_BUILD" | head -20
-        fi
-      fi
-
-      # Export results
-      echo "AUTO_SKIP_BUILD=$CAN_SKIP_BUILD" >> detect_changes.env
-      if [ "$CAN_SKIP_BUILD" = "true" ] && [ -n "$CACHE_COMMIT" ]; then
-        echo "HAF_COMMIT=$CACHE_COMMIT" >> detect_changes.env
-      fi
-
-      echo ""
-      echo "=== Results ==="
-      cat detect_changes.env
-  artifacts:
-    reports:
-      dotenv: detect_changes.env
-    expire_in: 1 day
-  tags:
-    - data-cache-storage  # Needs NFS access to find caches
+  extends: .haf_app_detect_changes
+  variables:
+    # Skip patterns: tests, docs, SQL, markdown - these don't require HAF data rebuild
+    HAF_APP_SKIP_PATTERNS: '^tests/|^docs/|\.sql$|\.md$|^README|^CHANGELOG|^LICENSE|^CLAUDE'
 
 validate_haf_commit:
-  stage: build
-  image: alpine:latest
-  script:
-  - |
-    set -e
-    apk add --no-cache git
-    SUBMODULE_COMMIT=$(cat .git/modules/haf/HEAD 2>/dev/null || git -C haf rev-parse HEAD)
-    INCLUDE_REF=$(grep -A2 "project:.*hive/haf" .gitlab-ci.yml | grep "ref:" | head -1 | sed 's/.*ref: *\([a-f0-9]*\).*/\1/' || true)
-    echo "HAF_COMMIT variable: $HAF_COMMIT"
-    echo "HAF submodule HEAD:  $SUBMODULE_COMMIT"
-    echo "Include ref:         $INCLUDE_REF"
-    ERRORS=0
-    if [ "$HAF_COMMIT" != "$SUBMODULE_COMMIT" ]; then
-      echo "ERROR: HAF_COMMIT variable does not match submodule commit!"
-      ERRORS=1
-    fi
-    if [ "$HAF_COMMIT" != "$INCLUDE_REF" ]; then
-      echo "ERROR: HAF_COMMIT variable does not match include ref!"
-      ERRORS=1
-    fi
-    if [ $ERRORS -eq 1 ]; then
-      exit 1
-    fi
-    echo "All HAF commit references are consistent"
+  extends: .haf_commit_validation
+  variables:
+    HAF_INCLUDE_REF: "1ac5d12439b9cca33e6db383adc59967cae75fc4"
   tags:
   - public-runner-docker
 
@@ -248,9 +139,8 @@ prepare_hived_data:
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/hive/docker/config_5M.ini"
   rules:
-  - if: $QUICK_TEST == "true" || $AUTO_SKIP_BUILD == "true"
-    when: never
-  - when: on_success
+    - !reference [.skip_on_cached_data, rules]
+    - when: on_success
   tags:
   - data-cache-storage
   - fast
@@ -302,9 +192,8 @@ prepare_haf_data:
     BLOCK_LOG_SOURCE_DIR: $BLOCK_LOG_SOURCE_DIR_5M
     CONFIG_INI_SOURCE: "$CI_PROJECT_DIR/haf/docker/config_5M.ini"
   rules:
-  - if: $QUICK_TEST == "true" || $AUTO_SKIP_BUILD == "true"
-    when: never
-  - when: on_success
+    - !reference [.skip_on_cached_data, rules]
+    - when: on_success
   tags:
   - data-cache-storage
   - fast
@@ -745,13 +634,10 @@ hafah_pytest_rest_api_pattern_tests:
     DIRECT_CALLS: 0
     POSTGRES_URL: $DB_URL
   before_script:
+  # Fetch cache-manager from common-ci-configuration
+  - !reference [.fetch_cache_manager, before_script]
   - |
     echo -e "\e[0Ksection_start:$(date +%s):cache[collapsed=true]\r\e[0KFetching HAF cache..."
-    # Use cache-manager to extract HAF data directly to target directory
-    # cache-manager handles local/NFS fallback and permission restoration
-    CACHE_MANAGER="/tmp/cache-manager.sh"
-    curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/scripts/cache-manager.sh" -o "$CACHE_MANAGER"
-    chmod +x "$CACHE_MANAGER"
     mkdir -p "${HAF_DATA_DIRECTORY}" "${HAF_SHM_DIRECTORY}"
     if "$CACHE_MANAGER" get haf "${HAF_COMMIT}" "${HAF_DATA_DIRECTORY}"; then
       echo "HAF data extracted to ${HAF_DATA_DIRECTORY}"
