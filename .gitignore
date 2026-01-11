@@ -30,3 +30,6 @@ build_*/
 
 # exclude data generated during test_tools based tests
 **/generated_**
+
+# HAF scripts downloaded at runtime (no longer a submodule)
+haf/

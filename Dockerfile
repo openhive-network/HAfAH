@@ -68,7 +68,18 @@ SHELL ["/bin/bash", "-c"]
 ADD --chown=hafah_user:hafah_user ./postgrest/ ./app/postgrest
 ADD --chown=hafah_user:hafah_user ./queries/ ./app/queries
 ADD --chmod=755 --chown=hafah_user:hafah_user ./scripts ./app/scripts
-ADD --chmod=755 --chown=hafah_user:hafah_user ./haf/scripts ./app/haf/scripts
+
+# Fetch HAF scripts from common-ci-configuration (replaces submodule dependency)
+ARG COMMON_CI_REF=develop
+RUN <<EOF
+  set -e
+  mkdir -p ./app/haf/scripts
+  COMMON_CI_URL="https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/${COMMON_CI_REF}"
+  for script in common.sh create_haf_app_role.sh; do
+    wget -q "${COMMON_CI_URL}/haf-app-tools/scripts/${script}" -O "./app/haf/scripts/${script}"
+    chmod +x "./app/haf/scripts/${script}"
+  done
+EOF
 
 ADD --chmod=755 --chown=hafah_user:hafah_user ./docker/docker_entrypoint.sh .
 
