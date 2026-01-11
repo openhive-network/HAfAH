@@ -345,12 +345,28 @@ new_style_postgrest_pattern_tests:
   - job: detect_changes
     artifacts: true
     optional: true
+  - job: prepare_hived_image
+    artifacts: true
   - job: prepare_haf_data
     artifacts: true
     optional: true
   - job: prepare_hived_data
     artifacts: true
     optional: true
+
+  # Override services to fix hived-instance exiting immediately due to --stop-at-block
+  # when data is already at 5M blocks. Remove the stop flag so hived stays running for API calls.
+  services:
+    # hived-instance - standalone hived for comparison (reference node)
+    - name: $HIVED_IMAGE_NAME
+      alias: hived-instance
+      variables:
+        DATA_SOURCE: "${DATA_CACHE_HIVE_PREFIX}_${HIVED_COMMIT}"
+        LOG_FILE: $CI_JOB_NAME.log
+      # No --stop-at-block so hived stays running for API requests
+
+    # HAF services (from .haf_app_pattern_tests_template)
+    - !reference [.haf_app_pattern_tests_template, services]
 
   artifacts:
     paths:
