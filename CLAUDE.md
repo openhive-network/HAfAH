@@ -21,7 +21,6 @@ HAfAH (HAF Account History) is a read-only HAF (Hive Application Framework) appl
   - `hafah_rest_backend/` - Implementation functions for each API endpoint
 - `scripts/` - Setup and management scripts
 - `tests/` - Integration tests (pytest) and REST API tests (tavern YAML)
-- `haf/` - HAF submodule (the underlying data framework)
 
 **Database schemas** (created in order):
 1. `hafah_python` - Core schema with version table and helper views (from `ah_schema_functions.pgsql`)
@@ -117,12 +116,13 @@ curl -X POST http://localhost:3000/rpc/get_transaction \
 
 ## CI/CD Notes
 
-- HAF submodule commit must match in three places: `.gitmodules` ref, `HAF_COMMIT` variable in `.gitlab-ci.yml`, and `include: ref:` in `.gitlab-ci.yml`
-- The `validate_haf_commit` job ensures these stay in sync
-- Pattern tests (tavern) are tied to specific blockchain data and may fail when HAF commit changes
+- No submodules - CI uses runtime cloning with sparse checkout for test tools
+- HAF and Hive images are automatically detected via `find_haf_image` and `find_hive_image` jobs
+- Pattern tests (tavern) are tied to specific blockchain data
 - Uses cache-manager.sh from common-ci-configuration for HAF data caching
 - NFS cache at `/nfs/ci-cache/haf/` shares HAF data across CI runners
 - Docker image is Alpine-based (uses `apk`, `wget` - not `curl`)
+- HAF scripts (common.sh, create_haf_app_role.sh) are fetched from common-ci-configuration at build time
 
 **Quick Test Mode**: Skip data preparation by setting `QUICK_TEST=true` and `QUICK_TEST_HAF_COMMIT=<sha>` in pipeline variables. Find available caches with:
 ```bash
@@ -147,5 +147,5 @@ SQL files are executed in specific order by `scripts/install_app.sh`:
 - PostgREST exposes `hafah_endpoints` schema functions as REST endpoints
 - The `hafah_endpoints.home()` function is the main JSON-RPC dispatcher
 - Backend functions live in `hafah_python` and `hafah_backend` schemas
-- Test tools from HAF submodule: `test_tools`, `haf_local_tools`
+- Test tools (`test_tools`, `haf_local_tools`) are cloned at runtime in CI via sparse checkout
 - The `hafah_python.helper_operations_view` joins `hive.operations_view` with operation types
