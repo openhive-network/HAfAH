@@ -459,24 +459,6 @@ prepare_postgrest_hafah_image:
     HAFAH_IMAGE_TAG: $CI_COMMIT_SHORT_SHA
     USE_POSTGREST: 1
 
-build_setup_docker_image:
-  extends: .docker_image_builder_job_template
-  stage: build
-  before_script:
-  - !reference [.docker_image_builder_job_template, before_script]
-  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  # Fetch HAF scripts from common-ci-configuration (replaces submodule)
-  - mkdir -p "${CI_PROJECT_DIR}/haf/scripts"
-  - |
-    for script in common.sh create_haf_app_role.sh; do
-      curl -fsSL "${COMMON_CI_URL}/haf-app-tools/scripts/${script}" -o "${CI_PROJECT_DIR}/haf/scripts/${script}"
-      chmod +x "${CI_PROJECT_DIR}/haf/scripts/${script}"
-    done
-  script: scripts/ci-helpers/build_setup_image.sh "$CI_PROJECT_DIR"
-  tags:
-  - public-runner-docker
-  - standard
-
 .pattern_tests:
   extends: .haf_app_pattern_tests_template
   stage: test
