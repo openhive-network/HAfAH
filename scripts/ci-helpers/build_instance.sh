@@ -62,9 +62,34 @@ REGISTRY=${REG:-$REGISTRY}
 
 APP_PORT=${APP_PORT:-6543}
 HAF_POSTGRES_URL=${HAF_POSTGRES_URL:-postgresql://hafah_user@haf:5432/haf_block_log}
+
+# On CI push the images to the registry
+if [[ -n "${CI:-}" ]]; then
+  BUILD_MODE="--push"
+else
+  BUILD_MODE="--load"
+fi
+
+# Build image tags
 HAFAH_IMAGE_NAME=${REGISTRY}:$HAFAH_IMAGE_TAG
 HAFAH_MINIMAL_IMAGE_NAME=${REGISTRY}/minimal:$HAFAH_IMAGE_TAG
 HAFAH_REWRITER_IMAGE_NAME=${REGISTRY}/postgrest-rewriter:$HAFAH_IMAGE_TAG
+
+# Additional tags for main images
+MAIN_TAGS=("--tag" "$HAFAH_IMAGE_NAME" "--tag" "$HAFAH_MINIMAL_IMAGE_NAME")
+REWRITER_TAGS=("--tag" "$HAFAH_REWRITER_IMAGE_NAME")
+
+# Add 'latest' tags on develop branch
+if [[ "${CI_COMMIT_BRANCH:-}" == "${CI_DEFAULT_BRANCH:-develop}" ]]; then
+  MAIN_TAGS+=("--tag" "${REGISTRY}:latest" "--tag" "${REGISTRY}/minimal:latest")
+  REWRITER_TAGS+=("--tag" "${REGISTRY}/postgrest-rewriter:latest")
+fi
+
+# Add version tags on protected tags
+if [[ -n "${CI_COMMIT_TAG:-}" && "${CI_COMMIT_REF_PROTECTED:-}" == "true" ]]; then
+  MAIN_TAGS+=("--tag" "${REGISTRY}:${CI_COMMIT_TAG}")
+  REWRITER_TAGS+=("--tag" "${REGISTRY}/postgrest-rewriter:${CI_COMMIT_TAG}")
+fi
 
 
 printf "Parameter values:\n - SOURCE_DIR: %s\n - APP_PORT: %d\n - HAF_POSTGRES_URL: %s\n - HAFAH_IMAGE_NAME: %s\n\n" \
@@ -110,7 +135,7 @@ if [ -n "$BUILD_IMAGE_TAG" ]; then
   TAG_BUILD_ARGS=( "--build-arg" "GIT_COMMIT_TAG=$BUILD_IMAGE_TAG" )
 fi
 
-echo "Building Hivemind image..."
+echo "Building HAfAH image..."
 
 docker buildx build \
     --build-arg HTTP_PORT="$APP_PORT" \
@@ -122,9 +147,8 @@ docker buildx build \
     --build-arg GIT_LAST_COMMITTER="$GIT_LAST_COMMITTER" \
     --build-arg GIT_LAST_COMMIT_DATE="$GIT_LAST_COMMIT_DATE" \
     --target=instance \
-    --tag "$HAFAH_IMAGE_NAME" \
-    --tag "$HAFAH_MINIMAL_IMAGE_NAME" \
-    --load \
+    "${MAIN_TAGS[@]}" \
+    $BUILD_MODE \
     --file Dockerfile .
 
 echo -e "Done!\nBuilding rewriter image..."
@@ -138,8 +162,8 @@ docker buildx build \
     --build-arg GIT_LAST_COMMIT_DATE="$GIT_LAST_COMMIT_DATE" \
     --target=$REWRITER_TARGET \
     "${TAG_BUILD_ARGS[@]}" \
-    --tag "$HAFAH_REWRITER_IMAGE_NAME" \
-    --load \
+    "${REWRITER_TAGS[@]}" \
+    $BUILD_MODE \
     --file Dockerfile.rewriter .
 
 echo "Done!"
