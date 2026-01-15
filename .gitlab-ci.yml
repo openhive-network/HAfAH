@@ -159,7 +159,6 @@ find_hive_image:
     expire_in: 1 day
   tags:
     - public-runner-docker
-    - standard
 
 find_haf_image:
   extends: .find_upstream_image
@@ -197,7 +196,6 @@ find_haf_image:
     expire_in: 1 day
   tags:
     - public-runner-docker
-    - standard
 
 # =============================================================================
 # Reusable YAML Anchors for Services and Clone Operations
@@ -325,7 +323,6 @@ verify_poetry_lock_sanity:
     PYPROJECT_DIR: "$CI_PROJECT_DIR/tests/integration/hafah-local-tools"
   tags:
   - public-runner-docker
-  - standard
 
 # =============================================================================
 # Data Preparation Jobs (use pre-built images from registry)
@@ -350,7 +347,6 @@ prepare_hived_data:
     - echo "Using hived image:${HIVED_IMAGE_NAME} (commit:${HIVE_COMMIT})"
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 extract-swagger-json:
@@ -360,7 +356,6 @@ extract-swagger-json:
     INPUT_SQL_SWAGGER_FILE: "${CI_PROJECT_DIR}/postgrest/hafah_REST/hafah_openapi.sql"
   tags:
   - public-runner-docker
-  - standard
 
 generate-wax-spec:
   extends: .generate_swagger_package
@@ -378,7 +373,6 @@ generate-wax-spec:
     artifacts: true
   tags:
   - public-runner-docker
-  - standard
 
 prepare_haf_data:
   extends: .prepare_haf_data_5m
@@ -400,7 +394,6 @@ prepare_haf_data:
     - echo "Using HAF image:${HAF_IMAGE_NAME} (commit:${HAF_COMMIT})"
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 .prepare_hafah_image:
@@ -424,12 +417,24 @@ prepare_haf_data:
 
   script:
   - |
-    echo "Building HAfAH image: $HAFAH_IMAGE_NAME"
+    echo $HAFAH_IMAGE_NAME
+    echo $SOURCE_DIR
+    scripts/ci-helpers/build_instance.sh
     docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
-    # build_instance.sh handles tagging (short SHA, latest on develop, version on protected tags)
-    # and pushes directly to registry
-    scripts/ci-helpers/build_instance.sh "$HAFAH_IMAGE_TAG" "$SOURCE_DIR" "$CI_REGISTRY_IMAGE"
+    docker push "$HAFAH_IMAGE_NAME"
+    docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG"
     echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
+    if [[ -n "$CI_COMMIT_TAG" ]]; then
+      docker login -u "$BLOG_REGISTRY_USER" -p "$BLOG_REGISTRY_PASSWORD" "registry-upload.hive.blog"
+      docker tag "$HAFAH_IMAGE_NAME" "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+      docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+      docker tag "$HAFAH_IMAGE_NAME" "registry-upload.hive.blog/hafah:$CI_COMMIT_TAG"
+      docker push "registry-upload.hive.blog/hafah:$CI_COMMIT_TAG"
+      docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
+      docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
+      docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "registry-upload.hive.blog/hafah/postgrest-rewriter:$CI_COMMIT_TAG"
+      docker push "registry-upload.hive.blog/hafah/postgrest-rewriter:$CI_COMMIT_TAG"
+    fi
 
   artifacts:
     paths:
@@ -439,7 +444,6 @@ prepare_haf_data:
 
   tags:
   - public-runner-docker
-  - standard
 
 prepare_postgrest_hafah_image:
   extends: .prepare_hafah_image
@@ -554,7 +558,6 @@ build_setup_docker_image:
 
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 postgrest_pattern_tests:
@@ -701,7 +704,6 @@ new_style_postgrest_pattern_tests:
 
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 postgrest_comparison_tests:
@@ -760,7 +762,6 @@ postgrest_comparison_tests:
       junit: wdir/jmeter_junit_report.xml
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 postgrest_block_api_benchmark_tests:
@@ -817,7 +818,6 @@ postgrest_rest_benchmark_tests:
       junit: tests/performance/junit-result.xml
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 cleanup_hive_cache_manual:
@@ -827,7 +827,6 @@ cleanup_hive_cache_manual:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_hive_*"
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 cleanup_haf_cache_manual:
@@ -837,18 +836,24 @@ cleanup_haf_cache_manual:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_haf_*"
   tags:
   - data-cache-storage
-  - standard
   - fast
 
-# Publish to registry.hive.blog on protected tags only
-# Uses pull/retag/push pattern - no rebuild
-publish_images:
-  extends: .docker_publish_job_template
-  variables:
-    # Use "" for root image, subpath for others
-    # Note: HAfAH project name is case-sensitive but external registry uses lowercase
-    PUBLISH_IMAGES: "HAfAH minimal postgrest-rewriter"
-    PUBLISH_PROJECT_NAME: "hafah"
+build_and_publish_image:
+  stage: publish
+  extends: .publish_docker_image_template
+  before_script:
+  - !reference [.publish_docker_image_template, before_script]
+  # Fetch HAF scripts from common-ci-configuration (replaces submodule)
+  - mkdir -p "${CI_PROJECT_DIR}/haf/scripts"
+  - |
+    for script in common.sh create_haf_app_role.sh; do
+      curl -fsSL "${COMMON_CI_URL}/haf-app-tools/scripts/${script}" -o "${CI_PROJECT_DIR}/haf/scripts/${script}"
+      chmod +x "${CI_PROJECT_DIR}/haf/scripts/${script}"
+    done
+  script:
+  - scripts/ci-helpers/build_and_publish_instance.sh
+  tags:
+  - public-runner-docker
 
 prepare_haf_image_testnet:
   extends: .prepare_haf_image
@@ -879,7 +884,6 @@ prepare_haf_image_testnet:
       cd "${CI_PROJECT_DIR}"
   tags:
   - public-runner-docker
-  - standard
 
 .haf-instance-with-nfs-fallback: &haf-instance-with-nfs-fallback
   name: ${HAF_IMAGE_NAME}
@@ -1036,7 +1040,6 @@ prepare_haf_image_testnet:
     -m $PYTEST_MARK
   tags:
   - public-runner-docker
-  - standard
 
 hafah_pytest_rest_api_pattern_tests:
   stage: test
@@ -1136,7 +1139,6 @@ hafah_pytest_rest_api_pattern_tests:
     when: always
   tags:
   - data-cache-storage
-  - standard
   - fast
 
 hafah_pytest_fuctional_tests_part1:
@@ -1170,7 +1172,6 @@ deploy-wax-spec-dev-package:
     artifacts: true
   tags:
   - public-runner-docker
-  - standard
 
 deploy-wax-spec-production-public-npm:
   extends: .registry_npmjs_org_deploy_package_template
@@ -1194,4 +1195,3 @@ deploy-wax-spec-production-public-npm:
     artifacts: true
   tags:
   - public-runner-docker
-  - standard
