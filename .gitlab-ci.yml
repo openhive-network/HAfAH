@@ -419,8 +419,11 @@ prepare_haf_data:
   - |
     echo $HAFAH_IMAGE_NAME
     echo $SOURCE_DIR
-    scripts/ci-helpers/build_instance.sh
+    # Login before build_instance.sh because it uses --push in CI mode
     docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
+    scripts/ci-helpers/build_instance.sh
+    # Push commands below are redundant since build_instance.sh already pushes with --push,
+    # but kept for backwards compatibility and explicit visibility
     docker push "$HAFAH_IMAGE_NAME"
     docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG"
     echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
