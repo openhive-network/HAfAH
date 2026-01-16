@@ -417,27 +417,12 @@ prepare_haf_data:
 
   script:
   - |
-    echo $HAFAH_IMAGE_NAME
-    echo $SOURCE_DIR
-    # Login before build_instance.sh because it uses --push in CI mode
+    echo "Building HAfAH image: $HAFAH_IMAGE_NAME"
     docker login -u "$HAFAH_CI_IMG_BUILDER_USER" -p "$HAFAH_CI_IMG_BUILDER_PASSWORD" "$REGISTRY"
-    scripts/ci-helpers/build_instance.sh
-    # Push commands below are redundant since build_instance.sh already pushes with --push,
-    # but kept for backwards compatibility and explicit visibility
-    docker push "$HAFAH_IMAGE_NAME"
-    docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG"
+    # build_instance.sh handles tagging (short SHA, latest on develop, version on protected tags)
+    # and pushes directly to registry
+    scripts/ci-helpers/build_instance.sh "$HAFAH_IMAGE_TAG" "$SOURCE_DIR" "$CI_REGISTRY_IMAGE"
     echo "HAFAH_IMAGE_NAME=$HAFAH_IMAGE_NAME" > docker_image_name.env
-    if [[ -n "$CI_COMMIT_TAG" ]]; then
-      docker login -u "$BLOG_REGISTRY_USER" -p "$BLOG_REGISTRY_PASSWORD" "registry-upload.hive.blog"
-      docker tag "$HAFAH_IMAGE_NAME" "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
-      docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
-      docker tag "$HAFAH_IMAGE_NAME" "registry-upload.hive.blog/hafah:$CI_COMMIT_TAG"
-      docker push "registry-upload.hive.blog/hafah:$CI_COMMIT_TAG"
-      docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
-      docker push "$CI_REGISTRY_IMAGE/postgrest-rewriter:$CI_COMMIT_TAG"
-      docker tag "$CI_REGISTRY_IMAGE/postgrest-rewriter:$HAFAH_IMAGE_TAG" "registry-upload.hive.blog/hafah/postgrest-rewriter:$CI_COMMIT_TAG"
-      docker push "registry-upload.hive.blog/hafah/postgrest-rewriter:$CI_COMMIT_TAG"
-    fi
 
   artifacts:
     paths:
@@ -823,22 +808,15 @@ cleanup_haf_cache_manual:
   - data-cache-storage
   - fast
 
-build_and_publish_image:
-  stage: publish
-  extends: .publish_docker_image_template
-  before_script:
-  - !reference [.publish_docker_image_template, before_script]
-  # Fetch HAF scripts from common-ci-configuration (replaces submodule)
-  - mkdir -p "${CI_PROJECT_DIR}/haf/scripts"
-  - |
-    for script in common.sh create_haf_app_role.sh; do
-      curl -fsSL "${COMMON_CI_URL}/haf-app-tools/scripts/${script}" -o "${CI_PROJECT_DIR}/haf/scripts/${script}"
-      chmod +x "${CI_PROJECT_DIR}/haf/scripts/${script}"
-    done
-  script:
-  - scripts/ci-helpers/build_and_publish_instance.sh
-  tags:
-  - public-runner-docker
+# Publish to registry.hive.blog on protected tags only
+# Uses pull/retag/push pattern - no rebuild
+publish_images:
+  extends: .docker_publish_job_template
+  variables:
+    # Use "" for root image, subpath for others
+    # Note: HAfAH project name is case-sensitive but external registry uses lowercase
+    PUBLISH_IMAGES: "HAfAH minimal postgrest-rewriter"
+    PUBLISH_PROJECT_NAME: "hafah"
 
 prepare_haf_image_testnet:
   extends: .prepare_haf_image
