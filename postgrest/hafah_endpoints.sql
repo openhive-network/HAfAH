@@ -592,17 +592,4 @@ END
 $$
 ;
 
---- Definition of this function must be at the end of setup
-CREATE OR REPLACE FUNCTION hafah_python.is_setup_completed()
-RETURNS BOOLEAN
-IMMUTABLE
-LANGUAGE PLPGSQL
-AS
-$$
-BEGIN
-  RETURN TRUE;
-END
-$$
-;
-
 RESET ROLE;
