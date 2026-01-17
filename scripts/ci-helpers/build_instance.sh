@@ -72,16 +72,15 @@ fi
 
 # Build image tags
 HAFAH_IMAGE_NAME=${REGISTRY}:$HAFAH_IMAGE_TAG
-HAFAH_MINIMAL_IMAGE_NAME=${REGISTRY}/minimal:$HAFAH_IMAGE_TAG
 HAFAH_REWRITER_IMAGE_NAME=${REGISTRY}/postgrest-rewriter:$HAFAH_IMAGE_TAG
 
-# Additional tags for main images
-MAIN_TAGS=("--tag" "$HAFAH_IMAGE_NAME" "--tag" "$HAFAH_MINIMAL_IMAGE_NAME")
+# Additional tags for images
+MAIN_TAGS=("--tag" "$HAFAH_IMAGE_NAME")
 REWRITER_TAGS=("--tag" "$HAFAH_REWRITER_IMAGE_NAME")
 
 # Add 'latest' tags on develop branch
 if [[ "${CI_COMMIT_BRANCH:-}" == "${CI_DEFAULT_BRANCH:-develop}" ]]; then
-  MAIN_TAGS+=("--tag" "${REGISTRY}:latest" "--tag" "${REGISTRY}/minimal:latest")
+  MAIN_TAGS+=("--tag" "${REGISTRY}:latest")
   REWRITER_TAGS+=("--tag" "${REGISTRY}/postgrest-rewriter:latest")
 fi
 

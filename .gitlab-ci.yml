@@ -839,7 +839,7 @@ publish_images:
   variables:
     # Use "" for root image, subpath for others
     # Note: HAfAH project name is case-sensitive but external registry uses lowercase
-    PUBLISH_IMAGES: "HAfAH minimal postgrest-rewriter"
+    PUBLISH_IMAGES: "HAfAH postgrest-rewriter"
     PUBLISH_PROJECT_NAME: "hafah"
 
 prepare_haf_image_testnet:
