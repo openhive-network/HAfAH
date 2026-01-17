@@ -52,16 +52,22 @@ variables:
 
   # Allow access from any network to eliminate CI IP addressing problems
   # Also allow local socket connections for hived/haf_maintainer (peer auth fails in container)
+  # IPv6 rules (::/0) required because Docker may resolve hostnames to IPv6 addresses
   HAF_DB_ACCESS: |
     "local   all              haf_admin                     trust"
     "local   all              haf_maintainer                trust"
     "local   all              hived                         trust"
     "local   all              postgres                      trust"
     "host    all              haf_admin        0.0.0.0/0    trust"
+    "host    all              haf_admin        ::/0         trust"
     "host    all              hived            0.0.0.0/0    trust"
+    "host    all              hived            ::/0         trust"
     "host    all              haf_maintainer   0.0.0.0/0    trust"
+    "host    all              haf_maintainer   ::/0         trust"
     "host    all              hafah_user       0.0.0.0/0    trust"
+    "host    all              hafah_user       ::/0         trust"
     "host    all              all              0.0.0.0/0    scram-sha-256"
+    "host    all              all              ::/0         scram-sha-256"
 
   # =============================================================================
   # Quick Test / Auto-Skip Mode
@@ -853,16 +859,7 @@ prepare_haf_image_testnet:
   alias: haf-instance
   variables:
     PGCTLTIMEOUT: 600
-    PG_ACCESS: |
-      "local   all              haf_admin                     trust"
-      "local   all              haf_maintainer                trust"
-      "local   all              hived                         trust"
-      "local   all              postgres                      trust"
-      "host    all              haf_admin        0.0.0.0/0    trust"
-      "host    all              hived            0.0.0.0/0    trust"
-      "host    all              haf_maintainer   0.0.0.0/0    trust"
-      "host    all              hafah_user       0.0.0.0/0    trust"
-      "host    all              all              0.0.0.0/0    scram-sha-256"
+    PG_ACCESS: "${HAF_DB_ACCESS}"
     DATA_SOURCE: "${HAF_DATA_SOURCE}"
     SHARED_BLOCK_LOG_DIR: "${BLOCK_LOG_SOURCE_DIR_5M}"
     DATA_SOURCE_NFS_PREFIX: "${DATA_CACHE_NFS_PREFIX}"
@@ -893,16 +890,7 @@ prepare_haf_image_testnet:
   alias: haf-instance
   variables:
     PGCTLTIMEOUT: 600
-    PG_ACCESS: |
-      "local   all              haf_admin                     trust"
-      "local   all              haf_maintainer                trust"
-      "local   all              hived                         trust"
-      "local   all              postgres                      trust"
-      "host    all              haf_admin        0.0.0.0/0    trust"
-      "host    all              hived            0.0.0.0/0    trust"
-      "host    all              haf_maintainer   0.0.0.0/0    trust"
-      "host    all              hafah_user       0.0.0.0/0    trust"
-      "host    all              all              0.0.0.0/0    scram-sha-256"
+    PG_ACCESS: "${HAF_DB_ACCESS}"
   command: ["--execute-maintenance-script=${HAF_SOURCE_DIR}/scripts/maintenance-scripts/sleep_infinity.sh"]
 
 .hafah_pytest_fuctional_tests_base:
