@@ -1031,6 +1031,26 @@ hafah_pytest_rest_api_pattern_tests:
     POSTGRES_URL: $DB_URL
   before_script:
   - |
+    # Clean up stale data directories from previous runs (may be root-owned from Docker)
+    # Docker-builder is Alpine-based without sudo, so use Docker to clean up as root
+    # Wait for Docker daemon with timeout, then use alpine container to remove directories
+    echo "Cleaning up stale data directories..."
+    CLEANUP_TIMEOUT=30
+    CLEANUP_START=$(date +%s)
+    while ! docker info >/dev/null 2>&1; do
+      ELAPSED=$(($(date +%s) - CLEANUP_START))
+      if [[ $ELAPSED -ge $CLEANUP_TIMEOUT ]]; then
+        echo "Docker not available for cleanup, trying fallback..."
+        rm -rf "${HAF_DATA_DIRECTORY}" "${HAF_SHM_DIRECTORY}" 2>/dev/null || true
+        break
+      fi
+      sleep 1
+    done
+    if docker info >/dev/null 2>&1; then
+      docker run --rm -v "${CI_PROJECT_DIR}:/workspace" alpine:latest \
+        sh -c "rm -rf /workspace/haf-data /workspace/haf-shm" 2>/dev/null || true
+    fi
+
     echo -e "\e[0Ksection_start:$(date +%s):cache[collapsed=true]\r\e[0KFetching HAF cache..."
     # Use cache-manager to extract HAF data directly to target directory
     # cache-manager handles local/NFS fallback and permission restoration
@@ -1083,6 +1103,12 @@ hafah_pytest_rest_api_pattern_tests:
     cd "${CI_PROJECT_DIR}/docker"
     docker compose --env-file ci.env -f docker-compose.ci.yml logs > docker-compose-logs.txt 2>&1 || true
     docker compose --env-file ci.env -f docker-compose.ci.yml down --volumes || true
+
+    # Clean up data directories to prevent permission issues for next job
+    # Use Docker to remove as root since docker-builder doesn't have sudo
+    docker run --rm -v "${CI_PROJECT_DIR}:/workspace" alpine:latest \
+      sh -c "rm -rf /workspace/haf-data /workspace/haf-shm" 2>/dev/null || \
+      rm -rf "${HAF_DATA_DIRECTORY}" "${HAF_SHM_DIRECTORY}" 2>/dev/null || true
   artifacts:
     paths:
     - "**/*.out.json"
