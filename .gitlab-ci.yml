@@ -7,6 +7,8 @@ stages:
 - maintenance
 
 variables:
+  # Override HAF image to use specific feature branch commit
+  UPSTREAM_OVERRIDE_TAG: "92e16281e47074d4bbd511f5aa2c0ec25ecb7999"
   # Fetch strategy reuses workspace between jobs, reducing GitLab server load.
   GIT_STRATEGY: fetch
   GIT_DEPTH: 0
