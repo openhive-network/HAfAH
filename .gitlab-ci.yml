@@ -352,6 +352,7 @@ prepare_hived_data:
     # Log the mapped variables
     - echo "Using hived image:${HIVED_IMAGE_NAME} (commit:${HIVE_COMMIT})"
   tags:
+  - public-runner-docker
   - data-cache-storage
   - fast
 
@@ -399,6 +400,7 @@ prepare_haf_data:
     # Log the mapped variables
     - echo "Using HAF image:${HAF_IMAGE_NAME} (commit:${HAF_COMMIT})"
   tags:
+  - public-runner-docker
   - data-cache-storage
   - fast
 
@@ -551,6 +553,7 @@ build_setup_docker_image:
     - "hive-test-tools/tests/python/api_tests/pattern_tests/results.xml"
 
   tags:
+  - public-runner-docker
   - data-cache-storage
   - fast
 
@@ -697,6 +700,7 @@ new_style_postgrest_pattern_tests:
       junit: "hive-test-tools/tests/python/api_tests/comparsion_tests/comparsion_tests.xml"
 
   tags:
+  - public-runner-docker
   - data-cache-storage
   - fast
 
@@ -755,6 +759,7 @@ postgrest_comparison_tests:
     reports:
       junit: wdir/jmeter_junit_report.xml
   tags:
+  - public-runner-docker
   - data-cache-storage
   - fast
 
@@ -811,6 +816,7 @@ postgrest_rest_benchmark_tests:
     reports:
       junit: tests/performance/junit-result.xml
   tags:
+  - public-runner-docker
   - data-cache-storage
   - fast
 
@@ -820,6 +826,7 @@ cleanup_hive_cache_manual:
   variables:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_hive_*"
   tags:
+  - public-runner-docker
   - data-cache-storage
   - fast
 
@@ -829,6 +836,7 @@ cleanup_haf_cache_manual:
   variables:
     CLEANUP_PATH_PATTERN: "/cache/replay_data_haf_*"
   tags:
+  - public-runner-docker
   - data-cache-storage
   - fast
 
@@ -1133,6 +1141,7 @@ hafah_pytest_rest_api_pattern_tests:
     - docker/docker-compose-logs.txt
     when: always
   tags:
+  - public-runner-docker
   - data-cache-storage
   - fast
 
