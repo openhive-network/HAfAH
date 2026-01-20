@@ -825,14 +825,14 @@ extract_testnet_binaries:
       echo "Extracting binaries from testnet image: ${HAF_TESTNET_UPSTREAM_IMAGE}"
       mkdir -p "${BINARY_CACHE_PATH}"
 
-      # Create a temporary container from the testnet image and copy binaries out
-      CONTAINER_ID=$(docker create "${HAF_TESTNET_UPSTREAM_IMAGE}")
+      # Create a temporary container from the testnet image (override entrypoint to prevent startup)
+      CONTAINER_ID=$(docker create --entrypoint /bin/true "${HAF_TESTNET_UPSTREAM_IMAGE}")
 
-      # Copy binaries from the container
-      docker cp "${CONTAINER_ID}:/home/hived_admin/bin/hived" "${BINARY_CACHE_PATH}/hived"
-      docker cp "${CONTAINER_ID}:/home/hived_admin/bin/compress_block_log" "${BINARY_CACHE_PATH}/compress_block_log"
-      docker cp "${CONTAINER_ID}:/home/hived_admin/bin/get_dev_key" "${BINARY_CACHE_PATH}/get_dev_key"
-      docker cp "${CONTAINER_ID}:/home/hived_admin/bin/cli_wallet" "${BINARY_CACHE_PATH}/cli_wallet"
+      # Copy binaries from the container (binaries are at /home/hived/bin/)
+      docker cp "${CONTAINER_ID}:/home/hived/bin/hived" "${BINARY_CACHE_PATH}/hived"
+      docker cp "${CONTAINER_ID}:/home/hived/bin/compress_block_log" "${BINARY_CACHE_PATH}/compress_block_log"
+      docker cp "${CONTAINER_ID}:/home/hived/bin/get_dev_key" "${BINARY_CACHE_PATH}/get_dev_key"
+      docker cp "${CONTAINER_ID}:/home/hived/bin/cli_wallet" "${BINARY_CACHE_PATH}/cli_wallet"
 
       # Cleanup container
       docker rm "${CONTAINER_ID}"
