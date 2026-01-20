@@ -810,6 +810,42 @@ publish_images:
     PUBLISH_IMAGES: "HAfAH postgrest-rewriter"
     PUBLISH_PROJECT_NAME: "hafah"
 
+# Extract binaries from pre-built testnet image for functional tests
+# The test_tools framework needs local hived binaries to spawn test nodes
+extract_testnet_binaries:
+  extends: .docker_image_builder_job_template
+  stage: build
+  needs:
+    - job: find_haf_testnet_image
+      artifacts: true
+  variables:
+    BINARY_CACHE_PATH: "haf-testnet-binaries"
+  script:
+    - |
+      echo "Extracting binaries from testnet image: ${HAF_TESTNET_UPSTREAM_IMAGE}"
+      mkdir -p "${BINARY_CACHE_PATH}"
+
+      # Create a temporary container from the testnet image and copy binaries out
+      CONTAINER_ID=$(docker create "${HAF_TESTNET_UPSTREAM_IMAGE}")
+
+      # Copy binaries from the container
+      docker cp "${CONTAINER_ID}:/home/hived_admin/bin/hived" "${BINARY_CACHE_PATH}/hived"
+      docker cp "${CONTAINER_ID}:/home/hived_admin/bin/compress_block_log" "${BINARY_CACHE_PATH}/compress_block_log"
+      docker cp "${CONTAINER_ID}:/home/hived_admin/bin/get_dev_key" "${BINARY_CACHE_PATH}/get_dev_key"
+      docker cp "${CONTAINER_ID}:/home/hived_admin/bin/cli_wallet" "${BINARY_CACHE_PATH}/cli_wallet"
+
+      # Cleanup container
+      docker rm "${CONTAINER_ID}"
+
+      echo "Extracted binaries:"
+      ls -la "${BINARY_CACHE_PATH}/"
+  artifacts:
+    paths:
+      - haf-testnet-binaries/
+    expire_in: 1 day
+  tags:
+    - public-runner-docker
+
 .haf-instance-with-nfs-fallback: &haf-instance-with-nfs-fallback
   name: ${HAF_IMAGE_NAME}
   alias: haf-instance
@@ -856,6 +892,8 @@ publish_images:
   - job: find_haf_image
     artifacts: true
   - job: find_haf_testnet_image
+    artifacts: true
+  - job: extract_testnet_binaries
     artifacts: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
@@ -928,7 +966,8 @@ publish_images:
     # Map HAF_UPSTREAM_COMMIT for .clone_haf_and_hive_test_tools script
     HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
 
-    # Note: haf-testnet-binaries are no longer needed since we use pre-built testnet image
+    # Binaries extracted from pre-built testnet image by extract_testnet_binaries job
+    BINARY_CACHE_PATH: "haf-testnet-binaries"
     HIVED_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/hived"
     COMPRESS_BLOCK_LOG_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/compress_block_log"
     GET_DEV_KEY_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/get_dev_key"
