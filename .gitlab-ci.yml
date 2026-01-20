@@ -167,41 +167,19 @@ find_hive_image:
     - public-runner-docker
 
 find_haf_image:
-  extends: .find_upstream_image
+  extends: .find_haf_image
+  stage: detect
+
+find_haf_testnet_image:
+  extends: .find_haf_image
   stage: detect
   variables:
-    UPSTREAM_REPO_URL: "https://gitlab.syncad.com/hive/haf.git"
-    UPSTREAM_REGISTRY: "registry.gitlab.syncad.com/hive/haf"
-    UPSTREAM_BRANCH: "develop"
-    UPSTREAM_OUTPUT: "haf_image.env"
-  before_script:
-    # docker-builder image already has git, bash, and curl
-    # Fetch source patterns from HAF's script (single source of truth)
-    - |
-      PATTERNS_URL="https://gitlab.syncad.com/hive/haf/-/raw/develop/scripts/ci-helpers/source-patterns.sh"
-      echo "Fetching source patterns from: $PATTERNS_URL"
-      if UPSTREAM_PATTERNS=$(curl -sf "$PATTERNS_URL" | sh); then
-        echo "Loaded patterns: $UPSTREAM_PATTERNS"
-        export UPSTREAM_PATTERNS
-      else
-        echo "ERROR: Could not fetch source-patterns.sh from HAF"
-        exit 1
-      fi
-  script:
-    - !reference [.find_upstream_image, script]
-    # Rename UPSTREAM_* to HAF_UPSTREAM_* to avoid collisions with other upstream jobs
-    - |
-      if [ -f "$UPSTREAM_OUTPUT" ]; then
-        sed -i 's/^UPSTREAM_/HAF_UPSTREAM_/' "$UPSTREAM_OUTPUT"
-        echo "Renamed variables in $UPSTREAM_OUTPUT:"
-        cat "$UPSTREAM_OUTPUT"
-      fi
+    HAF_IMAGE_TYPE: "testnet"
+    HAF_VAR_PREFIX: "HAF_TESTNET"
   artifacts:
     reports:
-      dotenv: haf_image.env
+      dotenv: haf_testnet_image.env
     expire_in: 1 day
-  tags:
-    - public-runner-docker
 
 # =============================================================================
 # Reusable YAML Anchors for Services and Clone Operations
@@ -850,36 +828,6 @@ publish_images:
     PUBLISH_IMAGES: "HAfAH postgrest-rewriter"
     PUBLISH_PROJECT_NAME: "hafah"
 
-prepare_haf_image_testnet:
-  extends: .prepare_haf_image
-  stage: build
-  needs:
-    - job: find_haf_image
-      artifacts: true
-  variables:
-    SUBMODULE_DIR: "$CI_PROJECT_DIR/haf"
-    REGISTRY_USER: "$CI_IMG_BUILDER_USER"
-    REGISTRY_PASS: $CI_IMG_BUILDER_PASSWORD
-    HIVE_NETWORK_TYPE: testnet
-    BINARY_CACHE_PATH: "$CI_PROJECT_DIR/haf-testnet-binaries"
-    # Map HAF_UPSTREAM_* from find_haf_image
-    HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
-  before_script:
-    - !reference [.haf_docker_image_builder_job, before_script]
-    # Clone HAF at runtime for testnet build using HAF_COMMIT
-    - |
-      echo "Cloning HAF for testnet build at commit ${HAF_COMMIT}..."
-      git clone --single-branch \
-        https://gitlab.syncad.com/hive/haf.git "${CI_PROJECT_DIR}/haf" \
-        --no-checkout
-      cd "${CI_PROJECT_DIR}/haf"
-      git fetch --depth 1 origin "${HAF_COMMIT}"
-      git checkout "${HAF_COMMIT}"
-      git submodule update --init --recursive --depth 1
-      cd "${CI_PROJECT_DIR}"
-  tags:
-  - public-runner-docker
-
 .haf-instance-with-nfs-fallback: &haf-instance-with-nfs-fallback
   name: ${HAF_IMAGE_NAME}
   alias: haf-instance
@@ -925,7 +873,7 @@ prepare_haf_image_testnet:
   needs:
   - job: find_haf_image
     artifacts: true
-  - job: prepare_haf_image_testnet
+  - job: find_haf_testnet_image
     artifacts: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
@@ -993,11 +941,12 @@ prepare_haf_image_testnet:
     # Use builder image with Python 3.14 (hafah-local-tools requires Python ^3.14)
     PYTEST_BASED_IMAGE_NAME: $BUILDER_IMAGE_PATH
     POETRY_INSTALL_ROOT_DIR: $CI_PROJECT_DIR/tests/integration/hafah-local-tools
-    # HAF_IMAGE_NAME is set by prepare_haf_image_testnet dotenv artifact
+    # Map HAF_TESTNET_UPSTREAM_IMAGE from find_haf_testnet_image to HAF_IMAGE_NAME for services
+    HAF_IMAGE_NAME: "${HAF_TESTNET_UPSTREAM_IMAGE}"
     # Map HAF_UPSTREAM_COMMIT for .clone_haf_and_hive_test_tools script
     HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
 
-    BINARY_CACHE_PATH: "haf-testnet-binaries"
+    # Note: haf-testnet-binaries are no longer needed since we use pre-built testnet image
     HIVED_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/hived"
     COMPRESS_BLOCK_LOG_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/compress_block_log"
     GET_DEV_KEY_PATH: "$CI_PROJECT_DIR/$BINARY_CACHE_PATH/get_dev_key"
