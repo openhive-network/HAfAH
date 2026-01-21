@@ -116,7 +116,10 @@ include:
 
 # Use templates from common-ci-configuration for fetch strategy support
 default:
-  hooks: !reference [.haf_git_corruption_cleanup, hooks]
+  hooks:
+    pre_get_sources_script:
+      - !reference [.haf_git_corruption_cleanup, hooks, pre_get_sources_script]
+      - !reference [.haf_permission_fix, hooks, pre_get_sources_script]
 
 # =============================================================================
 # Upstream Image Detection Jobs
