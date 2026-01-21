@@ -84,6 +84,18 @@ pytest tests/tavern/get_block/positive/first_block.tavern.yaml
 
 Test marks: `enum_virtual_ops_and_get_ops_in_block`, `get_account_history_and_get_transaction`
 
+## Dependency Management (Poetry)
+
+The lockfile pins exact versions of all dependencies (direct and transitive). This prevents dependency mismatches between environments - if the lockfile is wrong or missing, builds may fail or behave differently. These rules keep it synchronized with pyproject.toml.
+
+- **Dependency versions are specified in `pyproject.toml` and locked in `poetry.lock`**
+- **Always use `poetry lock`** (without additional flags like `--regenerate`)
+- **Always run `poetry lock` after changing `pyproject.toml`**
+- **The `poetry.lock` file must be in the repository** - never add it to `.gitignore`
+- **Never delete `poetry.lock`** - it ensures reproducible builds
+- **Never edit `poetry.lock` manually** - always use poetry commands
+- **Don't upgrade dependencies on your own** - only upgrade when explicitly requested
+
 ## API Call Styles
 
 HAfAH supports two call styles:
