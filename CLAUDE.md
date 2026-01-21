@@ -166,5 +166,5 @@ SQL files are executed in specific order by `scripts/install_app.sh`:
 - The `hafah_endpoints.home()` function is the main JSON-RPC dispatcher
 - Backend functions live in `hafah_python` and `hafah_backend` schemas
 - HAF scripts are downloaded automatically by `setup_postgres.sh` when needed
-- Test tools (`test_tools`, `haf_local_tools`) are cloned at runtime in CI via sparse checkout
+- `test_tools` is installed as wheel from GitLab package registry; `haf_local_tools` is cloned at runtime in CI via sparse checkout
 - The `hafah_python.helper_operations_view` joins `hive.operations_view` with operation types
