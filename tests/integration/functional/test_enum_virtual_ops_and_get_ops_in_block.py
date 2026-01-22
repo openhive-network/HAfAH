@@ -144,6 +144,8 @@ def test_find_newly_created_virtual_op(haf_node, postgrest_hafah, wallet):
     transaction = wallet.api.transfer_to_vesting(
         "initminer", "bob", tt.Asset.Test(100)
     )
+    # Wait for HAF to index the transaction before querying
+    haf_node.wait_for_transaction_in_database(transaction, timeout=60)
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
     end_block = haf_node.get_last_block_number()
