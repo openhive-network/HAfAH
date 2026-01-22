@@ -103,7 +103,7 @@ include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 # Common CI templates from common-ci-configuration
 - project: 'hive/common-ci-configuration'
-  ref: develop
+  ref: fix/docker-builder-workspace-permissions  # Testing permission fix from common-ci MR !269
   file:
     - '/templates/cache_cleanup.gitlab-ci.yml'
     - '/templates/docker_image_jobs.gitlab-ci.yml'
