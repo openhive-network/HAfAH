@@ -393,6 +393,13 @@ prepare_haf_data:
 
   before_script:
   - !reference [.docker_image_builder_job_template, before_script]
+  # Fix workspace permissions for docker-builder container (fetch strategy can leave
+  # directories owned by runner user, making them non-writable by container user)
+  - |
+    if [ ! -w "${CI_PROJECT_DIR}" ]; then
+      echo "Workspace not writable, fixing permissions via docker..."
+      docker run --rm -v "${CI_PROJECT_DIR}:/workspace" alpine:latest chmod -R a+w /workspace
+    fi
   # Fetch HAF scripts from common-ci-configuration (replaces submodule)
   - mkdir -p "${CI_PROJECT_DIR}/haf/scripts"
   - |
