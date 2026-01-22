@@ -1074,7 +1074,7 @@ hafah_pytest_rest_api_pattern_tests:
     echo "HAF image name $HAF_IMAGE_NAME"
     # Run pytest from a Python container connected to the haf-network
     # This allows pytest to reach the hafah service at hafah-ci-hafah-1:6543
-    # Use Python 3.12 image - tests_api requires Python 3.12+
+    # Use Python 3.14 image - tests_api requires Python 3.14+
     # Tavern tests require validate_response module from hive/tests_api
     docker run --rm --network haf-network \
       -e HAF_APP_HOST=hafah-ci-hafah-1 \
@@ -1082,7 +1082,7 @@ hafah_pytest_rest_api_pattern_tests:
       -e TAVERN_DIR=/workspace/tests/tavern \
       -v "${CI_PROJECT_DIR}:/workspace" \
       -w /workspace \
-      python:3.12-slim \
+      python:3.14-slim \
       /bin/bash -c "
         # Clone and install tests_api for validate_response module
         apt-get update && apt-get install -y --no-install-recommends git ca-certificates >/dev/null 2>&1
