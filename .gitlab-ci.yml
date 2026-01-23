@@ -172,11 +172,14 @@ find_hive_image:
 find_haf_image:
   extends: .find_haf_image
   stage: detect
+  variables:
+    UPSTREAM_BRANCH: "rm-sub-update-23-01-2026"
 
 find_haf_testnet_image:
   extends: .find_haf_image
   stage: detect
   variables:
+    UPSTREAM_BRANCH: "rm-sub-update-23-01-2026"
     HAF_IMAGE_TYPE: "testnet"
     HAF_VAR_PREFIX: "HAF_TESTNET"
   artifacts:
