@@ -237,6 +237,20 @@ find_haf_testnet_image:
     "./docker_entrypoint.sh" "$@"
   - '/bin/bash'
 
+# Wait for Docker DNS to register the 'app' service alias
+# Docker's embedded DNS can take a few seconds to propagate aliases after services start.
+# Without this wait, tests may fail with "Failed to resolve 'app'" errors.
+# Usage: !reference [.wait_for_app_dns, script]
+.wait_for_app_dns:
+  script:
+    - |
+      echo "Waiting for 'app' hostname to resolve..."
+      timeout 60 sh -c 'until getent hosts app >/dev/null 2>&1; do echo "  DNS not ready, retrying..."; sleep 2; done' || {
+        echo "ERROR: Could not resolve 'app' hostname after 60s"
+        exit 1
+      }
+      echo "DNS resolved: $(getent hosts app)"
+
 # Clone hive test-tools (tests/python directory with submodules)
 # Usage: !reference [.clone_hive_test_tools, script]
 .clone_hive_test_tools:
@@ -629,6 +643,7 @@ new_style_postgrest_pattern_tests:
     - echo "Entering ${POETRY_INSTALL_ROOT_DIR}"
     - cd "${POETRY_INSTALL_ROOT_DIR}"
     - poetry install
+    - !reference [.wait_for_app_dns, script]
 
   # Override services to use haf_admin for wait script (hafah_user doesn't exist until app-setup creates it)
   # comparison_tests needs services from both hived_pattern_tests_template and haf_app_pattern_tests_template
@@ -766,6 +781,7 @@ postgrest_comparison_tests:
   before_script:
     - apk add --no-cache git
     - !reference [.clone_tests_api, script]
+    - !reference [.wait_for_app_dns, script]
 
   script:
   - /usr/bin/python3 "${BENCHMARK_SOURCE_DIR}/benchmark.py" -a app -p $APP_PORT -c
@@ -818,8 +834,9 @@ postgrest_rest_benchmark_tests:
     artifacts: true
   - job: prepare_postgrest_hafah_image
     artifacts: true
+  before_script:
+    - !reference [.wait_for_app_dns, script]
   script:
-  - sleep 10
   - timeout -k 1m 10m ./tests/performance/run_performance_tests.sh --backend-host=app
     --backend-port=$APP_PORT
   - tar -czvf tests/performance/results.tar.gz $(pwd)/tests/performance/*result.*
