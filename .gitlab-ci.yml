@@ -4,6 +4,7 @@ stages:
 - test
 - publish
 - cleanup
+- maintenance
 
 variables:
   # Fetch strategy reuses workspace between jobs, reducing GitLab server load.
@@ -308,6 +309,50 @@ verify_poetry_lock_sanity:
     PYPROJECT_DIR: "$CI_PROJECT_DIR/tests/integration/hafah-local-tools"
   tags:
   - public-runner-docker
+
+# =============================================================================
+# Maintenance Jobs (triggered by upstream repos)
+# =============================================================================
+# This job is triggered by hive when its poetry dependencies change.
+# It regenerates hafah-local-tools/poetry.lock and creates an MR if needed.
+update_poetry_lock_from_trigger:
+  stage: maintenance
+  image: $BUILDER_IMAGE_PATH
+  rules:
+    - if: $TRIGGER_POETRY_UPDATE == "true"
+  variables:
+    HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
+  before_script:
+    - !reference [.clone_haf_and_hive_test_tools, script]
+  script:
+    - cd tests/integration/hafah-local-tools
+    - poetry lock
+    - |
+      cd "${CI_PROJECT_DIR}"
+      if git diff --quiet tests/integration/hafah-local-tools/poetry.lock; then
+        echo "No changes needed to poetry.lock"
+        exit 0
+      fi
+    - |
+      # Configure git for commits
+      git config user.email "ci@syncad.com"
+      git config user.name "GitLab CI"
+      # Create branch and commit
+      BRANCH="auto/poetry-lock-hive-${HIVE_COMMIT:0:8}"
+      git checkout -b "$BRANCH"
+      git add tests/integration/hafah-local-tools/poetry.lock
+      git commit -m "Update poetry.lock for hive ${HIVE_COMMIT:0:8}
+
+Triggered by hive merge to develop."
+      # Push and create MR
+      git push -o merge_request.create \
+               -o merge_request.title="Auto: Update poetry.lock for hive changes" \
+               -o merge_request.description="Triggered by hive merge to develop (${HIVE_COMMIT})" \
+               -o merge_request.target=develop \
+               -o merge_request.remove_source_branch \
+               origin "$BRANCH"
+  tags:
+    - public-runner-docker
 
 # =============================================================================
 # Data Preparation Jobs (use pre-built images from registry)
