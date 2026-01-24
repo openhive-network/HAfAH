@@ -341,9 +341,7 @@ update_poetry_lock_from_trigger:
       BRANCH="auto/poetry-lock-hive-${HIVE_COMMIT:0:8}"
       git checkout -b "$BRANCH"
       git add tests/integration/hafah-local-tools/poetry.lock
-      git commit -m "Update poetry.lock for hive ${HIVE_COMMIT:0:8}
-
-Triggered by hive merge to develop."
+      git commit -m "Update poetry.lock for hive ${HIVE_COMMIT:0:8}"
       # Push and create MR
       git push -o merge_request.create \
                -o merge_request.title="Auto: Update poetry.lock for hive changes" \
