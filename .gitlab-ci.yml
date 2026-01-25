@@ -100,6 +100,14 @@ variables:
   DATA_CACHE_NFS_PREFIX: "/nfs/ci-cache"
   BLOCK_LOG_SOURCE_DIR_5M: /blockchain/block_log_5m
 
+  # =============================================================================
+  # Service Startup Timeouts
+  # =============================================================================
+  # HAF instance needs ~150-180s to copy cached data and start PostgreSQL.
+  # These timeouts must exceed HAF startup time to prevent service failures.
+  HAFAH_SETUP_TIMEOUT: "600"        # Total timeout for wait_for_setup_completed.sh (10 min)
+  HAFAH_SETUP_WAIT_ATTEMPTS: "30"   # Attempts for app-setup PostgreSQL wait (30 * 10s = 300s)
+
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 # Common CI templates from common-ci-configuration
@@ -213,7 +221,16 @@ find_haf_testnet_image:
     - '-c'
     - |
       set -xeuo pipefail
+      WAIT_ATTEMPTS=${HAFAH_SETUP_WAIT_ATTEMPTS:-30}
       echo "Attempting to perform application setup..."
+      # Wait for PostgreSQL with configurable attempts (default 30 * 10s = 300s)
+      for i in $(seq $WAIT_ATTEMPTS); do
+        if psql "${POSTGRES_URL}" -c "SELECT 1" >/dev/null 2>&1; then
+          break
+        fi
+        echo "Waiting for PostgreSQL server to become available: ${POSTGRES_URL}, $((WAIT_ATTEMPTS - i)) remaining attempts..."
+        sleep 10
+      done
       "./docker_entrypoint.sh" "$@"
       echo "Application setup completed, starting to listen on app port to satisfy Gitlab health checker..."
       nc -v -l -p $(echo "${HAF_APP_PORT}")
@@ -229,9 +246,10 @@ find_haf_testnet_image:
   - '-c'
   - |
     set -xeuo pipefail
+    WAIT_TIMEOUT=${HAFAH_SETUP_TIMEOUT:-600}
     # Since Gitlab services startup order is undefined, wait for app setup completion
     # Use haf_admin to check for setup (hafah_user doesn't exist until app-setup creates it)
-    [ -s "./app/scripts/wait_for_setup_completed.sh" ] && "./app/scripts/wait_for_setup_completed.sh" --postgres-url="postgresql://haf_admin@haf-instance/haf_block_log"
+    [ -s "./app/scripts/wait_for_setup_completed.sh" ] && "./app/scripts/wait_for_setup_completed.sh" --postgres-url="postgresql://haf_admin@haf-instance/haf_block_log" --timeout="$WAIT_TIMEOUT"
     echo "Application setup finished - continue app-service spawn..."
     # Pass control to the default image entrypoint
     "./docker_entrypoint.sh" "$@"
@@ -523,7 +541,16 @@ prepare_postgrest_hafah_image:
         - '-c'
         - |
           set -xeuo pipefail
+          WAIT_ATTEMPTS=${HAFAH_SETUP_WAIT_ATTEMPTS:-30}
           echo "Attempting to perform application setup..."
+          # Wait for PostgreSQL with configurable attempts (default 30 * 10s = 300s)
+          for i in $(seq $WAIT_ATTEMPTS); do
+            if psql "${POSTGRES_URL}" -c "SELECT 1" >/dev/null 2>&1; then
+              break
+            fi
+            echo "Waiting for PostgreSQL server to become available: ${POSTGRES_URL}, $((WAIT_ATTEMPTS - i)) remaining attempts..."
+            sleep 10
+          done
           "./docker_entrypoint.sh" "$@"
           echo "Application setup completed, starting to listen on app port to satisfy Gitlab health checker..."
           nc -v -l -p $(echo "${HAF_APP_PORT}")
@@ -537,9 +564,10 @@ prepare_postgrest_hafah_image:
       - '-c'
       - |
         set -xeuo pipefail
+        WAIT_TIMEOUT=${HAFAH_SETUP_TIMEOUT:-600}
         # since Gitlab services startup order is undefined, we need to wait for app setup completion
         # Use haf_admin to check for setup (hafah_user doesn't exist until app-setup creates it)
-        [ -s "./app/scripts/wait_for_setup_completed.sh" ] && "./app/scripts/wait_for_setup_completed.sh" --postgres-url="postgresql://haf_admin@haf-instance/haf_block_log"
+        [ -s "./app/scripts/wait_for_setup_completed.sh" ] && "./app/scripts/wait_for_setup_completed.sh" --postgres-url="postgresql://haf_admin@haf-instance/haf_block_log" --timeout="$WAIT_TIMEOUT"
         echo "Application setup finished - continue app-service spawn..."
         # pass control to the default image entrypoint
         "./docker_entrypoint.sh" "$@"
@@ -673,7 +701,16 @@ new_style_postgrest_pattern_tests:
         - '-c'
         - |
           set -xeuo pipefail
+          WAIT_ATTEMPTS=${HAFAH_SETUP_WAIT_ATTEMPTS:-30}
           echo "Attempting to perform application setup..."
+          # Wait for PostgreSQL with configurable attempts (default 30 * 10s = 300s)
+          for i in $(seq $WAIT_ATTEMPTS); do
+            if psql "${POSTGRES_URL}" -c "SELECT 1" >/dev/null 2>&1; then
+              break
+            fi
+            echo "Waiting for PostgreSQL server to become available: ${POSTGRES_URL}, $((WAIT_ATTEMPTS - i)) remaining attempts..."
+            sleep 10
+          done
           "./docker_entrypoint.sh" "$@"
           echo "Application setup completed, starting to listen on app port to satisfy Gitlab health checker..."
           nc -v -l -p $(echo "${HAF_APP_PORT}")
@@ -687,9 +724,10 @@ new_style_postgrest_pattern_tests:
       - '-c'
       - |
         set -xeuo pipefail
+        WAIT_TIMEOUT=${HAFAH_SETUP_TIMEOUT:-600}
         # since Gitlab services startup order is undefined, we need to wait for app setup completion
         # Use haf_admin to check for setup (hafah_user doesn't exist until app-setup creates it)
-        [ -s "./app/scripts/wait_for_setup_completed.sh" ] && "./app/scripts/wait_for_setup_completed.sh" --postgres-url="postgresql://haf_admin@haf-instance/haf_block_log"
+        [ -s "./app/scripts/wait_for_setup_completed.sh" ] && "./app/scripts/wait_for_setup_completed.sh" --postgres-url="postgresql://haf_admin@haf-instance/haf_block_log" --timeout="$WAIT_TIMEOUT"
         echo "Application setup finished - continue app-service spawn..."
         # pass control to the default image entrypoint
         "./docker_entrypoint.sh" "$@"
@@ -988,7 +1026,16 @@ extract_testnet_binaries:
     - '-c'
     - |
       set -xeuo pipefail
+      WAIT_ATTEMPTS=${HAFAH_SETUP_WAIT_ATTEMPTS:-30}
       echo "Attempting to perform application setup..."
+      # Wait for PostgreSQL with configurable attempts (default 30 * 10s = 300s)
+      for i in $(seq $WAIT_ATTEMPTS); do
+        if psql "${POSTGRES_URL}" -c "SELECT 1" >/dev/null 2>&1; then
+          break
+        fi
+        echo "Waiting for PostgreSQL server to become available: ${POSTGRES_URL}, $((WAIT_ATTEMPTS - i)) remaining attempts..."
+        sleep 10
+      done
       # pass control to the default image entrypoint
       "./docker_entrypoint.sh" "install_app"
       echo "Application setup completed, starting to listen on app port to satisfy Gitlab health checker..."
@@ -1005,9 +1052,10 @@ extract_testnet_binaries:
     - '-c'
     - |
       set -xeuo pipefail
+      WAIT_TIMEOUT=${HAFAH_SETUP_TIMEOUT:-600}
       # since Gitlab services startup order is undefined, we need to wait for app setup completion
       # Use haf_admin to check for setup (hafah_user doesn't exist until app-setup creates it)
-      "/home/hafah_user/app/scripts/wait_for_setup_completed.sh" --postgres-url="postgresql://haf_admin@haf-instance/haf_block_log"
+      "/home/hafah_user/app/scripts/wait_for_setup_completed.sh" --postgres-url="postgresql://haf_admin@haf-instance/haf_block_log" --timeout="$WAIT_TIMEOUT"
       echo "Application setup finished - continue app-service spawn..."
       # pass control to the default image entrypoint
       /home/hafah_user/docker_entrypoint.sh run "$@"
