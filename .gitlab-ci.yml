@@ -936,7 +936,7 @@ extract_testnet_binaries:
 
 # Testnet HAF instance - starts with empty database, no pre-existing data required
 .haf-instance-testnet: &haf-instance-testnet
-  name: ${HAF_IMAGE_NAME}
+  name: ${HAF_TESTNET_IMAGE_NAME}
   alias: haf-instance
   variables:
     PGCTLTIMEOUT: 600
@@ -1018,7 +1018,8 @@ extract_testnet_binaries:
     # Use builder image with Python 3.14 (hafah-local-tools requires Python ^3.14)
     PYTEST_BASED_IMAGE_NAME: $BUILDER_IMAGE_PATH
     POETRY_INSTALL_ROOT_DIR: $CI_PROJECT_DIR/tests/integration/hafah-local-tools
-    # Map HAF_TESTNET_UPSTREAM_IMAGE from find_haf_testnet_image to HAF_IMAGE_NAME for services
+    # Note: HAF_TESTNET_IMAGE_NAME from find_haf_testnet_image is used directly by haf-instance-testnet anchor
+    # HAF_IMAGE_NAME mapping kept for backward compatibility with other potential uses
     HAF_IMAGE_NAME: "${HAF_TESTNET_UPSTREAM_IMAGE}"
     # Map HAF_UPSTREAM_COMMIT for .clone_haf_and_hive_test_tools script
     HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
