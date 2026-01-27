@@ -7,7 +7,9 @@ __workbook
 tests/data/records.sql
 ah/api/tmp.py
 set_version_in_sql.pgsql
-postgrest/hafah_REST_openapi
+endpoints_openapi
+scripts/claude/prompts
+scripts/process_openapi.py
 
 # Build directories
 build/

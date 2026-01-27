@@ -11,40 +11,37 @@ HAfAH (HAF Account History) is a read-only HAF (Hive Application Framework) appl
 **Stack**: PostgreSQL + PostgREST (no application code - pure SQL functions exposed as REST API)
 
 **Key directories**:
-- `postgrest/` - PostgREST endpoint definitions and SQL types
-  - `hafah_endpoints.sql` - Main API router that dispatches JSON-RPC calls to backend functions
-  - `hafah_backend.sql` - Argument parsing and exception utilities
-  - `hafah_roles.sql` - Permission grants for database roles
-  - `hafah_REST/` - REST endpoint SQL functions organized by resource
-- `queries/` - Backend SQL implementation
-  - `ah_schema_functions.pgsql` - Core schema setup (`hafah_python` schema), version table, helper views
-  - `hafah_rest_backend/` - Implementation functions for each API endpoint
+- `db/` - Database initialization
+  - `builtin_roles.sql` - Database role definitions (hafah_owner, hafah_user)
+  - `hafah_app.sql` - Schema creation, version table, helper views
+- `backend/` - SQL implementation functions
+  - `common/` - Shared utilities (json_utils, bit_operations, validation)
+    - `utilities/` - REST-specific helpers (exceptions, validators, paging)
+  - `rest/` - REST API backend functions (account_history, blocks, operations, market_history)
+  - `jsonrpc/` - JSON-RPC API functions (argument_parsing, ops_in_block, transaction, virtual_ops, account_history, json_formatters)
+- `endpoints/` - PostgREST-exposed API functions
+  - `endpoint_schema.sql` - OpenAPI schema definition
+  - `dispatcher.sql` - JSON-RPC router (home function)
+  - `types/` - SQL type definitions
+  - `accounts/`, `blocks/`, `operations/`, `transactions/`, `market_history/`, `operation_types/`, `other/` - REST endpoints
 - `scripts/` - Setup and management scripts
 - `tests/` - Integration tests (pytest) and REST API tests (tavern YAML)
 
-**Database schemas** (created in order):
-1. `hafah_python` - Core schema with version table and helper views (from `ah_schema_functions.pgsql`)
-2. `hafah_backend` - Argument parsing and exception utilities
-3. `hafah_helper` - Utility functions
-4. `hafah_endpoints` - PostgREST-exposed API functions (the public interface)
+**Database schemas** (only 2 schemas):
+1. `hafah_backend` - Backend implementation functions, utilities, helper views, version table
+2. `hafah_endpoints` - PostgREST-exposed API functions (the public interface)
 
 **Database roles**:
 - `haf_admin` - For install/uninstall operations
 - `hafah_owner` - Schema owner (creates all objects)
-- `hafah_user` - For running the PostgREST service (read-only)
+- `hafah_user` - For running the PostgREST service (read-only, 10s query timeout)
 
 ## Common Commands
 
 ### Local Development
 
 ```bash
-# Setup database and install app (requires running HAF database)
-./run.sh setup
-
-# Start PostgREST server (default port 3000)
-./run.sh start [PORT]
-
-# Install app only (with custom postgres URL)
+# Install app (with custom postgres URL)
 scripts/install_app.sh --postgres-url=postgresql://haf_admin@localhost:5432/haf_block_log
 
 # Uninstall app
@@ -150,21 +147,48 @@ ssh hive-builder-10 'ls -lt /nfs/ci-cache/haf/*.tar | head -5'
 ## SQL File Execution Order
 
 SQL files are executed in specific order by `scripts/install_app.sh`:
-1. `queries/ah_schema_functions.pgsql` - Core schema setup
-2. `postgrest/hafah_backend.sql` - Backend utilities
-3. `postgrest/hafah_REST/types/*.sql` - Type definitions
-4. `queries/hafah_rest_backend/utilities/*.sql` - Utility functions
-5. `queries/hafah_rest_backend/*/` - API implementations (account_history, blocks, operations, market_history)
-6. `postgrest/hafah_endpoints.sql` - API router
-7. `postgrest/hafah_REST/*.sql` - REST endpoint functions
-8. `postgrest/hafah_roles.sql` - Permission grants (must be last)
+
+1. **Database setup** (`db/`)
+   - `db/builtin_roles.sql` - Create hafah_owner and hafah_user roles
+   - `db/hafah_app.sql` - Create schemas, version table, helper views
+   - `endpoints/endpoint_schema.sql` - OpenAPI schema
+
+2. **Backend: Common utilities** (`backend/`)
+   - `backend/jsonrpc/argument_parsing.sql` - JSON-RPC argument parsing
+   - `backend/common/json_utils.sql` - JSON helper functions
+   - `backend/common/bit_operations.sql` - Bit manipulation for filters
+   - `backend/common/validation.sql` - Input validation
+
+3. **Backend: JSON-RPC functions** (`backend/jsonrpc/`)
+   - ops_in_block, transaction, virtual_ops, account_history, json_formatters
+
+4. **Endpoint types** (`endpoints/types/`)
+   - op_types, operation, sort_direction, block, transaction, fill_order, participation_mode
+
+5. **Backend: REST utilities** (`backend/common/utilities/`)
+   - exceptions, validators, account, get_operation_types, paging, path_filters, operation_body_filter, function_helpers
+
+6. **Backend: REST implementations** (`backend/rest/`)
+   - account_history/, market_history/, blocks/, operations/
+
+7. **JSON-RPC dispatcher**
+   - `endpoints/dispatcher.sql` - Main router (home function)
+   - `scripts/set_version_in_sql.pgsql` - Version injection
+
+8. **REST endpoints** (`endpoints/`)
+   - blocks/, transactions/, accounts/, operations/, operation_types/, other/, market_history/
+
+9. **Permissions** (inline in install_app.sh)
+   - GRANT USAGE on schemas to hafah_user
+   - GRANT SELECT on tables to hafah_user
+   - GRANT EXECUTE on functions to hafah_user
+   - Create is_setup_completed() function
 
 ## Development Notes
 
 - All API logic is in SQL - no Python/application code for the main service
 - PostgREST exposes `hafah_endpoints` schema functions as REST endpoints
 - The `hafah_endpoints.home()` function is the main JSON-RPC dispatcher
-- Backend functions live in `hafah_python` and `hafah_backend` schemas
-- HAF scripts are downloaded automatically by `setup_postgres.sh` when needed
+- Backend functions live in `hafah_backend` schema (single backend schema)
 - `test_tools` is installed as wheel from GitLab package registry; `haf_local_tools` is cloned at runtime in CI via sparse checkout
-- The `hafah_python.helper_operations_view` joins `hive.operations_view` with operation types
+- The `hafah_backend.helper_operations_view` joins `hive.operations_view` with operation types
