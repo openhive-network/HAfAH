@@ -1,3 +1,29 @@
+/*
+ * get_transaction: REST endpoint for transaction lookup by hash.
+ *
+ * ENDPOINT: GET /transactions/{transaction-id}
+ *
+ * PURPOSE: Retrieve full transaction details including signatures, operations,
+ *          and block metadata.
+ *
+ * PARAMETERS:
+ *   transaction-id (path) - 40-character hex transaction hash [REQUIRED]
+ *   include-virtual (query) - Include virtual operations (default: FALSE)
+ *
+ * RETURNS: Transaction body with:
+ *   - transaction_json (ref_block_num, ref_block_prefix, extensions,
+ *                       expiration, operations, signatures)
+ *   - transaction_id (the hash)
+ *   - block_num (containing block)
+ *   - transaction_num (position in block)
+ *   - timestamp (block timestamp)
+ *
+ * CACHING:
+ *   - 1 year cache if transaction is in an irreversible block
+ *   - 2 second cache if transaction is in a reversible block
+ *
+ * DELEGATES TO: hafah_backend.get_transaction_json()
+ */
 SET ROLE hafah_owner;
 
 /** openapi:paths

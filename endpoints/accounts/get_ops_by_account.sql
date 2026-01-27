@@ -1,3 +1,33 @@
+/*
+ * get_ops_by_account: REST endpoint for account operation history.
+ *
+ * ENDPOINT: GET /accounts/{account-name}/operations
+ *
+ * PURPOSE: List operations for a given account in descending order (newest first).
+ *          Supports filtering by operation types, transacting accounts, and block range.
+ *
+ * PARAMETERS:
+ *   account-name (path) - Account to query [REQUIRED]
+ *   transacting-account-name (query) - Filter by participating account
+ *   participation-mode (query) - 'include', 'exclude', or 'all' filter mode
+ *   operation-types (query) - Comma-separated operation type IDs (e.g., "18,12")
+ *   page (query) - Page number (NULL = newest page)
+ *   page-size (query) - Results per page (default: 100, max: 1000)
+ *   data-size-limit (query) - Truncate large op bodies (default: 200000)
+ *   from-block/to-block (query) - Block range filter (accepts block num or timestamp)
+ *
+ * CACHING:
+ *   - 1 year cache (31536000s) if all data is irreversible
+ *   - 2 second cache if data includes reversible blocks
+ *
+ * PAGINATION:
+ *   Uses descending order: page 1 = newest, higher pages = older.
+ *   First page may have fewer results due to remainder handling.
+ *
+ * ROUTING: Delegates to hafah_backend.get_ops_by_account() which uses a router
+ *          pattern to select optimal query strategy based on filters.
+ *          See: backend/rest/account_history/router.sql
+ */
 SET ROLE hafah_owner;
 
 /** openapi:paths

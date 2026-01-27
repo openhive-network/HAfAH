@@ -1,3 +1,33 @@
+/*
+ * get_operations: REST endpoint for operations within a block range.
+ *
+ * ENDPOINT: GET /operations?from-block=X&to-block=Y
+ *
+ * PURPOSE: Retrieve all operations in a block range with filtering support.
+ *          Similar to enum_virtual_ops JSON-RPC but with REST interface.
+ *
+ * PARAMETERS:
+ *   from-block (query) - Start of block range [REQUIRED]
+ *                        Accepts block number or timestamp (created_at >= timestamp)
+ *   to-block (query) - End of block range [REQUIRED]
+ *                      Accepts block number or timestamp (created_at <= timestamp)
+ *   operation-types (query) - Comma-separated type IDs (e.g., "18,12")
+ *   operation-group-type (query) - 'virtual', 'real', or 'all' (default: all)
+ *   operation-begin (query) - Starting operation ID for pagination (default: -1)
+ *   page-size (query) - Max operations per page (default: 1000, max: 150000)
+ *   include-reversible (query) - Include reversible blocks (default: FALSE)
+ *
+ * RETURNS: operations_in_block_range containing:
+ *   - ops (array of operations)
+ *   - next_operation_begin (for pagination)
+ *   - next_block_range_begin (for pagination)
+ *
+ * CACHING:
+ *   - 1 year cache if all blocks in range are irreversible
+ *   - 2 second cache if range includes any reversible blocks
+ *
+ * DELEGATES TO: hafah_backend.get_ops_in_blocks()
+ */
 SET ROLE hafah_owner;
 
 /** openapi:paths
