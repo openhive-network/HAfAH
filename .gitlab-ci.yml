@@ -20,7 +20,7 @@ variables:
   BUILDER_IMAGE_TAG: ":ubuntu24.04-py3.14-2"
   BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image${BUILDER_IMAGE_TAG}"
 
-  # Python 3.14 image for test tools (wax, test-tools require Python 3.14)
+  # Python 3.14 image for shared tools (wax, hive-local-tools require Python 3.14)
   PYTHON_COMPAT_IMAGE: "registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image:ubuntu24.04-py3.14-2"
   # Use the Python 3.14 image for pytest compatibility
   PYTEST_RUNTIME_IMAGE_NAME: "${PYTHON_COMPAT_IMAGE}"
@@ -46,8 +46,9 @@ variables:
   #   HAF_UPSTREAM_IMAGE, HAF_UPSTREAM_COMMIT, HAF_UPSTREAM_TAG
   #   HIVE_UPSTREAM_IMAGE, HIVE_UPSTREAM_COMMIT, HIVE_UPSTREAM_TAG
   # =============================================================================
-  # Use develop for test-tools to get latest dependency fixes
-  HIVE_TEST_TOOLS_REF: "develop"
+  # Hive repo ref for cloning hive-local-tools, shared-tools and tests_api
+  # (path dependencies required by hafah-local-tools)
+  HIVE_PYTHON_SHARED_TOOLS_REF: "develop"
   # tests_api repo uses master branch (not develop)
   TESTS_API_REF: "master"
 
@@ -269,20 +270,20 @@ find_haf_testnet_image:
       }
       echo "DNS resolved: $(getent hosts app)"
 
-# Clone hive test-tools (tests/python directory with submodules)
-# Usage: !reference [.clone_hive_test_tools, script]
-.clone_hive_test_tools:
+# Clone hive shared tools (tests/python directory with submodules)
+# Usage: !reference [.clone_hive_shared_tools, script]
+.clone_hive_shared_tools:
   script:
     - |
-      echo "Cloning hive test tools at ref ${HIVE_TEST_TOOLS_REF}..."
+      echo "Cloning hive shared tools at ref ${HIVE_PYTHON_SHARED_TOOLS_REF}..."
       git clone --depth 1 --single-branch \
-        https://gitlab.syncad.com/hive/hive.git "${CI_PROJECT_DIR}/hive-test-tools" \
+        https://gitlab.syncad.com/hive/hive.git "${CI_PROJECT_DIR}/hive-shared-tools" \
         --no-checkout
-      cd "${CI_PROJECT_DIR}/hive-test-tools"
-      git fetch --depth 1 origin "${HIVE_TEST_TOOLS_REF}"
+      cd "${CI_PROJECT_DIR}/hive-shared-tools"
+      git fetch --depth 1 origin "${HIVE_PYTHON_SHARED_TOOLS_REF}"
       git sparse-checkout init --cone
       git sparse-checkout set tests/python
-      git checkout "${HIVE_TEST_TOOLS_REF}"
+      git checkout "${HIVE_PYTHON_SHARED_TOOLS_REF}"
       # Initialize submodules within hive-local-tools (tests_api, shared-tools)
       git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
       git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
@@ -297,13 +298,13 @@ find_haf_testnet_image:
       git clone --depth 1 --single-branch -b "${TESTS_API_REF}" \
         https://gitlab.syncad.com/hive/tests_api.git "${CI_PROJECT_DIR}/tests_api"
 
-# Clone HAF and hive test tools for pytest functional tests
+# Clone HAF and hive shared tools for pytest functional tests
 # This creates haf/ and haf/hive/ directories for hafah-local-tools path dependencies
-# Usage: !reference [.clone_haf_and_hive_test_tools, script]
-.clone_haf_and_hive_test_tools:
+# Usage: !reference [.clone_haf_and_hive_shared_tools, script]
+.clone_haf_and_hive_shared_tools:
   script:
     - |
-      echo "Cloning HAF test tools at commit ${HAF_COMMIT}..."
+      echo "Cloning HAF local tools at commit ${HAF_COMMIT}..."
       git clone --depth 1 --single-branch \
         https://gitlab.syncad.com/hive/haf.git "${CI_PROJECT_DIR}/haf" \
         --no-checkout
@@ -314,15 +315,15 @@ find_haf_testnet_image:
       git checkout "${HAF_COMMIT}"
       cd "${CI_PROJECT_DIR}"
     - |
-      echo "Cloning hive test tools into haf/hive at ref ${HIVE_TEST_TOOLS_REF}..."
+      echo "Cloning hive shared tools into haf/hive at ref ${HIVE_PYTHON_SHARED_TOOLS_REF}..."
       git clone --depth 1 --single-branch \
         https://gitlab.syncad.com/hive/hive.git "${CI_PROJECT_DIR}/haf/hive" \
         --no-checkout
       cd "${CI_PROJECT_DIR}/haf/hive"
-      git fetch --depth 1 origin "${HIVE_TEST_TOOLS_REF}"
+      git fetch --depth 1 origin "${HIVE_PYTHON_SHARED_TOOLS_REF}"
       git sparse-checkout init --cone
       git sparse-checkout set tests/python/hive-local-tools
-      git checkout "${HIVE_TEST_TOOLS_REF}"
+      git checkout "${HIVE_PYTHON_SHARED_TOOLS_REF}"
       # Initialize submodules within hive-local-tools (tests_api, shared-tools)
       git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
       git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
@@ -355,7 +356,7 @@ update_poetry_lock_from_trigger:
   variables:
     HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
   before_script:
-    - !reference [.clone_haf_and_hive_test_tools, script]
+    - !reference [.clone_haf_and_hive_shared_tools, script]
   script:
     - cd tests/integration/hafah-local-tools
     - poetry lock
@@ -528,13 +529,13 @@ build_setup_docker_image:
     HAF_APP_USER: "hafah_user"
 
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
-    # Test tools are cloned at runtime - use the cloned path
-    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/hive-local-tools"
+    # Shared tools are cloned at runtime - use the cloned path
+    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/hive-shared-tools/tests/python/hive-local-tools"
 
     TEST_SUITE: "condenser_api_patterns/get_transaction and not get_transaction_hex
       or account_history_api or condenser_api_patterns/get_account_history or condenser_api_patterns/get_ops_in_block"
-    PATTERN_TESTS_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/api_tests/pattern_tests"
-    JUNIT_REPORT: "hive-test-tools/tests/python/api_tests/pattern_tests/results.xml"
+    PATTERN_TESTS_DIR: "${CI_PROJECT_DIR}/hive-shared-tools/tests/python/api_tests/pattern_tests"
+    JUNIT_REPORT: "hive-shared-tools/tests/python/api_tests/pattern_tests/results.xml"
     DIRECT_CALLS: 0
     HIVED_UID: $HIVED_UID
 
@@ -597,9 +598,9 @@ build_setup_docker_image:
   - job: prepare_haf_data
     artifacts: true
 
-  # Clone hive test tools at runtime (replaces submodule)
+  # Clone hive shared tools at runtime (replaces submodule)
   before_script:
-    - !reference [.clone_hive_test_tools, script]
+    - !reference [.clone_hive_shared_tools, script]
     - !reference [.haf_app_pattern_tests_template, before_script]
     - echo "HAfAH image name $HAF_APP_IMAGE"
     - echo "HAF image name $HAF_IMAGE_NAME"
@@ -611,7 +612,7 @@ build_setup_docker_image:
     - "**/ah.log"
     - "**/*.out.json"
     - "tests/tests_api/hived/workdir_*"
-    - "hive-test-tools/tests/python/api_tests/pattern_tests/results.xml"
+    - "hive-shared-tools/tests/python/api_tests/pattern_tests/results.xml"
 
   tags:
   - public-runner-docker
@@ -652,9 +653,9 @@ new_style_postgrest_pattern_tests:
     HAF_DATA_SOURCE: "/cache/haf_${HAF_UPSTREAM_COMMIT}"
     HAF_APP_IMAGE: "${HAFAH_IMAGE_NAME}"
     PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
-    # Test tools are cloned at runtime - use the cloned path
-    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/hive-local-tools"
-    COMPARISON_TESTS_DIR: "${CI_PROJECT_DIR}/hive-test-tools/tests/python/api_tests/comparsion_tests"
+    # Shared tools are cloned at runtime - use the cloned path
+    POETRY_INSTALL_ROOT_DIR: "${CI_PROJECT_DIR}/hive-shared-tools/tests/python/hive-local-tools"
+    COMPARISON_TESTS_DIR: "${CI_PROJECT_DIR}/hive-shared-tools/tests/python/api_tests/comparsion_tests"
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
     HIVED_UID: $HIVED_UID
@@ -662,9 +663,9 @@ new_style_postgrest_pattern_tests:
     HIVED_IMAGE_NAME: "${HIVE_UPSTREAM_IMAGE}"
     HIVE_DATA_SOURCE: "${DATA_CACHE_HIVE_PREFIX}_${HIVE_UPSTREAM_COMMIT}"
 
-  # Clone hive test tools at runtime then do poetry install
+  # Clone hive shared tools at runtime then do poetry install
   before_script:
-    - !reference [.clone_hive_test_tools, script]
+    - !reference [.clone_hive_shared_tools, script]
     # Poetry install (from .pytest_based_template)
     - python3 -m venv venv/
     - . venv/bin/activate
@@ -769,7 +770,7 @@ new_style_postgrest_pattern_tests:
     - "**/*.out.json"
 
     reports:
-      junit: "hive-test-tools/tests/python/api_tests/comparsion_tests/comparsion_tests.xml"
+      junit: "hive-shared-tools/tests/python/api_tests/comparsion_tests/comparsion_tests.xml"
 
   tags:
   - public-runner-docker
@@ -925,7 +926,7 @@ publish_images:
     PUBLISH_PROJECT_NAME: "hafah"
 
 # Extract binaries from pre-built testnet image for functional tests
-# The test_tools framework needs local hived binaries to spawn test nodes
+# The hive-local-tools framework needs local hived binaries to spawn test nodes
 extract_testnet_binaries:
   extends: .docker_image_builder_job_template
   stage: build
@@ -1012,11 +1013,11 @@ extract_testnet_binaries:
   - job: prepare_postgrest_hafah_image
     artifacts: true
 
-  # Clone HAF and hive test tools at runtime using reusable template
+  # Clone HAF and hive shared tools at runtime using reusable template
   # hafah-local-tools has path dependencies to haf/ and haf/hive/ directories
   # Note: HAF_COMMIT is mapped from HAF_UPSTREAM_COMMIT in variables section
   before_script:
-    - !reference [.clone_haf_and_hive_test_tools, script]
+    - !reference [.clone_haf_and_hive_shared_tools, script]
     # Fix Python version constraint in pyproject.toml files
     - |
       cd "${CI_PROJECT_DIR}/haf/hive"
@@ -1087,7 +1088,7 @@ extract_testnet_binaries:
     # Note: HAF_TESTNET_IMAGE_NAME from find_haf_testnet_image is used directly by haf-instance-testnet anchor
     # HAF_IMAGE_NAME mapping kept for backward compatibility with other potential uses
     HAF_IMAGE_NAME: "${HAF_TESTNET_UPSTREAM_IMAGE}"
-    # Map HAF_UPSTREAM_COMMIT for .clone_haf_and_hive_test_tools script
+    # Map HAF_UPSTREAM_COMMIT for .clone_haf_and_hive_shared_tools script
     HAF_COMMIT: "${HAF_UPSTREAM_COMMIT}"
 
     # Binaries extracted from pre-built testnet image by extract_testnet_binaries job
