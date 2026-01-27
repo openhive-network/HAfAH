@@ -8,21 +8,40 @@ SET ROLE hafah_owner;
  * JSON-RPC Method: account_history_api.enum_virtual_ops
  *
  * Returns virtual operations within a block range with filtering and pagination.
+ *
+ * 64-BIT OPERATION TYPE FILTER:
+ *   Unlike get_account_history which uses 128-bit filter (split into low/high),
+ *   enum_virtual_ops uses a single 64-bit bitmask. This is sufficient because
+ *   virtual operations only use a subset of operation types.
+ *
+ *   - NULL filter: All virtual operation types
+ *   - 0 filter: No types (returns empty)
+ *   - Non-zero: Specific types (bit position = operation type ID)
+ *
+ * BLOCK RANGE:
+ *   - _block_range_begin: Start block (inclusive)
+ *   - _block_range_end: End block (EXCLUSIVE)
+ *   - Maximum range: 2000 blocks
+ *
+ * PAGINATION:
+ *   Uses _operation_begin for cursor-based pagination:
+ *   - -1: Start from beginning of range
+ *   - >0: Continue from this operation ID (for next page)
  */
 
 /*
- * Result type for enum_virtual_ops function
+ * RESULT TYPE: enum_virtual_ops_result
  */
 DROP TYPE IF EXISTS hafah_backend.enum_virtual_ops_result CASCADE;
 CREATE TYPE hafah_backend.enum_virtual_ops_result AS (
-    _trx_id       TEXT,
-    _block        INT,
-    _trx_in_block BIGINT,
-    _op_in_trx    BIGINT,
-    _virtual_op   BOOLEAN,
-    _timestamp    TEXT,
-    _value        TEXT,
-    _operation_id BIGINT
+    _trx_id       TEXT,    -- Always 40 zeros (virtual ops have no transaction)
+    _block        INT,     -- Block number containing this operation
+    _trx_in_block BIGINT,  -- Always 4294967295 (no transaction)
+    _op_in_trx    BIGINT,  -- Operation position
+    _virtual_op   BOOLEAN, -- Always TRUE for this endpoint
+    _timestamp    TEXT,    -- Block timestamp in ISO 8601
+    _value        TEXT,    -- Operation body as JSON
+    _operation_id BIGINT   -- Global operation ID (for pagination)
 );
 
 /*
@@ -63,20 +82,26 @@ RETURNS SETOF hafah_backend.enum_virtual_ops_result
 LANGUAGE 'plpgsql' STABLE
 AS $$
 DECLARE
-  __resolved_filter   SMALLINT[];
-  __upper_block_limit INT;
-  __filter_info       INT;
+  __resolved_filter   SMALLINT[];  -- Array of operation type IDs from bitmask
+  __upper_block_limit INT;         -- Last irreversible block (when filtering reversible)
+  __filter_info       INT;         -- NULL if no filter, array length otherwise
 BEGIN
   /*
-   * Input Validation
+   * INPUT VALIDATION:
+   *   - Limit must be positive (negative not allowed unlike account history)
+   *   - Limit maximum: 150000 operations
+   *   - Block range maximum: 2000 blocks
    */
   PERFORM hafah_backend.validate_negative_limit(_limit);
   PERFORM hafah_backend.validate_limit(_limit, 150000);
   PERFORM hafah_backend.validate_block_range(_block_range_begin, _block_range_end, 2000);
 
   /*
-   * Empty Filter Check:
-   *   If filter is explicitly 0 (no types), return empty result
+   * EMPTY FILTER CHECK:
+   *   Filter = 0 explicitly means "no operation types wanted".
+   *   This is different from NULL which means "all types".
+   *
+   * WHY fast exit: No point querying database if result will be empty.
    */
   IF (NOT (_filter IS NULL)) AND _filter = 0 THEN
     RETURN QUERY SELECT
@@ -93,17 +118,31 @@ BEGIN
   END IF;
 
   /*
-   * Translate bitmask filter to array of operation type IDs
+   * 64-BIT BITMASK TO TYPE ID TRANSLATION:
+   *   Convert single 64-bit filter to array of operation type IDs.
+   *
+   *   Example: _filter = 5 (binary: 101)
+   *   Result: ARRAY[0, 2] (operation types at bit positions 0 and 2)
+   *
+   *   See: backend/utilities/bit_operations.sql for implementation
    */
   SELECT hafah_backend.translate_enum_virtual_ops_filter(_filter) INTO __resolved_filter;
   SELECT INTO __filter_info (SELECT array_length(__resolved_filter, 1));
 
   /*
-   * Reversibility Constraint:
-   *   If not including reversible, clamp block range to irreversible
+   * REVERSIBILITY CONSTRAINT:
+   *   When _include_reversible = FALSE, we must not return data from
+   *   blocks that may be reorganized (reverted).
+   *
+   *   Strategy:
+   *   1. Get last irreversible block number
+   *   2. If entire range is reversible: return empty
+   *   3. If range spans reversible: clamp end to irreversible block
    */
   IF NOT _include_reversible THEN
     SELECT hive.app_get_irreversible_block() INTO __upper_block_limit;
+
+    -- WHY: Entire range is in reversible territory - nothing to return
     IF _block_range_begin > __upper_block_limit THEN
       RETURN QUERY SELECT
         NULL::TEXT,
@@ -116,17 +155,30 @@ BEGIN
         NULL::BIGINT
       LIMIT 0;
       RETURN;
+    -- WHY: Partial range in reversible - clamp to irreversible boundary
     ELSIF __upper_block_limit <= _block_range_end THEN
       SELECT __upper_block_limit INTO _block_range_end;
     END IF;
   END IF;
 
   RETURN QUERY
+    /*
+     * ===================================================================================
+     * MAIN QUERY: Virtual Operations Enumeration
+     * ===================================================================================
+     * STRATEGY:
+     *   1. Inner query (T): Select virtual ops from helper_operations_view
+     *   2. LEFT JOIN transactions: For completeness (usually NULL for virtual ops)
+     *   3. JOIN blocks: Get timestamp
+     *   4. Order by operation_id for consistent pagination
+     */
     WITH pre_result AS (
       SELECT
         /*
-         * Transaction ID:
-         *   Virtual ops may not have a transaction, use placeholder
+         * TRANSACTION ID:
+         *   Virtual operations generally don't have transactions.
+         *   Some edge cases exist where virtual ops reference transactions,
+         *   but most will be NULL → 40-char zero placeholder.
          */
         (
           CASE
@@ -139,7 +191,7 @@ BEGIN
         (
           CASE
             WHEN T2.trx_in_block IS NULL
-              THEN 4294967295
+              THEN 4294967295  -- WHY: Max uint32 signals "no transaction"
             ELSE T2.trx_in_block
           END
         ) AS _trx_in_block,
@@ -148,6 +200,15 @@ BEGIN
         T.body::TEXT AS _value,
         T.id AS _operation_id
       FROM (
+        /*
+         * INNER QUERY: Virtual Operations Selection
+         *
+         * Filters applied:
+         *   1. Block range (begin inclusive, end exclusive)
+         *   2. Virtual operations only (ho.virtual_op = TRUE)
+         *   3. Operation type filter (if specified)
+         *   4. Pagination cursor (if specified)
+         */
         SELECT
           ho.id,
           ho.block_num,
@@ -158,13 +219,32 @@ BEGIN
           ho.virtual_op
         FROM hafah_backend.helper_operations_view ho
         WHERE ho.block_num >= _block_range_begin
-          AND ho.block_num < _block_range_end
-          AND ho.virtual_op = TRUE
+          AND ho.block_num < _block_range_end  -- WHY: Exclusive end for consistent pagination
+          AND ho.virtual_op = TRUE             -- WHY: Only virtual operations
+          /*
+           * OPERATION TYPE FILTER:
+           *   __filter_info IS NULL: No filter, accept all types
+           *   __filter_info NOT NULL: Filter to specific types from bitmask
+           *
+           * WHY unnest: Convert SMALLINT[] to rows for IN clause
+           */
           AND ((__filter_info IS NULL) OR (ho.op_type_id IN (SELECT * FROM unnest(__resolved_filter))))
+          /*
+           * PAGINATION CURSOR:
+           *   _operation_begin = -1: Start from beginning of range
+           *   _operation_begin > 0: Continue from this operation ID
+           *
+           * WHY: Enables efficient cursor-based pagination for large result sets
+           */
           AND (_operation_begin = -1 OR ho.id >= _operation_begin)
-        ORDER BY ho.id
+        ORDER BY ho.id  -- WHY: Consistent ordering for pagination
         LIMIT _limit
       ) T
+      /*
+       * TRANSACTION JOIN:
+       *   LEFT JOIN because most virtual ops won't match a transaction.
+       *   Restricted to same block range for efficiency.
+       */
       LEFT JOIN (
         SELECT block_num, trx_in_block, trx_hash
         FROM hive.transactions_view ht
@@ -184,14 +264,15 @@ BEGIN
       pre_result._trx_in_block,
       pre_result._op_in_trx,
       pre_result._virtual_op,
+      -- WHY trim: Remove quotes added by to_json for clean ISO 8601 timestamp
       trim(both '"' from to_json(hb.created_at)::TEXT) AS _timestamp,
       pre_result._value,
       pre_result._operation_id
     FROM pre_result
-    JOIN hive.blocks_view hb ON hb.num = pre_result._block
+    JOIN hive.blocks_view hb ON hb.num = pre_result._block  -- WHY: Get block timestamp
     WHERE hb.num >= _block_range_begin
       AND hb.num < _block_range_end
-    ORDER BY pre_result._operation_id;
+    ORDER BY pre_result._operation_id;  -- WHY: Consistent ordering for client consumption
 END
 $$;
 

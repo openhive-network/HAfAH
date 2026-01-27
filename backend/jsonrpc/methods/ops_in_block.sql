@@ -9,6 +9,19 @@ SET ROLE hafah_owner;
  * JSON-RPC Method: account_history_api.get_ops_in_block
  *
  * Returns operations from a specific block with optional filtering for virtual ops.
+ *
+ * VIRTUAL VS REAL OPERATIONS:
+ *   Real operations: User-initiated (vote, transfer, comment, etc.)
+ *   Virtual operations: System-generated (curation_reward, author_reward, etc.)
+ *
+ *   Virtual ops have:
+ *   - trx_in_block = -1 (no transaction)
+ *   - trx_id = 40 zeros (placeholder)
+ *   - is_virtual = TRUE in operation_types
+ *
+ *   This endpoint supports:
+ *   - _only_virtual = FALSE: Return all operations (default)
+ *   - _only_virtual = TRUE: Return only virtual operations
  */
 
 /*
@@ -72,19 +85,25 @@ BEGIN
   RETURN QUERY
     SELECT
       /*
-       * Transaction ID:
-       *   Virtual ops have no transaction, use zero-padded placeholder
+       * TRANSACTION ID HANDLING:
+       *   - Real operations: 40-char hex hash from transactions_view
+       *   - Virtual operations: trx_hash IS NULL → return 40 zeros
+       *
+       * WHY LEFT JOIN: Virtual ops won't match any transaction, giving NULL.
        */
       (
         CASE
           WHEN ht.trx_hash IS NULL
-            THEN '0000000000000000000000000000000000000000'
+            THEN '0000000000000000000000000000000000000000'  -- WHY: Consistent 40-char placeholder
           ELSE encode(ht.trx_hash, 'hex')
         END
       ) AS _trx_id,
       /*
-       * Transaction In Block:
-       *   Virtual ops have no transaction, use max uint32 as marker
+       * TRANSACTION INDEX:
+       *   - Real operations: 0-based index in block
+       *   - Virtual operations: 4294967295 (max uint32)
+       *
+       * WHY max uint32: Signals "no transaction" to clients, matches Hive node behavior.
        */
       (
         CASE
@@ -93,12 +112,14 @@ BEGIN
           ELSE ht.trx_in_block
         END
       ) AS _trx_in_block,
-      T.op_pos AS _op_in_trx,
-      T.virtual_op AS _virtual_op,
+      T.op_pos AS _op_in_trx,         -- Operation position within transaction
+      T.virtual_op AS _virtual_op,    -- TRUE if system-generated operation
+      -- WHY trim: Remove quotes added by to_json for clean ISO 8601 timestamp
       trim(both '"' from to_json(hb.created_at)::TEXT) AS _timestamp,
       /*
-       * Operation Body:
-       *   Format based on legacy or new style
+       * OPERATION BODY FORMAT:
+       *   Legacy: {"vote": {...}} - Type as key
+       *   New: {"type": "vote_operation", "value": {...}} - Explicit type field
        */
       (
         CASE
@@ -109,6 +130,11 @@ BEGIN
       ) AS _value,
       T.id::BIGINT AS _operation_id
     FROM (
+      /*
+       * HELPER VIEW USAGE:
+       *   helper_operations_view pre-joins with operation_types to include virtual_op flag.
+       *   More efficient than joining in outer query for every row.
+       */
       SELECT
         ho.id,
         ho.block_num,
@@ -120,13 +146,23 @@ BEGIN
         ho.virtual_op
       FROM hafah_backend.helper_operations_view ho
       WHERE ho.block_num = _block_num
+        /*
+         * VIRTUAL OPERATION FILTER:
+         *   - _only_virtual = FALSE: Return all operations (real + virtual)
+         *   - _only_virtual = TRUE: Return only virtual operations
+         */
         AND (_only_virtual = FALSE OR ho.virtual_op = TRUE)
     ) T
-    JOIN hive.blocks_view hb ON hb.num = T.block_num
+    JOIN hive.blocks_view hb ON hb.num = T.block_num  -- WHY: Get block timestamp
+    /*
+     * LEFT JOIN TRANSACTIONS:
+     *   Virtual operations have no transaction, so LEFT JOIN ensures they're included.
+     *   The CASE statements above handle NULL trx_hash appropriately.
+     */
     LEFT JOIN hive.transactions_view ht
       ON T.block_num = ht.block_num
       AND T.trx_in_block = ht.trx_in_block
-    ORDER BY _operation_id;
+    ORDER BY _operation_id;  -- WHY: Maintain operation order within block
 END
 $$;
 
