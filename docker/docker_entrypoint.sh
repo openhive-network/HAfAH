@@ -106,7 +106,6 @@ install() {
   sleep 10
   wait_for_database
 
-  "${SCRIPTDIR}/app/scripts/setup_postgres.sh" --postgres-url="${POSTGRES_URL}"
   "${SCRIPTDIR}/app/scripts/install_app.sh" --postgres-url="${POSTGRES_URL}" --swagger-url="${SWAGGER_URL}"
 
   exit $?
