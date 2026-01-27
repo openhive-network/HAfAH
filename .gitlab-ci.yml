@@ -414,7 +414,7 @@ extract-swagger-json:
   extends: .filter_out_swagger_json
   stage: build
   variables:
-    INPUT_SQL_SWAGGER_FILE: "${CI_PROJECT_DIR}/postgrest/hafah_REST/hafah_openapi.sql"
+    INPUT_SQL_SWAGGER_FILE: "${CI_PROJECT_DIR}/endpoints/endpoint_schema.sql"
   tags:
   - public-runner-docker
 
