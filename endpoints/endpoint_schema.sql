@@ -8,7 +8,7 @@
  *   - PostgREST reads this schema and serves it at the root endpoint
  *   - The home() function returns this JSON spec for GET requests (no body)
  *   - For POST requests with JSON-RPC body, home() routes to method handlers
- *   - All endpoint definitions use /** openapi:paths markers that
+ *   - All endpoint definitions use openapi:paths markers that
  *     reference this central schema
  *
  * COMPONENTS DEFINED:
