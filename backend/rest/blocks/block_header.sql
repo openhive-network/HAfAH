@@ -1,5 +1,25 @@
 SET ROLE hafah_owner;
 
+/*
+ * block_header.sql: REST API backend for block header retrieval.
+ *
+ * Called by: hafah_endpoints.get_block_header() in endpoints/blocks/get_block_header.sql
+ *
+ * REST Endpoint: GET /blocks/{block-num}/header
+ */
+
+/*
+ * ===================================================================================
+ * get_block_header
+ * ===================================================================================
+ * PURPOSE: Retrieve block header without transactions and operations.
+ *          Lightweight endpoint for header-only queries.
+ *
+ * PARAMETERS:
+ *   _block_num - Block number to retrieve header for
+ *
+ * RETURNS: Block header data (previous hash, timestamp, witness, merkle root, extensions)
+ */
 CREATE OR REPLACE FUNCTION hafah_backend.get_block_header( _block_num INT )
     RETURNS hafah_backend.block_header
     LANGUAGE plpgsql

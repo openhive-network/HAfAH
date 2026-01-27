@@ -1,15 +1,45 @@
 SET ROLE hafah_owner;
 
---block range 
+/*
+ * ops_in_block.sql: REST API backend for operations in block range queries.
+ *
+ * Called by:
+ *   - hafah_endpoints.get_operations() in endpoints/operations/get_operations.sql
+ *   - hafah_endpoints.get_block_operations() in endpoints/blocks/get_block_operations.sql
+ *
+ * REST Endpoints:
+ *   - GET /operations?from-block={n}&to-block={m}
+ *   - GET /blocks/{block-num}/operations
+ */
+
+/*
+ * ===================================================================================
+ * get_ops_in_blocks
+ * ===================================================================================
+ * PURPOSE: Retrieve operations from a block range with pagination support.
+ *          Supports filtering by operation types and virtual/non-virtual operations.
+ *
+ * PARAMETERS:
+ *   _block_num             - Starting block number
+ *   _end_block_num         - Ending block number
+ *   _operation_group_types - Filter: TRUE=virtual only, FALSE=non-virtual only, NULL=all
+ *   _operation_types       - Array of operation type IDs to filter by
+ *   _operation_begin       - Operation ID to start from (-1 for beginning)
+ *   _limit                 - Maximum number of operations to return
+ *   _include_reversible    - Whether to include reversible blocks
+ *   _is_legacy_style       - Whether to use legacy operation format
+ *
+ * RETURNS: Operations with next block number for cursor-based pagination
+ */
 CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_blocks(
     in _block_num INT,
-    in _end_block_num INT, 
+    in _end_block_num INT,
     in _operation_group_types BOOLEAN,
     in _operation_types INT[],
     in _operation_begin BIGINT,
     in _limit INT,
     in _include_reversible BOOLEAN,
-    in _is_legacy_style BOOLEAN 
+    in _is_legacy_style BOOLEAN
 )
 RETURNS hafah_backend.operations_in_block_range
 LANGUAGE 'plpgsql' STABLE
@@ -33,7 +63,7 @@ BEGIN
       hp._trx_in_block AS "trx_in_block",
       hp._virtual_op AS "virtual_op",
       hp._operation_id AS "operation_id"
-    FROM hafah_backend.get_ops_in_blocks_helper( 
+    FROM hafah_backend.get_ops_in_blocks_helper(
       _block_num,
       (CASE WHEN _end_block_num > _latest_block_num THEN _latest_block_num + 1 ELSE _end_block_num + 1 END),
       _operation_group_types,
@@ -68,13 +98,13 @@ BEGIN
     WHERE pre_result.operation_id = (SELECT MAX(pre_result.operation_id) FROM pre_result)
     LIMIT 1
   )
-  SELECT 
+  SELECT
     COALESCE((SELECT block_num FROM paging_logic), 0)::INT,
     COALESCE((SELECT id FROM paging_logic), 0)::TEXT,
     (
       SELECT array_agg(rows ORDER BY rows.operation_id::BIGINT)
       FROM (
-        SELECT 
+        SELECT
           s.op,
           s.block,
           s.trx_id,
@@ -95,16 +125,28 @@ BEGIN
 END
 $$;
 
---get_ops_in_blocks json-rpc function reused in hafah REST
-CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_blocks_helper( 
+/*
+ * ===================================================================================
+ * get_ops_in_blocks_helper
+ * ===================================================================================
+ * PURPOSE: Internal helper function for get_ops_in_blocks. Handles the actual
+ *          query execution with proper reversibility checking and filtering.
+ *
+ * PARAMETERS: Same as get_ops_in_blocks
+ *
+ * RETURNS: Table of operation data for aggregation by the main function
+ *
+ * NOTE: Also used by JSON-RPC API for enum_virtual_ops and get_ops_in_block
+ */
+CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_blocks_helper(
     in _block_num INT,
-    in _end_block_num INT, 
+    in _end_block_num INT,
     in _operation_group_types BOOLEAN,
-    in _operation_types INT[], 
+    in _operation_types INT[],
     in _operation_begin BIGINT,
     in _limit INT,
     in _include_reversible BOOLEAN,
-    in _is_legacy_style BOOLEAN 
+    in _is_legacy_style BOOLEAN
 )
 RETURNS TABLE(
     __block_num INT,
@@ -180,7 +222,7 @@ BEGIN
             FROM hafah_backend.helper_operations_view ho
             JOIN accepted_types t ON ho.op_type_id = t.id
             WHERE __resolved_filter_exists AND (
-                (block_num >= _block_num) AND 
+                (block_num >= _block_num) AND
                 (block_num < _end_block_num ) AND
                 ( _operation_begin = -1 OR ho.id > _operation_begin )
             )
@@ -193,7 +235,7 @@ BEGIN
               ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.body_binary, ho.op_type_id, ho.virtual_op
             FROM hafah_backend.helper_operations_view ho
             WHERE NOT __resolved_filter_exists AND (
-                (block_num >= _block_num) AND 
+                (block_num >= _block_num) AND
                 (block_num < _end_block_num ) AND
                 (__operation_filter OR (ho.virtual_op = _operation_group_types)) AND
                 ( _operation_begin = -1 OR ho.id > _operation_begin )
@@ -204,11 +246,11 @@ BEGIN
         ) T
       LEFT JOIN
         (
-          SELECT 
-            trx_hash, trx_in_block, block_num 
+          SELECT
+            trx_hash, trx_in_block, block_num
           FROM hive.transactions_view
-          WHERE 
-            (block_num >= _block_num) AND 
+          WHERE
+            (block_num >= _block_num) AND
             (block_num < _end_block_num)
         ) T2 ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
       WHERE T.block_num >= _block_num AND T.block_num < _end_block_num
@@ -234,6 +276,26 @@ $function$
 language plpgsql STABLE
 SET JIT=OFF;
 
+/*
+ * ===================================================================================
+ * get_ops_by_block
+ * ===================================================================================
+ * PURPOSE: Retrieve operations from a single block with filtering and pagination.
+ *          Supports filtering by operation type, account, and operation body keys.
+ *
+ * PARAMETERS:
+ *   _block_num    - Block number to query
+ *   _page_num     - Page number (1-based)
+ *   _page_size    - Number of results per page
+ *   _filter       - Array of operation type IDs to filter by
+ *   _order_is     - Sort direction ('asc' or 'desc')
+ *   _body_limit   - Maximum size for operation body (-1 for unlimited)
+ *   _account_id   - Filter by account ID (NULL for all accounts)
+ *   _key_content  - Array of values to match in operation body
+ *   _setof_keys   - JSON array of key paths for body filtering
+ *
+ * RETURNS: Set of operations matching the criteria
+ */
 CREATE OR REPLACE FUNCTION hafah_backend.get_ops_by_block(
     _block_num INT,
     _page_num INT,
@@ -261,7 +323,7 @@ DECLARE
 BEGIN
 
 IF _account_id IS NULL THEN
-  RETURN QUERY 
+  RETURN QUERY
   WITH operation_range AS MATERIALIZED (
     SELECT
       ls.id,
@@ -273,18 +335,18 @@ IF _account_id IS NULL THEN
       ls.body,
       hot.is_virtual
     FROM (
-      With operations_in_block AS 
+      With operations_in_block AS
       (
       SELECT ov.id, ov.trx_in_block, ov.op_pos, ov.body, ov.op_type_id, ov.block_num
       FROM hive.operations_view ov
       WHERE
-        ov.block_num = _block_num 
+        ov.block_num = _block_num
       ),
-      filter_ops AS MATERIALIZED 
+      filter_ops AS MATERIALIZED
       (
       SELECT *
-      FROM operations_in_block oib 
-      WHERE 
+      FROM operations_in_block oib
+      WHERE
         (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
         (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
         (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND
@@ -303,8 +365,8 @@ IF _account_id IS NULL THEN
       (CASE WHEN _order_is = 'desc' THEN ls.id ELSE NULL END) DESC,
       (CASE WHEN _order_is = 'asc' THEN ls.id ELSE NULL END) ASC)
 
-  -- filter too long operation bodies 
-    SELECT 
+  -- filter too long operation bodies
+    SELECT
       (filtered_operations.composite).body,
       filtered_operations.block_num,
       filtered_operations.trx_hash,
@@ -323,7 +385,7 @@ IF _account_id IS NULL THEN
 
 ELSE
 
-  RETURN QUERY 
+  RETURN QUERY
   WITH operation_range AS MATERIALIZED (
     SELECT
       ls.id,
@@ -335,25 +397,25 @@ ELSE
       ls.body,
       hot.is_virtual
     FROM (
-      WITH account_operations_in_block AS 
+      WITH account_operations_in_block AS
       (
         SELECT aov.operation_id
         FROM hive.account_operations_view aov
         WHERE
           aov.account_id = _account_id AND
-          aov.block_num = _block_num 
+          aov.block_num = _block_num
       ),
-      operations_in_block AS 
+      operations_in_block AS
       (
         SELECT ov.id, ov.trx_in_block, ov.op_pos, ov.body, ov.op_type_id, ov.block_num
         FROM hive.operations_view ov
         JOIN account_operations_in_block aoib ON aoib.operation_id = ov.id
       ),
-      filter_ops AS MATERIALIZED 
+      filter_ops AS MATERIALIZED
       (
         SELECT *
-        FROM operations_in_block oib 
-        WHERE 
+        FROM operations_in_block oib
+        WHERE
           (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
           (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
           (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND
@@ -372,8 +434,8 @@ ELSE
       (CASE WHEN _order_is = 'desc' THEN ls.id ELSE NULL END) DESC,
       (CASE WHEN _order_is = 'asc' THEN ls.id ELSE NULL END) ASC)
 
-  -- filter too long operation bodies 
-    SELECT 
+  -- filter too long operation bodies
+    SELECT
       (filtered_operations.composite).body,
       filtered_operations.block_num,
       filtered_operations.trx_hash,
@@ -395,7 +457,22 @@ END IF;
 END
 $$;
 
-
+/*
+ * ===================================================================================
+ * get_ops_by_block_count
+ * ===================================================================================
+ * PURPOSE: Count operations in a block matching the specified filters.
+ *          Used for pagination calculations.
+ *
+ * PARAMETERS:
+ *   _block_num    - Block number to query
+ *   _filter       - Array of operation type IDs to filter by
+ *   _account_id   - Filter by account ID (NULL for all accounts)
+ *   _key_content  - Array of values to match in operation body
+ *   _setof_keys   - JSON array of key paths for body filtering
+ *
+ * RETURNS: Count of matching operations
+ */
 CREATE OR REPLACE FUNCTION hafah_backend.get_ops_by_block_count(
     _block_num INT,
     _filter INT [],
@@ -419,18 +496,18 @@ BEGIN
 
 IF _account_id IS NULL THEN
   RETURN (
-    WITH operations_in_block AS 
+    WITH operations_in_block AS
     (
       SELECT ov.op_type_id, ov.body
       FROM hive.operations_view ov
       WHERE
-        ov.block_num = _block_num 
+        ov.block_num = _block_num
     ),
-    filter_ops AS MATERIALIZED 
+    filter_ops AS MATERIALIZED
     (
-      SELECT oib.op_type_id 
-      FROM operations_in_block oib 
-      WHERE 
+      SELECT oib.op_type_id
+      FROM operations_in_block oib
+      WHERE
         (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
         (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
         (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND
@@ -439,25 +516,25 @@ IF _account_id IS NULL THEN
     SELECT COUNT(*) FROM filter_ops);
 ELSE
   RETURN (
-    WITH account_operations_in_block AS 
+    WITH account_operations_in_block AS
     (
       SELECT aov.operation_id
       FROM hive.account_operations_view aov
       WHERE
         aov.account_id = _account_id AND
-        aov.block_num = _block_num 
+        aov.block_num = _block_num
     ),
-    operations_in_block AS 
+    operations_in_block AS
     (
       SELECT ov.op_type_id, ov.body
       FROM hive.operations_view ov
       JOIN account_operations_in_block aoib ON aoib.operation_id = ov.id
     ),
-    filter_ops AS MATERIALIZED 
+    filter_ops AS MATERIALIZED
     (
-      SELECT oib.op_type_id 
-      FROM operations_in_block oib 
-      WHERE 
+      SELECT oib.op_type_id
+      FROM operations_in_block oib
+      WHERE
         (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
         (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
         (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND

@@ -73,95 +73,126 @@ fi
 
 echo "Installing app..."
 
-# Create database roles and schemas
+# ===================================================================================
+# SECTION 1: Database Setup
+# ===================================================================================
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../db/builtin_roles.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../db/hafah_app.sql"
+
+# ===================================================================================
+# SECTION 2: OpenAPI Schema
+# ===================================================================================
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET custom.swagger_url = '$SWAGGER_URL';" -f "$SCRIPTPATH/../endpoints/endpoint_schema.sql"
 
-# Backend: argument parsing and common utilities
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/argument_parsing.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/json_utils.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/bit_operations.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/validation.sql"
-
-# Backend: JSON-RPC functions
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/ops_in_block.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/transaction.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/virtual_ops.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/account_history.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/json_formatters.sql"
-
-# Endpoint types
+# ===================================================================================
+# SECTION 3: Endpoint Types
+# ===================================================================================
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/sort_direction.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/participation_mode.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/op_types.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/operation.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/sort_direction.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/block.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/transaction.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/fill_order.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/participation_mode.sql"
 
-# Backend: REST utilities
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/exceptions.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/validators.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/account.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/get_operation_types.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/paging.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/path_filters.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/operation_body_filter.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/function_helpers.sql"
+# ===================================================================================
+# SECTION 4: Shared Utilities
+# ===================================================================================
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/utilities/bit_operations.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/utilities/validators.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/utilities/exceptions.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/utilities/account.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/utilities/operation_types.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/utilities/paging.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/utilities/path_filters.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/utilities/operation_body_filter.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/helpers/function_helpers.sql"
 
-# Backend: REST implementations
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/account_history.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/by_operations.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/default.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/excluding_accounts.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/including_accounts.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/include_account.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/exclude_account.sql"
+# ===================================================================================
+# SECTION 5: JSON-RPC Backend
+# ===================================================================================
+# Argument parsing and exceptions
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/argument_parsing.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/exception_parsing.sql"
+# Methods first (define types and core functions)
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/methods/ops_in_block.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/methods/transaction.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/methods/virtual_ops.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/methods/account_history.sql"
+# Formatters second (depend on methods)
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/formatters/transaction.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/formatters/account_history.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/formatters/ops_in_block.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/formatters/virtual_ops.sql"
 
+# ===================================================================================
+# SECTION 6: REST Backend - Blocks
+# ===================================================================================
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/blocks/block.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/blocks/block_header.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/blocks/block_range.sql"
+
+# ===================================================================================
+# SECTION 7: REST Backend - Operations
+# ===================================================================================
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/operation.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/ops_in_block.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/op_types.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/acc_op_types.sql"
+
+# ===================================================================================
+# SECTION 8: REST Backend - Market History
+# ===================================================================================
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/market_history/recent_trades.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/market_history/trade_history.sql"
 
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/blocks/block_header.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/blocks/block_range.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/blocks/block.sql"
+# ===================================================================================
+# SECTION 9: REST Backend - Account History
+# ===================================================================================
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/default.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/by_operations.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/include_account.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/including_accounts.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/exclude_account.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/excluding_accounts.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/router.sql"
 
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/acc_op_types.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/op_types.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/operation.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/ops_in_block.sql"
-
-# JSON-RPC dispatcher and version
+# ===================================================================================
+# SECTION 10: JSON-RPC Dispatcher
+# ===================================================================================
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/dispatcher.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/set_version_in_sql.pgsql"
 
-# REST endpoints
+# ===================================================================================
+# SECTION 11: REST Endpoints
+# ===================================================================================
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/blocks/get_block.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/blocks/get_block_range.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/blocks/get_block_header.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/blocks/get_block_range.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/blocks/get_ops_by_block_paging.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/transactions/get_transaction.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/accounts/get_ops_by_account.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/accounts/get_acc_op_types.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/operations/get_operations.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/operations/get_operation.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/operations/get_operations.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/operation_types/get_op_types.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/operation_types/get_operation_keys.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/other/get_version.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/other/get_head_block_num.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/other/get_block.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/market_history/get_recent_trades.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/market_history/get_trade_history.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/other/get_block.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/other/get_head_block_num.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/other/get_version.sql"
 
-# Configure permissions
+# ===================================================================================
+# SECTION 12: Permissions and Setup Completion
+# ===================================================================================
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT USAGE ON SCHEMA hafah_endpoints TO hafah_user;"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT USAGE ON SCHEMA hafah_backend TO hafah_user;"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT SELECT ON ALL TABLES IN SCHEMA hafah_endpoints TO hafah_user;"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT SELECT ON ALL TABLES IN SCHEMA hafah_backend TO hafah_user;"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hafah_backend TO hafah_user;"
 
-# Create is_setup_completed function (must be at the very end)
-# This signals that setup is complete and hafah_user has all required access
+# Create is_setup_completed function (must be at the very end - signals setup is complete)
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on <<EOF
 SET ROLE hafah_owner;
 CREATE OR REPLACE FUNCTION hafah_backend.is_setup_completed()

@@ -55,15 +55,6 @@ CREATE TABLE hafah_backend.version(
 );
 INSERT INTO hafah_backend.version VALUES('unspecified (generate and apply set_version_in_sql.pgsql)');
 
-CREATE OR REPLACE FUNCTION hafah_backend.get_version()
-  RETURNS TEXT AS $$
-DECLARE
-  _ BOOLEAN;
-BEGIN
-  RETURN (SELECT git_hash FROM hafah_backend.version LIMIT 1);
-END;
-$$ LANGUAGE plpgsql;
-
 -- ============================================================================
 -- HELPER VIEWS
 -- ============================================================================

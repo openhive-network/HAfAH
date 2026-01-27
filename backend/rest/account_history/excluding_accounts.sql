@@ -1,9 +1,40 @@
 SET ROLE hafah_owner;
 
-CREATE OR REPLACE FUNCTION hafah_backend.account_history_exclude_account(
+/*
+ * excluding_accounts.sql: Account history filtering by multiple transacting accounts (exclude).
+ *
+ * Called by: hafah_backend.get_ops_by_account() in backend/rest/account_history/router.sql
+ *
+ * Used when: participation_mode='exclude' with multiple account filter
+ */
+
+/*
+ * ===================================================================================
+ * account_history_excluding_accounts
+ * ===================================================================================
+ * PURPOSE: Retrieve account operations where the transacting account does NOT match
+ *          any of the specified accounts. Uses a sliding window pagination approach with
+ *          max 10 pages per batch to handle large result sets efficiently.
+ *
+ * PARAMETERS:
+ *   _account_id              - Account ID to get operations for
+ *   _operations              - Array of operation type IDs to filter by (NULL for all)
+ *   _transacting_account_ids - Array of account IDs to exclude from transacting party
+ *   _from_block              - Starting block number
+ *   _to_block                - Ending block number
+ *   _page                    - Page number for pagination
+ *   _body_limit              - Maximum size for operation body (-1 for unlimited)
+ *   _limit                   - Number of results per page
+ *
+ * RETURNS: Account operation history with pagination info
+ *
+ * NOTE: The from_block in the returned range may be adjusted to support
+ *       cursor-based pagination for the next API call.
+ */
+CREATE OR REPLACE FUNCTION hafah_backend.account_history_excluding_accounts(
     _account_id INT,
     _operations INT [],
-    _transacting_account_id INT,
+    _transacting_account_ids INT [],
     _from_block INT,
     _to_block INT,
     _page INT,
@@ -18,7 +49,7 @@ SET join_collapse_limit = 16
 SET from_collapse_limit = 16
 AS
 $$
-DECLARE 
+DECLARE
   _result hafah_backend.operation[];
   _account_range hafah_backend.account_filter_return;
   __max_page_count INT := 10;
@@ -31,7 +62,10 @@ BEGIN
   _account_range := hafah_backend.account_range(_operations, _account_id, _from_block, _to_block);
 
   -- Fetching operations
-  WITH operation_range AS MATERIALIZED (
+  WITH /* excluded_ids AS MATERIALIZED (
+    SELECT unnest(_transacting_account_ids) AS id
+  ), */
+  operation_range AS MATERIALIZED (
     SELECT
       ls.operation_id AS id,
       ls.block_num,
@@ -42,18 +76,24 @@ BEGIN
       SELECT aov.operation_id, aov.op_type_id, aov.block_num, aov.account_op_seq_no
       FROM hive.account_operations_view aov
       WHERE aov.account_id = _account_id
-      AND aov.transacting_account_id != _transacting_account_id
-      AND aov.transacting_account_id IS NOT NULL -- for future compatibility
       AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
       AND aov.account_op_seq_no >= _account_range.from_seq
       AND aov.account_op_seq_no <= _account_range.to_seq
+      AND aov.transacting_account_id != ANY(_transacting_account_ids) -- exclude all transacting accounts
+      AND aov.transacting_account_id IS NOT NULL -- for future compatibility
+      /*
+      AND NOT EXISTS (
+          SELECT 1 FROM excluded_ids e
+          WHERE e.id = aov.transacting_account_id
+      )
+      */
       ORDER BY aov.account_op_seq_no DESC
       LIMIT (__max_page_count * _limit) + 1 -- by default operation filter is limited to 10 pages
       -- The +1 is to check if there are more operations in block that are not included in the current page-range
     ) ls
   ),
   -----------PAGING LOGIC----------------
-  -- Calculating pages based on result set (operation_range) 
+  -- Calculating pages based on result set (operation_range)
   -- there is corner case when the last two operations are in the same block
   -- when generating next batch of pages, we may miss operations made in the same block
   -- to prevent this, we check if the last two operations are in the same block
@@ -63,40 +103,40 @@ BEGIN
   check_if_saturated AS ( -- if not saturated, returns empty
     SELECT (
       CASE
-        WHEN MAX(row_num) = (__max_page_count * _limit) + 1 THEN 
+        WHEN MAX(row_num) = (__max_page_count * _limit) + 1 THEN
           (__max_page_count * _limit) + 1
-        ELSE 
+        ELSE
           NULL
-      END 
+      END
     ) AS count
     FROM operation_range
-  ), 
+  ),
   if_saturated_find_last_two_ops AS ( -- if not saturated, returns empty
     SELECT
       orr.block_num,
       orr.account_op_seq_no
     FROM operation_range orr
     WHERE orr.row_num IN (
-      (SELECT count FROM check_if_saturated), 
+      (SELECT count FROM check_if_saturated),
       (SELECT count - 1 FROM check_if_saturated)
     )
-  ), 
+  ),
   block_check AS MATERIALIZED ( -- if not saturated, returns empty
     SELECT (
       CASE
-        WHEN COUNT(DISTINCT block_num) = 1 THEN 
+        WHEN COUNT(DISTINCT block_num) = 1 THEN
           MIN(block_num)
-        ELSE 
+        ELSE
           NULL
-      END  
+      END
     ) AS block_num,
     (
       CASE
-        WHEN COUNT(DISTINCT block_num) = 1 THEN 
+        WHEN COUNT(DISTINCT block_num) = 1 THEN
           MIN(account_op_seq_no)
-        ELSE 
+        ELSE
           NULL
-      END  
+      END
     ) AS account_op_seq_no
     FROM if_saturated_find_last_two_ops
   ),
@@ -109,7 +149,7 @@ BEGIN
       aov.block_num
     FROM hive.account_operations_view aov
     WHERE aov.account_id = _account_id
-    AND aov.transacting_account_id != _transacting_account_id
+    AND aov.transacting_account_id != ANY(_transacting_account_ids) -- exclude all transacting accounts
     AND aov.transacting_account_id IS NOT NULL -- for future compatibility
     AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
     AND aov.account_op_seq_no >= _account_range.from_seq
@@ -148,17 +188,17 @@ BEGIN
     FROM find_all_records_for_page
   ),
   min_block_num AS (
-    SELECT 
+    SELECT
       MIN(block_num) AS block_num
     FROM union_operations
   ),
   count_blocks AS MATERIALIZED (
-    SELECT 
+    SELECT
       COUNT(*) AS count
     FROM union_operations
   ),
   calculate_pages AS MATERIALIZED (
-    SELECT 
+    SELECT
       total_pages,
       offset_filter,
       limit_filter
@@ -177,7 +217,7 @@ BEGIN
     LIMIT (SELECT limit_filter FROM calculate_pages)
   ),
   -----------END PAGING LOGIC----------------
-  -- join the operations with other necessary tables 
+  -- join the operations with other necessary tables
   join_tables AS (
     SELECT
       ls.id,
@@ -197,9 +237,9 @@ BEGIN
     JOIN hafd.operation_types hot ON hot.id = ls.op_type_id
     --LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ov.trx_in_block
   ),
-  -- filter too long operation bodies 
+  -- filter too long operation bodies
   result_query AS (
-    SELECT 
+    SELECT
       (filtered_operations.composite).body,
       filtered_operations.block_num,
       filtered_operations.trx_hash,
@@ -211,19 +251,19 @@ BEGIN
       filtered_operations.trx_in_block
     FROM (
       SELECT hafah_backend.operation_body_filter(ov.body, ov.id, _body_limit) as composite, ov.id, ov.block_num, ov.trx_in_block, ov.trx_hash, ov.op_pos, ov.op_type_id, ov.is_virtual, hb.created_at
-      FROM join_tables ov 
+      FROM join_tables ov
       JOIN hive.blocks_view hb ON hb.num = ov.block_num
     ) filtered_operations
     ORDER BY filtered_operations.id DESC
   )
-  SELECT 
+  SELECT
     (SELECT count FROM count_blocks),
     (SELECT total_pages FROM calculate_pages),
     (SELECT block_num FROM min_block_num),
     (
       SELECT array_agg(rows ORDER BY rows.id::BIGINT DESC)
       FROM (
-        SELECT 
+        SELECT
           s.body,
           s.block_num,
           s.trx_hash,
@@ -239,7 +279,7 @@ BEGIN
   INTO __count, __total_pages, __min_block_num, _result;
 
   -- 1. If the min block number is NULL - the result is empty - there are no results for whole provided range
-  -- 2. If the min block number is NOT NULL and pages are not fully saturated it means there is no more blocks to fetch 
+  -- 2. If the min block number is NOT NULL and pages are not fully saturated it means there is no more blocks to fetch
   -- 3. (ELSE) If the min block number is NOT NULL - the result is not empty - there are results for the provided range
   -- and the min block number can be used as filter in the next API call (as a to-block parameter)
   _account_range.from_block := (
