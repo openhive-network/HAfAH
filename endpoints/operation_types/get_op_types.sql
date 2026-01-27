@@ -1,3 +1,25 @@
+/*
+ * get_op_types: REST endpoint for operation type metadata lookup.
+ *
+ * ENDPOINT: GET /operation-types
+ *
+ * PURPOSE: Returns operation type IDs and names, optionally filtered by
+ *          partial name match. Useful for discovering valid operation types.
+ *
+ * PARAMETERS:
+ *   partial-operation-name (query) - Filter by name substring (optional)
+ *                                    e.g., "transfer" matches transfer_operation,
+ *                                    transfer_to_vesting_operation, etc.
+ *
+ * RETURNS: Array of operation types with:
+ *   - op_type_id (integer ID used in filters)
+ *   - operation_name (full operation type name)
+ *   - is_virtual (boolean - true for virtual operations)
+ *
+ * DATA SOURCE: hafd.operation_types (HAF base table)
+ *
+ * DELEGATES TO: hafah_backend.get_op_types()
+ */
 SET ROLE hafah_owner;
 
 /** openapi:components:schemas

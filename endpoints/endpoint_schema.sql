@@ -1,3 +1,29 @@
+/*
+ * endpoint_schema.sql: OpenAPI 3.1.0 specification for HAfAH REST API.
+ *
+ * PURPOSE: Defines the OpenAPI schema that PostgREST serves at GET /.
+ *          This enables automatic API documentation via Swagger UI.
+ *
+ * INTEGRATION:
+ *   - PostgREST reads this schema and serves it at the root endpoint
+ *   - The home() function returns this JSON spec for GET requests (no body)
+ *   - For POST requests with JSON-RPC body, home() routes to method handlers
+ *   - All endpoint definitions use /** openapi:paths markers that
+ *     reference this central schema
+ *
+ * COMPONENTS DEFINED:
+ *   - All response types (operation, transaction, block_range, etc.)
+ *   - Common parameter schemas (operation_types, sort_direction, etc.)
+ *   - Error response schemas
+ *
+ * CODE GENERATION:
+ *   - Sections between openapi-generated-code-begin/end markers
+ *     are auto-generated from the openapi YAML above them
+ *   - Do not manually edit generated sections
+ *
+ * TAGS: Blocks, Transactions, Operations, Operation-types, Accounts,
+ *       Market-history, Other
+ */
 SET ROLE hafah_owner;
 
 /** openapi

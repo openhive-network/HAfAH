@@ -1,28 +1,40 @@
 /*
-'hafah_endpoints.home()' forwards call to 'hafah_python' schema to 'some_method()' and returns requests via:
-  - get_ops_in_block
-  - enum_virtual_ops
-  - get_transaction
-  - get_account_history
-Inside these functions, arguments are parsed from 'params', their types asserted and set or set to default.
-
-'hafah_endpoints' also serves as API for old style (like python's version of HAfAH) calls and new style (direct) calls:
-
-Old style call example:
-curl -X POST http://localhost:3000/ \
-	-H 'Content-Type: application/json' \
-	-d '{"jsonrpc": "2.0",
-  "method": "account_history_api.get_transaction",
-  "params": {"id": "390464f5178defc780b5d1a97cb308edeb27f983", "include_reversible": true},
-  "id": 0}'
-
-New style call example:
-curl -X POST http://localhost:3000/rpc/get_transaction \
-	-H 'Content-Type: application/json' \
-	-d  '{"id": "390464f5178defc780b5d1a97cb308edeb27f983", "include_reversible": true}'
-
-Note: Schema creation is handled by db/hafah_app.sql
-*/
+ * home: JSON-RPC 2.0 dispatcher function.
+ *
+ * PURPOSE: Routes incoming JSON-RPC requests to appropriate method handlers.
+ *
+ * SUPPORTED METHODS:
+ *   account_history_api:
+ *     - get_account_history (account operation history)
+ *     - get_ops_in_block (operations in a block)
+ *     - enum_virtual_ops (virtual operations in block range)
+ *     - get_transaction (transaction by hash)
+ *   block_api:
+ *     - get_block (full block with transactions)
+ *     - get_block_header (block header only)
+ *     - get_block_range (multiple blocks)
+ *   hive_api:
+ *     - get_version (API version info)
+ *
+ * LEGACY SUPPORT: Also handles condenser_api.* methods for backwards compatibility.
+ *                 Legacy style returns slightly different response format (no operation_id).
+ *
+ * ERROR HANDLING: Returns JSON-RPC error responses:
+ *   -32600: Invalid JSON-RPC (missing jsonrpc, params, or id)
+ *   -32601: Method not found
+ *   -32602: Invalid params (type errors, missing required params)
+ *
+ * TWO CALL STYLES:
+ *   Old style (JSON-RPC envelope):
+ *     POST / with {"jsonrpc": "2.0", "method": "account_history_api.get_transaction", "params": {...}, "id": 0}
+ *   New style (direct PostgREST RPC):
+ *     POST /rpc/get_transaction with {...params}
+ *
+ * ARCHITECTURE:
+ *   home() -> parses method string -> routes to call_* wrapper -> calls backend formatter
+ *
+ * Note: Schema creation is handled by db/hafah_app.sql
+ */
 
 SET ROLE hafah_owner;
 
@@ -101,6 +113,18 @@ END
 $$
 ;
 
+/*
+ * call_get_ops_in_block: JSON-RPC wrapper for get_ops_in_block method.
+ *
+ * PARAMETERS (from JSON-RPC params):
+ *   block_num (INT) - Block number to query (default: 0)
+ *   only_virtual (BOOLEAN) - Return only virtual operations (default: FALSE)
+ *   include_reversible (BOOLEAN) - Include reversible blocks (default: FALSE)
+ *
+ * PARAMETER STYLES: Supports both object {"block_num": 123} and array [123] params.
+ *
+ * DELEGATES TO: hafah_backend.get_ops_in_block_json()
+ */
 CREATE FUNCTION hafah_endpoints.call_get_ops_in_block(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
@@ -160,6 +184,22 @@ END
 $$
 ;
 
+/*
+ * call_enum_virtual_ops: JSON-RPC wrapper for enum_virtual_ops method.
+ *
+ * PURPOSE: Enumerate virtual operations within a block range.
+ *
+ * PARAMETERS (from JSON-RPC params):
+ *   block_range_begin (INT) - Start block number [REQUIRED]
+ *   block_range_end (INT) - End block number [REQUIRED]
+ *   operation_begin (BIGINT) - Starting operation ID for pagination (default: 0)
+ *   limit (INT) - Max operations to return (default: 150000)
+ *   filter (NUMERIC) - 128-bit bitmask for operation type filtering
+ *   include_reversible (BOOLEAN) - Include reversible blocks (default: FALSE)
+ *   group_by_block (BOOLEAN) - Group results by block (default: FALSE)
+ *
+ * DELEGATES TO: hafah_backend.enum_virtual_ops_json()
+ */
 CREATE FUNCTION hafah_endpoints.call_enum_virtual_ops(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
@@ -273,6 +313,21 @@ END
 $$
 ;
 
+/*
+ * call_get_transaction: JSON-RPC wrapper for get_transaction method.
+ *
+ * PURPOSE: Retrieve a transaction by its hash.
+ *
+ * PARAMETERS (from JSON-RPC params):
+ *   id (TEXT) - 40-character hex transaction hash [REQUIRED]
+ *   include_reversible (BOOLEAN) - Include reversible blocks (default: FALSE)
+ *
+ * VALIDATION:
+ *   - Hash must be exactly 40 hex characters
+ *   - Only valid hex characters (0-9, a-f, A-F) allowed
+ *
+ * DELEGATES TO: hafah_backend.get_transaction_json()
+ */
 CREATE FUNCTION hafah_endpoints.call_get_transaction(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
@@ -319,6 +374,25 @@ END
 $$
 ;
 
+/*
+ * call_get_account_history: JSON-RPC wrapper for get_account_history method.
+ *
+ * PURPOSE: Get operation history for a specific account.
+ *
+ * PARAMETERS (from JSON-RPC params):
+ *   account (VARCHAR) - Account name to query [REQUIRED, max 16 chars]
+ *   start (BIGINT) - Starting sequence number (default: -1 = most recent)
+ *                    Negative values count from end: -1 = last, -100 = 100th from last
+ *   limit (BIGINT) - Max operations to return (default: 1000)
+ *   operation_filter_low (NUMERIC) - Bits 0-63 of 128-bit operation type bitmask
+ *   operation_filter_high (NUMERIC) - Bits 64-127 of 128-bit operation type bitmask
+ *   include_reversible (BOOLEAN) - Include reversible blocks (default: FALSE)
+ *
+ * FILTER BITMASK: 128-bit mask split into two 64-bit integers for operation type filtering.
+ *                 Use hafah_backend.translate_get_account_history_filter() to decode.
+ *
+ * DELEGATES TO: hafah_backend.ah_get_account_history_json()
+ */
 CREATE FUNCTION hafah_endpoints.call_get_account_history(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
@@ -421,6 +495,17 @@ END;
 $$
 ;
 
+/*
+ * call_get_block: JSON-RPC wrapper for block_api.get_block method.
+ *
+ * PURPOSE: Retrieve a full signed block with transactions.
+ *
+ * PARAMETERS (from JSON-RPC params):
+ *   block_num (BIGINT) - Block number to retrieve [REQUIRED]
+ *                        Handles two's complement overflow for negative values.
+ *
+ * DELEGATES TO: hive.get_block_json() (HAF core function)
+ */
 CREATE OR REPLACE FUNCTION hafah_endpoints.call_get_block(_params JSON, _json_type TEXT, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
@@ -456,6 +541,16 @@ END
 $$
 ;
 
+/*
+ * call_get_block_header: JSON-RPC wrapper for block_api.get_block_header method.
+ *
+ * PURPOSE: Retrieve block header (metadata) without transactions.
+ *
+ * PARAMETERS (from JSON-RPC params):
+ *   block_num (BIGINT) - Block number to retrieve [REQUIRED]
+ *
+ * DELEGATES TO: hive.get_block_header_json() (HAF core function)
+ */
 CREATE OR REPLACE FUNCTION hafah_endpoints.call_get_block_header(_params JSON, _json_type TEXT, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
@@ -490,6 +585,17 @@ END
 $$
 ;
 
+/*
+ * call_get_block_range: JSON-RPC wrapper for block_api.get_block_range method.
+ *
+ * PURPOSE: Retrieve multiple consecutive blocks.
+ *
+ * PARAMETERS (from JSON-RPC params):
+ *   starting_block_num (BIGINT) - First block in range [REQUIRED]
+ *   count (BIGINT) - Number of blocks to return [REQUIRED]
+ *
+ * DELEGATES TO: hive.get_block_range_json() (HAF core function)
+ */
 CREATE OR REPLACE FUNCTION hafah_endpoints.call_get_block_range(_params JSON, _json_type TEXT, _id JSON = NULL)
 RETURNS JSON
 LANGUAGE 'plpgsql'
@@ -535,17 +641,27 @@ END
 $$
 ;
 
+/*
+ * get_version: Returns API version info for JSON-RPC hive_api.get_version.
+ *
+ * RETURNS: JSON object with app_name and commit hash.
+ */
 CREATE FUNCTION hafah_endpoints.get_version()
 RETURNS JSON
 LANGUAGE 'plpgsql'
 AS
 $$
 BEGIN
-  RETURN json_build_object('app_name', 'PostgRESTHAfAH', 'commit', (SELECT * FROM hafah_backend.get_version()));
+  RETURN json_build_object('app_name', 'PostgRESTHAfAH', 'commit', (SELECT git_hash FROM hafah_backend.version LIMIT 1));
 END;
 $$
 ;
 
+/*
+ * Direct PostgREST RPC wrappers (new-style API):
+ * These thin wrappers allow direct calls via POST /rpc/{function_name}
+ * without the JSON-RPC envelope. They delegate to the call_* functions.
+ */
 CREATE FUNCTION hafah_endpoints.get_ops_in_block(JSON)
 RETURNS JSON
 LANGUAGE 'plpgsql'

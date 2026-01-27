@@ -1,3 +1,30 @@
+/*
+ * get_ops_by_block_paging: REST endpoint for paginated operations in a block.
+ *
+ * ENDPOINT: GET /blocks/{block-num}/operations
+ *
+ * PURPOSE: List operations within a single block with filtering and pagination.
+ *          Supports filtering by operation type, account, and JSON path filters.
+ *
+ * PARAMETERS:
+ *   block-num (path) - Block number or timestamp [REQUIRED]
+ *   operation-types (query) - Comma-separated type IDs (e.g., "18,12")
+ *   account-name (query) - Filter by account that created operations
+ *   page (query) - Page number (default: 1)
+ *   page-size (query) - Results per page (default: 100, max: 10000)
+ *   page-order (query) - 'asc' or 'desc' sort direction (default: desc)
+ *   data-size-limit (query) - Truncate large op bodies (default: 200000)
+ *   path-filter (query) - JSON path filter (e.g., "value.creator=steem")
+ *
+ * PATH FILTERS: Filter operations by JSON content matching, e.g.:
+ *               path-filter=value.creator=steem finds ops where creator is steem.
+ *
+ * CACHING:
+ *   - 1 year cache if block is irreversible
+ *   - 2 second cache if block is reversible
+ *
+ * DELEGATES TO: hafah_backend.get_ops_by_block()
+ */
 SET ROLE hafah_owner;
 
 /** openapi:paths

@@ -1,3 +1,24 @@
+/*
+ * get_block_header: REST endpoint for retrieving block metadata only.
+ *
+ * ENDPOINT: GET /blocks/{block-num}/header
+ *
+ * PURPOSE: Retrieve block header without transaction data.
+ *          Lighter response than full block - useful when only metadata is needed.
+ *
+ * PARAMETERS:
+ *   block-num (path) - Block number or timestamp [REQUIRED]
+ *                      Timestamps auto-convert to block num (created_at <= timestamp)
+ *
+ * RETURNS: Block header fields: witness, previous, timestamp, extensions,
+ *          transaction_merkle_root (excludes transactions array).
+ *
+ * CACHING:
+ *   - 1 year cache if block is irreversible
+ *   - 2 second cache if block is reversible
+ *
+ * DELEGATES TO: hafah_backend.get_block_header()
+ */
 SET ROLE hafah_owner;
 
 /** openapi:paths

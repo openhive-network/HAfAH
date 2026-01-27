@@ -1,3 +1,26 @@
+/*
+ * get_block_range: REST endpoint for retrieving multiple blocks at once.
+ *
+ * ENDPOINT: GET /blocks?from-block=X&to-block=Y
+ *
+ * PURPOSE: Retrieve an array of full signed blocks within a range.
+ *          Useful for batch processing or syncing.
+ *
+ * PARAMETERS:
+ *   from-block (query) - Start of block range [REQUIRED]
+ *                        Accepts block number or timestamp (created_at >= timestamp)
+ *   to-block (query) - End of block range [REQUIRED]
+ *                      Accepts block number or timestamp (created_at <= timestamp)
+ *
+ * RETURNS: Array of full block objects, may be shorter than requested if
+ *          range extends past current head block.
+ *
+ * CACHING:
+ *   - 1 year cache if all blocks in range are irreversible
+ *   - 2 second cache if range includes any reversible blocks
+ *
+ * DELEGATES TO: hafah_backend.get_block_range()
+ */
 SET ROLE hafah_owner;
 
 /** openapi:components:schemas

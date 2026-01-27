@@ -1,3 +1,19 @@
+/*
+ * get_version: REST endpoint for API version information.
+ *
+ * ENDPOINT: GET /version
+ *
+ * PURPOSE: Returns HAfAH version info including app name and git commit hash.
+ *          Used for version identification and deployment verification.
+ *
+ * RETURNS:
+ *   - app_name: "PostgRESTHAfAH"
+ *   - commit: Git commit hash from hafah_backend.version table
+ *
+ * CACHING: 2 second cache (always short since version may change on redeploy)
+ *
+ * NOTE: Also defines hafah_backend.version_type composite type used for the response.
+ */
 SET ROLE hafah_owner;
 
 

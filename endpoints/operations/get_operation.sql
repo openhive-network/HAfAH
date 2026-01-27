@@ -1,3 +1,30 @@
+/*
+ * get_operation: REST endpoint for single operation lookup by ID.
+ *
+ * ENDPOINT: GET /operations/{operation-id}
+ *
+ * PURPOSE: Retrieve a single operation's full details by its unique ID.
+ *
+ * PARAMETERS:
+ *   operation-id (path) - 64-bit operation identifier [REQUIRED]
+ *                         Encodes block_num (32 bits) + op_pos (24 bits) + type (8 bits)
+ *
+ * OPERATION ID ENCODING:
+ *   msb.....................lsb
+ *    || block | op_pos | type ||
+ *    ||  32b  |  24b   |  8b  ||
+ *
+ * RETURNS: Operation details including:
+ *   - op (operation body with type and value)
+ *   - block, trx_id, op_pos, op_type_id, timestamp
+ *   - virtual_op (boolean), operation_id, trx_in_block
+ *
+ * CACHING:
+ *   - 1 year cache if operation is in an irreversible block
+ *   - 2 second cache if operation is in a reversible block
+ *
+ * DELEGATES TO: hafah_backend.get_operation()
+ */
 SET ROLE hafah_owner;
 
 /** openapi:paths

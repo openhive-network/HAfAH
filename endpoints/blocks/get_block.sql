@@ -1,3 +1,23 @@
+/*
+ * get_block: REST endpoint for retrieving a full signed block.
+ *
+ * ENDPOINT: GET /blocks/{block-num}
+ *
+ * PURPOSE: Retrieve complete block data including transactions and operations.
+ *
+ * PARAMETERS:
+ *   block-num (path) - Block number or timestamp [REQUIRED]
+ *                      Timestamps auto-convert to block num (created_at <= timestamp)
+ *   include-virtual (query) - Include virtual operations (default: FALSE)
+ *
+ * CACHING:
+ *   - 1 year cache (31536000s) if block is irreversible
+ *   - 2 second cache if block is reversible
+ *
+ * ERROR HANDLING: Raises error if block number exceeds head block.
+ *
+ * DELEGATES TO: hafah_backend.get_block()
+ */
 SET ROLE hafah_owner;
 
 /** openapi:paths

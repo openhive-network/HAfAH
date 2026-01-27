@@ -1,3 +1,26 @@
+/*
+ * get_trade_history: REST endpoint for historical market trades in a block range.
+ *
+ * ENDPOINT: GET /market-history/trade-history
+ *
+ * PURPOSE: Returns fill_order operations from the HBD:HIVE internal market
+ *          within a specified block/time range.
+ *
+ * PARAMETERS:
+ *   from-block (query) - Start of range [REQUIRED]
+ *                        Accepts block number or timestamp (created_at >= timestamp)
+ *   to-block (query) - End of range [REQUIRED]
+ *                      Accepts block number or timestamp (created_at <= timestamp)
+ *   result-limit (query) - Maximum trades to return [REQUIRED]
+ *
+ * RETURNS: Array of fill_order operations within the specified range.
+ *
+ * CACHING:
+ *   - 1 year cache if all data in range is irreversible
+ *   - 2 second cache if range includes reversible blocks
+ *
+ * DELEGATES TO: hafah_backend.trade_history()
+ */
 SET ROLE hafah_owner;
 
 /** openapi:paths

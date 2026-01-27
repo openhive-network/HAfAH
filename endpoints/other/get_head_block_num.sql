@@ -1,3 +1,17 @@
+/*
+ * get_head_block_num: REST endpoint for current head block number.
+ *
+ * ENDPOINT: GET /headblock
+ *
+ * PURPOSE: Returns the most recent block number synced to the HAF database.
+ *          Useful for clients to determine sync status and data freshness.
+ *
+ * RETURNS: Integer block number (e.g., 5000000)
+ *
+ * CACHING: 2 second cache (value changes frequently as blockchain advances)
+ *
+ * DATA SOURCE: hive.blocks_view (HAF base table)
+ */
 SET ROLE hafah_owner;
 
 /** openapi:paths

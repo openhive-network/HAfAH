@@ -1,3 +1,20 @@
+/*
+ * get_recent_trades: REST endpoint for recent internal market trades.
+ *
+ * ENDPOINT: GET /market-history/recent-trades
+ *
+ * PURPOSE: Returns the most recent fill_order operations from the HBD:HIVE
+ *          internal market. Useful for price discovery and market analysis.
+ *
+ * PARAMETERS:
+ *   result-limit (query) - Maximum number of trades to return [REQUIRED]
+ *
+ * RETURNS: Array of fill_order operations with trade details.
+ *
+ * DATA SOURCE: Queries fill_order_operation (op_type_id = 17) from operations.
+ *
+ * DELEGATES TO: hafah_backend.recent_trades()
+ */
 SET ROLE hafah_owner;
 
 /** openapi:paths
