@@ -1,5 +1,27 @@
 SET ROLE hafah_owner;
 
+/*
+ * block.sql: REST API backend for single block retrieval.
+ *
+ * Called by: hafah_endpoints.get_block() in endpoints/blocks/get_block.sql
+ *
+ * REST Endpoints:
+ *   - GET /blocks/{block-num}
+ *   - GET /blocks/{block-num}/raw (global state)
+ */
+
+/*
+ * ===================================================================================
+ * get_block
+ * ===================================================================================
+ * PURPOSE: Retrieve full block data including transactions and operations.
+ *
+ * PARAMETERS:
+ *   _block_num       - Block number to retrieve
+ *   _include_virtual - Whether to include virtual operations (default FALSE)
+ *
+ * RETURNS: Block data with transactions, operations, and metadata
+ */
 CREATE OR REPLACE FUNCTION hafah_backend.get_block(_block_num INT,  _include_virtual BOOLEAN = FALSE)
     RETURNS hafah_backend.block_range
     LANGUAGE plpgsql
@@ -32,6 +54,18 @@ END;
 $BODY$
 ;
 
+/*
+ * ===================================================================================
+ * get_global_state
+ * ===================================================================================
+ * PURPOSE: Retrieve block data with global blockchain state at that block.
+ *          Includes economic data like vesting fund, supply, and HBD interest rate.
+ *
+ * PARAMETERS:
+ *   _block_num - Block number to retrieve state for
+ *
+ * RETURNS: Block with global state data
+ */
 CREATE OR REPLACE FUNCTION hafah_backend.get_global_state(_block_num INT)
     RETURNS hafah_backend.block
     LANGUAGE plpgsql
@@ -43,7 +77,7 @@ DECLARE
 BEGIN
   __block_type := (
     SELECT (
-      bv.num,   
+      bv.num,
       encode(bv.hash,'hex'),
       encode(bv.prev,'hex'),
       (SELECT av.name FROM hive.accounts_view av WHERE av.id = bv.producer_account_id)::TEXT,

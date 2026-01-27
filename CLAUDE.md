@@ -15,10 +15,17 @@ HAfAH (HAF Account History) is a read-only HAF (Hive Application Framework) appl
   - `builtin_roles.sql` - Database role definitions (hafah_owner, hafah_user)
   - `hafah_app.sql` - Schema creation, version table, helper views
 - `backend/` - SQL implementation functions
-  - `common/` - Shared utilities (json_utils, bit_operations, validation)
-    - `utilities/` - REST-specific helpers (exceptions, validators, paging)
-  - `rest/` - REST API backend functions (account_history, blocks, operations, market_history)
-  - `jsonrpc/` - JSON-RPC API functions (argument_parsing, ops_in_block, transaction, virtual_ops, account_history, json_formatters)
+  - `utilities/` - Shared utilities for both APIs (json_utils, bit_operations, validators, exceptions, paging, etc.)
+  - `jsonrpc/` - JSON-RPC 2.0 API backend
+    - `argument_parsing.sql` - Request parsing and error handling
+    - `formatters/` - Response JSON formatters (transaction, account_history, ops_in_block, virtual_ops)
+    - `methods/` - Method implementations (ops_in_block, transaction, virtual_ops, account_history)
+  - `rest/` - REST API backend
+    - `helpers/` - Shared REST helpers (function_helpers)
+    - `account_history/` - Account operations with filtering router
+    - `blocks/` - Block data retrieval
+    - `operations/` - Operation queries
+    - `market_history/` - Market trade history
 - `endpoints/` - PostgREST-exposed API functions
   - `endpoint_schema.sql` - OpenAPI schema definition
   - `dispatcher.sql` - JSON-RPC router (home function)
@@ -151,38 +158,42 @@ SQL files are executed in specific order by `scripts/install_app.sh`:
 1. **Database setup** (`db/`)
    - `db/builtin_roles.sql` - Create hafah_owner and hafah_user roles
    - `db/hafah_app.sql` - Create schemas, version table, helper views
-   - `endpoints/endpoint_schema.sql` - OpenAPI schema
 
-2. **Backend: Common utilities** (`backend/`)
-   - `backend/jsonrpc/argument_parsing.sql` - JSON-RPC argument parsing
-   - `backend/common/json_utils.sql` - JSON helper functions
-   - `backend/common/bit_operations.sql` - Bit manipulation for filters
-   - `backend/common/validation.sql` - Input validation
+2. **OpenAPI schema**
+   - `endpoints/endpoint_schema.sql` - OpenAPI schema definition
 
-3. **Backend: JSON-RPC functions** (`backend/jsonrpc/`)
-   - ops_in_block, transaction, virtual_ops, account_history, json_formatters
+3. **Endpoint types** (`endpoints/types/`)
+   - sort_direction, participation_mode, op_types, operation, block, transaction, fill_order
 
-4. **Endpoint types** (`endpoints/types/`)
-   - op_types, operation, sort_direction, block, transaction, fill_order, participation_mode
+4. **Shared utilities** (`backend/utilities/`)
+   - json_utils, bit_operations, validators, exceptions, account, operation_types, paging, path_filters, operation_body_filter
 
-5. **Backend: REST utilities** (`backend/common/utilities/`)
-   - exceptions, validators, account, get_operation_types, paging, path_filters, operation_body_filter, function_helpers
+5. **JSON-RPC backend** (`backend/jsonrpc/`)
+   - `argument_parsing.sql` - Request parsing and error handling
+   - `formatters/` - transaction, account_history, ops_in_block, virtual_ops
+   - `methods/` - ops_in_block, transaction, virtual_ops, account_history
 
-6. **Backend: REST implementations** (`backend/rest/`)
-   - account_history/, market_history/, blocks/, operations/
+6. **REST backend helpers**
+   - `backend/rest/helpers/function_helpers.sql`
 
-7. **JSON-RPC dispatcher**
+7. **REST backend implementations** (`backend/rest/`)
+   - `blocks/` - block, block_header, block_range
+   - `operations/` - operation, ops_in_block, op_types, acc_op_types
+   - `market_history/` - recent_trades, trade_history
+   - `account_history/` - default, by_operations, include_account, including_accounts, exclude_account, excluding_accounts, router
+
+8. **JSON-RPC dispatcher**
    - `endpoints/dispatcher.sql` - Main router (home function)
    - `scripts/set_version_in_sql.pgsql` - Version injection
 
-8. **REST endpoints** (`endpoints/`)
-   - blocks/, transactions/, accounts/, operations/, operation_types/, other/, market_history/
+9. **REST endpoints** (`endpoints/`)
+   - blocks/, transactions/, accounts/, operations/, operation_types/, market_history/, other/
 
-9. **Permissions** (inline in install_app.sh)
-   - GRANT USAGE on schemas to hafah_user
-   - GRANT SELECT on tables to hafah_user
-   - GRANT EXECUTE on functions to hafah_user
-   - Create is_setup_completed() function
+10. **Permissions** (inline in install_app.sh)
+    - GRANT USAGE on schemas to hafah_user
+    - GRANT SELECT on tables to hafah_user
+    - GRANT EXECUTE on functions to hafah_user
+    - Create is_setup_completed() function
 
 ## Development Notes
 

@@ -1,5 +1,31 @@
 SET ROLE hafah_owner;
 
+/*
+ * block_range.sql: REST API backend for block range retrieval.
+ *
+ * Called by: hafah_endpoints.get_blocks() in endpoints/blocks/get_blocks.sql
+ *
+ * REST Endpoint: GET /blocks?from-block={n}&to-block={m}
+ */
+
+/*
+ * ===================================================================================
+ * get_raw_block_range
+ * ===================================================================================
+ * PURPOSE: Internal helper to retrieve raw block data for a range of blocks.
+ *          Performs validation and calls HAF's get_block_from_views.
+ *
+ * PARAMETERS:
+ *   _block_num     - Starting block number
+ *   _end_block_num - Ending block number (inclusive)
+ *
+ * RETURNS: Set of raw block data from HAF
+ *
+ * CONSTRAINTS:
+ *   - Starting block must be > 0
+ *   - Range must be positive
+ *   - Maximum 1000 blocks per request
+ */
 CREATE OR REPLACE FUNCTION hafah_backend.get_raw_block_range( _block_num INT, _end_block_num INT)
     RETURNS SETOF hive.block_type
     LANGUAGE plpgsql
@@ -24,7 +50,19 @@ END;
 $BODY$
 ;
 
-
+/*
+ * ===================================================================================
+ * get_block_range
+ * ===================================================================================
+ * PURPOSE: Retrieve multiple blocks in a range with formatted output.
+ *          Filters out blocks with NULL timestamps (non-existent blocks).
+ *
+ * PARAMETERS:
+ *   _block_num     - Starting block number
+ *   _end_block_num - Ending block number (inclusive)
+ *
+ * RETURNS: Set of formatted block data
+ */
 CREATE OR REPLACE FUNCTION hafah_backend.get_block_range(_block_num INT, _end_block_num INT)
     RETURNS SETOF hafah_backend.block_range
     LANGUAGE plpgsql

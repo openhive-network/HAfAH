@@ -63,8 +63,8 @@ BEGIN
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
 
   RETURN (
-    'PostgRESTHAfAH', 
-    (SELECT * FROM hafah_backend.get_version())
+    'PostgRESTHAfAH',
+    (SELECT git_hash FROM hafah_backend.version LIMIT 1)
   )::hafah_backend.version_type;
 END;
 $$

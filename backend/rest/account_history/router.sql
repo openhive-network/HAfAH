@@ -1,5 +1,44 @@
 SET ROLE hafah_owner;
 
+/*
+ * router.sql: Account history request router.
+ *
+ * Routes account history requests to appropriate filtering function based on
+ * participation_mode and filter parameters.
+ *
+ * Called by: hafah_endpoints.get_account_operations() in endpoints/accounts/get_account_operations.sql
+ *
+ * REST Endpoint: GET /accounts/{account-name}/operations
+ *
+ * Routing Logic:
+ *   - No filters            → account_history_default()
+ *   - Operations only       → account_history_by_operations()
+ *   - Include single acct   → account_history_include_account()
+ *   - Include multi accts   → account_history_including_accounts()
+ *   - Exclude single acct   → account_history_exclude_account()
+ *   - Exclude multi accts   → account_history_excluding_accounts()
+ */
+
+/*
+ * ===================================================================================
+ * get_ops_by_account
+ * ===================================================================================
+ * PURPOSE: Main entry point for account history queries. Routes to specific
+ *          implementation based on filtering parameters.
+ *
+ * PARAMETERS:
+ *   _account_id         - Account ID to get operations for
+ *   _filter_account_ids - Array of account IDs to filter by (NULL array means no filter)
+ *   _operations         - Array of operation type IDs to filter by (NULL means no filter)
+ *   _from_block         - Starting block number
+ *   _to_block           - Ending block number
+ *   _page               - Page number for pagination
+ *   _body_limit         - Maximum size for operation body (-1 for unlimited)
+ *   _limit              - Number of results per page
+ *   _participation_mode - Filter mode: 'all', 'include', or 'exclude'
+ *
+ * RETURNS: Account operation history with pagination info
+ */
 CREATE OR REPLACE FUNCTION hafah_backend.get_ops_by_account(
     _account_id INT,
     _filter_account_ids INT [],
@@ -15,7 +54,7 @@ RETURNS hafah_backend.account_operation_history -- noqa: LT01, CP05
 LANGUAGE 'plpgsql' STABLE
 AS
 $$
-DECLARE 
+DECLARE
   _result hafah_backend.account_operation_history;
 
   -- flags

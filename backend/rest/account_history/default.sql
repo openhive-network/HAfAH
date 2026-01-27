@@ -1,5 +1,30 @@
 SET ROLE hafah_owner;
 
+/*
+ * default.sql: Default account history filtering (no filters).
+ *
+ * Called by: hafah_backend.get_ops_by_account() in backend/rest/account_history/router.sql
+ *
+ * Used when: No operation filters and participation_mode is 'all' or no account filter
+ */
+
+/*
+ * ===================================================================================
+ * account_history_default
+ * ===================================================================================
+ * PURPOSE: Retrieve account operations without any filtering. Returns all operations
+ *          for the specified account within the given block range.
+ *
+ * PARAMETERS:
+ *   _account_id - Account ID to get operations for
+ *   _from_block - Starting block number
+ *   _to_block   - Ending block number
+ *   _page       - Page number for pagination
+ *   _body_limit - Maximum size for operation body (-1 for unlimited)
+ *   _limit      - Number of results per page
+ *
+ * RETURNS: Account operation history with pagination info
+ */
 CREATE OR REPLACE FUNCTION hafah_backend.account_history_default(
     _account_id INT,
     _from_block INT,
@@ -16,7 +41,7 @@ SET join_collapse_limit = 16
 SET from_collapse_limit = 16
 AS
 $$
-DECLARE 
+DECLARE
   _result hafah_backend.operation[];
   _account_range hafah_backend.account_filter_return;
   _calculate_pages hafah_backend.calculate_pages_return;
@@ -55,9 +80,9 @@ BEGIN
     JOIN hafd.operation_types hot ON hot.id = ls.op_type_id
     LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ov.trx_in_block
   ),
-  -- filter too long operation bodies 
+  -- filter too long operation bodies
   result_query AS (
-    SELECT 
+    SELECT
       (filtered_operations.composite).body,
       filtered_operations.block_num,
       filtered_operations.trx_hash,
@@ -69,7 +94,7 @@ BEGIN
       filtered_operations.trx_in_block::SMALLINT
     FROM (
       SELECT hafah_backend.operation_body_filter(ov.body, ov.id, _body_limit) as composite, ov.id, ov.block_num, ov.trx_in_block, ov.trx_hash, ov.op_pos, ov.op_type_id, ov.is_virtual, hb.created_at
-      FROM operation_range ov 
+      FROM operation_range ov
       JOIN hive.blocks_view hb ON hb.num = ov.block_num
     ) filtered_operations
     ORDER BY filtered_operations.id DESC
@@ -77,7 +102,7 @@ BEGIN
   SELECT array_agg(rows ORDER BY rows.id::BIGINT DESC)
   INTO _result
   FROM (
-    SELECT 
+    SELECT
       s.body,
       s.block_num,
       s.trx_hash,

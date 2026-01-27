@@ -1,9 +1,28 @@
 SET ROLE hafah_owner;
 
+/*
+ * op_types.sql: REST API backend for operation types retrieval.
+ *
+ * Called by: hafah_endpoints.get_operation_types() in endpoints/operation_types/get_operation_types.sql
+ *
+ * REST Endpoint: GET /operation-types
+ */
+
+/*
+ * ===================================================================================
+ * get_op_types
+ * ===================================================================================
+ * PURPOSE: Retrieve list of all operation types or filter by name pattern.
+ *
+ * PARAMETERS:
+ *   _operation_name - Optional LIKE pattern to filter operation names (NULL for all)
+ *
+ * RETURNS: Set of operation types with ID, name, and virtual flag
+ */
 CREATE OR REPLACE FUNCTION hafah_backend.get_op_types(
     _operation_name TEXT
 )
-RETURNS SETOF hafah_backend.op_types 
+RETURNS SETOF hafah_backend.op_types
 LANGUAGE 'plpgsql' STABLE
 AS
 $$
