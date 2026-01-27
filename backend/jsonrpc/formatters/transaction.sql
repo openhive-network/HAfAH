@@ -68,12 +68,36 @@ BEGIN
   END IF;
 
   RETURN (
+    /*
+     * JSON RESPONSE STRUCTURE:
+     *   {
+     *     "ref_block_num": INT,      -- TaPoS reference block
+     *     "ref_block_prefix": BIGINT, -- TaPoS block ID prefix
+     *     "extensions": [],          -- Protocol extensions (always empty for now)
+     *     "expiration": "YYYY-MM-DDTHH:MM:SS", -- ISO 8601 timestamp
+     *     "operations": [...],       -- Array of operations in this transaction
+     *     "signatures": [...],       -- Array of hex-encoded signatures
+     *     "transaction_id": "...",   -- 40-char hex hash
+     *     "block_num": INT,          -- Block containing this transaction
+     *     "transaction_num": INT     -- Index within block (0-based)
+     *   }
+     */
     SELECT to_json(a)
     FROM (
       SELECT
         __pre_result._ref_block_num    AS "ref_block_num",
         __pre_result._ref_block_prefix AS "ref_block_prefix",
+        /*
+         * EXTENSIONS FIELD:
+         *   Protocol extensions array - currently always empty.
+         *   Reserved for future protocol changes.
+         */
         ARRAY[]::INT[]                 AS "extensions",
+        /*
+         * TIMESTAMP FORMAT:
+         *   Already in ISO 8601 format from get_transaction().
+         *   Example: "2024-01-15T12:30:45"
+         */
         __pre_result._expiration       AS "expiration",
         /*
          * Operations Array:
@@ -91,22 +115,34 @@ BEGIN
           )
         ) AS "operations",
         /*
-         * Signatures Handling:
-         *   - No multisig (0) with signature: single-element array
-         *   - No multisig (0) without signature: empty array
-         *   - Multisig: prepend main signature to additional signatures
+         * SIGNATURES ARRAY:
+         *   Hive supports multi-signature transactions for enhanced security.
+         *   Signatures are 65-byte (520-bit) binary values encoded as 130-char hex strings.
+         *
+         *   Cases:
+         *   1. Single signature (most common): [primary_signature]
+         *   2. No signature (rare, system transactions): []
+         *   3. Multisig: [primary, additional_1, additional_2, ...]
+         *
+         *   WHY array_prepend: Primary signature from transactions_view comes first,
+         *   additional signatures from transactions_multisig_view follow.
          */
         (
           CASE
             WHEN __pre_result._multisig_number = 0 AND __pre_result._signature IS NOT NULL
-              THEN ARRAY[__pre_result._signature]
+              THEN ARRAY[__pre_result._signature]  -- Common case: single signer
             WHEN __pre_result._multisig_number = 0 AND __pre_result._signature IS NULL
-              THEN '{}'
+              THEN '{}'  -- Edge case: unsigned system transaction
             ELSE (
               array_prepend(
                 __pre_result._signature,
                 (
                   SELECT ARRAY(
+                    /*
+                     * BINARY TO HEX ENCODING:
+                     *   encode(signature, 'hex') converts 65-byte binary to 130-char hex.
+                     *   JSON cannot represent binary, so hex string is standard encoding.
+                     */
                     SELECT encode(signature, 'hex')
                     FROM hive.transactions_multisig_view
                     WHERE trx_hash = _trx_hash
@@ -116,6 +152,14 @@ BEGIN
             )
           END
         ) AS "signatures",
+        /*
+         * TRANSACTION ID (BINARY TO HEX):
+         *   Transaction hash is 20 bytes (160 bits) stored as BYTEA.
+         *   encode(..., 'hex') produces 40-character lowercase hex string.
+         *
+         *   WHY hex: JSON cannot represent binary data. Hex is human-readable
+         *   and matches the format used by Hive nodes and block explorers.
+         */
         encode(_trx_hash, 'hex')       AS "transaction_id",
         __pre_result._block_num        AS "block_num",
         __pre_result._trx_in_block     AS "transaction_num"

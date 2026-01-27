@@ -8,6 +8,22 @@ SET ROLE hafah_owner;
  * JSON-RPC Method: account_history_api.get_account_history
  *
  * Returns operation history for a specific account with filtering and pagination.
+ *
+ * 128-BIT OPERATION TYPE FILTER:
+ *   Hive uses a 128-bit bitmask to filter operation types. Each bit position
+ *   corresponds to an operation type ID. The filter is split into two 64-bit
+ *   parts for JSON transmission:
+ *
+ *     _filter_low:  Bits 0-63  (operation types 0-63)
+ *     _filter_high: Bits 64-127 (operation types 64-127)
+ *
+ *   Example: To filter for vote_operation (type 0) and comment_operation (type 1):
+ *     _filter_low = 3 (binary: 11), _filter_high = 0
+ *
+ *   NULL filter means "all types". Zero filter means "no types" (empty result).
+ *
+ *   The translate_get_account_history_filter() function converts this bitmask
+ *   to an array of operation type IDs for use in SQL queries.
  */
 
 /*
@@ -64,23 +80,31 @@ SET from_collapse_limit = 16
 SET plan_cache_mode = force_generic_plan
 AS $$
 DECLARE
-  __resolved_filter   SMALLINT[];
-  __account_id        INT;
-  __upper_block_limit INT;
-  __use_filter        INT;
+  __resolved_filter   SMALLINT[];  -- Array of operation type IDs from bitmask
+  __account_id        INT;         -- Resolved numeric account ID
+  __upper_block_limit INT;         -- Block limit based on reversibility
+  __use_filter        INT;         -- NULL if no filter, length otherwise
 BEGIN
   /*
-   * Input Validation
+   * INPUT VALIDATION:
+   *   - Limit must be <= 1000 (API maximum)
+   *   - Start must be >= limit-1 (ensures valid window)
    */
   PERFORM hafah_backend.validate_limit(_limit, 1000);
   PERFORM hafah_backend.validate_start_limit(_start, _limit);
 
   /*
-   * Empty Filter Check:
-   *   If both filter parts are 0, no types selected - return empty
+   * EMPTY FILTER CHECK:
+   *   128-bit filter split into low/high 64-bit parts:
+   *   - NULL + NULL = all types (no filtering)
+   *   - 0 + 0 = no types (return empty result)
+   *   - Any non-zero = specific types
+   *
+   * WHY COALESCE: Handle NULL values in addition (NULL + 0 = NULL, not 0)
    */
   IF (NOT (_filter_low IS NULL AND _filter_high IS NULL))
      AND COALESCE(_filter_low, 0) + COALESCE(_filter_high, 0) = 0 THEN
+    -- WHY: Zero filter explicitly means "no operations" - fast exit
     RETURN QUERY SELECT
       NULL::TEXT,
       NULL::INT,
@@ -95,15 +119,22 @@ BEGIN
   END IF;
 
   /*
-   * Translate filter bitmask to array of operation type IDs
+   * BITMASK TO TYPE ID TRANSLATION:
+   *   Convert 128-bit bitmask to array of SMALLINT operation type IDs.
+   *   Example: filter_low=5 (binary 101) → [0, 2] (types at bit positions 0 and 2)
+   *
+   *   See: backend/utilities/bit_operations.sql for implementation
    */
   SELECT hafah_backend.translate_get_account_history_filter(_filter_low, _filter_high)
   INTO __resolved_filter;
 
   /*
-   * Determine Upper Block Limit:
-   *   - Reversible: use latest block
-   *   - Irreversible only: use last irreversible block
+   * REVERSIBILITY HANDLING:
+   *   Hive has "reversible" blocks that may be reorganized.
+   *   irreversible_block = last confirmed block that won't change.
+   *
+   *   - include_reversible=TRUE: Return ops up to latest block (may change)
+   *   - include_reversible=FALSE: Only return ops in finalized blocks
    */
   IF _include_reversible THEN
     SELECT num FROM hive.blocks_view ORDER BY num DESC LIMIT 1 INTO __upper_block_limit;
@@ -112,9 +143,13 @@ BEGIN
   END IF;
 
   /*
-   * Resolve Account ID:
-   *   - Reversible: use accounts_view (includes reversible)
-   *   - Irreversible: use hafd.accounts (base table)
+   * ACCOUNT NAME TO ID RESOLUTION:
+   *   Account operations are indexed by numeric ID, not name.
+   *   Resolution source depends on reversibility:
+   *   - accounts_view: Includes accounts from reversible blocks
+   *   - hafd.accounts: Only finalized accounts
+   *
+   * TIMING: Resolved once here, not in the query, for efficiency.
    */
   IF _include_reversible THEN
     SELECT INTO __account_id (SELECT id FROM hive.accounts_view WHERE name = _account);
@@ -122,14 +157,25 @@ BEGIN
     SELECT INTO __account_id (SELECT id FROM hafd.accounts WHERE name = _account);
   END IF;
 
+  -- WHY: NULL means no filter (all types), non-NULL means filtered query
   __use_filter := array_length(__resolved_filter, 1);
 
   RETURN QUERY
+    /*
+     * ===================================================================================
+     * MAIN QUERY: Account History Retrieval
+     * ===================================================================================
+     * PERFORMANCE: Uses UNION ALL pattern for filtered/unfiltered query optimization.
+     *              PostgreSQL can optimize each branch independently based on __use_filter.
+     */
     WITH pre_result AS (
       SELECT
         /*
-         * Transaction ID:
-         *   Virtual ops have negative trx_in_block, use placeholder
+         * TRANSACTION ID:
+         *   - Regular ops: 40-char hex hash from transactions_view
+         *   - Virtual ops: Use placeholder (40 zeros)
+         *
+         * NOTE: trx_in_block < 0 indicates a virtual operation (no real transaction)
          */
         (
           CASE
@@ -148,15 +194,25 @@ BEGIN
           END
         ) AS _trx_id,
         ds.block_num AS _block,
+        /*
+         * TRANSACTION IN BLOCK:
+         *   - Regular ops: 0-based index within block
+         *   - Virtual ops: 4294967295 (max uint32, signals "no transaction")
+         */
         (
           CASE
             WHEN ho.trx_in_block < 0
-              THEN 4294967295
+              THEN 4294967295  -- WHY: Max uint32 = "no transaction" marker
             ELSE ho.trx_in_block
           END
         ) AS _trx_in_block,
         ho.op_pos::BIGINT AS _op_in_trx,
         hot.is_virtual AS virtual_op,
+        /*
+         * OPERATION BODY FORMAT:
+         *   - Legacy: Old format with type as string key {"vote": {...}}
+         *   - New: Structured format {"type": "vote_operation", "value": {...}}
+         */
         (
           CASE
             WHEN _is_legacy_style
@@ -167,9 +223,14 @@ BEGIN
         ds.account_op_seq_no AS _operation_id
       FROM (
         /*
-         * Query Strategy:
-         *   Use UNION ALL to handle filtered vs unfiltered queries separately
-         *   This allows better query plan optimization
+         * UNION ALL QUERY OPTIMIZATION PATTERN:
+         *   Why not a single query with OR condition?
+         *   - PostgreSQL optimizes each UNION branch independently
+         *   - Filtered query uses index on (account_id, op_type_id, account_op_seq_no)
+         *   - Unfiltered query uses index on (account_id, account_op_seq_no)
+         *   - Single query with OR would scan both paths inefficiently
+         *
+         * WHY MATERIALIZED: accepted_types CTE prevents repeated evaluation
          */
         WITH accepted_types AS MATERIALIZED (
           SELECT ot.id
@@ -178,7 +239,9 @@ BEGIN
             AND ot.id = ANY(__resolved_filter)
         )
         /*
-         * Branch 1: With operation type filter
+         * BRANCH 1: WITH FILTER
+         *   Activated when __use_filter IS NOT NULL (specific operation types requested)
+         *   JOIN on accepted_types filters to only requested operation types
          */
         (
           SELECT hao.operation_id, hao.op_type_id, hao.block_num, hao.account_op_seq_no
@@ -186,14 +249,16 @@ BEGIN
           JOIN accepted_types t ON hao.op_type_id = t.id
           WHERE __use_filter IS NOT NULL
             AND hao.account_id = __account_id
-            AND hao.account_op_seq_no <= _start
+            AND hao.account_op_seq_no <= _start  -- WHY: Descending from start
             AND hao.block_num <= __upper_block_limit
-          ORDER BY hao.account_op_seq_no DESC
+          ORDER BY hao.account_op_seq_no DESC  -- WHY: Most recent first
           LIMIT _limit
         )
         UNION ALL
         /*
-         * Branch 2: Without operation type filter (all types)
+         * BRANCH 2: WITHOUT FILTER (all operation types)
+         *   Activated when __use_filter IS NULL (no filter or NULL filter)
+         *   Simpler query without JOIN, uses different index
          */
         (
           SELECT hao.operation_id, hao.op_type_id, hao.block_num, hao.account_op_seq_no
@@ -206,17 +271,24 @@ BEGIN
           LIMIT _limit
         )
       ) ds
+      /*
+       * LATERAL JOINS:
+       *   Fetch operation details for each matched account_operation.
+       *   LATERAL allows correlated subqueries in FROM clause.
+       */
       JOIN LATERAL (
+        -- WHY LATERAL: Efficiently fetch operation body by ID from main operations table
         SELECT hov.body, hov.body_binary, hov.op_pos, hov.trx_in_block
         FROM hive.operations_view hov
         WHERE ds.operation_id = hov.id
       ) ho ON TRUE
       JOIN LATERAL (
+        -- WHY: Determine if operation is virtual (affects trx_id and trx_in_block display)
         SELECT ot.is_virtual
         FROM hafd.operation_types ot
         WHERE ds.op_type_id = ot.id
       ) hot ON TRUE
-      ORDER BY ds.account_op_seq_no ASC
+      ORDER BY ds.account_op_seq_no ASC  -- WHY: Final result ordered ascending (oldest first in array)
     )
     SELECT
       pre_result._trx_id,
@@ -224,12 +296,17 @@ BEGIN
       pre_result._trx_in_block,
       pre_result._op_in_trx,
       pre_result.virtual_op,
+      /*
+       * TIMESTAMP FORMATTING:
+       *   Block timestamp in ISO 8601 format without quotes.
+       *   btrim removes quotes added by to_json().
+       */
       btrim(to_json(hb.created_at)::TEXT, '"'::TEXT) AS formated_timestamp,
       pre_result._value,
       pre_result._operation_id
     FROM pre_result
-    JOIN hive.blocks_view hb ON hb.num = pre_result._block
-    ORDER BY pre_result._operation_id ASC;
+    JOIN hive.blocks_view hb ON hb.num = pre_result._block  -- WHY: Get block timestamp
+    ORDER BY pre_result._operation_id ASC;  -- WHY: Return in ascending sequence order
 END
 $$;
 

@@ -52,34 +52,71 @@ LANGUAGE 'plpgsql' STABLE
 AS $$
 BEGIN
   RETURN (
+    /*
+     * RESPONSE STRUCTURE:
+     *
+     * Legacy (condenser_api.*):
+     *   [[seq, {block, op, op_in_trx, timestamp, trx_id, trx_in_block, virtual_op}], ...]
+     *
+     * New (account_history_api.*):
+     *   {
+     *     "history": [[seq, {block, op, op_in_trx, timestamp, trx_id, trx_in_block, virtual_op, operation_id}], ...]
+     *   }
+     *
+     * Each entry is a tuple: [operation_sequence_number, operation_object]
+     * The sequence number is per-account (not global), assigned incrementally.
+     */
     WITH result AS (
       SELECT ARRAY(
         SELECT json_build_array(
+          /*
+           * OPERATION SEQUENCE NUMBER:
+           *   Per-account operation index (not global operation ID).
+           *   Used for pagination: start parameter references this value.
+           */
           ops.operation_id,
           /*
-           * Operation Object Formatting:
-           *   - Legacy style: Remove operation_id from inner object
-           *   - New style: Set operation_id to 0 (kept for API compatibility)
+           * OPERATION OBJECT FORMATTING (Legacy vs New Style):
+           *
+           * Legacy (condenser_api.*):
+           *   - Remove operation_id field from inner object
+           *   - Pattern: to_jsonb(record) - 'field_name' removes the field
+           *   - WHY: Old API didn't include operation_id in the inner object
+           *
+           * New (account_history_api.*):
+           *   - Keep operation_id but set to 0 (placeholder value)
+           *   - Pattern: jsonb_set(obj, path[], value, create_missing=false)
+           *   - WHY: Operation ID in inner object is deprecated, but kept for
+           *          backwards compatibility; actual value is in the tuple
            */
           (
             CASE
               WHEN _is_legacy_style
-                THEN to_jsonb(ops) - 'operation_id'
+                THEN to_jsonb(ops) - 'operation_id'  -- JSONB key removal pattern
               ELSE jsonb_set(to_jsonb(ops), ARRAY['operation_id']::TEXT[], '0'::JSONB, FALSE)
             END
           )
         )
         FROM (
           SELECT
-            _block        AS "block",
-            _value::JSON  AS "op",
-            _op_in_trx    AS "op_in_trx",
-            _timestamp    AS "timestamp",
-            _trx_id       AS "trx_id",
-            _trx_in_block AS "trx_in_block",
-            _virtual_op   AS "virtual_op",
-            _operation_id AS "operation_id"
+            _block        AS "block",         -- Block number containing this operation
+            _value::JSON  AS "op",            -- Operation body (already formatted)
+            _op_in_trx    AS "op_in_trx",     -- Operation index within transaction
+            _timestamp    AS "timestamp",     -- ISO 8601 block timestamp
+            _trx_id       AS "trx_id",        -- 40-char hex transaction hash
+            _trx_in_block AS "trx_in_block",  -- Transaction index in block
+            _virtual_op   AS "virtual_op",    -- TRUE if system-generated
+            _operation_id AS "operation_id"   -- Per-account sequence number
           FROM hafah_backend.ah_get_account_history(
+            /*
+             * TWO'S COMPLEMENT OVERFLOW HANDLING:
+             *   JSON numbers are NUMERIC type which can exceed BIGINT range.
+             *   numeric_to_bigint() handles unsigned 64-bit values that would
+             *   overflow signed BIGINT using two's complement conversion.
+             *
+             *   Example: Filter value 18446744073709551615 (0xFFFFFFFFFFFFFFFF)
+             *   would overflow BIGINT, but represents "all bits set" (all types).
+             */
             hafah_backend.numeric_to_bigint(_filter_low),
             hafah_backend.numeric_to_bigint(_filter_high),
             _account,
@@ -92,16 +129,25 @@ BEGIN
       ) AS a
     )
     /*
-     * Response Wrapper:
-     *   - Legacy: Return array directly
-     *   - New: Wrap in {history: array} object
+     * RESPONSE WRAPPER (Legacy vs New Style):
+     *
+     * Legacy (condenser_api.get_account_history):
+     *   Returns: [[seq, op], [seq, op], ...]
+     *   Direct array, no wrapper object.
+     *
+     * New (account_history_api.get_account_history):
+     *   Returns: {"history": [[seq, op], [seq, op], ...]}
+     *   Wrapped in object with 'history' key.
+     *
+     * WHY json_build_object: Creates {"history": ...} wrapper in one step.
+     * to_json(array) converts PostgreSQL array to JSON array.
      */
     SELECT
     (
       CASE
         WHEN _is_legacy_style
-          THEN to_json(result.a)
-        ELSE json_build_object('history', to_json(result.a))
+          THEN to_json(result.a)  -- Direct array output
+        ELSE json_build_object('history', to_json(result.a))  -- Wrapped in object
       END
     )
     FROM result
