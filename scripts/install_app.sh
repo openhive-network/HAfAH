@@ -71,62 +71,106 @@ else
   POSTGRES_ACCESS=$POSTGRES_URL
 fi
 
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/ah_schema_functions.pgsql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_backend.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/types/op_types.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/types/operation.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/types/sort_direction.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/types/block.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/types/transaction.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/types/fill_order.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/types/participation_mode.sql"
+echo "Installing app..."
 
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/utilities/account.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/utilities/exceptions.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/utilities/validators.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/utilities/get_operation_types.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/utilities/paging.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/utilities/path_filters.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/utilities/operation_body_filter.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/utilities/function_helpers.sql"
+# Create database roles and schemas
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../db/builtin_roles.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../db/hafah_app.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET custom.swagger_url = '$SWAGGER_URL';" -f "$SCRIPTPATH/../endpoints/endpoint_schema.sql"
 
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/account_history/account_history.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/account_history/filtering_functions/by_operations.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/account_history/filtering_functions/default.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/account_history/filtering_functions/excluding_accounts.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/account_history/filtering_functions/including_accounts.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/account_history/filtering_functions/include_account.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/account_history/filtering_functions/exclude_account.sql"
+# Backend: argument parsing and common utilities
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/argument_parsing.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/json_utils.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/bit_operations.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/validation.sql"
 
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/market_history/recent_trades.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/market_history/trade_history.sql"
+# Backend: JSON-RPC functions
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/ops_in_block.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/transaction.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/virtual_ops.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/account_history.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/json_formatters.sql"
 
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/blocks/block_header.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/blocks/block_range.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/blocks/block.sql"
+# Endpoint types
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/op_types.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/operation.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/sort_direction.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/block.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/transaction.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/fill_order.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/types/participation_mode.sql"
 
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/operations/acc_op_types.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/operations/op_types.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/operations/operation.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../queries/hafah_rest_backend/operations/ops_in_block.sql"
+# Backend: REST utilities
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/exceptions.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/validators.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/account.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/get_operation_types.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/paging.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/path_filters.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/operation_body_filter.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/common/utilities/function_helpers.sql"
 
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_endpoints.sql"
+# Backend: REST implementations
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/account_history.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/by_operations.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/default.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/excluding_accounts.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/including_accounts.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/include_account.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/account_history/filtering_functions/exclude_account.sql"
+
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/market_history/recent_trades.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/market_history/trade_history.sql"
+
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/blocks/block_header.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/blocks/block_range.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/blocks/block.sql"
+
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/acc_op_types.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/op_types.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/operation.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/rest/operations/ops_in_block.sql"
+
+# JSON-RPC dispatcher and version
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/dispatcher.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/set_version_in_sql.pgsql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET custom.swagger_url = '$SWAGGER_URL';" -f "$SCRIPTPATH/../postgrest/hafah_REST/hafah_openapi.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/blocks/get_block.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/blocks/get_block_range.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/blocks/get_block_header.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/blocks/get_ops_by_block_paging.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/transactions/get_transaction.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/accounts/get_ops_by_account.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/accounts/get_acc_op_types.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/operations/get_operations.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/operations/get_operation.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/operation_types/get_op_types.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/operation_types/get_operation_keys.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/other/get_version.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/other/get_head_block_num.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/other/get_block.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/market_history/get_recent_trades.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_REST/market_history/get_trade_history.sql"
-psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../postgrest/hafah_roles.sql"
+
+# REST endpoints
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/blocks/get_block.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/blocks/get_block_range.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/blocks/get_block_header.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/blocks/get_ops_by_block_paging.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/transactions/get_transaction.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/accounts/get_ops_by_account.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/accounts/get_acc_op_types.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/operations/get_operations.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/operations/get_operation.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/operation_types/get_op_types.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/operation_types/get_operation_keys.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/other/get_version.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/other/get_head_block_num.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/other/get_block.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/market_history/get_recent_trades.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../endpoints/market_history/get_trade_history.sql"
+
+# Configure permissions
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT USAGE ON SCHEMA hafah_endpoints TO hafah_user;"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT USAGE ON SCHEMA hafah_backend TO hafah_user;"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT SELECT ON ALL TABLES IN SCHEMA hafah_endpoints TO hafah_user;"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT SELECT ON ALL TABLES IN SCHEMA hafah_backend TO hafah_user;"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hafah_backend TO hafah_user;"
+
+# Create is_setup_completed function (must be at the very end)
+# This signals that setup is complete and hafah_user has all required access
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on <<EOF
+SET ROLE hafah_owner;
+CREATE OR REPLACE FUNCTION hafah_backend.is_setup_completed()
+RETURNS BOOLEAN
+IMMUTABLE
+LANGUAGE PLPGSQL
+AS \$\$
+BEGIN
+  RETURN TRUE;
+END
+\$\$;
+EOF
