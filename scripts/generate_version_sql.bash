@@ -15,4 +15,4 @@ GIT_DIR=${2:-"$1/.git"}
 # acquiring hash without git
 GIT_HASH=$(git --git-dir="$GIT_DIR" --work-tree="$GIT_WORK_TREE" rev-parse HEAD)
 
-echo "TRUNCATE TABLE hafah_python.version; INSERT INTO hafah_python.version(git_hash) VALUES ('$GIT_HASH');" > "$PATH_TO_SQL_VERSION_FILE"
+echo "TRUNCATE TABLE hafah_backend.version; INSERT INTO hafah_backend.version(git_hash) VALUES ('$GIT_HASH');" > "$PATH_TO_SQL_VERSION_FILE"
