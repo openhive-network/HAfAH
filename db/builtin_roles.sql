@@ -16,7 +16,7 @@
  * - Read-only role for API access
  * - Used by: PostgREST (API server), read-only queries
  * - Inherits from: hive_applications_group (HAF role for app users)
- * - Has 10-second query timeout to prevent runaway queries
+ * - Has 15-second query timeout to prevent runaway queries
  * - Can only SELECT from tables, cannot modify data
  *
  * Role Hierarchy:
@@ -57,4 +57,5 @@ GRANT hafah_owner TO haf_admin;
 GRANT hafah_user TO hafah_owner;
 
 -- Limit API query execution time to prevent resource exhaustion
-ALTER ROLE hafah_user SET statement_timeout = '10s';
+-- 15s allows for high-concurrency benchmark scenarios while still protecting against runaway queries
+ALTER ROLE hafah_user SET statement_timeout = '15s';
