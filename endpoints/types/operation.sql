@@ -55,6 +55,7 @@ hafah_backend.operation:
         operation identifier that indicates its sequence number in transaction
     op_type_id:
       type: integer
+      x-sql-datatype: SMALLINT
       description: operation type identifier
     timestamp:
       type: string
@@ -81,7 +82,7 @@ CREATE TYPE hafah_backend.operation AS (
     "block" INT,
     "trx_id" TEXT,
     "op_pos" INT,
-    "op_type_id" INT,
+    "op_type_id" SMALLINT,
     "timestamp" TIMESTAMP,
     "virtual_op" BOOLEAN,
     "operation_id" TEXT,

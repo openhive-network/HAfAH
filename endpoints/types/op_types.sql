@@ -6,6 +6,7 @@ hafah_backend.op_types:
   properties:
     op_type_id:
       type: integer
+      x-sql-datatype: SMALLINT
       description: operation type id
     operation_name:
       type: string
@@ -17,7 +18,7 @@ hafah_backend.op_types:
 -- openapi-generated-code-begin
 DROP TYPE IF EXISTS hafah_backend.op_types CASCADE;
 CREATE TYPE hafah_backend.op_types AS (
-    "op_type_id" INT,
+    "op_type_id" SMALLINT,
     "operation_name" TEXT,
     "is_virtual" BOOLEAN
 );

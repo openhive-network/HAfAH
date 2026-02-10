@@ -181,7 +181,7 @@ RETURNS TABLE(
     _trx_id TEXT,
     _trx_in_block BIGINT,
     _op_in_trx BIGINT,
-    _op_type_id INT,
+    _op_type_id SMALLINT,
     _virtual_op BOOLEAN,
     _timestamp TEXT,
     _value TEXT,
@@ -202,7 +202,7 @@ BEGIN
       NULL::TEXT, -- _trx_id
       NULL::BIGINT, -- _trx_in_block
       NULL::BIGINT, -- _op_in_trx
-      NULL::INT, -- _op_type_id
+      NULL::SMALLINT, -- _op_type_id
       NULL::BOOLEAN, -- _virtual_op
       NULL::TEXT, -- _timestamp
       NULL::TEXT, -- _value
@@ -307,7 +307,7 @@ BEGIN
       pre_result._trx_id,
       pre_result._trx_in_block,
       pre_result._op_in_trx,
-      pre_result._op_type_id::INT,
+      pre_result._op_type_id,
       pre_result._virtual_op,
       -- Timestamp from block, formatted without JSON quotes
       trim(both '"' from to_json(hb.created_at)::text) _timestamp,
