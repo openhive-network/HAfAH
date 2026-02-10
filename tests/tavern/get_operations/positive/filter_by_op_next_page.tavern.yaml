@@ -20,7 +20,7 @@
           to-block: "5000000"
           operation-types: "0"
           page-size: 10
-          operation-begin: "21474411278239744"
+          operation-begin: "21474411278237704"
       response:
         status_code: 200
         verify_response_with:

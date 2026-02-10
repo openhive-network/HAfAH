@@ -25,7 +25,7 @@
       "op_type_id": 72,
       "timestamp": "2016-09-15T19:47:15",
       "virtual_op": true,
-      "operation_id": "21474827890065736",
+      "operation_id": "21474827890065409",
       "trx_in_block": 0
     },
     {
@@ -46,7 +46,7 @@
       "op_type_id": 64,
       "timestamp": "2016-09-15T19:47:15",
       "virtual_op": true,
-      "operation_id": "21474827890066240",
+      "operation_id": "21474827890065411",
       "trx_in_block": -1
     },
     {
@@ -72,7 +72,7 @@
       "op_type_id": 72,
       "timestamp": "2016-09-15T19:47:18",
       "virtual_op": true,
-      "operation_id": "21474832185033032",
+      "operation_id": "21474832185032705",
       "trx_in_block": 0
     },
     {
@@ -94,7 +94,7 @@
       "op_type_id": 85,
       "timestamp": "2016-09-15T19:47:18",
       "virtual_op": true,
-      "operation_id": "21474832185033557",
+      "operation_id": "21474832185032707",
       "trx_in_block": 1
     },
     {
@@ -115,7 +115,7 @@
       "op_type_id": 78,
       "timestamp": "2016-09-15T19:47:18",
       "virtual_op": true,
-      "operation_id": "21474832185034062",
+      "operation_id": "21474832185032709",
       "trx_in_block": 2
     },
     {
@@ -137,7 +137,7 @@
       "op_type_id": 85,
       "timestamp": "2016-09-15T19:47:18",
       "virtual_op": true,
-      "operation_id": "21474832185034581",
+      "operation_id": "21474832185032711",
       "trx_in_block": 3
     },
     {
@@ -158,7 +158,7 @@
       "op_type_id": 64,
       "timestamp": "2016-09-15T19:47:18",
       "virtual_op": true,
-      "operation_id": "21474832185034816",
+      "operation_id": "21474832185032712",
       "trx_in_block": -1
     },
     {
@@ -185,7 +185,7 @@
       "op_type_id": 80,
       "timestamp": "2016-09-15T19:47:21",
       "virtual_op": true,
-      "operation_id": "21474836480000336",
+      "operation_id": "21474836480000001",
       "trx_in_block": 0
     },
     {
@@ -206,7 +206,7 @@
       "op_type_id": 64,
       "timestamp": "2016-09-15T19:47:21",
       "virtual_op": true,
-      "operation_id": "21474836480000832",
+      "operation_id": "21474836480000003",
       "trx_in_block": -1
     }
   ]
