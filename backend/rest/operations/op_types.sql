@@ -37,7 +37,7 @@ AS
 $$
 BEGIN
   RETURN QUERY SELECT
-    id::INT,
+    id,
     -- Name parsing: Extract operation name from C++ fully-qualified name
     -- "hive::protocol::vote_operation" -> "vote_operation"
     split_part(name, '::', 3),
