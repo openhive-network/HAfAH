@@ -1,6 +1,6 @@
 {
   "next_block_range_begin": 4999901,
-  "next_operation_begin": "21474411278239744",
+  "next_operation_begin": "21474411278237704",
   "ops": [
     {
       "op": {
@@ -18,7 +18,7 @@
       "op_type_id": 0,
       "timestamp": "2016-09-15T19:42:06",
       "virtual_op": false,
-      "operation_id": "21474406983270656",
+      "operation_id": "21474406983270401",
       "trx_in_block": 1
     },
     {
@@ -37,7 +37,7 @@
       "op_type_id": 0,
       "timestamp": "2016-09-15T19:42:06",
       "virtual_op": false,
-      "operation_id": "21474406983271168",
+      "operation_id": "21474406983270403",
       "trx_in_block": 2
     },
     {
@@ -56,7 +56,7 @@
       "op_type_id": 0,
       "timestamp": "2016-09-15T19:42:06",
       "virtual_op": false,
-      "operation_id": "21474406983271680",
+      "operation_id": "21474406983270405",
       "trx_in_block": 3
     },
     {
@@ -75,7 +75,7 @@
       "op_type_id": 0,
       "timestamp": "2016-09-15T19:42:06",
       "virtual_op": false,
-      "operation_id": "21474406983272192",
+      "operation_id": "21474406983270407",
       "trx_in_block": 4
     },
     {
@@ -94,7 +94,7 @@
       "op_type_id": 0,
       "timestamp": "2016-09-15T19:42:06",
       "virtual_op": false,
-      "operation_id": "21474406983272704",
+      "operation_id": "21474406983270409",
       "trx_in_block": 5
     },
     {
@@ -132,7 +132,7 @@
       "op_type_id": 0,
       "timestamp": "2016-09-15T19:42:09",
       "virtual_op": false,
-      "operation_id": "21474411278238208",
+      "operation_id": "21474411278237698",
       "trx_in_block": 1
     },
     {
@@ -151,7 +151,7 @@
       "op_type_id": 0,
       "timestamp": "2016-09-15T19:42:09",
       "virtual_op": false,
-      "operation_id": "21474411278238720",
+      "operation_id": "21474411278237700",
       "trx_in_block": 2
     },
     {
@@ -170,7 +170,7 @@
       "op_type_id": 0,
       "timestamp": "2016-09-15T19:42:09",
       "virtual_op": false,
-      "operation_id": "21474411278239232",
+      "operation_id": "21474411278237702",
       "trx_in_block": 3
     },
     {
@@ -189,7 +189,7 @@
       "op_type_id": 0,
       "timestamp": "2016-09-15T19:42:09",
       "virtual_op": false,
-      "operation_id": "21474411278239744",
+      "operation_id": "21474411278237704",
       "trx_in_block": 4
     }
   ]
