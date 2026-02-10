@@ -3,6 +3,13 @@ ARG PSQL_CLIENT_VERSION=14-1
 ARG POSTGREST_VERSION=v12.0.2
 FROM registry.gitlab.syncad.com/hive/common-ci-configuration/postgrest:${POSTGREST_VERSION} AS pure_postgrest
 
+FROM registry.gitlab.syncad.com/hive/common-ci-configuration/psql:${PSQL_CLIENT_VERSION} AS version-injection
+COPY . /tmp/src
+WORKDIR /tmp/src
+RUN API_VERSION="$(git describe --tags --abbrev=0 2>/dev/null || echo dev)" \
+    && sed -i 's|"version": "[^"]*"|"version": "'"$API_VERSION"'"|' endpoints/endpoint_schema.sql \
+    && sed -i 's|^  version: .*|  version: '"$API_VERSION"'|' endpoints/endpoint_schema.sql
+
 FROM registry.gitlab.syncad.com/hive/common-ci-configuration/psql:${PSQL_CLIENT_VERSION} AS runtime
 
 SHELL ["/bin/bash", "-c"]
@@ -67,7 +74,7 @@ SHELL ["/bin/bash", "-c"]
 
 ADD --chown=hafah_user:hafah_user ./db/ ./app/db
 ADD --chown=hafah_user:hafah_user ./backend/ ./app/backend
-ADD --chown=hafah_user:hafah_user ./endpoints/ ./app/endpoints
+COPY --from=version-injection --chown=hafah_user:hafah_user /tmp/src/endpoints/ ./app/endpoints
 ADD --chmod=755 --chown=hafah_user:hafah_user ./scripts ./app/scripts
 
 ADD --chmod=755 --chown=hafah_user:hafah_user ./docker/docker_entrypoint.sh .
