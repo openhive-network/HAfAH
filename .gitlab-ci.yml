@@ -1082,7 +1082,7 @@ extract_testnet_binaries:
     - '/bin/bash'
   variables:
     JUNIT_REPORT: tests/integration/functional/report.xml
-    # Use builder image with Python 3.14 (hafah-local-tools requires Python ^3.14)
+    # Use builder image with Python 3.14 (hafah-local-tools requires Python >=3.14)
     PYTEST_BASED_IMAGE_NAME: $BUILDER_IMAGE_PATH
     POETRY_INSTALL_ROOT_DIR: $CI_PROJECT_DIR/tests/integration/hafah-local-tools
     # Note: HAF_TESTNET_IMAGE_NAME from find_haf_testnet_image is used directly by haf-instance-testnet anchor
