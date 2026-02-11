@@ -27,6 +27,9 @@ variables:
   # Enable PyO3 forward compatibility for Python 3.14 (rpds-py build support)
   PYO3_USE_ABI3_FORWARD_COMPATIBILITY: "1"
 
+  # Dependency testing: set to "true" to test with latest available versions
+  TEST_WITH_LATEST_DEPENDENCIES: "false"
+
   # Common CI configuration for fetching scripts at runtime
   COMMON_CI_REF: "develop"
   COMMON_CI_URL: "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/${COMMON_CI_REF}"
@@ -1013,6 +1016,7 @@ extract_testnet_binaries:
     - . venv/bin/activate
     - echo "Entering ${POETRY_INSTALL_ROOT_DIR}"
     - cd "${POETRY_INSTALL_ROOT_DIR}"
+    - !reference [.update_deps_for_tests, script]
     - poetry install
 
   services:
@@ -1067,6 +1071,7 @@ extract_testnet_binaries:
     # Use builder image with Python 3.14 (hafah-local-tools requires Python >=3.14)
     PYTEST_BASED_IMAGE_NAME: $BUILDER_IMAGE_PATH
     POETRY_INSTALL_ROOT_DIR: $CI_PROJECT_DIR/tests/integration/hafah-local-tools
+    PYPROJECT_DIR: $CI_PROJECT_DIR/tests/integration/hafah-local-tools
     # Note: HAF_TESTNET_IMAGE_NAME from find_haf_testnet_image is used directly by haf-instance-testnet anchor
     # HAF_IMAGE_NAME mapping kept for backward compatibility with other potential uses
     HAF_IMAGE_NAME: "${HAF_TESTNET_UPSTREAM_IMAGE}"
