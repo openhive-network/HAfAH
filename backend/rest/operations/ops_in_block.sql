@@ -289,16 +289,8 @@ BEGIN
           )
         ) T
       -- LEFT JOIN transactions: Virtual ops won't match (have no transaction)
-      LEFT JOIN
-        (
-          SELECT
-            trx_hash, trx_in_block, block_num
-          FROM hive.transactions_view
-          WHERE
-            (block_num >= _block_num) AND
-            (block_num < _end_block_num)
-        ) T2 ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
-      WHERE T.block_num >= _block_num AND T.block_num < _end_block_num
+      LEFT JOIN hive.transactions_view T2
+        ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
       ORDER BY T.id
       LIMIT _limit
     )
@@ -316,7 +308,6 @@ BEGIN
     FROM hfm_operations pre_result
     -- JOIN blocks_view for timestamp
     JOIN hive.blocks_view hb ON hb.num = pre_result.__block_num
-    WHERE hb.num >= _block_num AND hb.num < _end_block_num
     ORDER BY pre_result._operation_id;
 END
 $function$

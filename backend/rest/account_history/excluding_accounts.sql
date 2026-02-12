@@ -78,7 +78,7 @@ BEGIN
   /*
    * STEP 1: Calculate sequence range from block range
    */
-  _account_range := hafah_backend.account_range(_operations, _account_id, _from_block, _to_block);
+  _account_range := hafah_backend.account_range(_account_id, _from_block, _to_block);
 
   /*
    * ===================================================================================
@@ -110,7 +110,7 @@ BEGIN
       AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
       AND aov.account_op_seq_no >= _account_range.from_seq
       AND aov.account_op_seq_no <= _account_range.to_seq
-      AND aov.transacting_account_id != ANY(_transacting_account_ids)  -- Multi-account exclude
+      AND NOT (aov.transacting_account_id = ANY(_transacting_account_ids))  -- Multi-account exclude
       AND aov.transacting_account_id IS NOT NULL
       /*
        * Alternative using NOT EXISTS (may perform better for large exclusion lists):
@@ -174,7 +174,7 @@ BEGIN
       aov.block_num
     FROM hive.account_operations_view aov
     WHERE aov.account_id = _account_id
-    AND aov.transacting_account_id != ANY(_transacting_account_ids)  -- Multi-account exclude
+    AND NOT (aov.transacting_account_id = ANY(_transacting_account_ids))  -- Multi-account exclude
     AND aov.transacting_account_id IS NOT NULL
     AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
     AND aov.account_op_seq_no >= _account_range.from_seq

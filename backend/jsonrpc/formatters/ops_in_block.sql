@@ -45,13 +45,17 @@ CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_block_json(
 RETURNS JSON
 LANGUAGE 'plpgsql' STABLE
 AS $$
+DECLARE
+  __irreversible_block INT;
 BEGIN
+  SELECT hive.app_get_irreversible_block() INTO __irreversible_block;
+
   /*
    * Cache Control:
    *   - Irreversible blocks: cache for 1 year (immutable)
    *   - Reversible blocks: cache for 3 seconds (may change)
    */
-  IF _block_num <= hive.app_get_irreversible_block() THEN
+  IF _block_num <= __irreversible_block THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
   ELSE
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=3"}]', true);
@@ -106,7 +110,8 @@ BEGIN
             _block_num,
             _only_virtual,
             _include_reversible,
-            _is_legacy_style
+            _is_legacy_style,
+            __irreversible_block
           )
         ) ops
       ) AS a

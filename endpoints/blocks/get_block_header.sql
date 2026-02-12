@@ -106,7 +106,7 @@ BEGIN
 
     EXCEPTION
       WHEN invalid_text_representation THEN
-        PERFORM hafah_backend.rest_raise_uint_exception();
+        PERFORM hafah_backend.raise_uint_exception();
   END;
 END
 $$

@@ -126,7 +126,8 @@ BEGIN
           _block_range_end,
           _operation_begin,
           _limit,
-          _include_reversible
+          _include_reversible,
+          __actual_last_irreversible_block_num
         )
       ),
       /*
@@ -315,16 +316,9 @@ BEGIN
                     array_agg(ds)           AS "ops",
                     /*
                      * BLOCK TIMESTAMP:
-                     *   Get timestamp from first operation in block.
                      *   All operations in a block share the same timestamp.
                      */
-                    (
-                      SELECT pr.timestamp
-                      FROM pre_result pr
-                      WHERE pr.block = ds.block
-                      ORDER BY pr.operation_id ASC
-                      LIMIT 1
-                    ) AS "timestamp"
+                    MIN(ds.timestamp) AS "timestamp"
                   FROM (
                     SELECT
                       s.block,

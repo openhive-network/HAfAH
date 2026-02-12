@@ -67,7 +67,7 @@ BEGIN
     __key_value := split_part(__param_text, '=', 1);
 
     -- Extract everything after the first '=' as value
-    __value_part := replace(__param_text, __key_value || '=', '');
+    __value_part := substring(__param_text FROM position('=' IN __param_text) + 1);
 
     -- Split the key into parts based on '.' separator
     __key_part := string_to_array(__key_value, '.');

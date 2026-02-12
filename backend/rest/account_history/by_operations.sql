@@ -78,7 +78,7 @@ BEGIN
    * Convert block range to account_op_seq_no range.
    * _operations passed to account_range() for potential optimization.
    */
-  _account_range := hafah_backend.account_range(_operations, _account_id, _from_block, _to_block);
+  _account_range := hafah_backend.account_range(_account_id, _from_block, _to_block);
 
   /*
    * Get count of operations matching the type filter.
@@ -169,13 +169,12 @@ BEGIN
       FROM operation_range ov
       JOIN hive.blocks_view hb ON hb.num = ov.block_num
     ) filtered_operations
-    ORDER BY filtered_operations.id DESC
   )
   /*
    * FINAL AGGREGATION
    * Collect all rows into an array, preserving descending order.
    */
-  SELECT array_agg(rows ORDER BY rows.id::BIGINT DESC)
+  SELECT array_agg(rows ORDER BY rows.id DESC)
   INTO _result
   FROM (
     SELECT
@@ -187,7 +186,7 @@ BEGIN
       s.created_at,
       s.is_virtual,
       s.id::TEXT,
-      s.trx_in_block::SMALLINT
+      s.trx_in_block
     FROM result_query s
   ) rows;
 

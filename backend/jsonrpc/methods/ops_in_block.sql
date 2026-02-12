@@ -49,7 +49,8 @@ CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_block(
     _block_num          INT,
     _only_virtual       BOOLEAN,
     _include_reversible BOOLEAN,
-    _is_legacy_style    BOOLEAN
+    _is_legacy_style    BOOLEAN,
+    _irreversible_block INT DEFAULT NULL
 )
 RETURNS TABLE(
     _trx_id       TEXT,
@@ -69,7 +70,7 @@ BEGIN
    *   If not including reversible blocks and block is beyond irreversible,
    *   return empty result set
    */
-  IF (NOT _include_reversible) AND _block_num > hive.app_get_irreversible_block() THEN
+  IF (NOT _include_reversible) AND _block_num > COALESCE(_irreversible_block, hive.app_get_irreversible_block()) THEN
     RETURN QUERY SELECT
       NULL::TEXT,    -- _trx_id
       NULL::BIGINT,  -- _trx_in_block

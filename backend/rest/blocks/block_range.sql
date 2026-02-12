@@ -43,7 +43,7 @@ $BODY$
 BEGIN
     -- Validation: Block numbers are 1-indexed (genesis is block 1)
     IF NOT _block_num  > 0 THEN
-        RAISE EXCEPTION 'block-num < 0: Invalid starting block number';
+        RAISE EXCEPTION 'block-num must be greater than 0: Invalid starting block number';
     END IF;
 
     -- Validation: End block must be >= start block (inclusive range)

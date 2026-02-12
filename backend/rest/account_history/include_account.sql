@@ -98,7 +98,7 @@ BEGIN
    * ===================================================================================
    * Convert block range to account_op_seq_no range for efficient filtering.
    */
-  _account_range := hafah_backend.account_range(_operations, _account_id, _from_block, _to_block);
+  _account_range := hafah_backend.account_range(_account_id, _from_block, _to_block);
 
   /*
    * ===================================================================================
@@ -128,7 +128,6 @@ BEGIN
       FROM hive.account_operations_view aov
       WHERE aov.account_id = _account_id
       AND aov.transacting_account_id = _transacting_account_id  -- Include filter (scalar)
-      AND aov.transacting_account_id IS NOT NULL  -- Future compatibility
       AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))  -- Optional type filter
       AND aov.account_op_seq_no >= _account_range.from_seq
       AND aov.account_op_seq_no <= _account_range.to_seq
@@ -221,7 +220,6 @@ BEGIN
     FROM hive.account_operations_view aov
     WHERE aov.account_id = _account_id
     AND aov.transacting_account_id = _transacting_account_id
-    AND aov.transacting_account_id IS NOT NULL
     AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
     AND aov.account_op_seq_no >= _account_range.from_seq
     AND (
