@@ -346,6 +346,14 @@ verify_poetry_lock_sanity:
   tags:
   - public-runner-docker
 
+verify_poetry_lock_stability:
+  extends: .verify_poetry_lock_stability_template
+  stage: build
+  variables:
+    PYPROJECT_DIR: "$CI_PROJECT_DIR/tests/integration/hafah-local-tools"
+  tags:
+  - public-runner-docker
+
 # =============================================================================
 # Maintenance Jobs (triggered by upstream repos)
 # =============================================================================
