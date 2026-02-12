@@ -336,7 +336,7 @@ RETURNS VOID
 LANGUAGE 'plpgsql' STABLE
 AS $$
 BEGIN
-  IF (_op_type > (SELECT MAX(id) FROM hafd.operation_types)) OR _op_type < 0 THEN
+  IF NOT EXISTS (SELECT 1 FROM hafd.operation_types WHERE id = _op_type) THEN
     PERFORM hafah_backend.rest_raise_missing_op_type(_op_type);
   END IF;
 END

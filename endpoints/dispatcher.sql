@@ -178,6 +178,8 @@ BEGIN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
       IF __exception_message ~ 'op_id cannot be None' THEN
         RETURN hafah_backend.raise_operation_id_exception(_id);
+      ELSE
+        RETURN hafah_backend.wrap_sql_exception(__exception_message, _id);
       END IF;
   END;
 END
@@ -520,7 +522,7 @@ BEGIN
     IF __block_num IS NOT NULL THEN
       __block_num = __block_num::BIGINT;
       IF __block_num < 0 THEN
-        __block_num := __block_num + ((POW(2, 31) - 1) :: BIGINT);
+        __block_num := __block_num + (POW(2, 32) :: BIGINT);
       END IF;
     ELSE
       RETURN hafah_backend.raise_missing_arg('block_num', _id);
@@ -565,7 +567,7 @@ BEGIN
     IF __block_num IS NOT NULL THEN
       __block_num = __block_num::BIGINT;
       IF __block_num < 0 THEN
-        __block_num := __block_num + ((POW(2, 31) - 1) :: BIGINT);
+        __block_num := __block_num + (POW(2, 32) :: BIGINT);
       END IF;
     ELSE
       RETURN hafah_backend.raise_missing_arg('block_num', _id);
@@ -611,7 +613,7 @@ BEGIN
     IF __starting_block_num IS NOT NULL THEN
       __starting_block_num = __starting_block_num::BIGINT;
       IF __starting_block_num < 0 THEN
-        __starting_block_num := __starting_block_num + ((POW(2, 31) - 1) :: BIGINT);
+        __starting_block_num := __starting_block_num + (POW(2, 32) :: BIGINT);
       END IF;
     ELSE
       RETURN hafah_backend.raise_missing_arg('starting_block_num', _id);
@@ -621,7 +623,7 @@ BEGIN
     IF __block_count IS NOT NULL THEN
       __block_count = __block_count::BIGINT;
       IF __block_count < 0 THEN
-        __block_count := __block_count + ((POW(2, 31) - 1) :: BIGINT);
+        __block_count := __block_count + (POW(2, 32) :: BIGINT);
       END IF;
     ELSE
       RETURN hafah_backend.raise_missing_arg('count', _id);

@@ -78,7 +78,7 @@ BEGIN
    * Convert block range to account_op_seq_no range for efficient index usage.
    * account_op_seq_no is a monotonically increasing sequence number per account.
    */
-  _account_range := hafah_backend.account_range(NULL, _account_id, _from_block, _to_block);
+  _account_range := hafah_backend.account_range(_account_id, _from_block, _to_block);
 
   /*
    * Get total operation count for pagination calculation.
@@ -164,21 +164,20 @@ BEGIN
       filtered_operations.op_type_id,
       filtered_operations.created_at,             -- Block timestamp
       filtered_operations.is_virtual,
-      filtered_operations.id::TEXT,
+      filtered_operations.id,
       filtered_operations.trx_in_block::SMALLINT
     FROM (
       SELECT hafah_backend.operation_body_filter(ov.body, ov.id, _body_limit) as composite, ov.id, ov.block_num, ov.trx_in_block, ov.trx_hash, ov.op_pos, ov.op_type_id, ov.is_virtual, hb.created_at
       FROM operation_range ov
       JOIN hive.blocks_view hb ON hb.num = ov.block_num
     ) filtered_operations
-    ORDER BY filtered_operations.id DESC
   )
   /*
    * FINAL AGGREGATION
    * Collect all rows into an array for the composite return type.
    * ORDER BY ensures descending operation ID order is preserved.
    */
-  SELECT array_agg(rows ORDER BY rows.id::BIGINT DESC)
+  SELECT array_agg(rows ORDER BY rows.id DESC)
   INTO _result
   FROM (
     SELECT
@@ -190,7 +189,7 @@ BEGIN
       s.created_at,
       s.is_virtual,
       s.id::TEXT,
-      s.trx_in_block::SMALLINT
+      s.trx_in_block
     FROM result_query s
   ) rows;
 

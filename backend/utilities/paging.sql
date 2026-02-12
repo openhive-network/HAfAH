@@ -140,7 +140,6 @@ $$;
  * RETURNS: hafah_backend.account_filter_return - range parameters
  */
 CREATE OR REPLACE FUNCTION hafah_backend.account_range(
-    _operations    INT[],
     _account_id    INT,
     _from          INT,
     _to            INT

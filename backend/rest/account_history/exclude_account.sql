@@ -76,7 +76,7 @@ BEGIN
   /*
    * STEP 1: Calculate sequence range from block range
    */
-  _account_range := hafah_backend.account_range(_operations, _account_id, _from_block, _to_block);
+  _account_range := hafah_backend.account_range(_account_id, _from_block, _to_block);
 
   /*
    * ===================================================================================
