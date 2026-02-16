@@ -185,6 +185,8 @@ find_hive_image:
 find_haf_image:
   extends: .find_haf_image
   stage: detect
+  variables:
+    UPSTREAM_BRANCH: "mi/refactoring_reversible_cc_squashed2"
 
 find_haf_testnet_image:
   extends: .find_haf_image
