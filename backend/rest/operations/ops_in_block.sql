@@ -33,7 +33,7 @@ SET ROLE hafah_owner;
  *
  * DATA SOURCES:
  *   - hafah_backend.get_ops_in_blocks_helper(): Core query execution
- *   - hive.blocks_view: Head block lookup for range clamping
+ *   - hafd.blocks: Head block lookup for range clamping
  *
  * PAGINATION: Cursor-based using operation_id
  *   - Returns next_block_num and next_operation_id for continuation
@@ -60,7 +60,7 @@ DECLARE
   _next_block_num INT;
 
   -- Head block: Used to clamp end_block_num to avoid querying future blocks
-  _latest_block_num INT := (SELECT num FROM hive.blocks_view ORDER BY num DESC LIMIT 1);
+  _latest_block_num INT := (SELECT num FROM hafd.blocks ORDER BY num DESC LIMIT 1);
 BEGIN
   WITH pre_result AS (
     SELECT
