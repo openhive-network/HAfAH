@@ -195,7 +195,7 @@ BEGIN
           (SELECT block_num FROM pag),  -- First choice: next op's block
           (
             CASE
-              WHEN _block_range_end > (SELECT num FROM hafd.blocks ORDER BY num DESC LIMIT 1)
+              WHEN _block_range_end > (SELECT num FROM hive.blocks_view ORDER BY num DESC LIMIT 1)
                 THEN 0  -- Past end of blockchain, no more data
               ELSE _block_range_end  -- More blocks exist, continue from here
             END
