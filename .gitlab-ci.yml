@@ -1011,12 +1011,6 @@ extract_testnet_binaries:
   # Note: HAF_COMMIT is mapped from HAF_UPSTREAM_COMMIT in variables section
   before_script:
     - !reference [.clone_haf_and_hive_shared_tools, script]
-    # Fix Python version constraint in pyproject.toml files
-    - |
-      cd "${CI_PROJECT_DIR}/haf/hive"
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/pyproject.toml
-      sed -i 's/python = ">=3\.14,<4"/python = ">=3.12,<4"/' tests/python/hive-local-tools/shared-tools/pyproject.toml
-      cd "${CI_PROJECT_DIR}"
     # Install libpq-dev for psycopg2 build (CI base image runs as root)
     - apt-get update && apt-get install -y libpq-dev
     # Poetry install (from .pytest_based_template)
