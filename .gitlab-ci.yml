@@ -666,6 +666,7 @@ new_style_postgrest_pattern_tests:
     - . venv/bin/activate
     - echo "Entering ${POETRY_INSTALL_ROOT_DIR}"
     - cd "${POETRY_INSTALL_ROOT_DIR}"
+    - !reference [.update_deps_for_tests, script]
     - poetry install
     - !reference [.wait_for_app_dns, script]
 
