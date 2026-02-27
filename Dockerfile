@@ -4,7 +4,7 @@ ARG POSTGREST_VERSION=v12.0.2
 FROM registry.gitlab.syncad.com/hive/common-ci-configuration/postgrest:${POSTGREST_VERSION} AS pure_postgrest
 
 FROM registry.gitlab.syncad.com/hive/common-ci-configuration/psql:${PSQL_CLIENT_VERSION} AS version-injection
-ARG API_VERSION="dev"
+ARG API_VERSION="0.0.0-dev"
 COPY . /tmp/src
 WORKDIR /tmp/src
 RUN sed -i 's|"version": "[^"]*"|"version": "'"$API_VERSION"'"|' endpoints/endpoint_schema.sql \
@@ -41,7 +41,8 @@ LABEL org.opencontainers.image.created="$BUILD_TIME"
 LABEL org.opencontainers.image.url="https://hive.io/"
 LABEL org.opencontainers.image.documentation="https://gitlab.syncad.com/hive/HAfAH"
 LABEL org.opencontainers.image.source="https://gitlab.syncad.com/hive/HAfAH"
-#LABEL org.opencontainers.image.version="${VERSION}"
+ARG API_VERSION
+LABEL org.opencontainers.image.version="$API_VERSION"
 LABEL org.opencontainers.image.revision="$GIT_COMMIT_SHA"
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.ref.name="HAfAH"
