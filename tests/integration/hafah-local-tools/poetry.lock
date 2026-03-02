@@ -652,11 +652,11 @@ develop = true
 
 [package.dependencies]
 hive_local_tools = {path = "../../../hive/tests/python/hive-local-tools", develop = true}
-msgspec = ">=0.20.0"
-pandas = ">=2.2.3"
-psycopg2-binary = ">=2.9.11"
-sqlalchemy = ">=2.0.39"
-sqlalchemy-utils = ">=0.41.2"
+msgspec = "^0.20.0"
+pandas = "^2.2.3"
+psycopg2-binary = "^2.9.11"
+sqlalchemy = "^2.0.39"
+sqlalchemy-utils = "^0.41.2"
 
 [package.source]
 type = "directory"
