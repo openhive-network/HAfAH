@@ -185,6 +185,9 @@ find_hive_image:
 find_haf_image:
   extends: .find_haf_image
   stage: detect
+  variables:
+    UPSTREAM_BRANCH: "feature/pg18-port"
+    HAF_PATTERNS_REF: "feature/pg18-port"
 
 find_haf_testnet_image:
   extends: .find_haf_image
@@ -192,6 +195,8 @@ find_haf_testnet_image:
   variables:
     HAF_IMAGE_TYPE: "testnet"
     HAF_VAR_PREFIX: "HAF_TESTNET"
+    UPSTREAM_BRANCH: "feature/pg18-port"
+    HAF_PATTERNS_REF: "feature/pg18-port"
   artifacts:
     reports:
       dotenv: haf_testnet_image.env
