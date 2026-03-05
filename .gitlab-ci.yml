@@ -287,9 +287,8 @@ find_haf_testnet_image:
       git sparse-checkout init --cone
       git sparse-checkout set tests/python
       git checkout "${HIVE_PYTHON_SHARED_TOOLS_REF}"
-      # Initialize submodules within hive-local-tools (tests_api, shared-tools)
+      # Initialize submodules within hive-local-tools (tests_api)
       git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
-      git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
       cd "${CI_PROJECT_DIR}"
 
 # Clone tests_api repo for benchmarks (uses TESTS_API_REF - master branch)
@@ -325,11 +324,10 @@ find_haf_testnet_image:
       cd "${CI_PROJECT_DIR}/haf/hive"
       git fetch --depth 1 origin "${HIVE_PYTHON_SHARED_TOOLS_REF}"
       git sparse-checkout init --cone
-      git sparse-checkout set tests/python/hive-local-tools
+      git sparse-checkout set tests/python/hive-local-tools tests/python/shared-tools
       git checkout "${HIVE_PYTHON_SHARED_TOOLS_REF}"
-      # Initialize submodules within hive-local-tools (tests_api, shared-tools)
+      # Initialize submodules within hive-local-tools (tests_api)
       git submodule update --init --depth 1 tests/python/hive-local-tools/tests_api
-      git submodule update --init --depth 1 tests/python/hive-local-tools/shared-tools
       cd "${CI_PROJECT_DIR}"
 
 # =============================================================================
