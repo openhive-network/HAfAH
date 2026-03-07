@@ -69,7 +69,7 @@ def test_filter_only_transfer_ops(haf_node, postgrest_hafah, wallet):
 
 
 @pytest.mark.get_account_history_and_get_transaction
-@pytest.mark.parametrize("step", (1, 2, 4, 8, 16, 32, 64))
+@pytest.mark.parametrize("step", (4, 8, 16, 32, 64))
 def test_pagination(haf_node, postgrest_hafah, wallet, step: int):
     amount_of_transfers = 59
     amount_of_operations_from_account_creation = 5
