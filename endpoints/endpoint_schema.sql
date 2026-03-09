@@ -78,6 +78,7 @@ declare
         "properties": {
           "op_type_id": {
             "type": "integer",
+            "x-sql-datatype": "SMALLINT",
             "description": "operation type id"
           },
           "operation_name": {
@@ -152,6 +153,7 @@ declare
           },
           "op_type_id": {
             "type": "integer",
+            "x-sql-datatype": "SMALLINT",
             "description": "operation type identifier"
           },
           "timestamp": {
@@ -445,7 +447,7 @@ declare
         "properties": {
           "transaction_json": {
             "$ref": "#/components/schemas/hafah_backend.transactions",
-            "x-sql-datatype": "JSONB",
+            "x-sql-datatype": "JSON",
             "description": "transactions in the block"
           },
           "transaction_id": {
@@ -1233,9 +1235,8 @@ declare
             "name": "operation-begin",
             "required": false,
             "schema": {
-              "type": "integer",
-              "x-sql-datatype": "BIGINT",
-              "default": -1
+              "type": "string",
+              "default": "-1"
             },
             "description": "Starting operation id"
           },
@@ -1447,8 +1448,7 @@ declare
             "name": "operation-id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "x-sql-datatype": "BIGINT"
+              "type": "string"
             },
             "description": "An operation-id is a unique operation identifier,\nencodes three key pieces of information into a single number,\nwith each piece occupying a specific number of bits:\n\n```\nmsb.....................lsb\n || block | op_pos | type ||\n ||  32b  |  24b   |  8b  ||\n```\n\n * block (block number) - occupies 32 bits.\n\n * op_pos (position of an operation in block) - occupies 24 bits.\n\n * type (operation type) - occupies 8 bits.\n"
           }

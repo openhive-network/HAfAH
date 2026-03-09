@@ -123,15 +123,15 @@ BEGIN
   _result := json_build_object(
     'ref_block_num', (_transaction_json->>'ref_block_num')::BIGINT,
     'ref_block_prefix',(_transaction_json->>'ref_block_prefix')::BIGINT,
-    'extensions', (_transaction_json->>'extensions')::JSON,
-    'expiration', (_transaction_json->>'expiration')::TEXT,
-    'operations', (_transaction_json->>'operations')::JSON,
-    'signatures', (_transaction_json->>'signatures')::JSON
+    'extensions', _transaction_json->'extensions',
+    'expiration', _transaction_json->>'expiration',
+    'operations', _transaction_json->'operations',
+    'signatures', _transaction_json->'signatures'
   );
 
   RETURN (
     _result,
-    (_transaction_json->>'transaction_id')::TEXT,
+    _transaction_json->>'transaction_id',
     (_transaction_json->>'block_num')::INT,
     (_transaction_json->>'transaction_num')::INT,
     (SELECT bv.created_at FROM hive.blocks_view bv WHERE bv.num = (_transaction_json->>'block_num')::INT)

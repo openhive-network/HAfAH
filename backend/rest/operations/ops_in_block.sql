@@ -65,7 +65,7 @@ BEGIN
   WITH pre_result AS (
     SELECT
       hp.__block_num AS "block",
-      hp._value::jsonb AS "op",
+      hp._value AS "op",
       hp._op_in_trx AS "op_in_trx",
       hp._op_type_id AS "op_type_id",
       hp._timestamp AS "timestamp",
@@ -184,7 +184,7 @@ RETURNS TABLE(
     _op_type_id SMALLINT,
     _virtual_op BOOLEAN,
     _timestamp TEXT,
-    _value TEXT,
+    _value JSONB,
     _operation_id BIGINT
 )
 AS
@@ -205,7 +205,7 @@ BEGIN
       NULL::SMALLINT, -- _op_type_id
       NULL::BOOLEAN, -- _virtual_op
       NULL::TEXT, -- _timestamp
-      NULL::TEXT, -- _value
+      NULL::JSONB, -- _value
       NULL::BIGINT  -- _operation_id
     LIMIT 0;
     RETURN;
@@ -242,8 +242,8 @@ BEGIN
         -- Operation body: Support legacy and modern formats
         (
           CASE
-            WHEN _is_legacy_style THEN hive.get_legacy_style_operation(T.body_binary)::text
-            ELSE T.body :: text
+            WHEN _is_legacy_style THEN hive.get_legacy_style_operation(T.body_binary)::JSONB
+            ELSE T.body
           END
         ) AS _value,
         T.id::BIGINT _operation_id

@@ -47,8 +47,7 @@ SET ROLE hafah_owner;
         name: operation-id
         required: true
         schema:
-          type: integer
-          x-sql-datatype: BIGINT
+          type: string
         description: |
           An operation-id is a unique operation identifier,
           encodes three key pieces of information into a single number,
@@ -100,7 +99,7 @@ SET ROLE hafah_owner;
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_operation;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_operation(
-    "operation-id" BIGINT
+    "operation-id" TEXT
 )
 RETURNS hafah_backend.operation 
 -- openapi-generated-code-end
@@ -111,19 +110,22 @@ SET from_collapse_limit = 16
 AS
 $$
 DECLARE
-  _block_num INT := (SELECT ov.block_num FROM hive.operations_view ov WHERE ov.id = "operation-id");
+  _operation_id BIGINT := "operation-id"::BIGINT;
+  _result hafah_backend.operation;
 BEGIN
-  IF _block_num IS NULL THEN
-    PERFORM hafah_backend.rest_raise_missing_operation_id("operation-id");
+  _result := hafah_backend.get_operation(_operation_id);
+
+  IF _result.block IS NULL THEN
+    PERFORM hafah_backend.rest_raise_missing_operation_id(_operation_id);
   END IF;
-  
-  IF _block_num <= hive.app_get_irreversible_block() THEN
+
+  IF _result.block <= hive.app_get_irreversible_block() THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
   ELSE
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
   END IF;
 
-  RETURN hafah_backend.get_operation("operation-id");
+  RETURN _result;
 END
 $$;
 

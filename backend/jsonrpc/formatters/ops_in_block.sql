@@ -99,7 +99,7 @@ BEGIN
         FROM (
           SELECT
             _block_num    AS "block",         -- Block number (same for all ops in result)
-            _value::JSON  AS "op",            -- Operation body (formatted per style)
+            _value        AS "op",            -- Operation body (already JSONB)
             _op_in_trx    AS "op_in_trx",     -- Operation index within transaction
             _timestamp    AS "timestamp",     -- ISO 8601 block timestamp
             _trx_id       AS "trx_id",        -- 40-char hex (or 40 zeros for virtual ops)

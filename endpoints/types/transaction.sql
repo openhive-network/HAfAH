@@ -6,7 +6,7 @@ hafah_backend.transaction:
   properties:
     transaction_json:
       $ref: '#/components/schemas/hafah_backend.transactions'
-      x-sql-datatype: JSONB
+      x-sql-datatype: JSON
       description: transactions in the block
     transaction_id:
       type: string
@@ -26,7 +26,7 @@ hafah_backend.transaction:
 -- openapi-generated-code-begin
 DROP TYPE IF EXISTS hafah_backend.transaction CASCADE;
 CREATE TYPE hafah_backend.transaction AS (
-    "transaction_json" JSONB,
+    "transaction_json" JSON,
     "transaction_id" TEXT,
     "block_num" INT,
     "transaction_num" INT,
