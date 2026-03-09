@@ -176,7 +176,7 @@ CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_transaction(
     _include_virtual BOOLEAN = FALSE
 )
 RETURNS TABLE(
-    _value TEXT
+    _value JSONB
 )
 LANGUAGE 'plpgsql' STABLE
 AS $$
@@ -194,8 +194,8 @@ BEGIN
       (
         CASE
           WHEN _is_legacy_style
-            THEN hive.get_legacy_style_operation(ho.body_binary)::TEXT
-          ELSE ho.body::TEXT  -- WHY: body column already in new JSON format
+            THEN hive.get_legacy_style_operation(ho.body_binary)::JSONB
+          ELSE ho.body
         END
       ) AS _value
     FROM hive.operations_view ho

@@ -108,7 +108,7 @@ BEGIN
       pre_result AS (
         SELECT
           _block         AS "block",
-          _value::JSONB  AS "op",          -- Operation body as JSONB for manipulation
+          _value         AS "op",          -- Operation body (already JSONB)
           _op_in_trx     AS "op_in_trx",
           _operation_id  AS "operation_id", -- Global operation ID (for pagination)
           _timestamp     AS "timestamp",    -- ISO 8601 format

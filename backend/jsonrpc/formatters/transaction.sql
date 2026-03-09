@@ -105,7 +105,7 @@ BEGIN
          */
         (
           SELECT ARRAY(
-            SELECT _value::JSON
+            SELECT _value
             FROM hafah_backend.get_ops_in_transaction(
               __pre_result._block_num,
               __pre_result._trx_in_block,

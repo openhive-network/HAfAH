@@ -107,9 +107,8 @@ SET ROLE hafah_owner;
         name: operation-begin
         required: false
         schema:
-          type: integer
-          x-sql-datatype: BIGINT
-          default: -1
+          type: string
+          default: "-1"
         description: Starting operation id
       - in: query
         name: page-size
@@ -304,7 +303,7 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_operations(
     "to-block" TEXT = NULL,
     "operation-types" TEXT = NULL,
     "operation-group-type" hafah_backend.operation_group_types = 'all',
-    "operation-begin" BIGINT = -1,
+    "operation-begin" TEXT = '-1',
     "page-size" INT = 1000,
     "include-reversible" BOOLEAN = False
 )
@@ -338,7 +337,7 @@ BEGIN
     _block_range.last_block,
     _operation_group_types,
     _operation_types,
-    "operation-begin",
+    "operation-begin"::BIGINT,
     "page-size",
     "include-reversible",
     FALSE

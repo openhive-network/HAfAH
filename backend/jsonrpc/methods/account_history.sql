@@ -70,7 +70,7 @@ RETURNS TABLE(
     _op_in_trx    BIGINT,
     _virtual_op   BOOLEAN,
     _timestamp    TEXT,
-    _value        TEXT,
+    _value        JSONB,
     _operation_id INT
 )
 LANGUAGE 'plpgsql' STABLE
@@ -112,7 +112,7 @@ BEGIN
       NULL::BIGINT,
       NULL::BOOLEAN,
       NULL::TEXT,
-      NULL::TEXT,
+      NULL::JSONB,
       NULL::INT
     LIMIT 0;
     RETURN;
@@ -216,8 +216,8 @@ BEGIN
         (
           CASE
             WHEN _is_legacy_style
-              THEN hive.get_legacy_style_operation(ho.body_binary)::TEXT
-            ELSE ho.body::TEXT
+              THEN hive.get_legacy_style_operation(ho.body_binary)::JSONB
+            ELSE ho.body
           END
         ) AS _value,
         ds.account_op_seq_no AS _operation_id

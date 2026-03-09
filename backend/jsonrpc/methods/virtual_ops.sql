@@ -40,7 +40,7 @@ CREATE TYPE hafah_backend.enum_virtual_ops_result AS (
     _op_in_trx    BIGINT,  -- Operation position
     _virtual_op   BOOLEAN, -- Always TRUE for this endpoint
     _timestamp    TEXT,    -- Block timestamp in ISO 8601
-    _value        TEXT,    -- Operation body as JSON
+    _value        JSONB,   -- Operation body as JSONB
     _operation_id BIGINT   -- Global operation ID (for pagination)
 );
 
@@ -112,7 +112,7 @@ BEGIN
       NULL::BIGINT,  -- _op_in_trx
       NULL::BOOLEAN, -- _virtual_op
       NULL::TEXT,    -- _timestamp
-      NULL::TEXT,    -- _value
+      NULL::JSONB,   -- _value
       NULL::BIGINT   -- _operation_id
     LIMIT 0;
     RETURN;
@@ -152,7 +152,7 @@ BEGIN
         NULL::BIGINT,
         NULL::BOOLEAN,
         NULL::TEXT,
-        NULL::TEXT,
+        NULL::JSONB,
         NULL::BIGINT
       LIMIT 0;
       RETURN;
@@ -198,7 +198,7 @@ BEGIN
         ) AS _trx_in_block,
         T.op_pos AS _op_in_trx,
         T.virtual_op AS _virtual_op,
-        T.body::TEXT AS _value,
+        T.body AS _value,
         T.id AS _operation_id
       FROM (
         /*
