@@ -360,25 +360,6 @@ files = [
 ]
 
 [[package]]
-name = "deepdiff"
-version = "6.3.0"
-description = "Deep Difference and Search of any Python object/data. Recreate objects by adding adding deltas to each other."
-optional = false
-python-versions = ">=3.7"
-groups = ["main"]
-files = [
-    {file = "deepdiff-6.3.0-py3-none-any.whl", hash = "sha256:15838bd1cbd046ce15ed0c41e837cd04aff6b3e169c5e06fca69d7aa11615ceb"},
-    {file = "deepdiff-6.3.0.tar.gz", hash = "sha256:6a3bf1e7228ac5c71ca2ec43505ca0a743ff54ec77aa08d7db22de6bc7b2b644"},
-]
-
-[package.dependencies]
-ordered-set = ">=4.0.2,<4.2.0"
-
-[package.extras]
-cli = ["click (==8.1.3)", "pyyaml (==6.0)"]
-optimize = ["orjson"]
-
-[[package]]
 name = "docopt"
 version = "0.6.2"
 description = "Pythonic argument parser, that will make you smile"
@@ -641,58 +622,6 @@ hpack = ">=4.1,<5"
 hyperframe = ">=6.1,<7"
 
 [[package]]
-name = "haf-local-tools"
-version = "0.0.0"
-description = "A collective library containing all the tools required by haf python tests."
-optional = false
-python-versions = ">=3.14,<4"
-groups = ["main"]
-files = []
-develop = true
-
-[package.dependencies]
-hive_local_tools = {path = "../../../hive/tests/python/hive-local-tools", develop = true}
-msgspec = "^0.20.0"
-pandas = "^2.2.3"
-psycopg2-binary = "^2.9.11"
-sqlalchemy = "^2.0.39"
-sqlalchemy-utils = "^0.41.2"
-
-[package.source]
-type = "directory"
-url = "../../../haf/tests/integration/haf-local-tools"
-
-[[package]]
-name = "hive-local-tools"
-version = "0.0.0"
-description = "A collective library containing all the tools required by hive python tests."
-optional = false
-python-versions = ">=3.14,<4"
-groups = ["main"]
-files = []
-develop = true
-
-[package.dependencies]
-hiveio-beekeepy = "^1.28.6-post.0"
-hiveio-test-tools = "^2.0.2-post.0"
-hiveio-wax = "^2.0.2-post.0"
-msgspec = "^0.20.0"
-pytest = "^9.0.0"
-pytest-asyncio = "^1.0.0"
-pytest-repeat = "^0.9.3"
-pytest-rerunfailures = "^14.0"
-pytest-timeout = "^2.3.1"
-pytest-xdist = "^3.6.1"
-shared-tools = {path = "shared-tools", develop = true}
-tavern = "^3.0.2"
-tests_api = {path = "tests_api", develop = true}
-types-PyYAML = "^6.0.12"
-
-[package.source]
-type = "directory"
-url = "../../../haf/hive/tests/python/hive-local-tools"
-
-[[package]]
 name = "hiveio-api"
 version = "1.28.6rc8.post20260227150305"
 description = "Hive JSON-RPC API client package with lazy-loaded submodules for all Hive APIs"
@@ -729,6 +658,33 @@ loguru = ">=0.7.2,<0.8.0"
 psutil = ">=7.0.0,<8.0.0"
 python-dateutil = ">=2.8.2,<3.0.0"
 requests = ">=2.32.3,<3.0.0"
+
+[package.source]
+type = "legacy"
+url = "https://gitlab.syncad.com/api/v4/groups/136/-/packages/pypi/simple"
+reference = "gitlab-hive"
+
+[[package]]
+name = "hiveio-haf-local-tools"
+version = "1.28.8rc12.post20260312142017"
+description = "A collective library containing all the tools required by haf python tests."
+optional = false
+python-versions = ">=3.14,<4"
+groups = ["main"]
+files = [
+    {file = "hiveio_haf_local_tools-1.28.8rc12.post20260312142017-py3-none-any.whl", hash = "sha256:9c3253e99319dbad6d2d42dd7bbee3246f5e3f3903378e8226631ba52817706d"},
+]
+
+[package.dependencies]
+hiveio-test-tools = ">=2.0.2,<3.0.0"
+msgspec = ">=0.20.0,<0.21.0"
+pandas = ">=2.2.3,<3.0.0"
+psycopg2-binary = ">=2.9.11,<3.0.0"
+pytest = ">=8.3.5,<9.0.0"
+pytest-timeout = ">=2.3.1,<3.0.0"
+pytest-xdist = ">=3.5.0,<4.0.0"
+sqlalchemy = ">=2.0.39,<3.0.0"
+sqlalchemy-utils = ">=0.41.2,<0.42.0"
 
 [package.source]
 type = "legacy"
@@ -1282,21 +1238,6 @@ files = [
 ]
 
 [[package]]
-name = "ordered-set"
-version = "4.1.0"
-description = "An OrderedSet is a custom MutableSet that remembers its order, so that every"
-optional = false
-python-versions = ">=3.7"
-groups = ["main"]
-files = [
-    {file = "ordered-set-4.1.0.tar.gz", hash = "sha256:694a8e44c87657c59292ede72891eb91d34131f6531463aab3009191c77364a8"},
-    {file = "ordered_set-4.1.0-py3-none-any.whl", hash = "sha256:046e1132c71fcf3330438a539928932caf51ddbc582496833e23de611de14562"},
-]
-
-[package.extras]
-dev = ["black", "mypy", "pytest"]
-
-[[package]]
 name = "packaging"
 version = "26.0"
 description = "Core utilities for Python packages"
@@ -1434,24 +1375,6 @@ files = [
 [package.extras]
 dev = ["pre-commit", "tox"]
 testing = ["coverage", "pytest", "pytest-benchmark"]
-
-[[package]]
-name = "prettytable"
-version = "3.8.0"
-description = "A simple Python library for easily displaying tabular data in a visually appealing ASCII table format"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "prettytable-3.8.0-py3-none-any.whl", hash = "sha256:03481bca25ae0c28958c8cd6ac5165c159ce89f7ccde04d5c899b24b68bb13b7"},
-    {file = "prettytable-3.8.0.tar.gz", hash = "sha256:031eae6a9102017e8c7c7906460d150b7ed78b20fd1d8c8be4edaf88556c07ce"},
-]
-
-[package.dependencies]
-wcwidth = "*"
-
-[package.extras]
-tests = ["pytest", "pytest-cov", "pytest-lazy-fixture"]
 
 [[package]]
 name = "propcache"
@@ -1769,75 +1692,25 @@ python-dateutil = ">=2.8.0"
 
 [[package]]
 name = "pytest"
-version = "9.0.2"
+version = "8.4.2"
 description = "pytest: simple powerful testing with Python"
 optional = false
-python-versions = ">=3.10"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "pytest-9.0.2-py3-none-any.whl", hash = "sha256:711ffd45bf766d5264d487b917733b453d917afd2b0ad65223959f59089f875b"},
-    {file = "pytest-9.0.2.tar.gz", hash = "sha256:75186651a92bd89611d1d9fc20f0b4345fd827c41ccd5c299a868a05d70edf11"},
+    {file = "pytest-8.4.2-py3-none-any.whl", hash = "sha256:872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79"},
+    {file = "pytest-8.4.2.tar.gz", hash = "sha256:86c0d0b93306b961d58d62a4db4879f27fe25513d4b969df351abdddb3c30e01"},
 ]
 
 [package.dependencies]
 colorama = {version = ">=0.4", markers = "sys_platform == \"win32\""}
-iniconfig = ">=1.0.1"
-packaging = ">=22"
+iniconfig = ">=1"
+packaging = ">=20"
 pluggy = ">=1.5,<2"
 pygments = ">=2.7.2"
 
 [package.extras]
 dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "requests", "setuptools", "xmlschema"]
-
-[[package]]
-name = "pytest-asyncio"
-version = "1.3.0"
-description = "Pytest support for asyncio"
-optional = false
-python-versions = ">=3.10"
-groups = ["main"]
-files = [
-    {file = "pytest_asyncio-1.3.0-py3-none-any.whl", hash = "sha256:611e26147c7f77640e6d0a92a38ed17c3e9848063698d5c93d5aa7aa11cebff5"},
-    {file = "pytest_asyncio-1.3.0.tar.gz", hash = "sha256:d7f52f36d231b80ee124cd216ffb19369aa168fc10095013c6b014a34d3ee9e5"},
-]
-
-[package.dependencies]
-pytest = ">=8.2,<10"
-
-[package.extras]
-docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1)"]
-testing = ["coverage (>=6.2)", "hypothesis (>=5.7.1)"]
-
-[[package]]
-name = "pytest-repeat"
-version = "0.9.3"
-description = "pytest plugin for repeating tests"
-optional = false
-python-versions = ">=3.7"
-groups = ["main"]
-files = [
-    {file = "pytest_repeat-0.9.3-py3-none-any.whl", hash = "sha256:26ab2df18226af9d5ce441c858f273121e92ff55f5bb311d25755b8d7abdd8ed"},
-    {file = "pytest_repeat-0.9.3.tar.gz", hash = "sha256:ffd3836dfcd67bb270bec648b330e20be37d2966448c4148c4092d1e8aba8185"},
-]
-
-[package.dependencies]
-pytest = "*"
-
-[[package]]
-name = "pytest-rerunfailures"
-version = "14.0"
-description = "pytest plugin to re-run tests to eliminate flaky failures"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "pytest-rerunfailures-14.0.tar.gz", hash = "sha256:4a400bcbcd3c7a4ad151ab8afac123d90eca3abe27f98725dc4d9702887d2e92"},
-    {file = "pytest_rerunfailures-14.0-py3-none-any.whl", hash = "sha256:4197bdd2eaeffdbf50b5ea6e7236f47ff0e44d1def8dae08e409f536d84e7b32"},
-]
-
-[package.dependencies]
-packaging = ">=17.1"
-pytest = ">=7.2"
 
 [[package]]
 name = "pytest-timeout"
@@ -2224,20 +2097,6 @@ test = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "ini2toml[lite] (>=
 type = ["importlib_metadata (>=7.0.2) ; python_version < \"3.10\"", "jaraco.develop (>=7.21) ; sys_platform != \"cygwin\"", "mypy (==1.14.*)", "pytest-mypy"]
 
 [[package]]
-name = "shared-tools"
-version = "0.0.0"
-description = "Tools shared by tests in hive projects"
-optional = false
-python-versions = ">=3.14,<4"
-groups = ["main"]
-files = []
-develop = true
-
-[package.source]
-type = "directory"
-url = "../../../haf/hive/tests/python/hive-local-tools/shared-tools"
-
-[[package]]
 name = "simpleeval"
 version = "1.0.3"
 description = "A simple, safe single expression evaluator library."
@@ -2434,65 +2293,6 @@ grpc = ["google-api-python-client", "grpcio", "grpcio-reflection", "grpcio-statu
 mqtt = ["paho-mqtt (>=1.3.1,<=1.6.1)"]
 
 [[package]]
-name = "tests-api"
-version = "0.0.0"
-description = "A collective library containing tests for different APIs and tools for benchmarking"
-optional = false
-python-versions = ">=3.14,<4"
-groups = ["main"]
-files = []
-develop = true
-
-[package.dependencies]
-deepdiff = "6.3.0"
-prettytable = "3.8.0"
-requests = "2.32.3"
-types-requests = "2.31.0.2"
-
-[package.source]
-type = "directory"
-url = "../../../haf/hive/tests/python/hive-local-tools/tests_api"
-
-[[package]]
-name = "types-pyyaml"
-version = "6.0.12.11"
-description = "Typing stubs for PyYAML"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "types-PyYAML-6.0.12.11.tar.gz", hash = "sha256:7d340b19ca28cddfdba438ee638cd4084bde213e501a3978738543e27094775b"},
-    {file = "types_PyYAML-6.0.12.11-py3-none-any.whl", hash = "sha256:a461508f3096d1d5810ec5ab95d7eeecb651f3a15b71959999988942063bf01d"},
-]
-
-[[package]]
-name = "types-requests"
-version = "2.31.0.2"
-description = "Typing stubs for requests"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "types-requests-2.31.0.2.tar.gz", hash = "sha256:6aa3f7faf0ea52d728bb18c0a0d1522d9bfd8c72d26ff6f61bfc3d06a411cf40"},
-    {file = "types_requests-2.31.0.2-py3-none-any.whl", hash = "sha256:56d181c85b5925cbc59f4489a57e72a8b2166f18273fd8ba7b6fe0c0b986f12a"},
-]
-
-[package.dependencies]
-types-urllib3 = "*"
-
-[[package]]
-name = "types-urllib3"
-version = "1.26.25.14"
-description = "Typing stubs for urllib3"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "types-urllib3-1.26.25.14.tar.gz", hash = "sha256:229b7f577c951b8c1b92c1bc2b2fdb0b49847bd2af6d1cc2a2e3dd340f3bda8f"},
-    {file = "types_urllib3-1.26.25.14-py3-none-any.whl", hash = "sha256:9683bbb7fb72e32bfe9d2be6e04875fbe1b3eeec3cbb4ea231435aa7fd6b4f0e"},
-]
-
-[[package]]
 name = "typing-extensions"
 version = "4.15.0"
 description = "Backported and Experimental Type Hints for Python 3.9+"
@@ -2533,18 +2333,6 @@ brotli = ["brotli (>=1.2.0) ; platform_python_implementation == \"CPython\"", "b
 h2 = ["h2 (>=4,<5)"]
 socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
 zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
-
-[[package]]
-name = "wcwidth"
-version = "0.5.3"
-description = "Measures the displayed width of unicode strings in a terminal"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "wcwidth-0.5.3-py3-none-any.whl", hash = "sha256:d584eff31cd4753e1e5ff6c12e1edfdb324c995713f75d26c29807bb84bf649e"},
-    {file = "wcwidth-0.5.3.tar.gz", hash = "sha256:53123b7af053c74e9fe2e92ac810301f6139e64379031f7124574212fb3b4091"},
-]
 
 [[package]]
 name = "win32-setctime"
@@ -2710,4 +2498,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.14,<4"
-content-hash = "57ef8b6145250955e6fb1357a864be7e1be7b03c96898081f133defe47a893cc"
+content-hash = "e405b9cb6b1e193a548ef3b2128b0534209493bd8b8a8d48bccb4a8dc8ee3be2"
