@@ -125,8 +125,8 @@ BEGIN
       (
         CASE
           WHEN _is_legacy_style
-            THEN hive.get_legacy_style_operation(T.body_binary)::JSONB
-          ELSE T.body
+            THEN hive.get_legacy_style_operation(T.body_value)::TEXT
+          ELSE T.body::TEXT
         END
       ) AS _value,
       T.id::BIGINT AS _operation_id
@@ -142,7 +142,7 @@ BEGIN
         ho.trx_in_block,
         ho.op_pos,
         ho.body,
-        ho.body_binary,
+        ho.body_value,
         ho.op_type_id,
         ho.virtual_op
       FROM hafah_backend.helper_operations_view ho

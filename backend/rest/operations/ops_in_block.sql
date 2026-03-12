@@ -242,8 +242,8 @@ BEGIN
         -- Operation body: Support legacy and modern formats
         (
           CASE
-            WHEN _is_legacy_style THEN hive.get_legacy_style_operation(T.body_binary)::JSONB
-            ELSE T.body
+            WHEN _is_legacy_style THEN hive.get_legacy_style_operation(T.body_value)::text
+            ELSE T.body :: text
           END
         ) AS _value,
         T.id::BIGINT _operation_id
@@ -259,7 +259,7 @@ BEGIN
           -- Branch 1: Type-filtered query (when _operation_types provided)
           (
             SELECT
-              ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.body_binary, ho.op_type_id, ho.virtual_op
+              ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.body_value, ho.op_type_id, ho.virtual_op
             FROM hafah_backend.helper_operations_view ho
             JOIN accepted_types t ON ho.op_type_id = t.id
             WHERE __resolved_filter_exists AND (
@@ -275,7 +275,7 @@ BEGIN
           -- Branch 2: Unfiltered or virtual-only query
           (
             SELECT
-              ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.body_binary, ho.op_type_id, ho.virtual_op
+              ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.body_value, ho.op_type_id, ho.virtual_op
             FROM hafah_backend.helper_operations_view ho
             WHERE NOT __resolved_filter_exists AND (
                 (block_num >= _block_num) AND

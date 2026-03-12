@@ -194,8 +194,8 @@ BEGIN
       (
         CASE
           WHEN _is_legacy_style
-            THEN hive.get_legacy_style_operation(ho.body_binary)::JSONB
-          ELSE ho.body
+            THEN hive.get_legacy_style_operation(ho.body_value)::TEXT
+          ELSE ho.body::TEXT  -- WHY: body column already in new JSON format
         END
       ) AS _value
     FROM hive.operations_view ho
