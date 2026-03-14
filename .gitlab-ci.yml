@@ -508,7 +508,6 @@ build_setup_docker_image:
     PATTERN_TESTS_DIR: "${CI_PROJECT_DIR}/hive-api-tests/tests/python/api_tests/pattern_tests"
     JUNIT_REPORT: "hive-api-tests/tests/python/api_tests/pattern_tests/results.xml"
     DIRECT_CALLS: 0
-    HIVED_UID: $HIVED_UID
 
   # Override services to use haf_admin for wait script (hafah_user doesn't exist until app-setup creates it)
   services:
@@ -630,7 +629,6 @@ new_style_postgrest_pattern_tests:
     COMPARISON_TESTS_DIR: "${CI_PROJECT_DIR}/hive-api-tests/tests/python/api_tests/comparsion_tests"
     HAF_APP_PORT: ${APP_PORT}
     HAF_APP_USER: "hafah_user"
-    HIVED_UID: $HIVED_UID
     # Map HIVE_UPSTREAM_* from find_hive_image to HIVE_* for services
     HIVED_IMAGE_NAME: "${HIVE_UPSTREAM_IMAGE}"
     HIVE_DATA_SOURCE: "${DATA_CACHE_HIVE_PREFIX}_${HIVE_UPSTREAM_COMMIT}"
@@ -775,7 +773,6 @@ postgrest_comparison_tests:
     HAF_APP_USER: "hafah_user"
     FF_NETWORK_PER_BUILD: 1
     API_FOR_TESTING: "account_history_api" # alternatively: blocks_api
-    HIVED_UID: $HIVED_UID
     BENCHMARK_SOURCE_DIR: "${CI_PROJECT_DIR}/tests_api/benchmarks"
 
   # Use YAML anchors for services (defined in Reusable YAML Anchors section)
@@ -833,7 +830,6 @@ postgrest_rest_benchmark_tests:
     HAF_APP_PORT: $APP_PORT
     HAF_APP_USER: "hafah_user"
     FF_NETWORK_PER_BUILD: 1
-    HIVED_UID: $HIVED_UID
 
   # Use YAML anchors for services (defined in Reusable YAML Anchors section)
   services:

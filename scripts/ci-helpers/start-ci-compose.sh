@@ -12,14 +12,11 @@ CI_PROJECT_DIR=${CI_PROJECT_DIR:-$SCRIPTPATH/../..}
 # Optional with defaults
 HAF_SHM_DIRECTORY=${HAF_SHM_DIRECTORY:-${HAF_DATA_DIRECTORY}/shm_dir}
 HAFAH_PORT=${HAFAH_PORT:-6543}
-HIVED_UID=${HIVED_UID:-$(id -u)}
-
 echo "=== Starting HAfAH CI Test Environment ==="
 echo "HAF image: ${HAF_IMAGE_NAME}"
 echo "HAfAH image: ${HAFAH_IMAGE_NAME}"
 echo "HAF data directory: ${HAF_DATA_DIRECTORY}"
 echo "HAF SHM directory: ${HAF_SHM_DIRECTORY}"
-echo "HIVED_UID: ${HIVED_UID}"
 
 # Ensure SHM directory exists
 mkdir -p "${HAF_SHM_DIRECTORY}"
@@ -31,7 +28,6 @@ HAFAH_IMAGE=${HAFAH_IMAGE_NAME}
 HAF_DATA_DIRECTORY=${HAF_DATA_DIRECTORY}
 HAF_SHM_DIRECTORY=${HAF_SHM_DIRECTORY}
 HAFAH_PORT=${HAFAH_PORT}
-HIVED_UID=${HIVED_UID}
 EOF
 
 echo "Generated ci.env:"
