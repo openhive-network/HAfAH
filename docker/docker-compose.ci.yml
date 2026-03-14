@@ -6,7 +6,6 @@ services:
     command: ["--execute-maintenance-script=/home/haf_admin/source/scripts/maintenance-scripts/sleep_infinity.sh"]
     environment:
       PGCTLTIMEOUT: 600
-      HIVED_UID: ${HIVED_UID:-1000}
       DATADIR: /home/hived/datadir
       SHM_DIR: /home/hived/shm_dir
       PG_ACCESS: |
