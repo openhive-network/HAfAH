@@ -120,15 +120,11 @@ include:
     - '/templates/cache_cleanup.gitlab-ci.yml'
     - '/templates/docker_image_jobs.gitlab-ci.yml'
     - '/templates/haf_app_testing.gitlab-ci.yml'
+    - '/templates/haf_data_preparation.gitlab-ci.yml'
     - '/templates/python_projects.gitlab-ci.yml'
     - '/templates/npm_projects.gitlab-ci.yml'
     - '/templates/test_jobs.gitlab-ci.yml'
     - '/templates/source_change_detection.gitlab-ci.yml'
-# DinD permission fix for non-root hived images
-- project: 'hive/common-ci-configuration'
-  ref: fix/standardize-hived-uid
-  file:
-    - '/templates/haf_data_preparation.gitlab-ci.yml'
 
 # Use templates from common-ci-configuration for fetch strategy support
 default:
