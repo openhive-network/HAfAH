@@ -80,7 +80,7 @@ ADD --chmod=755 --chown=hafah_user:hafah_user ./scripts ./app/scripts
 
 ADD --chmod=755 --chown=hafah_user:hafah_user ./docker/docker_entrypoint.sh .
 
-USER hived
+USER hafah_user
 
 # JSON rpc service
 EXPOSE ${HTTP_PORT}
