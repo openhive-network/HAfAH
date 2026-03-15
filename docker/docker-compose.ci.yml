@@ -2,8 +2,8 @@ name: 'hafah-ci'
 services:
   haf:
     image: ${HAF_IMAGE:-registry.gitlab.syncad.com/hive/haf/instance:latest}
-    entrypoint: /home/haf_admin/docker_entrypoint.sh
-    command: ["--execute-maintenance-script=/home/haf_admin/source/scripts/maintenance-scripts/sleep_infinity.sh"]
+    entrypoint: /home/hived/docker_entrypoint.sh
+    command: ["--execute-maintenance-script=/home/hived/source/scripts/maintenance-scripts/sleep_infinity.sh"]
     environment:
       PGCTLTIMEOUT: 600
       DATADIR: /home/hived/datadir

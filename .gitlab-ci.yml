@@ -646,15 +646,15 @@ new_style_postgrest_pattern_tests:
           # Download fixed copy_datadir.sh from develop until hive images are rebuilt
           # Use wget (Alpine) or curl (Debian) based on availability
           if command -v wget >/dev/null 2>&1; then
-            wget -qO /home/hived_admin/scripts/copy_datadir.sh "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/haf-app-tools/scripts/copy_datadir.sh"
+            wget -qO /home/hived/scripts/copy_datadir.sh "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/haf-app-tools/scripts/copy_datadir.sh"
           elif command -v curl >/dev/null 2>&1; then
-            curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/haf-app-tools/scripts/copy_datadir.sh" -o /home/hived_admin/scripts/copy_datadir.sh
+            curl -fsSL "https://gitlab.syncad.com/hive/common-ci-configuration/-/raw/develop/haf-app-tools/scripts/copy_datadir.sh" -o /home/hived/scripts/copy_datadir.sh
           else
             echo "WARNING: Neither wget nor curl available, using bundled copy_datadir.sh"
           fi
-          chmod +x /home/hived_admin/scripts/copy_datadir.sh
+          chmod +x /home/hived/scripts/copy_datadir.sh
           # Run the original docker entrypoint with the fixed copy_datadir.sh
-          exec /home/hived_admin/docker_entrypoint.sh --stop-at-block=5000000
+          exec /home/hived/docker_entrypoint.sh --stop-at-block=5000000
 
     - name: ${HAF_IMAGE_NAME}
       alias: haf-instance
@@ -940,7 +940,7 @@ extract_testnet_binaries:
           export DATA_SOURCE="$NFS_PATH"
         fi
       fi
-      exec /home/haf_admin/docker_entrypoint.sh "$@"
+      exec /home/hived/docker_entrypoint.sh "$@"
     - '/bin/bash'
   command: ["--execute-maintenance-script=${HAF_SOURCE_DIR}/scripts/maintenance-scripts/sleep_infinity.sh"]
 
