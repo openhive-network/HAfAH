@@ -125,7 +125,7 @@ BEGIN
       (
         CASE
           WHEN _is_legacy_style
-            THEN hive.get_legacy_style_operation(T.body_value)::TEXT
+            THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(T.body))::TEXT
           ELSE T.body::TEXT
         END
       ) AS _value,
@@ -142,7 +142,6 @@ BEGIN
         ho.trx_in_block,
         ho.op_pos,
         ho.body,
-        ho.body_value,
         ho.op_type_id,
         ho.virtual_op
       FROM hafah_backend.helper_operations_view ho

@@ -222,7 +222,7 @@ BEGIN
         (
           CASE
             WHEN _is_legacy_style
-              THEN hive.get_legacy_style_operation(ho.body_value)::TEXT
+              THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::TEXT
             ELSE ho.body::TEXT
           END
         ) AS _value,
@@ -284,7 +284,7 @@ BEGIN
        */
       JOIN LATERAL (
         -- WHY LATERAL: Efficiently fetch operation body by ID from main operations table
-        SELECT hov.body, hov.body_value, hov.op_pos, hov.trx_in_block
+        SELECT hov.body, hov.op_pos, hov.trx_in_block
         FROM hive.operations_view hov
         WHERE ds.operation_id = hov.id
       ) ho ON TRUE
