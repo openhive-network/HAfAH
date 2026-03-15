@@ -38,7 +38,7 @@ BEGIN
   WITH recent_operations AS MATERIALIZED (
     SELECT
       ov.block_num,
-      ov.body
+      ov.body_value
     FROM hive.operations_view ov
     WHERE
       ov.op_type_id = 57 AND
@@ -55,7 +55,7 @@ BEGIN
     foo.taker
   FROM recent_operations ro
   JOIN hive.blocks_view bv ON bv.num = ro.block_num
-  CROSS JOIN hafah_backend.process_fill_order_operation(ro.body, bv.created_at) foo;
+  CROSS JOIN hafah_backend.process_fill_order_operation(ro.body_value, bv.created_at) foo;
 END
 $$;
 
