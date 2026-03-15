@@ -372,12 +372,16 @@ prepare_hived_data:
     # Map HIVE_UPSTREAM_* from find_hive_image to HIVE_* expected by template
     HIVED_IMAGE_NAME: "${HIVE_UPSTREAM_IMAGE}"
     HIVE_COMMIT: "${HIVE_UPSTREAM_COMMIT}"
+    # Use TTY fix branch until merged to develop
+    HIVE_SCRIPTS_REF: "fix/run-hived-img-no-tty"
   before_script:
     - !reference [.haf_docker_image_builder_job, before_script]
     - mkdir -p /tmp/haf-app-tools
     - curl -fsSL "${COMMON_CI_URL}/haf-app-tools/config/hived_config_5M.ini" -o /tmp/haf-app-tools/hived_config_5M.ini
     # Log the mapped variables
     - echo "Using hived image:${HIVED_IMAGE_NAME} (commit:${HIVE_COMMIT})"
+    # Ensure hived_uid.env exists for artifact collection
+    - echo "HIVED_UID=${HIVED_UID:-1000}" > "$CI_PROJECT_DIR/hived_uid.env"
   tags:
   - public-runner-docker
   - data-cache-storage
