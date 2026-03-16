@@ -74,7 +74,7 @@ INSERT INTO hafah_backend.version VALUES('unspecified (generate and apply set_ve
  *   virtual_op  - TRUE if this is a virtual operation
  *   op_type_id  - Operation type ID
  *   body        - Operation body as JSON
- *   body_value  - Operation body as JSONB
+ *   body        - Operation body as JSONB (full wrapper with type)
  */
 CREATE VIEW hafah_backend.helper_operations_view AS SELECT
   hov.id id,
@@ -83,8 +83,7 @@ CREATE VIEW hafah_backend.helper_operations_view AS SELECT
   hov.op_pos ::BIGINT AS op_pos,
   hot.is_virtual AS virtual_op,
   op_type_id op_type_id,
-  hov.body AS body,
-  hov.body_value AS body_value
+  hov.body AS body
 FROM
   hive.operations_view hov
 JOIN
