@@ -216,8 +216,8 @@ BEGIN
         (
           CASE
             WHEN _is_legacy_style
-              THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::TEXT
-            ELSE ho.body::TEXT
+              THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::JSONB
+            ELSE ho.body
           END
         ) AS _value,
         ds.account_op_seq_no AS _operation_id

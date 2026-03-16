@@ -242,8 +242,8 @@ BEGIN
         -- Operation body: Support legacy and modern formats
         (
           CASE
-            WHEN _is_legacy_style THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(T.body))::text
-            ELSE T.body :: text
+            WHEN _is_legacy_style THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(T.body))::JSONB
+            ELSE T.body
           END
         ) AS _value,
         T.id::BIGINT _operation_id
