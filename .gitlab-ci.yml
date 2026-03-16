@@ -372,10 +372,6 @@ prepare_hived_data:
     # Map HIVE_UPSTREAM_* from find_hive_image to HIVE_* expected by template
     HIVED_IMAGE_NAME: "${HIVE_UPSTREAM_IMAGE}"
     HIVE_COMMIT: "${HIVE_UPSTREAM_COMMIT}"
-    # Match container UID to skip remapping — current hive image has hived at
-    # UID 2001 (not 1000) and lacks NOPASSWD sudo, so remapping crashes.
-    # Remove once hive image is rebuilt with hived at UID 1000.
-    HIVED_UID: "2001"
   before_script:
     - !reference [.haf_docker_image_builder_job, before_script]
     - mkdir -p /tmp/haf-app-tools
