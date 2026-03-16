@@ -125,8 +125,8 @@ BEGIN
       (
         CASE
           WHEN _is_legacy_style
-            THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(T.body))::TEXT
-          ELSE T.body::TEXT
+            THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(T.body))::JSONB
+          ELSE T.body
         END
       ) AS _value,
       T.id::BIGINT AS _operation_id
