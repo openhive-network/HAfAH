@@ -18,26 +18,26 @@ SET ROLE hafah_owner;
  *          Internal helper for market history functions.
  *
  * PARAMETERS:
- *   _body_value - JSONB body_value (inner value, no type wrapper)
- *   _timestamp  - Block timestamp for the trade
+ *   _operation_body - JSONB operation body containing fill_order data
+ *   _timestamp      - Block timestamp for the trade
  *
  * RETURNS: Structured fill_order with current_pays, open_pays, maker, taker, and date
  */
-CREATE OR REPLACE FUNCTION hafah_backend.process_fill_order_operation(IN _body_value JSONB, IN _timestamp TIMESTAMP)
+CREATE OR REPLACE FUNCTION hafah_backend.process_fill_order_operation(IN _operation_body JSONB, IN _timestamp TIMESTAMP)
 RETURNS hafah_backend.fill_order
 LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
-  _open_pays hafah_backend.nai_object := jsonb_populate_record(NULL::hafah_backend.nai_object, _body_value->'open_pays');
-  _current_pays hafah_backend.nai_object := jsonb_populate_record(NULL::hafah_backend.nai_object, _body_value->'current_pays');
+  _open_pays hafah_backend.nai_object := jsonb_populate_record(NULL::hafah_backend.nai_object, _operation_body->'value'->'open_pays');
+  _current_pays hafah_backend.nai_object := jsonb_populate_record(NULL::hafah_backend.nai_object, _operation_body->'value'->'current_pays');
 BEGIN
   RETURN (
     _current_pays,
     _timestamp,
-    _body_value->>'open_owner',
+    _operation_body->'value'->>'open_owner',
     _open_pays,
-    _body_value->>'current_owner'
+    _operation_body->'value'->>'current_owner'
   )::hafah_backend.fill_order;
 END
 $$;
@@ -66,7 +66,7 @@ BEGIN
   WITH recent_operations AS MATERIALIZED (
     SELECT
       ov.block_num,
-      ov.body_value
+      ov.body
     FROM hive.operations_view ov
     WHERE ov.op_type_id = 57
     ORDER BY ov.block_num DESC, ov.id DESC
@@ -80,7 +80,7 @@ BEGIN
     foo.taker
   FROM recent_operations ro
   JOIN hive.blocks_view bv ON bv.num = ro.block_num
-  CROSS JOIN hafah_backend.process_fill_order_operation(ro.body_value, bv.created_at) foo;
+  CROSS JOIN hafah_backend.process_fill_order_operation(ro.body, bv.created_at) foo;
 END
 $$;
 
