@@ -43,7 +43,9 @@ BEGIN
     WHERE
       ov.op_type_id = 57 AND
       ov.block_num >= _from_block AND
-      ov.block_num <= _to_block
+      ov.block_num <= _to_block AND
+      ov.id >= hafd.operation_id(_from_block, 0) AND                    -- chunk exclusion
+      ov.id < hafd.operation_id(_to_block + 1, 0)                       -- chunk exclusion
     ORDER BY ov.block_num, ov.id
     LIMIT _limit
   )

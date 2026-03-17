@@ -221,6 +221,8 @@ BEGIN
         FROM hafah_backend.helper_operations_view ho
         WHERE ho.block_num >= _block_range_begin
           AND ho.block_num < _block_range_end  -- WHY: Exclusive end for consistent pagination
+          AND ho.id >= hafd.operation_id(_block_range_begin, 0)  -- chunk exclusion hint for compressed hypertable
+          AND ho.id < hafd.operation_id(_block_range_end, 0)     -- chunk exclusion hint for compressed hypertable
           AND ho.virtual_op = TRUE             -- WHY: Only virtual operations
           /*
            * OPERATION TYPE FILTER:

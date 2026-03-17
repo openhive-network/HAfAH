@@ -265,6 +265,8 @@ BEGIN
             WHERE __resolved_filter_exists AND (
                 (block_num >= _block_num) AND
                 (block_num < _end_block_num ) AND
+                (ho.id >= hafd.operation_id(_block_num, 0)) AND       -- chunk exclusion
+                (ho.id < hafd.operation_id(_end_block_num, 0)) AND    -- chunk exclusion
                 -- Cursor-based pagination: Skip operations before cursor
                 ( _operation_begin = -1 OR ho.id > _operation_begin )
             )
@@ -280,6 +282,8 @@ BEGIN
             WHERE NOT __resolved_filter_exists AND (
                 (block_num >= _block_num) AND
                 (block_num < _end_block_num ) AND
+                (ho.id >= hafd.operation_id(_block_num, 0)) AND       -- chunk exclusion
+                (ho.id < hafd.operation_id(_end_block_num, 0)) AND    -- chunk exclusion
                 -- Virtual filter: NULL=all, TRUE=virtual only, FALSE=non-virtual only
                 (__operation_filter OR (ho.virtual_op = _operation_group_types)) AND
                 ( _operation_begin = -1 OR ho.id > _operation_begin )
@@ -398,6 +402,7 @@ IF _account_id IS NULL THEN
       FROM hive.operations_view ov
       WHERE
         ov.block_num = _block_num
+        AND ov.id >= hafd.operation_id(_block_num, 0) AND ov.id < hafd.operation_id(_block_num + 1, 0)  -- chunk exclusion
       ),
       filter_ops AS MATERIALIZED
       (
@@ -576,6 +581,7 @@ IF _account_id IS NULL THEN
       FROM hive.operations_view ov
       WHERE
         ov.block_num = _block_num
+        AND ov.id >= hafd.operation_id(_block_num, 0) AND ov.id < hafd.operation_id(_block_num + 1, 0)  -- chunk exclusion
     ),
     filter_ops AS MATERIALIZED
     (

@@ -201,6 +201,7 @@ BEGIN
     FROM hive.operations_view ho
     JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
     WHERE ho.block_num = _block_num
+      AND ho.id >= hafd.operation_id(_block_num, 0) AND ho.id < hafd.operation_id(_block_num + 1, 0)  -- chunk exclusion
       AND ho.trx_in_block = _trx_in_block
       /*
        * VIRTUAL OPERATION FILTERING:

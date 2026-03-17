@@ -171,6 +171,7 @@ BEGIN
         WHERE
           ot.is_virtual = TRUE
           AND o.block_num >= (SELECT blk FROM pre_result_in)
+          AND o.id >= hafd.operation_id((SELECT blk FROM pre_result_in), 0)  -- chunk exclusion
           AND o.id > (SELECT op_id FROM pre_result_in)
         ORDER BY o.block_num, o.id
         LIMIT 1
