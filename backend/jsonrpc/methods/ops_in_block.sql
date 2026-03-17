@@ -146,7 +146,7 @@ BEGIN
         ho.virtual_op
       FROM hafah_backend.helper_operations_view ho
       WHERE ho.block_num = _block_num
-        AND ho.id >= hafd.operation_id(_block_num, 0) AND ho.id < hafd.operation_id(_block_num + 1, 0)  -- chunk exclusion
+        AND (_block_num < 0 OR (ho.id >= hafd.operation_id(_block_num, 0) AND ho.id < hafd.operation_id(_block_num + 1, 0)))  -- chunk exclusion
         /*
          * VIRTUAL OPERATION FILTER:
          *   - _only_virtual = FALSE: Return all operations (real + virtual)
