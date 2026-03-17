@@ -80,8 +80,8 @@ ADD --chmod=755 --chown=hafah_user:hafah_user ./scripts ./app/scripts
 
 ADD --chmod=755 --chown=hafah_user:hafah_user ./docker/docker_entrypoint.sh .
 
-# Run as haf_admin (has sudo) — entrypoint uses sudo -Enu hafah_user for PostgREST
-USER haf_admin
+# Run as hived (has sudo) — entrypoint uses sudo -Enu hafah_user for PostgREST
+USER hived
 
 # JSON rpc service
 EXPOSE ${HTTP_PORT}
