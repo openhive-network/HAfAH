@@ -34,6 +34,7 @@ CREATE OR REPLACE FUNCTION hafah_backend.get_operation(
 )
 RETURNS hafah_backend.operation
 LANGUAGE 'plpgsql' STABLE
+SET JIT = OFF
 AS
 $$
 BEGIN
