@@ -478,8 +478,9 @@ ELSE
       (
         SELECT ov.id, ov.trx_in_block, ov.op_pos, ov.body, ov.op_type_id, ov.block_num
         FROM hive.operations_view ov
-        -- JOIN to account ops: Only operations involving this account
-        JOIN account_operations_in_block aoib ON aoib.operation_id = ov.id
+        WHERE ov.id = ANY((SELECT array_agg(operation_id) FROM account_operations_in_block)::bigint[])
+          AND ov.id >= hafd.operation_id(_block_num, 0)
+          AND ov.id < hafd.operation_id(_block_num + 1, 0)
       ),
       filter_ops AS MATERIALIZED
       (
@@ -612,7 +613,9 @@ ELSE
     (
       SELECT ov.op_type_id, ov.body
       FROM hive.operations_view ov
-      JOIN account_operations_in_block aoib ON aoib.operation_id = ov.id
+      WHERE ov.id = ANY((SELECT array_agg(operation_id) FROM account_operations_in_block)::bigint[])
+        AND ov.id >= hafd.operation_id(_block_num, 0)
+        AND ov.id < hafd.operation_id(_block_num + 1, 0)
     ),
     filter_ops AS MATERIALIZED
     (
