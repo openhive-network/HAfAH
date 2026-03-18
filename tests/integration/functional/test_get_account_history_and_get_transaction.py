@@ -2,8 +2,6 @@ import pytest
 
 import test_tools as tt
 from beekeepy.exceptions import ErrorInResponseError
-from schemas.apis.account_history_api.response_schemas import GetTransaction
-
 from hafah_local_tools import send_request_to_hafah
 
 
@@ -147,7 +145,7 @@ def test_get_transaction_in_reversible_block(
         id=transaction_dict["transaction_id"],
         include_reversible=include_reversible,
     )
-    assert response == GetTransaction(**transaction_dict)
+    assert response.dict() == transaction_dict
 
 
 @pytest.mark.get_account_history_and_get_transaction
