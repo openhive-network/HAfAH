@@ -231,14 +231,18 @@ BEGIN
     SELECT
       ls.id,
       ls.block_num,
-      (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.id) AS trx_in_block,
+      (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.id
+       AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0)) AS trx_in_block,
       encode((SELECT htv.trx_hash FROM hive.transactions_view htv
               WHERE htv.block_num = ls.block_num
-              AND htv.trx_in_block = (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.id)
+              AND htv.trx_in_block = (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.id
+       AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0))
              ), 'hex') AS trx_hash,
-      (SELECT op_pos FROM hive.operations_view WHERE id = ls.id) AS op_pos,
+      (SELECT op_pos FROM hive.operations_view WHERE id = ls.id
+       AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0)) AS op_pos,
       ls.op_type_id,
-      (SELECT body FROM hive.operations_view WHERE id = ls.id) AS body,
+      (SELECT body FROM hive.operations_view WHERE id = ls.id
+       AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0)) AS body,
       (SELECT is_virtual FROM hafd.operation_types WHERE id = ls.op_type_id) AS is_virtual
     FROM (
       SELECT aov.id, aov.op_type_id, aov.block_num

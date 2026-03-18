@@ -179,15 +179,18 @@ BEGIN
          */
         (
           CASE
-            WHEN (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id) < 0
+            WHEN (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) < 0
               THEN '0000000000000000000000000000000000000000'
             ELSE encode(
               (
                 SELECT htv.trx_hash
                 FROM hive.transactions_view htv
-                WHERE (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id) >= 0
+                WHERE (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) >= 0
                   AND ds.block_num = htv.block_num
-                  AND (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id) = htv.trx_in_block
+                  AND (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) = htv.trx_in_block
               ),
               'hex'
             )
@@ -201,12 +204,15 @@ BEGIN
          */
         (
           CASE
-            WHEN (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id) < 0
+            WHEN (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) < 0
               THEN 4294967295  -- WHY: Max uint32 = "no transaction" marker
-            ELSE (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id)
+            ELSE (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))
           END
         ) AS _trx_in_block,
-        (SELECT op_pos FROM hive.operations_view WHERE id = ds.operation_id)::BIGINT AS _op_in_trx,
+        (SELECT op_pos FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))::BIGINT AS _op_in_trx,
         (SELECT is_virtual FROM hafd.operation_types WHERE id = ds.op_type_id) AS virtual_op,
         /*
          * OPERATION BODY FORMAT:
@@ -224,9 +230,11 @@ BEGIN
           CASE
             WHEN _is_legacy_style
               THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(
-                (SELECT body FROM hive.operations_view WHERE id = ds.operation_id)
+                (SELECT body FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))
               ))::JSONB
-            ELSE (SELECT body FROM hive.operations_view WHERE id = ds.operation_id)
+            ELSE (SELECT body FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))
           END
         ) AS _value,
         ds.account_op_seq_no AS _operation_id
