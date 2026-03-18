@@ -179,15 +179,18 @@ BEGIN
          */
         (
           CASE
-            WHEN ho.trx_in_block < 0
+            WHEN (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) < 0
               THEN '0000000000000000000000000000000000000000'
             ELSE encode(
               (
                 SELECT htv.trx_hash
                 FROM hive.transactions_view htv
-                WHERE ho.trx_in_block >= 0
+                WHERE (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+                       AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) >= 0
                   AND ds.block_num = htv.block_num
-                  AND ho.trx_in_block = htv.trx_in_block
+                  AND (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+                       AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) = htv.trx_in_block
               ),
               'hex'
             )
@@ -201,13 +204,16 @@ BEGIN
          */
         (
           CASE
-            WHEN ho.trx_in_block < 0
+            WHEN (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) < 0
               THEN 4294967295  -- WHY: Max uint32 = "no transaction" marker
-            ELSE ho.trx_in_block
+            ELSE (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))
           END
         ) AS _trx_in_block,
-        ho.op_pos::BIGINT AS _op_in_trx,
-        hot.is_virtual AS virtual_op,
+        (SELECT op_pos FROM hive.operations_view WHERE id = ds.operation_id
+         AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))::BIGINT AS _op_in_trx,
+        (SELECT is_virtual FROM hafd.operation_types WHERE id = ds.op_type_id) AS virtual_op,
         /*
          * OPERATION BODY FORMAT:
          *   - Legacy: Old format with type as string key {"vote": {...}}
@@ -216,8 +222,12 @@ BEGIN
         (
           CASE
             WHEN _is_legacy_style
-              THEN hive.get_legacy_style_operation(ho.body_binary)::JSONB
-            ELSE ho.body
+              THEN hive.get_legacy_style_operation(
+                (SELECT body_binary FROM hive.operations_view WHERE id = ds.operation_id
+                 AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))
+              )::JSONB
+            ELSE (SELECT body FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))
           END
         ) AS _value,
         ds.account_op_seq_no AS _operation_id
@@ -271,23 +281,6 @@ BEGIN
           LIMIT _limit
         )
       ) ds
-      /*
-       * LATERAL JOINS:
-       *   Fetch operation details for each matched account_operation.
-       *   LATERAL allows correlated subqueries in FROM clause.
-       */
-      JOIN LATERAL (
-        -- WHY LATERAL: Efficiently fetch operation body by ID from main operations table
-        SELECT hov.body, hov.body_binary, hov.op_pos, hov.trx_in_block
-        FROM hive.operations_view hov
-        WHERE ds.operation_id = hov.id
-      ) ho ON TRUE
-      JOIN LATERAL (
-        -- WHY: Determine if operation is virtual (affects trx_id and trx_in_block display)
-        SELECT ot.is_virtual
-        FROM hafd.operation_types ot
-        WHERE ds.op_type_id = ot.id
-      ) hot ON TRUE
       ORDER BY ds.account_op_seq_no ASC  -- WHY: Final result ordered ascending (oldest first in array)
     )
     SELECT

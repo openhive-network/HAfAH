@@ -62,7 +62,9 @@ BEGIN
     -- LEFT JOIN transactions: Virtual ops have no transaction, so LEFT JOIN
     -- Match by block_num + trx_in_block (composite key)
     LEFT JOIN hive.transactions_view htv ON htv.block_num = ov.block_num AND htv.trx_in_block = ov.trx_in_block
-    WHERE ov.id = _operation_id;
+    WHERE ov.id = _operation_id
+      AND ov.id >= hafd.operation_id(hafd.operation_id_to_block_num(_operation_id), 0)
+      AND ov.id < hafd.operation_id(hafd.operation_id_to_block_num(_operation_id) + 1, 0);
 END
 $$;
 
