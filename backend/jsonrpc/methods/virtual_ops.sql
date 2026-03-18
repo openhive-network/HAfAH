@@ -81,6 +81,7 @@ CREATE OR REPLACE FUNCTION hafah_backend.enum_virtual_ops(
 )
 RETURNS SETOF hafah_backend.enum_virtual_ops_result
 LANGUAGE 'plpgsql' STABLE
+SET JIT = OFF
 AS $$
 DECLARE
   __resolved_filter   SMALLINT[];  -- Array of operation type IDs from bitmask
