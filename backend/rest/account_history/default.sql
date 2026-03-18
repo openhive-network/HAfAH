@@ -122,12 +122,15 @@ BEGIN
     SELECT
       ls.operation_id AS id,
       ls.block_num,
-      ov.trx_in_block,
-      encode(htv.trx_hash, 'hex') AS trx_hash,  -- Convert binary hash to hex string
-      ov.op_pos,
+      (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.operation_id) AS trx_in_block,
+      encode((SELECT htv.trx_hash FROM hive.transactions_view htv
+              WHERE htv.block_num = ls.block_num
+              AND htv.trx_in_block = (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.operation_id)
+             ), 'hex') AS trx_hash,
+      (SELECT op_pos FROM hive.operations_view WHERE id = ls.operation_id) AS op_pos,
       ls.op_type_id,
-      ov.body,
-      hot.is_virtual
+      (SELECT body FROM hive.operations_view WHERE id = ls.operation_id) AS body,
+      (SELECT is_virtual FROM hafd.operation_types WHERE id = ls.op_type_id) AS is_virtual
     FROM (
       -- Inner query: fetch from account_operations_view with pagination
       SELECT aov.operation_id, aov.op_type_id, aov.block_num
@@ -138,9 +141,6 @@ BEGIN
       ORDER BY aov.account_op_seq_no DESC
       LIMIT _calculate_pages.limit_filter
     ) ls
-    JOIN hive.operations_view ov ON ov.id = ls.operation_id        -- Operation body
-    JOIN hafd.operation_types hot ON hot.id = ls.op_type_id        -- Virtual flag
-    LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ov.trx_in_block  -- Transaction hash (NULL for virtual)
   ),
   /*
    * ===================================================================================

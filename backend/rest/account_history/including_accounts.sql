@@ -208,18 +208,19 @@ BEGIN
     SELECT
       ls.id,
       ls.block_num,
-      ov.trx_in_block,
-      (SELECT encode(htv.trx_hash, 'hex') FROM hive.transactions_view htv WHERE htv.block_num = ls.block_num AND htv.trx_in_block = ov.trx_in_block) AS trx_hash,
-      ov.op_pos,
+      (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.id) AS trx_in_block,
+      encode((SELECT htv.trx_hash FROM hive.transactions_view htv
+              WHERE htv.block_num = ls.block_num
+              AND htv.trx_in_block = (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.id)
+             ), 'hex') AS trx_hash,
+      (SELECT op_pos FROM hive.operations_view WHERE id = ls.id) AS op_pos,
       ls.op_type_id,
-      ov.body,
-      hot.is_virtual
+      (SELECT body FROM hive.operations_view WHERE id = ls.id) AS body,
+      (SELECT is_virtual FROM hafd.operation_types WHERE id = ls.op_type_id) AS is_virtual
     FROM (
       SELECT aov.id, aov.op_type_id, aov.block_num
       FROM filter_page aov
     ) ls
-    JOIN hive.operations_view ov ON ov.id = ls.id
-    JOIN hafd.operation_types hot ON hot.id = ls.op_type_id
   ),
   result_query AS (
     SELECT
