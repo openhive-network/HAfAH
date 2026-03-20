@@ -222,8 +222,12 @@ BEGIN
         (
           CASE
             WHEN _is_legacy_style
-              THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::JSONB
-            ELSE ho.body
+              THEN hive.get_legacy_style_operation(
+                (SELECT body_value FROM hive.operations_view WHERE id = ds.operation_id
+                 AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))
+              )::JSONB
+            ELSE (SELECT body FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))
           END
         ) AS _value,
         ds.account_op_seq_no AS _operation_id
@@ -277,23 +281,6 @@ BEGIN
           LIMIT _limit
         )
       ) ds
-      /*
-       * LATERAL JOINS:
-       *   Fetch operation details for each matched account_operation.
-       *   LATERAL allows correlated subqueries in FROM clause.
-       */
-      JOIN LATERAL (
-        -- WHY LATERAL: Efficiently fetch operation body by ID from main operations table
-        SELECT hov.body, hov.op_pos, hov.trx_in_block
-        FROM hive.operations_view hov
-        WHERE ds.operation_id = hov.id
-      ) ho ON TRUE
-      JOIN LATERAL (
-        -- WHY: Determine if operation is virtual (affects trx_id and trx_in_block display)
-        SELECT ot.is_virtual
-        FROM hafd.operation_types ot
-        WHERE ds.op_type_id = ot.id
-      ) hot ON TRUE
       ORDER BY ds.account_op_seq_no ASC  -- WHY: Final result ordered ascending (oldest first in array)
     )
     SELECT
