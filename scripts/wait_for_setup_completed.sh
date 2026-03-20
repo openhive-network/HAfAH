@@ -41,57 +41,27 @@ wait_for_postgres() {
 wait_for_app_setup() {
   local time_limit=$1
 
-  COMMAND="SELECT EXISTS(SELECT 1 FROM information_schema.schemata WHERE schema_name = 'hafah_backend');"
-  TOTAL_SLEEP=0
-  SLEEP_INTERVAL=3
-  until psql "${DATABASE_URL}" --quiet --tuples-only --command="$COMMAND" | grep t &>/dev/null
-  do
-    echo "Waiting for schema hafah_backend to be created..."
-    if [[ $TOTAL_SLEEP -ge $LIMIT ]]; then
-      echo "Timeout waiting for schema hafah_backend to be created"
-      exit 1
-    fi
-    sleep $SLEEP_INTERVAL
-    TOTAL_SLEEP=$((TOTAL_SLEEP+SLEEP_INTERVAL))
-  done
-
-  psql -q "${DATABASE_URL}" -v ON_ERROR_STOP=on -f- <<EOF
-
-CREATE OR REPLACE FUNCTION hafah_backend.app_setup_helper()
-RETURNS BOOLEAN
-IMMUTABLE
-LANGUAGE PLPGSQL
-AS
-\$\$
-BEGIN
-	RETURN hafah_backend.is_setup_completed();
-EXCEPTION WHEN OTHERS THEN
-	RETURN FALSE;
-END
-\$\$;
-EOF
+  echo "Waiting for application setup at the URL: ${DATABASE_URL}, timeout: ${time_limit}."
 
   set +e
 
-  timeout -v "${time_limit}" bash <<EOF
-    echo "Waiting for application setup at the URL: ${DATABASE_URL}, timeout: ${time_limit}."
+  timeout -v "${time_limit}" bash -c "
     retry=0
-    status=\$(psql -qAt ${DATABASE_URL} -c 'SELECT hafah_backend.app_setup_helper();')
-
-    until [ "\${status}" == "t" ] ; do
+    while true; do
+      status=\$(psql -qAt \"${DATABASE_URL}\" -c \"SELECT COALESCE((SELECT hafah_backend.is_setup_completed()), false);\" 2>/dev/null)
+      if [ \"\${status}\" = \"t\" ]; then
+        break
+      fi
       retry=\$((retry+1))
-      echo "\${retry} Retrying a wait for application setup at the URL: ${DATABASE_URL}.";
-      sleep 1 ;
-      status=\$(psql -qAt ${DATABASE_URL} -c 'SELECT hafah_backend.app_setup_helper();')
+      echo \"\${retry} Retrying a wait for application setup at the URL: ${DATABASE_URL}.\"
+      sleep 1
     done
-EOF
+  "
 
   retcode=$?
-  psql "${DATABASE_URL}" -q -v ON_ERROR_STOP=on -c 'DROP FUNCTION IF EXISTS hafah_backend.app_setup_helper;'
   set -e
 
-  if [ ${retcode} -eq 0 ];
-  then
+  if [ ${retcode} -eq 0 ]; then
     echo "Application is ready."
   fi
 
