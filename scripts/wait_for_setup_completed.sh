@@ -45,18 +45,21 @@ wait_for_app_setup() {
 
   set +e
 
-  timeout -v "${time_limit}" bash -c "
+  local db_url="${DATABASE_URL}"
+  export SETUP_CHECK_DB_URL="${db_url}"
+
+  timeout -v "${time_limit}" bash -c '
     retry=0
     while true; do
-      status=\$(psql -qAt \"${DATABASE_URL}\" -c \"SELECT COALESCE((SELECT hafah_backend.is_setup_completed()), false);\" 2>/dev/null)
-      if [ \"\${status}\" = \"t\" ]; then
+      status=$(psql -qAt "${SETUP_CHECK_DB_URL}" -c "SELECT COALESCE((SELECT hafah_backend.is_setup_completed()), false);" 2>/dev/null)
+      if [ "${status}" = "t" ]; then
         break
       fi
-      retry=\$((retry+1))
-      echo \"\${retry} Retrying a wait for application setup at the URL: ${DATABASE_URL}.\"
+      retry=$((retry+1))
+      echo "${retry} Retrying a wait for application setup at the URL: ${SETUP_CHECK_DB_URL}."
       sleep 1
     done
-  "
+  '
 
   retcode=$?
   set -e
