@@ -394,7 +394,7 @@ IF _account_id IS NULL THEN
     FROM (
       With operations_in_block AS
       (
-      SELECT ov.id, ov.trx_in_block, ov.op_pos, ov.body, ov.op_type_id, ov.block_num
+      SELECT ov.id, ov.trx_in_block, ov.op_pos, ov.body, ov.body_value, ov.op_type_id, ov.block_num
       FROM hive.operations_view ov
       WHERE
         ov.block_num = _block_num
@@ -405,9 +405,9 @@ IF _account_id IS NULL THEN
       FROM operations_in_block oib
       WHERE
         (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
-        (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
-        (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND
-        (_third_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2))) = _key_content[3])
+        (_first_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0) OFFSET 1)) = _key_content[1]) AND
+        (_second_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1) OFFSET 1)) = _key_content[2]) AND
+        (_third_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2) OFFSET 1)) = _key_content[3])
       )
       SELECT * FROM filter_ops fo
       ORDER BY
@@ -471,7 +471,7 @@ ELSE
       ),
       operations_in_block AS
       (
-        SELECT ov.id, ov.trx_in_block, ov.op_pos, ov.body, ov.op_type_id, ov.block_num
+        SELECT ov.id, ov.trx_in_block, ov.op_pos, ov.body, ov.body_value, ov.op_type_id, ov.block_num
         FROM hive.operations_view ov
         -- JOIN to account ops: Only operations involving this account
         JOIN account_operations_in_block aoib ON aoib.operation_id = ov.id
@@ -482,9 +482,9 @@ ELSE
         FROM operations_in_block oib
         WHERE
           (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
-          (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
-          (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND
-          (_third_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2))) = _key_content[3])
+          (_first_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0) OFFSET 1)) = _key_content[1]) AND
+          (_second_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1) OFFSET 1)) = _key_content[2]) AND
+          (_third_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2) OFFSET 1)) = _key_content[3])
       )
       SELECT * FROM filter_ops fo
       ORDER BY
@@ -572,7 +572,7 @@ IF _account_id IS NULL THEN
   RETURN (
     WITH operations_in_block AS
     (
-      SELECT ov.op_type_id, ov.body
+      SELECT ov.op_type_id, ov.body, ov.body_value
       FROM hive.operations_view ov
       WHERE
         ov.block_num = _block_num
@@ -585,9 +585,9 @@ IF _account_id IS NULL THEN
         -- Operation type filter: NULL = all types, otherwise match array
         (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
         -- Body key filters: Extract nested JSON values and compare
-        (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
-        (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND
-        (_third_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2))) = _key_content[3])
+        (_first_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0) OFFSET 1)) = _key_content[1]) AND
+        (_second_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1) OFFSET 1)) = _key_content[2]) AND
+        (_third_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2) OFFSET 1)) = _key_content[3])
     )
     SELECT COUNT(*) FROM filter_ops);
 -- Count branch 2: Account-filtered operations
@@ -604,7 +604,7 @@ ELSE
     ),
     operations_in_block AS
     (
-      SELECT ov.op_type_id, ov.body
+      SELECT ov.op_type_id, ov.body, ov.body_value
       FROM hive.operations_view ov
       JOIN account_operations_in_block aoib ON aoib.operation_id = ov.id
     ),
@@ -614,9 +614,9 @@ ELSE
       FROM operations_in_block oib
       WHERE
         (__no_ops_filter OR oib.op_type_id = ANY(_filter)) AND
-        (_first_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0))) = _key_content[1]) AND
-        (_second_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1))) = _key_content[2]) AND
-        (_third_key OR jsonb_extract_path_text(oib.body, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2))) = _key_content[3])
+        (_first_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->0) OFFSET 1)) = _key_content[1]) AND
+        (_second_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->1) OFFSET 1)) = _key_content[2]) AND
+        (_third_key OR jsonb_extract_path_text(oib.body_value, variadic ARRAY(SELECT json_array_elements_text(_setof_keys->2) OFFSET 1)) = _key_content[3])
     )
     SELECT COUNT(*) FROM filter_ops);
 
