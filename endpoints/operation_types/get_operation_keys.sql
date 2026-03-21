@@ -38,13 +38,13 @@ SET ROLE hafah_owner;
                   type: string
               x-sql-datatype: JSON
             example: [
-                  ["value","body"],
-                  ["value","title"],
-                  ["value","author"],
-                  ["value","permlink"],
-                  ["value","json_metadata"],
-                  ["value","parent_author"],
-                  ["value","parent_permlink"]
+                  ["body"],
+                  ["title"],
+                  ["author"],
+                  ["permlink"],
+                  ["json_metadata"],
+                  ["parent_author"],
+                  ["parent_permlink"]
                 ]
  */
 -- openapi-generated-code-begin
@@ -70,33 +70,33 @@ BEGIN
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
 
   _example_key := (
-    SELECT 
-      ov.body 
-    FROM hive.operations_view ov 
-    WHERE ov.op_type_id = "type-id" 
+    SELECT
+      ov.body_value::json
+    FROM hive.operations_view ov
+    WHERE ov.op_type_id = "type-id"
     LIMIT 1
   );
 
   RETURN COALESCE(
     (
       WITH RECURSIVE extract_keys AS (
-        SELECT 
-          ARRAY['value']::TEXT[] as key_path, 
-          (json_each(_example_key -> 'value')).*
+        SELECT
+          ARRAY[]::TEXT[] as key_path,
+          (json_each(_example_key)).*
         UNION ALL
-        SELECT 
+        SELECT
           key_path || key,
           (json_each(value)).*
-        FROM 
+        FROM
           extract_keys
-        WHERE 
+        WHERE
           json_typeof(value) = 'object'
       )
-      SELECT 
+      SELECT
         json_agg(to_json(key_path || key))
-      FROM 
+      FROM
         extract_keys
-      WHERE 
+      WHERE
         json_typeof(value) != 'object'
     ), '[]'::json
   );
