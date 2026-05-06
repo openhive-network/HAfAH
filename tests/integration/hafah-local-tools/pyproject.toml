@@ -19,5 +19,5 @@ source = [
 
 [tool.poetry.dependencies]
 python = ">=3.14,<4"
-hiveio-haf-local-tools = "^1.28.5"
+hiveio-haf-local-tools = "^1.28.6"
 tavern = "^3.0.2"
