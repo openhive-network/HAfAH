@@ -666,13 +666,13 @@ reference = "gitlab-hive"
 
 [[package]]
 name = "hiveio-haf-local-tools"
-version = "1.28.6rc14.dev20260506125357"
+version = "1.28.6"
 description = "A collective library containing all the tools required by haf python tests."
 optional = false
 python-versions = ">=3.14,<4"
 groups = ["main"]
 files = [
-    {file = "hiveio_haf_local_tools-1.28.6rc14.dev20260506125357-py3-none-any.whl", hash = "sha256:b341bfcb4af237b05ad7d6a1c1a5fbef87a84049d1e26abf32978f3b438d3a0d"},
+    {file = "hiveio_haf_local_tools-1.28.6-py3-none-any.whl", hash = "sha256:09477d8bdd8b9a0c9521bb2d509707c84448b6aabf83fed5d7af10f079e681fe"},
 ]
 
 [package.dependencies]
@@ -2498,4 +2498,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.14,<4"
-content-hash = "bee63bfa8ec75db9485583260dc7ad880c9a6542fc7b53afc0297e6dfa9f41a9"
+content-hash = "75478d595de25f5806c5fd9a966ad9db9e8a4850f069ffc1f3316539950bd472"
