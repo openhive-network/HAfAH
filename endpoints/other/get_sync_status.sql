@@ -54,6 +54,9 @@ SET ROLE hafah_owner;
         description: |
           HAF''s consistent (last irreversible) block and its timestamp.
           `last_block_time` is null if HAF has no consistent block yet.
+          While the HAF instance is still in massive sync (indexes not yet
+          built) the call fails fast with an error rather than executing an
+          unindexed lookup.
 
           * Returns `JSON`
         content:
@@ -87,6 +90,17 @@ DECLARE
 BEGIN
   -- No cache - sync status needs real-time accuracy
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=0"}]', true);
+
+  -- Fail fast during HAF massive sync: hafd.blocks' PK is dropped for the
+  -- duration (hive.disable_indexes_of_irreversible), so the blocks_view
+  -- lookup below would seq-scan the largest table in the database.
+  -- Health-check agents gate on is_instance_ready() before calling APIs;
+  -- this guard protects any caller that does not (e.g. a raw haproxy
+  -- httpchk) by erroring in milliseconds instead of stalling.
+  IF NOT hive.is_instance_ready() THEN
+    RAISE EXCEPTION 'HAF instance is not ready (massive sync in progress)'
+      USING ERRCODE = '55000';
+  END IF;
 
   RETURN json_build_object(
     'last_block_num', __consistent_block,
