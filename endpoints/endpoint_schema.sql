@@ -2136,6 +2136,44 @@ declare
         }
       }
     },
+    "/sync-status": {
+      "get": {
+        "tags": [
+          "Other"
+        ],
+        "summary": "Get hafah''s sync status",
+        "description": "Get the last block for which HAfAH data is available, as an object\ncontaining both the block number and its timestamp (UTC). This is the\nuniform HAF-app sync/health endpoint: the timestamp lets a consumer\ncompute staleness with a single call (`age = now() - last_block_time`)\nwithout needing a separate head-block reference.\n\nHAfAH serves account history directly from HAF''s own tables and has no\napp-specific sync process, so its data freshness is HAF''s freshness:\nthis endpoint reports HAF''s consistent (last irreversible) block. For\nHAfAH, \"synced\" means the HAF database itself is synced (its last\nirreversible block is recent).\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_sync_status();`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/sync-status''`\n",
+        "operationId": "hafah_endpoints.get_sync_status",
+        "responses": {
+          "200": {
+            "description": "HAF''s consistent (last irreversible) block and its timestamp.\n`last_block_time` is null if HAF has no consistent block yet.\n\n* Returns `JSON`\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "x-sql-datatype": "JSON",
+                  "properties": {
+                    "last_block_num": {
+                      "type": "integer",
+                      "description": "HAF''s consistent (last irreversible) block number"
+                    },
+                    "last_block_time": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "UTC timestamp of that block"
+                    }
+                  }
+                },
+                "example": {
+                  "last_block_num": 5000000,
+                  "last_block_time": "2016-09-15T19:47:21"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/global-state": {
       "get": {
         "tags": [
