@@ -2146,7 +2146,7 @@ declare
         "operationId": "hafah_endpoints.get_sync_status",
         "responses": {
           "200": {
-            "description": "HAF''s consistent (last irreversible) block and its timestamp.\n`last_block_time` is null if HAF has no consistent block yet.\n\n* Returns `JSON`\n",
+            "description": "HAF''s consistent (last irreversible) block and its timestamp.\n`last_block_time` is null if HAF has no consistent block yet.\nWhile the HAF instance is still in massive sync (indexes not yet\nbuilt) the call fails fast with an error rather than executing an\nunindexed lookup.\n\n* Returns `JSON`\n",
             "content": {
               "application/json": {
                 "schema": {
