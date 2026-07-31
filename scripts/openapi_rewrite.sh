@@ -47,6 +47,7 @@ ENDPOINTS_IN_ORDER="
 ../$endpoints/market_history/get_recent_trades.sql
 ../$endpoints/other/get_version.sql
 ../$endpoints/other/get_head_block_num.sql
+../$endpoints/other/get_sync_status.sql
 ../$endpoints/other/get_block.sql"
 
 # Function to reverse the lines
