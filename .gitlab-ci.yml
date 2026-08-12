@@ -17,11 +17,11 @@ variables:
 
   CI_DEBUG_SERVICES: "true"
   # CI base image (Ubuntu 26.04, native Python 3.14)
-  BUILDER_IMAGE_TAG: ":ubuntu26.04-pg18-1"
+  BUILDER_IMAGE_TAG: ":ubuntu26.04-pg18-2"
   BUILDER_IMAGE_PATH: "registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image-ubuntu${BUILDER_IMAGE_TAG}"
 
   # Python 3.14 image (hafah-local-tools require Python >=3.14)
-  PYTHON_COMPAT_IMAGE: "registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image-ubuntu:ubuntu26.04-pg18-1"
+  PYTHON_COMPAT_IMAGE: "registry.gitlab.syncad.com/hive/common-ci-configuration/ci-base-image-ubuntu:ubuntu26.04-pg18-2"
   # Use the Python 3.14 image for pytest compatibility
   PYTEST_RUNTIME_IMAGE_NAME: "${PYTHON_COMPAT_IMAGE}"
   # Enable PyO3 forward compatibility for Python 3.14 (rpds-py build support)
