@@ -327,7 +327,11 @@ def test_default_args_value(postgrest_hafah):
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-@pytest.mark.parametrize("only_virtual, number_of_ops", ((False, 3), (True, 2)))
+# Since the testnet account-creation fee became non-zero (hive 49eb9bdf), the
+# burned fee adds a clear_null_account_balance_operation to every block with an
+# account_create: [account_create, account_created, clear_null_account_balance,
+# producer_reward].
+@pytest.mark.parametrize("only_virtual, number_of_ops", ((False, 4), (True, 3)))
 def test_filter_virtual_ops(postgrest_hafah, wallet, only_virtual, number_of_ops):
     block_number = wallet.create_account(f"fred-{int(only_virtual)}")["block_num"]
     response = send_request_to_hafah(
