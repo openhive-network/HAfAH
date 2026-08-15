@@ -157,7 +157,7 @@ def test_find_newly_created_virtual_op(haf_node, postgrest_hafah, wallet):
         filter=0x8000000,
     )
     assert len(response["ops"]) == 1
-    assert response["ops"][0]["trx_id"] == transaction["transaction_id"]
+    assert response["ops"][0]["trx_id"] == transaction.transaction_id
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
