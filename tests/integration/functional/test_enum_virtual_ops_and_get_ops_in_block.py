@@ -112,11 +112,10 @@ def test_filter_only_hardfork_operations(haf_node, postgrest_hafah):
         include_reversible=True,
         filter=0x000400,
     )
-    number_of_hardforks = int(
-        haf_node.api.database.get_config()["HIVE_BLOCKCHAIN_HARDFORK_VERSION"].split(
-            "."
-        )[1]
-    )
+    # HIVE_BLOCKCHAIN_HARDFORK_VERSION reports the highest *defined* hardfork,
+    # which since hive 1.29 can be ahead of activation (HF29 has a far-future
+    # default time); a hardfork_operation is only emitted for applied ones.
+    number_of_hardforks = haf_node.api.database.get_hardfork_properties().last_hardfork
     assert len(response["ops"]) == number_of_hardforks
 
 
