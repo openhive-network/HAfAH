@@ -3,11 +3,21 @@ import time
 
 from beekeepy.exceptions import ErrorInResponseError
 from schemas.convert import to_builtins as _to_builtins
+from schemas.fields.serializable import Serializable
+
+
+def _enc_hook(obj):
+    # schemas' field wrappers (HiveDateTime, assets, ...) know their own wire format
+    if isinstance(obj, Serializable):
+        return _to_builtins(obj.serialize(), enc_hook=_enc_hook)
+    if isinstance(obj, int):
+        return int(obj)
+    return str(obj)
 
 
 def to_plain(obj):
-    """to_builtins with support for schemas' scalar wrappers (HiveInt etc.)."""
-    return _to_builtins(obj, enc_hook=lambda o: int(o) if isinstance(o, int) else str(o))
+    """to_builtins with support for schemas' scalar/field wrappers (HiveInt etc.)."""
+    return _to_builtins(obj, enc_hook=_enc_hook)
 
 
 def send_request_to_hafah(hafah_node: tt.RemoteNode, method, **kwargs):
