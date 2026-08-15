@@ -2,7 +2,12 @@ import test_tools as tt
 import time
 
 from beekeepy.exceptions import ErrorInResponseError
-from schemas.convert import to_builtins
+from schemas.convert import to_builtins as _to_builtins
+
+
+def to_plain(obj):
+    """to_builtins with support for schemas' scalar wrappers (HiveInt etc.)."""
+    return _to_builtins(obj, enc_hook=lambda o: int(o) if isinstance(o, int) else str(o))
 
 
 def send_request_to_hafah(hafah_node: tt.RemoteNode, method, **kwargs):
@@ -11,7 +16,7 @@ def send_request_to_hafah(hafah_node: tt.RemoteNode, method, **kwargs):
         try:
             # Convert the typed msgspec response back to plain dicts/lists so the
             # tests can keep their JSON-shaped assertions.
-            response = to_builtins(getattr(hafah_node.api.account_history, method)(**kwargs))
+            response = to_plain(getattr(hafah_node.api.account_history, method)(**kwargs))
         except ErrorInResponseError as error:
             if "Unknown Transaction" in error.error and i!=4:
                 response = None

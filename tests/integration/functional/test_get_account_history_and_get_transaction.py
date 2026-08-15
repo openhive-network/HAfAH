@@ -2,8 +2,7 @@ import pytest
 
 import test_tools as tt
 from beekeepy.exceptions import ErrorInResponseError
-from hafah_local_tools import send_request_to_hafah
-from schemas.convert import to_builtins
+from hafah_local_tools import send_request_to_hafah, to_plain
 
 
 @pytest.mark.get_account_history_and_get_transaction
@@ -131,7 +130,7 @@ def test_get_transaction_in_reversible_block(
     wallet.close()
     wallet = tt.Wallet(attach_to=init_node)
     transaction = wallet.create_account(f"ewa-{int(include_reversible)}")
-    transaction_dict = to_builtins(transaction)
+    transaction_dict = to_plain(transaction)
 
     # Wait for HAF to actually sync the transaction to the database
     haf_node.wait_for_transaction_in_database(transaction, timeout=60)
