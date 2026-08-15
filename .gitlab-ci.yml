@@ -186,7 +186,7 @@ find_haf_image:
   stage: detect
 
   variables:
-    UPSTREAM_BRANCH: 1.28.6-rc14
+    UPSTREAM_BRANCH: develop
 find_haf_testnet_image:
   extends: .find_haf_image
   stage: detect
