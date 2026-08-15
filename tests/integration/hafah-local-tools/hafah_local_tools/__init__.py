@@ -16,8 +16,13 @@ def _enc_hook(obj):
 
 
 def to_plain(obj):
-    """to_builtins with support for schemas' scalar/field wrappers (HiveInt etc.)."""
-    return _to_builtins(obj, enc_hook=_enc_hook)
+    """to_builtins with support for schemas' scalar/field wrappers (HiveInt etc.).
+
+    Round-trips through JSON so containers normalize to their wire shapes
+    (e.g. key_auths tuples become arrays)."""
+    import json as _json
+
+    return _json.loads(_json.dumps(_to_builtins(obj, enc_hook=_enc_hook)))
 
 
 def send_request_to_hafah(hafah_node: tt.RemoteNode, method, **kwargs):
