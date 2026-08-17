@@ -1,4 +1,4 @@
-# syntax=registry.gitlab.syncad.com/hive/common-ci-configuration/dockerfile:1.5
+# syntax=registry.gitlab.syncad.com/hive/common-ci-configuration/dockerfile:1.11
 ARG PSQL_CLIENT_VERSION=14-1
 ARG POSTGREST_VERSION=v12.0.2
 FROM registry.gitlab.syncad.com/hive/common-ci-configuration/postgrest:${POSTGREST_VERSION} AS pure_postgrest
