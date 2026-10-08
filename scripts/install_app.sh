@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit 1; pwd -P )"
 
 export LOG_FILE=install_app.log
-# shellcheck source=common.sh
+# shellcheck source-path=SCRIPTDIR source=common.sh
 source "$SCRIPTPATH/common.sh"
 
 log_exec_params "$@"

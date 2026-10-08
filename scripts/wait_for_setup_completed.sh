@@ -48,6 +48,7 @@ wait_for_app_setup() {
   local db_url="${DATABASE_URL}"
   export SETUP_CHECK_DB_URL="${db_url}"
 
+  # shellcheck disable=SC2016 # the inner script expands its own variables in the child bash
   timeout -v "${time_limit}" bash -c '
     retry=0
     while true; do
