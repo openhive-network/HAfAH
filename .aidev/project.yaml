@@ -1,0 +1,92 @@
+# Profile for hive/HAfAH, written by `aidev project scaffold` (#13561).
+#
+# Schema reference: docs/architecture/project-profile.md
+# Onboarding procedure: the `onboard-external-project` skill.
+# Guide: docs/operations/onboarding-an-external-project.md
+#
+# The generator writes a starting point, not a governed answer: every
+# binding below is the command a maintainer said this project runs, and it
+# is reviewed and edited like any other declaration.
+version: 2
+project: hafah
+
+gitlab:
+  host: "gitlab.syncad.com"
+  path: "hive/HAfAH"
+  id: 308
+
+# AIDEV integrates into its own branch; people merge it into develop through
+# merge requests (as in hive/denser and hive/haf_api_node), so `stable` is
+# omitted and `aidev release` never moves develop or master.
+branches:
+  integration: "aidev/integration"
+
+# How this project's suites execute (#13892): one kind, stated once.
+environment:
+  kind: "container"
+  # Built by .aidev/runtime/build.sh from .aidev/runtime/Dockerfile (its only input).
+  image: "registry.gitlab.syncad.com/hive/hafah/aidev-tests@sha256:13606fcffa0ca096d06f9eb6f7b4bf9dbfc3e9ab6798e20f749628d0ef0228f7"
+  inputs: [".aidev/runtime/Dockerfile"]
+
+issues:
+  intake_label: todo
+  taxonomy: ".aidev/labels.yaml"
+  decompose:
+    # `never` is where an external project starts: nothing marks work
+    # approved on this project's behalf until there is a track record.
+    auto_todo: never
+  # Reports about this project's work are filed against this project.
+  watcher_reports: self
+
+# The service stack the slots that install HAfAH start (aidev#9890): one empty
+# HAF testnet database, as CI's pytest functional jobs run it. The runtime
+# container joins its network and reaches it as `haf`; the candidate's own SQL is
+# installed into it by .aidev/run-checks.sh, so no HAfAH image is built. Slots that
+# only lint say `stack: false`. See .aidev/README.md.
+sandbox:
+  compose: .aidev/test-stack.compose.yml
+  # One idle PostgreSQL 18 (about 0.9 GB resident, nothing replayed).
+  resource_class: light
+  services: [haf]
+  readiness_timeout: 300
+  env:
+    HAFAH_TEST_DB_HOST: haf
+
+# Verification slots. Each binding is what this project genuinely runs for
+# that slot — never one selection repeated under seven names, which makes
+# seven gates report on the same evidence while claiming to check seven
+# different things.
+#
+# Lightweight first: lint, then install / reinstall of the candidate's SQL into an
+# empty HAF testnet database and a PostgREST smoke test. CI's pytest functional
+# tests (testnet + hived), tavern pattern tests (5M-block replay), comparison
+# tests and benchmarks aren't bound yet; see .aidev/README.md.
+verification:
+  quick:
+    adapter: command
+    args: [".aidev/run-checks.sh", "quick", "shellcheck", "sql-registered"]
+    stack: false
+    artifacts: ["test-results/quick/"]
+  full:
+    adapter: command
+    args: [".aidev/run-checks.sh", "full", "shellcheck", "sql-registered", "install", "reinstall", "api-smoke"]
+    artifacts: ["test-results/full/"]
+  baseline:
+    adapter: command
+    args: [".aidev/run-checks.sh", "baseline", "install", "reinstall", "api-smoke"]
+    artifacts: ["test-results/baseline/"]
+  canary:
+    adapter: command
+    args: [".aidev/run-checks.sh", "canary", "shellcheck", "sql-registered", "install", "reinstall", "api-smoke"]
+    artifacts: ["test-results/canary/"]
+  # There is no coverage measurement for SQL; `coverage` runs the tree-wide checks
+  # (AIDEV runs it in the post-implementation scan only). `static` and `system`
+  # are left unbound: AIDEV runs neither for a project.
+  coverage:
+    adapter: command
+    args: [".aidev/run-checks.sh", "coverage", "shellcheck", "sql-registered"]
+    stack: false
+    artifacts: ["test-results/coverage/"]
+
+# Capability grants for target-side code. Empty until this project needs one.
+capabilities: []

@@ -111,6 +111,20 @@ variables:
   HAFAH_SETUP_TIMEOUT: "600"        # Total timeout for wait_for_setup_completed.sh (10 min)
   HAFAH_SETUP_WAIT_ATTEMPTS: "30"   # Attempts for app-setup PostgreSQL wait (30 * 10s = 300s)
 
+# AIDEV branches (ai/*, session/*) and pushes to aidev/integration run no
+# pipeline: AIDEV verifies them through .aidev/project.yaml. A pipeline started
+# from the web UI or the API still runs on aidev/integration (e.g. for its MR).
+# The last two rules are the included Branch-Pipelines template's, which this
+# block replaces.
+workflow:
+  rules:
+  - if: $CI_COMMIT_BRANCH =~ /^(ai|session)\//
+    when: never
+  - if: $CI_COMMIT_BRANCH == "aidev/integration" && $CI_PIPELINE_SOURCE !~ /^(web|api)$/
+    when: never
+  - if: $CI_COMMIT_TAG
+  - if: $CI_COMMIT_BRANCH
+
 include:
 - template: Workflows/Branch-Pipelines.gitlab-ci.yml
 # Common CI templates from common-ci-configuration

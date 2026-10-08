@@ -35,3 +35,6 @@ build_*/
 
 # HAF scripts downloaded at runtime (no longer a submodule)
 haf/
+
+# AIDEV check reports (.aidev/run-checks.sh)
+test-results/
