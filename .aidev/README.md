@@ -14,7 +14,7 @@ the failure body. `api-smoke` also writes one case per call (`api-smoke.xml`).
 
 | Step | What |
 |---|---|
-| `shellcheck` | ShellCheck on `scripts/` and `docker/` at **error** severity (they carry warnings today), and on `.aidev/`'s own scripts at the default severity |
+| `shellcheck` | ShellCheck at its default severity on `scripts/`, `docker/` and `.aidev/`'s own scripts |
 | `sql-registered` | every `.sql` file under `db/`, `backend/` and `endpoints/` is applied by `scripts/install_app.sh` |
 | `install` | a per-run copy-on-write clone of the shared HAF (below), `scripts/install_app.sh` into it as `haf_shared_consumer`, then `hafah_backend.is_setup_completed()` and the SQL checks `.aidev/*_check.sql` (read-only checks against the chain data) |
 | `reinstall` | the schemas dropped (`scripts/uninstall_app.sh` without its role statements), then `install` again |
