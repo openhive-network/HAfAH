@@ -25,7 +25,7 @@ branches:
 environment:
   kind: "container"
   # Built by .aidev/runtime/build.sh from .aidev/runtime/Dockerfile (its only input).
-  image: "registry.gitlab.syncad.com/hive/hafah/aidev-tests@sha256:13606fcffa0ca096d06f9eb6f7b4bf9dbfc3e9ab6798e20f749628d0ef0228f7"
+  image: "registry.gitlab.syncad.com/hive/hafah/aidev-tests@sha256:3a93cff858bcfa03efcdcb945b5e078e0deb888414aa08acf3d3c9a73f8ea538"
   inputs: [".aidev/runtime/Dockerfile"]
 
 issues:
@@ -38,29 +38,27 @@ issues:
   # Reports about this project's work are filed against this project.
   watcher_reports: self
 
-# The service stack the slots that install HAfAH start (aidev#9890): one empty
-# HAF testnet database, as CI's pytest functional jobs run it. The runtime
-# container joins its network and reaches it as `haf`; the candidate's own SQL is
-# installed into it by .aidev/run-checks.sh, so no HAfAH image is built. Slots that
-# only lint say `stack: false`. See .aidev/README.md.
+# The slots that install HAfAH (every one without `stack: false`) reach the shared
+# HAF the `haf` project hosts (sandbox.shared haf, a HAF replayed to block 5000000)
+# as AIDEV_EXTERNAL_HAF_HOST/_PORT. .aidev/run-checks.sh takes a copy-on-write clone
+# of it per run, installs the candidate's own SQL into the clone and drops it on
+# exit, so no data is copied and no HAfAH image is built. The consumer role is
+# trusted from the fleet LAN: no secret. See .aidev/README.md.
 sandbox:
-  compose: .aidev/test-stack.compose.yml
-  # One idle PostgreSQL 18 (about 0.9 GB resident, nothing replayed).
-  resource_class: light
-  services: [haf]
-  readiness_timeout: 300
-  env:
-    HAFAH_TEST_DB_HOST: haf
+  external:
+    - name: haf
+      provider: "haf/haf"
 
 # Verification slots. Each binding is what this project genuinely runs for
 # that slot — never one selection repeated under seven names, which makes
 # seven gates report on the same evidence while claiming to check seven
 # different things.
 #
-# Lightweight first: lint, then install / reinstall of the candidate's SQL into an
-# empty HAF testnet database and a PostgREST smoke test. CI's pytest functional
-# tests (testnet + hived), tavern pattern tests (5M-block replay), comparison
-# tests and benchmarks aren't bound yet; see .aidev/README.md.
+# Lightweight first: lint, then install / reinstall of the candidate's SQL into a
+# clone of the shared 5M-block HAF, a PostgREST smoke test of chain data and, for
+# full and canary, the tavern pattern tests (CI's
+# hafah_pytest_rest_api_pattern_tests). CI's pytest functional tests (testnet +
+# hived), comparison tests and benchmarks aren't bound yet; see .aidev/README.md.
 verification:
   quick:
     adapter: command
@@ -69,7 +67,7 @@ verification:
     artifacts: ["test-results/quick/"]
   full:
     adapter: command
-    args: [".aidev/run-checks.sh", "full", "shellcheck", "sql-registered", "install", "reinstall", "api-smoke"]
+    args: [".aidev/run-checks.sh", "full", "shellcheck", "sql-registered", "install", "reinstall", "api-smoke", "tavern"]
     artifacts: ["test-results/full/"]
   baseline:
     adapter: command
@@ -77,7 +75,7 @@ verification:
     artifacts: ["test-results/baseline/"]
   canary:
     adapter: command
-    args: [".aidev/run-checks.sh", "canary", "shellcheck", "sql-registered", "install", "reinstall", "api-smoke"]
+    args: [".aidev/run-checks.sh", "canary", "shellcheck", "sql-registered", "install", "reinstall", "api-smoke", "tavern"]
     artifacts: ["test-results/canary/"]
   # There is no coverage measurement for SQL; `coverage` runs the tree-wide checks
   # (AIDEV runs it in the post-implementation scan only). `static` and `system`
