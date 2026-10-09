@@ -235,6 +235,12 @@ $$;
  * PURPOSE: Counts operations for an account within a sequence number range,
  *          optionally filtered by operation types. Used in account page endpoint.
  *
+ * INDEX USAGE:
+ *   - unfiltered: no scan, the range length is the count
+ *   - filtered, range covering the account's whole history: index(-only) scan of
+ *     hive_account_operations_account_id_op_type_id_idx (no seq predicate)
+ *   - filtered, bounded range: the same index plus a heap fetch per match
+ *
  * PARAMETERS:
  *   _operations - Array of operation type IDs to filter (NULL for all)
  *   _account_id - Account ID to count operations for
@@ -256,9 +262,38 @@ SET join_collapse_limit = 16
 SET enable_hashjoin = OFF
 SET JIT = OFF
 AS $$
+DECLARE
+  __first_seq INT;
+  __last_seq INT;
 BEGIN
   IF _operations IS NULL THEN
     RETURN _to_seq - _from_seq + 1;
+  END IF;
+
+  __first_seq := (
+    SELECT aov.account_op_seq_no
+    FROM hive.account_operations_view aov
+    WHERE aov.account_id = _account_id
+    ORDER BY aov.account_op_seq_no ASC LIMIT 1
+  );
+
+  __last_seq := (
+    SELECT aov.account_op_seq_no
+    FROM hive.account_operations_view aov
+    WHERE aov.account_id = _account_id
+    ORDER BY aov.account_op_seq_no DESC LIMIT 1
+  );
+
+  -- hive_account_operations_account_id_op_type_id_idx lacks account_op_seq_no, so
+  -- a seq predicate turns the count into a heap fetch per matching row; when the
+  -- range covers the whole history the predicate filters nothing and is dropped.
+  IF _from_seq <= __first_seq AND _to_seq >= __last_seq THEN
+    RETURN (
+      SELECT COUNT(*)
+      FROM hive.account_operations_view aov
+      WHERE aov.account_id = _account_id
+        AND aov.op_type_id = ANY(_operations)
+    );
   END IF;
 
   RETURN (

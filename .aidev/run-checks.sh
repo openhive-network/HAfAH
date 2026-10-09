@@ -12,7 +12,8 @@
 #                     by scripts/install_app.sh (a file it misses never reaches a
 #                     database)
 #   - install         scripts/install_app.sh into the stack's HAF database
-#                     (HAFAH_TEST_DB_HOST, default `haf`)
+#                     (HAFAH_TEST_DB_HOST, default `haf`), then the SQL checks in
+#                     .aidev/*_check.sql (each rolls back what it writes)
 #   - reinstall       scripts/uninstall_app.sh, then install_app.sh again
 #   - api-smoke       PostgREST over the installed schema, JSON-RPC and REST calls
 #                     checked by .aidev/hafah_smoke.py; one junit case per call
@@ -98,7 +99,12 @@ wait_for_db() {
 install() {
     stage_sources && wait_for_db || return 1
     (cd "$stage" && bash scripts/install_app.sh --postgres-url="$ADMIN_URL") || return 1
-    psql "$ADMIN_URL" -v ON_ERROR_STOP=on -Atc "select hafah_backend.is_setup_completed()"
+    psql "$ADMIN_URL" -v ON_ERROR_STOP=on -Atc "select hafah_backend.is_setup_completed()" || return 1
+    local check
+    for check in .aidev/*_check.sql; do
+        echo "== $check"
+        psql "$ADMIN_URL" -v ON_ERROR_STOP=on -q -f "$check" || return 1
+    done
 }
 
 reinstall() {

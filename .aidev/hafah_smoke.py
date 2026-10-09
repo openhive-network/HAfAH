@@ -30,7 +30,7 @@ def rpc(method, params):
 
 
 def result_has(*keys):
-    def check(status, body):
+    def check(status, body) -> None:
         assert status == 200, f"HTTP {status}"
         assert "error" not in body, f"error: {body.get('error')}"
         missing = [k for k in keys if k not in body["result"]]
@@ -39,29 +39,41 @@ def result_has(*keys):
 
 
 def result_is(expected):
-    def check(status, body):
+    def check(status, body) -> None:
         assert status == 200, f"HTTP {status}"
         assert body.get("result") == expected, f"result {body.get('result')!r}, expected {expected!r}"
     return check
 
 
 def rpc_error(code):
-    def check(status, body):
+    def check(status, body) -> None:
         assert status == 200, f"HTTP {status}"
         assert body.get("error", {}).get("code") == code, f"expected error {code}, got {body}"
     return check
 
 
-def http_ok(status, body):
+def http_ok(status, body) -> None:
     assert status == 200, f"HTTP {status}"
 
 
+def http_error(code, message_part):
+    def check(status, body) -> None:
+        assert status == code, f"HTTP {status}, expected {code}"
+        message = (body or {}).get("message", "") if isinstance(body, dict) else ""
+        assert message_part in message, f"expected a message containing {message_part!r}, got {body!r}"
+    return check
+
+
 def http_json(kind):
-    def check(status, body):
+    def check(status, body) -> None:
         assert status == 200, f"HTTP {status}"
         assert isinstance(body, kind), f"expected {kind.__name__}, got {body!r}"
     return check
 
+
+# The Denser wallet's operation-types filter, which takes account_history_by_operations.
+WALLET_OPS = "2,3,4,55,54,32,33,27,34,31,28,29,50,57,39,51,49,8"
+UNKNOWN_ACCOUNT = http_error(400, "Account 'initminer' does not exist")
 
 # name, request, check(status, decoded body)
 CHECKS = [
@@ -83,6 +95,15 @@ CHECKS = [
     ("rest/get_operations", ("GET", "/rpc/get_operations?from-block=1&to-block=10", None), http_json(dict)),
     ("rest/get_recent_trades", ("GET", "/rpc/get_recent_trades?result-limit=10", None), http_json(list)),
     ("rest/get_block_range", ("GET", "/rpc/get_block_range?from-block=1&to-block=5", None), http_json(list)),
+    # The filtered requests answer exactly as their unfiltered twins on the empty chain.
+    ("rest/get_ops_by_account", ("GET", "/rpc/get_ops_by_account?account-name=initminer", None), UNKNOWN_ACCOUNT),
+    ("rest/get_ops_by_account.by_operations", ("GET", f"/rpc/get_ops_by_account?account-name=initminer&operation-types={WALLET_OPS}", None),
+     UNKNOWN_ACCOUNT),
+    ("rest/get_ops_by_account.block_range", ("GET", "/rpc/get_ops_by_account?account-name=initminer&from-block=1&to-block=10", None),
+     UNKNOWN_ACCOUNT),
+    ("rest/get_ops_by_account.by_operations.block_range",
+     ("GET", f"/rpc/get_ops_by_account?account-name=initminer&operation-types={WALLET_OPS}&from-block=1&to-block=10", None),
+     UNKNOWN_ACCOUNT),
 ]
 
 

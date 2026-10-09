@@ -16,9 +16,9 @@ the failure body. `api-smoke` also writes one case per call (`api-smoke.xml`).
 |---|---|
 | `shellcheck` | ShellCheck on `scripts/` and `docker/` at **error** severity (they carry warnings today), and on `.aidev/`'s own scripts at the default severity |
 | `sql-registered` | every `.sql` file under `db/`, `backend/` and `endpoints/` is applied by `scripts/install_app.sh` |
-| `install` | `scripts/install_app.sh` into the stack's HAF database as `haf_admin`, then `hafah_backend.is_setup_completed()` |
+| `install` | `scripts/install_app.sh` into the stack's HAF database as `haf_admin`, then `hafah_backend.is_setup_completed()` and the SQL checks `.aidev/*_check.sql` (each fabricates the rows it needs and rolls them back) |
 | `reinstall` | `scripts/uninstall_app.sh`, then `install` again |
-| `api-smoke` | `.aidev/hafah_smoke.py`: PostgREST over the installed schema (as `run_hafah_postgrest.sh` starts it), then JSON-RPC calls (`account_history_api`, `condenser_api`, `block_api`, an unknown method) and REST calls (`/rpc/get_version`, `get_head_block_num`, `get_op_types`, `get_operations`, `get_recent_trades`, `get_block_range`), each checked against the shape an empty chain answers with |
+| `api-smoke` | `.aidev/hafah_smoke.py`: PostgREST over the installed schema (as `run_hafah_postgrest.sh` starts it), then JSON-RPC calls (`account_history_api`, `condenser_api`, `block_api`, an unknown method) and REST calls (`/rpc/get_version`, `get_head_block_num`, `get_op_types`, `get_operations`, `get_recent_trades`, `get_block_range`, `get_ops_by_account` with and without an `operation-types` filter and a block range), each checked against the shape an empty chain answers with |
 
 The install steps copy `db/ backend/ endpoints/ scripts/` to a scratch directory and
 write `scripts/set_version_in_sql.pgsql` there (`git rev-parse HEAD`, or `aidev` when the
