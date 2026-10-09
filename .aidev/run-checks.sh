@@ -61,8 +61,7 @@ step() {
 
 run_shellcheck() {
     shellcheck --version | head -2
-    # The project's scripts carry warnings today; errors are the floor.
-    shellcheck -S error -f gcc scripts/*.sh scripts/*.bash docker/*.sh || return 1
+    shellcheck -f gcc scripts/*.sh scripts/*.bash docker/*.sh || return 1
     shellcheck -f gcc .aidev/*.sh .aidev/runtime/*.sh
 }
 
