@@ -30,7 +30,7 @@ def rpc(method, params):
 
 
 def result_has(*keys):
-    def check(status, body):
+    def check(status, body) -> None:
         assert status == 200, f"HTTP {status}"
         assert "error" not in body, f"error: {body.get('error')}"
         missing = [k for k in keys if k not in body["result"]]
@@ -39,25 +39,25 @@ def result_has(*keys):
 
 
 def result_is(expected):
-    def check(status, body):
+    def check(status, body) -> None:
         assert status == 200, f"HTTP {status}"
         assert body.get("result") == expected, f"result {body.get('result')!r}, expected {expected!r}"
     return check
 
 
 def rpc_error(code):
-    def check(status, body):
+    def check(status, body) -> None:
         assert status == 200, f"HTTP {status}"
         assert body.get("error", {}).get("code") == code, f"expected error {code}, got {body}"
     return check
 
 
-def http_ok(status, body):
+def http_ok(status, body) -> None:
     assert status == 200, f"HTTP {status}"
 
 
 def http_error(code, message_part):
-    def check(status, body):
+    def check(status, body) -> None:
         assert status == code, f"HTTP {status}, expected {code}"
         message = (body or {}).get("message", "") if isinstance(body, dict) else ""
         assert message_part in message, f"expected a message containing {message_part!r}, got {body!r}"
@@ -65,7 +65,7 @@ def http_error(code, message_part):
 
 
 def http_json(kind):
-    def check(status, body):
+    def check(status, body) -> None:
         assert status == 200, f"HTTP {status}"
         assert isinstance(body, kind), f"expected {kind.__name__}, got {body!r}"
     return check
