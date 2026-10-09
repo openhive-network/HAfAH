@@ -9,7 +9,7 @@ HTTP_PORT=${HTTP_PORT:-3000}
 POSTGRES_URL=${POSTGRES_URL:-}
 SWAGGER_URL=${POSTGRES_URL:-"{hafah-host}"}
 
-# shellcheck disable=SC2317
+# shellcheck disable=SC2317,SC2329
 cleanup () {
   local postgrest_pid=0
   echo "Performing cleanup...."
