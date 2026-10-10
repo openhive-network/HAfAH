@@ -113,6 +113,8 @@ performance:
   shape:
     source: {host: steem-18, container: haf-haf-1, database: haf_block_log, user: haf_admin}
     image: registry.gitlab.syncad.com/hive/haf:1.28.8
+    # steem-18 haf_block_log at block 110,647,587 (2026-10-10), published to the fleet store.
+    artifact: 03ecc60bd5dcab58bef4e3b508ed9050c29d5046b4e3f4058a3ae334c846bcaf
   queries:
     # JSON-RPC account_history_api.get_account_history, no filter:
     # hafah_backend.ah_get_account_history, unfiltered branch.
@@ -328,7 +330,7 @@ performance:
         latency_ms: 1000
       plan:
         no_seq_scan: [hafd.operations, hafd.transactions, hafd.blocks]
-        uses_index: [hive_operations_block_num_id_idx]
+        uses_index: [hive_operations_block_num_trx_in_block_idx]  # what steem-18 chooses (EXPLAIN, 2026-10-10)
       time: {max_ms: 1000, error_threshold: 0.5}
 
     # REST GET /operations?from-block=…&to-block=…: the unfiltered branch of
@@ -355,7 +357,7 @@ performance:
         latency_ms: 1000
       plan:
         no_seq_scan: [hafd.operations, hafd.transactions]
-        uses_index: [hive_operations_block_num_id_idx]
+        uses_index: [hive_operations_block_num_trx_in_block_idx]  # what steem-18 chooses (EXPLAIN, 2026-10-10)
       time: {max_ms: 1000, error_threshold: 0.5}
 
     # JSON-RPC account_history_api.get_transaction and REST
