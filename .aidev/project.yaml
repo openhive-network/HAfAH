@@ -66,9 +66,20 @@ verification:
     stack: false
     artifacts: ["test-results/quick/"]
   full:
-    adapter: command
-    args: [".aidev/run-checks.sh", "full", "shellcheck", "sql-registered", "install", "reinstall", "api-smoke", "tavern"]
-    artifacts: ["test-results/full/"]
+    suites:
+      - name: default
+        adapter: command
+        args: [".aidev/run-checks.sh", "full", "shellcheck", "sql-registered", "install", "reinstall", "api-smoke", "tavern"]
+        artifacts: ["test-results/full/"]
+      # Plans the `performance:` queries on a shape of the full-scale HAF. It
+      # needs the host's `aidev` CLI and docker daemon, so it runs host-side
+      # (`docker: true`), not in the runtime image, and reaches no fixture.
+      - name: db_shape
+        adapter: command
+        args: [aidev, db, shape, check, --report, db-shape-report.json]
+        stack: false
+        docker: true
+        mode: advisory
   baseline:
     adapter: command
     args: [".aidev/run-checks.sh", "baseline", "install", "reinstall", "api-smoke"]
@@ -85,6 +96,325 @@ verification:
     args: [".aidev/run-checks.sh", "coverage", "shellcheck", "sql-registered"]
     stack: false
     artifacts: ["test-results/coverage/"]
+
+# Hot queries planned against a shape of the full-scale HAF on steem-18
+# (docs/operations/db-shape.md in aidev): plans and predicted times only —
+# response correctness stays with the 5M-block tavern suites. Each statement is
+# the one inside the plpgsql function behind its endpoint, with that function's
+# parameters written as values a full-scale chain has: block 100,000,000, the
+# account `blocktrades`, the API's largest page. Values the function resolves in
+# an earlier statement (the account id, the irreversible block) stay
+# subqueries, so the planner estimates them as the function's own generic
+# plans do. `time.error_threshold` is proposed from `role` (aidev's rule: ±25%
+# at ≤100 ms, ±50% at ≤1 s) and unapproved, so every time assertion warns until
+# a maintainer approves it.
+performance:
+  mode: observe
+  shape:
+    source: {host: steem-18, container: haf-haf-1, database: haf_block_log, user: haf_admin}
+    image: registry.gitlab.syncad.com/hive/haf:1.28.8
+  queries:
+    # JSON-RPC account_history_api.get_account_history, no filter:
+    # hafah_backend.ah_get_account_history, unfiltered branch.
+    - name: jsonrpc-account-history
+      sql: |
+        WITH pre_result AS (
+          SELECT
+            ds.block_num AS _block,
+            (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+               AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) AS _trx_in_block,
+            (SELECT htv.trx_hash FROM hive.transactions_view htv
+              WHERE ds.block_num = htv.block_num
+                AND htv.trx_in_block = (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
+                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))) AS _trx_hash,
+            (SELECT op_pos FROM hive.operations_view WHERE id = ds.operation_id
+               AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))::BIGINT AS _op_in_trx,
+            (SELECT is_virtual FROM hafd.operation_types WHERE id = ds.op_type_id) AS virtual_op,
+            ho.body AS _value,
+            ds.account_op_seq_no AS _operation_id
+          FROM (
+            SELECT hao.operation_id, hao.op_type_id, hao.block_num, hao.account_op_seq_no
+            FROM hive.account_operations_view hao
+            WHERE hao.account_id = (SELECT id FROM hafd.accounts WHERE name = 'blocktrades')
+              AND hao.account_op_seq_no <= 2147483647
+              AND hao.block_num <= (SELECT hive.app_get_irreversible_block())
+            ORDER BY hao.account_op_seq_no DESC
+            LIMIT 1000
+          ) ds
+          JOIN LATERAL (
+            SELECT hov.body, hov.op_pos, hov.trx_in_block
+            FROM hive.operations_view hov
+            WHERE ds.operation_id = hov.id
+          ) ho ON TRUE
+          ORDER BY ds.account_op_seq_no ASC
+        )
+        SELECT pre_result.*, hb.created_at
+        FROM pre_result
+        JOIN hive.blocks_view hb ON hb.num = pre_result._block
+        ORDER BY pre_result._operation_id ASC
+      role:
+        frequency: "per get_account_history call — the API's busiest method; a page is up to 1000 operations"
+        waiter: "JSON-RPC client through PostgREST"
+        latency_ms: 500
+      plan:
+        no_seq_scan: [hafd.account_operations, hafd.operations, hafd.transactions, hafd.blocks]
+        uses_index: [hive_account_operations_uq1, pk_hive_operations]
+      time: {max_ms: 500, error_threshold: 0.5}
+
+    # JSON-RPC account_history_api.get_account_history with an operation filter
+    # (transfer_operation): ah_get_account_history, filtered branch.
+    - name: jsonrpc-account-history-by-type
+      sql: |
+        WITH accepted_types AS MATERIALIZED (
+          SELECT ot.id FROM hafd.operation_types ot WHERE ot.id = ANY('{2}'::SMALLINT[])
+        )
+        SELECT ds.block_num, ds.account_op_seq_no, ho.body, ho.op_pos, ho.trx_in_block, hb.created_at
+        FROM (
+          SELECT hao.operation_id, hao.op_type_id, hao.block_num, hao.account_op_seq_no
+          FROM hive.account_operations_view hao
+          JOIN accepted_types t ON hao.op_type_id = t.id
+          WHERE hao.account_id = (SELECT id FROM hafd.accounts WHERE name = 'blocktrades')
+            AND hao.account_op_seq_no <= 2147483647
+            AND hao.block_num <= (SELECT hive.app_get_irreversible_block())
+          ORDER BY hao.account_op_seq_no DESC
+          LIMIT 1000
+        ) ds
+        JOIN LATERAL (
+          SELECT hov.body, hov.op_pos, hov.trx_in_block
+          FROM hive.operations_view hov
+          WHERE ds.operation_id = hov.id
+        ) ho ON TRUE
+        JOIN hive.blocks_view hb ON hb.num = ds.block_num
+        ORDER BY ds.account_op_seq_no ASC
+      role:
+        frequency: "per filtered get_account_history call — exchanges and wallets polling deposits"
+        waiter: "JSON-RPC client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.account_operations, hafd.operations, hafd.blocks]
+        uses_index: [pk_hive_operations]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # REST GET /accounts/{account-name}/operations, first page, no filter:
+    # hafah_backend.account_history_default (via get_ops_by_account).
+    - name: rest-account-operations-page
+      sql: |
+        WITH operation_range AS MATERIALIZED (
+          SELECT
+            ls.operation_id AS id,
+            ls.block_num,
+            (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.operation_id
+               AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0)) AS trx_in_block,
+            encode((SELECT htv.trx_hash FROM hive.transactions_view htv
+                    WHERE htv.block_num = ls.block_num
+                      AND htv.trx_in_block = (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.operation_id
+                        AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0))), 'hex') AS trx_hash,
+            (SELECT op_pos FROM hive.operations_view WHERE id = ls.operation_id
+               AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0)) AS op_pos,
+            ls.op_type_id,
+            (SELECT body FROM hive.operations_view WHERE id = ls.operation_id
+               AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0)) AS body,
+            (SELECT is_virtual FROM hafd.operation_types WHERE id = ls.op_type_id) AS is_virtual
+          FROM (
+            SELECT aov.operation_id, aov.op_type_id, aov.block_num
+            FROM hive.account_operations_view aov
+            WHERE aov.account_id = (SELECT id FROM hafd.accounts WHERE name = 'blocktrades')
+              AND aov.account_op_seq_no >= 0
+              AND aov.account_op_seq_no <= 2147483647
+            ORDER BY aov.account_op_seq_no DESC
+            LIMIT 100
+          ) ls
+        )
+        SELECT ov.*, hb.created_at
+        FROM operation_range ov
+        JOIN hive.blocks_view hb ON hb.num = ov.block_num
+        ORDER BY ov.id DESC
+      role:
+        frequency: "per REST account-operations page — block explorers' account view"
+        waiter: "REST client through PostgREST"
+        latency_ms: 500
+      plan:
+        no_seq_scan: [hafd.account_operations, hafd.operations, hafd.transactions, hafd.blocks]
+        uses_index: [hive_account_operations_uq1, pk_hive_operations]
+      time: {max_ms: 500, error_threshold: 0.5}
+
+    # REST GET /accounts/{account-name}/operations?to-block=…: the upper
+    # sequence-number bound hafah_backend.account_range looks up for a block range.
+    - name: rest-account-range-to-block
+      sql: |
+        SELECT aov.account_op_seq_no
+        FROM hive.account_operations_view aov
+        WHERE aov.account_id = (SELECT id FROM hafd.accounts WHERE name = 'blocktrades')
+          AND aov.block_num <= 90000000
+        ORDER BY aov.account_op_seq_no DESC
+        LIMIT 1
+      role:
+        frequency: "per REST account-operations request with a block range"
+        waiter: "REST client through PostgREST"
+        latency_ms: 200
+      plan:
+        no_seq_scan: [hafd.account_operations]
+        uses_index: [hive_account_operations_uq1]
+      time: {max_ms: 200, error_threshold: 0.5}
+
+    # REST GET /accounts/{account-name}/operations?operation-types=…: the total
+    # hafah_backend.get_account_operations_count computes for paging.
+    - name: rest-account-operations-count-by-type
+      sql: |
+        SELECT COUNT(*)
+        FROM hive.account_operations_view aov
+        WHERE aov.account_id = (SELECT id FROM hafd.accounts WHERE name = 'blocktrades')
+          AND aov.op_type_id = ANY('{2}'::INT[])
+      role:
+        frequency: "per REST account-operations request with an operation-type filter"
+        waiter: "REST client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.account_operations]
+        uses_index: [hive_account_operations_account_id_op_type_id_idx]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # JSON-RPC account_history_api.get_ops_in_block: hafah_backend.get_ops_in_block.
+    - name: jsonrpc-ops-in-block
+      sql: |
+        SELECT
+          ht.trx_hash, ht.trx_in_block, T.op_pos, T.virtual_op, hb.created_at, T.body, T.id
+        FROM (
+          SELECT ho.id, ho.block_num, ho.trx_in_block, ho.op_pos::BIGINT AS op_pos, ho.body, ho.op_type_id, hot.is_virtual AS virtual_op
+          FROM hive.operations_view ho
+          JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
+          WHERE ho.block_num = 100000000
+        ) T
+        JOIN hive.blocks_view hb ON hb.num = T.block_num
+        LEFT JOIN hive.transactions_view ht
+          ON T.block_num = ht.block_num
+          AND T.trx_in_block = ht.trx_in_block
+        ORDER BY T.id
+      role:
+        frequency: "per get_ops_in_block call — block-following indexers fetch every block"
+        waiter: "JSON-RPC client through PostgREST"
+        latency_ms: 200
+      plan:
+        no_seq_scan: [hafd.operations, hafd.transactions, hafd.blocks]
+      time: {max_ms: 200, error_threshold: 0.5}
+
+    # JSON-RPC account_history_api.enum_virtual_ops, no filter, a 100-block
+    # window: hafah_backend.enum_virtual_ops.
+    - name: jsonrpc-enum-virtual-ops
+      sql: |
+        WITH pre_result AS (
+          SELECT T2.trx_hash, T.block_num AS _block, T2.trx_in_block, T.op_pos, T.virtual_op, T.body, T.id AS _operation_id
+          FROM (
+            SELECT ho.id, ho.block_num, ho.trx_in_block, ho.op_pos::BIGINT AS op_pos, ho.body, ho.op_type_id, hot.is_virtual AS virtual_op
+            FROM hive.operations_view ho
+            JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
+            WHERE ho.block_num >= 100000000
+              AND ho.block_num < 100000100
+              AND hot.is_virtual = TRUE
+            ORDER BY ho.id
+            LIMIT 1000
+          ) T
+          LEFT JOIN hive.transactions_view T2
+            ON T.block_num = T2.block_num
+            AND T.trx_in_block = T2.trx_in_block
+        )
+        SELECT pre_result.*, hb.created_at
+        FROM pre_result
+        JOIN hive.blocks_view hb ON hb.num = pre_result._block
+        ORDER BY pre_result._operation_id
+      role:
+        frequency: "per enum_virtual_ops call — reward and payout indexers walking the chain"
+        waiter: "JSON-RPC client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.operations, hafd.transactions, hafd.blocks]
+        uses_index: [hive_operations_block_num_id_idx]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # REST GET /operations?from-block=…&to-block=…: the unfiltered branch of
+    # hafah_backend.get_ops_in_blocks_helper.
+    - name: rest-operations-in-block-range
+      sql: |
+        SELECT T.block_num, T2.trx_hash, T2.trx_in_block, T.op_pos, T.op_type_id, T.virtual_op, T.body, T.id
+        FROM (
+          SELECT ho.id, ho.block_num, ho.trx_in_block, ho.op_pos::BIGINT AS op_pos, ho.body, ho.op_type_id, hot.is_virtual AS virtual_op
+          FROM hive.operations_view ho
+          JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
+          WHERE ho.block_num >= 100000000
+            AND ho.block_num < 100000010
+          ORDER BY ho.id
+          LIMIT 1000
+        ) T
+        LEFT JOIN hive.transactions_view T2
+          ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
+        ORDER BY T.id
+        LIMIT 1000
+      role:
+        frequency: "per REST operations-range page"
+        waiter: "REST client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.operations, hafd.transactions]
+        uses_index: [hive_operations_block_num_id_idx]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # JSON-RPC account_history_api.get_transaction and REST
+    # GET /transactions/{transaction-id}: the lookup by hash in
+    # hafah_backend.get_transaction. The hash is the first transaction of block
+    # 100,000,000.
+    - name: transaction-by-hash
+      sql: |
+        SELECT ht.*
+        FROM hive.transactions_view ht
+        WHERE ht.trx_hash = (SELECT t.trx_hash FROM hafd.transactions t WHERE t.block_num = 100000000 AND t.trx_in_block = 0)
+      role:
+        frequency: "per transaction lookup — wallets confirming a broadcast"
+        waiter: "JSON-RPC or REST client through PostgREST"
+        latency_ms: 50
+      plan:
+        no_seq_scan: [hafd.transactions]
+        uses_index: [pk_hive_transactions, hive_transactions_block_num_trx_in_block_idx]
+      time: {max_ms: 50, error_threshold: 0.25}
+
+    # JSON-RPC get_transaction and REST GET /transactions/{transaction-id}:
+    # the transaction's operations, hafah_backend.get_ops_in_transaction.
+    - name: operations-in-transaction
+      sql: |
+        SELECT ho.body
+        FROM hive.operations_view ho
+        JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
+        WHERE ho.block_num = 100000000
+          AND ho.trx_in_block = 0
+          AND hot.is_virtual = FALSE
+        ORDER BY ho.id
+      role:
+        frequency: "per transaction lookup"
+        waiter: "JSON-RPC or REST client through PostgREST"
+        latency_ms: 50
+      plan:
+        no_seq_scan: [hafd.operations]
+        uses_index: [hive_operations_block_num_trx_in_block_idx]
+      time: {max_ms: 50, error_threshold: 0.25}
+
+    # REST GET /operations/{operation-id}: hafah_backend.get_operation. The id is
+    # the first operation of block 100,000,000.
+    - name: rest-operation-by-id
+      sql: |
+        SELECT ov.body, ov.block_num, encode(htv.trx_hash, 'hex'), ov.op_pos, ov.op_type_id, ov.timestamp, hot.is_virtual, ov.id, ov.trx_in_block
+        FROM hive.operations_view_extended ov
+        JOIN hafd.operation_types hot ON hot.id = ov.op_type_id
+        LEFT JOIN hive.transactions_view htv ON htv.block_num = ov.block_num AND htv.trx_in_block = ov.trx_in_block
+        WHERE ov.id = hafd.operation_id(100000000, 0)
+          AND ov.id >= hafd.operation_id(100000000, 0)
+          AND ov.id < hafd.operation_id(100000001, 0)
+      role:
+        frequency: "per REST operation lookup"
+        waiter: "REST client through PostgREST"
+        latency_ms: 50
+      plan:
+        no_seq_scan: [hafd.operations, hafd.transactions, hafd.blocks]
+        uses_index: [pk_hive_operations]
+      time: {max_ms: 50, error_threshold: 0.25}
 
 # Capability grants for target-side code. Empty until this project needs one.
 capabilities: []
