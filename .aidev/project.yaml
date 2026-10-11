@@ -102,10 +102,13 @@ verification:
 # response correctness stays with the 5M-block tavern suites. Each statement is
 # the one inside the plpgsql function behind its endpoint, with that function's
 # parameters written as values a full-scale chain has: block 100,000,000, the
-# account `blocktrades`, the API's largest page. Values the function resolves in
-# an earlier statement (the account id, the irreversible block) stay
-# subqueries, so the planner estimates them as the function's own generic
-# plans do. `time.error_threshold` is proposed from `role` (aidev's rule: ±25%
+# account `blocktrades` (id 440), the API's largest page. The values that select
+# data are `${name}` placeholders whose `parameters` name the column deciding
+# which values are troublesome, so `aidev db shape capture --queries` catalogues
+# them and the check plans each query once per catalogued value; `value` is the
+# default each is planned with. The account is its id, as the function binds the
+# id it resolved by name; the irreversible block stays a subquery, as it is
+# resolved per call. `time.error_threshold` is proposed from `role` (aidev's rule: ±25%
 # at ≤100 ms, ±50% at ≤1 s) and unapproved, so every time assertion warns until
 # a maintainer approves it.
 performance:
@@ -137,7 +140,7 @@ performance:
           FROM (
             SELECT hao.operation_id, hao.op_type_id, hao.block_num, hao.account_op_seq_no
             FROM hive.account_operations_view hao
-            WHERE hao.account_id = (SELECT id FROM hafd.accounts WHERE name = 'blocktrades')
+            WHERE hao.account_id = ${account}
               AND hao.account_op_seq_no <= 2147483647
               AND hao.block_num <= (SELECT hive.app_get_irreversible_block())
             ORDER BY hao.account_op_seq_no DESC
@@ -154,6 +157,8 @@ performance:
         FROM pre_result
         JOIN hive.blocks_view hb ON hb.num = pre_result._block
         ORDER BY pre_result._operation_id ASC
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
       role:
         frequency: "per get_account_history call — the API's busiest method; a page is up to 1000 operations"
         waiter: "JSON-RPC client through PostgREST"
@@ -168,14 +173,14 @@ performance:
     - name: jsonrpc-account-history-by-type
       sql: |
         WITH accepted_types AS MATERIALIZED (
-          SELECT ot.id FROM hafd.operation_types ot WHERE ot.id = ANY('{2}'::SMALLINT[])
+          SELECT ot.id FROM hafd.operation_types ot WHERE ot.id = ANY(ARRAY[${op_type}]::SMALLINT[])
         )
         SELECT ds.block_num, ds.account_op_seq_no, ho.body, ho.op_pos, ho.trx_in_block, hb.created_at
         FROM (
           SELECT hao.operation_id, hao.op_type_id, hao.block_num, hao.account_op_seq_no
           FROM hive.account_operations_view hao
           JOIN accepted_types t ON hao.op_type_id = t.id
-          WHERE hao.account_id = (SELECT id FROM hafd.accounts WHERE name = 'blocktrades')
+          WHERE hao.account_id = ${account}
             AND hao.account_op_seq_no <= 2147483647
             AND hao.block_num <= (SELECT hive.app_get_irreversible_block())
           ORDER BY hao.account_op_seq_no DESC
@@ -188,6 +193,9 @@ performance:
         ) ho ON TRUE
         JOIN hive.blocks_view hb ON hb.num = ds.block_num
         ORDER BY ds.account_op_seq_no ASC
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
+        op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
       role:
         frequency: "per filtered get_account_history call — exchanges and wallets polling deposits"
         waiter: "JSON-RPC client through PostgREST"
@@ -220,7 +228,7 @@ performance:
           FROM (
             SELECT aov.operation_id, aov.op_type_id, aov.block_num
             FROM hive.account_operations_view aov
-            WHERE aov.account_id = (SELECT id FROM hafd.accounts WHERE name = 'blocktrades')
+            WHERE aov.account_id = ${account}
               AND aov.account_op_seq_no >= 0
               AND aov.account_op_seq_no <= 2147483647
             ORDER BY aov.account_op_seq_no DESC
@@ -231,6 +239,8 @@ performance:
         FROM operation_range ov
         JOIN hive.blocks_view hb ON hb.num = ov.block_num
         ORDER BY ov.id DESC
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
       role:
         frequency: "per REST account-operations page — block explorers' account view"
         waiter: "REST client through PostgREST"
@@ -246,10 +256,12 @@ performance:
       sql: |
         SELECT aov.account_op_seq_no
         FROM hive.account_operations_view aov
-        WHERE aov.account_id = (SELECT id FROM hafd.accounts WHERE name = 'blocktrades')
+        WHERE aov.account_id = ${account}
           AND aov.block_num <= 90000000
         ORDER BY aov.account_op_seq_no DESC
         LIMIT 1
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
       role:
         frequency: "per REST account-operations request with a block range"
         waiter: "REST client through PostgREST"
@@ -265,8 +277,11 @@ performance:
       sql: |
         SELECT COUNT(*)
         FROM hive.account_operations_view aov
-        WHERE aov.account_id = (SELECT id FROM hafd.accounts WHERE name = 'blocktrades')
-          AND aov.op_type_id = ANY('{2}'::INT[])
+        WHERE aov.account_id = ${account}
+          AND aov.op_type_id = ANY(ARRAY[${op_type}]::INT[])
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
+        op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
       role:
         frequency: "per REST account-operations request with an operation-type filter"
         waiter: "REST client through PostgREST"
@@ -285,13 +300,15 @@ performance:
           SELECT ho.id, ho.block_num, ho.trx_in_block, ho.op_pos::BIGINT AS op_pos, ho.body, ho.op_type_id, hot.is_virtual AS virtual_op
           FROM hive.operations_view ho
           JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
-          WHERE ho.block_num = 100000000
+          WHERE ho.block_num = ${block}
         ) T
         JOIN hive.blocks_view hb ON hb.num = T.block_num
         LEFT JOIN hive.transactions_view ht
           ON T.block_num = ht.block_num
           AND T.trx_in_block = ht.trx_in_block
         ORDER BY T.id
+      parameters:
+        block: {column: hafd.operations.block_num, value: 100000000}
       role:
         frequency: "per get_ops_in_block call — block-following indexers fetch every block"
         waiter: "JSON-RPC client through PostgREST"
@@ -310,8 +327,8 @@ performance:
             SELECT ho.id, ho.block_num, ho.trx_in_block, ho.op_pos::BIGINT AS op_pos, ho.body, ho.op_type_id, hot.is_virtual AS virtual_op
             FROM hive.operations_view ho
             JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
-            WHERE ho.block_num >= 100000000
-              AND ho.block_num < 100000100
+            WHERE ho.block_num >= ${block}
+              AND ho.block_num < ${block} + 100
               AND hot.is_virtual = TRUE
             ORDER BY ho.id
             LIMIT 1000
@@ -324,6 +341,8 @@ performance:
         FROM pre_result
         JOIN hive.blocks_view hb ON hb.num = pre_result._block
         ORDER BY pre_result._operation_id
+      parameters:
+        block: {column: hafd.operations.block_num, value: 100000000, range: 100}
       role:
         frequency: "per enum_virtual_ops call — reward and payout indexers walking the chain"
         waiter: "JSON-RPC client through PostgREST"
@@ -342,8 +361,8 @@ performance:
           SELECT ho.id, ho.block_num, ho.trx_in_block, ho.op_pos::BIGINT AS op_pos, ho.body, ho.op_type_id, hot.is_virtual AS virtual_op
           FROM hive.operations_view ho
           JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
-          WHERE ho.block_num >= 100000000
-            AND ho.block_num < 100000010
+          WHERE ho.block_num >= ${block}
+            AND ho.block_num < ${block} + 10
           ORDER BY ho.id
           LIMIT 1000
         ) T
@@ -351,6 +370,8 @@ performance:
           ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
         ORDER BY T.id
         LIMIT 1000
+      parameters:
+        block: {column: hafd.operations.block_num, value: 100000000, range: 10}
       role:
         frequency: "per REST operations-range page"
         waiter: "REST client through PostgREST"
@@ -363,19 +384,22 @@ performance:
     # JSON-RPC account_history_api.get_transaction and REST
     # GET /transactions/{transaction-id}: the lookup by hash in
     # hafah_backend.get_transaction. The hash is the first transaction of block
-    # 100,000,000.
+    # 100,000,000. The lookup is by its primary key alone, so it reads no
+    # (block_num, trx_in_block) index.
     - name: transaction-by-hash
       sql: |
         SELECT ht.*
         FROM hive.transactions_view ht
-        WHERE ht.trx_hash = (SELECT t.trx_hash FROM hafd.transactions t WHERE t.block_num = 100000000 AND t.trx_in_block = 0)
+        WHERE ht.trx_hash = ${hash}
+      parameters:
+        hash: {column: hafd.transactions.trx_hash, value: '\xbffb22b2a732237098d6ba1b17b5d5e3d5995be3'}
       role:
         frequency: "per transaction lookup — wallets confirming a broadcast"
         waiter: "JSON-RPC or REST client through PostgREST"
         latency_ms: 50
       plan:
         no_seq_scan: [hafd.transactions]
-        uses_index: [pk_hive_transactions, hive_transactions_block_num_trx_in_block_idx]
+        uses_index: [pk_hive_transactions]
       time: {max_ms: 50, error_threshold: 0.25}
 
     # JSON-RPC get_transaction and REST GET /transactions/{transaction-id}:
@@ -385,10 +409,12 @@ performance:
         SELECT ho.body
         FROM hive.operations_view ho
         JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
-        WHERE ho.block_num = 100000000
+        WHERE ho.block_num = ${block}
           AND ho.trx_in_block = 0
           AND hot.is_virtual = FALSE
         ORDER BY ho.id
+      parameters:
+        block: {column: hafd.operations.block_num, value: 100000000}
       role:
         frequency: "per transaction lookup"
         waiter: "JSON-RPC or REST client through PostgREST"
@@ -406,9 +432,11 @@ performance:
         FROM hive.operations_view_extended ov
         JOIN hafd.operation_types hot ON hot.id = ov.op_type_id
         LEFT JOIN hive.transactions_view htv ON htv.block_num = ov.block_num AND htv.trx_in_block = ov.trx_in_block
-        WHERE ov.id = hafd.operation_id(100000000, 0)
-          AND ov.id >= hafd.operation_id(100000000, 0)
-          AND ov.id < hafd.operation_id(100000001, 0)
+        WHERE ov.id = hafd.operation_id(${block}, 0)
+          AND ov.id >= hafd.operation_id(${block}, 0)
+          AND ov.id < hafd.operation_id(${block} + 1, 0)
+      parameters:
+        block: {column: hafd.operations.block_num, value: 100000000}
       role:
         frequency: "per REST operation lookup"
         waiter: "REST client through PostgREST"
