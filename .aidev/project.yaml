@@ -308,7 +308,8 @@ performance:
           AND T.trx_in_block = ht.trx_in_block
         ORDER BY T.id
       parameters:
-        block: {column: hafd.operations.block_num, value: 100000000}
+        # hafd.operations has no block_num column (an operation's block is encoded in its id); transaction density per block stands in for operation density when choosing dense and sparse blocks.
+        block: {column: hafd.transactions.block_num, value: 100000000}
       role:
         frequency: "per get_ops_in_block call — block-following indexers fetch every block"
         waiter: "JSON-RPC client through PostgREST"
@@ -342,7 +343,7 @@ performance:
         JOIN hive.blocks_view hb ON hb.num = pre_result._block
         ORDER BY pre_result._operation_id
       parameters:
-        block: {column: hafd.operations.block_num, value: 100000000, range: 100}
+        block: {column: hafd.transactions.block_num, value: 100000000, range: 100}
       role:
         frequency: "per enum_virtual_ops call — reward and payout indexers walking the chain"
         waiter: "JSON-RPC client through PostgREST"
@@ -371,7 +372,7 @@ performance:
         ORDER BY T.id
         LIMIT 1000
       parameters:
-        block: {column: hafd.operations.block_num, value: 100000000, range: 10}
+        block: {column: hafd.transactions.block_num, value: 100000000, range: 10}
       role:
         frequency: "per REST operations-range page"
         waiter: "REST client through PostgREST"
@@ -414,7 +415,7 @@ performance:
           AND hot.is_virtual = FALSE
         ORDER BY ho.id
       parameters:
-        block: {column: hafd.operations.block_num, value: 100000000}
+        block: {column: hafd.transactions.block_num, value: 100000000}
       role:
         frequency: "per transaction lookup"
         waiter: "JSON-RPC or REST client through PostgREST"
@@ -436,7 +437,7 @@ performance:
           AND ov.id >= hafd.operation_id(${block}, 0)
           AND ov.id < hafd.operation_id(${block} + 1, 0)
       parameters:
-        block: {column: hafd.operations.block_num, value: 100000000}
+        block: {column: hafd.transactions.block_num, value: 100000000}
       role:
         frequency: "per REST operation lookup"
         waiter: "REST client through PostgREST"
