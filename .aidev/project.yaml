@@ -116,8 +116,8 @@ performance:
   shape:
     source: {host: steem-18, container: haf-haf-1, database: haf_block_log, user: haf_admin}
     image: registry.gitlab.syncad.com/hive/haf:1.28.8
-    # steem-18 haf_block_log at block 110,683,812 (2026-10-11), value catalog with per-query heap-locality windows, heaviest accounts included (aidev#15581/#15583/#15584); published to the fleet store.
-    artifact: cc7f7bae9bc219a72bde5bed3dec4972099d7d7d75e6e56ace590ad19a50e9dd
+    # steem-18 haf_block_log at block 110,696,250 (2026-10-12), after VACUUM (FREEZE, ANALYZE) of hafd.account_operations (0% -> 100% all-visible, as HAF#350 leaves it); value catalog with per-query heap-locality windows, heaviest accounts included; published to the fleet store.
+    artifact: 6dcaa7133a3469ce1f7b32cb30efba98e85f01ebc43144e3cb278e6b8e2f7ccb
   queries:
     # JSON-RPC account_history_api.get_account_history, no filter:
     # hafah_backend.ah_get_account_history, unfiltered branch.
