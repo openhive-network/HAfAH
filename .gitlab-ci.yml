@@ -58,20 +58,20 @@ variables:
   # Also allow local socket connections for hived/haf_maintainer (peer auth fails in container)
   # IPv6 rules (::/0) required because Docker may resolve hostnames to IPv6 addresses
   HAF_DB_ACCESS: |
-    "local   all              haf_admin                     trust"
-    "local   all              haf_maintainer                trust"
-    "local   all              hived                         trust"
-    "local   all              postgres                      trust"
-    "host    all              haf_admin        0.0.0.0/0    trust"
-    "host    all              haf_admin        ::/0         trust"
-    "host    all              hived            0.0.0.0/0    trust"
-    "host    all              hived            ::/0         trust"
-    "host    all              haf_maintainer   0.0.0.0/0    trust"
-    "host    all              haf_maintainer   ::/0         trust"
-    "host    all              hafah_user       0.0.0.0/0    trust"
-    "host    all              hafah_user       ::/0         trust"
-    "host    all              all              0.0.0.0/0    scram-sha-256"
-    "host    all              all              ::/0         scram-sha-256"
+    local   all              haf_admin                     trust
+    local   all              haf_maintainer                trust
+    local   all              hived                         trust
+    local   all              postgres                      trust
+    host    all              haf_admin        0.0.0.0/0    trust
+    host    all              haf_admin        ::/0         trust
+    host    all              hived            0.0.0.0/0    trust
+    host    all              hived            ::/0         trust
+    host    all              haf_maintainer   0.0.0.0/0    trust
+    host    all              haf_maintainer   ::/0         trust
+    host    all              hafah_user       0.0.0.0/0    trust
+    host    all              hafah_user       ::/0         trust
+    host    all              all              0.0.0.0/0    scram-sha-256
+    host    all              all              ::/0         scram-sha-256
 
   # =============================================================================
   # Quick Test / Auto-Skip Mode
