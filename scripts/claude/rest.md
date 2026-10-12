@@ -151,7 +151,10 @@ HAfAH sets cache headers based on data reversibility:
 
 Only irreversible data is served. `include-reversible` (GET /operations) is
 accepted for compatibility, but even when set to true only irreversible blocks
-and operations are returned.
+and operations are returned. For the same reason the account history
+endpoints report `block_range.to` (`backend/utilities/paging.sql`) as the last
+irreversible block, not the head block, when no `to-block` is given or the
+requested one lies past it.
 
 **Check Function:**
 ```sql

@@ -1,0 +1,36 @@
+---
+  test_name: Hafah JSON-RPC enum_virtual_ops range reaching past the last irreversible block
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: range 4999995..5000010 includes block 5000000 and ends the paging
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+          accept: application/json
+        json:
+          jsonrpc: "2.0"
+          method: account_history_api.enum_virtual_ops
+          params:
+            block_range_begin: 4999995
+            block_range_end: 5000010
+          id: 1
+      response:
+        status_code: 200
+        verify_response_with:
+          - function: tavern.helpers:check_jmespath_match
+            extra_kwargs:
+              query: "result.ops[?block == `5000000`].operation_id"
+              expected: ["21474836480000001", "21474836480000003"]
+          - function: tavern.helpers:check_jmespath_match
+            extra_kwargs:
+              query: "max(result.ops[*].block)"
+              expected: 5000000
+          - function: tavern.helpers:check_jmespath_match
+            extra_kwargs:
+              query: "result.[next_block_range_begin, next_operation_begin]"
+              expected: [0, 0]

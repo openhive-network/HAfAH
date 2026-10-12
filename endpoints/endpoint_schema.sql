@@ -106,7 +106,8 @@ declare
             "type": "integer"
           },
           "to": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Last block of the range; when no end block is requested, or the requested one lies past the last irreversible block, this is the last irreversible block"
           }
         }
       },

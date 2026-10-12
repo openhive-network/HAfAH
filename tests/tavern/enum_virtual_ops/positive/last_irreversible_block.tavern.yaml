@@ -1,0 +1,34 @@
+---
+  test_name: Hafah JSON-RPC enum_virtual_ops serves the last irreversible block
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: block 5000000 (the last irreversible block) alone
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/"
+        method: POST
+        headers:
+          content-type: application/json
+          accept: application/json
+        json:
+          jsonrpc: "2.0"
+          method: account_history_api.enum_virtual_ops
+          params:
+            block_range_begin: 5000000
+            block_range_end: 5000001
+          id: 1
+      response:
+        status_code: 200
+        verify_response_with:
+          - function: tavern.helpers:check_jmespath_match
+            extra_kwargs:
+              query: "result.ops[*].[block, operation_id, op.type]"
+              expected:
+                - [5000000, "21474836480000001", "account_created_operation"]
+                - [5000000, "21474836480000003", "producer_reward_operation"]
+          - function: tavern.helpers:check_jmespath_match
+            extra_kwargs:
+              query: "result.[next_block_range_begin, next_operation_begin]"
+              expected: [0, 0]
