@@ -95,6 +95,7 @@ DECLARE
   __total_pages INT;
   __min_block_num INT;  -- Lowest block number in result set (for cursor)
   __count INT;          -- Operations in current batch
+  __rare_types BOOLEAN;  -- TRUE: read all matches by type and sort, FALSE: walk uq1
 BEGIN
   /*
    * ===================================================================================
@@ -103,6 +104,13 @@ BEGIN
    * Convert block range to account_op_seq_no range for efficient filtering.
    */
   _account_range := hafah_backend.account_range(_account_id, _from_block, _to_block);
+
+  -- Rare/common page plan, as in account_history_by_operations; [from_seq, to_seq]
+  -- already stops at the last irreversible block
+  __rare_types := hafah_backend.account_op_types_are_rare(
+    _operations, _account_id, _account_range.from_seq, _account_range.to_seq,
+    (__max_page_count * _limit) + 1
+  );
 
   /*
    * ===================================================================================
@@ -128,15 +136,43 @@ BEGIN
       -- Row number for saturation detection and block boundary check
       ROW_NUMBER() OVER (ORDER BY ls.operation_id DESC) AS row_num
     FROM (
-      SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num, ao.account_op_seq_no
-      FROM hafd.account_operations ao
-      WHERE ao.account_id = _account_id
-      AND ao.transacting_account_id = _transacting_account_id  -- Include filter (scalar)
-      AND (_operations IS NULL OR ao.op_type_id = ANY(_operations))  -- Optional type filter
-      AND ao.account_op_seq_no >= _account_range.from_seq
-      AND ao.account_op_seq_no <= _account_range.to_seq
-      ORDER BY ao.account_op_seq_no DESC
-      LIMIT (__max_page_count * _limit) + 1  -- +1 to detect saturation
+      -- Exactly one branch runs; the custom plan folds the other away
+      (
+        -- Walk uq1; the fence keeps the sort-everything plan out of this branch
+        SELECT walk.operation_id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num, walk.account_op_seq_no
+        FROM (
+          SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
+          FROM hafd.account_operations ao
+          WHERE NOT __rare_types
+          AND ao.account_id = _account_id
+          AND ao.account_op_seq_no >= _account_range.from_seq
+          AND ao.account_op_seq_no <= _account_range.to_seq
+          ORDER BY ao.account_op_seq_no DESC
+          OFFSET 0  -- Filters stay outside, so the planner costs the walk on every account row
+        ) walk
+        WHERE walk.transacting_account_id = _transacting_account_id  -- Include filter (scalar)
+        AND (_operations IS NULL OR (walk.op_type_id = ANY(_operations)) IS TRUE)  -- Optional type filter
+        ORDER BY walk.account_op_seq_no DESC
+        LIMIT (__max_page_count * _limit) + 1  -- +1 to detect saturation
+      )
+      UNION ALL
+      (
+        -- Rare types: every match through the (account_id, op_type_id) index, then sort
+        SELECT rare.operation_id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num, rare.account_op_seq_no
+        FROM (
+          SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
+          FROM hafd.account_operations ao
+          WHERE __rare_types
+          AND ao.account_id = _account_id
+          AND ao.transacting_account_id = _transacting_account_id  -- Include filter (scalar)
+          AND ao.op_type_id = ANY(_operations)
+          AND ao.account_op_seq_no >= _account_range.from_seq
+          AND ao.account_op_seq_no <= _account_range.to_seq
+          OFFSET 0  -- Plan the fetch of all matches on its own, not as an ordered walk
+        ) rare
+        ORDER BY rare.account_op_seq_no DESC
+        LIMIT (__max_page_count * _limit) + 1  -- +1 to detect saturation
+      )
     ) ls
   ),
   /*
@@ -217,22 +253,50 @@ BEGIN
    * RETURNS: Empty if no block boundary issue. Otherwise, all ops in the boundary block.
    */
   filter_by_op_seq AS MATERIALIZED (
-    SELECT
-      ao.operation_id AS id,
-      ao.op_type_id,
-      hafd.operation_id_to_block_num(ao.operation_id) AS block_num
-    FROM hafd.account_operations ao
-    WHERE ao.account_id = _account_id
-    AND ao.transacting_account_id = _transacting_account_id
-    AND (_operations IS NULL OR ao.op_type_id = ANY(_operations))
-    AND ao.account_op_seq_no >= _account_range.from_seq
-    AND (
-      -- Only execute if block boundary issue detected
-      (SELECT account_op_seq_no FROM block_check) IS NOT NULL
-      AND ao.account_op_seq_no <= (SELECT account_op_seq_no FROM block_check)
+    (
+      -- Walk uq1; the fence keeps the sort-everything plan out of this branch
+      SELECT walk.operation_id AS id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num
+      FROM (
+        SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
+        FROM hafd.account_operations ao
+        WHERE NOT __rare_types
+        AND ao.account_id = _account_id
+        AND ao.account_op_seq_no >= _account_range.from_seq
+        AND (
+          -- Only execute if block boundary issue detected
+          (SELECT account_op_seq_no FROM block_check) IS NOT NULL
+          AND ao.account_op_seq_no <= (SELECT account_op_seq_no FROM block_check)
+        )
+        ORDER BY ao.account_op_seq_no DESC
+        OFFSET 0  -- Filters stay outside, so the planner costs the walk on every account row
+      ) walk
+      WHERE walk.transacting_account_id = _transacting_account_id
+      AND (_operations IS NULL OR (walk.op_type_id = ANY(_operations)) IS TRUE)
+      ORDER BY walk.account_op_seq_no DESC
+      LIMIT _limit  -- Safety limit for the extra records
     )
-    ORDER BY ao.account_op_seq_no DESC
-    LIMIT _limit  -- Safety limit for the extra records
+    UNION ALL
+    (
+      -- Rare types: every match through the (account_id, op_type_id) index, then sort
+      SELECT rare.operation_id AS id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num
+      FROM (
+        SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
+        FROM hafd.account_operations ao
+        WHERE __rare_types
+        AND ao.account_id = _account_id
+        AND ao.transacting_account_id = _transacting_account_id
+        AND ao.op_type_id = ANY(_operations)
+        AND ao.account_op_seq_no >= _account_range.from_seq
+        AND (
+          -- Only execute if block boundary issue detected
+          (SELECT account_op_seq_no FROM block_check) IS NOT NULL
+          AND ao.account_op_seq_no <= (SELECT account_op_seq_no FROM block_check)
+        )
+        OFFSET 0  -- Plan the fetch of all matches on its own, not as an ordered walk
+      ) rare
+      ORDER BY rare.account_op_seq_no DESC
+      LIMIT _limit  -- Safety limit for the extra records
+    )
   ),
   /*
    * ===================================================================================

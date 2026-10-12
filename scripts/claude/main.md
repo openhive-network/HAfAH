@@ -211,7 +211,11 @@ Account history functions with an operation-type filter set
 `plan_cache_mode = force_custom_plan`, so each call is planned with its account
 and filter: walking `hive_account_operations_uq1` backwards wins when the
 requested types are common for the account, the `(account_id, op_type_id)`
-index wins when they are rare.
+index wins when they are rare. Every filtered path (JSON-RPC `get_account_history`,
+REST `by_operations` and the include/exclude-account variants) counts the
+matches in the range its page reads, up to `sqrt(rows * N)`
+(`hafah_backend.account_op_types_are_rare`, or the exact total in
+`by_operations`), and runs one of two `UNION ALL` branches accordingly.
 
 ### 2. Binary to Hex Encoding
 ```sql
