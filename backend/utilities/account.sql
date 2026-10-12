@@ -28,7 +28,7 @@ RETURNS INT
 LANGUAGE 'plpgsql' STABLE
 AS $$
 DECLARE
-  __account_id INT := (SELECT av.id FROM hive.accounts_view av WHERE av.name = _account_name);
+  __account_id INT := (SELECT ha.id FROM hafd.accounts ha WHERE ha.name = _account_name);
 BEGIN
   PERFORM hafah_backend.validate_account(__account_id, _account_name, _required);
   RETURN __account_id;
@@ -53,7 +53,7 @@ RETURNS TEXT
 LANGUAGE 'plpgsql' STABLE
 AS $$
 BEGIN
-  RETURN av.name FROM hive.accounts_view av WHERE av.id = _account_id;
+  RETURN ha.name FROM hafd.accounts ha WHERE ha.id = _account_id;
 END
 $$;
 

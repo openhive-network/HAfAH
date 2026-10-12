@@ -81,7 +81,7 @@ Input validation functions that normalize and bounds-check parameters.
 | `get_account_id(_name)` | Convert account name to ID |
 | `get_account_name(_id)` | Convert account ID to name |
 
-**Source:** `hive.accounts_view`
+**Source:** `hafd.accounts`
 
 **Note:** Account lookup should be done on the smallest/most-filtered result set (late binding) for performance.
 

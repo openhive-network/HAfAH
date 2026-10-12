@@ -26,14 +26,14 @@ SET ROLE hafah_owner;
  *   _operation_types       - Array of operation type IDs to filter by
  *   _operation_begin       - Operation ID to start from (-1 for beginning)
  *   _limit                 - Maximum number of operations to return
- *   _include_reversible    - Whether to include reversible blocks
  *   _is_legacy_style       - Whether to use legacy operation format
  *
  * RETURNS: Operations with next block number for cursor-based pagination
  *
  * DATA SOURCES:
  *   - hafah_backend.get_ops_in_blocks_helper(): Core query execution
- *   - hive.blocks_view: Head block lookup for range clamping
+ *   - hive.app_get_irreversible_block(): Range clamping; only irreversible
+ *     blocks are served, whatever include-reversible the endpoint received
  *
  * PAGINATION: Cursor-based using operation_id
  *   - Returns next_block_num and next_operation_id for continuation
@@ -47,7 +47,6 @@ CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_blocks(
     in _operation_types INT[],
     in _operation_begin BIGINT,
     in _limit INT,
-    in _include_reversible BOOLEAN,
     in _is_legacy_style BOOLEAN
 )
 RETURNS hafah_backend.operations_in_block_range
@@ -59,8 +58,8 @@ DECLARE
   _operation_id TEXT;
   _next_block_num INT;
 
-  -- Head block: Used to clamp end_block_num to avoid querying future blocks
-  _latest_block_num INT := (SELECT num FROM hive.blocks_view ORDER BY num DESC LIMIT 1);
+  -- Last irreversible block: Used to clamp end_block_num, later blocks are not served
+  _latest_block_num INT := hive.app_get_irreversible_block();
 BEGIN
   WITH pre_result AS (
     SELECT
@@ -75,14 +74,13 @@ BEGIN
       hp._operation_id AS "operation_id"
     FROM hafah_backend.get_ops_in_blocks_helper(
       _block_num,
-      -- Clamp end block to head block + 1 to avoid querying non-existent blocks
+      -- Clamp end block to last irreversible block + 1
       -- Helper uses exclusive end, so +1 gives inclusive behavior
       (CASE WHEN _end_block_num > _latest_block_num THEN _latest_block_num + 1 ELSE _end_block_num + 1 END),
       _operation_group_types,
       _operation_types,
       _operation_begin,
       _limit,
-      _include_reversible,
       _is_legacy_style
     ) AS hp
   ),
@@ -154,17 +152,14 @@ $$;
  * RETURNS: Table of operation data for aggregation by the main function
  *
  * DATA SOURCES:
- *   - hafah_backend.helper_operations_view: Optimized operations view
- *   - hive.transactions_view: Transaction hash lookup
- *   - hive.blocks_view: Block timestamp lookup
+ *   - hafah_backend.helper_operations_view: hafd.operations with type and body
+ *   - hafd.transactions: Transaction hash lookup
+ *   - hafd.blocks: Block timestamp lookup
  *   - hafd.operation_types: Type filtering validation
  *
- * REVERSIBILITY:
+ * IRREVERSIBLE DATA ONLY:
  *   - hive.app_get_irreversible_block(): Returns last irreversible block number
- *   - If _include_reversible=FALSE, clamps query to irreversible blocks only
- *   - Irreversible data can be cached for 1 year; reversible only 2 seconds
- *
- * NOTE: Also used by JSON-RPC API for enum_virtual_ops and get_ops_in_block
+ *   - The query is always clamped to irreversible blocks
  */
 CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_blocks_helper(
     in _block_num INT,
@@ -173,7 +168,6 @@ CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_blocks_helper(
     in _operation_types INT[],
     in _operation_begin BIGINT,
     in _limit INT,
-    in _include_reversible BOOLEAN,
     in _is_legacy_style BOOLEAN
 )
 RETURNS TABLE(
@@ -193,25 +187,15 @@ DECLARE
   -- NULL = all operations; TRUE/FALSE filters virtual/non-virtual
   __operation_filter BOOLEAN = (_operation_group_types IS NULL);
   __resolved_filter_exists BOOLEAN;
+  __irreversible_block INT := hive.app_get_irreversible_block();
 BEGIN
-  -- REVERSIBILITY CHECK: If only irreversible data requested, validate block range
+  -- IRREVERSIBLE DATA ONLY
   -- Case 1: Start block is beyond irreversible - return empty result
-  IF (NOT _include_reversible) AND _block_num > hive.app_get_irreversible_block() THEN
-    RETURN QUERY SELECT
-      NULL::INT, -- _block_num
-      NULL::TEXT, -- _trx_id
-      NULL::BIGINT, -- _trx_in_block
-      NULL::BIGINT, -- _op_in_trx
-      NULL::SMALLINT, -- _op_type_id
-      NULL::BOOLEAN, -- _virtual_op
-      NULL::TEXT, -- _timestamp
-      NULL::JSONB, -- _value
-      NULL::BIGINT  -- _operation_id
-    LIMIT 0;
+  IF _block_num > __irreversible_block THEN
     RETURN;
   -- Case 2: End block extends into reversible - clamp to irreversible boundary
-  ELSEIF (NOT _include_reversible) AND _end_block_num > hive.app_get_irreversible_block() THEN
-    _end_block_num := hive.app_get_irreversible_block() + 1;
+  ELSEIF _end_block_num > __irreversible_block THEN
+    _end_block_num := __irreversible_block + 1;
   END IF;
 
   -- Check if specific operation type filter was provided
@@ -289,8 +273,12 @@ BEGIN
           )
         ) T
       -- LEFT JOIN transactions: Virtual ops won't match (have no transaction)
-      LEFT JOIN hive.transactions_view T2
-        ON T.block_num = T2.block_num AND T.trx_in_block = T2.trx_in_block
+      LEFT JOIN LATERAL (
+        -- LIMIT 1: a position holds one transaction (its index is not declared unique)
+        SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
+        WHERE tx.block_num = T.block_num AND tx.trx_in_block = T.trx_in_block
+        LIMIT 1
+      ) T2 ON TRUE
       ORDER BY T.id
       LIMIT _limit
     )
@@ -306,8 +294,8 @@ BEGIN
       pre_result._value,
       pre_result._operation_id
     FROM hfm_operations pre_result
-    -- JOIN blocks_view for timestamp
-    JOIN hive.blocks_view hb ON hb.num = pre_result.__block_num
+    -- JOIN blocks for timestamp
+    JOIN hafd.blocks hb ON hb.num = pre_result.__block_num
     ORDER BY pre_result._operation_id;
 END
 $function$
@@ -335,11 +323,14 @@ SET JIT=OFF;
  * RETURNS: Set of operations matching the criteria
  *
  * DATA SOURCES:
- *   - hive.operations_view: Operation bodies and metadata
- *   - hive.account_operations_view: Account-to-operation mapping
+ *   - hafah_backend.helper_operations_view: Operation bodies and metadata (hafd.operations)
+ *   - hafd.account_operations: Account-to-operation mapping
  *   - hafd.operation_types: is_virtual flag lookup
- *   - hive.transactions_view: Transaction hash lookup
- *   - hive.blocks_view: Block timestamp
+ *   - hafd.transactions: Transaction hash lookup
+ *   - hafd.blocks: Block timestamp
+ *
+ * The caller validates the block with validate_block_num(), which rejects a
+ * block beyond the last irreversible block.
  *
  * PAGINATION: Offset-based (page-based)
  *   - Page 1 = most recent when desc, oldest when asc
@@ -394,8 +385,8 @@ IF _account_id IS NULL THEN
     FROM (
       With operations_in_block AS
       (
-      SELECT ov.id, ov.trx_in_block, ov.op_pos, ov.body, ov.body_value, ov.op_type_id, ov.block_num
-      FROM hive.operations_view ov
+      SELECT ov.id, ov.trx_in_block, ov.op_pos::INT AS op_pos, ov.body, ov.body_value, ov.op_type_id, ov.block_num
+      FROM hafah_backend.helper_operations_view ov
       WHERE
         ov.block_num = _block_num
       ),
@@ -419,7 +410,12 @@ IF _account_id IS NULL THEN
     -- JOIN operation_types: Required to get is_virtual flag
     JOIN hafd.operation_types hot ON hot.id = ls.op_type_id
     -- LEFT JOIN transactions: Virtual ops have no transaction (NULL trx_hash)
-    LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ls.trx_in_block
+    LEFT JOIN LATERAL (
+      -- LIMIT 1: a position holds one transaction (its index is not declared unique)
+      SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
+      WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ls.trx_in_block
+      LIMIT 1
+    ) htv ON TRUE
     ORDER BY
       (CASE WHEN _order_is = 'desc' THEN ls.id ELSE NULL END) DESC,
       (CASE WHEN _order_is = 'asc' THEN ls.id ELSE NULL END) ASC)
@@ -439,12 +435,12 @@ IF _account_id IS NULL THEN
     FROM (
     SELECT hafah_backend.operation_body_filter(opr.body, opr.id, _body_limit) as composite, opr.id, opr.block_num, opr.trx_in_block, opr.trx_hash, opr.op_pos, opr.op_type_id, opr.is_virtual, hb.created_at
     FROM operation_range opr
-    -- JOIN blocks_view for timestamp
-    JOIN hive.blocks_view hb ON hb.num = opr.block_num
+    -- JOIN blocks for timestamp
+    JOIN hafd.blocks hb ON hb.num = opr.block_num
     ) filtered_operations
     ORDER BY filtered_operations.id, filtered_operations.trx_in_block, filtered_operations.op_pos;
 
--- Branch 2: With account filter - use account_operations_view for efficient lookup
+-- Branch 2: With account filter - use account_operations for efficient lookup
 ELSE
 
   RETURN QUERY
@@ -460,19 +456,20 @@ ELSE
       ls.body,
       hot.is_virtual
     FROM (
-      -- Use account_operations_view: Index-optimized for account lookups
+      -- Use account_operations: Index-optimized for account lookups
       WITH account_operations_in_block AS
       (
-        SELECT aov.operation_id
-        FROM hive.account_operations_view aov
+        SELECT ao.operation_id
+        FROM hafd.account_operations ao
         WHERE
-          aov.account_id = _account_id AND
-          aov.block_num = _block_num
+          ao.account_id = _account_id AND
+          ao.operation_id >= hafd.operation_id(_block_num, 0) AND
+          ao.operation_id < hafd.operation_id(_block_num + 1, 0)
       ),
       operations_in_block AS
       (
-        SELECT ov.id, ov.trx_in_block, ov.op_pos, ov.body, ov.body_value, ov.op_type_id, ov.block_num
-        FROM hive.operations_view ov
+        SELECT ov.id, ov.trx_in_block, ov.op_pos::INT AS op_pos, ov.body, ov.body_value, ov.op_type_id, ov.block_num
+        FROM hafah_backend.helper_operations_view ov
         -- JOIN to account ops: Only operations involving this account
         JOIN account_operations_in_block aoib ON aoib.operation_id = ov.id
       ),
@@ -494,7 +491,12 @@ ELSE
       OFFSET _offset
     ) ls
     JOIN hafd.operation_types hot ON hot.id = ls.op_type_id
-    LEFT JOIN hive.transactions_view htv ON htv.block_num = ls.block_num AND htv.trx_in_block = ls.trx_in_block
+    LEFT JOIN LATERAL (
+      -- LIMIT 1: a position holds one transaction (its index is not declared unique)
+      SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
+      WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ls.trx_in_block
+      LIMIT 1
+    ) htv ON TRUE
     ORDER BY
       (CASE WHEN _order_is = 'desc' THEN ls.id ELSE NULL END) DESC,
       (CASE WHEN _order_is = 'asc' THEN ls.id ELSE NULL END) ASC)
@@ -513,7 +515,7 @@ ELSE
     FROM (
     SELECT hafah_backend.operation_body_filter(opr.body, opr.id, _body_limit) as composite, opr.id, opr.block_num, opr.trx_in_block, opr.trx_hash, opr.op_pos, opr.op_type_id, opr.is_virtual, hb.created_at
     FROM operation_range opr
-    JOIN hive.blocks_view hb ON hb.num = opr.block_num
+    JOIN hafd.blocks hb ON hb.num = opr.block_num
     ) filtered_operations
     ORDER BY filtered_operations.id, filtered_operations.trx_in_block, filtered_operations.op_pos;
 
@@ -539,8 +541,8 @@ $$;
  * RETURNS: Count of matching operations
  *
  * DATA SOURCES:
- *   - hive.operations_view: All operations in block
- *   - hive.account_operations_view: Account-filtered operations
+ *   - hafd.operations: All operations in block
+ *   - hafd.account_operations: Account-filtered operations
  *
  * NOTES:
  *   - Mirrors filter logic from get_ops_by_block but only counts
@@ -572,10 +574,10 @@ IF _account_id IS NULL THEN
   RETURN (
     WITH operations_in_block AS
     (
-      SELECT ov.op_type_id, ov.body, ov.body_value
-      FROM hive.operations_view ov
+      SELECT ov.op_type_id, ov.body_value
+      FROM hafd.operations ov
       WHERE
-        ov.block_num = _block_num
+        hafd.operation_id_to_block_num(ov.id) = _block_num
     ),
     filter_ops AS MATERIALIZED
     (
@@ -593,19 +595,20 @@ IF _account_id IS NULL THEN
 -- Count branch 2: Account-filtered operations
 ELSE
   RETURN (
-    -- Use account_operations_view for efficient account lookup
+    -- Use account_operations for efficient account lookup
     WITH account_operations_in_block AS
     (
-      SELECT aov.operation_id
-      FROM hive.account_operations_view aov
+      SELECT ao.operation_id
+      FROM hafd.account_operations ao
       WHERE
-        aov.account_id = _account_id AND
-        aov.block_num = _block_num
+        ao.account_id = _account_id AND
+        ao.operation_id >= hafd.operation_id(_block_num, 0) AND
+        ao.operation_id < hafd.operation_id(_block_num + 1, 0)
     ),
     operations_in_block AS
     (
-      SELECT ov.op_type_id, ov.body, ov.body_value
-      FROM hive.operations_view ov
+      SELECT ov.op_type_id, ov.body_value
+      FROM hafd.operations ov
       JOIN account_operations_in_block aoib ON aoib.operation_id = ov.id
     ),
     filter_ops AS MATERIALIZED

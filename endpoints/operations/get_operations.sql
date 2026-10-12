@@ -15,7 +15,9 @@
  *   operation-group-type (query) - 'virtual', 'real', or 'all' (default: all)
  *   operation-begin (query) - Starting operation ID for pagination (default: -1)
  *   page-size (query) - Max operations per page (default: 1000, max: 150000)
- *   include-reversible (query) - Include reversible blocks (default: FALSE)
+ *   include-reversible (query) - Accepted for compatibility (default: FALSE).
+ *                        WARNING: even when set to true, only irreversible
+ *                        blocks and operations are returned.
  *
  * RETURNS: operations_in_block_range containing:
  *   - ops (array of operations)
@@ -24,7 +26,8 @@
  *
  * CACHING:
  *   - 1 year cache if all blocks in range are irreversible
- *   - 2 second cache if range includes any reversible blocks
+ *   - 2 second cache if range includes any reversible blocks (their operations
+ *     are not returned yet; they appear once the blocks become irreversible)
  *
  * DELEGATES TO: hafah_backend.get_ops_in_blocks()
  */
@@ -126,7 +129,9 @@ SET ROLE hafah_owner;
           type: boolean
           default: false
         description: |
-          If true, operations from reversible blocks will be included.
+          Accepted for compatibility only. WARNING: even when set to true,
+          only operations from irreversible blocks are returned; the value
+          does not change the result.
     responses:
       '200':
         description: |
@@ -339,7 +344,6 @@ BEGIN
     _operation_types,
     "operation-begin"::BIGINT,
     "page-size",
-    "include-reversible",
     FALSE
   );
 

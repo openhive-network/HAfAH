@@ -43,26 +43,28 @@ CREATE TYPE hafah_backend.get_transaction_result AS (
  * PURPOSE: Retrieve transaction details by hash.
  *
  * DATA FLOW:
- *   1. Look up transaction by hash in transactions_view
- *   2. Check reversibility constraints
+ *   1. Look up transaction by hash in hafd.transactions
+ *   2. Return nothing for a transaction beyond the last irreversible block
  *   3. Count multisig signatures
  *   4. Return transaction metadata
  *
  * PARAMETERS:
  *   - _trx_hash: Transaction hash (20 bytes)
- *   - _include_reversible: Include reversible blocks
+ *
+ * Only irreversible transactions are served: the include_reversible argument of
+ * the JSON-RPC call does not reach this function, and even when it is true a
+ * transaction in a reversible block is reported as unknown.
  *
  * RETURNS: Transaction metadata including ref_block info, expiration, signature
  */
 CREATE OR REPLACE FUNCTION hafah_backend.get_transaction(
-    _trx_hash           BYTEA,
-    _include_reversible BOOLEAN
+    _trx_hash           BYTEA
 )
 RETURNS SETOF hafah_backend.get_transaction_result
 LANGUAGE 'plpgsql' STABLE
 AS $$
 DECLARE
-  __result         hive.transactions_view%ROWTYPE;  -- Full transaction row
+  __result         hafd.transactions%ROWTYPE;       -- Full transaction row
   __multisig_number SMALLINT;                        -- Additional signature count
 BEGIN
   /*
@@ -71,41 +73,31 @@ BEGIN
    *   Returns full row including TaPoS fields, expiration, and signature.
    */
   SELECT * INTO __result
-  FROM hive.transactions_view ht
+  FROM hafd.transactions ht
   WHERE ht.trx_hash = _trx_hash;
 
   /*
-   * REVERSIBILITY CHECK:
-   *   Transactions in reversible blocks may disappear during chain reorganization.
-   *   If caller requests only irreversible data, filter out reversible transactions.
+   * IRREVERSIBLE DATA ONLY:
+   *   Transactions in reversible blocks may disappear during chain reorganization,
+   *   so they are never returned.
    *
-   * WHY: Exchanges and other services need confirmed transactions only.
-   *      app_get_irreversible_block() returns last finalized block number.
+   * WHY: app_get_irreversible_block() returns last finalized block number.
    */
-  IF NOT _include_reversible AND __result.block_num > hive.app_get_irreversible_block() THEN
+  IF __result.block_num > hive.app_get_irreversible_block() THEN
     -- WHY: Return empty set (not NULL row) for consistent API behavior
-    RETURN QUERY SELECT
-      NULL::INT,
-      NULL::BIGINT,
-      NULL::TEXT,
-      NULL::INT,
-      NULL::SMALLINT,
-      NULL::TEXT,
-      NULL::SMALLINT
-    LIMIT 0;
     RETURN;
   END IF;
 
   /*
    * MULTISIG SIGNATURE COUNT:
    *   Hive supports multi-signature transactions. The primary signature is in
-   *   transactions_view. Additional signatures are in transactions_multisig_view.
+   *   hafd.transactions. Additional signatures are in hafd.transactions_multisig.
    *
    * WHY: Caller needs this count to know if there are additional signatures
    *      to fetch via get_multi_signatures_in_transaction().
    */
   SELECT count(*) INTO __multisig_number
-  FROM hive.transactions_multisig_view htm
+  FROM hafd.transactions_multisig htm
   WHERE htm.trx_hash = _trx_hash;
 
   RETURN QUERY
@@ -144,7 +136,7 @@ AS $$
 BEGIN
   RETURN QUERY
     SELECT encode(htm.signature, 'hex') AS _signature
-    FROM hive.transactions_multisig_view htm
+    FROM hafd.transactions_multisig htm
     WHERE htm.trx_hash = _trx_hash;
 END
 $$;
@@ -156,7 +148,7 @@ $$;
  * PURPOSE: Retrieve operations within a specific transaction.
  *
  * DATA FLOW:
- *   1. Query operations_view for the specific block/transaction
+ *   1. Query helper_operations_view (hafd.operations) for the specific block/transaction
  *   2. Filter virtual ops based on _include_virtual
  *   3. Format operation body based on style
  *   4. Return ordered by operation ID
@@ -198,8 +190,7 @@ BEGIN
           ELSE ho.body
         END
       ) AS _value
-    FROM hive.operations_view ho
-    JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
+    FROM hafah_backend.helper_operations_view ho
     WHERE ho.block_num = _block_num
       AND ho.trx_in_block = _trx_in_block
       /*
@@ -210,7 +201,7 @@ BEGIN
        *   - _include_virtual = TRUE: Include all operations
        *   - _include_virtual = FALSE: Only real transaction operations
        */
-      AND (_include_virtual OR hot.is_virtual = FALSE)
+      AND (_include_virtual OR ho.virtual_op = FALSE)
     ORDER BY ho.id;  -- WHY: Maintain operation order within transaction
 END
 $$;

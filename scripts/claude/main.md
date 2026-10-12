@@ -65,9 +65,9 @@ HAfAH (HAF Account History) is a **read-only** HAF application that implements t
    ┌─────────────────────────────────────────────────────────────────────┐
    │                      HAF Base Tables                                 │
    │                                                                      │
-   │  hive.blocks_view    hive.transactions_view    hive.operations_view │
-   │  hive.accounts_view  hive.account_operations_view                   │
-   │  hafd.operation_types                                                │
+   │  hafd.blocks         hafd.transactions         hafd.operations     │
+   │  hafd.accounts       hafd.account_operations   hafd.operation_types │
+   │  (irreversible data only, bounded by app_get_irreversible_block())  │
    └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -161,30 +161,57 @@ Installation executes files in this specific order (see `scripts/install_app.sh`
 
 ## HAF Table Dependencies
 
-HAfAH reads from these HAF base tables:
+HAfAH serves **irreversible data only** and reads the `hafd.*` base tables
+directly, never the `hive.*_view` views or the `hafd.*_reversible` tables:
 
 | Table | Purpose |
 |-------|---------|
-| `hive.blocks_view` | Block headers |
-| `hive.transactions_view` | Transaction data |
-| `hive.operations_view` | Operation bodies |
-| `hive.accounts_view` | Account name ↔ ID mapping |
-| `hive.account_operations_view` | Account operation index |
+| `hafd.blocks` | Block headers |
+| `hafd.transactions` | Transaction data |
+| `hafd.transactions_multisig` | Additional transaction signatures |
+| `hafd.operations` | Operation bodies (`body_value`; block encoded in `id`) |
+| `hafd.accounts` | Account name ↔ ID mapping |
+| `hafd.account_operations` | Account operation index |
 | `hafd.operation_types` | Operation type metadata |
+
+Every query is bounded by `hive.app_get_irreversible_block()`. The JSON-RPC
+`include_reversible` and REST `include-reversible` arguments are still accepted
+so clients do not break, but they do not change the result: even when set to
+true, only irreversible blocks and operations are returned.
+
+`hafah_backend.helper_operations_view` (`db/hafah_app.sql`) joins
+`hafd.operations` with `hafd.operation_types` and builds the operation body
+exactly as `hive.operations_view` does (`{"type": ..., "value": body_value}`).
+Use it for the single per-row operations join.
+
+HAF functions without a base-table variant are still called and guarded by an
+irreversible-block check first: `hive.get_block`, `hive.get_block_header`,
+`hive.get_block_from_views` (block endpoints) and `hive.convert_to_blocks_range`
+(timestamp → block number).
 
 ---
 
 ## Key Patterns
 
-### 1. Reversibility Handling
+### 1. Irreversible Data Only
 ```sql
--- Check if block is irreversible
+-- Last block whose data is served
 SELECT hive.app_get_irreversible_block()
 
--- Set cache headers based on reversibility
+-- Block bound on operation ids: every operation of block N has
+-- operation_id(N, 0) <= id < operation_id(N + 1, 0)
+WHERE ao.operation_id < hafd.operation_id(hive.app_get_irreversible_block() + 1, 0)
+
+-- Cache headers
 -- Irreversible: 1 year cache
--- Reversible: 2 second cache
+-- Range reaching past the irreversible block: 2 second cache (data appears later)
 ```
+
+Account history functions with an operation-type filter set
+`plan_cache_mode = force_custom_plan`, so each call is planned with its account
+and filter: walking `hive_account_operations_uq1` backwards wins when the
+requested types are common for the account, the `(account_id, op_type_id)`
+index wins when they are rare.
 
 ### 2. Binary to Hex Encoding
 ```sql

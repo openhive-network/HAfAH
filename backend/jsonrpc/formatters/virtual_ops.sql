@@ -10,6 +10,9 @@ SET ROLE hafah_owner;
  * Formats virtual operations with pagination support. Supports two modes:
  *   - Flat mode: Returns operations in a flat array
  *   - Grouped mode: Returns operations grouped by block with irreversibility info
+ *
+ * Only irreversible blocks are served, so every returned block is marked
+ * irreversible, even when the caller sets include_reversible to true.
  */
 
 /*
@@ -32,7 +35,6 @@ SET ROLE hafah_owner;
  *   - _block_range_end: End of block range (exclusive)
  *   - _operation_begin: Starting operation ID for pagination
  *   - _limit: Maximum operations to return
- *   - _include_reversible: Include reversible blocks
  *   - _group_by_block: Group results by block number
  *
  * RETURNS: JSONB with ops/ops_by_block array and pagination fields
@@ -43,14 +45,12 @@ CREATE OR REPLACE FUNCTION hafah_backend.enum_virtual_ops_json(
     _block_range_end    INT,
     _operation_begin    BIGINT,
     _limit              INT,
-    _include_reversible BOOLEAN,
     _group_by_block     BOOLEAN
 )
 RETURNS JSONB
 LANGUAGE 'plpgsql' STABLE
 AS $$
 DECLARE
-  __irr_num                           INT;
   __actual_last_irreversible_block_num INT;
 BEGIN
   SELECT hive.app_get_irreversible_block() INTO __actual_last_irreversible_block_num;
@@ -64,16 +64,6 @@ BEGIN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
   ELSE
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=3"}]', true);
-  END IF;
-
-  /*
-   * Irreversibility Marker:
-   *   Used for ops_by_block mode to mark blocks as reversible/irreversible
-   *   Default to max int (all irreversible) unless group_by_block with reversible
-   */
-  __irr_num := (x'7fffffff'::BIGINT::INT);
-  IF _include_reversible = TRUE AND _group_by_block = TRUE THEN
-    __irr_num := __actual_last_irreversible_block_num;
   END IF;
 
   RETURN (
@@ -126,7 +116,6 @@ BEGIN
           _block_range_end,
           _operation_begin,
           _limit,
-          _include_reversible,
           __actual_last_irreversible_block_num
         )
       ),
@@ -162,15 +151,15 @@ BEGIN
           LIMIT 1
         )
         /*
-         * Find the NEXT virtual operation after our last result.
+         * Find the NEXT irreversible virtual operation after our last result.
          * This becomes the cursor for the client's next request.
          */
         SELECT o.block_num, o.id
-        FROM hive.operations_view o
-        JOIN hafd.operation_types ot ON o.op_type_id = ot.id
+        FROM hafah_backend.helper_operations_view o
         WHERE
-          ot.is_virtual = TRUE
+          o.virtual_op = TRUE
           AND o.block_num >= (SELECT blk FROM pre_result_in)
+          AND o.block_num <= __actual_last_irreversible_block_num
           AND o.id > (SELECT op_id FROM pre_result_in)
         ORDER BY o.block_num, o.id
         LIMIT 1
@@ -186,7 +175,7 @@ BEGIN
          *   COALESCE PATTERN:
          *   1. If pag CTE found a next operation → use that block number
          *   2. Otherwise:
-         *      - If _block_range_end > last block in DB → return 0 (no more data)
+         *      - If _block_range_end > last irreversible block → return 0 (no more data)
          *      - Else → return _block_range_end (continue from where we stopped)
          *
          *   WHY 0: Signals "no more data" to the client. They should stop paginating.
@@ -195,8 +184,8 @@ BEGIN
           (SELECT block_num FROM pag),  -- First choice: next op's block
           (
             CASE
-              WHEN _block_range_end > (SELECT num FROM hive.blocks_view ORDER BY num DESC LIMIT 1)
-                THEN 0  -- Past end of blockchain, no more data
+              WHEN _block_range_end > __actual_last_irreversible_block_num
+                THEN 0  -- Past the served (irreversible) chain, no more data
               ELSE _block_range_end  -- More blocks exist, continue from here
             END
           )
@@ -279,7 +268,7 @@ BEGIN
          *   [
          *     {
          *       "block": 12345,
-         *       "irreversible": true,      -- FALSE if block may be reorganized
+         *       "irreversible": true,      -- always true: only irreversible blocks are served
          *       "ops": [{op}, {op}, ...],  -- All operations in this block
          *       "timestamp": "2024-01-15T12:30:45"  -- Block timestamp
          *     },
@@ -299,16 +288,10 @@ BEGIN
                     ds.block                AS "block",
                     /*
                      * IRREVERSIBILITY FLAG:
-                     *   __irr_num is set to last irreversible block number when
-                     *   _include_reversible = TRUE, or max int (all irreversible) otherwise.
-                     *
-                     *   block <= __irr_num → block is confirmed, won't be reorganized
-                     *   block > __irr_num → block may still be reverted
-                     *
-                     *   WHY important: Exchanges should wait for irreversibility
-                     *   before crediting deposits to prevent double-spend attacks.
+                     *   enum_virtual_ops() returns irreversible blocks only, so every
+                     *   block is confirmed and won't be reorganized.
                      */
-                    (ds.block <= __irr_num) AS "irreversible",
+                    TRUE                    AS "irreversible",
                     /*
                      * array_agg: Collects all operations in this block into an array.
                      * PostgreSQL GROUP BY aggregates all rows with same block number.

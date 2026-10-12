@@ -20,7 +20,7 @@ SET ROLE hafah_owner;
  * PURPOSE: Format account history data as JSON for JSON-RPC response.
  *
  * DATA FLOW:
- *   1. Retrieve operations via ah_get_account_history()
+ *   1. Retrieve operations via ah_get_account_history() (irreversible blocks only)
  *   2. Format each operation into [operation_id, operation_object] pairs
  *   3. Handle legacy vs new style formatting:
  *      - Legacy: operation_id removed from inner object
@@ -33,7 +33,6 @@ SET ROLE hafah_owner;
  *   - _account: Account name to query
  *   - _start: Starting operation sequence number
  *   - _limit: Maximum operations to return
- *   - _include_reversible: Include reversible blocks
  *   - _is_legacy_style: Use legacy response format
  *
  * RETURNS: JSON object or array depending on style
@@ -44,7 +43,6 @@ CREATE OR REPLACE FUNCTION hafah_backend.ah_get_account_history_json(
     _account            VARCHAR,
     _start              BIGINT,
     _limit              BIGINT,
-    _include_reversible BOOLEAN,
     _is_legacy_style    BOOLEAN
 )
 RETURNS JSON
@@ -122,7 +120,6 @@ BEGIN
             _account,
             _start,
             _limit,
-            _include_reversible,
             _is_legacy_style
           )
         ) ops

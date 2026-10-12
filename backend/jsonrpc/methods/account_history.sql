@@ -32,16 +32,41 @@ SET ROLE hafah_owner;
  * ===================================================================================
  * PURPOSE: Retrieve account operation history with filtering by operation type.
  *
+ * IRREVERSIBLE DATA ONLY:
+ *   Reads the hafd.* base tables and returns operations in blocks up to
+ *   hive.app_get_irreversible_block(). The JSON-RPC include_reversible argument
+ *   is accepted by the dispatcher but does not reach this function: even when
+ *   it is true, only irreversible operations are returned.
+ *
  * DATA FLOW:
  *   1. Validate input parameters (limit, start/limit relationship)
  *   2. Handle empty filter case (return empty)
  *   3. Translate filter bitmask to operation type IDs
- *   4. Determine upper block limit based on reversibility
- *   5. Resolve account name to ID
- *   6. Query account_operations_view with optional type filter
- *   7. Join with operations for body and transaction info
- *   8. Join with blocks for timestamp
- *   9. Return formatted results ordered by operation sequence
+ *   4. Resolve account name to ID
+ *   5. Select the page from hafd.account_operations, newest first
+ *   6. Join each page row once to hafd.operations (with its type),
+ *      hafd.transactions for the hash and hafd.blocks for the timestamp
+ *   7. Return formatted results ordered by operation sequence
+ *
+ * PLAN CHOICE (filtered calls):
+ *   Two ways to read a filtered page, and which is fast depends on how common
+ *   the requested types are for this account:
+ *     - walk hive_account_operations_uq1 (account_id, account_op_seq_no)
+ *       backwards and stop after _limit matches: about _limit * N / M rows
+ *       visited, N = the account's operations up to _start, M = its matches;
+ *     - read every match through hive_account_operations_account_id_op_type_id_idx
+ *       and sort: about M rows.
+ *   They cost the same at M = sqrt(_limit * N). The planner cannot judge M: it
+ *   multiplies the account's and the types' frequencies, and nothing records
+ *   how often a type occurs for one account. So M is counted, up to that
+ *   threshold, with an index-only scan of the (account_id, op_type_id) index,
+ *   and the page query takes the branch the count selects. The walk tests the
+ *   types with IS TRUE, which no index can serve, so a misestimate cannot turn
+ *   it into a full read and sort of a common type.
+ *
+ *   plan_cache_mode = force_custom_plan plans the page query for every call
+ *   with the account, the filter and the branch as constants: the branch not
+ *   taken folds away, and the estimates are the account's own.
  *
  * PARAMETERS:
  *   - _filter_low: Low 64 bits of operation type bitmask
@@ -49,7 +74,6 @@ SET ROLE hafah_owner;
  *   - _account: Account name to query
  *   - _start: Starting operation sequence number (descending)
  *   - _limit: Maximum operations to return
- *   - _include_reversible: Include reversible blocks
  *   - _is_legacy_style: Format operations in legacy style
  *
  * RETURNS: Table of account operations with metadata
@@ -60,7 +84,6 @@ CREATE OR REPLACE FUNCTION hafah_backend.ah_get_account_history(
     _account            VARCHAR,
     _start              BIGINT,
     _limit              BIGINT,
-    _include_reversible BOOLEAN,
     _is_legacy_style    BOOLEAN
 )
 RETURNS TABLE(
@@ -77,13 +100,14 @@ LANGUAGE 'plpgsql' STABLE
 SET JIT = OFF
 SET join_collapse_limit = 16
 SET from_collapse_limit = 16
-SET plan_cache_mode = force_generic_plan
+SET plan_cache_mode = force_custom_plan
 AS $$
 DECLARE
-  __resolved_filter   SMALLINT[];  -- Array of operation type IDs from bitmask
-  __account_id        INT;         -- Resolved numeric account ID
-  __upper_block_limit INT;         -- Block limit based on reversibility
-  __use_filter        INT;         -- NULL if no filter, length otherwise
+  __resolved_filter       SMALLINT[];  -- Array of operation type IDs from bitmask (NULL = all types)
+  __account_id            INT;         -- Resolved numeric account ID
+  __upper_operation_id    BIGINT;      -- First operation id past the last irreversible block
+  __rare_threshold        BIGINT;      -- sqrt(_limit * N): fewer matches than this are "rare"
+  __rare_types            BOOLEAN := FALSE;  -- TRUE: read all matches by type and sort
 BEGIN
   /*
    * INPUT VALIDATION:
@@ -105,16 +129,6 @@ BEGIN
   IF (NOT (_filter_low IS NULL AND _filter_high IS NULL))
      AND COALESCE(_filter_low, 0) + COALESCE(_filter_high, 0) = 0 THEN
     -- WHY: Zero filter explicitly means "no operations" - fast exit
-    RETURN QUERY SELECT
-      NULL::TEXT,
-      NULL::INT,
-      NULL::BIGINT,
-      NULL::BIGINT,
-      NULL::BOOLEAN,
-      NULL::TEXT,
-      NULL::JSONB,
-      NULL::INT
-    LIMIT 0;
     RETURN;
   END IF;
 
@@ -125,194 +139,135 @@ BEGIN
    *
    *   See: backend/utilities/bit_operations.sql for implementation
    */
-  SELECT hafah_backend.translate_get_account_history_filter(_filter_low, _filter_high)
-  INTO __resolved_filter;
+  __resolved_filter := hafah_backend.translate_get_account_history_filter(_filter_low, _filter_high);
 
-  /*
-   * REVERSIBILITY HANDLING:
-   *   Hive has "reversible" blocks that may be reorganized.
-   *   irreversible_block = last confirmed block that won't change.
-   *
-   *   - include_reversible=TRUE: Return ops up to latest block (may change)
-   *   - include_reversible=FALSE: Only return ops in finalized blocks
-   */
-  IF _include_reversible THEN
-    SELECT num FROM hive.blocks_view ORDER BY num DESC LIMIT 1 INTO __upper_block_limit;
-  ELSE
-    SELECT hive.app_get_irreversible_block() INTO __upper_block_limit;
+  -- Every operation of block N has an id below operation_id(N + 1, 0)
+  __upper_operation_id := hafd.operation_id(hive.app_get_irreversible_block() + 1, 0);
+
+  -- TIMING: Resolved once here, not in the query, so the page query plans with a constant
+  __account_id := (SELECT ha.id FROM hafd.accounts ha WHERE ha.name = _account);
+
+  IF __resolved_filter IS NOT NULL THEN
+    -- account_op_seq_no counts the account's operations from 0, so N = highest seq <= _start, plus one
+    __rare_threshold := ceil(sqrt(_limit * (
+      SELECT ao.account_op_seq_no + 1
+      FROM hafd.account_operations ao
+      WHERE ao.account_id = __account_id AND ao.account_op_seq_no <= _start
+      ORDER BY ao.account_op_seq_no DESC
+      LIMIT 1
+    )));
+
+    __rare_types := COALESCE((
+      SELECT count(*) < __rare_threshold
+      FROM (
+        SELECT
+        FROM hafd.account_operations ao
+        WHERE ao.account_id = __account_id
+          AND ao.op_type_id = ANY(__resolved_filter)
+        LIMIT __rare_threshold
+      ) matches
+    ), FALSE);
   END IF;
-
-  /*
-   * ACCOUNT NAME TO ID RESOLUTION:
-   *   Account operations are indexed by numeric ID, not name.
-   *   Resolution source depends on reversibility:
-   *   - accounts_view: Includes accounts from reversible blocks
-   *   - hafd.accounts: Only finalized accounts
-   *
-   * TIMING: Resolved once here, not in the query, for efficiency.
-   */
-  IF _include_reversible THEN
-    SELECT INTO __account_id (SELECT id FROM hive.accounts_view WHERE name = _account);
-  ELSE
-    SELECT INTO __account_id (SELECT id FROM hafd.accounts WHERE name = _account);
-  END IF;
-
-  -- WHY: NULL means no filter (all types), non-NULL means filtered query
-  __use_filter := array_length(__resolved_filter, 1);
 
   RETURN QUERY
-    /*
-     * ===================================================================================
-     * MAIN QUERY: Account History Retrieval
-     * ===================================================================================
-     * PERFORMANCE: Uses UNION ALL pattern for filtered/unfiltered query optimization.
-     *              PostgreSQL can optimize each branch independently based on __use_filter.
-     */
-    WITH pre_result AS (
-      SELECT
-        /*
-         * TRANSACTION ID:
-         *   - Regular ops: 40-char hex hash from transactions_view
-         *   - Virtual ops: Use placeholder (40 zeros)
-         *
-         * NOTE: trx_in_block < 0 indicates a virtual operation (no real transaction)
-         */
-        (
-          CASE
-            WHEN (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
-                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) < 0
-              THEN '0000000000000000000000000000000000000000'
-            ELSE encode(
-              (
-                SELECT htv.trx_hash
-                FROM hive.transactions_view htv
-                WHERE (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
-                       AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) >= 0
-                  AND ds.block_num = htv.block_num
-                  AND (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
-                       AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) = htv.trx_in_block
-              ),
-              'hex'
-            )
-          END
-        ) AS _trx_id,
-        ds.block_num AS _block,
-        /*
-         * TRANSACTION IN BLOCK:
-         *   - Regular ops: 0-based index within block
-         *   - Virtual ops: 4294967295 (max uint32, signals "no transaction")
-         */
-        (
-          CASE
-            WHEN (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
-                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0)) < 0
-              THEN 4294967295  -- WHY: Max uint32 = "no transaction" marker
-            ELSE (SELECT trx_in_block FROM hive.operations_view WHERE id = ds.operation_id
-                  AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))
-          END
-        ) AS _trx_in_block,
-        (SELECT op_pos FROM hive.operations_view WHERE id = ds.operation_id
-         AND id >= hafd.operation_id(ds.block_num, 0) AND id < hafd.operation_id(ds.block_num + 1, 0))::BIGINT AS _op_in_trx,
-        (SELECT is_virtual FROM hafd.operation_types WHERE id = ds.op_type_id) AS virtual_op,
-        /*
-         * OPERATION BODY FORMAT:
-         *   - Legacy: Old format with type as string key {"vote": {...}}
-         *   - New: Structured format {"type": "vote_operation", "value": {...}}
-         */
-        (
-          CASE
-            WHEN _is_legacy_style
-              THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::JSONB
-            ELSE ho.body
-          END
-        ) AS _value,
-        ds.account_op_seq_no AS _operation_id
-      FROM (
-        /*
-         * UNION ALL QUERY OPTIMIZATION PATTERN:
-         *   Why not a single query with OR condition?
-         *   - PostgreSQL optimizes each UNION branch independently
-         *   - Filtered query uses index on (account_id, op_type_id, account_op_seq_no)
-         *   - Unfiltered query uses index on (account_id, account_op_seq_no)
-         *   - Single query with OR would scan both paths inefficiently
-         *
-         * WHY MATERIALIZED: accepted_types CTE prevents repeated evaluation
-         */
-        WITH accepted_types AS MATERIALIZED (
-          SELECT ot.id
-          FROM hafd.operation_types ot
-          WHERE __use_filter IS NOT NULL
-            AND ot.id = ANY(__resolved_filter)
-        )
-        /*
-         * BRANCH 1: WITH FILTER
-         *   Activated when __use_filter IS NOT NULL (specific operation types requested)
-         *   JOIN on accepted_types filters to only requested operation types
-         */
-        (
-          SELECT hao.operation_id, hao.op_type_id, hao.block_num, hao.account_op_seq_no
-          FROM hive.account_operations_view hao
-          JOIN accepted_types t ON hao.op_type_id = t.id
-          WHERE __use_filter IS NOT NULL
-            AND hao.account_id = __account_id
-            AND hao.account_op_seq_no <= _start  -- WHY: Descending from start
-            AND hao.block_num <= __upper_block_limit
-          ORDER BY hao.account_op_seq_no DESC  -- WHY: Most recent first
-          LIMIT _limit
-        )
-        UNION ALL
-        /*
-         * BRANCH 2: WITHOUT FILTER (all operation types)
-         *   Activated when __use_filter IS NULL (no filter or NULL filter)
-         *   Simpler query without JOIN, uses different index
-         */
-        (
-          SELECT hao.operation_id, hao.op_type_id, hao.block_num, hao.account_op_seq_no
-          FROM hive.account_operations_view hao
-          WHERE __use_filter IS NULL
-            AND hao.account_id = __account_id
-            AND hao.account_op_seq_no <= _start
-            AND hao.block_num <= __upper_block_limit
-          ORDER BY hao.account_op_seq_no DESC
-          LIMIT _limit
-        )
-      ) ds
-      /*
-       * LATERAL JOINS:
-       *   Fetch operation details for each matched account_operation.
-       *   LATERAL allows correlated subqueries in FROM clause.
-       */
-      JOIN LATERAL (
-        -- WHY LATERAL: Efficiently fetch operation body by ID from main operations table
-        SELECT hov.body, hov.op_pos, hov.trx_in_block
-        FROM hive.operations_view hov
-        WHERE ds.operation_id = hov.id
-      ) ho ON TRUE
-      JOIN LATERAL (
-        -- WHY: Determine if operation is virtual (affects trx_id and trx_in_block display)
-        SELECT ot.is_virtual
-        FROM hafd.operation_types ot
-        WHERE ds.op_type_id = ot.id
-      ) hot ON TRUE
-      ORDER BY ds.account_op_seq_no ASC  -- WHY: Final result ordered ascending (oldest first in array)
-    )
     SELECT
-      pre_result._trx_id,
-      pre_result._block,
-      pre_result._trx_in_block,
-      pre_result._op_in_trx,
-      pre_result.virtual_op,
+      /*
+       * TRANSACTION ID:
+       *   - Regular ops: 40-char hex hash from hafd.transactions
+       *   - Virtual ops: Use placeholder (40 zeros)
+       *
+       * NOTE: trx_in_block < 0 indicates a virtual operation (no real transaction)
+       */
+      (
+        CASE
+          WHEN ho.trx_in_block < 0
+            THEN '0000000000000000000000000000000000000000'
+          ELSE encode(ht.trx_hash, 'hex')
+        END
+      ) AS _trx_id,
+      blk.block_num AS _block,
+      /*
+       * TRANSACTION IN BLOCK:
+       *   - Regular ops: 0-based index within block
+       *   - Virtual ops: 4294967295 (max uint32, signals "no transaction")
+       */
+      (
+        CASE
+          WHEN ho.trx_in_block < 0
+            THEN 4294967295  -- WHY: Max uint32 = "no transaction" marker
+          ELSE ho.trx_in_block
+        END
+      ) AS _trx_in_block,
+      ho.op_pos AS _op_in_trx,
+      ho.virtual_op AS _virtual_op,
       /*
        * TIMESTAMP FORMATTING:
        *   Block timestamp in ISO 8601 format without quotes.
        *   btrim removes quotes added by to_json().
        */
-      btrim(to_json(hb.created_at)::TEXT, '"'::TEXT) AS formated_timestamp,
-      pre_result._value,
-      pre_result._operation_id
-    FROM pre_result
-    JOIN hive.blocks_view hb ON hb.num = pre_result._block  -- WHY: Get block timestamp
-    ORDER BY pre_result._operation_id ASC;  -- WHY: Return in ascending sequence order
+      btrim(to_json(hb.created_at)::TEXT, '"'::TEXT) AS _timestamp,
+      /*
+       * OPERATION BODY FORMAT:
+       *   - Legacy: Old format with type as string key {"vote": {...}}
+       *   - New: Structured format {"type": "vote_operation", "value": {...}}
+       */
+      (
+        CASE
+          WHEN _is_legacy_style
+            THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::JSONB
+          ELSE ho.body
+        END
+      ) AS _value,
+      page.account_op_seq_no AS _operation_id
+    FROM (
+      /*
+       * PAGE SELECTION:
+       *   Newest first from _start, at most _limit rows, irreversible only.
+       *   Exactly one branch runs; the custom plan folds the other away.
+       */
+      (
+        -- Walk uq1: unfiltered calls, and filters whose types are common for the account
+        SELECT ao.operation_id, ao.account_op_seq_no
+        FROM hafd.account_operations ao
+        WHERE NOT __rare_types
+          AND ao.account_id = __account_id
+          AND ao.account_op_seq_no <= _start
+          AND ao.operation_id < __upper_operation_id
+          AND (__resolved_filter IS NULL OR (ao.op_type_id = ANY(__resolved_filter)) IS TRUE)
+        ORDER BY ao.account_op_seq_no DESC  -- WHY: Most recent first
+        LIMIT _limit
+      )
+      UNION ALL
+      (
+        -- Rare types: every match through the (account_id, op_type_id) index, then sort
+        SELECT rare.operation_id, rare.account_op_seq_no
+        FROM (
+          SELECT ao.operation_id, ao.account_op_seq_no
+          FROM hafd.account_operations ao
+          WHERE __rare_types
+            AND ao.account_id = __account_id
+            AND ao.op_type_id = ANY(__resolved_filter)
+            AND ao.account_op_seq_no <= _start
+            AND ao.operation_id < __upper_operation_id
+          OFFSET 0  -- WHY: Plan the fetch of all matches on its own, not as an ordered walk
+        ) rare
+        ORDER BY rare.account_op_seq_no DESC
+        LIMIT _limit
+      )
+      LIMIT _limit  -- WHY: Lets the planner see the page holds at most _limit rows
+    ) page
+    CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
+    -- One primary-key probe per page row: body, op_pos, trx_in_block, is_virtual
+    JOIN hafah_backend.helper_operations_view ho ON ho.id = page.operation_id
+    JOIN hafd.blocks hb ON hb.num = blk.block_num  -- WHY: Get block timestamp
+    -- Virtual ops (trx_in_block = -1) match no transaction
+    LEFT JOIN LATERAL (
+      -- LIMIT 1: a position holds one transaction (its index is not declared unique)
+      SELECT tx.trx_hash FROM hafd.transactions tx
+      WHERE tx.block_num = blk.block_num AND tx.trx_in_block = ho.trx_in_block
+      LIMIT 1
+    ) ht ON TRUE
+    ORDER BY page.account_op_seq_no ASC;  -- WHY: Return in ascending sequence order
 END
 $$;
 

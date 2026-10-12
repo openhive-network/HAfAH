@@ -70,10 +70,11 @@ BEGIN
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
 
   _example_key := (
-    SELECT 
-      ov.body 
-    FROM hive.operations_view ov 
-    WHERE ov.op_type_id = "type-id" 
+    SELECT
+      ov.body
+    FROM hafah_backend.helper_operations_view ov
+    WHERE ov.op_type_id = "type-id"
+      AND ov.block_num <= hive.app_get_irreversible_block()
     LIMIT 1
   );
 

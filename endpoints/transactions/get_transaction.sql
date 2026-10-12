@@ -19,8 +19,8 @@
  *   - timestamp (block timestamp)
  *
  * CACHING:
- *   - 1 year cache if transaction is in an irreversible block
- *   - 2 second cache if transaction is in a reversible block
+ *   - 1 year cache: only transactions in irreversible blocks are served; a
+ *     transaction in a reversible block is reported as unknown
  *
  * DELEGATES TO: hafah_backend.get_transaction_json()
  */
@@ -111,14 +111,11 @@ SET from_collapse_limit = 16
 AS
 $$
 DECLARE
-  _transaction_json JSON := hafah_backend.get_transaction_json(('\x' || "transaction-id")::BYTEA, TRUE, FALSE, "include-virtual");
+  _transaction_json JSON := hafah_backend.get_transaction_json(('\x' || "transaction-id")::BYTEA, FALSE, "include-virtual");
   _result JSON           := NULL;
 BEGIN
-  IF (_transaction_json->>'block_num')::INT <= hive.app_get_irreversible_block() THEN
-    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
-  ELSE
-    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
-  END IF;
+  -- Only irreversible transactions are served, so the result never changes
+  PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
 
   _result := json_build_object(
     'ref_block_num', (_transaction_json->>'ref_block_num')::BIGINT,
@@ -134,7 +131,7 @@ BEGIN
     _transaction_json->>'transaction_id',
     (_transaction_json->>'block_num')::INT,
     (_transaction_json->>'transaction_num')::INT,
-    (SELECT bv.created_at FROM hive.blocks_view bv WHERE bv.num = (_transaction_json->>'block_num')::INT)
+    (SELECT hb.created_at FROM hafd.blocks hb WHERE hb.num = (_transaction_json->>'block_num')::INT)
   )::hafah_backend.transaction;
 END
 $$;

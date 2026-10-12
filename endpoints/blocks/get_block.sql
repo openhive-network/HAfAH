@@ -12,7 +12,8 @@
  *
  * CACHING:
  *   - 1 year cache (31536000s) if block is irreversible
- *   - 2 second cache if block is reversible
+ *   - 2 second cache if block is reversible (reported missing until it
+ *     becomes irreversible: only irreversible blocks are served)
  *
  * ERROR HANDLING: Raises error if block number exceeds head block.
  *

@@ -23,14 +23,13 @@ SET ROLE hafah_owner;
  * DATA FLOW:
  *   1. Retrieve raw transaction data via get_transaction()
  *   2. Validate transaction exists (raise exception if not found)
- *   3. Set cache headers based on reversibility
+ *   3. Set cache headers (only irreversible transactions are served)
  *   4. Format operations array via get_ops_in_transaction()
  *   5. Handle signatures (single, none, or multisig)
  *   6. Return complete JSON object
  *
  * PARAMETERS:
  *   - _trx_hash: Transaction hash (20 bytes)
- *   - _include_reversible: Include reversible blocks in results
  *   - _is_legacy_style: Use legacy operation format
  *   - _include_virtual: Include virtual operations (default FALSE)
  *
@@ -38,7 +37,6 @@ SET ROLE hafah_owner;
  */
 CREATE OR REPLACE FUNCTION hafah_backend.get_transaction_json(
     _trx_hash           BYTEA,
-    _include_reversible BOOLEAN,
     _is_legacy_style    BOOLEAN,
     _include_virtual    BOOLEAN = FALSE
 )
@@ -49,23 +47,15 @@ DECLARE
   __pre_result hafah_backend.get_transaction_result;
 BEGIN
   SELECT * INTO __pre_result
-  FROM hafah_backend.get_transaction(_trx_hash, _include_reversible);
+  FROM hafah_backend.get_transaction(_trx_hash);
 
   IF NOT FOUND OR __pre_result._block_num IS NULL THEN
     RAISE EXCEPTION 'Assert Exception:false: Unknown Transaction %',
       RPAD(encode(_trx_hash, 'hex'), 40, '0');
   END IF;
 
-  /*
-   * Cache Control:
-   *   - Irreversible blocks: cache for 1 year (immutable)
-   *   - Reversible blocks: cache for 3 seconds (may change)
-   */
-  IF __pre_result._block_num <= hive.app_get_irreversible_block() THEN
-    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
-  ELSE
-    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=3"}]', true);
-  END IF;
+  -- Cache Control: only irreversible transactions are served, so cache for 1 year (immutable)
+  PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
 
   RETURN (
     /*
@@ -124,8 +114,8 @@ BEGIN
          *   2. No signature (rare, system transactions): []
          *   3. Multisig: [primary, additional_1, additional_2, ...]
          *
-         *   WHY array_prepend: Primary signature from transactions_view comes first,
-         *   additional signatures from transactions_multisig_view follow.
+         *   WHY array_prepend: Primary signature from hafd.transactions comes first,
+         *   additional signatures from hafd.transactions_multisig follow.
          */
         (
           CASE
@@ -144,7 +134,7 @@ BEGIN
                      *   JSON cannot represent binary, so hex string is standard encoding.
                      */
                     SELECT encode(signature, 'hex')
-                    FROM hive.transactions_multisig_view
+                    FROM hafd.transactions_multisig
                     WHERE trx_hash = _trx_hash
                   )
                 )
