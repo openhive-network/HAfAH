@@ -37,6 +37,23 @@ Not covered yet: CI's pytest functional tests (`hafah_pytest_fuctional_tests_*`:
 testnet with hived and test-tools), the comparison tests against hived and the JMeter
 benchmarks. They stay in GitLab CI.
 
+## The db shape (`performance:`)
+
+`full`'s advisory `db_shape` suite plans the `performance.queries` on a captured shape
+of steem-18's HAF, once with the base tree's hafah code and once with the candidate's
+(aidev's `docs/operations/db-shape.md`). `performance.shape.apply` runs
+`.aidev/shape-apply.sh` in each tree to install that code on its shape copy:
+`scripts/install_app.sh` itself, from a scratch copy of the sources, with
+`.aidev/shape-psql.sh` first on `PATH` as `psql`. Each of the install's psql calls
+becomes one run of `$AIDEV_DB_SHAPE_PSQL` with the call's `-c` commands and `-f` files on
+stdin, because the shape server has no network and a `-f` path would resolve inside it.
+Before the install it drops the `hafah_*` schemas the shape restored as `postgres`'s
+and grants the app's roles `CREATE` on the copy.
+
+A query whose function picks a branch at run time (rare/common types or partners)
+is declared once per branch. The shape has no rows, so a `nested` call cannot take
+production's branch.
+
 ## The shared HAF (`sandbox.external`)
 
 The slots without `stack: false` declare `sandbox.external: [{name: haf, provider:

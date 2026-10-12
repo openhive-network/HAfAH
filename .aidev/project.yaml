@@ -121,6 +121,10 @@ performance:
     image: registry.gitlab.syncad.com/hive/haf:1.28.8
     # steem-18 haf_block_log at block 110,696,250 (2026-10-12), after VACUUM (FREEZE, ANALYZE) of hafd.account_operations (0% -> 100% all-visible, as HAF#350 leaves it); value catalog with per-query heap-locality windows, heaviest accounts included; published to the fleet store.
     artifact: 6dcaa7133a3469ce1f7b32cb30efba98e85f01ebc43144e3cb278e6b8e2f7ccb
+    # Installs each tree's hafah_* code on its shape copy: scripts/install_app.sh's
+    # own files and order, each psql call fed to $AIDEV_DB_SHAPE_PSQL on stdin
+    # (the shape server has no network, so no DSN).
+    apply: {command: [.aidev/shape-apply.sh]}
   queries:
     # JSON-RPC account_history_api.get_account_history, no filter:
     # hafah_backend.ah_get_account_history's page statement with no type filter
@@ -425,6 +429,369 @@ performance:
         op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
       role:
         frequency: "per REST account-operations request with an operation-type filter"
+        waiter: "REST client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.account_operations]
+        uses_index: [hive_account_operations_account_id_op_type_id_idx]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # REST GET /accounts/{account-name}/operations?operation-types=… (no
+    # participation filter): hafah_backend.account_history_by_operations' page
+    # statement on its uq1-walk branch, types the account has many of. Which
+    # branch runs is decided from the count above (rest-account-operations-count-by-type).
+    - name: rest-account-operations-by-type
+      sql: |
+        SELECT
+          ls.operation_id AS id,
+          ls.block_num,
+          ho.trx_in_block,
+          encode(ht.trx_hash, 'hex') AS trx_hash,
+          ho.op_pos::INT AS op_pos,
+          ls.op_type_id,
+          jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS body,
+          hot.is_virtual
+        FROM (
+          (
+            SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+            FROM hafd.account_operations ao
+            WHERE NOT FALSE
+              AND ao.account_id = ${account}
+              AND (ARRAY[${op_type}]::INT[] IS NULL OR (ao.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
+              AND ao.account_op_seq_no >= 0
+              AND ao.account_op_seq_no <= 2147483647
+            ORDER BY ao.account_op_seq_no DESC
+            LIMIT 100
+            OFFSET 0
+          )
+          UNION ALL
+          (
+            SELECT rare.operation_id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num
+            FROM (
+              SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
+              FROM hafd.account_operations ao
+              WHERE FALSE
+                AND ao.account_id = ${account}
+                AND ao.op_type_id = ANY(ARRAY[${op_type}]::INT[])
+                AND ao.account_op_seq_no >= 0
+                AND ao.account_op_seq_no <= 2147483647
+              OFFSET 0
+            ) rare
+            ORDER BY rare.account_op_seq_no DESC
+            LIMIT 100
+            OFFSET 0
+          )
+        ) ls
+        JOIN hafd.operations ho ON ho.id = ls.operation_id
+        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
+        LEFT JOIN LATERAL (
+          SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
+          WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ho.trx_in_block
+          LIMIT 1
+        ) ht ON TRUE
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
+        op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
+      role:
+        frequency: "per REST account-operations page with an operation-type filter — wallets' transfer history"
+        waiter: "REST client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.account_operations, hafd.operations]
+        uses_index: [hive_account_operations_uq1, pk_hive_operations]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # The same request when the types are rare for the account:
+    # account_history_by_operations' rare-types branch, every match by type then
+    # a sort.
+    - name: rest-account-operations-by-rare-type
+      sql: |
+        SELECT
+          ls.operation_id AS id,
+          ls.block_num,
+          ho.trx_in_block,
+          encode(ht.trx_hash, 'hex') AS trx_hash,
+          ho.op_pos::INT AS op_pos,
+          ls.op_type_id,
+          jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS body,
+          hot.is_virtual
+        FROM (
+          (
+            SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+            FROM hafd.account_operations ao
+            WHERE NOT TRUE
+              AND ao.account_id = ${account}
+              AND (ARRAY[${op_type}]::INT[] IS NULL OR (ao.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
+              AND ao.account_op_seq_no >= 0
+              AND ao.account_op_seq_no <= 2147483647
+            ORDER BY ao.account_op_seq_no DESC
+            LIMIT 100
+            OFFSET 0
+          )
+          UNION ALL
+          (
+            SELECT rare.operation_id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num
+            FROM (
+              SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
+              FROM hafd.account_operations ao
+              WHERE TRUE
+                AND ao.account_id = ${account}
+                AND ao.op_type_id = ANY(ARRAY[${op_type}]::INT[])
+                AND ao.account_op_seq_no >= 0
+                AND ao.account_op_seq_no <= 2147483647
+              OFFSET 0
+            ) rare
+            ORDER BY rare.account_op_seq_no DESC
+            LIMIT 100
+            OFFSET 0
+          )
+        ) ls
+        JOIN hafd.operations ho ON ho.id = ls.operation_id
+        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
+        LEFT JOIN LATERAL (
+          SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
+          WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ho.trx_in_block
+          LIMIT 1
+        ) ht ON TRUE
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 105331}
+        op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
+      role:
+        frequency: "per REST account-operations page whose operation types are rare for the account"
+        waiter: "REST client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.account_operations, hafd.operations]
+        uses_index: [hive_account_operations_account_id_op_type_id_idx, pk_hive_operations]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # The include and exclude variants (participation-mode=include|exclude with
+    # transacting accounts) read a sliding window of up to 10 pages + 1 rows
+    # (LIMIT 1001 at the default page size of 100) in their operation_range CTE,
+    # on one of two branches chosen at run time; the rest of the statement reads
+    # one page of it by primary key. Each branch is declared below as that CTE's
+    # statement, the folded-away branch left out. The transacting partner is its
+    # own parameter, so a capture catalogues its heavy hitters and near-empty values.
+    #
+    # REST ?participation-mode=include with one transacting account, matches
+    # common: hafah_backend.account_history_include_account's uq1-walk branch.
+    # account_rare_op_matches (below) chose it by counting past sqrt(1001 * N)
+    # matches. A rare partner on this branch walks the whole history (HAfAH#79).
+    - name: rest-include-account-walk
+      sql: |
+        SELECT walk.operation_id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num, walk.account_op_seq_no
+        FROM (
+          SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = ${account}
+            AND ao.account_op_seq_no >= 0
+            AND ao.account_op_seq_no <= 2147483647
+          ORDER BY ao.account_op_seq_no DESC
+          OFFSET 0
+        ) walk
+        WHERE walk.transacting_account_id = ${partner}
+          AND (ARRAY[${op_type}]::INT[] IS NULL OR (walk.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
+        ORDER BY walk.account_op_seq_no DESC
+        LIMIT 1001
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
+        op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
+        partner: {column: hafd.account_operations.transacting_account_id, value: 440}  # blocktrades' own transfers
+      role:
+        frequency: "per REST account-operations request filtered to one transacting account — transfers between two accounts"
+        waiter: "REST client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.account_operations]
+        uses_index: [hive_account_operations_uq1]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # The include variants' rare/common decision and rare branch in one:
+    # hafah_backend.account_rare_op_matches, called by account_history_include_account
+    # (ARRAY[the partner]) and account_history_including_accounts (the partners),
+    # reads every match by type up to sqrt(1001 * N), N the account's operations
+    # (16.0M for 509861). Fewer matches are the rare branch's rows, which the page
+    # only sorts; more choose the walk. Planned with the heaviest account and a
+    # partner with 2 operations in all, so at most 2 matches.
+    - name: rest-include-account-rare-matches
+      sql: |
+        SELECT ARRAY(
+          SELECT (ao.operation_id, ao.op_type_id, ao.account_op_seq_no)
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = ${account}
+            AND ao.op_type_id = ANY(ARRAY[${op_type}]::INT[])
+            AND ao.transacting_account_id = ANY(ARRAY[${partner}]::INT[])
+            AND ao.account_op_seq_no >= 0
+            AND ao.account_op_seq_no <= 2147483647
+          LIMIT 126576
+        )
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 509861}
+        op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
+        partner: {column: hafd.account_operations.transacting_account_id, value: 1342941}
+      role:
+        frequency: "per REST account-operations request filtered to included transacting accounts and operation types"
+        waiter: "REST client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.account_operations]
+        uses_index: [hive_account_operations_account_id_op_type_id_idx]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # REST ?participation-mode=include with several transacting accounts, matches
+    # common: hafah_backend.account_history_including_accounts' uq1-walk branch.
+    # Its rare branch is rest-include-account-rare-matches.
+    - name: rest-including-accounts-walk
+      sql: |
+        SELECT walk.operation_id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num, walk.account_op_seq_no
+        FROM (
+          SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = ${account}
+            AND ao.account_op_seq_no >= 0
+            AND ao.account_op_seq_no <= 2147483647
+          ORDER BY ao.account_op_seq_no DESC
+          OFFSET 0
+        ) walk
+        WHERE walk.transacting_account_id = ANY(ARRAY[${partner}]::INT[])
+          AND (ARRAY[${op_type}]::INT[] IS NULL OR (walk.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
+        ORDER BY walk.account_op_seq_no DESC
+        LIMIT 1001
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
+        op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
+        partner: {column: hafd.account_operations.transacting_account_id, value: 440}  # blocktrades' own transfers
+      role:
+        frequency: "per REST account-operations request filtered to several transacting accounts"
+        waiter: "REST client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.account_operations]
+        uses_index: [hive_account_operations_uq1]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # REST ?participation-mode=exclude with one transacting account, types common
+    # for the account: hafah_backend.account_history_exclude_account's uq1-walk
+    # branch. The exclude variants decide on types only
+    # (account_op_types_are_rare, as jsonrpc-account-history-type-count).
+    - name: rest-exclude-account-walk
+      sql: |
+        SELECT walk.operation_id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num, walk.account_op_seq_no
+        FROM (
+          SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = ${account}
+            AND ao.account_op_seq_no >= 0
+            AND ao.account_op_seq_no <= 2147483647
+          ORDER BY ao.account_op_seq_no DESC
+          OFFSET 0
+        ) walk
+        WHERE walk.transacting_account_id != ${partner}
+          AND walk.transacting_account_id IS NOT NULL
+          AND (ARRAY[${op_type}]::INT[] IS NULL OR (walk.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
+        ORDER BY walk.account_op_seq_no DESC
+        LIMIT 1001
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
+        op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
+        partner: {column: hafd.account_operations.transacting_account_id, value: 440}  # transfers blocktrades received
+      role:
+        frequency: "per REST account-operations request excluding one transacting account — incoming transfers"
+        waiter: "REST client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.account_operations]
+        uses_index: [hive_account_operations_uq1]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # The same request when the types are rare for the account:
+    # account_history_exclude_account's rare-types branch, every match by type
+    # then a sort.
+    - name: rest-exclude-account-rare
+      sql: |
+        SELECT rare.operation_id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num, rare.account_op_seq_no
+        FROM (
+          SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = ${account}
+            AND ao.transacting_account_id != ${partner}
+            AND ao.transacting_account_id IS NOT NULL
+            AND ao.op_type_id = ANY(ARRAY[${op_type}]::INT[])
+            AND ao.account_op_seq_no >= 0
+            AND ao.account_op_seq_no <= 2147483647
+          OFFSET 0
+        ) rare
+        ORDER BY rare.account_op_seq_no DESC
+        LIMIT 1001
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 105331}
+        op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
+        partner: {column: hafd.account_operations.transacting_account_id, value: 440}  # blocktrades
+      role:
+        frequency: "per REST account-operations request excluding one transacting account, types rare for the account"
+        waiter: "REST client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.account_operations]
+        uses_index: [hive_account_operations_account_id_op_type_id_idx]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # REST ?participation-mode=exclude with several transacting accounts, types
+    # common: hafah_backend.account_history_excluding_accounts' uq1-walk branch.
+    - name: rest-excluding-accounts-walk
+      sql: |
+        SELECT walk.operation_id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num, walk.account_op_seq_no
+        FROM (
+          SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = ${account}
+            AND ao.account_op_seq_no >= 0
+            AND ao.account_op_seq_no <= 2147483647
+          ORDER BY ao.account_op_seq_no DESC
+          OFFSET 0
+        ) walk
+        WHERE (ARRAY[${op_type}]::INT[] IS NULL OR (walk.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
+          AND NOT (walk.transacting_account_id = ANY(ARRAY[${partner}]::INT[]))
+          AND walk.transacting_account_id IS NOT NULL
+        ORDER BY walk.account_op_seq_no DESC
+        LIMIT 1001
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
+        op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
+        partner: {column: hafd.account_operations.transacting_account_id, value: 440}  # blocktrades
+      role:
+        frequency: "per REST account-operations request excluding several transacting accounts"
+        waiter: "REST client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.account_operations]
+        uses_index: [hive_account_operations_uq1]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # The same request when the types are rare for the account:
+    # account_history_excluding_accounts' rare-types branch.
+    - name: rest-excluding-accounts-rare
+      sql: |
+        SELECT rare.operation_id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num, rare.account_op_seq_no
+        FROM (
+          SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = ${account}
+            AND ao.op_type_id = ANY(ARRAY[${op_type}]::INT[])
+            AND ao.account_op_seq_no >= 0
+            AND ao.account_op_seq_no <= 2147483647
+            AND NOT (ao.transacting_account_id = ANY(ARRAY[${partner}]::INT[]))
+            AND ao.transacting_account_id IS NOT NULL
+          OFFSET 0
+        ) rare
+        ORDER BY rare.account_op_seq_no DESC
+        LIMIT 1001
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: 105331}
+        op_type: {column: hafd.account_operations.op_type_id, value: 2}  # transfer_operation
+        partner: {column: hafd.account_operations.transacting_account_id, value: 440}  # blocktrades
+      role:
+        frequency: "per REST account-operations request excluding several transacting accounts, types rare for the account"
         waiter: "REST client through PostgREST"
         latency_ms: 1000
       plan:
