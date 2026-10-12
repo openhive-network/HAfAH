@@ -8,6 +8,10 @@ hafah_backend.block_range_type:
       type: integer
     to:
       type: integer
+      description: >-
+        Last block of the range; when no end block is requested, or the
+        requested one lies past the last irreversible block, this is the
+        last irreversible block
  */
 -- openapi-generated-code-begin
 DROP TYPE IF EXISTS hafah_backend.block_range_type CASCADE;

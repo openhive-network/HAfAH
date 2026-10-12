@@ -140,16 +140,17 @@ BEGIN
    *   Strategy:
    *   1. Get last irreversible block number
    *   2. If entire range is reversible: return empty
-   *   3. If range spans reversible: clamp end to irreversible block
+   *   3. If range spans reversible: clamp the exclusive end to irreversible block + 1,
+   *      so the irreversible block itself is still served
    */
   __upper_block_limit := COALESCE(_irreversible_block, hive.app_get_irreversible_block());
 
   -- WHY: Entire range is in reversible territory - nothing to return
   IF _block_range_begin > __upper_block_limit THEN
     RETURN;
-  -- WHY: Partial range in reversible - clamp to irreversible boundary
-  ELSIF __upper_block_limit <= _block_range_end THEN
-    _block_range_end := __upper_block_limit;
+  -- WHY: Partial range in reversible - clamp to irreversible boundary (end is exclusive)
+  ELSIF __upper_block_limit < _block_range_end THEN
+    _block_range_end := __upper_block_limit + 1;
   END IF;
 
   RETURN QUERY
