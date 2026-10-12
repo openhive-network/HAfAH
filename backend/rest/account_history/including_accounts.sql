@@ -80,10 +80,11 @@ BEGIN
   _account_range := hafah_backend.account_range(_account_id, _from_block, _to_block);
 
   -- Rare/common page plan, as in account_history_by_operations; [from_seq, to_seq]
-  -- already stops at the last irreversible block
+  -- already stops at the last irreversible block. The include filter is counted
+  -- too: common types with a rare partner still have few matches.
   __rare_types := hafah_backend.account_op_types_are_rare(
     _operations, _account_id, _account_range.from_seq, _account_range.to_seq,
-    (__max_page_count * _limit) + 1
+    (__max_page_count * _limit) + 1, _transacting_account_ids
   );
 
   /*
