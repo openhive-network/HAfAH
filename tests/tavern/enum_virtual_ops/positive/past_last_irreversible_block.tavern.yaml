@@ -22,15 +22,15 @@
       response:
         status_code: 200
         verify_response_with:
-          - function: tavern.helpers:check_jmespath_match
-            extra_kwargs:
-              query: "result.ops[?block == `5000000`].operation_id"
-              expected: ["21474836480000001", "21474836480000003"]
-          - function: tavern.helpers:check_jmespath_match
-            extra_kwargs:
-              query: "max(result.ops[*].block)"
-              expected: 5000000
-          - function: tavern.helpers:check_jmespath_match
-            extra_kwargs:
-              query: "result.[next_block_range_begin, next_operation_begin]"
-              expected: [0, 0]
+          function: tavern.helpers:validate_content
+          extra_kwargs:
+            comparisons:
+              - jmespath: "result.ops[?block == `5000000`].operation_id"
+                operator: eq
+                expected: ["21474836480000001", "21474836480000003"]
+              - jmespath: "max(result.ops[*].block)"
+                operator: eq
+                expected: 5000000
+              - jmespath: "result.[next_block_range_begin, next_operation_begin]"
+                operator: eq
+                expected: [0, 0]

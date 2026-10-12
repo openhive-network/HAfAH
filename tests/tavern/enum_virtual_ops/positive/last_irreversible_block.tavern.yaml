@@ -22,13 +22,14 @@
       response:
         status_code: 200
         verify_response_with:
-          - function: tavern.helpers:check_jmespath_match
-            extra_kwargs:
-              query: "result.ops[*].[block, operation_id, op.type]"
-              expected:
-                - [5000000, "21474836480000001", "account_created_operation"]
-                - [5000000, "21474836480000003", "producer_reward_operation"]
-          - function: tavern.helpers:check_jmespath_match
-            extra_kwargs:
-              query: "result.[next_block_range_begin, next_operation_begin]"
-              expected: [0, 0]
+          function: tavern.helpers:validate_content
+          extra_kwargs:
+            comparisons:
+              - jmespath: "result.ops[*].[block, operation_id, op.type]"
+                operator: eq
+                expected:
+                  - [5000000, "21474836480000001", "account_created_operation"]
+                  - [5000000, "21474836480000003", "producer_reward_operation"]
+              - jmespath: "result.[next_block_range_begin, next_operation_begin]"
+                operator: eq
+                expected: [0, 0]
