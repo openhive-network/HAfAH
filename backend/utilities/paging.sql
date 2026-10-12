@@ -6,6 +6,7 @@ SET ROLE hafah_owner;
  * Types:
  *   - hafah_backend.calculate_pages_return - Return type for calculate_pages
  *   - hafah_backend.account_filter_return - Return type for account_range
+ *   - hafah_backend.account_op_match - Element type for account_rare_op_matches
  *
  * Functions:
  *   - hafah_backend.calculate_pages() - Calculate pagination parameters
@@ -13,6 +14,7 @@ SET ROLE hafah_owner;
  *   - hafah_backend.total_pages() - Calculate total pages for given count
  *   - hafah_backend.get_account_operations_count() - Count operations for account
  *   - hafah_backend.account_op_types_are_rare() - Choose the filtered page plan
+ *   - hafah_backend.account_rare_op_matches() - Choose the include page plan, keeping rare matches
  */
 
 -- ===================================================================================
@@ -34,6 +36,13 @@ CREATE TYPE hafah_backend.account_filter_return AS (
     to_block      INT,
     from_seq      INT,
     to_seq        INT
+);
+
+DROP TYPE IF EXISTS hafah_backend.account_op_match CASCADE;
+CREATE TYPE hafah_backend.account_op_match AS (
+    operation_id         BIGINT,
+    op_type_id           SMALLINT,
+    account_op_seq_no    INT
 );
 
 -- ===================================================================================
@@ -335,22 +344,16 @@ $$;
  *   _to_seq     - Highest sequence number the page query reads; callers bound
  *                 it by the last irreversible block
  *   _rows       - Rows the page query keeps (offset plus limit)
- *   _transacting_account_ids - When not NULL, a match must also have one of these
- *                 transacting accounts, as in the page query of an include
- *                 variant; the count then fetches the heap row of every type
- *                 match it examines, which the rare page query reads anyway
  *
  * RETURNS: BOOLEAN - TRUE when fewer than sqrt(_rows * N) operations in
- *          [_from_seq, _to_seq] match _operations (and _transacting_account_ids);
- *          FALSE for an empty range
+ *          [_from_seq, _to_seq] match _operations; FALSE for an empty range
  */
 CREATE OR REPLACE FUNCTION hafah_backend.account_op_types_are_rare(
     _operations    INT[],
     _account_id    INT,
     _from_seq      INT,
     _to_seq        INT,
-    _rows          INT,
-    _transacting_account_ids INT[] DEFAULT NULL
+    _rows          INT
 )
 RETURNS BOOLEAN -- noqa: LT01, CP05
 LANGUAGE 'plpgsql' STABLE
@@ -391,7 +394,6 @@ BEGIN
         FROM hafd.account_operations ao
         WHERE ao.account_id = _account_id
           AND ao.op_type_id = ANY(_operations)
-          AND (_transacting_account_ids IS NULL OR ao.transacting_account_id = ANY(_transacting_account_ids))
         LIMIT __threshold
       ) matches
     );
@@ -404,12 +406,84 @@ BEGIN
       FROM hafd.account_operations ao
       WHERE ao.account_id = _account_id
         AND ao.op_type_id = ANY(_operations)
-        AND (_transacting_account_ids IS NULL OR ao.transacting_account_id = ANY(_transacting_account_ids))
         AND ao.account_op_seq_no >= _from_seq
         AND ao.account_op_seq_no <= _to_seq
       LIMIT __threshold
     ) matches
   );
+END
+$$;
+
+/*
+ * ===================================================================================
+ * account_rare_op_matches
+ * ===================================================================================
+ * PURPOSE: account_op_types_are_rare for the include variants, whose page query
+ *          also requires a transacting account. That column is not in
+ *          hive_account_operations_account_id_op_type_id_idx, so the count
+ *          fetches the heap row of every type match it examines, the very rows
+ *          the rare page query reads. The count therefore keeps them: when they
+ *          are rare, they are every match and the page is built from them.
+ *
+ * INDEX USAGE:
+ *   - hive_account_operations_account_id_op_type_id_idx plus a heap fetch per
+ *     type match examined, stopping at sqrt(_rows * N) matches
+ *
+ * PARAMETERS:
+ *   _operations - Array of operation type IDs (NULL for all: never rare)
+ *   _account_id - Account ID
+ *   _from_seq   - Lowest sequence number the page query reads
+ *   _to_seq     - Highest sequence number the page query reads; callers bound
+ *                 it by the last irreversible block
+ *   _rows       - Rows the page query keeps (offset plus limit)
+ *   _transacting_account_ids - A match must have one of these transacting accounts
+ *
+ * RETURNS: hafah_backend.account_op_match[] - every operation in
+ *          [_from_seq, _to_seq] matching _operations and _transacting_account_ids,
+ *          unordered, when there are fewer than sqrt(_rows * N) of them;
+ *          NULL otherwise (walk hive_account_operations_uq1) and for an empty range
+ */
+CREATE OR REPLACE FUNCTION hafah_backend.account_rare_op_matches(
+    _operations    INT[],
+    _account_id    INT,
+    _from_seq      INT,
+    _to_seq        INT,
+    _rows          INT,
+    _transacting_account_ids INT[]
+)
+RETURNS hafah_backend.account_op_match[] -- noqa: LT01, CP05
+LANGUAGE 'plpgsql' STABLE
+SET JIT = OFF
+SET plan_cache_mode = force_custom_plan
+AS $$
+DECLARE
+  __threshold BIGINT;
+  __matches hafah_backend.account_op_match[];
+BEGIN
+  IF _operations IS NULL OR _from_seq IS NULL OR _to_seq IS NULL OR _to_seq < _from_seq THEN
+    RETURN NULL;
+  END IF;
+
+  __threshold := ceil(sqrt(_rows::FLOAT8 * (_to_seq::BIGINT - _from_seq + 1)));
+
+  -- The heap row is fetched for the transacting account anyway, so the seq
+  -- predicate costs nothing here, unlike in account_op_types_are_rare.
+  __matches := ARRAY(
+    SELECT (ao.operation_id, ao.op_type_id, ao.account_op_seq_no)::hafah_backend.account_op_match
+    FROM hafd.account_operations ao
+    WHERE ao.account_id = _account_id
+      AND ao.op_type_id = ANY(_operations)
+      AND ao.transacting_account_id = ANY(_transacting_account_ids)
+      AND ao.account_op_seq_no >= _from_seq
+      AND ao.account_op_seq_no <= _to_seq
+    LIMIT __threshold
+  );
+
+  IF cardinality(__matches) < __threshold THEN
+    RETURN __matches;
+  END IF;
+
+  RETURN NULL;
 END
 $$;
 
