@@ -116,6 +116,21 @@ verification:
 # a maintainer approves it.
 performance:
   mode: observe
+  # What the db_shape check watches: a diff touching none of these (or this
+  # profile) is reported `not applicable` without loading the shape. These
+  # replace the default inputs (the decisions' files; under a command apply,
+  # every non-documentation path), so they name everything the apply installs
+  # and the scripts that install it. fnmatch globs, where `*` also crosses `/`:
+  # `db/*.sql` covers db/hafah_app.sql as well as nested files, which
+  # `db/**/*.sql` would miss.
+  inputs:
+    - backend/*.sql
+    - endpoints/*.sql
+    - db/*.sql
+    - .aidev/shape-apply.sh
+    - .aidev/shape-psql.sh
+    - scripts/install_app.sh
+    - scripts/common.sh
   shape:
     # workflow_access: the decision check reads the source, read-only; decision_user:
     # the restricted role that evaluates decision code steem-18's released hafah
