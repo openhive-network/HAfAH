@@ -53,13 +53,14 @@ SET ROLE hafah_owner;
  *   the requested types are for this account:
  *     - walk hive_account_operations_uq1 (account_id, account_op_seq_no)
  *       backwards and stop after _limit matches: about _limit * N / M rows
- *       visited, N = the account's operations up to _start, M = its matches;
+ *       visited, N = the account's irreversible operations up to _start,
+ *       M = the matches among them;
  *     - read every match through hive_account_operations_account_id_op_type_id_idx
  *       and sort: about M rows.
  *   They cost the same at M = sqrt(_limit * N). The planner cannot judge M: it
  *   multiplies the account's and the types' frequencies, and nothing records
  *   how often a type occurs for one account. So M is counted, up to that
- *   threshold, with an index-only scan of the (account_id, op_type_id) index,
+ *   threshold, by hafah_backend.account_op_types_are_rare (backend/utilities/paging.sql),
  *   and the page query takes the branch the count selects. The walk tests the
  *   types with IS TRUE, which no index can serve, so a misestimate cannot turn
  *   it into a full read and sort of a common type.
@@ -106,7 +107,7 @@ DECLARE
   __resolved_filter       SMALLINT[];  -- Array of operation type IDs from bitmask (NULL = all types)
   __account_id            INT;         -- Resolved numeric account ID
   __upper_operation_id    BIGINT;      -- First operation id past the last irreversible block
-  __rare_threshold        BIGINT;      -- sqrt(_limit * N): fewer matches than this are "rare"
+  __last_seq              INT;         -- Highest seq the page can return
   __rare_types            BOOLEAN := FALSE;  -- TRUE: read all matches by type and sort
 BEGIN
   /*
@@ -148,25 +149,20 @@ BEGIN
   __account_id := (SELECT ha.id FROM hafd.accounts ha WHERE ha.name = _account);
 
   IF __resolved_filter IS NOT NULL THEN
-    -- account_op_seq_no counts the account's operations from 0, so N = highest seq <= _start, plus one
-    __rare_threshold := ceil(sqrt(_limit * (
-      SELECT ao.account_op_seq_no + 1
+    -- The page reads seq 0 up to the newest irreversible operation at or below _start
+    __last_seq := (
+      SELECT ao.account_op_seq_no
       FROM hafd.account_operations ao
-      WHERE ao.account_id = __account_id AND ao.account_op_seq_no <= _start
+      WHERE ao.account_id = __account_id
+        AND ao.account_op_seq_no <= _start
+        AND ao.operation_id < __upper_operation_id
       ORDER BY ao.account_op_seq_no DESC
       LIMIT 1
-    )));
+    );
 
-    __rare_types := COALESCE((
-      SELECT count(*) < __rare_threshold
-      FROM (
-        SELECT
-        FROM hafd.account_operations ao
-        WHERE ao.account_id = __account_id
-          AND ao.op_type_id = ANY(__resolved_filter)
-        LIMIT __rare_threshold
-      ) matches
-    ), FALSE);
+    __rare_types := hafah_backend.account_op_types_are_rare(
+      __resolved_filter::INT[], __account_id, 0, __last_seq, _limit::INT
+    );
   END IF;
 
   RETURN QUERY

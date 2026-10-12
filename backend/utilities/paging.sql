@@ -12,6 +12,7 @@ SET ROLE hafah_owner;
  *   - hafah_backend.account_range() - Calculate account operation range
  *   - hafah_backend.total_pages() - Calculate total pages for given count
  *   - hafah_backend.get_account_operations_count() - Count operations for account
+ *   - hafah_backend.account_op_types_are_rare() - Choose the filtered page plan
  */
 
 -- ===================================================================================
@@ -306,6 +307,100 @@ BEGIN
       AND (_operations IS NULL OR ao.op_type_id = ANY(_operations))
       AND ao.account_op_seq_no >= _from_seq
       AND ao.account_op_seq_no <= _to_seq
+  );
+END
+$$;
+
+/*
+ * ===================================================================================
+ * account_op_types_are_rare
+ * ===================================================================================
+ * PURPOSE: Chooses how a type-filtered page of an account's history is read.
+ *          Walking hive_account_operations_uq1 backwards visits about
+ *          _rows * N / M rows, N = the range's operations, M = its matches;
+ *          reading every match through hive_account_operations_account_id_op_type_id_idx
+ *          and sorting visits about M. They cost the same at M = sqrt(_rows * N),
+ *          and the planner cannot judge M (nothing records how often a type
+ *          occurs for one account), so M is counted up to that threshold.
+ *
+ * INDEX USAGE:
+ *   - range covering the account's whole history: index-only scan of
+ *     hive_account_operations_account_id_op_type_id_idx (no seq predicate)
+ *   - bounded range: the same index plus a heap fetch per match examined
+ *
+ * PARAMETERS:
+ *   _operations - Array of operation type IDs (NULL for all: never rare)
+ *   _account_id - Account ID
+ *   _from_seq   - Lowest sequence number the page query reads
+ *   _to_seq     - Highest sequence number the page query reads; callers bound
+ *                 it by the last irreversible block
+ *   _rows       - Rows the page query keeps (offset plus limit)
+ *
+ * RETURNS: BOOLEAN - TRUE when fewer than sqrt(_rows * N) operations in
+ *          [_from_seq, _to_seq] match _operations; FALSE for an empty range
+ */
+CREATE OR REPLACE FUNCTION hafah_backend.account_op_types_are_rare(
+    _operations    INT[],
+    _account_id    INT,
+    _from_seq      INT,
+    _to_seq        INT,
+    _rows          INT
+)
+RETURNS BOOLEAN -- noqa: LT01, CP05
+LANGUAGE 'plpgsql' STABLE
+SET JIT = OFF
+AS $$
+DECLARE
+  __threshold BIGINT;
+  __first_seq INT;
+  __last_seq INT;
+BEGIN
+  IF _operations IS NULL OR _from_seq IS NULL OR _to_seq IS NULL OR _to_seq < _from_seq THEN
+    RETURN FALSE;
+  END IF;
+
+  __threshold := ceil(sqrt(_rows::FLOAT8 * (_to_seq::BIGINT - _from_seq + 1)));
+
+  __first_seq := (
+    SELECT ao.account_op_seq_no
+    FROM hafd.account_operations ao
+    WHERE ao.account_id = _account_id
+    ORDER BY ao.account_op_seq_no ASC LIMIT 1
+  );
+
+  __last_seq := (
+    SELECT ao.account_op_seq_no
+    FROM hafd.account_operations ao
+    WHERE ao.account_id = _account_id
+    ORDER BY ao.account_op_seq_no DESC LIMIT 1
+  );
+
+  -- As in get_account_operations_count: a seq predicate costs a heap fetch per
+  -- match, and over the whole history it filters nothing, so it is dropped.
+  IF _from_seq <= __first_seq AND _to_seq >= __last_seq THEN
+    RETURN (
+      SELECT count(*) < __threshold
+      FROM (
+        SELECT
+        FROM hafd.account_operations ao
+        WHERE ao.account_id = _account_id
+          AND ao.op_type_id = ANY(_operations)
+        LIMIT __threshold
+      ) matches
+    );
+  END IF;
+
+  RETURN (
+    SELECT count(*) < __threshold
+    FROM (
+      SELECT
+      FROM hafd.account_operations ao
+      WHERE ao.account_id = _account_id
+        AND ao.op_type_id = ANY(_operations)
+        AND ao.account_op_seq_no >= _from_seq
+        AND ao.account_op_seq_no <= _to_seq
+      LIMIT __threshold
+    ) matches
   );
 END
 $$;
