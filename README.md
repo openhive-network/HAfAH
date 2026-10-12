@@ -9,6 +9,39 @@ HAfAH is a **read-only** HAF application that implements the account history API
 - **Pure SQL**: All logic is implemented in PostgreSQL functions
 - **High performance**: Optimized queries with proper caching
 
+## Data Served: Irreversible Only
+
+HAfAH returns **irreversible data only**. Every JSON-RPC method and REST
+endpoint answers with blocks, transactions and operations up to the last
+irreversible block (`hive.app_get_irreversible_block()`); nothing newer is
+returned.
+
+The cost is small: under one-block irreversibility a block normally becomes
+irreversible about 200 ms after it is produced, so new operations appear about
+that much later than on the head block. The delay is longer only while the
+network fails to reach irreversibility. In exchange, a response never contains
+data that a fork could later undo, so it can be cached for good.
+
+What this means for clients:
+
+- **`include_reversible` is ignored.** The JSON-RPC `include_reversible` and
+  REST `include-reversible` arguments are still accepted, so existing clients
+  keep working, but they do not change the result: even when set to `true`,
+  only irreversible data is returned.
+- **The head block is the last irreversible block.** `/headblock` and the
+  `block_range.to` field of REST account history responses report the last
+  irreversible block, not the chain head.
+- **Block-range cursors stop at the last irreversible block.** The
+  `next_block_range_begin` cursor of `enum_virtual_ops` and REST `/operations`
+  never points past the last irreversible block. When a request reaches past
+  it, REST `/operations` ends its paging with `next_block_range_begin` set to
+  the last irreversible block, not the requested `to-block`, so a poller that
+  resumes from the returned cursor picks up the later blocks once they become
+  irreversible. `enum_virtual_ops` instead ends such paging with
+  `next_block_range_begin` set to `0` ("no more data"), so a poller should not
+  request past `/headblock` + 1 (the end is exclusive) and resume from that
+  block on its next call.
+
 ## Quick Start (Docker)
 
 ### 1. Install the application
