@@ -117,7 +117,10 @@ verification:
 performance:
   mode: observe
   shape:
-    source: {host: steem-18, container: haf-haf-1, database: haf_block_log, user: haf_admin}
+    # workflow_access: the decision check reads the source, read-only; decision_user:
+    # the restricted role that evaluates decision code steem-18's released hafah
+    # lacks types for (hafah_backend.account_op_match) in a rolled-back scratch schema.
+    source: {host: steem-18, container: haf-haf-1, database: haf_block_log, user: haf_admin, workflow_access: true, decision_user: aidev_decision}
     image: registry.gitlab.syncad.com/hive/haf:1.28.8
     # steem-18 haf_block_log at block 110,699,894 (2026-10-12), hafd.account_operations all-visible; value catalog includes transacting_account_id partners for the REST include/exclude declarations (HAfAH#80; partner row counts uncounted: no index leads that column); published to the fleet store.
     artifact: 21376e6ac4b76ad6c1dbea0cc46ad6647c98c852b0e6255d7e6a924f73777e67
@@ -975,6 +978,84 @@ performance:
         no_seq_scan: [hafd.operations, hafd.transactions, hafd.blocks]
         uses_index: [pk_hive_operations]
       time: {max_ms: 50, error_threshold: 0.25}
+
+  # Run-time plan decisions: each tree's decision function is evaluated on the
+  # source for every input below, and the branch it picks is judged by that
+  # branch query's cost on the shape. Each call reads the account's whole
+  # history, [0, its newest operation], as the callers do for a request with no
+  # block range. Inputs are correlated combinations chosen by hand so that each
+  # decision is exercised on both sides.
+  decisions:
+    # account_history_include_account / _including_accounts: the matches
+    # counted by type and transacting account; NULL walks uq1. HAfAH#77 was
+    # 509861 with the one-transfer partner 1398279 walking (the count ignored
+    # the partner).
+    - name: include-account-rare-matches
+      function: hafah_backend.account_rare_op_matches
+      file: backend/utilities/paging.sql
+      call: >-
+        hafah_backend.account_rare_op_matches(ARRAY[${op_type}]::INT[], ${account}, 0,
+        (SELECT ao.account_op_seq_no FROM hafd.account_operations ao WHERE ao.account_id = ${account} ORDER BY ao.account_op_seq_no DESC LIMIT 1),
+        1001, ARRAY[${partner}]::INT[])
+      branch_from: "CASE WHEN result IS NULL THEN 'walk' ELSE 'rare' END"
+      branches: {walk: rest-include-account-walk, rare: rest-include-account-rare-matches}
+      inputs:
+        - {account: 509861, op_type: 2, partner: 1398279}  # one transfer with the partner: rare
+        - {account: 509861, op_type: 2, partner: 509861}   # its own transfers: common
+        - {account: 509861, op_type: 2, partner: 1342941}  # a near-empty partner (2 operations in all)
+        - {account: 105331, op_type: 2, partner: 105331}   # transfers rare for the account
+        - {account: 440, op_type: 2, partner: 440}         # blocktrades' own transfers: common
+        - {account: 1157375, op_type: 2, partner: 4}       # heavy account, heaviest partner
+      files:
+        - backend/utilities/paging.sql
+        - backend/rest/account_history/include_account.sql
+        - backend/rest/account_history/including_accounts.sql
+
+    # JSON-RPC get_account_history with an operation filter: types counted up
+    # to sqrt(limit * N); rare reads every match by type and sorts.
+    - name: jsonrpc-account-history-rare-types
+      function: hafah_backend.account_op_types_are_rare
+      file: backend/utilities/paging.sql
+      call: >-
+        hafah_backend.account_op_types_are_rare(ARRAY[${op_type}]::INT[], ${account}, 0,
+        (SELECT ao.account_op_seq_no FROM hafd.account_operations ao WHERE ao.account_id = ${account} ORDER BY ao.account_op_seq_no DESC LIMIT 1),
+        1000)
+      branch_from: "CASE WHEN result THEN 'rare' ELSE 'walk' END"
+      branches: {walk: jsonrpc-account-history-by-type, rare: jsonrpc-account-history-by-rare-type}
+      inputs:
+        - {account: 509861, op_type: 2}   # heaviest account
+        - {account: 105331, op_type: 2}   # transfers rare for the account
+        - {account: 440, op_type: 2}      # blocktrades: transfers common
+        - {account: 770979, op_type: 2}   # heavy hitter the planner underestimates (2.0M true, 145k estimated)
+        - {account: 1342941, op_type: 2}  # near-empty account (2 operations)
+      files:
+        - backend/utilities/paging.sql
+        - backend/jsonrpc/methods/account_history.sql
+        - backend/rest/account_history/by_operations.sql
+
+    # account_history_exclude_account / _excluding_accounts: the same type
+    # count, which ignores the excluded partner — so a heavy excluded partner
+    # can leave few matches while the count still says common.
+    - name: exclude-account-rare-types
+      function: hafah_backend.account_op_types_are_rare
+      file: backend/utilities/paging.sql
+      call: >-
+        hafah_backend.account_op_types_are_rare(ARRAY[${op_type}]::INT[], ${account}, 0,
+        (SELECT ao.account_op_seq_no FROM hafd.account_operations ao WHERE ao.account_id = ${account} ORDER BY ao.account_op_seq_no DESC LIMIT 1),
+        1001)
+      branch_from: "CASE WHEN result THEN 'rare' ELSE 'walk' END"
+      branches: {walk: rest-exclude-account-walk, rare: rest-exclude-account-rare}
+      inputs:
+        - {account: 509861, op_type: 2, partner: 509861}  # heaviest account excluding its heaviest partner, itself
+        - {account: 1157375, op_type: 2, partner: 4}      # heavy account excluding the heaviest partner
+        - {account: 440, op_type: 2, partner: 440}        # blocktrades' received transfers
+        - {account: 105331, op_type: 2, partner: 440}     # transfers rare for the account
+        - {account: 1342941, op_type: 2, partner: 440}    # near-empty account
+      files:
+        - backend/utilities/paging.sql
+        - backend/rest/account_history/exclude_account.sql
+        - backend/rest/account_history/excluding_accounts.sql
+        - backend/rest/account_history/by_operations.sql
 
 # Capability grants for target-side code. Empty until this project needs one.
 capabilities: []
