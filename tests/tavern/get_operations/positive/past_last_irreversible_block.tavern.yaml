@@ -1,0 +1,33 @@
+---
+  test_name: Hafah PostgREST get_operations range reaching past the last irreversible block
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: range 4999998..5000010 ends the paging at the last irreversible block, not the requested end
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/rpc/get_operations"
+        method: POST
+        headers:
+          content-type: application/json
+          accept: application/json
+        json:
+          from-block: "4999998"
+          to-block: "5000010"
+          page-size: 1000
+      response:
+        status_code: 200
+        verify_response_with:
+          function: tavern.helpers:validate_content
+          extra_kwargs:
+            comparisons:
+              - jmespath: "ops[?block == `5000000`].operation_id"
+                operator: eq
+                expected: ["21474836480000000", "21474836480000001", "21474836480000002", "21474836480000003"]
+              - jmespath: "max(ops[*].block)"
+                operator: eq
+                expected: 5000000
+              - jmespath: "[next_block_range_begin, next_operation_begin]"
+                operator: eq
+                expected: [5000000, "0"]

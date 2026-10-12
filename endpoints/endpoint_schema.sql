@@ -1188,7 +1188,7 @@ declare
           "Operations"
         ],
         "summary": "Get operations in a block range",
-        "description": "Returns all operations contained in specified block range, supports various forms of filtering.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operations(4999999,5000000);`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/operations?from-block=4999999&to-block=5000000&operation-group-type=virtual''`\n",
+        "description": "Returns all operations contained in specified block range, supports various forms of filtering.\n\nWhen the page holds fewer than `page-size` operations, `next_operation_begin` is 0 and\n`next_block_range_begin` is the last block served: when the requested range extends past\nthe last irreversible block, the returned block is the last irreversible block.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_operations(4999999,5000000);`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/operations?from-block=4999999&to-block=5000000&operation-group-type=virtual''`\n",
         "operationId": "hafah_endpoints.get_operations",
         "parameters": [
           {

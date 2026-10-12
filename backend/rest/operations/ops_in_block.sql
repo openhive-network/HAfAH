@@ -37,7 +37,8 @@ SET ROLE hafah_owner;
  *
  * PAGINATION: Cursor-based using operation_id
  *   - Returns next_block_num and next_operation_id for continuation
- *   - If result count < limit, no more data exists
+ *   - If result count < limit, no more data exists; the returned block is
+ *     LEAST(_end_block_num, last irreversible block)
  *   - Client uses returned cursor for next request
  */
 CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_blocks(
@@ -90,14 +91,16 @@ BEGIN
   ),
   -- Calculate next cursor position for pagination
   -- If count = limit, more data exists; use last operation as cursor
-  -- If count < limit, no more data; return end_block_num as terminal
+  -- If count < limit, no more data; return the last block served as terminal
+  -- (end_block_num, or the last irreversible block when the range was clamped,
+  -- so a client resuming from it fetches the clamped blocks once irreversible)
   paging_logic AS MATERIALIZED (
     SELECT (
       CASE
         WHEN (SELECT count FROM count_logic) = _limit THEN
           pre_result.block
         ELSE
-          _end_block_num
+          LEAST(_end_block_num, _latest_block_num)
         END
       ) AS block_num,
       (
