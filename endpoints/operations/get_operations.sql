@@ -41,6 +41,10 @@ SET ROLE hafah_owner;
     summary: Get operations in a block range
     description: |
       Returns all operations contained in specified block range, supports various forms of filtering.
+
+      When the page holds fewer than `page-size` operations, `next_operation_begin` is 0 and
+      `next_block_range_begin` is the last block served: when the requested range extends past
+      the last irreversible block, the returned block is the last irreversible block.
       
       SQL example
       * `SELECT * FROM hafah_endpoints.get_operations(4999999,5000000);`

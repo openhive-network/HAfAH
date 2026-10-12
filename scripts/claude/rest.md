@@ -154,7 +154,9 @@ accepted for compatibility, but even when set to true only irreversible blocks
 and operations are returned. For the same reason the account history
 endpoints report `block_range.to` (`backend/utilities/paging.sql`) as the last
 irreversible block, not the head block, when no `to-block` is given or the
-requested one lies past it.
+requested one lies past it. Likewise GET /operations ends its paging with
+`next_block_range_begin` set to the last irreversible block, not the requested
+`to-block`, so a poller resuming from it fetches the remaining blocks later.
 
 **Check Function:**
 ```sql
