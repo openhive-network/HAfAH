@@ -215,7 +215,10 @@ index wins when they are rare. Every filtered path (JSON-RPC `get_account_histor
 REST `by_operations` and the include/exclude-account variants) counts the
 matches in the range its page reads, up to `sqrt(rows * N)`
 (`hafah_backend.account_op_types_are_rare`, or the exact total in
-`by_operations`), and runs one of two `UNION ALL` branches accordingly.
+`by_operations`), and runs one of two `UNION ALL` branches accordingly. The
+include variants filter on `transacting_account_id`, which the type index lacks,
+so their count (`hafah_backend.account_rare_op_matches`) reads the heap rows and
+returns them when rare; the rare branch sorts those instead of reading again.
 
 ### 2. Binary to Hex Encoding
 ```sql

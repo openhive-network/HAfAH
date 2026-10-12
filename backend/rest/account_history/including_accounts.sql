@@ -72,7 +72,8 @@ DECLARE
   __total_pages INT;
   __min_block_num INT;
   __count INT;
-  __rare_types BOOLEAN;  -- TRUE: read all matches by type and sort, FALSE: walk uq1
+  __rare_matches hafah_backend.account_op_match[];  -- Every match when they are rare, else NULL
+  __rare_types BOOLEAN;  -- TRUE: sort __rare_matches, FALSE: walk uq1
 BEGIN
   /*
    * STEP 1: Calculate sequence range from block range
@@ -81,11 +82,13 @@ BEGIN
 
   -- Rare/common page plan, as in account_history_by_operations; [from_seq, to_seq]
   -- already stops at the last irreversible block. The include filter is counted
-  -- too: common types with a rare partner still have few matches.
-  __rare_types := hafah_backend.account_op_types_are_rare(
+  -- too: common types with a rare partner still have few matches. Rare matches
+  -- come back already read, so the page sorts them instead of reading them again.
+  __rare_matches := hafah_backend.account_rare_op_matches(
     _operations, _account_id, _account_range.from_seq, _account_range.to_seq,
     (__max_page_count * _limit) + 1, _transacting_account_ids
   );
+  __rare_types := __rare_matches IS NOT NULL;
 
   /*
    * ===================================================================================
@@ -124,19 +127,10 @@ BEGIN
       )
       UNION ALL
       (
-        -- Rare types: every match through the (account_id, op_type_id) index, then sort
+        -- Rare types: every match, already read by account_rare_op_matches, then sort
         SELECT rare.operation_id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num, rare.account_op_seq_no
-        FROM (
-          SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
-          FROM hafd.account_operations ao
-          WHERE __rare_types
-          AND ao.account_id = _account_id
-          AND ao.transacting_account_id = ANY(_transacting_account_ids)  -- Multi-account include (array membership)
-          AND ao.op_type_id = ANY(_operations)
-          AND ao.account_op_seq_no >= _account_range.from_seq
-          AND ao.account_op_seq_no <= _account_range.to_seq
-          OFFSET 0  -- Plan the fetch of all matches on its own, not as an ordered walk
-        ) rare
+        FROM unnest(__rare_matches) rare
+        WHERE __rare_types
         ORDER BY rare.account_op_seq_no DESC
         LIMIT (__max_page_count * _limit) + 1
       )
@@ -210,22 +204,14 @@ BEGIN
     )
     UNION ALL
     (
-      -- Rare types: every match through the (account_id, op_type_id) index, then sort
+      -- Rare types: every match, already read by account_rare_op_matches, then sort
       SELECT rare.operation_id AS id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num
-      FROM (
-        SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
-        FROM hafd.account_operations ao
-        WHERE __rare_types
-        AND ao.account_id = _account_id
-        AND ao.transacting_account_id = ANY(_transacting_account_ids)  -- Multi-account include
-        AND ao.op_type_id = ANY(_operations)
-        AND ao.account_op_seq_no >= _account_range.from_seq
-        AND (
-          (SELECT account_op_seq_no FROM block_check) IS NOT NULL
-          AND ao.account_op_seq_no <= (SELECT account_op_seq_no FROM block_check)
-        )
-        OFFSET 0  -- Plan the fetch of all matches on its own, not as an ordered walk
-      ) rare
+      FROM unnest(__rare_matches) rare
+      WHERE __rare_types
+      AND (
+        (SELECT account_op_seq_no FROM block_check) IS NOT NULL
+        AND rare.account_op_seq_no <= (SELECT account_op_seq_no FROM block_check)
+      )
       ORDER BY rare.account_op_seq_no DESC
       LIMIT _limit
     )
