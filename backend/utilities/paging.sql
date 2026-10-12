@@ -335,16 +335,22 @@ $$;
  *   _to_seq     - Highest sequence number the page query reads; callers bound
  *                 it by the last irreversible block
  *   _rows       - Rows the page query keeps (offset plus limit)
+ *   _transacting_account_ids - When not NULL, a match must also have one of these
+ *                 transacting accounts, as in the page query of an include
+ *                 variant; the count then fetches the heap row of every type
+ *                 match it examines, which the rare page query reads anyway
  *
  * RETURNS: BOOLEAN - TRUE when fewer than sqrt(_rows * N) operations in
- *          [_from_seq, _to_seq] match _operations; FALSE for an empty range
+ *          [_from_seq, _to_seq] match _operations (and _transacting_account_ids);
+ *          FALSE for an empty range
  */
 CREATE OR REPLACE FUNCTION hafah_backend.account_op_types_are_rare(
     _operations    INT[],
     _account_id    INT,
     _from_seq      INT,
     _to_seq        INT,
-    _rows          INT
+    _rows          INT,
+    _transacting_account_ids INT[] DEFAULT NULL
 )
 RETURNS BOOLEAN -- noqa: LT01, CP05
 LANGUAGE 'plpgsql' STABLE
@@ -385,6 +391,7 @@ BEGIN
         FROM hafd.account_operations ao
         WHERE ao.account_id = _account_id
           AND ao.op_type_id = ANY(_operations)
+          AND (_transacting_account_ids IS NULL OR ao.transacting_account_id = ANY(_transacting_account_ids))
         LIMIT __threshold
       ) matches
     );
@@ -397,6 +404,7 @@ BEGIN
       FROM hafd.account_operations ao
       WHERE ao.account_id = _account_id
         AND ao.op_type_id = ANY(_operations)
+        AND (_transacting_account_ids IS NULL OR ao.transacting_account_id = ANY(_transacting_account_ids))
         AND ao.account_op_seq_no >= _from_seq
         AND ao.account_op_seq_no <= _to_seq
       LIMIT __threshold

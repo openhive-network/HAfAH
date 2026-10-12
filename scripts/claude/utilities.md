@@ -107,7 +107,7 @@ Input validation functions that normalize and bounds-check parameters.
 | `total_pages(_count, _limit)` | Calculate total page count |
 | `calculate_pages(_total, _page, _limit)` | Get offset for descending pagination |
 | `account_range(_page, _limit, _total)` | Get operation sequence range |
-| `account_op_types_are_rare(_operations, _account_id, _from_seq, _to_seq, _rows)` | Bounded match count: TRUE → read matches by type index and sort, FALSE → walk uq1 |
+| `account_op_types_are_rare(_operations, _account_id, _from_seq, _to_seq, _rows, _transacting_account_ids DEFAULT NULL)` | Bounded match count (include variants also count their transacting filter): TRUE → read matches by type index and sort, FALSE → walk uq1 |
 
 ### Descending Pagination Logic
 
