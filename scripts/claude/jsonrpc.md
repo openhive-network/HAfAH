@@ -21,6 +21,14 @@ HAfAH implements the Hive account history API using JSON-RPC 2.0 protocol. Reque
 
 **Legacy Support:** Methods prefixed with `condenser_api.*` are also supported for backwards compatibility.
 
+**Irreversible data only:** every method returns data for blocks up to
+`hive.app_get_irreversible_block()`. `get_ops_in_block`, `enum_virtual_ops`,
+`get_transaction` and `get_account_history` still accept `include_reversible`
+(it is parsed and validated in `endpoints/dispatcher.sql`), but it is not passed
+to the backend: even when set to true, only irreversible blocks and operations
+are returned. `enum_virtual_ops` with `group_by_block` therefore marks every
+block `"irreversible": true`.
+
 ---
 
 ## Request Format

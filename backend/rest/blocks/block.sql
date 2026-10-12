@@ -30,6 +30,9 @@ SET ROLE hafah_owner;
  *   - Binary data (hashes, signatures) encoded as hex strings for JSON safety
  *   - NULL timestamp indicates block doesn't exist in HAF database
  *   - Virtual operations are blockchain-generated (rewards, vesting, etc.)
+ *   - HAF provides no base-table variant of this function (it reads HAF's
+ *     reversible-aware views), so a block beyond the last irreversible block is
+ *     reported missing before HAF is called: only irreversible blocks are served
  */
 CREATE OR REPLACE FUNCTION hafah_backend.get_block(_block_num INT,  _include_virtual BOOLEAN = FALSE)
     RETURNS hafah_backend.block_range
@@ -40,6 +43,10 @@ $BODY$
 DECLARE
     __block hive.block_type;
 BEGIN
+  IF _block_num > hive.app_get_irreversible_block() THEN
+    PERFORM hafah_backend.rest_raise_missing_block(_block_num);
+  END IF;
+
   -- Use HAF's get_block function which aggregates block, transactions, and operations
   SELECT * FROM hive.get_block( _block_num, _include_virtual) INTO __block;
 
@@ -87,8 +94,9 @@ $BODY$
  * RETURNS: Block with global state data
  *
  * DATA SOURCES:
- *   - hive.blocks_view: Block headers with embedded economic state
- *   - hive.accounts_view: Witness name lookup from producer_account_id
+ *   - hafd.blocks: Block headers with embedded economic state (irreversible
+ *     blocks only; a later block is reported missing)
+ *   - hafd.accounts: Witness name lookup from producer_account_id
  *
  * NOTES:
  *   - Global state snapshot captured at each block for economic queries
@@ -112,7 +120,7 @@ BEGIN
       -- Binary-to-hex: Previous block hash (32 bytes) as hex string
       encode(bv.prev,'hex'),
       -- Witness lookup: Convert producer_account_id to readable name
-      (SELECT av.name FROM hive.accounts_view av WHERE av.id = bv.producer_account_id)::TEXT,
+      (SELECT ha.name FROM hafd.accounts ha WHERE ha.id = bv.producer_account_id)::TEXT,
       -- Binary-to-hex: Merkle root of all transactions
       encode(bv.transaction_merkle_root,'hex'),
       COALESCE(bv.extensions, '[]'),
@@ -137,8 +145,9 @@ BEGIN
       bv.dhf_interval_ledger::numeric,
       bv.created_at
     )::hafah_backend.block
-    FROM hive.blocks_view bv
+    FROM hafd.blocks bv
     WHERE bv.num = _block_num
+      AND _block_num <= hive.app_get_irreversible_block()
   );
 
   -- Missing block detection: NULL block_num means no matching row

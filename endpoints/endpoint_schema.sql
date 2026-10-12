@@ -1258,7 +1258,7 @@ declare
               "type": "boolean",
               "default": false
             },
-            "description": "If true, operations from reversible blocks will be included.\n"
+            "description": "Accepted for compatibility only. WARNING: even when set to true,\nonly operations from irreversible blocks are returned; the value\ndoes not change the result.\n"
           }
         ],
         "responses": {
@@ -2115,12 +2115,12 @@ declare
         "tags": [
           "Other"
         ],
-        "summary": "Get last synced block in the HAF database.",
-        "description": "Get last synced block in the HAF database\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_head_block_num();`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/headblock''`\n",
+        "summary": "Get last irreversible block in the HAF database.",
+        "description": "Get the last irreversible block in the HAF database. HAfAH serves\nirreversible data only, so this is the newest block whose data the API\nreturns.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_head_block_num();`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/headblock''`\n",
         "operationId": "hafah_endpoints.get_head_block_num",
         "responses": {
           "200": {
-            "description": "Last block stored in HAF\n\n* Returns `INT`\n",
+            "description": "Last irreversible block in HAF\n\n* Returns `INT`\n",
             "content": {
               "application/json": {
                 "schema": {

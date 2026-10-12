@@ -25,7 +25,7 @@ SET ROLE hafah_owner;
  * ─────────────────────────────────────────────────────────────────────────────────────
  * Each filter strategy requires different query patterns for optimal performance:
  *
- *   1. DEFAULT: Simple query on account_operations_view with no filters.
+ *   1. DEFAULT: Simple query on hafd.account_operations with no filters.
  *      Uses direct COUNT for total operations (fast on indexed column).
  *
  *   2. BY_OPERATIONS: Filters by op_type_id using = ANY(array).
@@ -49,7 +49,7 @@ SET ROLE hafah_owner;
  *          implementation based on filtering parameters.
  *
  * PARAMETERS:
- *   _account_id         - Account ID to get operations for (from hive.accounts_view)
+ *   _account_id         - Account ID to get operations for (from hafd.accounts)
  *   _filter_account_ids - Array of account IDs to filter by (NULL array means no filter)
  *   _operations         - Array of operation type IDs to filter by (NULL means all types)
  *   _from_block         - Starting block number (inclusive)

@@ -3,14 +3,16 @@
  *
  * ENDPOINT: GET /headblock
  *
- * PURPOSE: Returns the most recent block number synced to the HAF database.
- *          Useful for clients to determine sync status and data freshness.
+ * PURPOSE: Returns the last irreversible block number in the HAF database.
+ *          HAfAH serves irreversible data only, so this is the newest block
+ *          whose data the API returns. Useful for clients to determine sync
+ *          status and data freshness.
  *
- * RETURNS: Integer block number (e.g., 5000000)
+ * RETURNS: Integer block number (e.g., 5000000), NULL when no block is irreversible yet
  *
  * CACHING: 2 second cache (value changes frequently as blockchain advances)
  *
- * DATA SOURCE: hive.blocks_view (HAF base table)
+ * DATA SOURCE: hive.app_get_irreversible_block() (hafd.hive_state.consistent_block)
  */
 SET ROLE hafah_owner;
 
@@ -19,9 +21,11 @@ SET ROLE hafah_owner;
   get:
     tags:
       - Other
-    summary: Get last synced block in the HAF database.
+    summary: Get last irreversible block in the HAF database.
     description: |
-      Get last synced block in the HAF database
+      Get the last irreversible block in the HAF database. HAfAH serves
+      irreversible data only, so this is the newest block whose data the API
+      returns.
 
       SQL example
       * `SELECT * FROM hafah_endpoints.get_head_block_num();`
@@ -32,7 +36,7 @@ SET ROLE hafah_owner;
     responses:
       '200':
         description: |
-          Last block stored in HAF
+          Last irreversible block in HAF
           
           * Returns `INT`
         content:
@@ -56,7 +60,8 @@ AS
 $$
 BEGIN
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
-  RETURN bv.num FROM hive.blocks_view bv ORDER BY bv.num DESC LIMIT 1;
+  -- 0 means no block is irreversible yet: report it as missing, like an empty database
+  RETURN NULLIF(hive.app_get_irreversible_block(), 0);
 END
 $$;
 

@@ -15,7 +15,8 @@
  *
  * CACHING:
  *   - 1 year cache if block is irreversible
- *   - 2 second cache if block is reversible
+ *   - 2 second cache if block is reversible (reported missing until it
+ *     becomes irreversible: only irreversible blocks are served)
  *
  * DELEGATES TO: hafah_backend.get_block_header()
  */

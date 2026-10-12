@@ -119,7 +119,9 @@ $$
  * PARAMETERS (from JSON-RPC params):
  *   block_num (INT) - Block number to query (default: 0)
  *   only_virtual (BOOLEAN) - Return only virtual operations (default: FALSE)
- *   include_reversible (BOOLEAN) - Include reversible blocks (default: FALSE)
+ *   include_reversible (BOOLEAN) - Accepted for compatibility (default: FALSE).
+ *     WARNING: even when set to true, only irreversible blocks and operations
+ *     are returned; the value is validated but does not change the result.
  *
  * PARAMETER STYLES: Supports both object {"block_num": 123} and array [123] params.
  *
@@ -133,7 +135,7 @@ $$
 DECLARE
   __block_num INT = NULL; -- default 0
   __only_virtual BOOLEAN = NULL; -- default FALSE
-  __include_reversible BOOLEAN = NULL; -- default FALSE
+  __include_reversible BOOLEAN = NULL; -- default FALSE; validated only, irreversible data is always served
 
   __exception_message TEXT;
 BEGIN
@@ -172,7 +174,7 @@ BEGIN
   END;
 
   BEGIN
-    RETURN hafah_backend.get_ops_in_block_json(__block_num, __only_virtual, __include_reversible, _is_legacy_style);
+    RETURN hafah_backend.get_ops_in_block_json(__block_num, __only_virtual, _is_legacy_style);
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
@@ -197,7 +199,9 @@ $$
  *   operation_begin (BIGINT) - Starting operation ID for pagination (default: 0)
  *   limit (INT) - Max operations to return (default: 150000)
  *   filter (NUMERIC) - 128-bit bitmask for operation type filtering
- *   include_reversible (BOOLEAN) - Include reversible blocks (default: FALSE)
+ *   include_reversible (BOOLEAN) - Accepted for compatibility (default: FALSE).
+ *     WARNING: even when set to true, only irreversible blocks and operations
+ *     are returned; the value is validated but does not change the result.
  *   group_by_block (BOOLEAN) - Group results by block (default: FALSE)
  *
  * DELEGATES TO: hafah_backend.enum_virtual_ops_json()
@@ -213,7 +217,7 @@ DECLARE
   __operation_begin BIGINT = NULL; -- default 0
   __limit INT = NULL; -- default 150000
   __filter NUMERIC = NULL; -- default NULL
-  __include_reversible BOOLEAN = NULL; -- default FALSE
+  __include_reversible BOOLEAN = NULL; -- default FALSE; validated only, irreversible data is always served
   __group_by_block BOOLEAN = NULL; -- default FALSE
 
   __exception_message TEXT;
@@ -301,7 +305,7 @@ BEGIN
   END;
 
   BEGIN
-    RETURN hafah_backend.enum_virtual_ops_json(__filter, __block_range_begin, __block_range_end, __operation_begin, __limit, __include_reversible, __group_by_block);
+    RETURN hafah_backend.enum_virtual_ops_json(__filter, __block_range_begin, __block_range_end, __operation_begin, __limit, __group_by_block);
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
@@ -322,7 +326,9 @@ $$
  *
  * PARAMETERS (from JSON-RPC params):
  *   id (TEXT) - 40-character hex transaction hash [REQUIRED]
- *   include_reversible (BOOLEAN) - Include reversible blocks (default: FALSE)
+ *   include_reversible (BOOLEAN) - Accepted for compatibility (default: FALSE).
+ *     WARNING: even when set to true, only irreversible blocks and operations
+ *     are returned; the value is validated but does not change the result.
  *
  * VALIDATION:
  *   - Hash must be exactly 40 hex characters
@@ -337,7 +343,7 @@ AS
 $$
 DECLARE
   __id TEXT; -- required
-  __include_reversible BOOLEAN = NULL; -- default FALSE
+  __include_reversible BOOLEAN = NULL; -- default FALSE; validated only, irreversible data is always served
 
   __exception_message TEXT;
 BEGIN
@@ -366,7 +372,7 @@ BEGIN
   END;
 
   BEGIN
-    RETURN hafah_backend.get_transaction_json(decode(__id, 'hex'), __include_reversible, _is_legacy_style);
+    RETURN hafah_backend.get_transaction_json(decode(__id, 'hex'), _is_legacy_style);
   EXCEPTION
     WHEN raise_exception THEN
       GET STACKED DIAGNOSTICS __exception_message = message_text;
@@ -388,7 +394,9 @@ $$
  *   limit (BIGINT) - Max operations to return (default: 1000)
  *   operation_filter_low (NUMERIC) - Bits 0-63 of 128-bit operation type bitmask
  *   operation_filter_high (NUMERIC) - Bits 64-127 of 128-bit operation type bitmask
- *   include_reversible (BOOLEAN) - Include reversible blocks (default: FALSE)
+ *   include_reversible (BOOLEAN) - Accepted for compatibility (default: FALSE).
+ *     WARNING: even when set to true, only irreversible blocks and operations
+ *     are returned; the value is validated but does not change the result.
  *
  * FILTER BITMASK: 128-bit mask split into two 64-bit integers for operation type filtering.
  *                 Use hafah_backend.translate_get_account_history_filter() to decode.
@@ -407,7 +415,7 @@ DECLARE
   __limit BIGINT = NULL; -- default 1000
   __operation_filter_low NUMERIC = NULL; -- default 0
   __operation_filter_high NUMERIC = NULL; -- default 0
-  __include_reversible BOOLEAN = NULL; -- default FALSE
+  __include_reversible BOOLEAN = NULL; -- default FALSE; validated only, irreversible data is always served
 
   __exception_message TEXT;
 BEGIN
@@ -485,7 +493,6 @@ BEGIN
       __account,
       hafah_backend.parse_acc_hist_start(__start),
       hafah_backend.parse_acc_hist_limit(__limit),
-      __include_reversible,
       _is_legacy_style
     );
   EXCEPTION

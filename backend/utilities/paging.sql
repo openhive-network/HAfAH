@@ -126,16 +126,19 @@ $$;
  * account_range
  * ===================================================================================
  * PURPOSE: Calculates block and sequence number ranges for account operations.
- *          Uses different indexing strategies based on filters:
- *          1. hive_account_operations_uq_1 - when no filters (page by account_op_seq_no)
- *          2. hive_account_operations_uq2 - when filtering by block_num only
- *          3. hive_account_operations_type_account_id_op_seq_idx - when filtering by op_type_id
+ *          Both bounds walk hive_account_operations_uq1 (account_id,
+ *          account_op_seq_no) and stop at the first operation inside the block
+ *          range. A block bound is an operation_id bound: every operation of
+ *          block N has an id in [operation_id(N, 0), operation_id(N + 1, 0)).
+ *
+ *          HAfAH serves irreversible data only: the upper bound never exceeds
+ *          hive.app_get_irreversible_block(), so every account history variant
+ *          paging inside [from_seq, to_seq] reads irreversible operations only.
  *
  * PARAMETERS:
- *   _operations - Array of operation type IDs to filter (NULL for all)
  *   _account_id - Account ID to query
  *   _from       - Starting block number (NULL for beginning)
- *   _to         - Ending block number (NULL for current block)
+ *   _to         - Ending block number (NULL for the last irreversible block)
  *
  * RETURNS: hafah_backend.account_filter_return - range parameters
  */
@@ -153,24 +156,24 @@ DECLARE
   __from INT;
   __to_seq INT;
   __from_seq INT;
-  __current_block INT := (SELECT bv.num FROM hive.blocks_view bv ORDER BY bv.num DESC LIMIT 1);
+  __current_block INT := hive.app_get_irreversible_block();
 BEGIN
   __to_seq := (
-    SELECT aov.account_op_seq_no
-    FROM hive.account_operations_view aov
+    SELECT ao.account_op_seq_no
+    FROM hafd.account_operations ao
     WHERE
-      aov.account_id = _account_id AND
-      (_to IS NULL OR aov.block_num <= _to)
-    ORDER BY aov.account_op_seq_no DESC LIMIT 1
+      ao.account_id = _account_id AND
+      ao.operation_id < hafd.operation_id(LEAST(COALESCE(_to, __current_block), __current_block) + 1, 0)
+    ORDER BY ao.account_op_seq_no DESC LIMIT 1
   );
 
   __from_seq := (
-    SELECT aov.account_op_seq_no
-    FROM hive.account_operations_view aov
+    SELECT ao.account_op_seq_no
+    FROM hafd.account_operations ao
     WHERE
-      aov.account_id = _account_id AND
-      (_from IS NULL OR aov.block_num >= _from)
-    ORDER BY aov.account_op_seq_no ASC LIMIT 1
+      ao.account_id = _account_id AND
+      (_from IS NULL OR ao.operation_id >= hafd.operation_id(_from, 0))
+    ORDER BY ao.account_op_seq_no ASC LIMIT 1
   );
 
   __to := (
@@ -271,17 +274,17 @@ BEGIN
   END IF;
 
   __first_seq := (
-    SELECT aov.account_op_seq_no
-    FROM hive.account_operations_view aov
-    WHERE aov.account_id = _account_id
-    ORDER BY aov.account_op_seq_no ASC LIMIT 1
+    SELECT ao.account_op_seq_no
+    FROM hafd.account_operations ao
+    WHERE ao.account_id = _account_id
+    ORDER BY ao.account_op_seq_no ASC LIMIT 1
   );
 
   __last_seq := (
-    SELECT aov.account_op_seq_no
-    FROM hive.account_operations_view aov
-    WHERE aov.account_id = _account_id
-    ORDER BY aov.account_op_seq_no DESC LIMIT 1
+    SELECT ao.account_op_seq_no
+    FROM hafd.account_operations ao
+    WHERE ao.account_id = _account_id
+    ORDER BY ao.account_op_seq_no DESC LIMIT 1
   );
 
   -- hive_account_operations_account_id_op_type_id_idx lacks account_op_seq_no, so
@@ -290,19 +293,19 @@ BEGIN
   IF _from_seq <= __first_seq AND _to_seq >= __last_seq THEN
     RETURN (
       SELECT COUNT(*)
-      FROM hive.account_operations_view aov
-      WHERE aov.account_id = _account_id
-        AND aov.op_type_id = ANY(_operations)
+      FROM hafd.account_operations ao
+      WHERE ao.account_id = _account_id
+        AND ao.op_type_id = ANY(_operations)
     );
   END IF;
 
   RETURN (
     SELECT COUNT(*)
-    FROM hive.account_operations_view aov
-    WHERE aov.account_id = _account_id
-      AND (_operations IS NULL OR aov.op_type_id = ANY(_operations))
-      AND aov.account_op_seq_no >= _from_seq
-      AND aov.account_op_seq_no <= _to_seq
+    FROM hafd.account_operations ao
+    WHERE ao.account_id = _account_id
+      AND (_operations IS NULL OR ao.op_type_id = ANY(_operations))
+      AND ao.account_op_seq_no >= _from_seq
+      AND ao.account_op_seq_no <= _to_seq
   );
 END
 $$;

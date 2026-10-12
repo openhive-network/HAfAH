@@ -54,7 +54,7 @@ CREATE TYPE hafah_backend.enum_virtual_ops_result AS (
  *   1. Validate input parameters (limit, block range)
  *   2. Handle empty filter case (return empty)
  *   3. Resolve operation type filter to array of type IDs
- *   4. Apply reversibility constraints to block range
+ *   4. Clamp the block range to the last irreversible block
  *   5. Query virtual operations from helper_operations_view
  *   6. Join with transactions for hash (if applicable)
  *   7. Join with blocks for timestamp
@@ -66,7 +66,11 @@ CREATE TYPE hafah_backend.enum_virtual_ops_result AS (
  *   - _block_range_end: End block (exclusive)
  *   - _operation_begin: Starting operation ID for pagination (-1 = from start)
  *   - _limit: Maximum operations to return
- *   - _include_reversible: Include reversible blocks
+ *   - _irreversible_block: Last irreversible block, when the caller already has it
+ *
+ * Only irreversible blocks are served: the JSON-RPC include_reversible argument
+ * does not reach this function, and even when it is true no operation from a
+ * reversible block is returned.
  *
  * RETURNS: Set of virtual operations with metadata
  */
@@ -76,7 +80,6 @@ CREATE OR REPLACE FUNCTION hafah_backend.enum_virtual_ops(
     _block_range_end    INT,
     _operation_begin    BIGINT,
     _limit              INT,
-    _include_reversible BOOLEAN,
     _irreversible_block INT DEFAULT NULL
 )
 RETURNS SETOF hafah_backend.enum_virtual_ops_result
@@ -84,7 +87,7 @@ LANGUAGE 'plpgsql' STABLE
 AS $$
 DECLARE
   __resolved_filter   SMALLINT[];  -- Array of operation type IDs from bitmask
-  __upper_block_limit INT;         -- Last irreversible block (when filtering reversible)
+  __upper_block_limit INT;         -- Last irreversible block
   __filter_info       INT;         -- NULL if no filter, array length otherwise
 BEGIN
   /*
@@ -131,35 +134,22 @@ BEGIN
   SELECT INTO __filter_info (SELECT array_length(__resolved_filter, 1));
 
   /*
-   * REVERSIBILITY CONSTRAINT:
-   *   When _include_reversible = FALSE, we must not return data from
-   *   blocks that may be reorganized (reverted).
+   * IRREVERSIBLE DATA ONLY:
+   *   Data from blocks that may be reorganized (reverted) is never returned.
    *
    *   Strategy:
    *   1. Get last irreversible block number
    *   2. If entire range is reversible: return empty
    *   3. If range spans reversible: clamp end to irreversible block
    */
-  IF NOT _include_reversible THEN
-    __upper_block_limit := COALESCE(_irreversible_block, hive.app_get_irreversible_block());
+  __upper_block_limit := COALESCE(_irreversible_block, hive.app_get_irreversible_block());
 
-    -- WHY: Entire range is in reversible territory - nothing to return
-    IF _block_range_begin > __upper_block_limit THEN
-      RETURN QUERY SELECT
-        NULL::TEXT,
-        NULL::INT,
-        NULL::BIGINT,
-        NULL::BIGINT,
-        NULL::BOOLEAN,
-        NULL::TEXT,
-        NULL::JSONB,
-        NULL::BIGINT
-      LIMIT 0;
-      RETURN;
-    -- WHY: Partial range in reversible - clamp to irreversible boundary
-    ELSIF __upper_block_limit <= _block_range_end THEN
-      SELECT __upper_block_limit INTO _block_range_end;
-    END IF;
+  -- WHY: Entire range is in reversible territory - nothing to return
+  IF _block_range_begin > __upper_block_limit THEN
+    RETURN;
+  -- WHY: Partial range in reversible - clamp to irreversible boundary
+  ELSIF __upper_block_limit <= _block_range_end THEN
+    _block_range_end := __upper_block_limit;
   END IF;
 
   RETURN QUERY
@@ -246,9 +236,12 @@ BEGIN
        *   LEFT JOIN because most virtual ops won't match a transaction.
        *   Restricted to same block range for efficiency.
        */
-      LEFT JOIN hive.transactions_view T2
-        ON T.block_num = T2.block_num
-        AND T.trx_in_block = T2.trx_in_block
+      LEFT JOIN LATERAL (
+        -- LIMIT 1: a position holds one transaction (its index is not declared unique)
+        SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
+        WHERE tx.block_num = T.block_num AND tx.trx_in_block = T.trx_in_block
+        LIMIT 1
+      ) T2 ON TRUE
     )
     SELECT
       pre_result._trx_id,
@@ -261,7 +254,7 @@ BEGIN
       pre_result._value,
       pre_result._operation_id
     FROM pre_result
-    JOIN hive.blocks_view hb ON hb.num = pre_result._block  -- WHY: Get block timestamp
+    JOIN hafd.blocks hb ON hb.num = pre_result._block  -- WHY: Get block timestamp
     ORDER BY pre_result._operation_id;  -- WHY: Consistent ordering for client consumption
 END
 $$;

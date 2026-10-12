@@ -147,7 +147,11 @@ HAfAH sets cache headers based on data reversibility:
 | Data State | Cache Duration | Reason |
 |------------|----------------|--------|
 | Irreversible | 1 year (31536000s) | Data will never change |
-| Reversible | 2 seconds | Data may be forked |
+| Reaches past the irreversible block | 2 seconds | Not served yet; appears once irreversible |
+
+Only irreversible data is served. `include-reversible` (GET /operations) is
+accepted for compatibility, but even when set to true only irreversible blocks
+and operations are returned.
 
 **Check Function:**
 ```sql
@@ -162,9 +166,10 @@ Located in `backend/rest/blocks/`:
 
 | File | Function | HAF Tables Used |
 |------|----------|-----------------|
-| `block.sql` | `get_block()` | blocks_view, transactions_view, operations_view |
-| `block_header.sql` | `get_block_header()` | blocks_view |
-| `block_range.sql` | `get_block_range()` | blocks_view |
+| `block.sql` | `get_block()` | `hive.get_block()` (HAF, no base-table variant) after an irreversible check |
+| `block.sql` | `get_global_state()` | hafd.blocks, hafd.accounts |
+| `block_header.sql` | `get_block_header()` | `hive.get_block_header()` (HAF) after an irreversible check |
+| `block_range.sql` | `get_block_range()` | `hive.get_block_from_views()` (HAF) on a range cut at the irreversible block |
 
 ---
 

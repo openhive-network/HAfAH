@@ -22,7 +22,7 @@ SET ROLE hafah_owner;
  *
  * DATA SOURCES:
  *   - hafd.operation_types: Master list of all operation types
- *   - hive.account_operations_view: Account-to-operation index
+ *   - hafd.account_operations: Account-to-operation index (irreversible operations)
  *
  * NOTES:
  *   - Uses EXISTS subquery for efficient presence check
@@ -37,15 +37,19 @@ RETURNS INT[] -- noqa: LT01, CP05
 LANGUAGE 'plpgsql' STABLE
 AS
 $$
+DECLARE
+  -- Every operation of block N has an id below operation_id(N + 1, 0)
+  __upper_operation_id BIGINT := hafd.operation_id(hive.app_get_irreversible_block() + 1, 0);
 BEGIN
   -- Aggregate matching type IDs into ordered array
   RETURN array_agg(hot.id ORDER BY hot.id)
   FROM hafd.operation_types hot
   -- EXISTS pattern: More efficient than JOIN for existence check
-  -- Stops scanning account_operations_view after first match per type
+  -- Stops scanning account_operations after first match per type
   WHERE EXISTS (
-    SELECT 1 FROM hive.account_operations_view aov
-    WHERE aov.account_id = _account_id AND aov.op_type_id = hot.id
+    SELECT 1 FROM hafd.account_operations ao
+    WHERE ao.account_id = _account_id AND ao.op_type_id = hot.id
+      AND ao.operation_id < __upper_operation_id
   );
 
 END

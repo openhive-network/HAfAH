@@ -52,7 +52,8 @@ $$;
  * PARAMETERS:
  *   _limit - Maximum number of trades to return
  *
- * RETURNS: Set of fill_order records representing recent trades
+ * RETURNS: Set of fill_order records representing recent trades in
+ *          irreversible blocks
  */
 CREATE OR REPLACE FUNCTION hafah_backend.recent_trades(
     _limit INT
@@ -61,14 +62,17 @@ RETURNS SETOF hafah_backend.fill_order -- noqa: LT01, CP05
 LANGUAGE 'plpgsql' STABLE
 AS
 $$
+DECLARE
+  __irreversible_block INT := hive.app_get_irreversible_block();
 BEGIN
   RETURN QUERY
   WITH recent_operations AS MATERIALIZED (
     SELECT
       ov.block_num,
       ov.body
-    FROM hive.operations_view ov
+    FROM hafah_backend.helper_operations_view ov
     WHERE ov.op_type_id = 57
+      AND ov.block_num <= __irreversible_block
     ORDER BY ov.block_num DESC, ov.id DESC
     LIMIT _limit
   )
@@ -79,7 +83,7 @@ BEGIN
     foo.open_pays,
     foo.taker
   FROM recent_operations ro
-  JOIN hive.blocks_view bv ON bv.num = ro.block_num
+  JOIN hafd.blocks bv ON bv.num = ro.block_num
   CROSS JOIN hafah_backend.process_fill_order_operation(ro.body, bv.created_at) foo;
 END
 $$;

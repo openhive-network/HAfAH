@@ -12,15 +12,16 @@
  *          has no app-specific sync context, so its data freshness is HAF's
  *          freshness: this endpoint reports HAF's consistent (last
  *          irreversible) block, i.e. hafd.hive_state.consistent_block, read
- *          through the public HAF API (hive.app_get_irreversible_block())
- *          per this repo's convention of avoiding internal hafd tables.
+ *          through the public HAF API (hive.app_get_irreversible_block()).
+ *          It is also the newest block whose data HAfAH serves, since every
+ *          endpoint returns irreversible data only.
  *
  * RETURNS: JSON {"last_block_num": INT, "last_block_time": TEXT|null}
  *
  * CACHING: No cache (max-age=0): used for real-time sync-status / health
  *          monitoring.
  *
- * DATA SOURCE: hive.app_get_irreversible_block(), hive.blocks_view
+ * DATA SOURCE: hive.app_get_irreversible_block(), hafd.blocks
  */
 SET ROLE hafah_owner;
 
@@ -92,7 +93,7 @@ BEGIN
   PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=0"}]', true);
 
   -- Fail fast during HAF massive sync: hafd.blocks' PK is dropped for the
-  -- duration (hive.disable_indexes_of_irreversible), so the blocks_view
+  -- duration (hive.disable_indexes_of_irreversible), so the hafd.blocks
   -- lookup below would seq-scan the largest table in the database.
   -- Health-check agents gate on is_instance_ready() before calling APIs;
   -- this guard protects any caller that does not (e.g. a raw haproxy
@@ -105,7 +106,7 @@ BEGIN
   RETURN json_build_object(
     'last_block_num', __consistent_block,
     'last_block_time', to_char(
-      (SELECT bv.created_at FROM hive.blocks_view bv WHERE bv.num = __consistent_block),
+      (SELECT hb.created_at FROM hafd.blocks hb WHERE hb.num = __consistent_block),
       'YYYY-MM-DD"T"HH24:MI:SS')
   );
 END

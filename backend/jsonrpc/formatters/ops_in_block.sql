@@ -31,7 +31,6 @@ SET ROLE hafah_owner;
  * PARAMETERS:
  *   - _block_num: Block number to query
  *   - _only_virtual: Filter to virtual operations only
- *   - _include_reversible: Include reversible blocks
  *   - _is_legacy_style: Use legacy response format
  *
  * RETURNS: JSON object or array depending on style
@@ -39,7 +38,6 @@ SET ROLE hafah_owner;
 CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_block_json(
     _block_num          INT,
     _only_virtual       BOOLEAN,
-    _include_reversible BOOLEAN,
     _is_legacy_style    BOOLEAN
 )
 RETURNS JSON
@@ -53,7 +51,7 @@ BEGIN
   /*
    * Cache Control:
    *   - Irreversible blocks: cache for 1 year (immutable)
-   *   - Reversible blocks: cache for 3 seconds (may change)
+   *   - Later blocks: cache for 3 seconds (empty now, served once irreversible)
    */
   IF _block_num <= __irreversible_block THEN
     PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
@@ -109,7 +107,6 @@ BEGIN
           FROM hafah_backend.get_ops_in_block(
             _block_num,
             _only_virtual,
-            _include_reversible,
             _is_legacy_style,
             __irreversible_block
           )

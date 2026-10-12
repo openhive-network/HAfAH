@@ -20,8 +20,8 @@
  *   - virtual_op (boolean), operation_id, trx_in_block
  *
  * CACHING:
- *   - 1 year cache if operation is in an irreversible block
- *   - 2 second cache if operation is in a reversible block
+ *   - 1 year cache: only operations in irreversible blocks are served; an
+ *     operation in a reversible block is reported as missing
  *
  * DELEGATES TO: hafah_backend.get_operation()
  */
@@ -119,11 +119,8 @@ BEGIN
     PERFORM hafah_backend.rest_raise_missing_operation_id(_operation_id);
   END IF;
 
-  IF _result.block <= hive.app_get_irreversible_block() THEN
-    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
-  ELSE
-    PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=2"}]', true);
-  END IF;
+  -- Only irreversible operations are served, so the result never changes
+  PERFORM set_config('response.headers', '[{"Cache-Control": "public, max-age=31536000"}]', true);
 
   RETURN _result;
 END

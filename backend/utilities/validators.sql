@@ -208,7 +208,8 @@ $$;
  * ===================================================================================
  * validate_block_num
  * ===================================================================================
- * PURPOSE: Validates that a block number exists in the database.
+ * PURPOSE: Validates that a block number exists in the database and is
+ *          irreversible (HAfAH serves irreversible data only).
  *
  * PARAMETERS:
  *   _block_num - Block number to validate
@@ -222,7 +223,8 @@ RETURNS VOID
 LANGUAGE 'plpgsql' STABLE
 AS $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM hive.blocks_view bv WHERE bv.num = _block_num) THEN
+  IF _block_num > hive.app_get_irreversible_block()
+     OR NOT EXISTS (SELECT 1 FROM hafd.blocks hb WHERE hb.num = _block_num) THEN
     PERFORM hafah_backend.rest_raise_missing_block(_block_num);
   END IF;
 END
@@ -346,7 +348,8 @@ $$;
  * ===================================================================================
  * validate_operation_id
  * ===================================================================================
- * PURPOSE: Validates that an operation ID exists in the database.
+ * PURPOSE: Validates that an operation ID exists in the database and lies in an
+ *          irreversible block (HAfAH serves irreversible data only).
  *
  * PARAMETERS:
  *   _operation_id - Operation ID to validate
@@ -360,7 +363,8 @@ RETURNS VOID
 LANGUAGE 'plpgsql' STABLE
 AS $$
 BEGIN
-  IF (SELECT ov.block_num FROM hive.operations_view ov WHERE ov.id = _operation_id) IS NULL THEN
+  IF hafd.operation_id_to_block_num(_operation_id) > hive.app_get_irreversible_block()
+     OR NOT EXISTS (SELECT 1 FROM hafd.operations ho WHERE ho.id = _operation_id) THEN
     PERFORM hafah_backend.rest_raise_missing_operation_id(_operation_id);
   END IF;
 END

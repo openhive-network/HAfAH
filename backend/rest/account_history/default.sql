@@ -35,7 +35,7 @@ SET ROLE hafah_owner;
  *          for the specified account within the given block range.
  *
  * PARAMETERS:
- *   _account_id - Account ID to get operations for (from hive.accounts_view)
+ *   _account_id - Account ID to get operations for (from hafd.accounts)
  *   _from_block - Starting block number (inclusive)
  *   _to_block   - Ending block number (inclusive)
  *   _page       - Page number for pagination (1-indexed, NULL for latest)
@@ -99,15 +99,15 @@ BEGIN
    * ===================================================================================
    * CTE: operation_range
    * ===================================================================================
-   * WHY: Fetch operation IDs and metadata from account_operations_view first,
+   * WHY: Fetch operation IDs and metadata from hafd.account_operations first,
    *      then JOIN to get full operation details. This is more efficient than
    *      joining everything at once.
    *
    * JOIN STRATEGY:
    *   - Inner subquery: Filters on indexed account_op_seq_no column
-   *   - operations_view: Get operation body and position (INNER JOIN - always exists)
-   *   - operation_types: Get is_virtual flag (INNER JOIN - always exists)
-   *   - transactions_view: Get transaction hash (LEFT JOIN - virtual ops have no transaction)
+   *   - helper_operations_view: Operation body, position and is_virtual flag
+   *     (hafd.operations + hafd.operation_types, one primary-key probe per row)
+   *   - hafd.transactions: Get transaction hash (LEFT JOIN - virtual ops have no transaction)
    *
    * PAGINATION:
    *   - Offset applied in WHERE: to_seq - offset_filter (faster than OFFSET clause)
@@ -122,31 +122,31 @@ BEGIN
     SELECT
       ls.operation_id AS id,
       ls.block_num,
-      -- Scalar subqueries with operation_id range predicates for index pruning
-      -- Range bounds: hafd.operation_id(block_num, 0) narrows the B-tree scan to one block
-      (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.operation_id
-       AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0)) AS trx_in_block,
-      encode((SELECT htv.trx_hash FROM hive.transactions_view htv
-              WHERE htv.block_num = ls.block_num
-              AND htv.trx_in_block = (SELECT trx_in_block FROM hive.operations_view WHERE id = ls.operation_id
-                                      AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0))
-             ), 'hex') AS trx_hash,
-      (SELECT op_pos FROM hive.operations_view WHERE id = ls.operation_id
-       AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0)) AS op_pos,
+      ho.trx_in_block,
+      encode(ht.trx_hash, 'hex') AS trx_hash,
+      ho.op_pos::INT AS op_pos,
       ls.op_type_id,
-      (SELECT body FROM hive.operations_view WHERE id = ls.operation_id
-       AND id >= hafd.operation_id(ls.block_num, 0) AND id < hafd.operation_id(ls.block_num + 1, 0)) AS body,
-      (SELECT is_virtual FROM hafd.operation_types WHERE id = ls.op_type_id) AS is_virtual
+      ho.body,
+      ho.virtual_op AS is_virtual
     FROM (
-      -- Inner query: fetch from account_operations_view with pagination
-      SELECT aov.operation_id, aov.op_type_id, aov.block_num
-      FROM hive.account_operations_view aov
-      WHERE aov.account_id = _account_id
-      AND aov.account_op_seq_no >= _account_range.from_seq
-      AND aov.account_op_seq_no <= _account_range.to_seq - _calculate_pages.offset_filter  -- Apply offset in WHERE
-      ORDER BY aov.account_op_seq_no DESC
+      -- Inner query: fetch from account_operations with pagination
+      SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+      FROM hafd.account_operations ao
+      WHERE ao.account_id = _account_id
+      AND ao.account_op_seq_no >= _account_range.from_seq
+      AND ao.account_op_seq_no <= _account_range.to_seq - _calculate_pages.offset_filter  -- Apply offset in WHERE
+      ORDER BY ao.account_op_seq_no DESC
       LIMIT _calculate_pages.limit_filter
     ) ls
+    -- One primary-key probe per page row for the operation's fields
+    JOIN hafah_backend.helper_operations_view ho ON ho.id = ls.operation_id
+    -- Virtual ops have no transaction (trx_in_block = -1), so the hash is NULL
+    LEFT JOIN LATERAL (
+      -- LIMIT 1: a position holds one transaction (its index is not declared unique)
+      SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
+      WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ho.trx_in_block
+      LIMIT 1
+    ) ht ON TRUE
   ),
   /*
    * ===================================================================================
@@ -159,7 +159,7 @@ BEGIN
    *   to prevent response size explosion. Returns composite (body, operation_id).
    *
    * TIMESTAMP:
-   *   Join to blocks_view to get created_at timestamp for each operation.
+   *   Join to hafd.blocks to get created_at timestamp for each operation.
    */
   result_query AS (
     SELECT
@@ -175,7 +175,7 @@ BEGIN
     FROM (
       SELECT hafah_backend.operation_body_filter(ov.body, ov.id, _body_limit) as composite, ov.id, ov.block_num, ov.trx_in_block, ov.trx_hash, ov.op_pos, ov.op_type_id, ov.is_virtual, hb.created_at
       FROM operation_range ov
-      JOIN hive.blocks_view hb ON hb.num = ov.block_num
+      JOIN hafd.blocks hb ON hb.num = ov.block_num
     ) filtered_operations
   )
   /*

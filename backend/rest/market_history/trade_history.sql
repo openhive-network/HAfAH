@@ -22,7 +22,8 @@ SET ROLE hafah_owner;
  *   _to_block   - Ending block number
  *   _limit      - Maximum number of trades to return
  *
- * RETURNS: Set of fill_order records representing trades in the range
+ * RETURNS: Set of fill_order records representing trades in the range; the
+ *          range ends at the last irreversible block at most
  */
 CREATE OR REPLACE FUNCTION hafah_backend.trade_history(
     _from_block INT,
@@ -33,17 +34,19 @@ RETURNS SETOF hafah_backend.fill_order -- noqa: LT01, CP05
 LANGUAGE 'plpgsql' STABLE
 AS
 $$
+DECLARE
+  __to_block INT := LEAST(_to_block, hive.app_get_irreversible_block());
 BEGIN
   RETURN QUERY
   WITH recent_operations AS MATERIALIZED (
     SELECT
       ov.block_num,
       ov.body
-    FROM hive.operations_view ov
+    FROM hafah_backend.helper_operations_view ov
     WHERE
       ov.op_type_id = 57 AND
       ov.block_num >= _from_block AND
-      ov.block_num <= _to_block
+      ov.block_num <= __to_block
     ORDER BY ov.block_num, ov.id
     LIMIT _limit
   )
@@ -54,7 +57,7 @@ BEGIN
     foo.open_pays,
     foo.taker
   FROM recent_operations ro
-  JOIN hive.blocks_view bv ON bv.num = ro.block_num
+  JOIN hafd.blocks bv ON bv.num = ro.block_num
   CROSS JOIN hafah_backend.process_fill_order_operation(ro.body, bv.created_at) foo;
 END
 $$;

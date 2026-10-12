@@ -30,6 +30,9 @@ SET ROLE hafah_owner;
  *   - hive.get_block_from_views(): HAF bulk block retrieval function
  *
  * NOTES:
+ *   - Only irreversible blocks are served: the range is cut at the last
+ *     irreversible block. HAF provides no base-table variant of
+ *     get_block_from_views, so the cut is applied before calling it.
  *   - 1000 block limit prevents memory exhaustion on large requests
  *   - Inclusive range: from-block to to-block both included
  *   - Called by get_block_range() which formats the output
@@ -55,6 +58,11 @@ BEGIN
     -- Each block can contain many transactions/operations = memory concern
     IF NOT (_end_block_num - _block_num + 1) <= 1000 THEN
         RAISE EXCEPTION 'block range > 1000: You can only ask for 1000 blocks at a time';
+    END IF;
+
+    _end_block_num := LEAST(_end_block_num, hive.app_get_irreversible_block());
+    IF _end_block_num < _block_num THEN
+        RETURN;
     END IF;
 
     -- HAF bulk retrieval: Second param is count, not end block

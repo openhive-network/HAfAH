@@ -31,16 +31,20 @@ SET ROLE hafah_owner;
  * PURPOSE: Retrieve operations from a specific block for JSON-RPC API.
  *
  * DATA FLOW:
- *   1. Check if block is within reversible range (if _include_reversible = FALSE)
+ *   1. Return nothing for a block beyond the last irreversible block
  *   2. Query operations from helper_operations_view for the block
- *   3. Join with blocks_view for timestamp
- *   4. Join with transactions_view for transaction hash
+ *   3. Join with hafd.blocks for timestamp
+ *   4. Join with hafd.transactions for transaction hash
  *   5. Format and return results ordered by operation ID
+ *
+ * Only irreversible blocks are served: the JSON-RPC include_reversible argument
+ * does not reach this function, and even when it is true a reversible block
+ * returns no operations.
  *
  * PARAMETERS:
  *   - _block_num: Block number to query
  *   - _only_virtual: If TRUE, return only virtual operations
- *   - _include_reversible: If TRUE, include operations from reversible blocks
+ *   - _irreversible_block: Last irreversible block, when the caller already has it
  *   - _is_legacy_style: If TRUE, format operations in legacy style
  *
  * RETURNS: Table of operations with transaction context
@@ -48,7 +52,6 @@ SET ROLE hafah_owner;
 CREATE OR REPLACE FUNCTION hafah_backend.get_ops_in_block(
     _block_num          INT,
     _only_virtual       BOOLEAN,
-    _include_reversible BOOLEAN,
     _is_legacy_style    BOOLEAN,
     _irreversible_block INT DEFAULT NULL
 )
@@ -65,21 +68,8 @@ LANGUAGE 'plpgsql' STABLE
 SET JIT = OFF
 AS $$
 BEGIN
-  /*
-   * Reversibility Check:
-   *   If not including reversible blocks and block is beyond irreversible,
-   *   return empty result set
-   */
-  IF (NOT _include_reversible) AND _block_num > COALESCE(_irreversible_block, hive.app_get_irreversible_block()) THEN
-    RETURN QUERY SELECT
-      NULL::TEXT,    -- _trx_id
-      NULL::BIGINT,  -- _trx_in_block
-      NULL::BIGINT,  -- _op_in_trx
-      NULL::BOOLEAN, -- _virtual_op
-      NULL::TEXT,    -- _timestamp
-      NULL::JSONB,   -- _value
-      NULL::BIGINT   -- _operation_id
-    LIMIT 0;
+  -- Irreversible data only: a block beyond the last irreversible block has no operations
+  IF _block_num > COALESCE(_irreversible_block, hive.app_get_irreversible_block()) THEN
     RETURN;
   END IF;
 
@@ -87,7 +77,7 @@ BEGIN
     SELECT
       /*
        * TRANSACTION ID HANDLING:
-       *   - Real operations: 40-char hex hash from transactions_view
+       *   - Real operations: 40-char hex hash from hafd.transactions
        *   - Virtual operations: trx_hash IS NULL → return 40 zeros
        *
        * WHY LEFT JOIN: Virtual ops won't match any transaction, giving NULL.
@@ -133,8 +123,8 @@ BEGIN
     FROM (
       /*
        * HELPER VIEW USAGE:
-       *   helper_operations_view pre-joins with operation_types to include virtual_op flag.
-       *   More efficient than joining in outer query for every row.
+       *   helper_operations_view pre-joins hafd.operations with operation_types
+       *   to include the virtual_op flag and the formatted body.
        */
       SELECT
         ho.id,
@@ -153,15 +143,18 @@ BEGIN
          */
         AND (_only_virtual = FALSE OR ho.virtual_op = TRUE)
     ) T
-    JOIN hive.blocks_view hb ON hb.num = T.block_num  -- WHY: Get block timestamp
+    JOIN hafd.blocks hb ON hb.num = T.block_num  -- WHY: Get block timestamp
     /*
      * LEFT JOIN TRANSACTIONS:
      *   Virtual operations have no transaction, so LEFT JOIN ensures they're included.
      *   The CASE statements above handle NULL trx_hash appropriately.
      */
-    LEFT JOIN hive.transactions_view ht
-      ON T.block_num = ht.block_num
-      AND T.trx_in_block = ht.trx_in_block
+    LEFT JOIN LATERAL (
+      -- LIMIT 1: a position holds one transaction (its index is not declared unique)
+      SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
+      WHERE tx.block_num = T.block_num AND tx.trx_in_block = T.trx_in_block
+      LIMIT 1
+    ) ht ON TRUE
     ORDER BY _operation_id;  -- WHY: Maintain operation order within block
 END
 $$;

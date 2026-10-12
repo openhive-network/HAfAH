@@ -37,6 +37,12 @@ $BODY$
 DECLARE
     __block hive.block_header_type;
 BEGIN
+  -- Irreversible data only. HAF has no base-table header function (hive.get_block_header
+  -- reads HAF's reversible-aware views), so a later block is rejected before it is called.
+  IF _block_num > hive.app_get_irreversible_block() THEN
+    PERFORM hafah_backend.rest_raise_missing_block(_block_num);
+  END IF;
+
   -- Use HAF's lightweight header-only function (no transaction/op data)
   SELECT * FROM hive.get_block_header( _block_num ) INTO __block;
 
