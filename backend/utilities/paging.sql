@@ -344,14 +344,13 @@ $$;
  *          [_from_seq, _to_seq] match _operations (and _transacting_account_ids);
  *          FALSE for an empty range
  */
-DROP FUNCTION IF EXISTS hafah_backend.account_op_types_are_rare(INT[], INT, INT, INT, INT);
 CREATE OR REPLACE FUNCTION hafah_backend.account_op_types_are_rare(
     _operations    INT[],
     _account_id    INT,
     _from_seq      INT,
     _to_seq        INT,
     _rows          INT,
-    _transacting_account_ids INT[] = NULL
+    _transacting_account_ids INT[] DEFAULT NULL
 )
 RETURNS BOOLEAN -- noqa: LT01, CP05
 LANGUAGE 'plpgsql' STABLE
