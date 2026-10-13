@@ -42,3 +42,22 @@ def send_request_to_hafah(hafah_node: tt.RemoteNode, method, **kwargs):
         previous_response = response
         time.sleep(1)
     return response
+
+
+def get_hafah_irreversible_block(haf_node) -> int:
+    """Last irreversible block in the HAF database, the upper bound of everything hafah serves."""
+    return haf_node.query_one("SELECT hive.app_get_irreversible_block()")
+
+
+def wait_for_irreversible_in_hafah(haf_node, block_number: int | None = None, *, timeout: float = 120):
+    """Block until `block_number` (default: haf_node's current head block) is irreversible in the HAF database.
+
+    The node's last irreversible block can run ahead of the database, so this waits on the value hafah reads.
+    Raises TimeoutError when the block is not irreversible within `timeout` seconds."""
+    target = block_number if block_number is not None else haf_node.get_last_block_number()
+    tt.Time.wait_for(
+        lambda: get_hafah_irreversible_block(haf_node) >= target,
+        timeout=timeout,
+        timeout_error_message=f"Waited too long for block {target} to become irreversible in the HAF database",
+        poll_time=1.0,
+    )
