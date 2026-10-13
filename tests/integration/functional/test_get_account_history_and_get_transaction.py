@@ -2,20 +2,32 @@ import pytest
 
 import test_tools as tt
 from beekeepy.exceptions import ErrorInResponseError
-from hafah_local_tools import send_request_to_hafah, to_plain
+from hafah_local_tools import (
+    get_hafah_irreversible_block,
+    send_request_to_hafah,
+    to_plain,
+    wait_for_irreversible_in_hafah,
+)
 
 
+# hafah serves irreversible data only, so history from a not yet irreversible block
+# is empty whatever include_reversible says
 @pytest.mark.get_account_history_and_get_transaction
-def test_get_empty_history(postgrest_hafah, wallet):
-    wallet.create_account("alice")
-    # Query immediately without waiting for irreversible - blocks should still be reversible
-    # so include_reversible=False should return no results
-    response = send_request_to_hafah(
-        postgrest_hafah,
-        "get_account_history",
-        account="alice",
-        include_reversible=False,
+@pytest.mark.parametrize("include_reversible", (False, True))
+def test_get_empty_history(haf_node, postgrest_hafah, wallet, include_reversible):
+    account = f"alice-{int(include_reversible)}"
+    block_number = wallet.create_account(account)["block_num"]
+    # a single request: send_request_to_hafah retries until the response changes,
+    # which would wait for the block to become irreversible
+    response = to_plain(
+        postgrest_hafah.api.account_history.get_account_history(
+            account=account,
+            include_reversible=include_reversible,
+        )
     )
+    assert block_number > get_hafah_irreversible_block(
+        haf_node
+    ), "block became irreversible before the check, reversible state not observed"
     assert len(response["history"]) == 0
 
 
@@ -34,9 +46,7 @@ def test_check_for_newly_created_history_operations(
 
     # Wait for HAF to actually sync the transaction to the database
     haf_node.wait_for_transaction_in_database(transaction, timeout=60)
-
-    if not include_reversible:
-        haf_node.wait_for_irreversible_block()
+    wait_for_irreversible_in_hafah(haf_node, transaction["block_num"])
 
     response = send_request_to_hafah(
         postgrest_hafah,
@@ -54,6 +64,7 @@ def test_filter_only_transfer_ops(haf_node, postgrest_hafah, wallet):
 
     # Wait for HAF to actually sync the transaction to the database
     haf_node.wait_for_transaction_in_database(transaction, timeout=60)
+    wait_for_irreversible_in_hafah(haf_node, transaction["block_num"])
 
     response = send_request_to_hafah(
         postgrest_hafah,
@@ -85,6 +96,7 @@ def test_pagination(haf_node, postgrest_hafah, wallet, step: int):
 
     # Wait for HAF to sync the blocks containing the transactions
     haf_node.wait_number_of_blocks(2)
+    wait_for_irreversible_in_hafah(haf_node)
 
     response = send_request_to_hafah(
         postgrest_hafah,
@@ -124,7 +136,7 @@ def test_pagination(haf_node, postgrest_hafah, wallet, step: int):
         False,
     ),
 )
-def test_get_transaction_in_reversible_block(
+def test_get_newly_created_transaction(
     init_node, haf_node, postgrest_hafah, wallet, include_reversible
 ):
     wallet.close()
@@ -134,9 +146,7 @@ def test_get_transaction_in_reversible_block(
 
     # Wait for HAF to actually sync the transaction to the database
     haf_node.wait_for_transaction_in_database(transaction, timeout=60)
-
-    if not include_reversible:
-        haf_node.wait_for_irreversible_block()
+    wait_for_irreversible_in_hafah(haf_node, transaction["block_num"])
     # delete one additional key to compare transactions
     del transaction_dict["rc_cost"]
     response = send_request_to_hafah(

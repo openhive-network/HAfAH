@@ -5,7 +5,12 @@ import pytest
 import test_tools as tt
 from beekeepy.exceptions import ErrorInResponseError
 
-from hafah_local_tools import send_request_to_hafah
+from hafah_local_tools import (
+    get_hafah_irreversible_block,
+    send_request_to_hafah,
+    to_plain,
+    wait_for_irreversible_in_hafah,
+)
 
 
 def send_transfers_to_vesting_from_initminer(
@@ -15,15 +20,29 @@ def send_transfers_to_vesting_from_initminer(
         wallet.api.transfer_to_vesting("initminer", to, tt.Asset.Test(1))
 
 
-# Run test with reversible_blocks primary
+# hafah serves irreversible data only; include_reversible must not change that
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-@pytest.mark.parametrize(
-    "include_reversible, comparison_type", ((False, "__eq__"), (True, "__gt__"))
-)
-def test_get_operations_in_block_with_and_without_reversible(
-    postgrest_hafah, wallet, include_reversible, comparison_type
+@pytest.mark.parametrize("include_reversible", (False, True))
+def test_get_ops_in_block_serves_irreversible_blocks_only(
+    haf_node, postgrest_hafah, wallet, include_reversible
 ):
     block_number = wallet.create_account(f"alice-{int(include_reversible)}")["block_num"]
+
+    # a single request: send_request_to_hafah retries until the response changes,
+    # which would wait for the block to become irreversible
+    response = to_plain(
+        postgrest_hafah.api.account_history.get_ops_in_block(
+            block_num=block_number,
+            only_virtual=False,
+            include_reversible=include_reversible,
+        )
+    )
+    assert block_number > get_hafah_irreversible_block(
+        haf_node
+    ), "block became irreversible before the check, reversible state not observed"
+    assert len(response["ops"]) == 0
+
+    wait_for_irreversible_in_hafah(haf_node, block_number)
 
     response = send_request_to_hafah(
         postgrest_hafah,
@@ -32,7 +51,7 @@ def test_get_operations_in_block_with_and_without_reversible(
         only_virtual=False,
         include_reversible=include_reversible,
     )
-    assert getattr(len(response["ops"]), comparison_type)(0)
+    assert len(response["ops"]) > 0
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
@@ -53,9 +72,7 @@ def test_limit(
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
     end_block = haf_node.get_last_block_number()
-
-    if not include_reversible:
-        haf_node.wait_for_irreversible_block()
+    wait_for_irreversible_in_hafah(haf_node, end_block)
 
     response = send_request_to_hafah(
         postgrest_hafah,
@@ -123,9 +140,8 @@ def test_filter_only_hardfork_operations(haf_node, postgrest_hafah):
 def test_find_irreversible_operations(haf_node, postgrest_hafah):
     block_to_start = haf_node.get_last_block_number()
     haf_node.wait_number_of_blocks(3)
-    # wait for the block with the transaction to become irreversible
-    haf_node.wait_for_irreversible_block()
     end_block = haf_node.get_last_block_number()
+    wait_for_irreversible_in_hafah(haf_node, end_block)
     response = send_request_to_hafah(
         postgrest_hafah,
         "enum_virtual_ops",
@@ -148,6 +164,7 @@ def test_find_newly_created_virtual_op(haf_node, postgrest_hafah, wallet):
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
     end_block = haf_node.get_last_block_number()
+    wait_for_irreversible_in_hafah(haf_node, end_block)
     response = send_request_to_hafah(
         postgrest_hafah,
         "enum_virtual_ops",
@@ -161,8 +178,11 @@ def test_find_newly_created_virtual_op(haf_node, postgrest_hafah, wallet):
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-def test_find_reversible_virtual_operations(haf_node, postgrest_hafah):
+def test_find_virtual_operations_in_head_block_once_irreversible(
+    haf_node, postgrest_hafah
+):
     block_to_start = haf_node.get_last_block_number()
+    wait_for_irreversible_in_hafah(haf_node, block_to_start)
     response = send_request_to_hafah(
         postgrest_hafah,
         "enum_virtual_ops",
@@ -186,6 +206,7 @@ def test_grouping_by_block(haf_node, postgrest_hafah, wallet):
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
     end_block = haf_node.get_last_block_number()
+    wait_for_irreversible_in_hafah(haf_node, end_block)
     response = send_request_to_hafah(
         postgrest_hafah,
         "enum_virtual_ops",
@@ -211,7 +232,7 @@ def test_grouping_by_block(haf_node, postgrest_hafah, wallet):
 @pytest.mark.parametrize(
     "group_by_block, key", ((False, "ops"), (True, "ops_by_block"))
 )
-def test_list_vops_partly_in_irreversible_and_partly_in_reversible_blocks(
+def test_list_vops_created_before_and_after_an_irreversibility_wait(
     haf_node, postgrest_hafah, wallet, group_by_block, key
 ):
     haf_node.wait_number_of_blocks(1)
@@ -223,7 +244,7 @@ def test_list_vops_partly_in_irreversible_and_partly_in_reversible_blocks(
     )
 
     # make ops irreversible
-    haf_node.wait_for_irreversible_block()
+    wait_for_irreversible_in_hafah(haf_node)
 
     send_transfers_to_vesting_from_initminer(
         wallet, amount=3, to=f"dan-{int(group_by_block)}"
@@ -232,6 +253,7 @@ def test_list_vops_partly_in_irreversible_and_partly_in_reversible_blocks(
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
     end_block = haf_node.get_last_block_number()
+    wait_for_irreversible_in_hafah(haf_node, end_block)
     limit = 5
     response = send_request_to_hafah(
         postgrest_hafah,
@@ -271,6 +293,7 @@ def test_number_of_producer_reward_ops(haf_node, postgrest_hafah):
     blocks_to_wait = 5
     haf_node.wait_number_of_blocks(blocks_to_wait)
     end_block = haf_node.get_last_block_number()
+    wait_for_irreversible_in_hafah(haf_node, end_block)
     response = send_request_to_hafah(
         postgrest_hafah,
         "enum_virtual_ops",
@@ -289,6 +312,7 @@ def test_pagination(haf_node, postgrest_hafah, wallet):
     # block_range_end arg takes block number exclusively that's why wait 1 more block
     haf_node.wait_number_of_blocks(1)
     end_block = haf_node.get_last_block_number()
+    wait_for_irreversible_in_hafah(haf_node, end_block)
     response = send_request_to_hafah(
         postgrest_hafah,
         "enum_virtual_ops",
@@ -332,8 +356,11 @@ def test_default_args_value(postgrest_hafah):
 # account_create: [account_create, account_created, clear_null_account_balance,
 # producer_reward].
 @pytest.mark.parametrize("only_virtual, number_of_ops", ((False, 4), (True, 3)))
-def test_filter_virtual_ops(postgrest_hafah, wallet, only_virtual, number_of_ops):
+def test_filter_virtual_ops(
+    haf_node, postgrest_hafah, wallet, only_virtual, number_of_ops
+):
     block_number = wallet.create_account(f"fred-{int(only_virtual)}")["block_num"]
+    wait_for_irreversible_in_hafah(haf_node, block_number)
     response = send_request_to_hafah(
         postgrest_hafah,
         "get_ops_in_block",
