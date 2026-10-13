@@ -14,7 +14,7 @@ from hafah_local_tools import (
 # is empty whatever include_reversible says
 @pytest.mark.get_account_history_and_get_transaction
 @pytest.mark.parametrize("include_reversible", (False, True))
-def test_get_empty_history(haf_node, postgrest_hafah, wallet, include_reversible):
+def test_get_empty_history(haf_node, postgrest_hafah, wallet, include_reversible) -> None:
     account = f"alice-{int(include_reversible)}"
     block_number = wallet.create_account(account)["block_num"]
     # a single request: send_request_to_hafah retries until the response changes,
@@ -41,7 +41,7 @@ def test_get_empty_history(haf_node, postgrest_hafah, wallet, include_reversible
 )
 def test_check_for_newly_created_history_operations(
     haf_node, postgrest_hafah, wallet, include_reversible
-):
+) -> None:
     transaction = wallet.create_account(f"bob-{int(include_reversible)}", hives=100)
 
     # Wait for HAF to actually sync the transaction to the database
@@ -59,7 +59,7 @@ def test_check_for_newly_created_history_operations(
 
 
 @pytest.mark.get_account_history_and_get_transaction
-def test_filter_only_transfer_ops(haf_node, postgrest_hafah, wallet):
+def test_filter_only_transfer_ops(haf_node, postgrest_hafah, wallet) -> None:
     transaction = wallet.create_account("carol", hives=100)
 
     # Wait for HAF to actually sync the transaction to the database
@@ -79,7 +79,7 @@ def test_filter_only_transfer_ops(haf_node, postgrest_hafah, wallet):
 
 @pytest.mark.get_account_history_and_get_transaction
 @pytest.mark.parametrize("step", (4, 8, 16, 32, 64))
-def test_pagination(haf_node, postgrest_hafah, wallet, step: int):
+def test_pagination(haf_node, postgrest_hafah, wallet, step: int) -> None:
     amount_of_transfers = 59
     amount_of_operations_from_account_creation = 5
     total_amount_of_operations = (
@@ -138,7 +138,7 @@ def test_pagination(haf_node, postgrest_hafah, wallet, step: int):
 )
 def test_get_newly_created_transaction(
     init_node, haf_node, postgrest_hafah, wallet, include_reversible
-):
+) -> None:
     wallet.close()
     wallet = tt.Wallet(attach_to=init_node)
     transaction = wallet.create_account(f"ewa-{int(include_reversible)}")
@@ -175,7 +175,7 @@ def test_get_newly_created_transaction(
         True,
     ),
 )
-def test_wrong_transaction_id(postgrest_hafah, incorrect_id, include_reversible):
+def test_wrong_transaction_id(postgrest_hafah, incorrect_id, include_reversible) -> None:
     with pytest.raises(ErrorInResponseError):
         send_request_to_hafah(
             postgrest_hafah,

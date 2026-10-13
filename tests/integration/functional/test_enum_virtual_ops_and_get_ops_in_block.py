@@ -15,7 +15,7 @@ from hafah_local_tools import (
 
 def send_transfers_to_vesting_from_initminer(
     wallet: tt.Wallet, *, amount: int, to: str
-):
+) -> None:
     for x in range(amount):
         wallet.api.transfer_to_vesting("initminer", to, tt.Asset.Test(1))
 
@@ -25,7 +25,7 @@ def send_transfers_to_vesting_from_initminer(
 @pytest.mark.parametrize("include_reversible", (False, True))
 def test_get_ops_in_block_serves_irreversible_blocks_only(
     haf_node, postgrest_hafah, wallet, include_reversible
-):
+) -> None:
     block_number = wallet.create_account(f"alice-{int(include_reversible)}")["block_num"]
 
     # a single request: send_request_to_hafah retries until the response changes,
@@ -61,7 +61,7 @@ def test_get_ops_in_block_serves_irreversible_blocks_only(
 )
 def test_limit(
     haf_node, postgrest_hafah, wallet, group_by_block: bool, include_reversible: bool
-):
+) -> None:
     haf_node.wait_number_of_blocks(1)
     block_to_start = haf_node.get_last_block_number()
     wallet.create_accounts(
@@ -96,13 +96,13 @@ def test_limit(
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-def test_get_ops_in_non_existent_block(postgrest_hafah):
+def test_get_ops_in_non_existent_block(postgrest_hafah) -> None:
     response = send_request_to_hafah(postgrest_hafah, "get_ops_in_block", block_num=-1)
     assert len(response["ops"]) == 0
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-def test_exceed_block_range(init_node, haf_node, postgrest_hafah):
+def test_exceed_block_range(init_node, haf_node, postgrest_hafah) -> None:
     tt.logger.info(
         f"gdgp init node: {init_node.api.database.get_dynamic_global_properties()}"
     )
@@ -120,7 +120,7 @@ def test_exceed_block_range(init_node, haf_node, postgrest_hafah):
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-def test_filter_only_hardfork_operations(haf_node, postgrest_hafah):
+def test_filter_only_hardfork_operations(haf_node, postgrest_hafah) -> None:
     response = send_request_to_hafah(
         postgrest_hafah,
         "enum_virtual_ops",
@@ -137,7 +137,7 @@ def test_filter_only_hardfork_operations(haf_node, postgrest_hafah):
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-def test_find_irreversible_operations(haf_node, postgrest_hafah):
+def test_find_irreversible_operations(haf_node, postgrest_hafah) -> None:
     block_to_start = haf_node.get_last_block_number()
     haf_node.wait_number_of_blocks(3)
     end_block = haf_node.get_last_block_number()
@@ -152,7 +152,7 @@ def test_find_irreversible_operations(haf_node, postgrest_hafah):
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-def test_find_newly_created_virtual_op(haf_node, postgrest_hafah, wallet):
+def test_find_newly_created_virtual_op(haf_node, postgrest_hafah, wallet) -> None:
     block_to_start = haf_node.get_last_block_number()
     wallet.create_account("bob")
     # transfer_to_vesting indicates transfer_to_vesting_completed virtual operation
@@ -180,7 +180,7 @@ def test_find_newly_created_virtual_op(haf_node, postgrest_hafah, wallet):
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
 def test_find_virtual_operations_in_head_block_once_irreversible(
     haf_node, postgrest_hafah
-):
+) -> None:
     block_to_start = haf_node.get_last_block_number()
     wait_for_irreversible_in_hafah(haf_node, block_to_start)
     response = send_request_to_hafah(
@@ -194,7 +194,7 @@ def test_find_virtual_operations_in_head_block_once_irreversible(
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-def test_grouping_by_block(haf_node, postgrest_hafah, wallet):
+def test_grouping_by_block(haf_node, postgrest_hafah, wallet) -> None:
     haf_node.wait_number_of_blocks(3)
     block_to_start = haf_node.get_last_block_number()
 
@@ -234,7 +234,7 @@ def test_grouping_by_block(haf_node, postgrest_hafah, wallet):
 )
 def test_list_vops_created_before_and_after_an_irreversibility_wait(
     haf_node, postgrest_hafah, wallet, group_by_block, key
-):
+) -> None:
     haf_node.wait_number_of_blocks(1)
     block_to_start = haf_node.get_last_block_number()
     wallet.create_account(f"dan-{int(group_by_block)}")
@@ -272,7 +272,7 @@ def test_list_vops_created_before_and_after_an_irreversibility_wait(
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
 @pytest.mark.skip(reason="https://gitlab.syncad.com/hive/HAfAH/-/issues/40")
 @pytest.mark.parametrize("group_by_block", (False, True))
-def test_no_virtual_operations(haf_node, postgrest_hafah, group_by_block: bool):
+def test_no_virtual_operations(haf_node, postgrest_hafah, group_by_block: bool) -> None:
     haf_node.wait_number_of_blocks(5)
     # check default values of block_range_begin/block_range_end too
     response = send_request_to_hafah(
@@ -287,7 +287,7 @@ def test_no_virtual_operations(haf_node, postgrest_hafah, group_by_block: bool):
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-def test_number_of_producer_reward_ops(haf_node, postgrest_hafah):
+def test_number_of_producer_reward_ops(haf_node, postgrest_hafah) -> None:
     haf_node.wait_number_of_blocks(3)
     block_to_start = haf_node.get_last_block_number()
     blocks_to_wait = 5
@@ -305,7 +305,7 @@ def test_number_of_producer_reward_ops(haf_node, postgrest_hafah):
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-def test_pagination(haf_node, postgrest_hafah, wallet):
+def test_pagination(haf_node, postgrest_hafah, wallet) -> None:
     haf_node.wait_number_of_blocks(1)
     block_to_start = haf_node.get_last_block_number()
     wallet.create_accounts(number_of_accounts=15, name_base="elen")
@@ -337,7 +337,7 @@ def test_pagination(haf_node, postgrest_hafah, wallet):
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-def test_same_block_range_begin_and_end(postgrest_hafah):
+def test_same_block_range_begin_and_end(postgrest_hafah) -> None:
     with pytest.raises(ErrorInResponseError):
         send_request_to_hafah(
             postgrest_hafah, "enum_virtual_ops", block_range_begin=1, block_range_end=1
@@ -345,7 +345,7 @@ def test_same_block_range_begin_and_end(postgrest_hafah):
 
 
 @pytest.mark.enum_virtual_ops_and_get_ops_in_block
-def test_default_args_value(postgrest_hafah):
+def test_default_args_value(postgrest_hafah) -> None:
     response = send_request_to_hafah(postgrest_hafah, "get_ops_in_block")
     assert len(response["ops"]) == 0
 
@@ -358,7 +358,7 @@ def test_default_args_value(postgrest_hafah):
 @pytest.mark.parametrize("only_virtual, number_of_ops", ((False, 4), (True, 3)))
 def test_filter_virtual_ops(
     haf_node, postgrest_hafah, wallet, only_virtual, number_of_ops
-):
+) -> None:
     block_number = wallet.create_account(f"fred-{int(only_virtual)}")["block_num"]
     wait_for_irreversible_in_hafah(haf_node, block_number)
     response = send_request_to_hafah(
