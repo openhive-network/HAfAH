@@ -15,7 +15,7 @@ Shared utility functions used by both JSON-RPC and REST APIs. Located in `backen
 | `exceptions.sql` | `rest_raise_*()`, `raise_*()` | Error handling |
 | `account.sql` | `get_account_id()`, `get_account_name()` | Account lookup |
 | `operation_types.sql` | `get_operation_types()`, `get_group_type()` | Operation type parsing |
-| `paging.sql` | `calculate_pages()`, `account_range()`, `total_pages()`, `account_op_types_are_rare()` | Pagination logic, filtered page plan choice |
+| `paging.sql` | `calculate_pages()`, `account_range()`, `total_pages()`, `account_rare_match_threshold()`, `account_op_types_are_rare()` | Pagination logic, filtered page plan choice |
 | `path_filters.sql` | `decode_param()`, `parse_path_filters()` | URL parameter parsing |
 | `operation_body_filter.sql` | `operation_body_filter()`, `body_filter_*()` | Truncate large bodies |
 | `bit_operations.sql` | `get_bit_positions_*()`, `translate_*_filter()` | Filter bitmask translation |
@@ -107,8 +107,9 @@ Input validation functions that normalize and bounds-check parameters.
 | `total_pages(_count, _limit)` | Calculate total page count |
 | `calculate_pages(_total, _page, _limit)` | Get offset for descending pagination |
 | `account_range(_page, _limit, _total)` | Get operation sequence range |
-| `account_op_types_are_rare(_operations, _account_id, _from_seq, _to_seq, _rows)` | Bounded match count: TRUE → read matches by type index and sort, FALSE → walk uq1 |
-| `account_rare_op_matches(_operations, _account_id, _from_seq, _to_seq, _rows, _transacting_account_ids)` | Include variants' bounded match read: every match (`account_op_match[]`) → sort them, NULL → walk uq1 |
+| `account_rare_match_threshold(_rows, _range)` | Break-even match count between the two-step uq1 walk and the type-index read |
+| `account_op_types_are_rare(_operations, _account_id, _from_seq, _to_seq, _rows)` | Bounded match count: TRUE → read matches by type index and sort, FALSE → two-step uq1 walk |
+| `account_rare_op_matches(_operations, _account_id, _from_seq, _to_seq, _rows, _transacting_account_ids)` | Include variants' bounded match read: every match (`account_op_match[]`) → sort them, NULL → two-step uq1 walk |
 
 ### Descending Pagination Logic
 

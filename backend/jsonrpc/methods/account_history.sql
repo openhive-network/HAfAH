@@ -51,23 +51,25 @@ SET ROLE hafah_owner;
  * PLAN CHOICE (filtered calls):
  *   Two ways to read a filtered page, and which is fast depends on how common
  *   the requested types are for this account:
- *     - walk hive_account_operations_uq1 (account_id, account_op_seq_no)
- *       backwards and stop after _limit matches: about _limit * N / M rows
- *       visited, N = the account's irreversible operations up to _start,
- *       M = the matches among them;
+ *     - two steps on hive_account_operations_uq1 (account_id, account_op_seq_no)
+ *       INCLUDE (op_type_id): an index-only backwards scan for the newest _limit
+ *       matching seqs, about _limit * N / M entries, N = the account's
+ *       irreversible operations up to _start, M = the matches among them; then
+ *       one uq1 probe per seq for its row;
  *     - read every match through hive_account_operations_account_id_op_type_id_idx
  *       and sort: about M rows.
- *   They cost the same at M = sqrt(_limit * N). The planner cannot judge M: it
- *   multiplies the account's and the types' frequencies, and nothing records
- *   how often a type occurs for one account. So M is counted, up to that
- *   threshold, by hafah_backend.account_op_types_are_rare (backend/utilities/paging.sql),
- *   and the page query takes the branch the count selects. The walk tests the
- *   types with IS TRUE, which no index can serve, so a misestimate cannot turn
- *   it into a full read and sort of a common type.
+ *   The planner cannot judge M: it multiplies the account's and the types'
+ *   frequencies, and nothing records how often a type occurs for one account.
+ *   So M is counted, up to the break-even of the two
+ *   (hafah_backend.account_rare_match_threshold), by
+ *   hafah_backend.account_op_types_are_rare (backend/utilities/paging.sql), and
+ *   the page query takes the branch the count selects. Step 1 tests the types
+ *   with IS TRUE, which no index can serve, so a misestimate cannot turn it
+ *   into a full read and sort of a common type. Unfiltered calls walk uq1.
  *
  *   plan_cache_mode = force_custom_plan plans the page query for every call
- *   with the account, the filter and the branch as constants: the branch not
- *   taken folds away, and the estimates are the account's own.
+ *   with the account, the filter and the branch as constants: the branches not
+ *   taken fold away, and the estimates are the account's own.
  *
  * PARAMETERS:
  *   - _filter_low: Low 64 bits of operation type bitmask
@@ -108,7 +110,7 @@ DECLARE
   __account_id            INT;         -- Resolved numeric account ID
   __upper_operation_id    BIGINT;      -- First operation id past the last irreversible block
   __last_seq              INT;         -- Highest seq the page can return
-  __rare_types            BOOLEAN := FALSE;  -- TRUE: read all matches by type and sort
+  __rare_types            BOOLEAN := FALSE;  -- TRUE: read all matches by type and sort, FALSE: two steps on uq1
 BEGIN
   /*
    * INPUT VALIDATION:
@@ -219,19 +221,43 @@ BEGIN
       /*
        * PAGE SELECTION:
        *   Newest first from _start, at most _limit rows, irreversible only.
-       *   Exactly one branch runs; the custom plan folds the other away.
+       *   Exactly one branch runs; the custom plan folds the others away.
        */
       (
-        -- Walk uq1: unfiltered calls, and filters whose types are common for the account
+        -- Unfiltered calls: walk uq1
         SELECT ao.operation_id, ao.account_op_seq_no
         FROM hafd.account_operations ao
-        WHERE NOT __rare_types
+        WHERE __resolved_filter IS NULL
           AND ao.account_id = __account_id
           AND ao.account_op_seq_no <= _start
           AND ao.operation_id < __upper_operation_id
-          AND (__resolved_filter IS NULL OR (ao.op_type_id = ANY(__resolved_filter)) IS TRUE)
         ORDER BY ao.account_op_seq_no DESC  -- WHY: Most recent first
         LIMIT _limit
+      )
+      UNION ALL
+      (
+        -- Common types, step 1: the newest matching seqs, index-only on uq1 INCLUDE (op_type_id).
+        -- __last_seq already stops at the last irreversible block; operation_id is not in uq1.
+        SELECT ao.operation_id, seqs.account_op_seq_no
+        FROM (
+          SELECT s.account_op_seq_no
+          FROM hafd.account_operations s
+          WHERE __resolved_filter IS NOT NULL AND NOT __rare_types
+            AND s.account_id = __account_id
+            AND s.account_op_seq_no <= __last_seq
+            AND (s.op_type_id = ANY(__resolved_filter)) IS TRUE
+          ORDER BY s.account_op_seq_no DESC
+          LIMIT _limit
+        ) seqs
+        -- Step 2: each seq's row; LIMIT 1 keeps it a uq1 probe per seq, never a merge with a walk
+        CROSS JOIN LATERAL (
+          SELECT ao.operation_id
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = __account_id
+            AND ao.account_op_seq_no = seqs.account_op_seq_no
+            AND ao.operation_id < __upper_operation_id
+          LIMIT 1
+        ) ao
       )
       UNION ALL
       (

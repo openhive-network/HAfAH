@@ -71,7 +71,7 @@ DECLARE
   _account_range hafah_backend.account_filter_return;
   _calculate_pages hafah_backend.calculate_pages_return;
   _ops_count INT;
-  _rare_types BOOLEAN;  -- TRUE: read all matches by type and sort, FALSE: walk uq1
+  _rare_types BOOLEAN;  -- TRUE: read all matches by type and sort, FALSE: two steps on uq1
 BEGIN
 
   /*
@@ -98,15 +98,16 @@ BEGIN
 
   /*
    * PAGE STRATEGY (as in hafah_backend.ah_get_account_history):
-   *   Walking hive_account_operations_uq1 backwards visits about
-   *   (offset + limit) * N / M rows, N = the range's operations, M = its matches;
-   *   reading every match through the (account_id, op_type_id) index and
-   *   sorting visits about M. _ops_count is M, so pick the cheaper one.
+   *   The two-step walk of hive_account_operations_uq1 INCLUDE (op_type_id)
+   *   scans about (offset + limit) * N / M entries index-only, N = the range's
+   *   operations, M = its matches; reading every match through the
+   *   (account_id, op_type_id) index and sorting visits about M. _ops_count is
+   *   M, so pick the cheaper one at hafah_backend.account_rare_match_threshold.
    */
   _rare_types := COALESCE(
-    _ops_count < sqrt(
-      (_calculate_pages.offset_filter + _calculate_pages.limit_filter)::FLOAT8
-      * (_account_range.to_seq - _account_range.from_seq + 1)
+    _ops_count < hafah_backend.account_rare_match_threshold(
+      _calculate_pages.offset_filter + _calculate_pages.limit_filter,
+      _account_range.to_seq::BIGINT - _account_range.from_seq + 1
     ),
     FALSE
   );
@@ -146,17 +147,29 @@ BEGIN
       -- Inner query: fetch from account_operations with type filter; exactly one
       -- branch runs, the custom plan folds the other away
       (
-        -- Walk uq1; IS TRUE keeps the (account_id, op_type_id) index out of this branch
-        SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
-        FROM hafd.account_operations ao
-        WHERE NOT _rare_types
-        AND ao.account_id = _account_id
-        AND (_operations IS NULL OR (ao.op_type_id = ANY(_operations)) IS TRUE)  -- Operation type filter
-        AND ao.account_op_seq_no >= _account_range.from_seq
-        AND ao.account_op_seq_no <= _account_range.to_seq
-        ORDER BY ao.account_op_seq_no DESC
-        LIMIT _calculate_pages.limit_filter
-        OFFSET _calculate_pages.offset_filter  -- Must use OFFSET for non-contiguous filtered results
+        -- Common types, step 1: the page's seqs, index-only on uq1 INCLUDE (op_type_id);
+        -- IS TRUE keeps the (account_id, op_type_id) index out of this branch
+        SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+        FROM (
+          SELECT s.account_op_seq_no, s.op_type_id
+          FROM hafd.account_operations s
+          WHERE NOT _rare_types
+          AND s.account_id = _account_id
+          AND (_operations IS NULL OR (s.op_type_id = ANY(_operations)) IS TRUE)  -- Operation type filter
+          AND s.account_op_seq_no >= _account_range.from_seq
+          AND s.account_op_seq_no <= _account_range.to_seq
+          ORDER BY s.account_op_seq_no DESC
+          LIMIT _calculate_pages.limit_filter
+          OFFSET _calculate_pages.offset_filter  -- Must use OFFSET for non-contiguous filtered results
+        ) seqs
+        -- Step 2: each seq's row; LIMIT 1 keeps it a uq1 probe per seq, never a merge with a walk
+        CROSS JOIN LATERAL (
+          SELECT ao.operation_id
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = _account_id
+          AND ao.account_op_seq_no = seqs.account_op_seq_no
+          LIMIT 1
+        ) ao
       )
       UNION ALL
       (

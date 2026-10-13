@@ -80,9 +80,9 @@ COST 10000
 SET JIT = OFF
 SET join_collapse_limit = 16
 SET from_collapse_limit = 16
--- Plan each call with its account and filter: walking hive_account_operations_uq1
--- is fast when the requested types are common for the account, the
--- (account_id, op_type_id) index is fast when they are rare.
+-- Plan each call with its account and filter: the two-step walk of
+-- hive_account_operations_uq1 is fast when the requested types are common for
+-- the account, the (account_id, op_type_id) index is fast when they are rare.
 SET plan_cache_mode = force_custom_plan
 AS
 $$
@@ -96,7 +96,7 @@ DECLARE
   __min_block_num INT;  -- Lowest block number in result set (for cursor)
   __count INT;          -- Operations in current batch
   __rare_matches hafah_backend.account_op_match[];  -- Every match when they are rare, else NULL
-  __rare_types BOOLEAN;  -- TRUE: sort __rare_matches, FALSE: walk uq1
+  __rare_types BOOLEAN;  -- TRUE: sort __rare_matches, FALSE: two steps on uq1 (a plain walk without a type filter)
 BEGIN
   /*
    * ===================================================================================
@@ -140,14 +140,14 @@ BEGIN
       -- Row number for saturation detection and block boundary check
       ROW_NUMBER() OVER (ORDER BY ls.operation_id DESC) AS row_num
     FROM (
-      -- Exactly one branch runs; the custom plan folds the other away
+      -- Exactly one branch runs; the custom plan folds the others away
       (
-        -- Walk uq1; the fence keeps the sort-everything plan out of this branch
+        -- No type filter: walk uq1; the fence keeps the sort-everything plan out of this branch
         SELECT walk.operation_id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num, walk.account_op_seq_no
         FROM (
           SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
           FROM hafd.account_operations ao
-          WHERE NOT __rare_types
+          WHERE NOT __rare_types AND _operations IS NULL
           AND ao.account_id = _account_id
           AND ao.account_op_seq_no >= _account_range.from_seq
           AND ao.account_op_seq_no <= _account_range.to_seq
@@ -157,6 +157,33 @@ BEGIN
         WHERE walk.transacting_account_id = _transacting_account_id  -- Include filter (scalar)
         AND (_operations IS NULL OR (walk.op_type_id = ANY(_operations)) IS TRUE)  -- Optional type filter
         ORDER BY walk.account_op_seq_no DESC
+        LIMIT (__max_page_count * _limit) + 1  -- +1 to detect saturation
+      )
+      UNION ALL
+      (
+        -- Typed, step 1: matching seqs newest first, index-only on uq1 INCLUDE (op_type_id)
+        SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num, seqs.account_op_seq_no
+        FROM (
+          SELECT s.account_op_seq_no, s.op_type_id
+          FROM hafd.account_operations s
+          WHERE NOT __rare_types AND _operations IS NOT NULL
+          AND s.account_id = _account_id
+          AND (s.op_type_id = ANY(_operations)) IS TRUE  -- IS TRUE: no type-index plan
+          AND s.account_op_seq_no >= _account_range.from_seq
+          AND s.account_op_seq_no <= _account_range.to_seq
+          ORDER BY s.account_op_seq_no DESC
+          OFFSET 0  -- Planned on its own; the LIMIT below stops it after the page
+        ) seqs
+        -- Step 2: each match's row for the partner filter; LIMIT 1 keeps it a uq1 probe per seq
+        CROSS JOIN LATERAL (
+          SELECT ao.operation_id, ao.transacting_account_id
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = _account_id
+          AND ao.account_op_seq_no = seqs.account_op_seq_no
+          LIMIT 1
+        ) ao
+        WHERE ao.transacting_account_id = _transacting_account_id  -- Include filter (scalar)
+        ORDER BY seqs.account_op_seq_no DESC
         LIMIT (__max_page_count * _limit) + 1  -- +1 to detect saturation
       )
       UNION ALL
@@ -249,12 +276,12 @@ BEGIN
    */
   filter_by_op_seq AS MATERIALIZED (
     (
-      -- Walk uq1; the fence keeps the sort-everything plan out of this branch
+      -- No type filter: walk uq1; the fence keeps the sort-everything plan out of this branch
       SELECT walk.operation_id AS id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num
       FROM (
         SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
         FROM hafd.account_operations ao
-        WHERE NOT __rare_types
+        WHERE NOT __rare_types AND _operations IS NULL
         AND ao.account_id = _account_id
         AND ao.account_op_seq_no >= _account_range.from_seq
         AND (
@@ -268,6 +295,37 @@ BEGIN
       WHERE walk.transacting_account_id = _transacting_account_id
       AND (_operations IS NULL OR (walk.op_type_id = ANY(_operations)) IS TRUE)
       ORDER BY walk.account_op_seq_no DESC
+      LIMIT _limit  -- Safety limit for the extra records
+    )
+    UNION ALL
+    (
+      -- Typed, step 1: matching seqs newest first, index-only on uq1 INCLUDE (op_type_id)
+      SELECT ao.operation_id AS id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+      FROM (
+        SELECT s.account_op_seq_no, s.op_type_id
+        FROM hafd.account_operations s
+        WHERE NOT __rare_types AND _operations IS NOT NULL
+        AND s.account_id = _account_id
+        AND (s.op_type_id = ANY(_operations)) IS TRUE  -- IS TRUE: no type-index plan
+        AND s.account_op_seq_no >= _account_range.from_seq
+        AND (
+          -- Only execute if block boundary issue detected
+          (SELECT account_op_seq_no FROM block_check) IS NOT NULL
+          AND s.account_op_seq_no <= (SELECT account_op_seq_no FROM block_check)
+        )
+        ORDER BY s.account_op_seq_no DESC
+        OFFSET 0  -- Planned on its own; the LIMIT below stops it after the page
+      ) seqs
+      -- Step 2: each match's row for the partner filter; LIMIT 1 keeps it a uq1 probe per seq
+      CROSS JOIN LATERAL (
+        SELECT ao.operation_id, ao.transacting_account_id
+        FROM hafd.account_operations ao
+        WHERE ao.account_id = _account_id
+        AND ao.account_op_seq_no = seqs.account_op_seq_no
+        LIMIT 1
+      ) ao
+      WHERE ao.transacting_account_id = _transacting_account_id
+      ORDER BY seqs.account_op_seq_no DESC
       LIMIT _limit  -- Safety limit for the extra records
     )
     UNION ALL
