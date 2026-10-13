@@ -49,7 +49,7 @@ def get_hafah_irreversible_block(haf_node) -> int:
     return haf_node.query_one("SELECT hive.app_get_irreversible_block()")
 
 
-def wait_for_irreversible_in_hafah(haf_node, block_number: int | None = None, *, timeout: float = 120):
+def wait_for_irreversible_in_hafah(haf_node, block_number: int | None = None, *, timeout: float = 120) -> None:
     """Block until `block_number` (default: haf_node's current head block) is irreversible in the HAF database.
 
     The node's last irreversible block can run ahead of the database, so this waits on the value hafah reads.
