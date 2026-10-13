@@ -209,16 +209,23 @@ WHERE ao.operation_id < hafd.operation_id(hive.app_get_irreversible_block() + 1,
 
 Account history functions with an operation-type filter set
 `plan_cache_mode = force_custom_plan`, so each call is planned with its account
-and filter: walking `hive_account_operations_uq1` backwards wins when the
-requested types are common for the account, the `(account_id, op_type_id)`
-index wins when they are rare. Every filtered path (JSON-RPC `get_account_history`,
-REST `by_operations` and the include/exclude-account variants) counts the
-matches in the range its page reads, up to `sqrt(rows * N)`
-(`hafah_backend.account_op_types_are_rare`, or the exact total in
-`by_operations`), and runs one of two `UNION ALL` branches accordingly. The
-include variants filter on `transacting_account_id`, which the type index lacks,
-so their count (`hafah_backend.account_rare_op_matches`) reads the heap rows and
-returns them when rare; the rare branch sorts those instead of reading again.
+and filter. A type-filtered page is read in two steps when the requested types
+are common for the account: an index-only backwards scan of
+`hive_account_operations_uq1` (`(account_id, account_op_seq_no) INCLUDE
+(op_type_id)`, HAF#364) for the newest matching `account_op_seq_no` values, then
+one `uq1` probe per value for its row. When the types are rare, every match is
+read through the `(account_id, op_type_id)` index and sorted. Every filtered path
+(JSON-RPC `get_account_history`, REST `by_operations` and the include/exclude-account
+variants) counts the matches in the range its page reads, up to
+`hafah_backend.account_rare_match_threshold` (the break-even of the two costs,
+derived in its header), via `hafah_backend.account_op_types_are_rare` or the
+exact total in `by_operations`, and runs the branch the count selects. The
+include/exclude variants apply the transacting-account filter in step 2, so the
+two-step reads one heap row per type match rather than per scanned row. The
+include variants' count (`hafah_backend.account_rare_op_matches`) also filters on
+`transacting_account_id`, which the type index lacks, so it reads the heap rows
+and returns them when rare; the rare branch sorts those instead of reading again.
+Unfiltered calls walk `uq1` directly.
 
 ### 2. Binary to Hex Encoding
 ```sql

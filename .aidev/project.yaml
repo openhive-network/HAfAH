@@ -145,8 +145,8 @@ performance:
     apply: {command: [.aidev/shape-apply.sh]}
   queries:
     # JSON-RPC account_history_api.get_account_history, no filter:
-    # hafah_backend.ah_get_account_history's page statement with no type filter
-    # (the rare-types branch folds away).
+    # hafah_backend.ah_get_account_history's page statement with no type filter:
+    # its uq1-walk branch (the two-step and rare-types branches fold away).
     - name: jsonrpc-account-history
       sql: |
         SELECT
@@ -162,13 +162,34 @@ performance:
           (
             SELECT ao.operation_id, ao.account_op_seq_no
             FROM hafd.account_operations ao
-            WHERE NOT FALSE
+            WHERE TRUE
               AND ao.account_id = ${account}
               AND ao.account_op_seq_no <= 2147483647
               AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
-              AND (NULL::SMALLINT[] IS NULL OR (ao.op_type_id = ANY(NULL::SMALLINT[])) IS TRUE)
             ORDER BY ao.account_op_seq_no DESC
             LIMIT 1000
+          )
+          UNION ALL
+          (
+            SELECT ao.operation_id, seqs.account_op_seq_no
+            FROM (
+              SELECT s.account_op_seq_no
+              FROM hafd.account_operations s
+              WHERE FALSE
+                AND s.account_id = ${account}
+                AND s.account_op_seq_no <= 2147483647
+                AND (s.op_type_id = ANY(NULL::SMALLINT[])) IS TRUE
+              ORDER BY s.account_op_seq_no DESC
+              LIMIT 1000
+            ) seqs
+            CROSS JOIN LATERAL (
+              SELECT ao.operation_id
+              FROM hafd.account_operations ao
+              WHERE ao.account_id = ${account}
+                AND ao.account_op_seq_no = seqs.account_op_seq_no
+                AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+              LIMIT 1
+            ) ao
           )
           UNION ALL
           (
@@ -211,7 +232,10 @@ performance:
 
     # JSON-RPC account_history_api.get_account_history with an operation filter
     # (transfer_operation) the account has many of: ah_get_account_history's page
-    # statement on its uq1-walk branch.
+    # statement on its two-step branch, the newest matching seqs index-only from
+    # hive_account_operations_uq1 (an Index Only Scan once HAF#364 adds
+    # INCLUDE (op_type_id); an Index Scan on the current shape), then one uq1
+    # probe per seq.
     - name: jsonrpc-account-history-by-type
       sql: |
         SELECT
@@ -227,13 +251,34 @@ performance:
           (
             SELECT ao.operation_id, ao.account_op_seq_no
             FROM hafd.account_operations ao
-            WHERE NOT FALSE
+            WHERE FALSE
               AND ao.account_id = ${account}
               AND ao.account_op_seq_no <= 2147483647
               AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
-              AND (ARRAY[${op_type}]::SMALLINT[] IS NULL OR (ao.op_type_id = ANY(ARRAY[${op_type}]::SMALLINT[])) IS TRUE)
             ORDER BY ao.account_op_seq_no DESC
             LIMIT 1000
+          )
+          UNION ALL
+          (
+            SELECT ao.operation_id, seqs.account_op_seq_no
+            FROM (
+              SELECT s.account_op_seq_no
+              FROM hafd.account_operations s
+              WHERE TRUE
+                AND s.account_id = ${account}
+                AND s.account_op_seq_no <= 2147483647
+                AND (s.op_type_id = ANY(ARRAY[${op_type}]::SMALLINT[])) IS TRUE
+              ORDER BY s.account_op_seq_no DESC
+              LIMIT 1000
+            ) seqs
+            CROSS JOIN LATERAL (
+              SELECT ao.operation_id
+              FROM hafd.account_operations ao
+              WHERE ao.account_id = ${account}
+                AND ao.account_op_seq_no = seqs.account_op_seq_no
+                AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+              LIMIT 1
+            ) ao
           )
           UNION ALL
           (
@@ -276,7 +321,7 @@ performance:
       time: {max_ms: 1000, error_threshold: 0.5}
 
     # JSON-RPC get_account_history with an operation filter the account has few
-    # of (fewer than sqrt(limit * its operations)): ah_get_account_history's page
+    # of (fewer than account_rare_match_threshold(limit, its operations)): ah_get_account_history's page
     # statement on its rare-types branch, every match by type then a sort.
     - name: jsonrpc-account-history-by-rare-type
       sql: |
@@ -293,13 +338,34 @@ performance:
           (
             SELECT ao.operation_id, ao.account_op_seq_no
             FROM hafd.account_operations ao
-            WHERE NOT TRUE
+            WHERE FALSE
               AND ao.account_id = ${account}
               AND ao.account_op_seq_no <= 2147483647
               AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
-              AND (ARRAY[${op_type}]::SMALLINT[] IS NULL OR (ao.op_type_id = ANY(ARRAY[${op_type}]::SMALLINT[])) IS TRUE)
             ORDER BY ao.account_op_seq_no DESC
             LIMIT 1000
+          )
+          UNION ALL
+          (
+            SELECT ao.operation_id, seqs.account_op_seq_no
+            FROM (
+              SELECT s.account_op_seq_no
+              FROM hafd.account_operations s
+              WHERE FALSE
+                AND s.account_id = ${account}
+                AND s.account_op_seq_no <= 2147483647
+                AND (s.op_type_id = ANY(ARRAY[${op_type}]::SMALLINT[])) IS TRUE
+              ORDER BY s.account_op_seq_no DESC
+              LIMIT 1000
+            ) seqs
+            CROSS JOIN LATERAL (
+              SELECT ao.operation_id
+              FROM hafd.account_operations ao
+              WHERE ao.account_id = ${account}
+                AND ao.account_op_seq_no = seqs.account_op_seq_no
+                AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+              LIMIT 1
+            ) ao
           )
           UNION ALL
           (
@@ -342,17 +408,18 @@ performance:
       time: {max_ms: 1000, error_threshold: 0.5}
 
     # JSON-RPC get_account_history with an operation filter: the bounded count
-    # that picks the page branch. Its LIMIT is ceil(sqrt(1000 * N)), N the
-    # account's operations (about 8.5M for blocktrades).
+    # that picks the page branch. Its LIMIT is
+    # hafah_backend.account_rare_match_threshold(1000, N), N the account's
+    # operations (8.17M for blocktrades): 6129 once HAF#364 is in, 92196 before.
     - name: jsonrpc-account-history-type-count
       sql: |
-        SELECT count(*) < 92196
+        SELECT count(*) < 6129
         FROM (
           SELECT
           FROM hafd.account_operations ao
           WHERE ao.account_id = ${account}
             AND ao.op_type_id = ANY(ARRAY[${op_type}]::SMALLINT[])
-          LIMIT 92196
+          LIMIT 6129
         ) matches
       parameters:
         account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
@@ -456,7 +523,7 @@ performance:
 
     # REST GET /accounts/{account-name}/operations?operation-types=… (no
     # participation filter): hafah_backend.account_history_by_operations' page
-    # statement on its uq1-walk branch, types the account has many of. Which
+    # statement on its two-step uq1 branch, types the account has many of. Which
     # branch runs is decided from the count above (rest-account-operations-count-by-type).
     - name: rest-account-operations-by-type
       sql: |
@@ -471,16 +538,26 @@ performance:
           hot.is_virtual
         FROM (
           (
-            SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
-            FROM hafd.account_operations ao
-            WHERE NOT FALSE
-              AND ao.account_id = ${account}
-              AND (ARRAY[${op_type}]::INT[] IS NULL OR (ao.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
-              AND ao.account_op_seq_no >= 0
-              AND ao.account_op_seq_no <= 2147483647
-            ORDER BY ao.account_op_seq_no DESC
-            LIMIT 100
-            OFFSET 0
+            SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+            FROM (
+              SELECT s.account_op_seq_no, s.op_type_id
+              FROM hafd.account_operations s
+              WHERE NOT FALSE
+                AND s.account_id = ${account}
+                AND (ARRAY[${op_type}]::INT[] IS NULL OR (s.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
+                AND s.account_op_seq_no >= 0
+                AND s.account_op_seq_no <= 2147483647
+              ORDER BY s.account_op_seq_no DESC
+              LIMIT 100
+              OFFSET 0
+            ) seqs
+            CROSS JOIN LATERAL (
+              SELECT ao.operation_id
+              FROM hafd.account_operations ao
+              WHERE ao.account_id = ${account}
+                AND ao.account_op_seq_no = seqs.account_op_seq_no
+              LIMIT 1
+            ) ao
           )
           UNION ALL
           (
@@ -535,16 +612,26 @@ performance:
           hot.is_virtual
         FROM (
           (
-            SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
-            FROM hafd.account_operations ao
-            WHERE NOT TRUE
-              AND ao.account_id = ${account}
-              AND (ARRAY[${op_type}]::INT[] IS NULL OR (ao.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
-              AND ao.account_op_seq_no >= 0
-              AND ao.account_op_seq_no <= 2147483647
-            ORDER BY ao.account_op_seq_no DESC
-            LIMIT 100
-            OFFSET 0
+            SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+            FROM (
+              SELECT s.account_op_seq_no, s.op_type_id
+              FROM hafd.account_operations s
+              WHERE NOT TRUE
+                AND s.account_id = ${account}
+                AND (ARRAY[${op_type}]::INT[] IS NULL OR (s.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
+                AND s.account_op_seq_no >= 0
+                AND s.account_op_seq_no <= 2147483647
+              ORDER BY s.account_op_seq_no DESC
+              LIMIT 100
+              OFFSET 0
+            ) seqs
+            CROSS JOIN LATERAL (
+              SELECT ao.operation_id
+              FROM hafd.account_operations ao
+              WHERE ao.account_id = ${account}
+                AND ao.account_op_seq_no = seqs.account_op_seq_no
+              LIMIT 1
+            ) ao
           )
           UNION ALL
           (
@@ -586,30 +673,40 @@ performance:
     # The include and exclude variants (participation-mode=include|exclude with
     # transacting accounts) read a sliding window of up to 10 pages + 1 rows
     # (LIMIT 1001 at the default page size of 100) in their operation_range CTE,
-    # on one of two branches chosen at run time; the rest of the statement reads
-    # one page of it by primary key. Each branch is declared below as that CTE's
-    # statement, the folded-away branch left out. The transacting partner is its
+    # on one of the branches chosen at run time; the rest of the statement reads
+    # one page of it by primary key. Each typed branch is declared below as that
+    # CTE's statement, the folded-away branches left out (the plain uq1 walk runs
+    # only without a type filter). The transacting partner is its
     # own parameter, so a capture catalogues its heavy hitters and near-empty values.
     #
     # REST ?participation-mode=include with one transacting account, matches
-    # common: hafah_backend.account_history_include_account's uq1-walk branch.
-    # account_rare_op_matches (below) chose it by counting past sqrt(1001 * N)
-    # matches. A rare partner on this branch walks the whole history (HAfAH#79).
-    - name: rest-include-account-walk
+    # common: hafah_backend.account_history_include_account's two-step branch,
+    # the type matches newest first index-only from uq1, then each match's row
+    # for the partner filter. account_rare_op_matches (below) chose it by counting
+    # past account_rare_match_threshold(1001, N) matches. A rare partner on this
+    # branch reads every type match (HAfAH#79).
+    - name: rest-include-account-two-step
       sql: |
-        SELECT walk.operation_id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num, walk.account_op_seq_no
+        SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num, seqs.account_op_seq_no
         FROM (
-          SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
+          SELECT s.account_op_seq_no, s.op_type_id
+          FROM hafd.account_operations s
+          WHERE s.account_id = ${account}
+            AND (s.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE
+            AND s.account_op_seq_no >= 0
+            AND s.account_op_seq_no <= 2147483647
+          ORDER BY s.account_op_seq_no DESC
+          OFFSET 0
+        ) seqs
+        CROSS JOIN LATERAL (
+          SELECT ao.operation_id, ao.transacting_account_id
           FROM hafd.account_operations ao
           WHERE ao.account_id = ${account}
-            AND ao.account_op_seq_no >= 0
-            AND ao.account_op_seq_no <= 2147483647
-          ORDER BY ao.account_op_seq_no DESC
-          OFFSET 0
-        ) walk
-        WHERE walk.transacting_account_id = ${partner}
-          AND (ARRAY[${op_type}]::INT[] IS NULL OR (walk.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
-        ORDER BY walk.account_op_seq_no DESC
+            AND ao.account_op_seq_no = seqs.account_op_seq_no
+          LIMIT 1
+        ) ao
+        WHERE ao.transacting_account_id = ${partner}
+        ORDER BY seqs.account_op_seq_no DESC
         LIMIT 1001
       parameters:
         account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
@@ -627,9 +724,10 @@ performance:
     # The include variants' rare/common decision and rare branch in one:
     # hafah_backend.account_rare_op_matches, called by account_history_include_account
     # (ARRAY[the partner]) and account_history_including_accounts (the partners),
-    # reads every match by type up to sqrt(1001 * N), N the account's operations
-    # (16.0M for 509861). Fewer matches are the rare branch's rows, which the page
-    # only sorts; more choose the walk. Planned with the heaviest account and a
+    # reads every match by type up to account_rare_match_threshold(1001, N), N the
+    # account's operations (16.0M for 509861: 8367 once HAF#364 is in, 126576
+    # before). Fewer matches are the rare branch's rows, which the page only
+    # sorts; more choose the two-step. Planned with the heaviest account and a
     # partner with 2 operations in all, so at most 2 matches.
     - name: rest-include-account-rare-matches
       sql: |
@@ -641,7 +739,7 @@ performance:
             AND ao.transacting_account_id = ANY(ARRAY[${partner}]::INT[])
             AND ao.account_op_seq_no >= 0
             AND ao.account_op_seq_no <= 2147483647
-          LIMIT 126576
+          LIMIT 8367
         )
       parameters:
         account: {column: hafd.account_operations.account_id, value: 509861}
@@ -657,23 +755,30 @@ performance:
       time: {max_ms: 1000, error_threshold: 0.5}
 
     # REST ?participation-mode=include with several transacting accounts, matches
-    # common: hafah_backend.account_history_including_accounts' uq1-walk branch.
+    # common: hafah_backend.account_history_including_accounts' two-step branch.
     # Its rare branch is rest-include-account-rare-matches.
-    - name: rest-including-accounts-walk
+    - name: rest-including-accounts-two-step
       sql: |
-        SELECT walk.operation_id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num, walk.account_op_seq_no
+        SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num, seqs.account_op_seq_no
         FROM (
-          SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
+          SELECT s.account_op_seq_no, s.op_type_id
+          FROM hafd.account_operations s
+          WHERE s.account_id = ${account}
+            AND (s.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE
+            AND s.account_op_seq_no >= 0
+            AND s.account_op_seq_no <= 2147483647
+          ORDER BY s.account_op_seq_no DESC
+          OFFSET 0
+        ) seqs
+        CROSS JOIN LATERAL (
+          SELECT ao.operation_id, ao.transacting_account_id
           FROM hafd.account_operations ao
           WHERE ao.account_id = ${account}
-            AND ao.account_op_seq_no >= 0
-            AND ao.account_op_seq_no <= 2147483647
-          ORDER BY ao.account_op_seq_no DESC
-          OFFSET 0
-        ) walk
-        WHERE walk.transacting_account_id = ANY(ARRAY[${partner}]::INT[])
-          AND (ARRAY[${op_type}]::INT[] IS NULL OR (walk.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
-        ORDER BY walk.account_op_seq_no DESC
+            AND ao.account_op_seq_no = seqs.account_op_seq_no
+          LIMIT 1
+        ) ao
+        WHERE ao.transacting_account_id = ANY(ARRAY[${partner}]::INT[])
+        ORDER BY seqs.account_op_seq_no DESC
         LIMIT 1001
       parameters:
         account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
@@ -689,25 +794,32 @@ performance:
       time: {max_ms: 1000, error_threshold: 0.5}
 
     # REST ?participation-mode=exclude with one transacting account, types common
-    # for the account: hafah_backend.account_history_exclude_account's uq1-walk
+    # for the account: hafah_backend.account_history_exclude_account's two-step
     # branch. The exclude variants decide on types only
     # (account_op_types_are_rare, as jsonrpc-account-history-type-count).
-    - name: rest-exclude-account-walk
+    - name: rest-exclude-account-two-step
       sql: |
-        SELECT walk.operation_id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num, walk.account_op_seq_no
+        SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num, seqs.account_op_seq_no
         FROM (
-          SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
+          SELECT s.account_op_seq_no, s.op_type_id
+          FROM hafd.account_operations s
+          WHERE s.account_id = ${account}
+            AND (s.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE
+            AND s.account_op_seq_no >= 0
+            AND s.account_op_seq_no <= 2147483647
+          ORDER BY s.account_op_seq_no DESC
+          OFFSET 0
+        ) seqs
+        CROSS JOIN LATERAL (
+          SELECT ao.operation_id, ao.transacting_account_id
           FROM hafd.account_operations ao
           WHERE ao.account_id = ${account}
-            AND ao.account_op_seq_no >= 0
-            AND ao.account_op_seq_no <= 2147483647
-          ORDER BY ao.account_op_seq_no DESC
-          OFFSET 0
-        ) walk
-        WHERE walk.transacting_account_id != ${partner}
-          AND walk.transacting_account_id IS NOT NULL
-          AND (ARRAY[${op_type}]::INT[] IS NULL OR (walk.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
-        ORDER BY walk.account_op_seq_no DESC
+            AND ao.account_op_seq_no = seqs.account_op_seq_no
+          LIMIT 1
+        ) ao
+        WHERE ao.transacting_account_id != ${partner}
+          AND ao.transacting_account_id IS NOT NULL
+        ORDER BY seqs.account_op_seq_no DESC
         LIMIT 1001
       parameters:
         account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
@@ -755,23 +867,30 @@ performance:
       time: {max_ms: 1000, error_threshold: 0.5}
 
     # REST ?participation-mode=exclude with several transacting accounts, types
-    # common: hafah_backend.account_history_excluding_accounts' uq1-walk branch.
-    - name: rest-excluding-accounts-walk
+    # common: hafah_backend.account_history_excluding_accounts' two-step branch.
+    - name: rest-excluding-accounts-two-step
       sql: |
-        SELECT walk.operation_id, walk.op_type_id, hafd.operation_id_to_block_num(walk.operation_id) AS block_num, walk.account_op_seq_no
+        SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num, seqs.account_op_seq_no
         FROM (
-          SELECT ao.operation_id, ao.op_type_id, ao.transacting_account_id, ao.account_op_seq_no
+          SELECT s.account_op_seq_no, s.op_type_id
+          FROM hafd.account_operations s
+          WHERE s.account_id = ${account}
+            AND (s.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE
+            AND s.account_op_seq_no >= 0
+            AND s.account_op_seq_no <= 2147483647
+          ORDER BY s.account_op_seq_no DESC
+          OFFSET 0
+        ) seqs
+        CROSS JOIN LATERAL (
+          SELECT ao.operation_id, ao.transacting_account_id
           FROM hafd.account_operations ao
           WHERE ao.account_id = ${account}
-            AND ao.account_op_seq_no >= 0
-            AND ao.account_op_seq_no <= 2147483647
-          ORDER BY ao.account_op_seq_no DESC
-          OFFSET 0
-        ) walk
-        WHERE (ARRAY[${op_type}]::INT[] IS NULL OR (walk.op_type_id = ANY(ARRAY[${op_type}]::INT[])) IS TRUE)
-          AND NOT (walk.transacting_account_id = ANY(ARRAY[${partner}]::INT[]))
-          AND walk.transacting_account_id IS NOT NULL
-        ORDER BY walk.account_op_seq_no DESC
+            AND ao.account_op_seq_no = seqs.account_op_seq_no
+          LIMIT 1
+        ) ao
+        WHERE NOT (ao.transacting_account_id = ANY(ARRAY[${partner}]::INT[]))
+          AND ao.transacting_account_id IS NOT NULL
+        ORDER BY seqs.account_op_seq_no DESC
         LIMIT 1001
       parameters:
         account: {column: hafd.account_operations.account_id, value: 440}  # blocktrades
@@ -1002,7 +1121,7 @@ performance:
   # decision is exercised on both sides.
   decisions:
     # account_history_include_account / _including_accounts: the matches
-    # counted by type and transacting account; NULL walks uq1. HAfAH#77 was
+    # counted by type and transacting account; NULL takes the two-step. HAfAH#77 was
     # 509861 with the one-transfer partner 1398279 walking (the count ignored
     # the partner).
     - name: include-account-rare-matches
@@ -1012,8 +1131,8 @@ performance:
         hafah_backend.account_rare_op_matches(ARRAY[${op_type}]::INT[], ${account}, 0,
         (SELECT ao.account_op_seq_no FROM hafd.account_operations ao WHERE ao.account_id = ${account} ORDER BY ao.account_op_seq_no DESC LIMIT 1),
         1001, ARRAY[${partner}]::INT[])
-      branch_from: "CASE WHEN result IS NULL THEN 'walk' ELSE 'rare' END"
-      branches: {walk: rest-include-account-walk, rare: rest-include-account-rare-matches}
+      branch_from: "CASE WHEN result IS NULL THEN 'two_step' ELSE 'rare' END"
+      branches: {two_step: rest-include-account-two-step, rare: rest-include-account-rare-matches}
       inputs:
         - {account: 509861, op_type: 2, partner: 1398279}  # one transfer with the partner: rare
         - {account: 509861, op_type: 2, partner: 509861}   # its own transfers: common
@@ -1027,7 +1146,10 @@ performance:
         - backend/rest/account_history/including_accounts.sql
 
     # JSON-RPC get_account_history with an operation filter: types counted up
-    # to sqrt(limit * N); rare reads every match by type and sorts.
+    # to account_rare_match_threshold(limit, N); rare reads every match by type
+    # and sorts, otherwise the two-step. Until HAF#364 gives uq1 its INCLUDE
+    # (op_type_id) the cut-off stays sqrt(limit * N); after it, 492651 and 120951
+    # move to the two-step and 770979 (5.4k matches, cut-off 3.3k) with them.
     - name: jsonrpc-account-history-rare-types
       function: hafah_backend.account_op_types_are_rare
       file: backend/utilities/paging.sql
@@ -1035,14 +1157,17 @@ performance:
         hafah_backend.account_op_types_are_rare(ARRAY[${op_type}]::INT[], ${account}, 0,
         (SELECT ao.account_op_seq_no FROM hafd.account_operations ao WHERE ao.account_id = ${account} ORDER BY ao.account_op_seq_no DESC LIMIT 1),
         1000)
-      branch_from: "CASE WHEN result THEN 'rare' ELSE 'walk' END"
-      branches: {walk: jsonrpc-account-history-by-type, rare: jsonrpc-account-history-by-rare-type}
+      branch_from: "CASE WHEN result THEN 'rare' ELSE 'two_step' END"
+      branches: {two_step: jsonrpc-account-history-by-type, rare: jsonrpc-account-history-by-rare-type}
       inputs:
         - {account: 509861, op_type: 2}   # heaviest account
         - {account: 105331, op_type: 2}   # transfers rare for the account
         - {account: 440, op_type: 2}      # blocktrades: transfers common
         - {account: 770979, op_type: 2}   # heavy hitter the planner underestimates (2.0M true, 145k estimated)
         - {account: 1342941, op_type: 2}  # near-empty account (2 operations)
+        - {account: 1475078, op_type: 2}  # 28 transfers in 9.54M operations: rare (the two-step scans 36.6k pages)
+        - {account: 492651, op_type: 2}   # 55.5k transfers in 1.20M: two-step under either cut-off
+        - {account: 120951, op_type: 2}   # 26.1k transfers in 1.07M: rare under sqrt(limit * N), two-step after HAF#364
       files:
         - backend/utilities/paging.sql
         - backend/jsonrpc/methods/account_history.sql
@@ -1058,8 +1183,8 @@ performance:
         hafah_backend.account_op_types_are_rare(ARRAY[${op_type}]::INT[], ${account}, 0,
         (SELECT ao.account_op_seq_no FROM hafd.account_operations ao WHERE ao.account_id = ${account} ORDER BY ao.account_op_seq_no DESC LIMIT 1),
         1001)
-      branch_from: "CASE WHEN result THEN 'rare' ELSE 'walk' END"
-      branches: {walk: rest-exclude-account-walk, rare: rest-exclude-account-rare}
+      branch_from: "CASE WHEN result THEN 'rare' ELSE 'two_step' END"
+      branches: {two_step: rest-exclude-account-two-step, rare: rest-exclude-account-rare}
       inputs:
         - {account: 509861, op_type: 2, partner: 509861}  # heaviest account excluding its heaviest partner, itself
         - {account: 1157375, op_type: 2, partner: 4}      # heavy account excluding the heaviest partner
