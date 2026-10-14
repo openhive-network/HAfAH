@@ -159,10 +159,11 @@ performance:
     # (the shape server has no network, so no DSN).
     apply: {command: [.aidev/shape-apply.sh]}
   # Production-traffic replay (aidev docs/operations/traffic-replay.md): `aidev
-  # replay ab --root <checkout>` replays the capture's hafah calls against
-  # steem-18's haf_api_node, base build against candidate, with block ingestion
-  # frozen; `--isolate` runs each build on a ZFS clone of the 1.28.8 datadir
-  # instead of switching the live stack. As run on steem-18 on 2026-10-14.
+  # replay ab` replays the capture's hafah calls against a full-scale
+  # haf_api_node, base build against candidate. The target node is operator
+  # configuration, kept out of this public repository: pass it with
+  # `--profile FILE` until aidev resolves targets from host-local config
+  # (aidev#15922).
   replay:
     mode: observe
     # api.hive.blog 2025-11-22, 89,782 requests; JSON-RPC ids renumbered, credential query parameters dropped.
@@ -175,27 +176,6 @@ performance:
       - condenser_api.enum_virtual_ops
       - "block_api.*"
       - "rest:/hafah-api/*"
-    target:
-      host: steem-18.syncad.com
-      compose_dir: /haf-pool/syncad/haf_api_node
-      build_env: HAFAH_VERSION
-      endpoint: http://127.0.0.1:17003
-      services: [hafah-install, hafah-postgrest, hafah-postgrest-rewriter]
-      freeze: {service: haf, env: ARGUMENTS, value: "--skip-hived"}
-      database: {container: haf-haf-1, name: haf_block_log, user: haf_admin, schemas: [hafd, hafah_backend]}
-      isolate:
-        dataset: haf-pool/haf-datadir-1.28.8
-        services: [haf, pgbouncer, hafah-install, hafah-postgrest, hafah-postgrest-rewriter]
-        database: "haf:5432"
-        api: "hafah-postgrest-rewriter:80"
-        env:
-          TOP_LEVEL_DATASET: "{name}"
-          TOP_LEVEL_DATASET_MOUNTPOINT: "{mountpoint}"
-          PROJECT_NAME: "{project}"
-          NETWORK_NAME: "{project}"
-        # A clone's PostgreSQL runs beside the live one.
-        postgres: {shared_buffers: 4GB}
-        memory_per_clone: 12GiB
     expected:
       - name: include-reversible-ignored
         methods:
