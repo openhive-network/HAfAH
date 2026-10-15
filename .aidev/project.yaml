@@ -299,16 +299,91 @@ performance:
         uses_index: [hive_account_operations_uq1, pk_hive_operations]
       time: {max_ms: 500, error_threshold: 0.5}
 
-    # condenser_api.get_account_history: the same statement, its params [account, start, limit, operation_filter_low, operation_filter_high] by position.
+    # condenser_api.get_account_history: the same statement with the body as
+    # ah_get_account_history's _is_legacy_style branch formats it (every
+    # condenser_api call is legacy style), its params [account, start, limit,
+    # operation_filter_low, operation_filter_high] by position.
     - <<: *jsonrpc-account-history
       name: condenser-account-history
       api_methods: [condenser_api.get_account_history]
+      sql: &condenser-account-history-sql |
+        SELECT
+          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
+          blk.block_num AS _block,
+          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
+          ho.op_pos::BIGINT AS _op_in_trx,
+          hot.is_virtual AS _virtual_op,
+          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
+          hive.get_legacy_style_operation(hafd._operation_from_jsonb(jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value)))::JSONB AS _value,
+          page.account_op_seq_no AS _operation_id
+        FROM (
+          (
+            SELECT ao.operation_id, ao.account_op_seq_no
+            FROM hafd.account_operations ao
+            WHERE TRUE
+              AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+              AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
+              AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+            ORDER BY ao.account_op_seq_no DESC
+            LIMIT ${limit}
+          )
+          UNION ALL
+          (
+            SELECT ao.operation_id, seqs.account_op_seq_no
+            FROM (
+              SELECT s.account_op_seq_no
+              FROM hafd.account_operations s
+              WHERE FALSE
+                AND s.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                AND s.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
+                AND (s.op_type_id = ANY(NULL::SMALLINT[])) IS TRUE
+              ORDER BY s.account_op_seq_no DESC
+              LIMIT ${limit}
+            ) seqs
+            CROSS JOIN LATERAL (
+              SELECT ao.operation_id
+              FROM hafd.account_operations ao
+              WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                AND ao.account_op_seq_no = seqs.account_op_seq_no
+                AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+              LIMIT 1
+            ) ao
+          )
+          UNION ALL
+          (
+            SELECT rare.operation_id, rare.account_op_seq_no
+            FROM (
+              SELECT ao.operation_id, ao.account_op_seq_no
+              FROM hafd.account_operations ao
+              WHERE FALSE
+                AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                AND ao.op_type_id = ANY(NULL::SMALLINT[])
+                AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
+                AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+              OFFSET 0
+            ) rare
+            ORDER BY rare.account_op_seq_no DESC
+            LIMIT ${limit}
+          )
+          LIMIT ${limit}
+        ) page
+        CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
+        JOIN hafd.operations ho ON ho.id = page.operation_id
+        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
+        JOIN hafd.blocks hb ON hb.num = blk.block_num
+        LEFT JOIN LATERAL (
+          SELECT t.trx_hash FROM hafd.transactions t
+          WHERE t.block_num = blk.block_num AND t.trx_in_block = ho.trx_in_block
+          LIMIT 1
+        ) ht ON TRUE
+        ORDER BY page.account_op_seq_no ASC
       parameter_map: {account: params.0, start: params.1, limit: params.2}
 
     # condenser_api.get_account_history with named params: the same statement and the JSON-RPC names.
     - <<: *jsonrpc-account-history
       name: condenser-account-history-named
       api_methods: [condenser_api.get_account_history]
+      sql: *condenser-account-history-sql
 
     # JSON-RPC account_history_api.get_account_history with an operation filter
     # (transfer_operation) the account has many of: ah_get_account_history's page
@@ -406,16 +481,91 @@ performance:
         uses_index: [hive_account_operations_uq1, pk_hive_operations]
       time: {max_ms: 1000, error_threshold: 0.5}
 
-    # condenser_api.get_account_history: the same statement, its params [account, start, limit, operation_filter_low, operation_filter_high] by position.
+    # condenser_api.get_account_history: the same statement with the body as
+    # ah_get_account_history's _is_legacy_style branch formats it (every
+    # condenser_api call is legacy style), its params [account, start, limit,
+    # operation_filter_low, operation_filter_high] by position.
     - <<: *jsonrpc-account-history-by-type
       name: condenser-account-history-by-type
       api_methods: [condenser_api.get_account_history]
+      sql: &condenser-account-history-by-type-sql |
+        SELECT
+          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
+          blk.block_num AS _block,
+          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
+          ho.op_pos::BIGINT AS _op_in_trx,
+          hot.is_virtual AS _virtual_op,
+          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
+          hive.get_legacy_style_operation(hafd._operation_from_jsonb(jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value)))::JSONB AS _value,
+          page.account_op_seq_no AS _operation_id
+        FROM (
+          (
+            SELECT ao.operation_id, ao.account_op_seq_no
+            FROM hafd.account_operations ao
+            WHERE FALSE
+              AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+              AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
+              AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+            ORDER BY ao.account_op_seq_no DESC
+            LIMIT ${limit}
+          )
+          UNION ALL
+          (
+            SELECT ao.operation_id, seqs.account_op_seq_no
+            FROM (
+              SELECT s.account_op_seq_no
+              FROM hafd.account_operations s
+              WHERE TRUE
+                AND s.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                AND s.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
+                AND (s.op_type_id = ANY(hafah_backend.translate_get_account_history_filter(hafah_backend.numeric_to_bigint(${filter_low}), hafah_backend.numeric_to_bigint(${filter_high})))) IS TRUE
+              ORDER BY s.account_op_seq_no DESC
+              LIMIT ${limit}
+            ) seqs
+            CROSS JOIN LATERAL (
+              SELECT ao.operation_id
+              FROM hafd.account_operations ao
+              WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                AND ao.account_op_seq_no = seqs.account_op_seq_no
+                AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+              LIMIT 1
+            ) ao
+          )
+          UNION ALL
+          (
+            SELECT rare.operation_id, rare.account_op_seq_no
+            FROM (
+              SELECT ao.operation_id, ao.account_op_seq_no
+              FROM hafd.account_operations ao
+              WHERE FALSE
+                AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                AND ao.op_type_id = ANY(hafah_backend.translate_get_account_history_filter(hafah_backend.numeric_to_bigint(${filter_low}), hafah_backend.numeric_to_bigint(${filter_high})))
+                AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
+                AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+              OFFSET 0
+            ) rare
+            ORDER BY rare.account_op_seq_no DESC
+            LIMIT ${limit}
+          )
+          LIMIT ${limit}
+        ) page
+        CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
+        JOIN hafd.operations ho ON ho.id = page.operation_id
+        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
+        JOIN hafd.blocks hb ON hb.num = blk.block_num
+        LEFT JOIN LATERAL (
+          SELECT t.trx_hash FROM hafd.transactions t
+          WHERE t.block_num = blk.block_num AND t.trx_in_block = ho.trx_in_block
+          LIMIT 1
+        ) ht ON TRUE
+        ORDER BY page.account_op_seq_no ASC
       parameter_map: {account: params.0, start: params.1, limit: params.2, filter_low: params.3, filter_high: params.4}
 
     # condenser_api.get_account_history with named params: the same statement and the JSON-RPC names.
     - <<: *jsonrpc-account-history-by-type
       name: condenser-account-history-by-type-named
       api_methods: [condenser_api.get_account_history]
+      sql: *condenser-account-history-by-type-sql
 
     # condenser_api.get_account_history with operation_filter_low and no
     # operation_filter_high (no params.4): the same statement, ${filter_high} left
@@ -424,6 +574,7 @@ performance:
     - <<: *jsonrpc-account-history-by-type
       name: condenser-account-history-by-type-low
       api_methods: [condenser_api.get_account_history]
+      sql: *condenser-account-history-by-type-sql
       parameter_map: {account: params.0, start: params.1, limit: params.2, filter_low: params.3}
 
     # condenser_api.get_account_history with operation_filter_low null and
@@ -433,6 +584,7 @@ performance:
     - <<: *jsonrpc-account-history-by-type
       name: condenser-account-history-by-type-high
       api_methods: [condenser_api.get_account_history]
+      sql: *condenser-account-history-by-type-sql
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
         filter_low: {column: hafd.account_operations.op_type_id, value: 0}
@@ -540,16 +692,91 @@ performance:
         uses_index: [hive_account_operations_account_id_op_type_id_idx, pk_hive_operations]
       time: {max_ms: 1000, error_threshold: 0.5}
 
-    # condenser_api.get_account_history: the same statement, its params [account, start, limit, operation_filter_low, operation_filter_high] by position.
+    # condenser_api.get_account_history: the same statement with the body as
+    # ah_get_account_history's _is_legacy_style branch formats it (every
+    # condenser_api call is legacy style), its params [account, start, limit,
+    # operation_filter_low, operation_filter_high] by position.
     - <<: *jsonrpc-account-history-by-rare-type
       name: condenser-account-history-by-rare-type
       api_methods: [condenser_api.get_account_history]
+      sql: &condenser-account-history-by-rare-type-sql |
+        SELECT
+          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
+          blk.block_num AS _block,
+          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
+          ho.op_pos::BIGINT AS _op_in_trx,
+          hot.is_virtual AS _virtual_op,
+          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
+          hive.get_legacy_style_operation(hafd._operation_from_jsonb(jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value)))::JSONB AS _value,
+          page.account_op_seq_no AS _operation_id
+        FROM (
+          (
+            SELECT ao.operation_id, ao.account_op_seq_no
+            FROM hafd.account_operations ao
+            WHERE FALSE
+              AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+              AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
+              AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+            ORDER BY ao.account_op_seq_no DESC
+            LIMIT ${limit}
+          )
+          UNION ALL
+          (
+            SELECT ao.operation_id, seqs.account_op_seq_no
+            FROM (
+              SELECT s.account_op_seq_no
+              FROM hafd.account_operations s
+              WHERE FALSE
+                AND s.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                AND s.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
+                AND (s.op_type_id = ANY(hafah_backend.translate_get_account_history_filter(hafah_backend.numeric_to_bigint(${filter_low}), hafah_backend.numeric_to_bigint(${filter_high})))) IS TRUE
+              ORDER BY s.account_op_seq_no DESC
+              LIMIT ${limit}
+            ) seqs
+            CROSS JOIN LATERAL (
+              SELECT ao.operation_id
+              FROM hafd.account_operations ao
+              WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                AND ao.account_op_seq_no = seqs.account_op_seq_no
+                AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+              LIMIT 1
+            ) ao
+          )
+          UNION ALL
+          (
+            SELECT rare.operation_id, rare.account_op_seq_no
+            FROM (
+              SELECT ao.operation_id, ao.account_op_seq_no
+              FROM hafd.account_operations ao
+              WHERE TRUE
+                AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                AND ao.op_type_id = ANY(hafah_backend.translate_get_account_history_filter(hafah_backend.numeric_to_bigint(${filter_low}), hafah_backend.numeric_to_bigint(${filter_high})))
+                AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
+                AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
+              OFFSET 0
+            ) rare
+            ORDER BY rare.account_op_seq_no DESC
+            LIMIT ${limit}
+          )
+          LIMIT ${limit}
+        ) page
+        CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
+        JOIN hafd.operations ho ON ho.id = page.operation_id
+        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
+        JOIN hafd.blocks hb ON hb.num = blk.block_num
+        LEFT JOIN LATERAL (
+          SELECT t.trx_hash FROM hafd.transactions t
+          WHERE t.block_num = blk.block_num AND t.trx_in_block = ho.trx_in_block
+          LIMIT 1
+        ) ht ON TRUE
+        ORDER BY page.account_op_seq_no ASC
       parameter_map: {account: params.0, start: params.1, limit: params.2, filter_low: params.3, filter_high: params.4}
 
     # condenser_api.get_account_history with named params: the same statement and the JSON-RPC names.
     - <<: *jsonrpc-account-history-by-rare-type
       name: condenser-account-history-by-rare-type-named
       api_methods: [condenser_api.get_account_history]
+      sql: *condenser-account-history-by-rare-type-sql
 
     # condenser_api.get_account_history with operation_filter_low and no
     # operation_filter_high (no params.4): the same statement, ${filter_high} left
@@ -558,6 +785,7 @@ performance:
     - <<: *jsonrpc-account-history-by-rare-type
       name: condenser-account-history-by-rare-type-low
       api_methods: [condenser_api.get_account_history]
+      sql: *condenser-account-history-by-rare-type-sql
       parameter_map: {account: params.0, start: params.1, limit: params.2, filter_low: params.3}
 
     # condenser_api.get_account_history with operation_filter_low null and
@@ -567,6 +795,7 @@ performance:
     - <<: *jsonrpc-account-history-by-rare-type
       name: condenser-account-history-by-rare-type-high
       api_methods: [condenser_api.get_account_history]
+      sql: *condenser-account-history-by-rare-type-sql
       parameters:
         account: {column: hafd.account_operations.account_id, value: "105331"}
         filter_low: {column: hafd.account_operations.op_type_id, value: 0}
@@ -1299,10 +1528,28 @@ performance:
       name: jsonrpc-ops-in-block-with-only-virtual
       parameter_map: {block: params.block_num, only_virtual: params.only_virtual}
 
-    # condenser_api.get_ops_in_block: the same statement, its params [block_num, only_virtual] by position.
+    # condenser_api.get_ops_in_block: the same statement with the body as
+    # get_ops_in_block's _is_legacy_style branch formats it, its params
+    # [block_num, only_virtual] by position.
     - <<: *jsonrpc-ops-in-block
       name: condenser-ops-in-block
       api_methods: [condenser_api.get_ops_in_block]
+      sql: |
+        SELECT
+          ht.trx_hash, ht.trx_in_block, T.op_pos, T.virtual_op, hb.created_at, hive.get_legacy_style_operation(hafd._operation_from_jsonb(T.body))::JSONB, T.id
+        FROM (
+          SELECT ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.virtual_op
+          FROM hafah_backend.helper_operations_view ho
+          WHERE ho.block_num = ${block}
+            AND (${only_virtual} = FALSE OR ho.virtual_op = TRUE)
+        ) T
+        JOIN hafd.blocks hb ON hb.num = T.block_num
+        LEFT JOIN LATERAL (
+          SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
+          WHERE tx.block_num = T.block_num AND tx.trx_in_block = T.trx_in_block
+          LIMIT 1
+        ) ht ON TRUE
+        ORDER BY T.id
       parameter_map: {block: params.0, only_virtual: params.1}
 
     # JSON-RPC account_history_api.enum_virtual_ops, no filter, a 100-block
