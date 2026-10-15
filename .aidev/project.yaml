@@ -97,7 +97,7 @@ verification:
     stack: false
     artifacts: ["test-results/coverage/"]
 
-# Hot queries planned against a shape of the full-scale HAF on steem-18
+# Hot queries planned against a shape of the full-scale HAF on steem-20
 # (docs/operations/db-shape.md in aidev): plans and predicted times only —
 # response correctness stays with the 5M-block tavern suites. Each statement is
 # the one inside the plpgsql function behind its endpoint, with that function's
@@ -148,12 +148,12 @@ performance:
     - scripts/common.sh
   shape:
     # workflow_access: the decision check reads the source, read-only; decision_user:
-    # the restricted role that evaluates decision code steem-18's released hafah
+    # the restricted role that evaluates decision code the source's released hafah
     # lacks types for (hafah_backend.account_op_match) in a rolled-back scratch schema.
-    source: {host: steem-18, container: haf-haf-1, database: haf_block_log, user: haf_admin, workflow_access: true, decision_user: aidev_decision}
+    source: {host: steem-20, container: haf-haf-1, database: haf_block_log, user: haf_admin, workflow_access: true, decision_user: aidev_decision}
     image: registry.gitlab.syncad.com/hive/haf:1.28.8
-    # steem-18 haf_block_log at block 110,699,894 (2026-10-12), hafd.account_operations all-visible; value catalog includes transacting_account_id partners for the REST include/exclude declarations (HAfAH#80; partner row counts uncounted: no index leads that column); published to the fleet store.
-    artifact: 21376e6ac4b76ad6c1dbea0cc46ad6647c98c852b0e6255d7e6a924f73777e67
+    # steem-20 haf_block_log captured 2026-10-15 with the HAfAH#90-#92 declarations (start/limit/filter halves mapped, legacy-style condenser bodies); its source's replay calibration (2026-10-14 production replay, every gated method within 3x) is published with it to the fleet store.
+    artifact: 66e51296f6b1c1bd16a802018e47f61b9fb4dda1978733e4a87331d3327fdcc5
     # Installs each tree's hafah_* code on its shape copy: scripts/install_app.sh's
     # own files and order, each psql call fed to $AIDEV_DB_SHAPE_PSQL on stdin
     # (the shape server has no network, so no DSN).
