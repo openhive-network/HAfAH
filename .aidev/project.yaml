@@ -1683,7 +1683,8 @@ performance:
 
     # JSON-RPC get_transaction and REST GET /transactions/{transaction-id}:
     # the transaction's operations, hafah_backend.get_ops_in_transaction.
-    - name: operations-in-transaction
+    - &operations-in-transaction
+      name: operations-in-transaction
       sql: |
         SELECT jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS body
         FROM hafd.operations ho
@@ -1702,6 +1703,23 @@ performance:
         no_seq_scan: [hafd.operations]
         uses_index: [hive_operations_block_num_trx_in_block_idx]
       time: {max_ms: 50, error_threshold: 0.25}
+
+    # condenser_api.get_transaction: the same statement with each body as
+    # get_ops_in_transaction's _is_legacy_style branch converts it. The request
+    # carries the transaction id, not its block, so every call plans the default
+    # block.
+    - <<: *operations-in-transaction
+      name: condenser-operations-in-transaction
+      api_methods: [condenser_api.get_transaction]
+      sql: |
+        SELECT hive.get_legacy_style_operation(hafd._operation_from_jsonb(
+          jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value)))::JSONB AS body
+        FROM hafd.operations ho
+        JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
+        WHERE hafd.operation_id_to_block_num(ho.id) = ${block}
+          AND ho.trx_in_block = 0
+          AND hot.is_virtual = FALSE
+        ORDER BY ho.id
 
     # REST GET /operations/{operation-id}: hafah_backend.get_operation. The id is
     # the first operation of block 100,000,000.
@@ -1730,6 +1748,174 @@ performance:
       plan:
         no_seq_scan: [hafd.operations, hafd.transactions, hafd.blocks]
         uses_index: [pk_hive_operations]
+      time: {max_ms: 50, error_threshold: 0.25}
+
+    # JSON-RPC block_api.get_block: call_get_block calls HAF's
+    # hive.get_block_json(block_num), which reads hive.get_block(block_num,
+    # FALSE): hive.get_block_from_views(block_num, 1, FALSE), the statement
+    # below. REST GET /blocks/{block-num} (hafah_backend.get_block) runs the
+    # same call. HAF reads its reversible-aware views, which on irreversible
+    # blocks read the hafd.* base tables. ${block} is block_num.
+    - name: block-api-block
+      sql: |
+        WITH
+        base_blocks_data AS MATERIALIZED (
+          SELECT hb.num, hb.prev, hb.created_at, hb.transaction_merkle_root, hb.witness_signature,
+                 COALESCE(hb.extensions, array_to_json(ARRAY[]::INT[])::JSONB) AS extensions,
+                 hb.producer_account_id, hb.hash, hb.signing_key, ha.name
+          FROM hive.blocks_view hb
+          JOIN hive.accounts_view ha ON hb.producer_account_id = ha.id
+          WHERE hb.num BETWEEN ${block} AND ${block}
+          ORDER BY hb.num ASC
+        ),
+        trx_details AS MATERIALIZED (
+          SELECT htv.block_num, htv.trx_in_block, htv.expiration, htv.ref_block_num, htv.ref_block_prefix, htv.trx_hash, htv.signature
+          FROM hive.transactions_view htv
+          WHERE htv.block_num BETWEEN ${block} AND ${block}
+          ORDER BY htv.block_num ASC, htv.trx_in_block ASC
+        ),
+        operations AS (
+          SELECT hafd.operation_id_to_block_num(ho.id) AS block_num, ho.trx_in_block,
+                 ARRAY_AGG(ho.body::hafd.operation ORDER BY op_pos ASC) bodies
+          FROM hive.operations_view ho
+          WHERE ho.op_type_id <= (SELECT ot.id FROM hafd.operation_types ot WHERE ot.is_virtual = FALSE ORDER BY ot.id DESC LIMIT 1)
+            AND hafd.operation_id_to_block_num(ho.id) BETWEEN ${block} AND ${block}
+          GROUP BY hafd.operation_id_to_block_num(ho.id), ho.trx_in_block
+          ORDER BY hafd.operation_id_to_block_num(ho.id) ASC, trx_in_block ASC
+        ),
+        trx_with_multisig AS MATERIALIZED (
+          SELECT htv.block_num, htv.trx_in_block, htv.ref_block_num, htv.ref_block_prefix, htv.expiration, htv.trx_hash, htv.signature,
+                 ARRAY_AGG(htmv.signature) AS multisig_signatures
+          FROM trx_details htv
+          LEFT JOIN hive.transactions_multisig_view htmv ON htv.trx_hash = htmv.trx_hash
+          GROUP BY htv.block_num, htv.trx_in_block, htv.ref_block_num, htv.ref_block_prefix, htv.expiration, htv.trx_hash, htv.signature
+        ),
+        full_transactions_with_signatures AS MATERIALIZED (
+          SELECT htv.block_num,
+                 ARRAY_AGG(htv.trx_hash ORDER BY htv.trx_in_block ASC) AS trx_hashes,
+                 ARRAY_AGG((htv.ref_block_num, htv.ref_block_prefix, htv.expiration, ops.bodies, array_to_json(ARRAY[]::INT[])::JSONB,
+                            (CASE WHEN htv.multisig_signatures = ARRAY[NULL]::BYTEA[] THEN ARRAY[htv.signature]::BYTEA[] ELSE htv.signature || htv.multisig_signatures END)
+                           )::hive.transaction_type ORDER BY htv.trx_in_block ASC) AS transactions
+          FROM trx_with_multisig htv
+          JOIN operations ops ON ops.block_num = htv.block_num AND htv.trx_in_block = ops.trx_in_block
+          WHERE ops.block_num BETWEEN ${block} AND ${block}
+          GROUP BY htv.block_num
+          ORDER BY htv.block_num ASC
+        )
+        SELECT bbd.num,
+               (bbd.prev, bbd.created_at, bbd.name, bbd.transaction_merkle_root, bbd.extensions, bbd.witness_signature,
+                ftws.transactions, bbd.hash, bbd.signing_key, ftws.trx_hashes)::hive.block_type
+        FROM base_blocks_data bbd
+        LEFT JOIN full_transactions_with_signatures ftws ON ftws.block_num = bbd.num
+        ORDER BY bbd.num ASC
+      parameters:
+        block: {column: hafd.transactions.block_num, value: 100000000}
+      api_methods: [block_api.get_block]
+      parameter_map: {block: params.block_num}
+      role:
+        frequency: "per get_block call — block-following clients fetch every block"
+        waiter: "JSON-RPC client through PostgREST"
+        latency_ms: 200
+      plan:
+        no_seq_scan: [hafd.blocks, hafd.transactions, hafd.operations]
+      time: {max_ms: 200, error_threshold: 0.5}
+
+    # JSON-RPC block_api.get_block_range: call_get_block_range calls HAF's
+    # hive.get_block_range_json(starting_block_num, count), which checks
+    # 0 < count <= 1000 and reads hive.get_block_from_views(starting_block_num,
+    # count, FALSE), the statement below. REST GET /blocks
+    # (hafah_backend.get_block_range through get_raw_block_range) runs the same
+    # call for to-block - from-block + 1 blocks, also at most 1000.
+    # ${block} is starting_block_num, ${count} is count.
+    - name: block-api-block-range
+      sql: |
+        WITH
+        base_blocks_data AS MATERIALIZED (
+          SELECT hb.num, hb.prev, hb.created_at, hb.transaction_merkle_root, hb.witness_signature,
+                 COALESCE(hb.extensions, array_to_json(ARRAY[]::INT[])::JSONB) AS extensions,
+                 hb.producer_account_id, hb.hash, hb.signing_key, ha.name
+          FROM hive.blocks_view hb
+          JOIN hive.accounts_view ha ON hb.producer_account_id = ha.id
+          WHERE hb.num BETWEEN ${block} AND (${block} + ${count} - 1)
+          ORDER BY hb.num ASC
+        ),
+        trx_details AS MATERIALIZED (
+          SELECT htv.block_num, htv.trx_in_block, htv.expiration, htv.ref_block_num, htv.ref_block_prefix, htv.trx_hash, htv.signature
+          FROM hive.transactions_view htv
+          WHERE htv.block_num BETWEEN ${block} AND (${block} + ${count} - 1)
+          ORDER BY htv.block_num ASC, htv.trx_in_block ASC
+        ),
+        operations AS (
+          SELECT hafd.operation_id_to_block_num(ho.id) AS block_num, ho.trx_in_block,
+                 ARRAY_AGG(ho.body::hafd.operation ORDER BY op_pos ASC) bodies
+          FROM hive.operations_view ho
+          WHERE ho.op_type_id <= (SELECT ot.id FROM hafd.operation_types ot WHERE ot.is_virtual = FALSE ORDER BY ot.id DESC LIMIT 1)
+            AND hafd.operation_id_to_block_num(ho.id) BETWEEN ${block} AND (${block} + ${count} - 1)
+          GROUP BY hafd.operation_id_to_block_num(ho.id), ho.trx_in_block
+          ORDER BY hafd.operation_id_to_block_num(ho.id) ASC, trx_in_block ASC
+        ),
+        trx_with_multisig AS MATERIALIZED (
+          SELECT htv.block_num, htv.trx_in_block, htv.ref_block_num, htv.ref_block_prefix, htv.expiration, htv.trx_hash, htv.signature,
+                 ARRAY_AGG(htmv.signature) AS multisig_signatures
+          FROM trx_details htv
+          LEFT JOIN hive.transactions_multisig_view htmv ON htv.trx_hash = htmv.trx_hash
+          GROUP BY htv.block_num, htv.trx_in_block, htv.ref_block_num, htv.ref_block_prefix, htv.expiration, htv.trx_hash, htv.signature
+        ),
+        full_transactions_with_signatures AS MATERIALIZED (
+          SELECT htv.block_num,
+                 ARRAY_AGG(htv.trx_hash ORDER BY htv.trx_in_block ASC) AS trx_hashes,
+                 ARRAY_AGG((htv.ref_block_num, htv.ref_block_prefix, htv.expiration, ops.bodies, array_to_json(ARRAY[]::INT[])::JSONB,
+                            (CASE WHEN htv.multisig_signatures = ARRAY[NULL]::BYTEA[] THEN ARRAY[htv.signature]::BYTEA[] ELSE htv.signature || htv.multisig_signatures END)
+                           )::hive.transaction_type ORDER BY htv.trx_in_block ASC) AS transactions
+          FROM trx_with_multisig htv
+          JOIN operations ops ON ops.block_num = htv.block_num AND htv.trx_in_block = ops.trx_in_block
+          WHERE ops.block_num BETWEEN ${block} AND (${block} + ${count} - 1)
+          GROUP BY htv.block_num
+          ORDER BY htv.block_num ASC
+        )
+        SELECT bbd.num,
+               (bbd.prev, bbd.created_at, bbd.name, bbd.transaction_merkle_root, bbd.extensions, bbd.witness_signature,
+                ftws.transactions, bbd.hash, bbd.signing_key, ftws.trx_hashes)::hive.block_type
+        FROM base_blocks_data bbd
+        LEFT JOIN full_transactions_with_signatures ftws ON ftws.block_num = bbd.num
+        ORDER BY bbd.num ASC
+      parameters:
+        block: {column: hafd.transactions.block_num, value: 100000000, range: 1000}
+      limit: {param: count, value: 1000, values: [1000]}
+      api_methods: [block_api.get_block_range]
+      parameter_map: {block: params.starting_block_num, count: params.count}
+      role:
+        frequency: "per get_block_range call — block-following clients catching up"
+        waiter: "JSON-RPC client through PostgREST"
+        latency_ms: 1000
+      plan:
+        no_seq_scan: [hafd.blocks, hafd.transactions, hafd.operations]
+      time: {max_ms: 1000, error_threshold: 0.5}
+
+    # JSON-RPC block_api.get_block_header: call_get_block_header calls HAF's
+    # hive.get_block_header_json(block_num), which reads
+    # hive.get_block_header(block_num): the block's header, then its producer's
+    # name by id, written here as one statement. REST
+    # GET /blocks/{block-num}/header (hafah_backend.get_block_header) runs the
+    # same call.
+    - name: block-api-block-header
+      sql: |
+        SELECT
+          hb.prev, hb.created_at, hb.transaction_merkle_root, hb.witness_signature, hb.extensions,
+          (SELECT ha.name FROM hive.accounts_view ha WHERE ha.id = hb.producer_account_id) AS witness
+        FROM hive.blocks_view hb
+        WHERE hb.num = ${block}
+      parameters:
+        block: {column: hafd.transactions.block_num, value: 100000000}
+      api_methods: [block_api.get_block_header]
+      parameter_map: {block: params.block_num}
+      role:
+        frequency: "per get_block_header call"
+        waiter: "JSON-RPC client through PostgREST"
+        latency_ms: 50
+      plan:
+        no_seq_scan: [hafd.blocks, hafd.accounts]
+        uses_index: [pk_hive_blocks]
       time: {max_ms: 50, error_threshold: 0.25}
 
   # Run-time plan decisions: each tree's decision function is evaluated on the
