@@ -203,6 +203,10 @@ performance:
     # JSON-RPC account_history_api.get_account_history, no filter:
     # hafah_backend.ah_get_account_history's page statement with no type filter:
     # its uq1-walk branch (the two-step and rare-types branches fold away).
+    # ${start} is _start as call_get_account_history passes it through
+    # parse_acc_hist_start (negative, the default -1: the newest, max BIGINT);
+    # the two-step branch's bound __last_seq is that start cut at the last
+    # irreversible block, written as the start itself. ${limit} is _limit.
     - &jsonrpc-account-history
       name: jsonrpc-account-history
       sql: |
@@ -221,10 +225,10 @@ performance:
             FROM hafd.account_operations ao
             WHERE TRUE
               AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-              AND ao.account_op_seq_no <= 2147483647
+              AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
               AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
             ORDER BY ao.account_op_seq_no DESC
-            LIMIT 1000
+            LIMIT ${limit}
           )
           UNION ALL
           (
@@ -234,10 +238,10 @@ performance:
               FROM hafd.account_operations s
               WHERE FALSE
                 AND s.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-                AND s.account_op_seq_no <= 2147483647
+                AND s.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
                 AND (s.op_type_id = ANY(NULL::SMALLINT[])) IS TRUE
               ORDER BY s.account_op_seq_no DESC
-              LIMIT 1000
+              LIMIT ${limit}
             ) seqs
             CROSS JOIN LATERAL (
               SELECT ao.operation_id
@@ -257,14 +261,14 @@ performance:
               WHERE FALSE
                 AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
                 AND ao.op_type_id = ANY(NULL::SMALLINT[])
-                AND ao.account_op_seq_no <= 2147483647
+                AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
                 AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
               OFFSET 0
             ) rare
             ORDER BY rare.account_op_seq_no DESC
-            LIMIT 1000
+            LIMIT ${limit}
           )
-          LIMIT 1000
+          LIMIT ${limit}
         ) page
         CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
         JOIN hafd.operations ho ON ho.id = page.operation_id
@@ -278,8 +282,10 @@ performance:
         ORDER BY page.account_op_seq_no ASC
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
+        start: {column: hafd.account_operations.account_op_seq_no, value: -1}  # the default: the newest
+      limit: {param: limit, value: 1000, values: [1000]}
       api_methods: [account_history_api.get_account_history]
-      parameter_map: {account: params.account}
+      parameter_map: {account: params.account, start: params.start, limit: params.limit}
       role:
         frequency: "per get_account_history call — the API's busiest method; a page is up to 1000 operations"
         waiter: "JSON-RPC client through PostgREST"
@@ -293,7 +299,12 @@ performance:
     - <<: *jsonrpc-account-history
       name: condenser-account-history
       api_methods: [condenser_api.get_account_history]
-      parameter_map: {account: params.0}
+      parameter_map: {account: params.0, start: params.1, limit: params.2}
+
+    # condenser_api.get_account_history with named params: the same statement and the JSON-RPC names.
+    - <<: *jsonrpc-account-history
+      name: condenser-account-history-named
+      api_methods: [condenser_api.get_account_history]
 
     # JSON-RPC account_history_api.get_account_history with an operation filter
     # (transfer_operation) the account has many of: ah_get_account_history's page
@@ -319,10 +330,10 @@ performance:
             FROM hafd.account_operations ao
             WHERE FALSE
               AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-              AND ao.account_op_seq_no <= 2147483647
+              AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
               AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
             ORDER BY ao.account_op_seq_no DESC
-            LIMIT 1000
+            LIMIT ${limit}
           )
           UNION ALL
           (
@@ -332,10 +343,10 @@ performance:
               FROM hafd.account_operations s
               WHERE TRUE
                 AND s.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-                AND s.account_op_seq_no <= 2147483647
+                AND s.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
                 AND (s.op_type_id = ANY(hafah_backend.translate_get_account_history_filter(hafah_backend.numeric_to_bigint(${filter_low}), hafah_backend.numeric_to_bigint(${filter_high})))) IS TRUE
               ORDER BY s.account_op_seq_no DESC
-              LIMIT 1000
+              LIMIT ${limit}
             ) seqs
             CROSS JOIN LATERAL (
               SELECT ao.operation_id
@@ -355,14 +366,14 @@ performance:
               WHERE FALSE
                 AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
                 AND ao.op_type_id = ANY(hafah_backend.translate_get_account_history_filter(hafah_backend.numeric_to_bigint(${filter_low}), hafah_backend.numeric_to_bigint(${filter_high})))
-                AND ao.account_op_seq_no <= 2147483647
+                AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
                 AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
               OFFSET 0
             ) rare
             ORDER BY rare.account_op_seq_no DESC
-            LIMIT 1000
+            LIMIT ${limit}
           )
-          LIMIT 1000
+          LIMIT ${limit}
         ) page
         CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
         JOIN hafd.operations ho ON ho.id = page.operation_id
@@ -378,8 +389,10 @@ performance:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
         filter_low: {column: hafd.account_operations.op_type_id, value: 4}  # bit 2: transfer_operation
         filter_high: {column: hafd.account_operations.op_type_id, value: 0}
+        start: {column: hafd.account_operations.account_op_seq_no, value: -1}  # the default: the newest
+      limit: {param: limit, value: 1000, values: [1000]}
       api_methods: [account_history_api.get_account_history]
-      parameter_map: {account: params.account, filter_low: params.operation_filter_low, filter_high: params.operation_filter_high}
+      parameter_map: {account: params.account, start: params.start, limit: params.limit, filter_low: params.operation_filter_low, filter_high: params.operation_filter_high}
       role:
         frequency: "per filtered get_account_history call — exchanges and wallets polling deposits"
         waiter: "JSON-RPC client through PostgREST"
@@ -393,7 +406,12 @@ performance:
     - <<: *jsonrpc-account-history-by-type
       name: condenser-account-history-by-type
       api_methods: [condenser_api.get_account_history]
-      parameter_map: {account: params.0, filter_low: params.3, filter_high: params.4}
+      parameter_map: {account: params.0, start: params.1, limit: params.2, filter_low: params.3, filter_high: params.4}
+
+    # condenser_api.get_account_history with named params: the same statement and the JSON-RPC names.
+    - <<: *jsonrpc-account-history-by-type
+      name: condenser-account-history-by-type-named
+      api_methods: [condenser_api.get_account_history]
 
     # JSON-RPC get_account_history with an operation filter the account has few
     # of (fewer than account_rare_match_threshold(limit, its operations)): ah_get_account_history's page
@@ -416,10 +434,10 @@ performance:
             FROM hafd.account_operations ao
             WHERE FALSE
               AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-              AND ao.account_op_seq_no <= 2147483647
+              AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
               AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
             ORDER BY ao.account_op_seq_no DESC
-            LIMIT 1000
+            LIMIT ${limit}
           )
           UNION ALL
           (
@@ -429,10 +447,10 @@ performance:
               FROM hafd.account_operations s
               WHERE FALSE
                 AND s.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-                AND s.account_op_seq_no <= 2147483647
+                AND s.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
                 AND (s.op_type_id = ANY(hafah_backend.translate_get_account_history_filter(hafah_backend.numeric_to_bigint(${filter_low}), hafah_backend.numeric_to_bigint(${filter_high})))) IS TRUE
               ORDER BY s.account_op_seq_no DESC
-              LIMIT 1000
+              LIMIT ${limit}
             ) seqs
             CROSS JOIN LATERAL (
               SELECT ao.operation_id
@@ -452,14 +470,14 @@ performance:
               WHERE TRUE
                 AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
                 AND ao.op_type_id = ANY(hafah_backend.translate_get_account_history_filter(hafah_backend.numeric_to_bigint(${filter_low}), hafah_backend.numeric_to_bigint(${filter_high})))
-                AND ao.account_op_seq_no <= 2147483647
+                AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END
                 AND ao.operation_id < hafd.operation_id(110696250 + 1, 0)
               OFFSET 0
             ) rare
             ORDER BY rare.account_op_seq_no DESC
-            LIMIT 1000
+            LIMIT ${limit}
           )
-          LIMIT 1000
+          LIMIT ${limit}
         ) page
         CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
         JOIN hafd.operations ho ON ho.id = page.operation_id
@@ -475,8 +493,10 @@ performance:
         account: {column: hafd.account_operations.account_id, value: "105331"}
         filter_low: {column: hafd.account_operations.op_type_id, value: 4}  # bit 2: transfer_operation
         filter_high: {column: hafd.account_operations.op_type_id, value: 0}
+        start: {column: hafd.account_operations.account_op_seq_no, value: -1}  # the default: the newest
+      limit: {param: limit, value: 1000, values: [1000]}
       api_methods: [account_history_api.get_account_history]
-      parameter_map: {account: params.account, filter_low: params.operation_filter_low, filter_high: params.operation_filter_high}
+      parameter_map: {account: params.account, start: params.start, limit: params.limit, filter_low: params.operation_filter_low, filter_high: params.operation_filter_high}
       role:
         frequency: "per filtered get_account_history call whose types are rare for the account"
         waiter: "JSON-RPC client through PostgREST"
@@ -490,29 +510,44 @@ performance:
     - <<: *jsonrpc-account-history-by-rare-type
       name: condenser-account-history-by-rare-type
       api_methods: [condenser_api.get_account_history]
-      parameter_map: {account: params.0, filter_low: params.3, filter_high: params.4}
+      parameter_map: {account: params.0, start: params.1, limit: params.2, filter_low: params.3, filter_high: params.4}
+
+    # condenser_api.get_account_history with named params: the same statement and the JSON-RPC names.
+    - <<: *jsonrpc-account-history-by-rare-type
+      name: condenser-account-history-by-rare-type-named
+      api_methods: [condenser_api.get_account_history]
 
     # JSON-RPC get_account_history with an operation filter: the bounded count
-    # that picks the page branch. Its LIMIT is
-    # hafah_backend.account_rare_match_threshold(1000, N), N the account's
-    # operations (8.17M for blocktrades): 6129 once HAF#364 is in, 92196 before.
+    # that picks the page branch, hafah_backend.account_op_types_are_rare over
+    # seqs [0, __last_seq]. Its LIMIT is account_rare_match_threshold(_limit, N),
+    # N = __last_seq + 1, written out as production computes it with
+    # hive_account_operations_uq1 INCLUDE (op_type_id) (HAF#364; the pinned shape
+    # predates it, so the function would return the older sqrt(_limit * N)): 6129
+    # for blocktrades at its 8.17M operations and limit 1000. __last_seq is the
+    # start bounded by the default account's newest seq, 8172599, which the
+    # planner cannot read per account. A start past every seq (the newest) counts
+    # over the whole history with no seq predicate, as the function does when the
+    # range covers it; any other start counts the bounded range.
     - &jsonrpc-account-history-type-count
       name: jsonrpc-account-history-type-count
       sql: |
-        SELECT count(*) < 6129
+        SELECT count(*) < (ceil((${limit} + sqrt(${limit}::FLOAT8 * ${limit} + 4 * ${limit}::FLOAT8 * (LEAST(CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END, 8172599) + 1) / 260)) / 2))::BIGINT
         FROM (
           SELECT
           FROM hafd.account_operations ao
           WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
             AND ao.op_type_id = ANY(hafah_backend.translate_get_account_history_filter(hafah_backend.numeric_to_bigint(${filter_low}), hafah_backend.numeric_to_bigint(${filter_high})))
-          LIMIT 6129
+            AND (CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END >= 2147483647 OR (ao.account_op_seq_no >= 0 AND ao.account_op_seq_no <= CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END))
+          LIMIT (ceil((${limit} + sqrt(${limit}::FLOAT8 * ${limit} + 4 * ${limit}::FLOAT8 * (LEAST(CASE WHEN ${start}::BIGINT < 0 THEN 9223372036854775807 ELSE ${start}::BIGINT END, 8172599) + 1) / 260)) / 2))::BIGINT
         ) matches
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
         filter_low: {column: hafd.account_operations.op_type_id, value: 4}  # bit 2: transfer_operation
         filter_high: {column: hafd.account_operations.op_type_id, value: 0}
+        start: {column: hafd.account_operations.account_op_seq_no, value: -1}  # the default: the newest
+      limit: {param: limit, value: 1000, values: [1000]}
       api_methods: [account_history_api.get_account_history]
-      parameter_map: {account: params.account, filter_low: params.operation_filter_low, filter_high: params.operation_filter_high}
+      parameter_map: {account: params.account, start: params.start, limit: params.limit, filter_low: params.operation_filter_low, filter_high: params.operation_filter_high}
       role:
         frequency: "per filtered get_account_history call"
         waiter: "JSON-RPC client through PostgREST"
@@ -526,10 +561,18 @@ performance:
     - <<: *jsonrpc-account-history-type-count
       name: condenser-account-history-type-count
       api_methods: [condenser_api.get_account_history]
-      parameter_map: {account: params.0, filter_low: params.3, filter_high: params.4}
+      parameter_map: {account: params.0, start: params.1, limit: params.2, filter_low: params.3, filter_high: params.4}
+
+    # condenser_api.get_account_history with named params: the same statement and the JSON-RPC names.
+    - <<: *jsonrpc-account-history-type-count
+      name: condenser-account-history-type-count-named
+      api_methods: [condenser_api.get_account_history]
 
     # REST GET /accounts/{account-name}/operations, first page, no filter:
-    # hafah_backend.account_history_default (via get_ops_by_account).
+    # hafah_backend.account_history_default (via get_ops_by_account). Its page is
+    # LIMIT _calculate_pages.limit_filter from to_seq - offset_filter down: with no
+    # page, the newest, offset 0 and count % page-size rows (page-size when that
+    # is 0), planned at its bound ${page_size}.
     - name: rest-account-operations-page
       sql: |
         WITH operation_range AS MATERIALIZED (
@@ -549,7 +592,7 @@ performance:
               AND ao.account_op_seq_no >= 0
               AND ao.account_op_seq_no <= 2147483647
             ORDER BY ao.account_op_seq_no DESC
-            LIMIT 100
+            LIMIT ${page_size}
           ) ls
           JOIN hafd.operations ho ON ho.id = ls.operation_id
           JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
@@ -565,10 +608,63 @@ performance:
         ORDER BY ov.id DESC
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
+      limit: {param: page_size, value: 100, values: [100]}
       api_methods: ["rest:/hafah-api/accounts/*/operations"]
-      parameter_map: {account: path.3}
+      parameter_map: {account: path.3, page_size: query.page-size}
       role:
         frequency: "per REST account-operations page — block explorers' account view"
+        waiter: "REST client through PostgREST"
+        latency_ms: 500
+      plan:
+        no_seq_scan: [hafd.account_operations, hafd.operations, hafd.transactions, hafd.blocks]
+        uses_index: [hive_account_operations_uq1, pk_hive_operations]
+      time: {max_ms: 500, error_threshold: 0.5}
+
+    # The same request with ?page=N: calculate_pages' to_seq - offset_filter is
+    # from_seq + N * page-size - 1 for every page (pages count from the oldest,
+    # from_seq is the account's first seq, 0, with no block range), the newest
+    # page's bound cut at to_seq.
+    - name: rest-account-operations-page-at
+      sql: |
+        WITH operation_range AS MATERIALIZED (
+          SELECT
+            ls.operation_id AS id,
+            ls.block_num,
+            ho.trx_in_block,
+            encode(ht.trx_hash, 'hex') AS trx_hash,
+            ho.op_pos,
+            ls.op_type_id,
+            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS body,
+            hot.is_virtual
+          FROM (
+            SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+            FROM hafd.account_operations ao
+            WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+              AND ao.account_op_seq_no >= 0
+              AND ao.account_op_seq_no <= LEAST(${page} * ${page_size} - 1, 2147483647)
+            ORDER BY ao.account_op_seq_no DESC
+            LIMIT ${page_size}
+          ) ls
+          JOIN hafd.operations ho ON ho.id = ls.operation_id
+          JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
+          LEFT JOIN LATERAL (
+            SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
+            WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ho.trx_in_block
+            LIMIT 1
+          ) ht ON TRUE
+        )
+        SELECT ov.*, hb.created_at
+        FROM operation_range ov
+        JOIN hafd.blocks hb ON hb.num = ov.block_num
+        ORDER BY ov.id DESC
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
+        page: {column: hafd.account_operations.account_op_seq_no, value: 1}  # the oldest page
+      limit: {param: page_size, value: 100, values: [100]}
+      api_methods: ["rest:/hafah-api/accounts/*/operations"]
+      parameter_map: {account: path.3, page: query.page, page_size: query.page-size}
+      role:
+        frequency: "per REST account-operations request for a numbered page — paging back through an account"
         waiter: "REST client through PostgREST"
         latency_ms: 500
       plan:
@@ -584,13 +680,14 @@ performance:
         SELECT ao.account_op_seq_no
         FROM hafd.account_operations ao
         WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-          AND ao.operation_id < hafd.operation_id(LEAST(90000000, 110696250) + 1, 0)
+          AND ao.operation_id < hafd.operation_id(LEAST(${to_block}, 110696250) + 1, 0)
         ORDER BY ao.account_op_seq_no DESC
         LIMIT 1
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
+        to_block: {column: hafd.transactions.block_num, value: 90000000}
       api_methods: ["rest:/hafah-api/accounts/*/operations"]
-      parameter_map: {account: path.3}
+      parameter_map: {account: path.3, to_block: query.to-block}
       role:
         frequency: "per REST account-operations request with a block range"
         waiter: "REST client through PostgREST"
@@ -649,7 +746,7 @@ performance:
                 AND s.account_op_seq_no >= 0
                 AND s.account_op_seq_no <= 2147483647
               ORDER BY s.account_op_seq_no DESC
-              LIMIT 100
+              LIMIT ${page_size}
               OFFSET 0
             ) seqs
             CROSS JOIN LATERAL (
@@ -674,7 +771,7 @@ performance:
               OFFSET 0
             ) rare
             ORDER BY rare.account_op_seq_no DESC
-            LIMIT 100
+            LIMIT ${page_size}
             OFFSET 0
           )
         ) ls
@@ -688,8 +785,9 @@ performance:
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
         op_type: {column: hafd.account_operations.op_type_id, value: "2"}  # transfer_operation
+      limit: {param: page_size, value: 100, values: [100]}
       api_methods: ["rest:/hafah-api/accounts/*/operations"]
-      parameter_map: {account: path.3, op_type: query.operation-types}
+      parameter_map: {account: path.3, op_type: query.operation-types, page_size: query.page-size}
       role:
         frequency: "per REST account-operations page with an operation-type filter — wallets' transfer history"
         waiter: "REST client through PostgREST"
@@ -725,7 +823,7 @@ performance:
                 AND s.account_op_seq_no >= 0
                 AND s.account_op_seq_no <= 2147483647
               ORDER BY s.account_op_seq_no DESC
-              LIMIT 100
+              LIMIT ${page_size}
               OFFSET 0
             ) seqs
             CROSS JOIN LATERAL (
@@ -750,7 +848,7 @@ performance:
               OFFSET 0
             ) rare
             ORDER BY rare.account_op_seq_no DESC
-            LIMIT 100
+            LIMIT ${page_size}
             OFFSET 0
           )
         ) ls
@@ -764,8 +862,9 @@ performance:
       parameters:
         account: {column: hafd.account_operations.account_id, value: "105331"}
         op_type: {column: hafd.account_operations.op_type_id, value: "2"}  # transfer_operation
+      limit: {param: page_size, value: 100, values: [100]}
       api_methods: ["rest:/hafah-api/accounts/*/operations"]
-      parameter_map: {account: path.3, op_type: query.operation-types}
+      parameter_map: {account: path.3, op_type: query.operation-types, page_size: query.page-size}
       role:
         frequency: "per REST account-operations page whose operation types are rare for the account"
         waiter: "REST client through PostgREST"
@@ -812,13 +911,14 @@ performance:
         ) ao
         WHERE ao.transacting_account_id = (CASE WHEN ${partner}::TEXT ~ '^[0-9]+$' THEN ${partner}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${partner}::TEXT) END)
         ORDER BY seqs.account_op_seq_no DESC
-        LIMIT 1001
+        LIMIT 10 * ${page_size} + 1
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
         op_type: {column: hafd.account_operations.op_type_id, value: "2"}  # transfer_operation
         partner: {column: hafd.account_operations.transacting_account_id, value: "440"}  # blocktrades' own transfers
+      limit: {param: page_size, value: 100, values: [100]}
       api_methods: ["rest:/hafah-api/accounts/*/operations"]
-      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name}
+      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name, page_size: query.page-size}
       role:
         frequency: "per REST account-operations request filtered to one transacting account — transfers between two accounts"
         waiter: "REST client through PostgREST"
@@ -831,11 +931,12 @@ performance:
     # The include variants' rare/common decision and rare branch in one:
     # hafah_backend.account_rare_op_matches, called by account_history_include_account
     # (ARRAY[the partner]) and account_history_including_accounts (the partners),
-    # reads every match by type up to account_rare_match_threshold(1001, N), N the
-    # account's operations (16.0M for 509861: 8367 once HAF#364 is in, 126576
-    # before). Fewer matches are the rare branch's rows, which the page only
-    # sorts; more choose the two-step. Planned with the heaviest account and a
-    # partner with 2 operations in all, so at most 2 matches.
+    # reads every match by type up to account_rare_match_threshold(10 * page-size + 1, N),
+    # N the account's operations (16006281 for 509861: 8367 at page-size 100 once
+    # HAF#364 is in, 126576 before; written out with uq1's INCLUDE, as
+    # jsonrpc-account-history-type-count). Fewer matches are the rare branch's
+    # rows, which the page only sorts; more choose the two-step. Planned with the
+    # heaviest account and a partner with 2 operations in all, so at most 2 matches.
     - name: rest-include-account-rare-matches
       sql: |
         SELECT ARRAY(
@@ -846,14 +947,15 @@ performance:
             AND ao.transacting_account_id = ANY(ARRAY[(CASE WHEN ${partner}::TEXT ~ '^[0-9]+$' THEN ${partner}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${partner}::TEXT) END)]::INT[])
             AND ao.account_op_seq_no >= 0
             AND ao.account_op_seq_no <= 2147483647
-          LIMIT 8367
+          LIMIT (ceil(((10 * ${page_size} + 1) + sqrt((10 * ${page_size} + 1)::FLOAT8 * (10 * ${page_size} + 1) + 4 * (10 * ${page_size} + 1)::FLOAT8 * 16006281 / 260)) / 2))::BIGINT
         )
       parameters:
         account: {column: hafd.account_operations.account_id, value: "509861"}
         op_type: {column: hafd.account_operations.op_type_id, value: "2"}  # transfer_operation
         partner: {column: hafd.account_operations.transacting_account_id, value: "1342941"}
+      limit: {param: page_size, value: 100, values: [100]}
       api_methods: ["rest:/hafah-api/accounts/*/operations"]
-      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name}
+      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name, page_size: query.page-size}
       role:
         frequency: "per REST account-operations request filtered to included transacting accounts and operation types"
         waiter: "REST client through PostgREST"
@@ -888,13 +990,14 @@ performance:
         ) ao
         WHERE ao.transacting_account_id = ANY(ARRAY[(CASE WHEN ${partner}::TEXT ~ '^[0-9]+$' THEN ${partner}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${partner}::TEXT) END)]::INT[])
         ORDER BY seqs.account_op_seq_no DESC
-        LIMIT 1001
+        LIMIT 10 * ${page_size} + 1
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
         op_type: {column: hafd.account_operations.op_type_id, value: "2"}  # transfer_operation
         partner: {column: hafd.account_operations.transacting_account_id, value: "440"}  # blocktrades' own transfers
+      limit: {param: page_size, value: 100, values: [100]}
       api_methods: ["rest:/hafah-api/accounts/*/operations"]
-      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name}
+      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name, page_size: query.page-size}
       role:
         frequency: "per REST account-operations request filtered to several transacting accounts"
         waiter: "REST client through PostgREST"
@@ -931,13 +1034,14 @@ performance:
         WHERE ao.transacting_account_id != (CASE WHEN ${partner}::TEXT ~ '^[0-9]+$' THEN ${partner}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${partner}::TEXT) END)
           AND ao.transacting_account_id IS NOT NULL
         ORDER BY seqs.account_op_seq_no DESC
-        LIMIT 1001
+        LIMIT 10 * ${page_size} + 1
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
         op_type: {column: hafd.account_operations.op_type_id, value: "2"}  # transfer_operation
         partner: {column: hafd.account_operations.transacting_account_id, value: "440"}  # transfers blocktrades received
+      limit: {param: page_size, value: 100, values: [100]}
       api_methods: ["rest:/hafah-api/accounts/*/operations"]
-      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name}
+      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name, page_size: query.page-size}
       role:
         frequency: "per REST account-operations request excluding one transacting account — incoming transfers"
         waiter: "REST client through PostgREST"
@@ -965,13 +1069,14 @@ performance:
           OFFSET 0
         ) rare
         ORDER BY rare.account_op_seq_no DESC
-        LIMIT 1001
+        LIMIT 10 * ${page_size} + 1
       parameters:
         account: {column: hafd.account_operations.account_id, value: "105331"}
         op_type: {column: hafd.account_operations.op_type_id, value: "2"}  # transfer_operation
         partner: {column: hafd.account_operations.transacting_account_id, value: "440"}  # blocktrades
+      limit: {param: page_size, value: 100, values: [100]}
       api_methods: ["rest:/hafah-api/accounts/*/operations"]
-      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name}
+      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name, page_size: query.page-size}
       role:
         frequency: "per REST account-operations request excluding one transacting account, types rare for the account"
         waiter: "REST client through PostgREST"
@@ -1006,13 +1111,14 @@ performance:
         WHERE NOT (ao.transacting_account_id = ANY(ARRAY[(CASE WHEN ${partner}::TEXT ~ '^[0-9]+$' THEN ${partner}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${partner}::TEXT) END)]::INT[]))
           AND ao.transacting_account_id IS NOT NULL
         ORDER BY seqs.account_op_seq_no DESC
-        LIMIT 1001
+        LIMIT 10 * ${page_size} + 1
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
         op_type: {column: hafd.account_operations.op_type_id, value: "2"}  # transfer_operation
         partner: {column: hafd.account_operations.transacting_account_id, value: "440"}  # blocktrades
+      limit: {param: page_size, value: 100, values: [100]}
       api_methods: ["rest:/hafah-api/accounts/*/operations"]
-      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name}
+      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name, page_size: query.page-size}
       role:
         frequency: "per REST account-operations request excluding several transacting accounts"
         waiter: "REST client through PostgREST"
@@ -1039,13 +1145,14 @@ performance:
           OFFSET 0
         ) rare
         ORDER BY rare.account_op_seq_no DESC
-        LIMIT 1001
+        LIMIT 10 * ${page_size} + 1
       parameters:
         account: {column: hafd.account_operations.account_id, value: "105331"}
         op_type: {column: hafd.account_operations.op_type_id, value: "2"}  # transfer_operation
         partner: {column: hafd.account_operations.transacting_account_id, value: "440"}  # blocktrades
+      limit: {param: page_size, value: 100, values: [100]}
       api_methods: ["rest:/hafah-api/accounts/*/operations"]
-      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name}
+      parameter_map: {account: path.3, op_type: query.operation-types, partner: query.transacting-account-name, page_size: query.page-size}
       role:
         frequency: "per REST account-operations request excluding several transacting accounts, types rare for the account"
         waiter: "REST client through PostgREST"
@@ -1055,20 +1162,22 @@ performance:
         uses_index: [hive_account_operations_account_id_op_type_id_idx]
       time: {max_ms: 1000, error_threshold: 0.5}
 
-    # JSON-RPC account_history_api.get_ops_in_block: hafah_backend.get_ops_in_block
-    # (hafah_backend.helper_operations_view written out).
+    # JSON-RPC account_history_api.get_ops_in_block: hafah_backend.get_ops_in_block,
+    # its rows from hafah_backend.helper_operations_view. ${only_virtual} is
+    # _only_virtual, FALSE when the request omits it (call_get_ops_in_block reads
+    # only `only_virtual`, so an `onlyvirtual` key is ignored). This declaration
+    # maps the block alone, so it covers every request; the -with-only-virtual
+    # variant below carries the flag for the requests that send it.
     - &jsonrpc-ops-in-block
       name: jsonrpc-ops-in-block
       sql: |
         SELECT
           ht.trx_hash, ht.trx_in_block, T.op_pos, T.virtual_op, hb.created_at, T.body, T.id
         FROM (
-          SELECT ho.id, hafd.operation_id_to_block_num(ho.id) AS block_num, ho.trx_in_block, ho.op_pos::BIGINT AS op_pos,
-                 jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS body,
-                 ho.op_type_id, hot.is_virtual AS virtual_op
-          FROM hafd.operations ho
-          JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
-          WHERE hafd.operation_id_to_block_num(ho.id) = ${block}
+          SELECT ho.id, ho.block_num, ho.trx_in_block, ho.op_pos, ho.body, ho.op_type_id, ho.virtual_op
+          FROM hafah_backend.helper_operations_view ho
+          WHERE ho.block_num = ${block}
+            AND (${only_virtual} = FALSE OR ho.virtual_op = TRUE)
         ) T
         JOIN hafd.blocks hb ON hb.num = T.block_num
         LEFT JOIN LATERAL (
@@ -1080,6 +1189,7 @@ performance:
       parameters:
         # hafd.operations has no block_num column (an operation's block is encoded in its id); transaction density per block stands in for operation density when choosing dense and sparse blocks.
         block: {column: hafd.transactions.block_num, value: 100000000}
+        only_virtual: {column: hafd.operation_types.is_virtual, value: false}
       api_methods: [account_history_api.get_ops_in_block]
       parameter_map: {block: params.block_num}
       role:
@@ -1090,14 +1200,22 @@ performance:
         no_seq_scan: [hafd.operations, hafd.transactions, hafd.blocks]
       time: {max_ms: 200, error_threshold: 0.5}
 
+    # The same statement for a request that sends only_virtual.
+    - <<: *jsonrpc-ops-in-block
+      name: jsonrpc-ops-in-block-with-only-virtual
+      parameter_map: {block: params.block_num, only_virtual: params.only_virtual}
+
     # condenser_api.get_ops_in_block: the same statement, its params [block_num, only_virtual] by position.
     - <<: *jsonrpc-ops-in-block
       name: condenser-ops-in-block
       api_methods: [condenser_api.get_ops_in_block]
-      parameter_map: {block: params.0}
+      parameter_map: {block: params.0, only_virtual: params.1}
 
     # JSON-RPC account_history_api.enum_virtual_ops, no filter, a 100-block
-    # window: hafah_backend.enum_virtual_ops.
+    # window: hafah_backend.enum_virtual_ops. ${block_end} is _block_range_end
+    # (exclusive), held to the 2000 blocks validate_block_range lets a request
+    # span, so a catalogued start window stays a range a request can ask for;
+    # ${limit} is _limit, 150000 when the request omits it.
     - &jsonrpc-enum-virtual-ops
       name: jsonrpc-enum-virtual-ops
       sql: |
@@ -1110,10 +1228,10 @@ performance:
             FROM hafd.operations ho
             JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
             WHERE hafd.operation_id_to_block_num(ho.id) >= ${block}
-              AND hafd.operation_id_to_block_num(ho.id) < ${block} + 100
+              AND hafd.operation_id_to_block_num(ho.id) < LEAST(${block_end}, ${block} + 2000)
               AND hot.is_virtual = TRUE
             ORDER BY ho.id
-            LIMIT 1000
+            LIMIT ${limit}
           ) T
           LEFT JOIN LATERAL (
           SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
@@ -1127,8 +1245,10 @@ performance:
         ORDER BY pre_result._operation_id
       parameters:
         block: {column: hafd.transactions.block_num, value: 100000000, range: 100}
+        block_end: {column: hafd.transactions.block_num, value: 100000100}
+      limit: {param: limit, value: 150000, values: [150000]}
       api_methods: [account_history_api.enum_virtual_ops]
-      parameter_map: {block: params.block_range_begin}
+      parameter_map: {block: params.block_range_begin, block_end: params.block_range_end, limit: params.limit}
       role:
         frequency: "per enum_virtual_ops call — reward and payout indexers walking the chain"
         waiter: "JSON-RPC client through PostgREST"
@@ -1138,14 +1258,16 @@ performance:
         uses_index: [hive_operations_block_num_trx_in_block_idx]  # what the shape chooses (2026-10-12)
       time: {max_ms: 1000, error_threshold: 0.5}
 
-    # condenser_api.enum_virtual_ops: the same statement, its params [block_range_begin, block_range_end] by position.
+    # condenser_api.enum_virtual_ops: the same statement, its params [block_range_begin, block_range_end, operation_begin, limit] by position.
     - <<: *jsonrpc-enum-virtual-ops
       name: condenser-enum-virtual-ops
       api_methods: [condenser_api.enum_virtual_ops]
-      parameter_map: {block: params.0}
+      parameter_map: {block: params.0, block_end: params.1, limit: params.3}
 
     # REST GET /operations?from-block=…&to-block=…: the unfiltered branch of
-    # hafah_backend.get_ops_in_blocks_helper.
+    # hafah_backend.get_ops_in_blocks_helper. get_ops_in_blocks passes it the
+    # inclusive to-block + 1 as its exclusive end, held here to the 2000 blocks
+    # get_operations' validate_block_range allows; ${page_size} is _limit.
     - name: rest-operations-in-block-range
       sql: |
         SELECT T.block_num, T2.trx_hash, T2.trx_in_block, T.op_pos, T.op_type_id, T.virtual_op, T.body, T.id
@@ -1156,9 +1278,9 @@ performance:
           FROM hafd.operations ho
           JOIN hafd.operation_types hot ON ho.op_type_id = hot.id
           WHERE hafd.operation_id_to_block_num(ho.id) >= ${block}
-            AND hafd.operation_id_to_block_num(ho.id) < ${block} + 10
+            AND hafd.operation_id_to_block_num(ho.id) < LEAST(${to_block}, ${block} + 2000) + 1
           ORDER BY ho.id
-          LIMIT 1000
+          LIMIT ${page_size}
         ) T
         LEFT JOIN LATERAL (
           SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
@@ -1166,11 +1288,13 @@ performance:
           LIMIT 1
         ) T2 ON TRUE
         ORDER BY T.id
-        LIMIT 1000
+        LIMIT ${page_size}
       parameters:
         block: {column: hafd.transactions.block_num, value: 100000000, range: 10}
+        to_block: {column: hafd.transactions.block_num, value: 100000009}
+      limit: {param: page_size, value: 1000, values: [1000]}
       api_methods: ["rest:/hafah-api/operations"]
-      parameter_map: {block: query.from-block}
+      parameter_map: {block: query.from-block, to_block: query.to-block, page_size: query.page-size}
       role:
         frequency: "per REST operations-range page"
         waiter: "REST client through PostgREST"
