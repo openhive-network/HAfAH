@@ -166,8 +166,8 @@ performance:
   # (aidev#15922).
   replay:
     mode: observe
-    # api.hive.blog 2025-11-22, 89,782 requests; JSON-RPC ids renumbered, credential query parameters dropped.
-    captures: [583b0d0d526bde1a1fe5ca83631cd05145940551d78320c431931fd1fb96c42e]
+    # api.hive.blog 2026-10-15, one hour at the front proxy, 2,999,125 requests; JSON-RPC ids renumbered, credential query parameters dropped.
+    captures: [7245d0a09cdd2e07f806ab03fe92ee20bd973345f8b189a86cef94f4c4773214]
     methods:
       - "account_history_api.*"
       - condenser_api.get_account_history
@@ -194,6 +194,16 @@ performance:
       - name: version-reports-build
         methods: ["rest:/version"]
         reason: /version answers the running build's commit
+    # Clients poll near the head (get_block_range count 1000 from a few hundred
+    # blocks below it, answered with the few blocks that exist). Replay those at
+    # the same distance below the frozen target's head, not as full old reads.
+    head_relative:
+      params:
+        - {methods: [block_api.get_block_range], paths: [params.starting_block_num]}
+        - {methods: [block_api.get_block, block_api.get_block_header, account_history_api.get_ops_in_block], paths: [params.block_num]}
+        - {methods: [condenser_api.get_ops_in_block], paths: [params.0]}
+        - {methods: [account_history_api.enum_virtual_ops], paths: [params.block_range_begin, params.block_range_end]}
+        - {methods: [condenser_api.enum_virtual_ops], paths: [params.0, params.1]}
     inputs: ["backend/**", "endpoints/**", "db/**"]
   # The production workload `aidev db shape check` weighs the declared queries
   # by: the replay capture's calls of each query's `api_methods`, planned with
