@@ -187,6 +187,10 @@ performance:
           - "block_api.*"
         params: [include_reversible]
         reason: hafah answers from irreversible blocks only and ignores include_reversible (HAfAH!338)
+      - name: onlyvirtual-ignored
+        methods: [account_history_api.get_ops_in_block]
+        params: [onlyvirtual]
+        reason: call_get_ops_in_block reads only `only_virtual`; a misspelt `onlyvirtual` key is ignored and the request returns every operation of the block
       - name: version-reports-build
         methods: ["rest:/version"]
         reason: /version answers the running build's commit
@@ -413,6 +417,36 @@ performance:
       name: condenser-account-history-by-type-named
       api_methods: [condenser_api.get_account_history]
 
+    # condenser_api.get_account_history with operation_filter_low and no
+    # operation_filter_high (no params.4): the same statement, ${filter_high} left
+    # at 0. call_get_account_history passes the missing filter_high as NULL, which
+    # translate_get_account_history_filter reads as no high bits, the same as 0.
+    - <<: *jsonrpc-account-history-by-type
+      name: condenser-account-history-by-type-low
+      api_methods: [condenser_api.get_account_history]
+      parameter_map: {account: params.0, start: params.1, limit: params.2, filter_low: params.3}
+
+    # condenser_api.get_account_history with operation_filter_low null and
+    # operation_filter_high set: ${filter_low} left at 0 (the backend reads the
+    # null as NULL, no low bits); planned with the capture's high filter 4194305
+    # (bits 0 and 22: types 64 and 86).
+    - <<: *jsonrpc-account-history-by-type
+      name: condenser-account-history-by-type-high
+      api_methods: [condenser_api.get_account_history]
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
+        filter_low: {column: hafd.account_operations.op_type_id, value: 0}
+        filter_high: {column: hafd.account_operations.op_type_id, value: 4194305}
+        start: {column: hafd.account_operations.account_op_seq_no, value: -1}  # the default: the newest
+      parameter_map: {account: params.0, start: params.1, limit: params.2, filter_high: params.4}
+
+    # JSON-RPC get_account_history with operation_filter_low and neither
+    # operation_filter_high nor start, as the capture sends it: the same
+    # statement, ${filter_high} at 0 and ${start} at the backend default -1.
+    - <<: *jsonrpc-account-history-by-type
+      name: jsonrpc-account-history-by-type-low
+      parameter_map: {account: params.account, limit: params.limit, filter_low: params.operation_filter_low}
+
     # JSON-RPC get_account_history with an operation filter the account has few
     # of (fewer than account_rare_match_threshold(limit, its operations)): ah_get_account_history's page
     # statement on its rare-types branch, every match by type then a sort.
@@ -517,6 +551,36 @@ performance:
       name: condenser-account-history-by-rare-type-named
       api_methods: [condenser_api.get_account_history]
 
+    # condenser_api.get_account_history with operation_filter_low and no
+    # operation_filter_high (no params.4): the same statement, ${filter_high} left
+    # at 0. call_get_account_history passes the missing filter_high as NULL, which
+    # translate_get_account_history_filter reads as no high bits, the same as 0.
+    - <<: *jsonrpc-account-history-by-rare-type
+      name: condenser-account-history-by-rare-type-low
+      api_methods: [condenser_api.get_account_history]
+      parameter_map: {account: params.0, start: params.1, limit: params.2, filter_low: params.3}
+
+    # condenser_api.get_account_history with operation_filter_low null and
+    # operation_filter_high set: ${filter_low} left at 0 (the backend reads the
+    # null as NULL, no low bits); planned with the capture's high filter 4194305
+    # (bits 0 and 22: types 64 and 86).
+    - <<: *jsonrpc-account-history-by-rare-type
+      name: condenser-account-history-by-rare-type-high
+      api_methods: [condenser_api.get_account_history]
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: "105331"}
+        filter_low: {column: hafd.account_operations.op_type_id, value: 0}
+        filter_high: {column: hafd.account_operations.op_type_id, value: 4194305}
+        start: {column: hafd.account_operations.account_op_seq_no, value: -1}  # the default: the newest
+      parameter_map: {account: params.0, start: params.1, limit: params.2, filter_high: params.4}
+
+    # JSON-RPC get_account_history with operation_filter_low and neither
+    # operation_filter_high nor start, as the capture sends it: the same
+    # statement, ${filter_high} at 0 and ${start} at the backend default -1.
+    - <<: *jsonrpc-account-history-by-rare-type
+      name: jsonrpc-account-history-by-rare-type-low
+      parameter_map: {account: params.account, limit: params.limit, filter_low: params.operation_filter_low}
+
     # JSON-RPC get_account_history with an operation filter: the bounded count
     # that picks the page branch, hafah_backend.account_op_types_are_rare over
     # seqs [0, __last_seq]. Its LIMIT is account_rare_match_threshold(_limit, N),
@@ -567,6 +631,36 @@ performance:
     - <<: *jsonrpc-account-history-type-count
       name: condenser-account-history-type-count-named
       api_methods: [condenser_api.get_account_history]
+
+    # condenser_api.get_account_history with operation_filter_low and no
+    # operation_filter_high (no params.4): the same statement, ${filter_high} left
+    # at 0. call_get_account_history passes the missing filter_high as NULL, which
+    # translate_get_account_history_filter reads as no high bits, the same as 0.
+    - <<: *jsonrpc-account-history-type-count
+      name: condenser-account-history-type-count-low
+      api_methods: [condenser_api.get_account_history]
+      parameter_map: {account: params.0, start: params.1, limit: params.2, filter_low: params.3}
+
+    # condenser_api.get_account_history with operation_filter_low null and
+    # operation_filter_high set: ${filter_low} left at 0 (the backend reads the
+    # null as NULL, no low bits); planned with the capture's high filter 4194305
+    # (bits 0 and 22: types 64 and 86).
+    - <<: *jsonrpc-account-history-type-count
+      name: condenser-account-history-type-count-high
+      api_methods: [condenser_api.get_account_history]
+      parameters:
+        account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
+        filter_low: {column: hafd.account_operations.op_type_id, value: 0}
+        filter_high: {column: hafd.account_operations.op_type_id, value: 4194305}
+        start: {column: hafd.account_operations.account_op_seq_no, value: -1}  # the default: the newest
+      parameter_map: {account: params.0, start: params.1, limit: params.2, filter_high: params.4}
+
+    # JSON-RPC get_account_history with operation_filter_low and neither
+    # operation_filter_high nor start, as the capture sends it: the same
+    # statement, ${filter_high} at 0 and ${start} at the backend default -1.
+    - <<: *jsonrpc-account-history-type-count
+      name: jsonrpc-account-history-type-count-low
+      parameter_map: {account: params.account, limit: params.limit, filter_low: params.operation_filter_low}
 
     # REST GET /accounts/{account-name}/operations, first page, no filter:
     # hafah_backend.account_history_default (via get_ops_by_account). Its page is
