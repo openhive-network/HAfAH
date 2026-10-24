@@ -83,31 +83,24 @@ To run the stack checks by hand against the shared HAF (`aidev session status
 haf-shared` shows its endpoint):
 
 ```bash
-image="$(grep -o 'registry[^"]*aidev-tests@sha256:[0-9a-f]*' .aidev/project.yaml)"
+docker build -t hafah-aidev-tests .aidev/runtime \
+    --build-arg BASE_IMAGE=registry.gitlab.syncad.com/hive/common-ci-configuration/python-test-tools:develop
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/w" -w /w \
-    -e AIDEV_EXTERNAL_HAF_HOST=<host> -e AIDEV_EXTERNAL_HAF_PORT=<port> "$image" \
+    -e AIDEV_EXTERNAL_HAF_HOST=<host> -e AIDEV_EXTERNAL_HAF_PORT=<port> hafah-aidev-tests \
     .aidev/run-checks.sh full shellcheck sql-registered install reinstall api-smoke tavern
 ```
 
 ## The test runtime image (`runtime/`)
 
-The checks run in a container with your uid: `python:3.14-alpine` (hive/tests_api needs
-Python >= 3.14), the `postgrest` binary of `postgrest:v12.0.2`, `bash`, `psql` and
-`shellcheck` from Alpine's repository, and pinned `tavern`, `pytest`, `pytest-xdist` and
-hive/tests_api (`validate_response`, the tavern tests' comparator) at the commit the
-Dockerfile's `TESTS_API_COMMIT` names; all bases pinned by digest, nothing installed at
-run time.
+The checks run in a container with your uid, built from `runtime/Dockerfile` on the
+base `project.yaml`'s `environment.base` follows: common-ci-configuration's
+`python-test-tools:develop`, the image CI's lint and test jobs use. It brings Python
+3.14, `tavern`, `pytest`, `pytest-xdist`, `bash`, `psql`, `shellcheck` and the
+`postgrest` binary at the versions in common-ci-configuration's `docker-bake.hcl`; the
+Dockerfile adds only hive/tests_api (`validate_response`, the tavern tests' comparator)
+at the commit its `TESTS_API_COMMIT` names. Nothing is installed at run time.
 
-When `runtime/Dockerfile` changes (e.g. to follow a new PostgREST in `Dockerfile`),
-rebuild and re-pin **in the same commit**:
-
-```bash
-.aidev/runtime/build.sh --push   # registry digest if aidev-<input hash> exists, else build + push
-# put the printed repo@sha256:<digest> into project.yaml environment.image
-```
-
-To build through a pull-through registry cache near the build host, set
-`AIDEV_IMAGE_CACHE_BY_REGION` to `region=host:port` pairs, e.g.
-`eu=cache.example.org:5001,*=cache2.example.org:5001`: a pair applies when its region is
-a label of the host's FQDN, and `*` applies to any other host. Unset, the image is built
-straight from `registry.gitlab.syncad.com`.
+No tool version is pinned here. AIDEV resolves the `develop` tag before every run and
+rebuilds the image when the tag or the Dockerfile moves, so nothing has to be re-pinned
+in this repository; a tool upgrade that breaks a check is fixed when it breaks. The
+`environment.image` digest is only the seed AIDEV reads before a slot resolves.

@@ -26,9 +26,14 @@ branches:
 # How this project's suites execute (#13892): one kind, stated once.
 environment:
   kind: "container"
-  # Built by .aidev/runtime/build.sh from .aidev/runtime/Dockerfile (its only input).
-  image: "registry.gitlab.syncad.com/hive/hafah/aidev-tests@sha256:3a93cff858bcfa03efcdcb945b5e078e0deb888414aa08acf3d3c9a73f8ea538"
+  # The tool versions are common-ci-configuration's (its docker-bake.hcl), as in CI:
+  # AIDEV builds .aidev/runtime/Dockerfile on whatever python-test-tools:develop names
+  # now and rebuilds when that tag moves. `image` is only the seed pin consumers read
+  # before a slot resolves (the base's digest at adoption); the suites never run in it.
+  image: "registry.gitlab.syncad.com/hive/common-ci-configuration/python-test-tools@sha256:6f7fb3acf0c4f5551cf9fa58a382fbae66c9c47b06510b31685553581ef1409e"
   inputs: [".aidev/runtime/Dockerfile"]
+  build: {dockerfile: ".aidev/runtime/Dockerfile", context: ".aidev/runtime"}
+  base: {image: "registry.gitlab.syncad.com/hive/common-ci-configuration/python-test-tools:develop", follow: true}
 
 issues:
   intake_label: todo

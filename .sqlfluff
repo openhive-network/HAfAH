@@ -1,0 +1,16 @@
+[sqlfluff]
+dialect = postgres
+# endpoints/endpoint_schema.sql and the larger endpoint files exceed the 20 kB default
+# and would be skipped silently.
+large_file_skip_byte_limit = 0
+# Baseline of the tree's existing style (sqlfluff 4.4.0, 2026-10-24: 1112 findings,
+# no parse errors), kept rather than restyling every file:
+#   LT01, LT02, LT05  spacing, indentation and line length
+#   CP01, CP04, CP05  keyword, literal and type-name capitalisation
+#   RF06              quoted identifiers: the REST endpoints' parameter names
+#                     ("page-size", "operation-begin", ...) are PostgREST's API
+#   CV06              the closing `;` of a statement on its own line after $BODY$
+#   AL01, AM05, ST06  aliasing, bare JOIN and select-target order in
+#                     db/hafah_app.sql's helper_operations_view
+# Every other rule applies.
+exclude_rules = LT01, LT02, LT05, CP01, CP04, CP05, RF06, CV06, AL01, AM05, ST06
