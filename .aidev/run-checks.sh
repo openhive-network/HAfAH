@@ -62,7 +62,7 @@ step() {
 run_shellcheck() {
     shellcheck --version | head -2
     shellcheck -f gcc scripts/*.sh scripts/*.bash docker/*.sh || return 1
-    shellcheck -f gcc .aidev/*.sh .aidev/runtime/*.sh
+    shellcheck -f gcc .aidev/*.sh
 }
 
 sql_registered() {

@@ -319,6 +319,23 @@ find_haf_testnet_image:
 # Note: Both HAF and Hive variables are automatically detected by find_haf_image
 # and find_hive_image jobs. No manual validation needed.
 
+# Lint in common-ci-configuration's python-test-tools image, at its tool versions.
+# Both trees lint clean (sqlfluff against the baseline recorded in .sqlfluff), so a
+# finding fails the pipeline instead of the templates' default allow_failure.
+lint_bash_scripts:
+  extends: .haf_app_lint_bash
+  needs: []
+  variables:
+    LINT_SCRIPTS_DIR: "."
+  allow_failure: false
+
+lint_sql_scripts:
+  extends: .haf_app_lint_sql
+  needs: []
+  variables:
+    SQLFLUFF_CONFIG: ".sqlfluff"
+  allow_failure: false
+
 verify_poetry_lock_sanity:
   extends: .verify_poetry_lock_sanity_template
   stage: build
@@ -1075,10 +1092,11 @@ extract_testnet_binaries:
   - public-runner-docker
 
 hafah_pytest_rest_api_pattern_tests:
+  extends: .tavern_test_variables
   stage: test
-  # Use specific tag with util-linux for NFS flock support (not :latest which has BusyBox flock)
-  image: 
-    registry.gitlab.syncad.com/hive/common-ci-configuration/docker-builder:${DOCKER_BUILDER_TAG}
+  # common-ci-configuration's test runner: tavern, pytest-xdist and deepdiff at its
+  # docker-bake.hcl versions, plus the docker CLI and util-linux flock for the NFS cache
+  image: "${HAF_APP_TEST_RUNNER_IMAGE}"
   needs:
   - job: find_haf_image
     artifacts: true
@@ -1104,20 +1122,25 @@ hafah_pytest_rest_api_pattern_tests:
     HAF_SHM_DIRECTORY: "${CI_PROJECT_DIR}/haf-shm"
     # Test configuration
     JUNIT_REPORT: $CI_PROJECT_DIR/tests/tavern/report.xml
-    PYTEST_BASED_IMAGE_NAME: ${PYTEST_RUNTIME_IMAGE_NAME}
     TAVERN_DIR: $CI_PROJECT_DIR/tests/tavern
     DB_NAME: haf_block_log
     DB_URL: "postgresql://haf_admin@localhost:5432/$DB_NAME"
     HAF_APP_IMAGE: $HAFAH_IMAGE_NAME
     HAF_APP_PORT: ${APP_PORT}
-    HAF_APP_HOST: localhost
+    # docker-compose.ci.yml publishes hafah's port on the DinD service
+    HAF_APP_HOST: docker
     DIRECT_CALLS: 0
     POSTGRES_URL: $DB_URL
   before_script:
+  - !reference [.tavern_install_deps, script]
   - !reference [.clone_tests_api, script]
   - |
+    # validate_response, the tavern tests' comparator. --no-deps keeps the image's
+    # tool versions: its requirements (deepdiff, requests, prettytable) are all there.
+    python3 -m pip install --quiet --no-cache-dir --no-deps "${CI_PROJECT_DIR}/tests_api"
+  - |
     # Clean up stale data directories from previous runs (may be root-owned from Docker)
-    # Docker-builder is Alpine-based without sudo, so use Docker to clean up as root
+    # Stale directories may be root-owned and the job runs as hived, so remove them as root through Docker
     # Wait for Docker daemon with timeout, then use alpine container to remove directories
     echo "Cleaning up stale data directories..."
     CLEANUP_TIMEOUT=30
@@ -1161,26 +1184,7 @@ hafah_pytest_rest_api_pattern_tests:
   - |
     echo "HAfAH image name $HAFAH_IMAGE_NAME"
     echo "HAF image name $HAF_IMAGE_NAME"
-    # Run pytest from a Python container connected to the haf-network
-    # This allows pytest to reach the hafah service at hafah-ci-hafah-1:6543
-    # Use Python 3.14 image - tests_api requires Python 3.14+
-    # Tavern tests require validate_response module from hive/tests_api
-    docker run --rm --network haf-network \
-      -e HAF_APP_HOST=hafah-ci-hafah-1 \
-      -e HAF_APP_PORT=${APP_PORT} \
-      -e TAVERN_DIR=/workspace/tests/tavern \
-      -v "${CI_PROJECT_DIR}:/workspace" \
-      -w /workspace \
-      python:3.14-slim \
-      /bin/bash -c "
-        # Install tests_api for validate_response module (pre-cloned by .clone_tests_api)
-        pip install --quiet /workspace/tests_api
-        # Install tavern test dependencies
-        pip install --quiet tavern pytest-xdist pyyaml requests deepdiff
-        # Run tests
-        cd /workspace/tests/tavern
-        pytest -n ${PYTEST_NUMBER_OF_PROCESSES:-4} --junitxml report.xml .
-      "
+  - !reference [.tavern_run_tests, script]
   after_script:
   - |
     cd "${CI_PROJECT_DIR}/docker"
@@ -1188,7 +1192,7 @@ hafah_pytest_rest_api_pattern_tests:
     docker compose --env-file ci.env -f docker-compose.ci.yml down --volumes || true
 
     # Clean up data directories to prevent permission issues for next job
-    # Use Docker to remove as root since docker-builder doesn't have sudo
+    # Use Docker to remove as root since the job runs as hived
     docker run --rm -v "${CI_PROJECT_DIR}:/workspace" alpine:latest \
       sh -c "rm -rf /workspace/haf-data /workspace/haf-shm" 2>/dev/null || \
       rm -rf "${HAF_DATA_DIRECTORY}" "${HAF_SHM_DIRECTORY}" 2>/dev/null || true
@@ -1196,6 +1200,8 @@ hafah_pytest_rest_api_pattern_tests:
     paths:
     - "**/*.out.json"
     - docker/docker-compose-logs.txt
+    reports:
+      junit: $JUNIT_REPORT
     when: always
   tags:
   - public-runner-docker
