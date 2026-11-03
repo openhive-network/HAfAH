@@ -20,11 +20,14 @@
 #                     checked by .aidev/hafah_smoke.py; one junit case per call
 #   - tavern          the tavern pattern tests (tests/tavern) against PostgREST over
 #                     the clone, by .aidev/hafah_tavern.py; one junit case per test
+#   - rewriter        the rewriter tests (tests/rewriter) through the rewriter emulator
+#                     (.aidev/rewriter.py) in front of PostgREST over the clone, by
+#                     .aidev/hafah_rewriter_tests.py; one junit case per test
 #
-# install, reinstall, api-smoke and tavern need the shared HAF (sandbox.external haf,
+# install, reinstall, api-smoke, tavern and rewriter need the shared HAF (sandbox.external haf,
 # provider haf/haf); the clone is dropped when the script exits, pass or fail.
 # Reports go to test-results/<suite>/: junit.xml (one case per step) plus
-# api-smoke.xml and tavern.xml.
+# api-smoke.xml, tavern.xml and rewriter.xml.
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 1
 
@@ -164,6 +167,7 @@ for s in "$@"; do
         reinstall) step reinstall reinstall ;;
         api-smoke) step api-smoke on_clone python3 .aidev/hafah_smoke.py "$out" ;;
         tavern) step tavern on_clone python3 .aidev/hafah_tavern.py "$out" ;;
+        rewriter) step rewriter on_clone python3 .aidev/hafah_rewriter_tests.py "$out" ;;
         *) echo "unknown step: $s" >&2; exit 2 ;;
     esac
 done
