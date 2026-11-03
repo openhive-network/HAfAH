@@ -17,7 +17,7 @@ from collections.abc import Iterator
 STARTUP_TIMEOUT_S = 60
 
 
-def _free_port() -> int:
+def free_port() -> int:
     with socket.socket() as sock:
         sock.bind(("127.0.0.1", 0))
         port: int = sock.getsockname()[1]
@@ -40,7 +40,7 @@ def serving(log_path: str) -> Iterator[str]:
     Its output goes to log_path. Raises RuntimeError when it exits or does not
     answer within STARTUP_TIMEOUT_S.
     """
-    port = _free_port()
+    port = free_port()
     base = f"http://127.0.0.1:{port}"
     env = dict(os.environ,
                PGRST_DB_URI=os.environ["HAFAH_TEST_DB_URL"],

@@ -20,6 +20,7 @@ the failure body. `api-smoke` also writes one case per call (`api-smoke.xml`).
 | `reinstall` | the schemas dropped (`scripts/uninstall_app.sh` without its role statements), then `install` again |
 | `api-smoke` | `.aidev/hafah_smoke.py`: PostgREST over the installed schema (`.aidev/postgrest.py`, as `run_hafah_postgrest.sh` starts it), then JSON-RPC calls (`account_history_api`, `condenser_api`, `block_api`, an unknown method, an unknown transaction) and REST calls (`get_version`, `get_head_block_num`, `get_op_types`, `get_operations`, `get_transaction`, `get_ops_by_block_paging`, `get_recent_trades`, `get_block`, `get_block_range`, `get_ops_by_account` with and without the Denser wallet's `operation-types` filter and a block range, an unknown account), each checked against the 5M-block chain's answer (e.g. `steemit`: 4266 operations, 1235 with the wallet filter) |
 | `tavern` | `.aidev/hafah_tavern.py`: the tavern pattern tests (`tests/tavern`, as CI's `hafah_pytest_rest_api_pattern_tests`) against PostgREST over the clone, 4 xdist workers, run from a copy in `test-results/<suite>/tavern/` (the comparator writes each answer beside its test); `tavern.xml`, one case per test |
+| `rewriter` | `.aidev/hafah_rewriter_tests.py`: the rewriter tests (`tests/rewriter`) through `.aidev/rewriter.py` in front of PostgREST over the clone; `rewriter.xml`, one case per test. The runtime image has no nginx, so `rewriter.py` does what `docker/hafah_rest_nginx.conf.template` makes the rewriter image do: the `path-filter` encoding, `endpoints/rewrite_rules.conf`, and the forwarding of a GET of `/rpc/<function>` as a form-encoded POST that keeps PostgREST's reserved parameters (`select`, `columns`, `on_conflict`, and names ending in `limit`, `offset`, `order`, `and`, `or`) in the query string. A change to one of those in the template needs the same change there. The tests read `HAFAH_REWRITER_URL` and `HAFAH_POSTGREST_URL`, so they can be pointed at the rewriter image too |
 
 The install steps copy `db/ backend/ endpoints/ scripts/` to a scratch directory and
 write `scripts/set_version_in_sql.pgsql` there (`git rev-parse HEAD`, or `aidev` when the
@@ -28,7 +29,7 @@ checkout has no usable git), because a workflow checkout may have no `.git`.
 | Slot | Steps | Shared HAF |
 |---|---|---|
 | quick, coverage | shellcheck, sql-registered | no |
-| full, canary | those plus install, reinstall, api-smoke, tavern | yes |
+| full, canary | those plus install, reinstall, api-smoke, tavern, rewriter | yes |
 | baseline | install, reinstall, api-smoke | yes |
 
 `static` and `system` are unbound: AIDEV runs neither for a project.
