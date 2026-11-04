@@ -38,3 +38,6 @@ haf/
 
 # AIDEV check reports (.aidev/run-checks.sh)
 test-results/
+
+# AIDEV db_shape gate report (aidev db shape check --report)
+/db-shape-report.json
