@@ -7,6 +7,8 @@ case sets one text parameter of an endpoint, in its path or its query, to such a
 requests it through the rewriter; the answer must equal the function's answer to the same
 arguments sent to PostgREST in a JSON body.
 """
+import json
+
 import pytest
 from rest_client import PostgREST, Rewriter
 
@@ -95,6 +97,22 @@ def test_head_answers_as_get(rewriter: Rewriter, target: str, status: int) -> No
     head = rewriter.head(target)
     assert head == rewriter.head(target, method="GET")
     assert head.status == status, head
+
+
+@pytest.mark.parametrize(("target", "status"), [
+    ("/accounts/blocktrades/operation-types", 200),
+    ("/accounts/not.existing/operation-types", 400),
+])
+def test_head_leaves_the_connection_to_the_next_answer(rewriter: Rewriter, target: str, status: int) -> None:
+    # A body sent after a HEAD's headers would stay on the connection and be read as the
+    # start of the GET's answer, which then fails to parse.
+    head, get = rewriter.in_turn(("HEAD", target), ("GET", target))
+    assert (head.status, head.body) == (get.status, b""), head
+    assert head.headers.get("Content-Type") == get.headers.get("Content-Type")
+    assert get.status == status, get
+    body = json.loads(get.body)
+    assert not _error_code(body).startswith("PGRST"), body
+    assert body == rewriter.get(target).body
 
 
 def test_plain_account_is_answered_as_before(rewriter: Rewriter, postgrest: PostgREST) -> None:
