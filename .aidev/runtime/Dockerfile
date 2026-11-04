@@ -9,8 +9,8 @@
 # the postgrest binary. This file adds hive/tests_api (validate_response, the
 # tavern tests' comparator) at TESTS_API_COMMIT, without its dependencies so the
 # base's tool versions stay as they are, and, for the rewriter step, the OpenResty of
-# the rewriter image's base (Dockerfile.rewriter's FROM, pinned at the digest its tag
-# named when this was written: move the pin when that tag moves). That OpenResty is
+# the rewriter image's base (Dockerfile.rewriter's FROM names the same digest: move
+# both together). That OpenResty is
 # built against Alpine's musl, so musl's loader and the two Alpine libraries it links
 # besides its own (zlib, libgcc_s) come too, in a directory only musl's loader reads.
 #
