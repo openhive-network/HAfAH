@@ -1,9 +1,13 @@
 """HTTP clients for the rewriter and the PostgREST behind it."""
+import http.client
+import io
 import json
+import socket
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from typing import Any
+from urllib.parse import urlsplit
 
 
 @dataclass(frozen=True)
@@ -28,6 +32,40 @@ class Head:
     content_type: str | None
 
 
+class _SharedReader(io.BufferedReader):
+    """One reader for every answer on a connection.
+
+    http.client gives each answer a reader of its own and drops whatever that reader buffered
+    past the answer's framing, so bytes a server sent after a HEAD's headers would vanish
+    rather than be read as the start of the next answer, as a proxy reusing the connection reads them.
+    """
+
+    def close(self) -> None:
+        """Leave the reader open for the next answer; release() closes it."""
+
+    def release(self) -> None:
+        super().close()
+
+
+def _answers_from(reader: _SharedReader) -> type[http.client.HTTPResponse]:
+    """An answer class reading from `reader` instead of a reader of its own."""
+    class _Answer(http.client.HTTPResponse):
+        def __init__(self, sock: socket.socket, debuglevel: int = 0, method: str | None = None,
+                     url: str | None = None) -> None:
+            super().__init__(sock, debuglevel, method, url)
+            self.fp.close()
+            self.fp = reader
+    return _Answer
+
+
+@dataclass(frozen=True)
+class Raw:
+    """An answer as it came off the connection: status, headers and every body byte read."""
+    status: int
+    headers: dict[str, str]
+    body: bytes
+
+
 @dataclass(frozen=True)
 class Rewriter:
     base: str
@@ -45,6 +83,27 @@ class Rewriter:
         except urllib.error.HTTPError as err:
             status, headers = err.code, err.headers
         return Head(status, headers.get("Content-Type"))
+
+    def in_turn(self, *requests: tuple[str, str]) -> list[Raw]:
+        """Send each (method, target) in turn on one HTTP/1.1 keep-alive connection, reading each answer fully.
+
+        Raises http.client.HTTPException when an answer is not where the previous one's framing ends.
+        """
+        conn = http.client.HTTPConnection(urlsplit(self.base).netloc, timeout=60)
+        conn.auto_open = 0
+        conn.connect()
+        reader = _SharedReader(socket.SocketIO(conn.sock, "rb"))
+        conn.response_class = _answers_from(reader)
+        try:
+            answers = []
+            for method, target in requests:
+                conn.request(method, target)
+                resp = conn.getresponse()
+                answers.append(Raw(resp.status, dict(resp.getheaders()), resp.read()))
+            return answers
+        finally:
+            reader.release()
+            conn.close()
 
 
 @dataclass(frozen=True)
