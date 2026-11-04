@@ -312,7 +312,7 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_block_range(
 )
 RETURNS SETOF hafah_backend.block_range 
 -- openapi-generated-code-end
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 SET JIT = OFF
 SET join_collapse_limit = 16
 SET from_collapse_limit = 16

@@ -72,7 +72,7 @@ DROP FUNCTION IF EXISTS hafah_endpoints.get_version;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_version()
 RETURNS hafah_backend.version_type 
 -- openapi-generated-code-end
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 BEGIN

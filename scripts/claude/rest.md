@@ -140,6 +140,19 @@ offset = (total_pages - page) * page_size
 
 ---
 
+## Function Volatility
+
+Every REST endpoint function is declared `STABLE` (on the `LANGUAGE` line just
+after `-- openapi-generated-code-end`, so regenerating the OpenAPI code keeps
+it). The rewriter forwards REST GETs to PostgREST as POSTs, and PostgREST runs
+a POST to a VOLATILE function in a READ WRITE transaction; a STABLE or
+IMMUTABLE one gets READ ONLY, as on a hot-standby replica it must.
+`.aidev/endpoint_volatility_check.sql` (run by the install step) fails on any
+VOLATILE function in `hafah_endpoints` except the JSON-RPC dispatcher's
+(first argument JSON).
+
+---
+
 ## Cache Headers
 
 HAfAH sets cache headers based on data reversibility:

@@ -78,7 +78,7 @@ CREATE OR REPLACE FUNCTION hafah_endpoints.get_block_header(
 )
 RETURNS hafah_backend.block_header 
 -- openapi-generated-code-end
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 SET JIT = OFF
 SET join_collapse_limit = 16
 SET from_collapse_limit = 16
