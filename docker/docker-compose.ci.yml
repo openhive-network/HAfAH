@@ -46,7 +46,9 @@ services:
     networks:
       haf-network:
     healthcheck:
-      test: ["CMD-SHELL", "psql -U hafah_user -d haf_block_log -h haf -c 'SELECT git_hash FROM hafah_backend.version LIMIT 1' || exit 1"]
+      # Probe PostgREST itself: the entrypoint only starts it after its own database waits,
+      # so a database-only check reports healthy before anything listens on 6543.
+      test: ["CMD-SHELL", "wget -q -O /dev/null -T 5 --header 'Content-Type: application/json' --post-data '{}' http://127.0.0.1:6543/rpc/get_head_block_num || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 30
