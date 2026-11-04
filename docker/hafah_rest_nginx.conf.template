@@ -74,8 +74,8 @@ http {
 
             # PostgREST reads a GET argument whose value starts with a filter operator
             # (`not.`, `eq.`, `in.`, ...) as a filter on the result, never as an argument,
-            # while every field of a form-encoded POST is an argument. So a GET of a
-            # function goes upstream as that POST, its query string becoming the body:
+            # while every field of a form-encoded POST is an argument. So a GET (or HEAD)
+            # of a function goes upstream as that POST, its query string becoming the body:
             # each argument reaches the function verbatim, whatever it starts with.
             # This runs after the set_by_lua_block directives and the rewrite rules, so
             # it sees the path segments they turn into arguments and the encoded
@@ -85,9 +85,11 @@ http {
             # `on_conflict`, and any name whose last dot-separated part is `limit`,
             # `offset`, `order`, `and` or `or` (`not.or`, `child.limit`), the names a
             # GET straight to PostgREST takes for no argument either. Each part keeps
-            # its encoding and order. .aidev/hafah_rewriter.py makes the same split.
+            # its encoding and order. The rewriter step of .aidev/run-checks.sh runs
+            # tests/rewriter through this configuration (.aidev/hafah_rewriter.py).
             rewrite_by_lua_block {
-                if ngx.req.get_method() == "GET" and ngx.var.uri:sub(1, 5) == "/rpc/" then
+                local method = ngx.req.get_method()
+                if (method == "GET" or method == "HEAD") and ngx.var.uri:sub(1, 5) == "/rpc/" then
                     local reserved = { select = true, columns = true, on_conflict = true }
                     local reserved_last = { limit = true, offset = true, order = true, ["and"] = true, ["or"] = true }
                     local body, query = {}, {}

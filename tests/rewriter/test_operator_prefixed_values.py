@@ -84,6 +84,19 @@ def test_operator_prefixed_partial_operation_name_matches_nothing(rewriter: Rewr
     assert (answer.status, answer.body) == (200, [])
 
 
+@pytest.mark.parametrize(("target", "status"), [
+    ("/accounts/not.existing/operation-types", 400),
+    ("/accounts/steemit/operation-types", 200),
+    # PGRST100 is a 400 too, like the function's answer for an unknown account, and a HEAD
+    # answers no body to tell them apart: here the function answers 200 (no operation type).
+    ("/operation-types?partial-operation-name=not.existing", 200),
+])
+def test_head_answers_as_get(rewriter: Rewriter, target: str, status: int) -> None:
+    head = rewriter.head(target)
+    assert head == rewriter.head(target, method="GET")
+    assert head.status == status, head
+
+
 def test_plain_account_is_answered_as_before(rewriter: Rewriter, postgrest: PostgREST) -> None:
     routed = rewriter.get("/accounts/steemit/operation-types")
     assert routed.status == 200 and 0 in routed.body, routed
