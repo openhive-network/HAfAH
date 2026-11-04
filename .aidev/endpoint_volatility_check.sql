@@ -4,7 +4,7 @@
 -- The JSON-RPC dispatcher functions (first argument JSON) are POSTed by their
 -- clients and are not checked. Then the endpoints whose volatility was once
 -- missing are called inside a READ ONLY transaction, on the shared HAF at
--- block 5000000.
+-- blocks 1000-1010.
 -- Runs as haf_shared_consumer in the run's clone (.aidev/run-checks.sh install)
 -- and writes nothing.
 \set ON_ERROR_STOP on
