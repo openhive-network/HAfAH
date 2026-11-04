@@ -65,7 +65,7 @@ sandbox:
 # clone of the shared 5M-block HAF, a PostgREST smoke test of chain data and, for
 # full and canary, the tavern pattern tests (CI's
 # hafah_pytest_rest_api_pattern_tests) and the rewriter tests (tests/rewriter,
-# through .aidev/rewriter.py's emulation of the rewriter image). CI's pytest functional tests (testnet +
+# through the rewriter image's OpenResty and nginx configuration). CI's pytest functional tests (testnet +
 # hived), comparison tests and benchmarks aren't bound yet; see .aidev/README.md.
 verification:
   quick:

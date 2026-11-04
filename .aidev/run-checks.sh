@@ -20,8 +20,9 @@
 #                     checked by .aidev/hafah_smoke.py; one junit case per call
 #   - tavern          the tavern pattern tests (tests/tavern) against PostgREST over
 #                     the clone, by .aidev/hafah_tavern.py; one junit case per test
-#   - rewriter        the rewriter tests (tests/rewriter) through the rewriter emulator
-#                     (.aidev/rewriter.py) in front of PostgREST over the clone, by
+#   - rewriter        the rewriter tests (tests/rewriter) through the rewriter image's
+#                     OpenResty and configuration (.aidev/hafah_rewriter.py) in front of
+#                     PostgREST over the clone, by
 #                     .aidev/hafah_rewriter_tests.py; one junit case per test
 #
 # install, reinstall, api-smoke, tavern and rewriter need the shared HAF (sandbox.external haf,

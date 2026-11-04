@@ -3,40 +3,37 @@
 
     hafah_rewriter_tests.py OUT_DIR
 
-Starts PostgREST over the run's clone (.aidev/postgrest.py) and the rewriter emulator in front
-of it (.aidev/rewriter.py, with endpoints/rewrite_rules.conf), then runs pytest on
-tests/rewriter with HAFAH_REWRITER_URL and HAFAH_POSTGREST_URL pointing at them. CI and a
-manual run can point the same variables at the rewriter image instead.
+Starts PostgREST over the run's clone (.aidev/postgrest.py) and, in front of it, the rewriter
+image's OpenResty with the image's configuration (.aidev/hafah_rewriter.py), then runs pytest
+on tests/rewriter with HAFAH_REWRITER_URL and HAFAH_POSTGREST_URL pointing at them. CI and a
+manual run can point the same variables at a running rewriter image instead.
 
-Writes OUT_DIR/rewriter.xml (one junit case per test) and exits with pytest's status.
+Writes OUT_DIR/rewriter.xml (one junit case per test) and the two servers' logs beside it, and
+exits with pytest's status.
 """
 import os
 import subprocess
 import sys
 
-import rewriter
-from postgrest import free_port, serving
+import hafah_rewriter
+from postgrest import serving
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TESTS = os.path.join(HERE, "..", "tests", "rewriter")
-RULES = os.path.join(HERE, "..", "endpoints", "rewrite_rules.conf")
 
 
 def main(out: str) -> int:
     os.makedirs(out, exist_ok=True)
-    with open(RULES) as rules, serving(os.path.join(out, "postgrest-rewriter.log")) as base:
-        host, port = base.removeprefix("http://").rsplit(":", 1)
-        rewriter_port = free_port()
-        server = rewriter.start(rules.read(), host, int(port), rewriter_port)
-        try:
-            env = dict(os.environ, HAFAH_POSTGREST_URL=base, HAFAH_REWRITER_URL=f"http://127.0.0.1:{rewriter_port}")
-            return subprocess.run(
-                [sys.executable, "-m", "pytest", "-p", "no:cacheprovider",
-                 "--junitxml", os.path.abspath(os.path.join(out, "rewriter.xml")), "."],
-                cwd=TESTS, env=env, check=False,
-            ).returncode
-        finally:
-            server.shutdown()
+    with serving(os.path.join(out, "postgrest-rewriter.log")) as base, \
+            hafah_rewriter.serving(base, os.path.join(out, "openresty-rewriter.log")) as rewriter:
+        print(f"rewriter: {hafah_rewriter.OPENRESTY} with docker/hafah_rest_nginx.conf.template at {rewriter}",
+              flush=True)
+        env = dict(os.environ, HAFAH_POSTGREST_URL=base, HAFAH_REWRITER_URL=rewriter)
+        return subprocess.run(
+            [sys.executable, "-m", "pytest", "-p", "no:cacheprovider",
+             "--junitxml", os.path.abspath(os.path.join(out, "rewriter.xml")), "."],
+            cwd=TESTS, env=env, check=False,
+        ).returncode
 
 
 if __name__ == "__main__":
