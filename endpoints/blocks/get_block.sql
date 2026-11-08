@@ -28,7 +28,10 @@ SET ROLE hafah_owner;
       - Blocks
     summary: Get block details
     description: |
-      Retrieve a full, signed block of the referenced block, or null if no matching block was found.
+      Retrieve a full, signed block of the referenced block.
+
+      If the block does not exist or is not yet irreversible, the call fails with HTTP 400
+      and an error message naming the block number, e.g. `Block_num ''999999999'' does not exist`.
 
       SQL example
       * `SELECT * FROM hafah_endpoints.get_block(5000000);`

@@ -12,8 +12,8 @@
  *   to-block (query) - End of block range [REQUIRED]
  *                      Accepts block number or timestamp (created_at <= timestamp)
  *
- * RETURNS: Array of full block objects, may be shorter than requested if
- *          range extends past current head block.
+ * RETURNS: Array of full block objects, cut at the last irreversible block,
+ *          so it may be shorter than requested (or empty).
  *
  * CACHING:
  *   - 1 year cache if all blocks in range are irreversible
@@ -38,7 +38,8 @@ hafah_backend.array_of_block_range:
     summary: Get block details in range
     description: |
       Retrieve a range of full, signed blocks.
-      The list may be shorter than requested if count blocks would take you past the current head block. 
+      Only irreversible blocks are returned: if `to-block` is past the last irreversible block,
+      the list stops at that block, so it may be shorter than requested (or empty).
 
       SQL example
       * `SELECT * FROM hafah_endpoints.get_block_range(4999999,5000000);`

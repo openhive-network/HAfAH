@@ -605,7 +605,7 @@ declare
           "Blocks"
         ],
         "summary": "Get block details in range",
-        "description": "Retrieve a range of full, signed blocks.\nThe list may be shorter than requested if count blocks would take you past the current head block. \n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block_range(4999999,5000000);`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/blocks?from-block=4999999&to-block=5000000''`\n",
+        "description": "Retrieve a range of full, signed blocks.\nOnly irreversible blocks are returned: if `to-block` is past the last irreversible block,\nthe list stops at that block, so it may be shorter than requested (or empty).\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block_range(4999999,5000000);`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/blocks?from-block=4999999&to-block=5000000''`\n",
         "operationId": "hafah_endpoints.get_block_range",
         "parameters": [
           {
@@ -862,7 +862,7 @@ declare
           "Blocks"
         ],
         "summary": "Get block details",
-        "description": "Retrieve a full, signed block of the referenced block, or null if no matching block was found.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block(5000000);`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/blocks/5000000''`\n",
+        "description": "Retrieve a full, signed block of the referenced block.\n\nIf the block does not exist or is not yet irreversible, the call fails with HTTP 400\nand an error message naming the block number, e.g. `Block_num ''999999999'' does not exist`.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block(5000000);`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/blocks/5000000''`\n",
         "operationId": "hafah_endpoints.get_block",
         "parameters": [
           {
@@ -1006,7 +1006,7 @@ declare
           "Blocks"
         ],
         "summary": "Get block header of the referenced block",
-        "description": "Retrieve a block header of the referenced block, or null if no matching block was found.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block_header(500000);`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/blocks/500000/header''`\n",
+        "description": "Retrieve a block header of the referenced block.\n\nIf the block does not exist or is not yet irreversible, the call fails with HTTP 400\nand an error message naming the block number, e.g. `Block_num ''999999999'' does not exist`.\n\nSQL example\n* `SELECT * FROM hafah_endpoints.get_block_header(500000);`\n\nREST call example\n* `GET ''https://%1$s/hafah-api/blocks/500000/header''`\n",
         "operationId": "hafah_endpoints.get_block_header",
         "parameters": [
           {
