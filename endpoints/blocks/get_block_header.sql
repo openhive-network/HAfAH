@@ -29,7 +29,10 @@ SET ROLE hafah_owner;
       - Blocks
     summary: Get block header of the referenced block
     description: |
-      Retrieve a block header of the referenced block, or null if no matching block was found.
+      Retrieve a block header of the referenced block.
+
+      If the block does not exist or is not yet irreversible, the call fails with HTTP 400
+      and an error message naming the block number, e.g. `Block_num ''999999999'' does not exist`.
       
       SQL example
       * `SELECT * FROM hafah_endpoints.get_block_header(500000);`
