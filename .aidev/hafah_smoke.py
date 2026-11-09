@@ -17,26 +17,27 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from typing import Any, Callable
 
 from postgrest import serving
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def rpc(method, params):
+def rpc(method: str, params: Any) -> tuple[str, str, dict[str, Any]]:
     return ("POST", "/", {"jsonrpc": "2.0", "method": method, "params": params, "id": 1})
 
 
-def _extracted(extract, value):
+def _extracted(extract: Callable[[Any], Any], value: Any) -> Any:
     try:
         return extract(value)
     except (KeyError, IndexError, TypeError) as err:
         raise AssertionError(f"answer lacks the checked field ({type(err).__name__}: {err})") from err
 
 
-def rpc_result(expected, extract):
+def rpc_result(expected: Any, extract: Callable[[Any], Any]) -> Callable[[int, Any], None]:
     """The JSON-RPC result, through extract, equals expected."""
-    def check(status, body) -> None:
+    def check(status: int, body: Any) -> None:
         assert status == 200, f"HTTP {status}"
         assert "error" not in body, f"error: {body.get('error')}"
         got = _extracted(extract, body["result"])
@@ -121,6 +122,8 @@ CHECKS = [
      rpc_result("2016-03-24T16:05:00", lambda r: r["header"]["timestamp"])),
     ("jsonrpc/block_api.get_block_range", rpc("block_api.get_block_range", {"starting_block_num": 4000000, "count": 5}),
      rpc_result(["003d0900", "003d0901", "003d0902", "003d0903", "003d0904"], lambda r: [b["block_id"][:8] for b in r["blocks"]])),
+    ("jsonrpc/hive_api.get_version", rpc("hive_api.get_version", {}),
+     rpc_result((["app_name", "commit"], "PostgRESTHAfAH", True), lambda r: (sorted(r), r["app_name"], bool(r["commit"])))),
     ("jsonrpc/unknown_method", rpc("account_history_api.no_such_method", {}), rpc_error(-32601)),
     ("rest/get_version", ("GET", "/rpc/get_version", None), http_body("PostgRESTHAfAH", lambda b: b["app_name"])),
     ("rest/get_head_block_num", ("GET", "/rpc/get_head_block_num", None), http_body(5000000, lambda b: b)),
