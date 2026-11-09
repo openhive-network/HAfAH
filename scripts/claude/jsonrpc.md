@@ -102,12 +102,18 @@ home(_body JSON)
         │   ├─ call_get_block()
         │   ├─ call_get_block_header()
         │   ├─ call_get_block_range()
-        │   └─ call_get_version()
+        │   └─ to_json(get_version())  (REST endpoint, endpoints/other/get_version.sql)
         │
         └─ Return JSON-RPC response
 ```
 
 **File:** `endpoints/dispatcher.sql`
+
+Every function in `dispatcher.sql` is declared `STABLE`: JSON-RPC calls are
+POSTs, and PostgREST runs a POST to a VOLATILE function in a READ WRITE
+transaction. `.aidev/endpoint_volatility_check.sql` fails on any VOLATILE
+`hafah_endpoints` function and calls each routed method through `home(json)`
+inside `BEGIN READ ONLY`.
 
 ---
 
@@ -209,6 +215,6 @@ When adding a new JSON-RPC method:
 
 1. Add method implementation in `backend/jsonrpc/methods/`
 2. Add formatter in `backend/jsonrpc/formatters/` if needed
-3. Add `call_*` wrapper in `endpoints/dispatcher.sql`
+3. Add `call_*` wrapper in `endpoints/dispatcher.sql`, declared `STABLE`
 4. Add routing case in `home()` function
 5. Update this documentation

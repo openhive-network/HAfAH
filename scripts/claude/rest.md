@@ -148,8 +148,7 @@ it). The rewriter forwards REST GETs to PostgREST as POSTs, and PostgREST runs
 a POST to a VOLATILE function in a READ WRITE transaction; a STABLE or
 IMMUTABLE one gets READ ONLY, as on a hot-standby replica it must.
 `.aidev/endpoint_volatility_check.sql` (run by the install step) fails on any
-VOLATILE function in `hafah_endpoints` except the JSON-RPC dispatcher's
-(first argument JSON).
+VOLATILE function in `hafah_endpoints`, the JSON-RPC dispatcher's included.
 
 ---
 

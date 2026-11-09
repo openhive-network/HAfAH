@@ -40,7 +40,7 @@ SET ROLE hafah_owner;
 
 CREATE FUNCTION hafah_endpoints.home(JSON)
 RETURNS JSONB
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
@@ -68,7 +68,8 @@ BEGIN
   END IF;
 
   IF __method = 'hive_api.get_version' THEN
-    SELECT hafah_endpoints.get_version() INTO __result;
+    -- The REST endpoints/other/get_version.sql function, installed after this file.
+    SELECT to_json(hafah_endpoints.get_version()) INTO __result;
   ELSE
 
     SELECT substring(__method FROM '^[^.]+') INTO __api_type;
@@ -129,7 +130,7 @@ $$
  */
 CREATE FUNCTION hafah_endpoints.call_get_ops_in_block(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
@@ -208,7 +209,7 @@ $$
  */
 CREATE FUNCTION hafah_endpoints.call_enum_virtual_ops(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
@@ -338,7 +339,7 @@ $$
  */
 CREATE FUNCTION hafah_endpoints.call_get_transaction(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
@@ -405,7 +406,7 @@ $$
  */
 CREATE FUNCTION hafah_endpoints.call_get_account_history(_params JSON, _json_type TEXT, _is_legacy_style BOOLEAN = FALSE, _id JSON = NULL)
 RETURNS JSON
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
@@ -517,7 +518,7 @@ $$
  */
 CREATE OR REPLACE FUNCTION hafah_endpoints.call_get_block(_params JSON, _json_type TEXT, _id JSON = NULL)
 RETURNS JSON
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
@@ -562,7 +563,7 @@ $$
  */
 CREATE OR REPLACE FUNCTION hafah_endpoints.call_get_block_header(_params JSON, _json_type TEXT, _id JSON = NULL)
 RETURNS JSON
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
@@ -607,7 +608,7 @@ $$
  */
 CREATE OR REPLACE FUNCTION hafah_endpoints.call_get_block_range(_params JSON, _json_type TEXT, _id JSON = NULL)
 RETURNS JSON
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 DECLARE
@@ -651,29 +652,13 @@ $$
 ;
 
 /*
- * get_version: Returns API version info for JSON-RPC hive_api.get_version.
- *
- * RETURNS: JSON object with app_name and commit hash.
- */
-CREATE FUNCTION hafah_endpoints.get_version()
-RETURNS JSON
-LANGUAGE 'plpgsql'
-AS
-$$
-BEGIN
-  RETURN json_build_object('app_name', 'PostgRESTHAfAH', 'commit', (SELECT git_hash FROM hafah_backend.version LIMIT 1));
-END;
-$$
-;
-
-/*
  * Direct PostgREST RPC wrappers (new-style API):
  * These thin wrappers allow direct calls via POST /rpc/{function_name}
  * without the JSON-RPC envelope. They delegate to the call_* functions.
  */
 CREATE FUNCTION hafah_endpoints.get_ops_in_block(JSON)
 RETURNS JSON
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 BEGIN
@@ -684,7 +669,7 @@ $$
 
 CREATE FUNCTION hafah_endpoints.enum_virtual_ops(JSON)
 RETURNS JSON
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 BEGIN
@@ -695,7 +680,7 @@ $$
 
 CREATE FUNCTION hafah_endpoints.get_transaction(JSON)
 RETURNS JSON
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 BEGIN
@@ -706,7 +691,7 @@ $$
 
 CREATE FUNCTION hafah_endpoints.get_account_history(JSON)
 RETURNS JSON
-LANGUAGE 'plpgsql'
+LANGUAGE 'plpgsql' STABLE
 AS
 $$
 BEGIN
