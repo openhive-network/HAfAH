@@ -11,7 +11,7 @@
  *                        Accepts block number or timestamp (created_at >= timestamp)
  *   to-block (query) - End of range [REQUIRED]
  *                      Accepts block number or timestamp (created_at <= timestamp)
- *   result-limit (query) - Maximum trades to return [REQUIRED]
+ *   result-limit (query) - Maximum trades to return (default: 1000, max: 1000)
  *
  * RETURNS: Array of fill_order operations within the specified range.
  *
@@ -72,9 +72,10 @@ SET ROLE hafah_owner;
           * `5000000`
       - in: query
         name: result-limit
-        required: true
+        required: false
         schema:
           type: integer
+          default: 1000
         description: |
           A limit of retrieved orders
     responses:
@@ -124,7 +125,7 @@ DROP FUNCTION IF EXISTS hafah_endpoints.get_trade_history;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_trade_history(
     "from-block" TEXT,
     "to-block" TEXT,
-    "result-limit" INT
+    "result-limit" INT = 1000
 )
 RETURNS SETOF hafah_backend.fill_order 
 -- openapi-generated-code-end

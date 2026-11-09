@@ -1,0 +1,26 @@
+---
+  test_name: Hafah PostgREST
+
+  marks:
+    - negative
+
+  includes:
+    - !include ../../common.yaml
+
+  stages:
+    - name: test
+      request:
+        url: "{service.proto:s}://{service.server:s}:{service.port}/rpc/get_block"
+        method: POST
+        headers:
+          content-type: application/json
+          accept: application/json
+        json:
+          block-num: "0"
+      response:
+        status_code: 400
+        json:
+          code: "P0001"
+          details: !anything
+          hint: !anything
+          message: !anystr
