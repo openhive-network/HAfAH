@@ -7,7 +7,7 @@
  *          internal market. Useful for price discovery and market analysis.
  *
  * PARAMETERS:
- *   result-limit (query) - Maximum number of trades to return [REQUIRED]
+ *   result-limit (query) - Maximum number of trades to return (default: 1000, max: 1000)
  *
  * RETURNS: Array of fill_order operations with trade details.
  *
@@ -34,9 +34,10 @@ SET ROLE hafah_owner;
     parameters:
       - in: query
         name: result-limit
-        required: true
+        required: false
         schema:
           type: integer
+          default: 1000
         description: |
           A limit of retrieved orders
     responses:
@@ -84,7 +85,7 @@ SET ROLE hafah_owner;
 -- openapi-generated-code-begin
 DROP FUNCTION IF EXISTS hafah_endpoints.get_recent_trades;
 CREATE OR REPLACE FUNCTION hafah_endpoints.get_recent_trades(
-    "result-limit" INT
+    "result-limit" INT = 1000
 )
 RETURNS SETOF hafah_backend.fill_order 
 -- openapi-generated-code-end
