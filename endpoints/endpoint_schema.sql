@@ -1964,9 +1964,10 @@ declare
           {
             "in": "query",
             "name": "result-limit",
-            "required": true,
+            "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "default": 1000
             },
             "description": "A limit of retrieved orders\n"
           }
