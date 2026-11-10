@@ -13,6 +13,9 @@ http {
     access_log /dev/stdout;
     # Initialize Lua and load functions here
     init_by_lua_block {
+        rpc_form = require "hive.rpc_form"
+        rpc_arguments = dofile(ngx.config.prefix() .. "conf/rpc_arguments.lua")
+
         -- Base64 encoding function
         local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 
@@ -72,54 +75,20 @@ http {
             # otherwise it will remain disabled
             ${REWRITE_LOG}
 
-            # PostgREST reads a GET argument whose value starts with a filter operator
-            # (`not.`, `eq.`, `in.`, ...) as a filter on the result, never as an argument,
-            # while every field of a form-encoded POST is an argument. So a GET (or HEAD)
-            # of a function goes upstream as that POST, its query string becoming the body:
-            # each argument reaches the function verbatim, whatever it starts with.
-            # This runs after the set_by_lua_block directives and the rewrite rules, so
-            # it sees the path segments they turn into arguments and the encoded
-            # path-filter too.
-            # PostgREST's reserved parameters stay in the query string, where they keep
-            # their meaning (in the body they would be arguments): `select`, `columns`,
-            # `on_conflict`, and any name whose last dot-separated part is `limit`,
-            # `offset`, `order`, `and` or `or` (`not.or`, `child.limit`), the names a
-            # GET straight to PostgREST takes for no argument either. Each part keeps
-            # its encoding and order. The rewriter step of .aidev/run-checks.sh runs
-            # tests/rewriter through this configuration (.aidev/hafah_rewriter.py).
-            rewrite_by_lua_block {
-                local method = ngx.req.get_method()
-                if (method == "GET" or method == "HEAD") and ngx.var.uri:sub(1, 5) == "/rpc/" then
-                    local reserved = { select = true, columns = true, on_conflict = true }
-                    local reserved_last = { limit = true, offset = true, order = true, ["and"] = true, ["or"] = true }
-                    local body, query = {}, {}
-                    for part in (ngx.var.args or ""):gmatch("[^&]+") do
-                        local name = ngx.unescape_uri((part:match("^[^=]*"):gsub("%+", " ")))
-                        if reserved[name] or reserved_last[name:match("[^.]*$")] then
-                            query[#query + 1] = part
-                        else
-                            body[#body + 1] = part
-                        end
-                    end
-                    ngx.ctx.head = method == "HEAD"
-                    ngx.req.read_body()
-                    ngx.req.set_method(ngx.HTTP_POST)
-                    ngx.req.set_header("Content-Type", "application/x-www-form-urlencoded")
-                    ngx.req.set_body_data(table.concat(body, "&"))
-                    ngx.req.set_uri_args(table.concat(query, "&"))
-                end
-            }
-
-            # nginx sends a HEAD's answer without its body by the request's method when it
-            # writes the headers, after the rewrite phase made it a POST. So a HEAD gets its
-            # method back here: its answer carries PostgREST's status and headers and no
-            # body, unchunked, as a HEAD straight to PostgREST would, and a keep-alive
-            # connection's next answer starts where the client expects it.
-            header_filter_by_lua_block {
-                if ngx.ctx.head then
-                    ngx.req.set_method(ngx.HTTP_HEAD)
-                end
-            }
+            # A GET (or HEAD) of a function goes upstream as a form-encoded POST, the
+            # parameters the function declares in its OpenAPI spec (rpc_arguments.lua,
+            # written by scripts/openapi_rewrite.sh) in the body: PostgREST reads a GET
+            # argument whose value starts with a filter operator (`not.`, `eq.`, ...) as a
+            # filter, while every field of a form body is an argument. Every other
+            # parameter (column filters, `select`, `order`, `limit`, `offset`, `and`, `or`)
+            # stays in the query string with its PostgREST meaning. This runs after the
+            # set_by_lua_block directives and the rewrite rules, so it sees the path
+            # segments they turn into arguments and the encoded path-filter too. A HEAD
+            # gets its method back before the headers go out, so its answer carries no
+            # body and a keep-alive connection's next answer is framed. See the module
+            # hive.rpc_form of the base image (common-ci-configuration).
+            rewrite_by_lua_block { rpc_form.forward(rpc_arguments) }
+            header_filter_by_lua_block { rpc_form.restore_head() }
 
             proxy_pass  http://hafah-postgrest:3000;  # my PostREST is  here!
 

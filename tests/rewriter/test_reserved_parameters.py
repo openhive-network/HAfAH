@@ -76,3 +76,28 @@ def test_logical_filter_beside_an_argument(rewriter: Rewriter, postgrest: PostgR
     vote_types = _all_op_types(postgrest, **{"partial-operation-name": "vote"})
     assert (answer.status, answer.body) == (200, [row for row in vote_types if row["op_type_id"] in (0, 2)])
     assert [row["operation_name"] for row in answer.body] == ["vote_operation"]
+
+
+def test_column_filter_beside_an_argument(rewriter: Rewriter, postgrest: PostgREST) -> None:
+    answer = rewriter.get("/operation-types?partial-operation-name=vote&op_type_id=eq.0")
+    vote_types = _all_op_types(postgrest, **{"partial-operation-name": "vote"})
+    assert (answer.status, answer.body) == (200, [row for row in vote_types if row["op_type_id"] == 0])
+    assert [row["operation_name"] for row in answer.body] == ["vote_operation"]
+
+
+def _blocks(postgrest: PostgREST) -> list[Any]:
+    answer = postgrest.call("get_block_range", {"from-block": "4000000", "to-block": "4000005"})
+    assert answer.status == 200 and len(answer.body) == 6, answer
+    rows: list[Any] = answer.body
+    return rows
+
+
+def test_offset_and_limit_trim_the_blocks(rewriter: Rewriter, postgrest: PostgREST) -> None:
+    answer = rewriter.get("/blocks?from-block=4000000&to-block=4000005&offset=1&limit=2")
+    assert (answer.status, answer.body) == (200, _blocks(postgrest)[1:3])
+
+
+def test_column_filter_trims_the_blocks(rewriter: Rewriter, postgrest: PostgREST) -> None:
+    third = _blocks(postgrest)[2]
+    answer = rewriter.get(f"/blocks?from-block=4000000&to-block=4000005&block_id=eq.{third['block_id']}")
+    assert (answer.status, answer.body) == (200, [third])
