@@ -18,6 +18,7 @@ fi
 endpoints="endpoints"
 rewrite_dir="${endpoints}_openapi"
 input_file="rewrite_rules.conf"
+rpc_arguments_file="rpc_arguments.lua"
 temp_output_file=$(mktemp)
 
 # Default directories with fixed order if none provided
@@ -129,4 +130,6 @@ rm -rf "$SCRIPTDIR/output"
 reverse_lines > "$temp_output_file"
 mv "$temp_output_file" "$SCRIPTDIR/../$rewrite_dir/$input_file"
 rm "$input_file"
+# The arguments each function declares, which the rewriter's hive.rpc_form module reads
+mv "$rpc_arguments_file" "$SCRIPTDIR/../$rewrite_dir/$rpc_arguments_file"
 echo "Rewritten scripts saved in $rewrite_dir"

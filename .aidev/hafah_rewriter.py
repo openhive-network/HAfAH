@@ -3,9 +3,10 @@
 The runtime image carries the OpenResty of Dockerfile.rewriter's base image
 (.aidev/runtime/Dockerfile). This gives it what Dockerfile.rewriter copies in -
 docker/hafah_rest_nginx.conf.template as nginx.conf, with docker/rewriter_entrypoint.sh's
-`${REWRITE_LOG}` substitution for REWRITE_LOG=on, and endpoints/rewrite_rules.conf beside it - in a scratch
-prefix, and changes only where it listens and what it forwards to: the checks run
-unprivileged, beside a PostgREST on a free loopback port rather than `hafah-postgrest:3000`.
+`${REWRITE_LOG}` substitution for REWRITE_LOG=on, and endpoints/rewrite_rules.conf and
+endpoints/rpc_arguments.lua beside it - in a scratch prefix, and changes only where it listens
+and what it forwards to: the checks run unprivileged, beside a PostgREST on a free loopback
+port rather than `hafah-postgrest:3000`.
 """
 import contextlib
 import os
@@ -23,7 +24,7 @@ STARTUP_TIMEOUT_S = 30
 
 _ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 _TEMPLATE = os.path.join(_ROOT, "docker", "hafah_rest_nginx.conf.template")
-_RULES = os.path.join(_ROOT, "endpoints", "rewrite_rules.conf")
+_CONF_FILES = ("rewrite_rules.conf", "rpc_arguments.lua")
 _REWRITE_LOG = "rewrite_log on;"
 _UPSTREAM = "http://hafah-postgrest:3000"
 
@@ -66,7 +67,8 @@ def serving(upstream: str, log_path: str) -> Iterator[str]:
         conf = os.path.join(prefix, "conf", "nginx.conf")
         with open(conf, "w") as out:
             out.write(_config(upstream, port, health_port))
-        shutil.copy(_RULES, os.path.join(prefix, "conf", "rewrite_rules.conf"))
+        for name in _CONF_FILES:
+            shutil.copy(os.path.join(_ROOT, "endpoints", name), os.path.join(prefix, "conf", name))
         command = [OPENRESTY, "-p", prefix, "-c", conf, "-e", "stderr", "-g", "daemon off;"]
         with open(log_path, "w") as log:
             if subprocess.run([*command, "-t"], stdout=log, stderr=subprocess.STDOUT, check=False).returncode != 0:

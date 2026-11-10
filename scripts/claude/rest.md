@@ -239,25 +239,32 @@ PERFORM hafah_backend.rest_raise_block_num_too_high(_block_num);
 ## The Rewriter
 
 Clients reach the endpoints through the postgrest-rewriter (`Dockerfile.rewriter`), an
-OpenResty in front of PostgREST configured by `docker/hafah_rest_nginx.conf.template` and
-`endpoints/rewrite_rules.conf`. Its rules turn the REST paths into `/rpc/<function>` calls,
-path segments into arguments (`/accounts/{account-name}/...` → `?account-name=...`).
+OpenResty in front of PostgREST configured by `docker/hafah_rest_nginx.conf.template`,
+`endpoints/rewrite_rules.conf` and `endpoints/rpc_arguments.lua`. Its rules turn the REST paths
+into `/rpc/<function>` calls, path segments into arguments (`/accounts/{account-name}/...` →
+`?account-name=...`).
 
 PostgREST reads a GET argument whose value starts with a filter operator (`not.`, `eq.`,
 `in.`, `like.`, `is.`, `fts.`, ...) as a filter on the result, never as an argument, and no
-setting changes that. So after the rules the rewriter forwards every GET of `/rpc/<function>`
-(or HEAD) as a form-encoded POST with the arguments in the body, whose fields PostgREST always takes as
-arguments; clients and caches still see a plain GET. PostgREST's reserved parameters stay in
-the upstream query string and keep their meaning: `select`, `columns`, `on_conflict`, and any
-name whose last dot-separated part is `limit`, `offset`, `order`, `and` or `or`. Hence:
+setting changes that. So after the rules the rewriter forwards a GET (or HEAD) of
+`/rpc/<function>` as a form-encoded POST, whose fields PostgREST always takes as arguments;
+clients and caches still see a plain GET. It does so with the `hive.rpc_form` module of its
+base image (common-ci-configuration's nginx, `docs/common-ci-images.md` there): the parameters
+the function declares in its OpenAPI spec, listed in `endpoints/rpc_arguments.lua`, go to the
+body, and every other parameter stays in the upstream query string with its PostgREST meaning
+(column filters, `select`, `order`, `limit`, `offset`, `and`, `or`). Hence:
 
-- no endpoint function can take an argument with one of those names;
+- an undeclared query parameter reaches PostgREST as a column filter (`?foo=1` answers a
+  PostgREST filter error), never as an argument;
+- `endpoints/rpc_arguments.lua` is generated with `endpoints/rewrite_rules.conf` by
+  `scripts/openapi_rewrite.sh` (into `endpoints_openapi/`): regenerate and commit both when an
+  endpoint's parameters change;
 - a caller going to PostgREST directly with such a value must POST it (form-encoded or JSON),
   as `GET /rpc/get_acc_op_types?account-name=not.existing` answers PGRST100.
 
 The `rewriter` test step runs `tests/rewriter` through this template itself: the runtime image
-carries the rewriter image's OpenResty and `.aidev/hafah_rewriter.py` serves the template and
-`endpoints/rewrite_rules.conf` with it in front of PostgREST.
+carries the rewriter image's OpenResty and `.aidev/hafah_rewriter.py` serves the template,
+`endpoints/rewrite_rules.conf` and `endpoints/rpc_arguments.lua` with it in front of PostgREST.
 
 ---
 

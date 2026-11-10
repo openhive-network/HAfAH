@@ -16,7 +16,7 @@
 #
 # See .aidev/README.md.
 ARG BASE_IMAGE
-FROM registry.gitlab.syncad.com/hive/common-ci-configuration/nginx@sha256:1008ee680742d09b3542393f8c3c5212162fab2893a3f5e13c546100de821ebe AS rewriter
+FROM registry.gitlab.syncad.com/hive/common-ci-configuration/nginx@sha256:e173b651aff04b3735f870068549281c417801ea64b192cf7c8cc4bce5a91815 AS rewriter
 
 FROM ${BASE_IMAGE}
 
