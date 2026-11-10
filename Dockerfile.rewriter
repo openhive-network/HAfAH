@@ -1,6 +1,6 @@
 # Same digest as the rewriter stage of .aidev/runtime/Dockerfile, whose OpenResty the
 # rewriter gate step tests: move both together.
-FROM registry.gitlab.syncad.com/hive/common-ci-configuration/nginx@sha256:1008ee680742d09b3542393f8c3c5212162fab2893a3f5e13c546100de821ebe
+FROM registry.gitlab.syncad.com/hive/common-ci-configuration/nginx@sha256:e173b651aff04b3735f870068549281c417801ea64b192cf7c8cc4bce5a91815
 
 COPY docker/hafah_rest_nginx.conf.template /usr/local/openresty/nginx/conf/nginx.conf.template
 COPY endpoints/rewrite_rules.conf /usr/local/openresty/nginx/conf/rewrite_rules.conf
