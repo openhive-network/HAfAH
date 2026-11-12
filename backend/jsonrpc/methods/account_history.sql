@@ -48,6 +48,14 @@ SET ROLE hafah_owner;
  *      hafd.transactions for the hash and hafd.blocks for the timestamp
  *   7. Return formatted results ordered by operation sequence
  *
+ * RENDERED OPERATION CACHE:
+ *   Page rows whose operation is in hafah_backend.rendered_operation_cache
+ *   (db/hafah_app.sql) return the stored inner object in _cached_entry and a
+ *   NULL _value: the body is neither read nor converted, and the formatter
+ *   splices _cached_entry. hafah_backend.refresh_rendered_operation_cache
+ *   (methods/rendered_operation_cache.sql) repeats the expressions below; keep
+ *   them in step.
+ *
  * PLAN CHOICE (filtered calls):
  *   Two ways to read a filtered page, and which is fast depends on how common
  *   the requested types are for this account:
@@ -79,8 +87,12 @@ SET ROLE hafah_owner;
  *   - _limit: Maximum operations to return
  *   - _is_legacy_style: Format operations in legacy style
  *
- * RETURNS: Table of account operations with metadata
+ * RETURNS: Table of account operations with metadata; _cached_entry is the
+ *          pre-rendered inner object (legacy or new style) of a cached operation,
+ *          NULL otherwise
  */
+-- WHY DROP: CREATE OR REPLACE cannot change the RETURNS TABLE columns
+DROP FUNCTION IF EXISTS hafah_backend.ah_get_account_history;
 CREATE OR REPLACE FUNCTION hafah_backend.ah_get_account_history(
     _filter_low         BIGINT,
     _filter_high        BIGINT,
@@ -97,7 +109,8 @@ RETURNS TABLE(
     _virtual_op   BOOLEAN,
     _timestamp    TEXT,
     _value        JSONB,
-    _operation_id INT
+    _operation_id INT,
+    _cached_entry JSON
 )
 LANGUAGE 'plpgsql' STABLE
 SET JIT = OFF
@@ -211,12 +224,22 @@ BEGIN
        */
       (
         CASE
+          -- WHY: A cached operation is not converted at all; the formatter splices _cached_entry
+          WHEN roc.operation_id IS NOT NULL
+            THEN NULL
           WHEN _is_legacy_style
             THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::JSONB
           ELSE ho.body
         END
       ) AS _value,
-      page.account_op_seq_no AS _operation_id
+      page.account_op_seq_no AS _operation_id,
+      (
+        CASE
+          WHEN _is_legacy_style
+            THEN roc.legacy_entry
+          ELSE roc.entry
+        END
+      ) AS _cached_entry
     FROM (
       /*
        * PAGE SELECTION:
@@ -289,6 +312,8 @@ BEGIN
       WHERE tx.block_num = blk.block_num AND tx.trx_in_block = ho.trx_in_block
       LIMIT 1
     ) ht ON TRUE
+    -- Huge operations rendered once (see hafah_backend.rendered_operation_cache)
+    LEFT JOIN hafah_backend.rendered_operation_cache roc ON roc.operation_id = page.operation_id
     ORDER BY page.account_op_seq_no ASC;  -- WHY: Return in ascending sequence order
 END
 $$;

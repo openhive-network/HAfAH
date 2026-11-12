@@ -24,10 +24,12 @@
  * -------------
  * 1. version: Schema version tracking table
  * 2. helper_operations_view: Joins operations with types for query efficiency
+ * 3. rendered_operation_cache: Pre-rendered get_account_history entries of a
+ *    few huge irreversible operations
  *
  * Note: HAfAH is a read-only application that reads directly from HAF
  * base tables. It has NO processing functions and NO application tables
- * (except version tracking).
+ * (except version tracking and the rendered operation cache).
  *
  * @see builtin_roles.sql for database role definitions
  */
@@ -54,6 +56,40 @@ CREATE TABLE hafah_backend.version(
   git_hash TEXT
 );
 INSERT INTO hafah_backend.version VALUES('unspecified (generate and apply set_version_in_sql.pgsql)');
+
+-- ============================================================================
+-- RENDERED OPERATION CACHE
+-- ============================================================================
+
+/*
+ * rendered_operation_cache
+ * ------------------------
+ * Serves a few huge irreversible operations without converting them per call.
+ *
+ * The hardfork_hive operation of account steem (block 41818752, HF23) is 13.8 MB
+ * of JSON and appears in the history of every account it lists. Each
+ * get_account_history page that reaches it spent ~1.2 s converting it to the
+ * legacy format. Its rendering never changes, so it is rendered once by
+ * hafah_backend.refresh_rendered_operation_cache and
+ * hafah_backend.ah_get_account_history_json splices the stored text.
+ *
+ * Only the inner object is stored: everything in it is a property of the
+ * operation; the per-account sequence number is added by the formatter.
+ * STORAGE EXTERNAL keeps the text uncompressed, so reading it is a plain copy.
+ *
+ * Columns:
+ *   operation_id - Global operation id (hafd.operations.id)
+ *   legacy_entry - Inner object as condenser_api.get_account_history renders it
+ *   entry        - Inner object as account_history_api.get_account_history renders it
+ */
+CREATE TABLE hafah_backend.rendered_operation_cache (
+  operation_id BIGINT PRIMARY KEY,
+  legacy_entry JSON NOT NULL,
+  entry        JSON NOT NULL
+);
+ALTER TABLE hafah_backend.rendered_operation_cache
+  ALTER COLUMN legacy_entry SET STORAGE EXTERNAL,
+  ALTER COLUMN entry SET STORAGE EXTERNAL;
 
 -- ============================================================================
 -- HELPER VIEWS

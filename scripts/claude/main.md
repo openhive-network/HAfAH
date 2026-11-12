@@ -184,6 +184,13 @@ true, only irreversible blocks and operations are returned.
 exactly as `hive.operations_view` does (`{"type": ..., "value": body_value}`).
 Use it for the single per-row operations join.
 
+`hafah_backend.rendered_operation_cache` (`db/hafah_app.sql`) holds the
+pre-rendered `get_account_history` inner objects of a few huge irreversible
+operations (the HF23 `hardfork_hive` op on mainnet), filled by
+`refresh_rendered_operation_cache()` at install. Its rendering repeats
+`ah_get_account_history` / `ah_get_account_history_json`; change them together,
+as the output must stay byte-identical.
+
 HAF functions without a base-table variant are still called and guarded by an
 irreversible-block check first: `hive.get_block`, `hive.get_block_header`,
 `hive.get_block_from_views` (block endpoints) and `hive.convert_to_blocks_range`

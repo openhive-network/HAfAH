@@ -27,6 +27,13 @@ SET ROLE hafah_owner;
  *      - New: operation_id set to 0 in inner object (kept for compatibility)
  *   4. Wrap result based on style (array vs {history: array})
  *
+ * CACHED OPERATIONS:
+ *   A row with _cached_entry (see hafah_backend.rendered_operation_cache) is
+ *   built from that pre-rendered inner object. json_build_array copies a JSON
+ *   argument verbatim, so its bytes are those step 3 would produce; the
+ *   rendering is repeated in hafah_backend.refresh_rendered_operation_cache,
+ *   keep the two in step.
+ *
  * PARAMETERS:
  *   - _filter_low: Low bits of operation type filter
  *   - _filter_high: High bits of operation type filter
@@ -66,7 +73,11 @@ BEGIN
      */
     WITH result AS (
       SELECT ARRAY(
-        SELECT json_build_array(
+        SELECT
+        CASE
+          WHEN f._cached_entry IS NOT NULL
+            THEN json_build_array(ops.operation_id, f._cached_entry)
+          ELSE json_build_array(
           /*
            * OPERATION SEQUENCE NUMBER:
            *   Per-account operation index (not global operation ID).
@@ -95,17 +106,8 @@ BEGIN
             END
           )
         )
-        FROM (
-          SELECT
-            _block        AS "block",         -- Block number containing this operation
-            _value        AS "op",            -- Operation body (already JSONB)
-            _op_in_trx    AS "op_in_trx",     -- Operation index within transaction
-            _timestamp    AS "timestamp",     -- ISO 8601 block timestamp
-            _trx_id       AS "trx_id",        -- 40-char hex transaction hash
-            _trx_in_block AS "trx_in_block",  -- Transaction index in block
-            _virtual_op   AS "virtual_op",    -- TRUE if system-generated
-            _operation_id AS "operation_id"   -- Per-account sequence number
-          FROM hafah_backend.ah_get_account_history(
+        END
+        FROM hafah_backend.ah_get_account_history(
             /*
              * TWO'S COMPLEMENT OVERFLOW HANDLING:
              *   JSON numbers are NUMERIC type which can exceed BIGINT range.
@@ -121,7 +123,18 @@ BEGIN
             _start,
             _limit,
             _is_legacy_style
-          )
+          ) f
+        -- WHY LATERAL: ops holds only the response fields, so to_jsonb(ops) never sees _cached_entry
+        CROSS JOIN LATERAL (
+          SELECT
+            f._block        AS "block",         -- Block number containing this operation
+            f._value        AS "op",            -- Operation body (already JSONB)
+            f._op_in_trx    AS "op_in_trx",     -- Operation index within transaction
+            f._timestamp    AS "timestamp",     -- ISO 8601 block timestamp
+            f._trx_id       AS "trx_id",        -- 40-char hex transaction hash
+            f._trx_in_block AS "trx_in_block",  -- Transaction index in block
+            f._virtual_op   AS "virtual_op",    -- TRUE if system-generated
+            f._operation_id AS "operation_id"   -- Per-account sequence number
         ) ops
       ) AS a
     )
