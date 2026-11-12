@@ -119,6 +119,7 @@ psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/m
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/methods/transaction.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/methods/virtual_ops.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/methods/account_history.sql"
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/methods/rendered_operation_cache.sql"
 # Formatters second (depend on methods)
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/formatters/transaction.sql"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../backend/jsonrpc/formatters/account_history.sql"
@@ -192,6 +193,10 @@ psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT USAGE
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT SELECT ON ALL TABLES IN SCHEMA hafah_endpoints TO hafah_user;"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT SELECT ON ALL TABLES IN SCHEMA hafah_backend TO hafah_user;"
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA hafah_backend TO hafah_user;"
+
+# Render the huge irreversible operations get_account_history serves from
+# hafah_backend.rendered_operation_cache; none exist below block 41818752.
+psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;SELECT hafah_backend.refresh_rendered_operation_cache() AS cached_operations;"
 
 # Create is_setup_completed function (must be at the very end - signals setup is complete)
 psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on <<EOF

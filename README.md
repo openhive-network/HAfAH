@@ -134,6 +134,21 @@ See [Quick Start](#quick-start-docker) above.
 ./run.sh start 3000
 ```
 
+### Rendered Operation Cache
+
+`get_account_history` serves the HF23 `hardfork_hive` operation (block 41818752,
+13.8 MB of JSON) from `hafah_backend.rendered_operation_cache` instead of
+converting it on every call. `install_app.sh` fills the cache from irreversible
+operations only, so on a node whose irreversible head is still below block
+41818752 it stays empty. Once the node has passed that block, fill it with a
+reinstall or:
+
+```bash
+psql postgresql://haf_admin@localhost:5432/haf_block_log -c "SET ROLE hafah_owner; SELECT hafah_backend.refresh_rendered_operation_cache();"
+```
+
+Until then the answers are the same, only slower for accounts listed in that operation.
+
 ## PostgreSQL Authentication
 
 If you're running PostgreSQL directly (not in Docker), configure authentication:

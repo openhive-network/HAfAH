@@ -154,7 +154,8 @@ Located in `backend/jsonrpc/methods/`:
 
 | File | Function | Notes |
 |------|----------|-------|
-| `account_history.sql` | `ah_get_account_history()` | Core account history query |
+| `account_history.sql` | `ah_get_account_history()` | Core account history query; cached ops return `_cached_entry`, not `_value` |
+| `rendered_operation_cache.sql` | `refresh_rendered_operation_cache()` | Pre-renders huge irreversible ops into `hafah_backend.rendered_operation_cache`; run by `install_app.sh` |
 | `transaction.sql` | `get_transaction()` | Single transaction lookup |
 | `ops_in_block.sql` | `get_ops_in_block()` | All operations in block |
 | `virtual_ops.sql` | `enum_virtual_ops()` | Virtual ops in block range |
@@ -167,7 +168,7 @@ Located in `backend/jsonrpc/formatters/`:
 
 | File | Function | Output |
 |------|----------|--------|
-| `account_history.sql` | `ah_get_account_history_json()` | `{history: [[seq, op], ...]}` |
+| `account_history.sql` | `ah_get_account_history_json()` | `{history: [[seq, op], ...]}`; splices `_cached_entry` verbatim |
 | `transaction.sql` | `get_transaction_json()` | Transaction with operations |
 | `ops_in_block.sql` | `get_ops_in_block_json()` | `{ops: [...]}` |
 | `virtual_ops.sql` | `enum_virtual_ops_json()` | `{ops: [...], next_block_range_begin: N}` |
