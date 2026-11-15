@@ -160,6 +160,9 @@ BEGIN
           o.virtual_op = TRUE
           AND o.block_num >= (SELECT blk FROM pre_result_in)
           AND o.block_num <= __actual_last_irreversible_block_num
+          -- The same range as ids: block_num is derived from id, which the planner cannot see
+          AND o.id >= hafd.operation_id((SELECT blk FROM pre_result_in), 0)
+          AND o.id < hafd.operation_id(__actual_last_irreversible_block_num + 1, 0)
           AND o.id > (SELECT op_id FROM pre_result_in)
         ORDER BY o.block_num, o.id
         LIMIT 1

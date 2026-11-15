@@ -212,6 +212,14 @@ BEGIN
         FROM hafah_backend.helper_operations_view ho
         WHERE ho.block_num >= _block_range_begin
           AND ho.block_num < _block_range_end  -- WHY: Exclusive end for consistent pagination
+          /*
+           * ID BOUND: the same range as ids, block N holding [operation_id(N, 0), operation_id(N + 1, 0)).
+           * WHY: block_num is derived from id, so the planner cannot see that the block range
+           * confines id; without this it walks pk_hive_operations from the lowest id.
+           * GREATEST: operation_id rejects a negative block, and no operation has one.
+           */
+          AND ho.id >= hafd.operation_id(GREATEST(_block_range_begin, 0), 0)
+          AND ho.id < hafd.operation_id(GREATEST(_block_range_end, 0), 0)
           AND ho.virtual_op = TRUE             -- WHY: Only virtual operations
           /*
            * OPERATION TYPE FILTER:
