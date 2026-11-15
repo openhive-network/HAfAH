@@ -252,6 +252,10 @@ BEGIN
             WHERE __resolved_filter_exists AND (
                 (block_num >= _block_num) AND
                 (block_num < _end_block_num ) AND
+                -- The same range as ids: block_num is derived from id, which the planner cannot see;
+                -- GREATEST because operation_id rejects a negative block, and no operation has one
+                ( ho.id >= hafd.operation_id(GREATEST(_block_num, 0), 0) AND
+                  ho.id < hafd.operation_id(GREATEST(_end_block_num, 0), 0) ) AND
                 -- Cursor-based pagination: Skip operations before cursor
                 ( _operation_begin = -1 OR ho.id > _operation_begin )
             )
@@ -267,6 +271,10 @@ BEGIN
             WHERE NOT __resolved_filter_exists AND (
                 (block_num >= _block_num) AND
                 (block_num < _end_block_num ) AND
+                -- The same range as ids: block_num is derived from id, which the planner cannot see;
+                -- GREATEST because operation_id rejects a negative block, and no operation has one
+                ( ho.id >= hafd.operation_id(GREATEST(_block_num, 0), 0) AND
+                  ho.id < hafd.operation_id(GREATEST(_end_block_num, 0), 0) ) AND
                 -- Virtual filter: NULL=all, TRUE=virtual only, FALSE=non-virtual only
                 (__operation_filter OR (ho.virtual_op = _operation_group_types)) AND
                 ( _operation_begin = -1 OR ho.id > _operation_begin )

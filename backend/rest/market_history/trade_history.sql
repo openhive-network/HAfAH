@@ -46,7 +46,11 @@ BEGIN
     WHERE
       ov.op_type_id = 57 AND
       ov.block_num >= _from_block AND
-      ov.block_num <= __to_block
+      ov.block_num <= __to_block AND
+      -- The same range as ids: block_num is derived from id, which the planner cannot see;
+      -- GREATEST because operation_id rejects a negative block, and no operation has one
+      ov.id >= hafd.operation_id(GREATEST(_from_block, 0), 0) AND
+      ov.id < hafd.operation_id(GREATEST(__to_block + 1, 0), 0)
     ORDER BY ov.block_num, ov.id
     LIMIT _limit
   )

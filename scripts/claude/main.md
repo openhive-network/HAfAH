@@ -214,6 +214,13 @@ WHERE ao.operation_id < hafd.operation_id(hive.app_get_irreversible_block() + 1,
 -- Range reaching past the irreversible block: 2 second cache (data appears later)
 ```
 
+A query over `helper_operations_view` that filters a block range and orders by
+`id` also bounds `id` by that range (`id >= hafd.operation_id(GREATEST(begin, 0), 0)
+AND id < hafd.operation_id(GREATEST(end, 0), 0)`, end exclusive), keeping its
+`block_num` predicates. The view derives `block_num` from `id`, so without the
+bound the planner may walk `pk_hive_operations` from the lowest id with the block
+range as a Filter. `hafd.operation_id` rejects a negative block, hence `GREATEST`.
+
 Account history functions with an operation-type filter set
 `plan_cache_mode = force_custom_plan`, so each call is planned with its account
 and filter. A type-filtered page is read in two steps when the requested types
