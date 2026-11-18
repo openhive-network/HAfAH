@@ -158,6 +158,48 @@ def test_get_newly_created_transaction(
     assert response == transaction_dict
 
 
+# effective delegate_rc_operation embedded in custom_json_operation is reported by hived as separate
+# operation with the same op_pos, right after its custom_json_operation; it is not part of the signed
+# transaction, so get_transaction has to skip it
+@pytest.mark.get_account_history_and_get_transaction
+def test_get_transaction_with_embedded_rc_delegation(
+    init_node, haf_node, postgrest_hafah, wallet
+) -> None:
+    wallet.close()
+    wallet = tt.Wallet(attach_to=init_node)
+    wallet.create_account("frank")
+    # well above min_delegation (account_creation_fee / 3 in VESTS) and below what initminer can delegate
+    transaction = wallet.api.delegate_rc("initminer", ["frank"], 100_000)
+    transaction_dict = to_plain(transaction)
+    assert [op["type"] for op in transaction_dict["operations"]] == ["custom_json_operation"]
+
+    # Wait for HAF to actually sync the transaction to the database
+    haf_node.wait_for_transaction_in_database(transaction, timeout=60)
+    wait_for_irreversible_in_hafah(haf_node, transaction["block_num"])
+    # the delegation was effective, so HAF holds it next to its custom_json_operation
+    operations = haf_node.query_all(
+        "SELECT ot.name, o.op_pos FROM hafd.operations o JOIN hafd.operation_types ot ON ot.id = o.op_type_id"
+        " WHERE hafd.operation_id_to_block_num(o.id) = :block_num AND o.trx_in_block = :trx_in_block"
+        " AND NOT ot.is_virtual ORDER BY o.id",
+        block_num=transaction_dict["block_num"],
+        trx_in_block=transaction_dict["transaction_num"],
+    )
+    assert [tuple(row) for row in operations] == [
+        ("hive::protocol::custom_json_operation", 0),
+        ("hive::protocol::delegate_rc_operation", 0),
+    ]
+
+    # delete one additional key to compare transactions
+    del transaction_dict["rc_cost"]
+    response = send_request_to_hafah(
+        postgrest_hafah,
+        "get_transaction",
+        id=transaction_dict["transaction_id"],
+        include_reversible=False,
+    )
+    assert response == transaction_dict
+
+
 @pytest.mark.get_account_history_and_get_transaction
 @pytest.mark.parametrize(
     "incorrect_id",

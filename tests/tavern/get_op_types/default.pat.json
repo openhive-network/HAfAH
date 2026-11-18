@@ -187,7 +187,7 @@
   {
     "is_virtual": false,
     "op_type_id": 37,
-    "operation_name": "reset_account_operation"
+    "operation_name": "delegate_rc_operation"
   },
   {
     "is_virtual": false,
