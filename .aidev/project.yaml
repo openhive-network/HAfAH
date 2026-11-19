@@ -77,7 +77,7 @@ verification:
     suites:
       - name: default
         adapter: command
-        args: [".aidev/run-checks.sh", "full", "shellcheck", "sql-registered", "install", "reinstall", "api-smoke", "tavern", "rewriter"]
+        args: [".aidev/run-checks.sh", "full", "shellcheck", "sql-registered", "install", "reinstall", "install-lock", "api-smoke", "tavern", "rewriter"]
         artifacts: ["test-results/full/"]
       # Plans the `performance:` queries on a shape of the full-scale HAF. It
       # needs the host's `aidev` CLI and docker daemon, so it runs host-side
@@ -94,7 +94,7 @@ verification:
     artifacts: ["test-results/baseline/"]
   canary:
     adapter: command
-    args: [".aidev/run-checks.sh", "canary", "shellcheck", "sql-registered", "install", "reinstall", "api-smoke", "tavern", "rewriter"]
+    args: [".aidev/run-checks.sh", "canary", "shellcheck", "sql-registered", "install", "reinstall", "install-lock", "api-smoke", "tavern", "rewriter"]
     artifacts: ["test-results/canary/"]
   # There is no coverage measurement for SQL; `coverage` runs the tree-wide checks
   # (AIDEV runs it in the post-implementation scan only). `static` and `system`

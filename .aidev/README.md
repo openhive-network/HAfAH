@@ -18,6 +18,7 @@ the failure body. `api-smoke` also writes one case per call (`api-smoke.xml`).
 | `sql-registered` | every `.sql` file under `db/`, `backend/` and `endpoints/` is applied by `scripts/install_app.sh` |
 | `install` | a per-run copy-on-write clone of the shared HAF (below), `scripts/install_app.sh` into it as `haf_shared_consumer`, then `hafah_backend.is_setup_completed()` and the SQL checks `.aidev/*_check.sql` (read-only checks against the chain data) |
 | `reinstall` | the schemas dropped (`scripts/uninstall_app.sh` without its role statements), then `install` again |
+| `install-lock` | `install`'s log shows `install_with_app_lock.py` holding the `hafah` install lock; then, while a second session holds the shared `hafah` lock (`hive.acquire_app_block_processor_locks`, as a serving hafah-postgrest does under haf_api_node), `scripts/install_app.sh` rerun must exit 0, log the skip and leave every `hafah_*` schema, function and type as it was. On a HAF whose install lock reads its application registry, the step first registers a stand-in `hafah` application in the clone, because hafah registers none yet (HAfAH#113) and such a HAF installs anyway, after about 10 s, while an unregistered app's lock is held |
 | `api-smoke` | `.aidev/hafah_smoke.py`: PostgREST over the installed schema (`.aidev/postgrest.py`, as `run_hafah_postgrest.sh` starts it), then JSON-RPC calls (`account_history_api`, `condenser_api`, `block_api`, an unknown method, an unknown transaction) and REST calls (`get_version`, `get_head_block_num`, `get_op_types`, `get_operations`, `get_transaction`, `get_ops_by_block_paging`, `get_recent_trades`, `get_block`, `get_block_range`, `get_ops_by_account` with and without the Denser wallet's `operation-types` filter and a block range, an unknown account), each checked against the 5M-block chain's answer (e.g. `steemit`: 4266 operations, 1235 with the wallet filter) |
 | `tavern` | `.aidev/hafah_tavern.py`: the tavern pattern tests (`tests/tavern`, as CI's `hafah_pytest_rest_api_pattern_tests`) against PostgREST over the clone, 4 xdist workers, run from a copy in `test-results/<suite>/tavern/` (the comparator writes each answer beside its test); `tavern.xml`, one case per test |
 | `rewriter` | `.aidev/hafah_rewriter_tests.py`: the rewriter tests (`tests/rewriter`) through the rewriter itself in front of PostgREST over the clone; `rewriter.xml`, one case per test, and `openresty-rewriter.log` (rewrite logging on). The runtime image (`runtime/Dockerfile`) carries the OpenResty of `Dockerfile.rewriter`'s base image, both pinned to the same digest; `.aidev/hafah_rewriter.py` gives it what `Dockerfile.rewriter` copies in (`docker/hafah_rest_nginx.conf.template` as `nginx.conf`, `endpoints/rewrite_rules.conf`, `endpoints/rpc_arguments.lua`) in a scratch prefix and changes only its listen addresses (loopback, free ports) and its upstream (that PostgREST). It refuses to start when the template no longer has the lines it adapts. The tests read `HAFAH_REWRITER_URL` and `HAFAH_POSTGREST_URL`, so they can be pointed at a running rewriter image too |
@@ -29,7 +30,7 @@ checkout has no usable git), because a workflow checkout may have no `.git`.
 | Slot | Steps | Shared HAF |
 |---|---|---|
 | quick, coverage | shellcheck, sql-registered | no |
-| full, canary | those plus install, reinstall, api-smoke, tavern, rewriter | yes |
+| full, canary | those plus install, reinstall, install-lock, api-smoke, tavern, rewriter | yes |
 | baseline | install, reinstall, api-smoke | yes |
 
 `static` and `system` are unbound: AIDEV runs neither for a project.
@@ -88,7 +89,7 @@ docker build -t hafah-aidev-tests .aidev/runtime \
     --build-arg BASE_IMAGE=registry.gitlab.syncad.com/hive/common-ci-configuration/python-test-tools:develop
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/w" -w /w \
     -e AIDEV_EXTERNAL_HAF_HOST=<host> -e AIDEV_EXTERNAL_HAF_PORT=<port> hafah-aidev-tests \
-    .aidev/run-checks.sh full shellcheck sql-registered install reinstall api-smoke tavern
+    .aidev/run-checks.sh full shellcheck sql-registered install reinstall install-lock api-smoke tavern
 ```
 
 ## The test runtime image (`runtime/`)
@@ -98,8 +99,12 @@ base `project.yaml`'s `environment.base` follows: common-ci-configuration's
 `python-test-tools:develop`, the image CI's lint and test jobs use. It brings Python
 3.14, `tavern`, `pytest`, `pytest-xdist`, `bash`, `psql`, `shellcheck` and the
 `postgrest` binary at the versions in common-ci-configuration's `docker-bake.hcl`; the
-Dockerfile adds only hive/tests_api (`validate_response`, the tavern tests' comparator)
-at the commit its `TESTS_API_COMMIT` names. Nothing is installed at run time.
+Dockerfile adds hive/tests_api (`validate_response`, the tavern tests' comparator)
+at the commit its `TESTS_API_COMMIT` names, the rewriter's OpenResty, and
+common-ci-configuration's `install_with_app_lock.py` (from the `psql` image the hafah
+`Dockerfile` builds on, pinned to the same tag's digest) with `psycopg2-binary`, so the
+install steps take the hafah install lock as the hafah image does. Nothing is
+installed at run time.
 
 No tool version is pinned here. AIDEV resolves the `develop` tag before every run and
 rebuilds the image when the tag or the Dockerfile moves, so nothing has to be re-pinned
