@@ -37,4 +37,6 @@ DROP SCHEMA IF EXISTS hafah_backend CASCADE;
 GRANT CREATE, CONNECT ON DATABASE :"db" TO hafah_owner, hafah_user;
 SQL
 
-(cd "$stage" && PATH="$stage/bin:$PATH" bash scripts/install_app.sh)
+# The install lock's wrapper connects to a DSN, which the shape copy has none of, and
+# nothing serves from the copy: install_app.sh runs as if already under the wrapper.
+(cd "$stage" && PATH="$stage/bin:$PATH" HAF_INSTALL_LOCK_HELD=hafah bash scripts/install_app.sh)

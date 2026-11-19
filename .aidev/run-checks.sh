@@ -16,6 +16,9 @@
 #                     as haf_shared_consumer), scripts/install_app.sh into it, then the
 #                     SQL checks in .aidev/*_check.sql (each rolls back what it writes)
 #   - reinstall       scripts/uninstall_app.sh, then install_app.sh again, in the clone
+#   - install-lock    install took HAF's exclusive hafah install lock, and install_app.sh
+#                     rerun while another session holds the shared hafah lock (as a
+#                     serving hafah-postgrest does) exits 0 and changes no hafah object
 #   - api-smoke       PostgREST over the installed schema, JSON-RPC and REST calls
 #                     checked by .aidev/hafah_smoke.py; one junit case per call
 #   - tavern          the tavern pattern tests (tests/tavern) against PostgREST over
@@ -25,7 +28,7 @@
 #                     PostgREST over the clone, by
 #                     .aidev/hafah_rewriter_tests.py; one junit case per test
 #
-# install, reinstall, api-smoke, tavern and rewriter need the shared HAF (sandbox.external haf,
+# install, reinstall, install-lock, api-smoke, tavern and rewriter need the shared HAF (sandbox.external haf,
 # provider haf/haf); the clone is dropped when the script exits, pass or fail.
 # Reports go to test-results/<suite>/: junit.xml (one case per step) plus
 # api-smoke.xml, tavern.xml and rewriter.xml.
@@ -160,12 +163,98 @@ reinstall() {
     install
 }
 
+# Every hafah schema, function and type with the row version it was last written at:
+# a rerun install that drops or replaces any of them changes this.
+HAFAH_OBJECTS_SQL="select md5(string_agg(format('%s %s %s', o.oid, o.xmin, o.name), ',' order by o.oid::bigint, o.name))
+from (
+    select n.oid, n.xmin, n.nspname::text as name from pg_namespace n where n.nspname like 'hafah\\_%'
+    union all
+    select p.oid, p.xmin, p.proname::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname like 'hafah\\_%'
+    union all
+    select t.oid, t.xmin, t.typname::text from pg_type t join pg_namespace n on n.oid = t.typnamespace where n.nspname like 'hafah\\_%'
+) o"
+
+LOCK_HOLDER=hafah-lock-holder
+
+release_lock_holder() {
+    psql "$HAFAH_TEST_DB_URL" -qAtc "select pg_terminate_backend(pid) from pg_stat_activity
+        where application_name = '$LOCK_HOLDER' and datname = current_database()" > /dev/null
+    wait "$1" 2> /dev/null || true
+}
+
+install_lock() {
+    [ -n "$clone" ] || { echo "no shared HAF clone: install did not run or could not create one"; return 1; }
+    if ! grep -qF "Acquired install lock for hafah" "$out/install.log"; then
+        echo "install did not run under install_with_app_lock.py holding the hafah lock (see install.log)"
+        return 1
+    fi
+
+    # A HAF whose install lock reads its application registry (haf#454) installs
+    # anyway, after about 10 s, while a holder holds the lock of an app no row is
+    # registered under, and hafah registers none yet (it has no context to register;
+    # HAfAH#113). Stand in for that registration in this run's clone so the skip is
+    # what is tested; a HAF that does not read the registry needs none.
+    local reads_registry
+    reads_registry="$(psql "$HAFAH_TEST_DB_URL" -v ON_ERROR_STOP=on -Atc "select position('hafd.applications' in prosrc) > 0
+        and not exists (select 1 from hafd.applications where name = 'hafah')
+        from pg_proc where oid = 'hive.try_acquire_app_install_lock(text)'::regprocedure")" || return 1
+    if [ "$reads_registry" = t ]; then
+        echo "== registering a stand-in hafah application: this HAF's install lock reads its registry"
+        psql "$HAFAH_TEST_DB_URL" -v ON_ERROR_STOP=on -q <<'SQL' || return 1
+CREATE SCHEMA lock_test_hafah;
+SELECT hive.app_create_context('lock_test_hafah', 'lock_test_hafah', _is_forking => FALSE, _is_attached => FALSE);
+SELECT hive.app_register('hafah', ARRAY['lock_test_hafah']::hive.contexts_group);
+SQL
+    fi
+
+    local before after holder rc=0 i
+    before="$(psql "$HAFAH_TEST_DB_URL" -v ON_ERROR_STOP=on -Atc "$HAFAH_OBJECTS_SQL")" || return 1
+
+    psql "$HAFAH_TEST_DB_URL" -v ON_ERROR_STOP=on -qAt \
+        -c "SET application_name = '$LOCK_HOLDER'" \
+        -c "SELECT hive.acquire_app_block_processor_locks(ARRAY['hafah'])" \
+        -c "SELECT pg_sleep(600)" > /dev/null 2>&1 &
+    holder=$!
+    for i in $(seq 1 60); do
+        [ "$(psql "$HAFAH_TEST_DB_URL" -Atc "select count(*) from pg_locks l join pg_stat_activity a on a.pid = l.pid
+            where a.application_name = '$LOCK_HOLDER' and l.locktype = 'advisory' and l.mode = 'ShareLock' and l.granted")" = 1 ] && break
+        if [ "$i" = 60 ]; then
+            echo "$LOCK_HOLDER did not take the shared hafah lock within 30 s"
+            release_lock_holder "$holder"
+            return 1
+        fi
+        sleep 0.5
+    done
+    echo "== $LOCK_HOLDER holds the shared hafah lock"
+
+    local log="$out/install-lock-rerun.log"
+    (cd "$stage" && timeout 300 bash scripts/install_app.sh --postgres-url="$HAFAH_TEST_DB_URL") > "$log" 2>&1 || rc=$?
+    release_lock_holder "$holder"
+    cat "$log"
+
+    after="$(psql "$HAFAH_TEST_DB_URL" -v ON_ERROR_STOP=on -Atc "$HAFAH_OBJECTS_SQL")" || return 1
+    if [ "$rc" -ne 0 ]; then
+        echo "install_app.sh exited $rc while the shared hafah lock was held; expected a skip with exit 0"
+        return 1
+    fi
+    if ! grep -qF "Skipping hafah install" "$log" || grep -qF "Installing app..." "$log"; then
+        echo "install_app.sh did not skip while the shared hafah lock was held"
+        return 1
+    fi
+    if [ "$before" != "$after" ]; then
+        echo "install_app.sh changed hafah's schemas, functions or types while the shared hafah lock was held"
+        return 1
+    fi
+    echo "install_app.sh skipped, exit 0, no hafah object changed"
+}
+
 for s in "$@"; do
     case "$s" in
         shellcheck) step shellcheck run_shellcheck ;;
         sql-registered) step sql-registered sql_registered ;;
         install) step install install ;;
         reinstall) step reinstall reinstall ;;
+        install-lock) step install-lock install_lock ;;
         api-smoke) step api-smoke on_clone python3 .aidev/hafah_smoke.py "$out" ;;
         tavern) step tavern on_clone python3 .aidev/hafah_tavern.py "$out" ;;
         rewriter) step rewriter on_clone python3 .aidev/hafah_rewriter_tests.py "$out" ;;

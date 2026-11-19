@@ -2,8 +2,17 @@
 set -euo pipefail
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit 1; pwd -P )"
+ORIGINAL_ARGS=("$@")
 
-export LOG_FILE=install_app.log
+APP_LOCK_NAME=hafah
+
+# Under the install-lock wrapper (below) this script runs a second time, its output
+# already going through the first run's log.
+if [[ "${HAF_INSTALL_LOCK_HELD:-}" == "$APP_LOCK_NAME" ]]; then
+  export LOG_FILE=/dev/null
+else
+  export LOG_FILE=install_app.log
+fi
 # shellcheck source-path=SCRIPTDIR source=common.sh
 source "$SCRIPTPATH/common.sh"
 
@@ -69,6 +78,18 @@ if [ -z "$POSTGRES_URL" ]; then
   POSTGRES_ACCESS="postgresql://haf_admin@$POSTGRES_HOST:$POSTGRES_PORT/haf_block_log"
 else
   POSTGRES_ACCESS=$POSTGRES_URL
+fi
+
+# Rerun the install under the wrapper, which holds HAF's exclusive install lock for
+# hafah across every psql call below and exits 0 without running it while another
+# session (a serving hafah-postgrest) holds the shared hafah lock. Where the wrapper
+# is not installed (a run outside the hafah image) the install runs without the lock.
+if [[ "${HAF_INSTALL_LOCK_HELD:-}" != "$APP_LOCK_NAME" ]]; then
+  if command -v python3 >/dev/null 2>&1 && [[ -f /usr/local/bin/install_with_app_lock.py ]]; then
+    export HAF_INSTALL_LOCK_HELD="$APP_LOCK_NAME"
+    exec python3 /usr/local/bin/install_with_app_lock.py "$APP_LOCK_NAME" "$POSTGRES_ACCESS" "$0" "${ORIGINAL_ARGS[@]}"
+  fi
+  echo "WARNING: install_with_app_lock.py wrapper not found; running install without HAF advisory lock (expected outside the hafah image, not in production install images)." >&2
 fi
 
 echo "Installing app..."

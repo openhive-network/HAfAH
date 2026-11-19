@@ -1,5 +1,8 @@
 # syntax=registry.gitlab.syncad.com/hive/common-ci-configuration/dockerfile:1.5
-ARG PSQL_CLIENT_VERSION=14-1
+# The c-c-c psql tag balance_tracker and the other HAF apps pin: it ships python3,
+# psycopg2 and /usr/local/bin/install_with_app_lock.py, which scripts/install_app.sh
+# reruns itself under to hold the hafah install lock.
+ARG PSQL_CLIENT_VERSION=da9ffb6003edfb5cbaf1dfcde8e1847667af7d24
 ARG POSTGREST_VERSION=v12.0.2
 FROM registry.gitlab.syncad.com/hive/common-ci-configuration/postgrest:${POSTGREST_VERSION} AS pure_postgrest
 
