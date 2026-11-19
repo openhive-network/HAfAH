@@ -80,11 +80,29 @@ else
   POSTGRES_ACCESS=$POSTGRES_URL
 fi
 
+# A HAF whose install lock reads its application registry treats the lock of an app
+# with no row as unheld: it waits about 10 s, then installs without it. hafah has no
+# context to register with hive.app_register, so where the HAF provides it (haf#501)
+# it registers lock-only, as its owner, before the wrapper below takes the lock; the
+# roles must exist for that. A HAF without the function needs no registration.
+register_lock_only_app() {
+  local provides
+  provides="$(psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -Atc "SELECT to_regprocedure('hive.app_register_lock_only(text)') IS NOT NULL")"
+  if [[ "$provides" != t ]]; then
+    echo "This HAF has no hive.app_register_lock_only; $APP_LOCK_NAME is not registered."
+    return 0
+  fi
+  psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -f "$SCRIPTPATH/../db/builtin_roles.sql"
+  psql "$POSTGRES_ACCESS" -v ON_ERROR_STOP=on -c "SET ROLE hafah_owner;SELECT hive.app_register_lock_only('$APP_LOCK_NAME');"
+  echo "Registered $APP_LOCK_NAME as a lock-only HAF application."
+}
+
 # Rerun the install under the wrapper, which holds HAF's exclusive install lock for
 # hafah across every psql call below and exits 0 without running it while another
 # session (a serving hafah-postgrest) holds the shared hafah lock. Where the wrapper
 # is not installed (a run outside the hafah image) the install runs without the lock.
 if [[ "${HAF_INSTALL_LOCK_HELD:-}" != "$APP_LOCK_NAME" ]]; then
+  register_lock_only_app
   if command -v python3 >/dev/null 2>&1 && [[ -f /usr/local/bin/install_with_app_lock.py ]]; then
     export HAF_INSTALL_LOCK_HELD="$APP_LOCK_NAME"
     exec python3 /usr/local/bin/install_with_app_lock.py "$APP_LOCK_NAME" "$POSTGRES_ACCESS" "$0" "${ORIGINAL_ARGS[@]}"

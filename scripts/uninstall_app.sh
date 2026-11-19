@@ -58,7 +58,28 @@ else
   POSTGRES_ACCESS=$POSTGRES_URL
 fi
 
+# install_app.sh registers hafah lock-only (haf#501) where the HAF provides it; only
+# its owner may unregister it, and hive.app_unregister fails for a missing row.
+unregister_lock_only_app() {
+    psql "$POSTGRES_ACCESS" -v "ON_ERROR_STOP=on" <<'EOF'
+DO $$
+BEGIN
+  IF to_regprocedure('hive.app_register_lock_only(text)') IS NULL THEN
+    RETURN;
+  END IF;
+  IF EXISTS (SELECT 1 FROM hafd.applications WHERE name = 'hafah' AND cardinality(contexts) = 0) THEN
+    SET LOCAL ROLE hafah_owner;
+    PERFORM hive.app_unregister('hafah');
+    RAISE NOTICE 'Unregistered the lock-only HAF application hafah';
+  END IF;
+END
+$$;
+EOF
+}
+
 uninstall_app() {
+    unregister_lock_only_app
+
     psql "$POSTGRES_ACCESS" -v "ON_ERROR_STOP=on" -c "DROP SCHEMA IF EXISTS hafah_backend CASCADE;"
     psql "$POSTGRES_ACCESS" -v "ON_ERROR_STOP=on" -c "DROP SCHEMA IF EXISTS hafah_endpoints CASCADE;"
 

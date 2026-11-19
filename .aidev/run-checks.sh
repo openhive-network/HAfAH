@@ -157,9 +157,24 @@ on_clone() {
     "$@"
 }
 
+# Where the HAF registers lock-only apps (haf#501): the number of hafah's lock-only
+# registry rows; nothing elsewhere.
+lock_only_rows() {
+    local provides
+    provides="$(psql "$HAFAH_TEST_DB_URL" -v ON_ERROR_STOP=on -Atc "select to_regprocedure('hive.app_register_lock_only(text)') is not null")" || return 1
+    [ "$provides" = t ] || return 0
+    psql "$HAFAH_TEST_DB_URL" -v ON_ERROR_STOP=on -Atc "select count(*) from hafd.applications where name = 'hafah' and cardinality(contexts) = 0"
+}
+
 reinstall() {
     stage_sources && open_clone || return 1
     (cd "$stage" && bash scripts/uninstall_app.sh --postgres-url="$HAFAH_TEST_DB_URL") || return 1
+    local rows
+    rows="$(lock_only_rows)" || return 1
+    if [ -n "$rows" ] && [ "$rows" != 0 ]; then
+        echo "uninstall_app.sh left $rows lock-only hafah registry rows"
+        return 1
+    fi
     install
 }
 
@@ -191,20 +206,31 @@ install_lock() {
 
     # A HAF whose install lock reads its application registry (haf#454) installs
     # anyway, after about 10 s, while a holder holds the lock of an app no row is
-    # registered under, and hafah registers none yet (it has no context to register;
-    # HAfAH#113). Stand in for that registration in this run's clone so the skip is
-    # what is tested; a HAF that does not read the registry needs none.
-    local reads_registry
-    reads_registry="$(psql "$HAFAH_TEST_DB_URL" -v ON_ERROR_STOP=on -Atc "select position('hafd.applications' in prosrc) > 0
-        and not exists (select 1 from hafd.applications where name = 'hafah')
-        from pg_proc where oid = 'hive.try_acquire_app_install_lock(text)'::regprocedure")" || return 1
-    if [ "$reads_registry" = t ]; then
-        echo "== registering a stand-in hafah application: this HAF's install lock reads its registry"
-        psql "$HAFAH_TEST_DB_URL" -v ON_ERROR_STOP=on -q <<'SQL' || return 1
+    # registered under. Where the HAF provides hive.app_register_lock_only (haf#501),
+    # install_app.sh registers hafah lock-only and that registration is what is
+    # tested. A registry-reading HAF without it gets a stand-in hafah application in
+    # this run's clone, so the skip is still what is tested; a HAF that does not read
+    # the registry needs neither.
+    local rows reads_registry
+    rows="$(lock_only_rows)" || return 1
+    if [ -n "$rows" ]; then
+        if [ "$rows" != 1 ]; then
+            echo "install_app.sh left $rows lock-only hafah registry rows; expected 1"
+            return 1
+        fi
+        echo "== install_app.sh registered hafah lock-only"
+    else
+        reads_registry="$(psql "$HAFAH_TEST_DB_URL" -v ON_ERROR_STOP=on -Atc "select position('hafd.applications' in prosrc) > 0
+            and not exists (select 1 from hafd.applications where name = 'hafah')
+            from pg_proc where oid = 'hive.try_acquire_app_install_lock(text)'::regprocedure")" || return 1
+        if [ "$reads_registry" = t ]; then
+            echo "== registering a stand-in hafah application: this HAF's install lock reads its registry and has no hive.app_register_lock_only"
+            psql "$HAFAH_TEST_DB_URL" -v ON_ERROR_STOP=on -q <<'SQL' || return 1
 CREATE SCHEMA lock_test_hafah;
 SELECT hive.app_create_context('lock_test_hafah', 'lock_test_hafah', _is_forking => FALSE, _is_attached => FALSE);
 SELECT hive.app_register('hafah', ARRAY['lock_test_hafah']::hive.contexts_group);
 SQL
+        fi
     fi
 
     local before after holder rc=0 i
