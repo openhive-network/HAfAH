@@ -1,4 +1,4 @@
-# syntax=registry.gitlab.syncad.com/hive/common-ci-configuration/dockerfile:1.5
+# syntax=registry.gitlab.syncad.com/hive/common-ci-configuration/dockerfile:1.11
 # The c-c-c psql tag balance_tracker and the other HAF apps pin: it ships python3,
 # psycopg2 and /usr/local/bin/install_with_app_lock.py, which scripts/install_app.sh
 # reruns itself under to hold the hafah install lock.
