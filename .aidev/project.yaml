@@ -229,19 +229,14 @@ performance:
     # parse_acc_hist_start (negative, the default -1: the newest, max BIGINT);
     # the two-step branch's bound __last_seq is that start cut at the last
     # irreversible block, written as the start itself. ${limit} is _limit.
+    # The CTE ho is the function's without its rendered_operation_cache join,
+    # and with helper_operations_view written out. The planner estimates each
+    # = ANY(ARRAY(subquery)) batch at 10 elements, so the ho and hb costs
+    # understate a 1000-row page.
     - &jsonrpc-account-history
       name: jsonrpc-account-history
       sql: |
-        SELECT
-          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
-          blk.block_num AS _block,
-          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
-          ho.op_pos::BIGINT AS _op_in_trx,
-          hot.is_virtual AS _virtual_op,
-          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
-          jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS _value,
-          page.account_op_seq_no AS _operation_id
-        FROM (
+        WITH page AS MATERIALIZED (
           (
             SELECT ao.operation_id, ao.account_op_seq_no
             FROM hafd.account_operations ao
@@ -291,14 +286,38 @@ performance:
             LIMIT ${limit}
           )
           LIMIT ${limit}
-        ) page
+        ),
+        ho AS MATERIALIZED (
+          SELECT o.id, o.trx_in_block, o.op_pos::BIGINT AS op_pos, hot.is_virtual AS virtual_op,
+            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', o.body_value) AS body
+          FROM hafd.operations o
+          JOIN hafd.operation_types hot ON hot.id = o.op_type_id
+          WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+        ),
+        hb AS MATERIALIZED (
+          SELECT b.num, b.created_at
+          FROM hafd.blocks b
+          WHERE b.num = ANY(ARRAY(
+            SELECT DISTINCT hafd.operation_id_to_block_num(p.operation_id) FROM page p ORDER BY 1
+          ))
+        )
+        SELECT
+          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
+          blk.block_num AS _block,
+          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
+          ho.op_pos AS _op_in_trx,
+          ho.virtual_op AS _virtual_op,
+          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
+          ho.body AS _value,
+          page.account_op_seq_no AS _operation_id
+        FROM page
         CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
-        JOIN hafd.operations ho ON ho.id = page.operation_id
-        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
-        JOIN hafd.blocks hb ON hb.num = blk.block_num
+        JOIN ho ON ho.id = page.operation_id
+        JOIN hb ON hb.num = blk.block_num
         LEFT JOIN LATERAL (
           SELECT t.trx_hash FROM hafd.transactions t
           WHERE t.block_num = blk.block_num AND t.trx_in_block = ho.trx_in_block
+            AND ho.trx_in_block >= 0
           LIMIT 1
         ) ht ON TRUE
         ORDER BY page.account_op_seq_no ASC
@@ -325,16 +344,7 @@ performance:
       name: condenser-account-history
       api_methods: [condenser_api.get_account_history]
       sql: &condenser-account-history-sql |
-        SELECT
-          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
-          blk.block_num AS _block,
-          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
-          ho.op_pos::BIGINT AS _op_in_trx,
-          hot.is_virtual AS _virtual_op,
-          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
-          hive.get_legacy_style_operation(hafd._operation_from_jsonb(jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value)))::JSONB AS _value,
-          page.account_op_seq_no AS _operation_id
-        FROM (
+        WITH page AS MATERIALIZED (
           (
             SELECT ao.operation_id, ao.account_op_seq_no
             FROM hafd.account_operations ao
@@ -384,14 +394,38 @@ performance:
             LIMIT ${limit}
           )
           LIMIT ${limit}
-        ) page
+        ),
+        ho AS MATERIALIZED (
+          SELECT o.id, o.trx_in_block, o.op_pos::BIGINT AS op_pos, hot.is_virtual AS virtual_op,
+            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', o.body_value) AS body
+          FROM hafd.operations o
+          JOIN hafd.operation_types hot ON hot.id = o.op_type_id
+          WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+        ),
+        hb AS MATERIALIZED (
+          SELECT b.num, b.created_at
+          FROM hafd.blocks b
+          WHERE b.num = ANY(ARRAY(
+            SELECT DISTINCT hafd.operation_id_to_block_num(p.operation_id) FROM page p ORDER BY 1
+          ))
+        )
+        SELECT
+          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
+          blk.block_num AS _block,
+          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
+          ho.op_pos AS _op_in_trx,
+          ho.virtual_op AS _virtual_op,
+          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
+          hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::JSONB AS _value,
+          page.account_op_seq_no AS _operation_id
+        FROM page
         CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
-        JOIN hafd.operations ho ON ho.id = page.operation_id
-        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
-        JOIN hafd.blocks hb ON hb.num = blk.block_num
+        JOIN ho ON ho.id = page.operation_id
+        JOIN hb ON hb.num = blk.block_num
         LEFT JOIN LATERAL (
           SELECT t.trx_hash FROM hafd.transactions t
           WHERE t.block_num = blk.block_num AND t.trx_in_block = ho.trx_in_block
+            AND ho.trx_in_block >= 0
           LIMIT 1
         ) ht ON TRUE
         ORDER BY page.account_op_seq_no ASC
@@ -412,16 +446,7 @@ performance:
     - &jsonrpc-account-history-by-type
       name: jsonrpc-account-history-by-type
       sql: |
-        SELECT
-          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
-          blk.block_num AS _block,
-          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
-          ho.op_pos::BIGINT AS _op_in_trx,
-          hot.is_virtual AS _virtual_op,
-          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
-          jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS _value,
-          page.account_op_seq_no AS _operation_id
-        FROM (
+        WITH page AS MATERIALIZED (
           (
             SELECT ao.operation_id, ao.account_op_seq_no
             FROM hafd.account_operations ao
@@ -471,14 +496,38 @@ performance:
             LIMIT ${limit}
           )
           LIMIT ${limit}
-        ) page
+        ),
+        ho AS MATERIALIZED (
+          SELECT o.id, o.trx_in_block, o.op_pos::BIGINT AS op_pos, hot.is_virtual AS virtual_op,
+            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', o.body_value) AS body
+          FROM hafd.operations o
+          JOIN hafd.operation_types hot ON hot.id = o.op_type_id
+          WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+        ),
+        hb AS MATERIALIZED (
+          SELECT b.num, b.created_at
+          FROM hafd.blocks b
+          WHERE b.num = ANY(ARRAY(
+            SELECT DISTINCT hafd.operation_id_to_block_num(p.operation_id) FROM page p ORDER BY 1
+          ))
+        )
+        SELECT
+          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
+          blk.block_num AS _block,
+          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
+          ho.op_pos AS _op_in_trx,
+          ho.virtual_op AS _virtual_op,
+          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
+          ho.body AS _value,
+          page.account_op_seq_no AS _operation_id
+        FROM page
         CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
-        JOIN hafd.operations ho ON ho.id = page.operation_id
-        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
-        JOIN hafd.blocks hb ON hb.num = blk.block_num
+        JOIN ho ON ho.id = page.operation_id
+        JOIN hb ON hb.num = blk.block_num
         LEFT JOIN LATERAL (
           SELECT t.trx_hash FROM hafd.transactions t
           WHERE t.block_num = blk.block_num AND t.trx_in_block = ho.trx_in_block
+            AND ho.trx_in_block >= 0
           LIMIT 1
         ) ht ON TRUE
         ORDER BY page.account_op_seq_no ASC
@@ -507,16 +556,7 @@ performance:
       name: condenser-account-history-by-type
       api_methods: [condenser_api.get_account_history]
       sql: &condenser-account-history-by-type-sql |
-        SELECT
-          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
-          blk.block_num AS _block,
-          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
-          ho.op_pos::BIGINT AS _op_in_trx,
-          hot.is_virtual AS _virtual_op,
-          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
-          hive.get_legacy_style_operation(hafd._operation_from_jsonb(jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value)))::JSONB AS _value,
-          page.account_op_seq_no AS _operation_id
-        FROM (
+        WITH page AS MATERIALIZED (
           (
             SELECT ao.operation_id, ao.account_op_seq_no
             FROM hafd.account_operations ao
@@ -566,14 +606,38 @@ performance:
             LIMIT ${limit}
           )
           LIMIT ${limit}
-        ) page
+        ),
+        ho AS MATERIALIZED (
+          SELECT o.id, o.trx_in_block, o.op_pos::BIGINT AS op_pos, hot.is_virtual AS virtual_op,
+            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', o.body_value) AS body
+          FROM hafd.operations o
+          JOIN hafd.operation_types hot ON hot.id = o.op_type_id
+          WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+        ),
+        hb AS MATERIALIZED (
+          SELECT b.num, b.created_at
+          FROM hafd.blocks b
+          WHERE b.num = ANY(ARRAY(
+            SELECT DISTINCT hafd.operation_id_to_block_num(p.operation_id) FROM page p ORDER BY 1
+          ))
+        )
+        SELECT
+          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
+          blk.block_num AS _block,
+          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
+          ho.op_pos AS _op_in_trx,
+          ho.virtual_op AS _virtual_op,
+          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
+          hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::JSONB AS _value,
+          page.account_op_seq_no AS _operation_id
+        FROM page
         CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
-        JOIN hafd.operations ho ON ho.id = page.operation_id
-        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
-        JOIN hafd.blocks hb ON hb.num = blk.block_num
+        JOIN ho ON ho.id = page.operation_id
+        JOIN hb ON hb.num = blk.block_num
         LEFT JOIN LATERAL (
           SELECT t.trx_hash FROM hafd.transactions t
           WHERE t.block_num = blk.block_num AND t.trx_in_block = ho.trx_in_block
+            AND ho.trx_in_block >= 0
           LIMIT 1
         ) ht ON TRUE
         ORDER BY page.account_op_seq_no ASC
@@ -623,16 +687,7 @@ performance:
     - &jsonrpc-account-history-by-rare-type
       name: jsonrpc-account-history-by-rare-type
       sql: |
-        SELECT
-          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
-          blk.block_num AS _block,
-          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
-          ho.op_pos::BIGINT AS _op_in_trx,
-          hot.is_virtual AS _virtual_op,
-          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
-          jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS _value,
-          page.account_op_seq_no AS _operation_id
-        FROM (
+        WITH page AS MATERIALIZED (
           (
             SELECT ao.operation_id, ao.account_op_seq_no
             FROM hafd.account_operations ao
@@ -682,14 +737,38 @@ performance:
             LIMIT ${limit}
           )
           LIMIT ${limit}
-        ) page
+        ),
+        ho AS MATERIALIZED (
+          SELECT o.id, o.trx_in_block, o.op_pos::BIGINT AS op_pos, hot.is_virtual AS virtual_op,
+            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', o.body_value) AS body
+          FROM hafd.operations o
+          JOIN hafd.operation_types hot ON hot.id = o.op_type_id
+          WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+        ),
+        hb AS MATERIALIZED (
+          SELECT b.num, b.created_at
+          FROM hafd.blocks b
+          WHERE b.num = ANY(ARRAY(
+            SELECT DISTINCT hafd.operation_id_to_block_num(p.operation_id) FROM page p ORDER BY 1
+          ))
+        )
+        SELECT
+          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
+          blk.block_num AS _block,
+          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
+          ho.op_pos AS _op_in_trx,
+          ho.virtual_op AS _virtual_op,
+          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
+          ho.body AS _value,
+          page.account_op_seq_no AS _operation_id
+        FROM page
         CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
-        JOIN hafd.operations ho ON ho.id = page.operation_id
-        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
-        JOIN hafd.blocks hb ON hb.num = blk.block_num
+        JOIN ho ON ho.id = page.operation_id
+        JOIN hb ON hb.num = blk.block_num
         LEFT JOIN LATERAL (
           SELECT t.trx_hash FROM hafd.transactions t
           WHERE t.block_num = blk.block_num AND t.trx_in_block = ho.trx_in_block
+            AND ho.trx_in_block >= 0
           LIMIT 1
         ) ht ON TRUE
         ORDER BY page.account_op_seq_no ASC
@@ -718,16 +797,7 @@ performance:
       name: condenser-account-history-by-rare-type
       api_methods: [condenser_api.get_account_history]
       sql: &condenser-account-history-by-rare-type-sql |
-        SELECT
-          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
-          blk.block_num AS _block,
-          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
-          ho.op_pos::BIGINT AS _op_in_trx,
-          hot.is_virtual AS _virtual_op,
-          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
-          hive.get_legacy_style_operation(hafd._operation_from_jsonb(jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value)))::JSONB AS _value,
-          page.account_op_seq_no AS _operation_id
-        FROM (
+        WITH page AS MATERIALIZED (
           (
             SELECT ao.operation_id, ao.account_op_seq_no
             FROM hafd.account_operations ao
@@ -777,14 +847,38 @@ performance:
             LIMIT ${limit}
           )
           LIMIT ${limit}
-        ) page
+        ),
+        ho AS MATERIALIZED (
+          SELECT o.id, o.trx_in_block, o.op_pos::BIGINT AS op_pos, hot.is_virtual AS virtual_op,
+            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', o.body_value) AS body
+          FROM hafd.operations o
+          JOIN hafd.operation_types hot ON hot.id = o.op_type_id
+          WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+        ),
+        hb AS MATERIALIZED (
+          SELECT b.num, b.created_at
+          FROM hafd.blocks b
+          WHERE b.num = ANY(ARRAY(
+            SELECT DISTINCT hafd.operation_id_to_block_num(p.operation_id) FROM page p ORDER BY 1
+          ))
+        )
+        SELECT
+          CASE WHEN ho.trx_in_block < 0 THEN '0000000000000000000000000000000000000000' ELSE encode(ht.trx_hash, 'hex') END AS _trx_id,
+          blk.block_num AS _block,
+          CASE WHEN ho.trx_in_block < 0 THEN 4294967295 ELSE ho.trx_in_block END AS _trx_in_block,
+          ho.op_pos AS _op_in_trx,
+          ho.virtual_op AS _virtual_op,
+          btrim(to_json(hb.created_at)::TEXT, '"') AS _timestamp,
+          hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::JSONB AS _value,
+          page.account_op_seq_no AS _operation_id
+        FROM page
         CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
-        JOIN hafd.operations ho ON ho.id = page.operation_id
-        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
-        JOIN hafd.blocks hb ON hb.num = blk.block_num
+        JOIN ho ON ho.id = page.operation_id
+        JOIN hb ON hb.num = blk.block_num
         LEFT JOIN LATERAL (
           SELECT t.trx_hash FROM hafd.transactions t
           WHERE t.block_num = blk.block_num AND t.trx_in_block = ho.trx_in_block
+            AND ho.trx_in_block >= 0
           LIMIT 1
         ) ht ON TRUE
         ORDER BY page.account_op_seq_no ASC
