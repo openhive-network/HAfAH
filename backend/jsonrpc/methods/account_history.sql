@@ -44,15 +44,16 @@ SET ROLE hafah_owner;
  *   3. Translate filter bitmask to operation type IDs
  *   4. Resolve account name to ID
  *   5. Select the page from hafd.account_operations, newest first
- *   6. Join each page row once to hafd.operations (with its type),
- *      hafd.transactions for the hash and hafd.blocks for the timestamp
+ *   6. Fetch the page's operations (with their type) and its blocks as two
+ *      id-sorted batches, and the hash of each non-virtual operation's
+ *      transaction from hafd.transactions
  *   7. Return formatted results ordered by operation sequence
  *
  * RENDERED OPERATION CACHE:
  *   Page rows whose operation is in hafah_backend.rendered_operation_cache
  *   (db/hafah_app.sql) return the stored inner object in _cached_entry and a
- *   NULL _value: the body is neither read nor converted, and the formatter
- *   splices _cached_entry. hafah_backend.refresh_rendered_operation_cache
+ *   NULL _value: the batch fetch leaves their body unread and unbuilt, the
+ *   result does not convert it, and the formatter splices _cached_entry. hafah_backend.refresh_rendered_operation_cache
  *   (methods/rendered_operation_cache.sql) repeats the expressions below; keep
  *   them in step.
  *
@@ -74,6 +75,12 @@ SET ROLE hafah_owner;
  *   the page query takes the branch the count selects. Step 1 tests the types
  *   with IS TRUE, which no index can serve, so a misestimate cannot turn it
  *   into a full read and sort of a common type. Unfiltered calls walk uq1.
+ *
+ * BATCHED FETCHES:
+ *   The page is materialized, then hafd.operations and hafd.blocks are each
+ *   read once with = ANY of the page's sorted ids, which walks the primary key
+ *   in order instead of descending it once per row. The batches lose the page
+ *   order, so the result is sorted by account_op_seq_no again.
  *
  *   plan_cache_mode = force_custom_plan plans the page query for every call
  *   with the account, the filter and the branch as constants: the branches not
@@ -181,66 +188,7 @@ BEGIN
   END IF;
 
   RETURN QUERY
-    SELECT
-      /*
-       * TRANSACTION ID:
-       *   - Regular ops: 40-char hex hash from hafd.transactions
-       *   - Virtual ops: Use placeholder (40 zeros)
-       *
-       * NOTE: trx_in_block < 0 indicates a virtual operation (no real transaction)
-       */
-      (
-        CASE
-          WHEN ho.trx_in_block < 0
-            THEN '0000000000000000000000000000000000000000'
-          ELSE encode(ht.trx_hash, 'hex')
-        END
-      ) AS _trx_id,
-      blk.block_num AS _block,
-      /*
-       * TRANSACTION IN BLOCK:
-       *   - Regular ops: 0-based index within block
-       *   - Virtual ops: 4294967295 (max uint32, signals "no transaction")
-       */
-      (
-        CASE
-          WHEN ho.trx_in_block < 0
-            THEN 4294967295  -- WHY: Max uint32 = "no transaction" marker
-          ELSE ho.trx_in_block
-        END
-      ) AS _trx_in_block,
-      ho.op_pos AS _op_in_trx,
-      ho.virtual_op AS _virtual_op,
-      /*
-       * TIMESTAMP FORMATTING:
-       *   Block timestamp in ISO 8601 format without quotes.
-       *   btrim removes quotes added by to_json().
-       */
-      btrim(to_json(hb.created_at)::TEXT, '"'::TEXT) AS _timestamp,
-      /*
-       * OPERATION BODY FORMAT:
-       *   - Legacy: Old format with type as string key {"vote": {...}}
-       *   - New: Structured format {"type": "vote_operation", "value": {...}}
-       */
-      (
-        CASE
-          -- WHY: A cached operation is not converted at all; the formatter splices _cached_entry
-          WHEN roc.operation_id IS NOT NULL
-            THEN NULL
-          WHEN _is_legacy_style
-            THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::JSONB
-          ELSE ho.body
-        END
-      ) AS _value,
-      page.account_op_seq_no AS _operation_id,
-      (
-        CASE
-          WHEN _is_legacy_style
-            THEN roc.legacy_entry
-          ELSE roc.entry
-        END
-      ) AS _cached_entry
-    FROM (
+    WITH page AS MATERIALIZED (
       /*
        * PAGE SELECTION:
        *   Newest first from _start, at most _limit rows, irreversible only.
@@ -300,16 +248,96 @@ BEGIN
         LIMIT _limit
       )
       LIMIT _limit  -- WHY: Lets the planner see the page holds at most _limit rows
-    ) page
+    ),
+    -- The page's operations in one walk of pk_hive_operations: = ANY of a sorted array
+    ho AS MATERIALIZED (
+      SELECT
+        o.id,
+        o.trx_in_block,
+        o.op_pos,
+        o.virtual_op,
+        -- WHY: A cached operation's body is never built, so its stored body_value is not read
+        (CASE WHEN roc.operation_id IS NULL THEN o.body END) AS body
+      FROM hafah_backend.helper_operations_view o
+      LEFT JOIN hafah_backend.rendered_operation_cache roc ON roc.operation_id = o.id
+      WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+    ),
+    -- The page's blocks, once each, in one walk of the blocks primary key
+    hb AS MATERIALIZED (
+      SELECT b.num, b.created_at
+      FROM hafd.blocks b
+      WHERE b.num = ANY(ARRAY(
+        SELECT DISTINCT hafd.operation_id_to_block_num(p.operation_id) FROM page p ORDER BY 1
+      ))
+    )
+    SELECT
+      /*
+       * TRANSACTION ID:
+       *   - Regular ops: 40-char hex hash from hafd.transactions
+       *   - Virtual ops: Use placeholder (40 zeros)
+       *
+       * NOTE: trx_in_block < 0 indicates a virtual operation (no real transaction)
+       */
+      (
+        CASE
+          WHEN ho.trx_in_block < 0
+            THEN '0000000000000000000000000000000000000000'
+          ELSE encode(ht.trx_hash, 'hex')
+        END
+      ) AS _trx_id,
+      blk.block_num AS _block,
+      /*
+       * TRANSACTION IN BLOCK:
+       *   - Regular ops: 0-based index within block
+       *   - Virtual ops: 4294967295 (max uint32, signals "no transaction")
+       */
+      (
+        CASE
+          WHEN ho.trx_in_block < 0
+            THEN 4294967295  -- WHY: Max uint32 = "no transaction" marker
+          ELSE ho.trx_in_block
+        END
+      ) AS _trx_in_block,
+      ho.op_pos AS _op_in_trx,
+      ho.virtual_op AS _virtual_op,
+      /*
+       * TIMESTAMP FORMATTING:
+       *   Block timestamp in ISO 8601 format without quotes.
+       *   btrim removes quotes added by to_json().
+       */
+      btrim(to_json(hb.created_at)::TEXT, '"'::TEXT) AS _timestamp,
+      /*
+       * OPERATION BODY FORMAT:
+       *   - Legacy: Old format with type as string key {"vote": {...}}
+       *   - New: Structured format {"type": "vote_operation", "value": {...}}
+       */
+      (
+        CASE
+          -- WHY: A cached operation is not converted at all; the formatter splices _cached_entry
+          WHEN roc.operation_id IS NOT NULL
+            THEN NULL
+          WHEN _is_legacy_style
+            THEN hive.get_legacy_style_operation(hafd._operation_from_jsonb(ho.body))::JSONB
+          ELSE ho.body
+        END
+      ) AS _value,
+      page.account_op_seq_no AS _operation_id,
+      (
+        CASE
+          WHEN _is_legacy_style
+            THEN roc.legacy_entry
+          ELSE roc.entry
+        END
+      ) AS _cached_entry
+    FROM page
     CROSS JOIN LATERAL (SELECT hafd.operation_id_to_block_num(page.operation_id) AS block_num) blk
-    -- One primary-key probe per page row: body, op_pos, trx_in_block, is_virtual
-    JOIN hafah_backend.helper_operations_view ho ON ho.id = page.operation_id
-    JOIN hafd.blocks hb ON hb.num = blk.block_num  -- WHY: Get block timestamp
-    -- Virtual ops (trx_in_block = -1) match no transaction
+    JOIN ho ON ho.id = page.operation_id
+    JOIN hb ON hb.num = blk.block_num  -- WHY: Get block timestamp
     LEFT JOIN LATERAL (
       -- LIMIT 1: a position holds one transaction (its index is not declared unique)
       SELECT tx.trx_hash FROM hafd.transactions tx
       WHERE tx.block_num = blk.block_num AND tx.trx_in_block = ho.trx_in_block
+        AND ho.trx_in_block >= 0  -- WHY: Virtual ops (trx_in_block = -1) have no transaction; skip the probe
       LIMIT 1
     ) ht ON TRUE
     -- Huge operations rendered once (see hafah_backend.rendered_operation_cache)
