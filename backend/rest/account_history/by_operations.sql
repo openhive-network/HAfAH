@@ -114,7 +114,7 @@ BEGIN
 
   /*
    * ===================================================================================
-   * CTE: operation_range
+   * CTEs: page, ho, hb, operation_range
    * ===================================================================================
    * WHY: Fetch operations matching the type filter from hafd.account_operations.
    *
@@ -125,24 +125,18 @@ BEGIN
    *   - Otherwise, only matching types are included
    *
    * JOIN STRATEGY:
-   *   - helper_operations_view: Get operation body, position and is_virtual flag
-   *   - hafd.transactions: Get transaction hash (LEFT JOIN for virtual ops)
+   *   - ho: Operation body, position and is_virtual flag from helper_operations_view,
+   *     the page's ids read as one sorted batch (as in hafah_backend.ah_get_account_history)
+   *   - hb: The page's block timestamps from hafd.blocks, read the same way
+   *   - hafd.transactions: Get transaction hash (LEFT JOIN; virtual ops are not probed)
    *
    * PAGINATION:
    *   - Uses LIMIT/OFFSET instead of WHERE clause offset
    *   - OFFSET required because filtered rows are non-contiguous
    *   - ORDER BY account_op_seq_no DESC for newest-first
    */
-  WITH operation_range AS MATERIALIZED (
-    SELECT
-      ls.operation_id AS id,
-      ls.block_num,
-      ho.trx_in_block,
-      encode(ht.trx_hash, 'hex') AS trx_hash,
-      ho.op_pos::INT AS op_pos,
-      ls.op_type_id,
-      ho.body,
-      ho.virtual_op AS is_virtual
+  WITH page AS MATERIALIZED (
+    SELECT ls.operation_id, ls.op_type_id, ls.block_num
     FROM (
       -- Inner query: fetch from account_operations with type filter; exactly one
       -- branch runs, the custom plan folds the other away
@@ -190,13 +184,37 @@ BEGIN
         OFFSET _calculate_pages.offset_filter
       )
     ) ls
-    -- One primary-key probe per page row for the operation's fields
-    JOIN hafah_backend.helper_operations_view ho ON ho.id = ls.operation_id
+  ),
+  -- The page's operations in one walk of pk_hive_operations: = ANY of a sorted array
+  ho AS MATERIALIZED (
+    SELECT o.id, o.trx_in_block, o.op_pos, o.body, o.virtual_op
+    FROM hafah_backend.helper_operations_view o
+    WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+  ),
+  -- The page's blocks, once each, in one walk of the blocks primary key
+  hb AS MATERIALIZED (
+    SELECT b.num, b.created_at
+    FROM hafd.blocks b
+    WHERE b.num = ANY(ARRAY(SELECT DISTINCT p.block_num FROM page p ORDER BY 1))
+  ),
+  operation_range AS MATERIALIZED (
+    SELECT
+      ls.operation_id AS id,
+      ls.block_num,
+      ho.trx_in_block,
+      encode(ht.trx_hash, 'hex') AS trx_hash,
+      ho.op_pos::INT AS op_pos,
+      ls.op_type_id,
+      ho.body,
+      ho.virtual_op AS is_virtual
+    FROM page ls
+    JOIN ho ON ho.id = ls.operation_id
     -- Virtual ops have no transaction (trx_in_block = -1), so the hash is NULL
     LEFT JOIN LATERAL (
       -- LIMIT 1: a position holds one transaction (its index is not declared unique)
       SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
       WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ho.trx_in_block
+        AND ho.trx_in_block >= 0  -- WHY: Virtual ops (trx_in_block = -1) have no transaction; skip the probe
       LIMIT 1
     ) ht ON TRUE
   ),
@@ -210,7 +228,7 @@ BEGIN
    *   operation_body_filter() truncates oversized bodies to prevent response explosion.
    *
    * TIMESTAMP:
-   *   Join to hafd.blocks to get created_at for each operation.
+   *   Join to hb (hafd.blocks) to get created_at for each operation.
    */
   result_query AS (
     SELECT
@@ -226,7 +244,7 @@ BEGIN
     FROM (
       SELECT hafah_backend.operation_body_filter(ov.body, ov.id, _body_limit) as composite, ov.id, ov.block_num, ov.trx_in_block, ov.trx_hash, ov.op_pos, ov.op_type_id, ov.is_virtual, hb.created_at
       FROM operation_range ov
-      JOIN hafd.blocks hb ON hb.num = ov.block_num
+      JOIN hb ON hb.num = ov.block_num
     ) filtered_operations
   )
   /*

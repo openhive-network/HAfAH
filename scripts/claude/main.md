@@ -184,6 +184,14 @@ true, only irreversible blocks and operations are returned.
 exactly as `hive.operations_view` does (`{"type": ..., "value": body_value}`).
 Use it for the single per-row operations join.
 
+The account history pages (JSON-RPC `ah_get_account_history` and the six REST
+variants in `backend/rest/account_history/`) select the page first as a
+materialized CTE, then read its operations from `helper_operations_view` and its
+blocks from `hafd.blocks` as two batches, `= ANY(ARRAY(<page ids> ORDER BY 1))`,
+one ordered walk of each primary key instead of a probe per row. The
+`hafd.transactions` hash lateral carries `trx_in_block >= 0`, so virtual
+operations skip it. Keep a new page path in the same form.
+
 `hafah_backend.rendered_operation_cache` (`db/hafah_app.sql`) holds the
 pre-rendered `get_account_history` inner objects of a few huge irreversible
 operations (the HF23 `hardfork_hive` op on mainnet), filled by
