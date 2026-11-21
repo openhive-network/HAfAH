@@ -3,10 +3,11 @@
 The runtime image carries the OpenResty of Dockerfile.rewriter's base image
 (.aidev/runtime/Dockerfile). This gives it what Dockerfile.rewriter copies in -
 docker/hafah_rest_nginx.conf.template as nginx.conf, with docker/rewriter_entrypoint.sh's
-`${REWRITE_LOG}` substitution for REWRITE_LOG=on, and endpoints/rewrite_rules.conf and
-endpoints/rpc_arguments.lua beside it - in a scratch prefix, and changes only where it listens
-and what it forwards to: the checks run unprivileged, beside a PostgREST on a free loopback
-port rather than `hafah-postgrest:3000`.
+`${REWRITE_LOG}` substitution for REWRITE_LOG=on and `${RESOLVER}` one for its default, and
+endpoints/rewrite_rules.conf and endpoints/rpc_arguments.lua beside it - in a scratch prefix,
+and changes only where it listens and what it forwards to: the checks run unprivileged, beside a
+PostgREST on a free loopback port rather than `hafah-postgrest:3000`. That upstream is an IP
+address, which nginx forwards to without asking the resolver, so the resolver is never queried.
 """
 import contextlib
 import os
@@ -26,6 +27,7 @@ _ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 _TEMPLATE = os.path.join(_ROOT, "docker", "hafah_rest_nginx.conf.template")
 _CONF_FILES = ("rewrite_rules.conf", "rpc_arguments.lua")
 _REWRITE_LOG = "rewrite_log on;"
+_RESOLVER = "127.0.0.11"
 _UPSTREAM = "http://hafah-postgrest:3000"
 
 
@@ -39,10 +41,10 @@ def _config(upstream: str, port: int, health_port: int) -> str:
     with open(_TEMPLATE) as template:
         text = template.read()
     # As the entrypoint's sed does: every occurrence, the template's comment naming it too.
-    text = text.replace("${REWRITE_LOG}", _REWRITE_LOG)
+    text = text.replace("${REWRITE_LOG}", _REWRITE_LOG).replace("${RESOLVER}", _RESOLVER)
     text = _replace_once(text, "listen 0.0.0.0:80 default_server;", f"listen 127.0.0.1:{port} default_server;")
     text = _replace_once(text, "listen 0.0.0.0:81;", f"listen 127.0.0.1:{health_port};")
-    return _replace_once(text, f"proxy_pass  {_UPSTREAM};", f"proxy_pass  {upstream};")
+    return _replace_once(text, f"set $postgrest_upstream {_UPSTREAM};", f"set $postgrest_upstream {upstream};")
 
 
 def _listening(port: int) -> bool:
