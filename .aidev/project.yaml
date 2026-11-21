@@ -212,6 +212,11 @@ performance:
         - {methods: [condenser_api.get_ops_in_block], paths: [params.0]}
         - {methods: [account_history_api.enum_virtual_ops], paths: [params.block_range_begin, params.block_range_end]}
         - {methods: [condenser_api.enum_virtual_ops], paths: [params.0, params.1]}
+    # The capture was taken at the front proxy (ahead of drone), so it holds raw
+    # client batches and appbase `call`s; present them as drone forwards them to
+    # hafah: batch members and translated calls are replayed, allowlisted and
+    # reported under their own method.
+    normalise: {jsonrpc: drone}
     inputs: ["backend/**", "endpoints/**", "db/**"]
   # The production workload `aidev db shape check` weighs the declared queries
   # by: the replay capture's calls of each query's `api_methods`, planned with
