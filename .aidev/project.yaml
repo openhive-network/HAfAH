@@ -1008,9 +1008,34 @@ performance:
     # LIMIT _calculate_pages.limit_filter from to_seq - offset_filter down: with no
     # page, the newest, offset 0 and count % page-size rows (page-size when that
     # is 0), planned at its bound ${page_size}.
+    # As in the function, the page is materialized and its operations (ho) and
+    # blocks (hb) are read as id-sorted batches, helper_operations_view written
+    # out; virtual operations skip the transactions probe. The planner estimates
+    # each = ANY(ARRAY(subquery)) batch at 10 elements.
     - name: rest-account-operations-page
       sql: |
-        WITH operation_range AS MATERIALIZED (
+        WITH page AS MATERIALIZED (
+          SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+            AND ao.account_op_seq_no >= 0
+            AND ao.account_op_seq_no <= 2147483647
+          ORDER BY ao.account_op_seq_no DESC
+          LIMIT ${page_size}
+        ),
+        ho AS MATERIALIZED (
+          SELECT o.id, o.trx_in_block, o.op_pos, hot.is_virtual,
+            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', o.body_value) AS body
+          FROM hafd.operations o
+          JOIN hafd.operation_types hot ON hot.id = o.op_type_id
+          WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+        ),
+        hb AS MATERIALIZED (
+          SELECT b.num, b.created_at
+          FROM hafd.blocks b
+          WHERE b.num = ANY(ARRAY(SELECT DISTINCT p.block_num FROM page p ORDER BY 1))
+        ),
+        operation_range AS MATERIALIZED (
           SELECT
             ls.operation_id AS id,
             ls.block_num,
@@ -1018,28 +1043,20 @@ performance:
             encode(ht.trx_hash, 'hex') AS trx_hash,
             ho.op_pos,
             ls.op_type_id,
-            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS body,
-            hot.is_virtual
-          FROM (
-            SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
-            FROM hafd.account_operations ao
-            WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-              AND ao.account_op_seq_no >= 0
-              AND ao.account_op_seq_no <= 2147483647
-            ORDER BY ao.account_op_seq_no DESC
-            LIMIT ${page_size}
-          ) ls
-          JOIN hafd.operations ho ON ho.id = ls.operation_id
-          JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
+            ho.body,
+            ho.is_virtual
+          FROM page ls
+          JOIN ho ON ho.id = ls.operation_id
           LEFT JOIN LATERAL (
             SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
             WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ho.trx_in_block
+              AND ho.trx_in_block >= 0
             LIMIT 1
           ) ht ON TRUE
         )
         SELECT ov.*, hb.created_at
         FROM operation_range ov
-        JOIN hafd.blocks hb ON hb.num = ov.block_num
+        JOIN hb ON hb.num = ov.block_num
         ORDER BY ov.id DESC
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
@@ -1061,7 +1078,28 @@ performance:
     # page's bound cut at to_seq.
     - name: rest-account-operations-page-at
       sql: |
-        WITH operation_range AS MATERIALIZED (
+        WITH page AS MATERIALIZED (
+          SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+          FROM hafd.account_operations ao
+          WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+            AND ao.account_op_seq_no >= 0
+            AND ao.account_op_seq_no <= LEAST(${page} * ${page_size} - 1, 2147483647)
+          ORDER BY ao.account_op_seq_no DESC
+          LIMIT ${page_size}
+        ),
+        ho AS MATERIALIZED (
+          SELECT o.id, o.trx_in_block, o.op_pos, hot.is_virtual,
+            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', o.body_value) AS body
+          FROM hafd.operations o
+          JOIN hafd.operation_types hot ON hot.id = o.op_type_id
+          WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+        ),
+        hb AS MATERIALIZED (
+          SELECT b.num, b.created_at
+          FROM hafd.blocks b
+          WHERE b.num = ANY(ARRAY(SELECT DISTINCT p.block_num FROM page p ORDER BY 1))
+        ),
+        operation_range AS MATERIALIZED (
           SELECT
             ls.operation_id AS id,
             ls.block_num,
@@ -1069,28 +1107,20 @@ performance:
             encode(ht.trx_hash, 'hex') AS trx_hash,
             ho.op_pos,
             ls.op_type_id,
-            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS body,
-            hot.is_virtual
-          FROM (
-            SELECT ao.operation_id, ao.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
-            FROM hafd.account_operations ao
-            WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-              AND ao.account_op_seq_no >= 0
-              AND ao.account_op_seq_no <= LEAST(${page} * ${page_size} - 1, 2147483647)
-            ORDER BY ao.account_op_seq_no DESC
-            LIMIT ${page_size}
-          ) ls
-          JOIN hafd.operations ho ON ho.id = ls.operation_id
-          JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
+            ho.body,
+            ho.is_virtual
+          FROM page ls
+          JOIN ho ON ho.id = ls.operation_id
           LEFT JOIN LATERAL (
             SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
             WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ho.trx_in_block
+              AND ho.trx_in_block >= 0
             LIMIT 1
           ) ht ON TRUE
         )
         SELECT ov.*, hb.created_at
         FROM operation_range ov
-        JOIN hafd.blocks hb ON hb.num = ov.block_num
+        JOIN hb ON hb.num = ov.block_num
         ORDER BY ov.id DESC
       parameters:
         account: {column: hafd.account_operations.account_id, value: "440"}  # blocktrades
@@ -1160,6 +1190,62 @@ performance:
     # branch runs is decided from the count above (rest-account-operations-count-by-type).
     - name: rest-account-operations-by-type
       sql: |
+        WITH page AS MATERIALIZED (
+          SELECT ls.operation_id, ls.op_type_id, ls.block_num
+          FROM (
+            (
+              SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+              FROM (
+                SELECT s.account_op_seq_no, s.op_type_id
+                FROM hafd.account_operations s
+                WHERE NOT FALSE
+                  AND s.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                  AND (string_to_array(${op_type}::TEXT, ',')::INT[] IS NULL OR (s.op_type_id = ANY(string_to_array(${op_type}::TEXT, ',')::INT[])) IS TRUE)
+                  AND s.account_op_seq_no >= 0
+                  AND s.account_op_seq_no <= 2147483647
+                ORDER BY s.account_op_seq_no DESC
+                LIMIT ${page_size}
+                OFFSET 0
+              ) seqs
+              CROSS JOIN LATERAL (
+                SELECT ao.operation_id
+                FROM hafd.account_operations ao
+                WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                  AND ao.account_op_seq_no = seqs.account_op_seq_no
+                LIMIT 1
+              ) ao
+            )
+            UNION ALL
+            (
+              SELECT rare.operation_id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num
+              FROM (
+                SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
+                FROM hafd.account_operations ao
+                WHERE FALSE
+                  AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                  AND ao.op_type_id = ANY(string_to_array(${op_type}::TEXT, ',')::INT[])
+                  AND ao.account_op_seq_no >= 0
+                  AND ao.account_op_seq_no <= 2147483647
+                OFFSET 0
+              ) rare
+              ORDER BY rare.account_op_seq_no DESC
+              LIMIT ${page_size}
+              OFFSET 0
+            )
+          ) ls
+        ),
+        ho AS MATERIALIZED (
+          SELECT o.id, o.trx_in_block, o.op_pos, hot.is_virtual,
+            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', o.body_value) AS body
+          FROM hafd.operations o
+          JOIN hafd.operation_types hot ON hot.id = o.op_type_id
+          WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+        ),
+        hb AS MATERIALIZED (
+          SELECT b.num, b.created_at
+          FROM hafd.blocks b
+          WHERE b.num = ANY(ARRAY(SELECT DISTINCT p.block_num FROM page p ORDER BY 1))
+        )
         SELECT
           ls.operation_id AS id,
           ls.block_num,
@@ -1167,54 +1253,16 @@ performance:
           encode(ht.trx_hash, 'hex') AS trx_hash,
           ho.op_pos::INT AS op_pos,
           ls.op_type_id,
-          jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS body,
-          hot.is_virtual
-        FROM (
-          (
-            SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
-            FROM (
-              SELECT s.account_op_seq_no, s.op_type_id
-              FROM hafd.account_operations s
-              WHERE NOT FALSE
-                AND s.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-                AND (string_to_array(${op_type}::TEXT, ',')::INT[] IS NULL OR (s.op_type_id = ANY(string_to_array(${op_type}::TEXT, ',')::INT[])) IS TRUE)
-                AND s.account_op_seq_no >= 0
-                AND s.account_op_seq_no <= 2147483647
-              ORDER BY s.account_op_seq_no DESC
-              LIMIT ${page_size}
-              OFFSET 0
-            ) seqs
-            CROSS JOIN LATERAL (
-              SELECT ao.operation_id
-              FROM hafd.account_operations ao
-              WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-                AND ao.account_op_seq_no = seqs.account_op_seq_no
-              LIMIT 1
-            ) ao
-          )
-          UNION ALL
-          (
-            SELECT rare.operation_id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num
-            FROM (
-              SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
-              FROM hafd.account_operations ao
-              WHERE FALSE
-                AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-                AND ao.op_type_id = ANY(string_to_array(${op_type}::TEXT, ',')::INT[])
-                AND ao.account_op_seq_no >= 0
-                AND ao.account_op_seq_no <= 2147483647
-              OFFSET 0
-            ) rare
-            ORDER BY rare.account_op_seq_no DESC
-            LIMIT ${page_size}
-            OFFSET 0
-          )
-        ) ls
-        JOIN hafd.operations ho ON ho.id = ls.operation_id
-        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
+          ho.body,
+          ho.is_virtual,
+          hb.created_at
+        FROM page ls
+        JOIN ho ON ho.id = ls.operation_id
+        JOIN hb ON hb.num = ls.block_num
         LEFT JOIN LATERAL (
           SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
           WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ho.trx_in_block
+            AND ho.trx_in_block >= 0
           LIMIT 1
         ) ht ON TRUE
       parameters:
@@ -1237,6 +1285,62 @@ performance:
     # a sort.
     - name: rest-account-operations-by-rare-type
       sql: |
+        WITH page AS MATERIALIZED (
+          SELECT ls.operation_id, ls.op_type_id, ls.block_num
+          FROM (
+            (
+              SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
+              FROM (
+                SELECT s.account_op_seq_no, s.op_type_id
+                FROM hafd.account_operations s
+                WHERE NOT TRUE
+                  AND s.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                  AND (string_to_array(${op_type}::TEXT, ',')::INT[] IS NULL OR (s.op_type_id = ANY(string_to_array(${op_type}::TEXT, ',')::INT[])) IS TRUE)
+                  AND s.account_op_seq_no >= 0
+                  AND s.account_op_seq_no <= 2147483647
+                ORDER BY s.account_op_seq_no DESC
+                LIMIT ${page_size}
+                OFFSET 0
+              ) seqs
+              CROSS JOIN LATERAL (
+                SELECT ao.operation_id
+                FROM hafd.account_operations ao
+                WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                  AND ao.account_op_seq_no = seqs.account_op_seq_no
+                LIMIT 1
+              ) ao
+            )
+            UNION ALL
+            (
+              SELECT rare.operation_id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num
+              FROM (
+                SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
+                FROM hafd.account_operations ao
+                WHERE TRUE
+                  AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
+                  AND ao.op_type_id = ANY(string_to_array(${op_type}::TEXT, ',')::INT[])
+                  AND ao.account_op_seq_no >= 0
+                  AND ao.account_op_seq_no <= 2147483647
+                OFFSET 0
+              ) rare
+              ORDER BY rare.account_op_seq_no DESC
+              LIMIT ${page_size}
+              OFFSET 0
+            )
+          ) ls
+        ),
+        ho AS MATERIALIZED (
+          SELECT o.id, o.trx_in_block, o.op_pos, hot.is_virtual,
+            jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', o.body_value) AS body
+          FROM hafd.operations o
+          JOIN hafd.operation_types hot ON hot.id = o.op_type_id
+          WHERE o.id = ANY(ARRAY(SELECT p.operation_id FROM page p ORDER BY p.operation_id))
+        ),
+        hb AS MATERIALIZED (
+          SELECT b.num, b.created_at
+          FROM hafd.blocks b
+          WHERE b.num = ANY(ARRAY(SELECT DISTINCT p.block_num FROM page p ORDER BY 1))
+        )
         SELECT
           ls.operation_id AS id,
           ls.block_num,
@@ -1244,54 +1348,16 @@ performance:
           encode(ht.trx_hash, 'hex') AS trx_hash,
           ho.op_pos::INT AS op_pos,
           ls.op_type_id,
-          jsonb_build_object('type', replace(hot.name, 'hive::protocol::', ''), 'value', ho.body_value) AS body,
-          hot.is_virtual
-        FROM (
-          (
-            SELECT ao.operation_id, seqs.op_type_id, hafd.operation_id_to_block_num(ao.operation_id) AS block_num
-            FROM (
-              SELECT s.account_op_seq_no, s.op_type_id
-              FROM hafd.account_operations s
-              WHERE NOT TRUE
-                AND s.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-                AND (string_to_array(${op_type}::TEXT, ',')::INT[] IS NULL OR (s.op_type_id = ANY(string_to_array(${op_type}::TEXT, ',')::INT[])) IS TRUE)
-                AND s.account_op_seq_no >= 0
-                AND s.account_op_seq_no <= 2147483647
-              ORDER BY s.account_op_seq_no DESC
-              LIMIT ${page_size}
-              OFFSET 0
-            ) seqs
-            CROSS JOIN LATERAL (
-              SELECT ao.operation_id
-              FROM hafd.account_operations ao
-              WHERE ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-                AND ao.account_op_seq_no = seqs.account_op_seq_no
-              LIMIT 1
-            ) ao
-          )
-          UNION ALL
-          (
-            SELECT rare.operation_id, rare.op_type_id, hafd.operation_id_to_block_num(rare.operation_id) AS block_num
-            FROM (
-              SELECT ao.operation_id, ao.op_type_id, ao.account_op_seq_no
-              FROM hafd.account_operations ao
-              WHERE TRUE
-                AND ao.account_id = (CASE WHEN ${account}::TEXT ~ '^[0-9]+$' THEN ${account}::TEXT::INT ELSE (SELECT a.id FROM hafd.accounts a WHERE a.name = ${account}::TEXT) END)
-                AND ao.op_type_id = ANY(string_to_array(${op_type}::TEXT, ',')::INT[])
-                AND ao.account_op_seq_no >= 0
-                AND ao.account_op_seq_no <= 2147483647
-              OFFSET 0
-            ) rare
-            ORDER BY rare.account_op_seq_no DESC
-            LIMIT ${page_size}
-            OFFSET 0
-          )
-        ) ls
-        JOIN hafd.operations ho ON ho.id = ls.operation_id
-        JOIN hafd.operation_types hot ON hot.id = ho.op_type_id
+          ho.body,
+          ho.is_virtual,
+          hb.created_at
+        FROM page ls
+        JOIN ho ON ho.id = ls.operation_id
+        JOIN hb ON hb.num = ls.block_num
         LEFT JOIN LATERAL (
           SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
           WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ho.trx_in_block
+            AND ho.trx_in_block >= 0
           LIMIT 1
         ) ht ON TRUE
       parameters:

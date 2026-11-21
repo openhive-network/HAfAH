@@ -330,12 +330,24 @@ BEGIN
       _limit
     )
   ),
-  filter_page AS (
+  filter_page AS MATERIALIZED (
     SELECT *
     FROM union_operations
     ORDER BY id DESC
     OFFSET (SELECT offset_filter FROM calculate_pages)
     LIMIT (SELECT limit_filter FROM calculate_pages)
+  ),
+  -- The page's operations in one walk of pk_hive_operations: = ANY of a sorted array
+  ho AS MATERIALIZED (
+    SELECT o.id, o.trx_in_block, o.op_pos, o.body, o.virtual_op
+    FROM hafah_backend.helper_operations_view o
+    WHERE o.id = ANY(ARRAY(SELECT p.id FROM filter_page p ORDER BY p.id))
+  ),
+  -- The page's blocks, once each, in one walk of the blocks primary key
+  hb AS MATERIALIZED (
+    SELECT b.num, b.created_at
+    FROM hafd.blocks b
+    WHERE b.num = ANY(ARRAY(SELECT DISTINCT p.block_num FROM filter_page p ORDER BY 1))
   ),
   /*
    * JOIN operation details from related tables
@@ -351,11 +363,12 @@ BEGIN
       ho.body,
       ho.virtual_op AS is_virtual
     FROM filter_page ls
-    JOIN hafah_backend.helper_operations_view ho ON ho.id = ls.id
+    JOIN ho ON ho.id = ls.id
     LEFT JOIN LATERAL (
       -- LIMIT 1: a position holds one transaction (its index is not declared unique)
       SELECT tx.trx_hash, tx.trx_in_block FROM hafd.transactions tx
       WHERE tx.block_num = ls.block_num AND tx.trx_in_block = ho.trx_in_block
+        AND ho.trx_in_block >= 0  -- WHY: Virtual ops (trx_in_block = -1) have no transaction; skip the probe
       LIMIT 1
     ) ht ON TRUE
   ),
@@ -373,7 +386,7 @@ BEGIN
     FROM (
       SELECT hafah_backend.operation_body_filter(ov.body, ov.id, _body_limit) as composite, ov.id, ov.block_num, ov.trx_in_block, ov.trx_hash, ov.op_pos, ov.op_type_id, ov.is_virtual, hb.created_at
       FROM join_tables ov
-      JOIN hafd.blocks hb ON hb.num = ov.block_num
+      JOIN hb ON hb.num = ov.block_num
     ) filtered_operations
     ORDER BY filtered_operations.id DESC
   )
