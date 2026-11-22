@@ -39,7 +39,7 @@
 SET ROLE hafah_owner;
 
 CREATE FUNCTION hafah_endpoints.home(JSON)
-RETURNS JSONB
+RETURNS JSON
 LANGUAGE 'plpgsql' STABLE
 AS
 $$
@@ -99,16 +99,21 @@ BEGIN
     END IF;
   END IF;
 
+  -- WHY: results stay JSON text end to end. get_account_history pages reach
+  -- 13.8 MB, and parsing them (into jsonb, or by __result->'error', which
+  -- re-scans the whole text) cost ~200 ms per call. An error is the envelope
+  -- hafah_backend.raise_exception builds, recognisable from its first bytes;
+  -- json_build_object embeds a JSON argument's text without parsing it.
   IF __result IS NULL THEN
     RETURN hafah_backend.raise_exception(-32601, 'Method not found', __method, __id);
-  ELSEIF __result->'error' IS NULL THEN
-    RETURN jsonb_build_object(
+  ELSEIF left(__result::TEXT, 64) ~ '^\s*\{\s*"jsonrpc"\s*:\s*"2\.0"\s*,\s*"error"\s*:' THEN
+    RETURN __result;
+  ELSE
+    RETURN json_build_object(
       'jsonrpc', '2.0',
       'result', __result,
       'id', __id
     );
-  ELSE
-    RETURN __result::JSONB;
   END IF;
 END
 $$

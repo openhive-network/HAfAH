@@ -115,6 +115,13 @@ transaction. `.aidev/endpoint_volatility_check.sql` fails on any VOLATILE
 `hafah_endpoints` function and calls each routed method through `home(json)`
 inside `BEGIN READ ONLY`.
 
+`home()` returns `JSON`, not `JSONB`: a `call_*` result (up to 13.8 MB for
+get_account_history pages holding a cached rendered operation) is wrapped with
+`json_build_object` and reaches PostgREST as unparsed text. Errors are told
+apart by their leading `{"jsonrpc": "2.0", "error":` bytes, so every error a
+`call_*` function returns must come from `hafah_backend.raise_exception`.
+Responses keep the key order and spacing their builders produced.
+
 ---
 
 ## Argument Parsing

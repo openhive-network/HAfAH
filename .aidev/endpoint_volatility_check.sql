@@ -86,6 +86,18 @@ BEGIN
     RAISE EXCEPTION 'an unknown JSON-RPC method answered %', _response;
   END IF;
 
+  -- A method's own error passes through home() as is, not wrapped as a result.
+  _response = hafah_endpoints.home('{"jsonrpc": "2.0", "id": 1, "method": "account_history_api.get_account_history", "params": {}}');
+  IF (_response->'error'->>'code')::INT IS DISTINCT FROM -32602 OR _response ? 'result' THEN
+    RAISE EXCEPTION 'get_account_history without an account answered %', _response;
+  END IF;
+
+  -- home() hands method results to PostgREST as JSON text; a JSONB return
+  -- would parse every (up to 13.8 MB) response again.
+  IF (SELECT prorettype FROM pg_proc WHERE oid = 'hafah_endpoints.home(json)'::regprocedure) <> 'json'::regtype THEN
+    RAISE EXCEPTION 'hafah_endpoints.home(json) does not return json';
+  END IF;
+
   PERFORM hafah_endpoints.get_ops_in_block('{"block_num": 4000000}'::JSON);
   PERFORM hafah_endpoints.enum_virtual_ops('{"block_range_begin": 4000000, "block_range_end": 4000010}'::JSON);
   PERFORM hafah_endpoints.get_account_history('{"account": "steemit", "start": -1, "limit": 10}'::JSON);
